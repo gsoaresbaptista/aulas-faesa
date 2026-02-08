@@ -1,0 +1,302 @@
+/* style.css - Estilo Global para todas as disciplinas */
+
+:root {
+    --primary-color: #011C5B;
+    --secondary-color: #1C86EE;
+    --text-color: #333;
+    --bg-color: #f4f7f9;
+    --white: #ffffff;
+    --border-color: #eee;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    margin: 0;
+    padding: 40px 20px;
+    display: flex;
+    justify-content: center;
+    transition: background 0.3s;
+}
+
+/* --- Layout Principal --- */
+.main-card {
+    background: var(--white);
+    max-width: 1100px; /* Serve para tabelas largas e textos */
+    width: 100%;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    overflow: hidden;
+}
+
+.header {
+    background-color: var(--primary-color);
+    color: var(--white);
+    padding: 30px;
+    text-align: center;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 26px;
+    letter-spacing: -0.5px;
+}
+
+.content {
+    padding: 30px;
+}
+
+.footer {
+    padding: 25px;
+    text-align: center;
+    border-top: 1px solid var(--border-color);
+    background: #fafafa;
+}
+
+.footer img {
+    max-width: 130px;
+    opacity: 0.9;
+    transition: opacity 0.3s;
+}
+
+.footer img:hover { opacity: 1; }
+
+/* --- Barra de Acessibilidade --- */
+.accessibility-bar {
+    max-width: 1100px;
+    margin: 0 auto 15px auto;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    position: absolute; /* Opcional: fixa no topo ou mantém no fluxo */
+    top: 10px;
+    right: 20px;
+}
+
+/* Caso queira centralizado acima do card em telas menores */
+@media (max-width: 1150px) {
+    .accessibility-bar {
+        position: relative;
+        top: 0;
+        right: 0;
+        margin-bottom: 10px;
+    }
+}
+
+.accessibility-bar button {
+    background: var(--white);
+    border: 1px solid #ddd;
+    padding: 5px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+/* --- Tabelas (Unificadas: TDE, Notas, Cronograma) --- */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    background: var(--white);
+    margin-bottom: 20px;
+}
+
+thead th {
+    background-color: var(--secondary-color);
+    color: var(--white);
+    padding: 12px 15px;
+    text-align: center;
+    text-transform: uppercase;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+td {
+    padding: 12px 15px;
+    border: 1px solid var(--border-color);
+    color: #444;
+    vertical-align: middle;
+}
+
+tbody tr:nth-child(even) { background-color: #fcfdfe; }
+tbody tr:hover { background-color: #f1f7ff; }
+
+/* Células Especiais de Tabelas */
+.unit-cell, .item-cell {
+    font-weight: bold;
+    color: var(--primary-color);
+    text-align: center;
+    white-space: nowrap;
+}
+
+.time-cell, .total-cell {
+    text-align: center;
+    font-family: monospace;
+    font-weight: bold;
+    color: #555;
+    background: #f0f4f8;
+    border-radius: 4px;
+}
+
+.total-row {
+    background-color: var(--primary-color) !important;
+    color: var(--white);
+    font-weight: bold;
+}
+
+.total-row td { border: none; }
+
+.holiday-row td {
+    background-color: #fff5f5;
+    color: #d32f2f;
+    font-style: italic;
+    text-align: center;
+}
+
+.exam-row td {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+    font-weight: bold;
+}
+
+/* --- Elementos de Texto e Decoração --- */
+h2, .section-title {
+    color: var(--primary-color);
+    font-size: 1.25rem;
+    text-transform: uppercase;
+    border-left: 5px solid var(--secondary-color);
+    padding-left: 15px;
+    margin: 40px 0 20px 0;
+    letter-spacing: 0.5px;
+}
+
+.intro-text {
+    text-align: justify;
+    font-size: 16px;
+    color: #444;
+    margin-bottom: 25px;
+}
+
+a.activity-link, a {
+    color: var(--secondary-color);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+a:hover { text-decoration: underline; }
+
+/* --- Caixas Especiais (Avisos, Citações, Destaques) --- */
+.warning-box {
+    display: flex;
+    align-items: flex-start;
+    background-color: #fff9c4;
+    border-left: 6px solid #fbc02d;
+    padding: 20px;
+    border-radius: 8px;
+    margin: 0 auto 30px auto;
+    width: 90%;
+}
+
+.warning-icon { font-size: 24px; margin-right: 15px; }
+.warning-text strong { display: block; color: #827717; font-size: 18px; margin-bottom: 5px; }
+
+.quote-box {
+    background-color: #f0f7ff;
+    border-left: 5px solid var(--secondary-color);
+    padding: 20px;
+    margin: 30px 0;
+    font-style: italic;
+    color: #444;
+}
+
+.highlight-box {
+    background-color: #f0f7ff;
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid #e1e9f0;
+}
+
+/* --- Imagens e Memes --- */
+.meme-container {
+    margin: 30px 0;
+    text-align: center;
+}
+
+.meme-container img {
+    max-width: 80%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+/* --- Listas e Tópicos --- */
+.topics-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    list-style: none;
+    padding: 0;
+}
+
+.topics-list li::before {
+    content: "▹";
+    color: var(--secondary-color);
+    font-weight: bold;
+    margin-right: 8px;
+}
+
+.topics-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.topics-grid div {
+    background: #fafafa;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+
+/* --- Badges de Data --- */
+.date-badge, .date-text {
+    background: var(--primary-color);
+    color: var(--white);
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-weight: bold;
+    font-family: monospace;
+    display: inline-block;
+}
+
+.centered { text-align: center; }
+
+/* --- MODO ALTO CONTRASTE (Dark Mode) --- */
+body.contrast { background-color: #000 !important; color: #fff !important; }
+.contrast .main-card { background: #000; border: 2px solid #fff; }
+.contrast .header { background: #000; border-bottom: 2px solid #fff; }
+.contrast .footer { background: #000; border-top: 2px solid #fff; }
+
+.contrast table, .contrast td, .contrast th, .contrast .topics-grid div {
+    background: #000 !important;
+    color: #fff !important;
+    border-color: #fff !important;
+}
+
+.contrast thead th { color: yellow !important; border-bottom: 2px solid yellow !important; }
+.contrast h2, .contrast .section-title { color: yellow !important; border-color: yellow !important; }
+.contrast a, .contrast strong { color: yellow !important; }
+
+/* Ajustes específicos de contraste */
+.contrast .warning-box { background: #000 !important; border: 2px solid yellow; }
+.contrast .warning-text strong, .contrast .warning-text p { color: yellow !important; }
+.contrast .exam-row td { color: #00ff00 !important; }
+.contrast .holiday-row td { color: #ff9999 !important; }
+.contrast .date-badge, .contrast .date-text { background: #333; color: yellow !important; border: 1px solid yellow; }
+.contrast img { filter: brightness(0) invert(1); }
