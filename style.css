@@ -17,6 +17,7 @@ body {
     margin: 0;
     padding: 40px 20px;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     transition: background 0.3s;
 }
