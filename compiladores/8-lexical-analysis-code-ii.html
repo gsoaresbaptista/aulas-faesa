@@ -1,0 +1,320 @@
+<!doctype html><html lang=pt-BR><meta charset=UTF-8><meta content="width=device-width,initial-scale=1.0" name=viewport><title>Toposia - Compiladores</title><link media="(prefers-color-scheme: light)" href=/img/dark-favicon.svg rel=icon><link media="(prefers-color-scheme: dark)" href=/img/light-favicon.svg rel=icon><link href=https://fonts.googleapis.com rel=preconnect><link crossorigin href=https://fonts.gstatic.com rel=preconnect><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel=stylesheet><link href=/css/bundle.min.css rel=stylesheet><link href=https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.css rel=stylesheet><script src=https://unpkg.com/lucide@latest></script></head><body><div class=page-wrapper><nav class=sidebar><div class=sidebar-content><header class=sidebar-title-section><a class=course-title-link href=contents.html> <h1 class=sidebar-course-title>Compiladores</h1> </a><div class=sidebar-ornament>❧</div></header><section class=sidebar-toc-section><h2 class=toc-header>Tabela de Conteúdos</h2><ol class=toc-list><li class="toc-item level-2"><a href=#introdução>8.1. Introdução</a></li><li class="toc-item level-2"><a href=#expansão-dos-tokens>8.2. Expansão dos Tokens</a></li><li class="toc-item level-2"><a href=#lookahead>8.3. Lookahead</a></li><li class="toc-item level-2"><a href=#comentários>8.4. Comentários</a></li><li class="toc-item level-4"><a href=#verificando-dígitos-e-letras>8.4.0.1. Verificando Dígitos e Letras</a></li><li class="toc-item level-2"><a href=#literais-para-números-e-strings>8.5. Literais para Números e Strings</a></li><li class="toc-item level-2"><a href=#palavras-chave-e-identificadores>8.6. . Palavras-Chave e Identificadores</a></li><li class="toc-item level-2"><a href=#o-loop-principal-atualizado>8.7. O Loop Principal Atualizado</a></li><li class="toc-item level-2"><a href=#testando-a-implementação-completa>8.8. Testando a Implementação Completa</a></li><li class="toc-item level-2"><a href=#próximos-passos>8.9. Próximos passos</a></li></ol></section><nav class=sidebar-nav-section><a class="sidebar-nav-link prev" href=7-lexical-analysis-code-i.html><i class=nav-icon data-lucide=chevron-left></i> Lab - Analisador Léxico I</a><a class="sidebar-nav-link back" href=javascript:void(0) onclick=handleBackNavigation()><i class=nav-icon data-lucide=arrow-left></i> Voltar</a></nav></div></nav><button aria-label=Menu class=mobile-menu-toggle><div class=hamburger-container><span class=hamburger-line></span><span class=hamburger-line></span><span class=hamburger-line></span></div></button><button aria-label="Alternar Barra Lateral" class=sidebar-toggle onclick=CourseForgeNav.toggleSidebar()><i class=toggle-icon data-lucide=chevron-left></i></button><div class=mobile-menu-overlay></div><main class=main-content><article class=article><header class=article-header><span class=chapter-number>8</span><h1 class=article-title><span class="title-ornament left">❧</span> <span class=title-text>Lab - Analisador Léxico II</span> <span class="title-ornament right">❧</span></h1><p class=article-date>29/01/2026</p><nav aria-label=Breadcrumb class=breadcrumb><a class=breadcrumb-link href=contents.html>Compiladores</a><span class=breadcrumb-separator><i class=breadcrumb-icon data-lucide=chevron-right></i></span><a class=breadcrumb-link href=contents.html#part-II>II - Análise Léxica</a><span class=breadcrumb-separator><i class=breadcrumb-icon data-lucide=chevron-right></i></span><span class=breadcrumb-current>Lab - Analisador Léxico II</span></nav></header><div class=article-body><h2 id=introdução><span class=heading-text>Introdução</span><span class=heading-arabic>8.1</span></h2><p>No laboratório anterior, estabelecemos a infraestrutura de leitura de arquivos e identificação de símbolos simples. Porém, uma linguagem de programação real precisa de muito mais expressividade. O nosso analisador atual falharia miseravelmente ao tentar interpretar lógica booleana, comentários ou diferenciar uma atribuição (<code>=</code>) de uma comparação (<code>==</code>).</p><p>Neste capítulo, finalizaremos o Lexer implementando o suporte a <strong>Literais</strong> (strings, números), <strong>Palavras-Chave</strong> e, crucialmente, resolveremos ambiguidades léxicas usando <em>Lookahead</em> (olhada à frente).</p><p>Refinaremos também nossa definição de linguagem. Para treinarmos um pouco, iremos dar suporte tanto a operadores lógicos textuais (<code>and</code>, <code>or</code>) quanto aos simbólicos (<code>&&</code>, <code>||</code>), além de um sistema robusto de comentários.</p><h2 id=expansão-dos-tokens><span class=heading-text>Expansão dos Tokens</span><span class=heading-arabic>8.2</span></h2><p>Antes de escrevermos a lógica, precisamos que o nosso sistema conheça os novos tipos de tokens. Analisando a especificação da linguagem, notamos que precisamos suportar operadores lógicos (<code>&&</code>, <code>||</code>, <code>!</code>), literais de texto (<em>Strings</em>) e diferenciar claramente atribuição de comparação.</p><p>Abra o arquivo <code>include/compiler/token.h</code> e <strong>substitua completamente</strong> a macro <code>TOKEN_LIST</code> antiga pela versão abaixo. Isso garantirá que todos os novos tokens estejam presentes e nomeados corretamente.</p><p>Observe a mudança importante: <code>TOK_ASSIGN</code> agora representa <code>=</code>, enquanto <code>TOK_EQ</code> representa <code>==</code>. Essa distinção léxica facilita imensamente a vida do Parser no futuro.</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>// include/compiler/token.h
+
+#define TOKEN_LIST \
+    X(TOK_LPAREN)        /* ( */ \
+    X(TOK_RPAREN)        /* ) */ \
+    X(TOK_LBRACE)        /* { */ \
+    X(TOK_RBRACE)        /* } */ \
+    X(TOK_COLON)         /* : */ \
+    X(TOK_SEMICOLON)     /* ; */ \
+    X(TOK_COMMA)         /* , */ \
+    X(TOK_PLUS)          /* + */ \
+    X(TOK_MINUS)         /* - */ \
+    X(TOK_STAR)          /* * */ \
+    X(TOK_SLASH)         /* / */ \
+    X(TOK_ASSIGN)        /* = */ \
+    X(TOK_EQ)            /* == */ \
+    X(TOK_BANG_EQ)       /* != */ \
+    X(TOK_GT)            /* > */ \
+    X(TOK_LT)            /* &lt; */ \
+    X(TOK_GT_EQ)         /* >= */ \
+    X(TOK_LT_EQ)         /* &lt;= */ \
+    X(TOK_ARROW)         /* -> */ \
+    X(TOK_AND)           /* && or and */ \
+    X(TOK_OR)            /* || or or */ \
+    X(TOK_NOT)           /* !  or not */ \
+    X(TOK_CHAR)          /* Ex: 'c' */ \
+    X(TOK_NUMBER)        /* number literal */ \
+    X(TOK_STRING)        /* string literal */ \
+    X(TOK_IDENTIFIER)    /* identifier */ \
+    X(TOK_KW_INT)        /* int */ \
+    X(TOK_KW_FLOAT)      /* float */ \
+    X(TOK_KW_VOID)       /* void */ \
+    X(TOK_KW_BOOL)       /* bool */ \
+    X(TOK_KW_CHAR)       /* char */ \
+    X(TOK_KW_STRING)     /* string */ \
+    X(TOK_KW_IF)         /* if */ \
+    X(TOK_KW_ELSE)       /* else */ \
+    X(TOK_KW_LOOP)       /* loop */ \
+    X(TOK_KW_RETURN)     /* return */ \
+    X(TOK_KW_FN)         /* fn */ \
+    X(TOK_KW_TRUE)       /* true */ \
+    X(TOK_KW_FALSE)      /* false */ \
+    X(TOK_ERROR)         /* &lt;error> */ \
+    X(TOK_EOF)           /* &lt;eof> */ \
+</code></pre><h2 id=lookahead><span class=heading-text>Lookahead</span><span class=heading-arabic>8.3</span></h2><p>Temos um problema clássico na hora de escrever analisadores léxicos que é a maneira de distinguir entre <code>/</code> (divisão) de <code>//</code> (comentário) ou <code>=</code> (atribuição) de <code>==</code> (igualdade). Uma forma muito usada para solucionar esse problema é fazer nosso Lexer ser capaz de espiar o próximo caractere sem consumi-lo imediatamente.</p><p>No arquivo <code>src/compiler/lexer.c</code>, adicione estas funções auxiliares antes da lógica de tokens. Elas são a base para resolvermos ambiguidades.</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>// src/compiler/lexer.c
+
+// Retorna o caractere atual
+static char peek(Lexer *lexer) {
+    return *lexer->current;
+}
+
+// Retorna o caractere seguinte (Lookahead de 2ª ordem)
+// Essencial para diferenciar "/*" (início de bloco) de "/" (divisão)
+static char peek_next(Lexer *lexer) {
+    if (is_at_end(lexer)) return '\0';
+    return lexer->current[1];
+}
+
+// Auxiliar: Verifica se o caractere atual é o esperado.
+// Se for, consome-o e retorna true. Útil para operadores compostos como '!='.
+static bool match(Lexer *lexer, char expected) {
+    if (is_at_end(lexer)) return false;
+    if (*lexer->current != expected) return false;
+    
+    lexer->current++; // Consome
+    return true;
+}
+</code></pre><h2 id=comentários><span class=heading-text>Comentários</span><span class=heading-arabic>8.4</span></h2><p>Comentários existem apenas para humanos e devem ser totalmente ignorados pelo compilador, da mesma forma que espaços em branco e quebras de linha. Por esse motivo, o tratamento de comentários não envolve a criação de tokens, mas sim o "consumo" silencioso desses trechos ainda na fase de análise léxica, garantindo que eles não cheguem às etapas posteriores do compilador.</p><p>A lógica de detecção de comentários exige atenção especial ao encontrar uma barra <code>/</code>. Nesse ponto, o analisador léxico não pode assumir imediatamente que se trata de um operador de divisão; é necessário observar o caractere seguinte. Se o próximo caractere também for <code>/</code>, o trecho corresponde a um comentário de linha, que deve ser consumido até a próxima quebra de linha. Se o caractere seguinte for <code>*</code>, trata-se de um comentário de bloco, que deve ser consumido até que a sequência de fechamento <code>*/</code> seja encontrada. Caso nenhum desses padrões seja identificado, a barra não representa comentário, e o controle deve retornar para que o lexer_next_token a trate normalmente como um operador.</p><p>Substitua sua função <code>skip_whitespace</code> antiga por esta versão robusta:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>static void skip_whitespace(Lexer *lexer) {
+    for (;;) {
+        char c = peek(lexer); // Apenas espia, não consome
+        switch (c) {
+            case ' ':
+            case '\r':
+            case '\t':
+                advance(lexer);
+                break;
+            case '\n':
+                lexer->line++;
+                advance(lexer);
+                break;
+                
+            case '/':
+                if (peek_next(lexer) == '/') {
+                    // Comentário Inline: Consome caracteres até o fim da linha
+                    while (peek(lexer) != '\n' && !is_at_end(lexer)) {
+                        advance(lexer);
+                    }
+                } 
+                else if (peek_next(lexer) == '*') {
+                    // Comentário de Bloco: Consome até encontrar "*/"
+                    advance(lexer); // Consome /
+                    advance(lexer); // Consome *
+                    
+                    while (!is_at_end(lexer)) {
+                        if (peek(lexer) == '\n') lexer->line++;
+                        
+                        // Verifica fechamento
+                        if (peek(lexer) == '*' && peek_next(lexer) == '/') {
+                            advance(lexer); // Consome *
+                            advance(lexer); // Consome /
+                            break; // Sai do loop do comentário
+                        }
+                        advance(lexer);
+                    }
+                } else {
+                    return; // É uma barra de divisão (/), não é whitespace/comentário.
+                }
+                break;
+                
+            default:
+                return;
+        }
+    }
+}
+</code></pre><h4 id=verificando-dígitos-e-letras><span class=heading-text>Verificando Dígitos e Letras</span><span class=heading-arabic>8.4.0.1</span></h4><p>Como não queremos depender da biblioteca <code>&lt;ctype.h></code> (para manter o controle total e portabilidade estrita), criaremos nossos helpers simples.</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>static bool is_digit(char c) {
+    return c >= '0' && c &lt;= '9';
+}
+
+static bool is_alpha(char c) {
+    return (c >= 'a' && c &lt;= 'z') ||
+           (c >= 'A' && c &lt;= 'Z') ||
+            c == '_';
+}
+</code></pre><h2 id=literais-para-números-e-strings><span class=heading-text>Literais para Números e Strings</span><span class=heading-arabic>8.5</span></h2><p>Agora precisamos ensinar o Lexer a ler dados.</p><p>Agora precisamos ensinar o Lexer a ler dados, adicionando novas funções em <code>src/compiler/lexer.c</code>. A leitura de strings consiste em consumir caracteres até encontrar a aspa de fechamento <code>"</code>. Durante esse processo, a presença de um <code>\n</code> dentro da string não encerra a leitura; em vez disso, o analisador apenas incrementa o contador de linhas, permitindo assim o suporte a strings multi-linha.</p><p>Para números, a lógica começa consumindo uma sequência de dígitos. Caso seja encontrado um ponto <code>.</code> seguido de outro dígito, o lexer identifica que se trata de um número de ponto flutuante, consome o ponto e continua a leitura da parte fracionária até que não haja mais dígitos válidos.</p><p>Adicione estas funções em <code>src/compiler/lexer.c</code>:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>static Token string(Lexer *lexer) {
+    while (peek(lexer) != '"' && !is_at_end(lexer)) {
+        if (peek(lexer) == '\n') lexer->line++;
+        advance(lexer);
+    }
+
+    if (is_at_end(lexer)) return error_token(lexer, "String não terminada.");
+
+    advance(lexer); // Consome a aspa de fechamento
+    return make_token(lexer, TOK_STRING);
+}
+
+static Token character(Lexer *lexer) {
+    if (is_at_end(lexer)) return error_token(lexer, "Caractere não terminado.");
+    
+    advance(lexer); // Consome o conteúdo
+    
+    if (peek(lexer) != '\'') {
+        return error_token(lexer, "Esperado ' fechando o literal de caractere.");
+    }
+    
+    advance(lexer); // Consome '
+    return make_token(lexer, TOK_CHAR);
+}
+
+static Token number(Lexer *lexer) {
+    while (is_digit(peek(lexer))) advance(lexer);
+
+    // Parte fracionária
+    if (peek(lexer) == '.' && is_digit(peek_next(lexer))) {
+        advance(lexer); // Consome o ponto
+        while (is_digit(peek(lexer))) advance(lexer);
+    }
+
+    return make_token(lexer, TOK_NUMBER);
+}
+</code></pre><h2 id=palavras-chave-e-identificadores><span class=heading-text>. Palavras-Chave e Identificadores</span><span class=heading-arabic>8.6</span></h2><p>O desafio aqui é: <code>if</code> é uma palavra-chave, mas <code>if_value</code> é um identificador. Ambos começam igual.</p><p>Implementaremos uma função <code>identifier_type</code> que compara o texto lido com nossa lista de keywords. Além das palavras reservadas padrão (<code>if</code>, <code>loop</code>), também verificaremos aqui os <strong>operadores lógicos textuais</strong> (<code>and</code>, <code>or</code>, <code>not</code>), convertendo-os para seus tokens correspondentes.</p><p>Adicione estas funções:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>static TokenType check_keyword(Lexer *lexer, int start, int length,
+                               const char *rest, TokenType type) {
+    if (lexer->current - lexer->start == start + length &&
+        memcmp(lexer->start + start, rest, length) == 0) {
+        return type;
+    }
+    return TOK_IDENTIFIER;
+}
+
+static TokenType identifier_type(Lexer *lexer) {
+    // Switch no primeiro caractere para performance (Trie simplificada)
+    char c = lexer->start[0];
+    switch (c) {
+        case 'a': return check_keyword(lexer, 1, 2, "nd", TOK_AND); // and
+        case 'b': return check_keyword(lexer, 1, 3, "ool", TOK_KW_BOOL);
+        case 'c': return check_keyword(lexer, 1, 3, "har", TOK_KW_CHAR);
+        case 'e': return check_keyword(lexer, 1, 3, "lse", TOK_KW_ELSE);
+        
+        case 'f':
+            if (lexer->current - lexer->start > 1) {
+                switch (lexer->start[1]) {
+                    case 'a': return check_keyword(lexer, 2, 3, "lse", TOK_KW_FALSE);
+                    case 'l': return check_keyword(lexer, 2, 3, "oat", TOK_KW_FLOAT);
+                    case 'n': return check_keyword(lexer, 2, 0, "", TOK_KW_FN);
+                }
+            }
+            break;
+            
+        case 'i': // if ou int
+            if (lexer->current - lexer->start > 1) {
+                switch (lexer->start[1]) {
+                    case 'f': return check_keyword(lexer, 2, 0, "", TOK_KW_IF);
+                    case 'n': return check_keyword(lexer, 2, 1, "t", TOK_KW_INT);
+                }
+            }
+            break;
+            
+        case 'l': return check_keyword(lexer, 1, 3, "oop", TOK_KW_LOOP);
+        case 'n': return check_keyword(lexer, 1, 2, "ot", TOK_NOT); // not
+        case 'o': return check_keyword(lexer, 1, 1, "r", TOK_OR);   // or
+        case 'r': return check_keyword(lexer, 1, 5, "eturn", TOK_KW_RETURN);
+        case 's': return check_keyword(lexer, 1, 5, "tring", TOK_KW_STRING);
+        case 't': return check_keyword(lexer, 1, 3, "rue", TOK_KW_TRUE);
+        case 'v': return check_keyword(lexer, 1, 3, "oid", TOK_KW_VOID);
+    }
+
+    return TOK_IDENTIFIER;
+}
+
+static Token identifier(Lexer *lexer) {
+    while (is_alpha(peek(lexer)) || is_digit(peek(lexer))) {
+        advance(lexer);
+    }
+    return make_token(lexer, identifier_type(lexer));
+}
+</code></pre><h2 id=o-loop-principal-atualizado><span class=heading-text>O Loop Principal Atualizado</span><span class=heading-arabic>8.7</span></h2><p>Finalmente, vamos reescrever a função <code>lexer_next_token</code>. Ela agora delega o trabalho para as funções que criamos quando encontra letras, números ou aspas.</p><p>Além disso, observe o uso intensivo da função <code>match</code> nos casos do <code>switch</code>. É aqui que resolvemos as ambiguidades dos operadores:</p><ul><li><code>=</code> vs <code>==</code></li><li><code>!</code> vs <code>!=</code></li><li><code>-</code> vs <code>-></code></li></ul><p>Substitua a função antiga inteiramente por esta:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>Token lexer_next_token(Lexer *lexer) {
+    skip_whitespace(lexer); // Agora trata comentários também!
+    
+    lexer->start = lexer->current;
+
+    if (is_at_end(lexer)) return make_token(lexer, TOK_EOF);
+
+    char c = advance(lexer);
+
+    // 1. Identificadores e Keywords (Começam com letra)
+    if (is_alpha(c)) return identifier(lexer);
+    
+    // 2. Números (Começam com dígito)
+    if (is_digit(c)) return number(lexer);
+
+    switch (c) {
+        // Delimitadores Simples
+        case '(': return make_token(lexer, TOK_LPAREN);
+        case ')': return make_token(lexer, TOK_RPAREN);
+        case '{': return make_token(lexer, TOK_LBRACE);
+        case '}': return make_token(lexer, TOK_RBRACE);
+        case ';': return make_token(lexer, TOK_SEMICOLON);
+        case ',': return make_token(lexer, TOK_COMMA);
+        case ':': return make_token(lexer, TOK_COLON);
+
+        // Operadores Compostos (Lookahead)
+        case '!':
+            // Se o próximo for '=', retorna BANG_EQ (!=), senão retorna NOT (!)
+            return make_token(lexer, match(lexer, '=') ? TOK_BANG_EQ : TOK_NOT); // ! ou !=
+            
+        case '=':
+            // Se o próximo for '=', retorna EQ (==), senão retorna ASSIGN (=)
+            return make_token(lexer, match(lexer, '=') ? TOK_EQ : TOK_ASSIGN);
+            
+        case '&lt;':
+            return make_token(lexer, match(lexer, '=') ? TOK_LT_EQ : TOK_LT); // &lt; ou &lt;=
+            
+        case '>':
+            return make_token(lexer, match(lexer, '=') ? TOK_GT_EQ : TOK_GT); // > ou >=
+            
+        case '-':
+            // Se o próximo for '>', retorna ARROW (->), senão retorna MINUS (-)
+            if (match(lexer, '>')) return make_token(lexer, TOK_ARROW);
+            return make_token(lexer, TOK_MINUS);
+
+        // Lógica Simbólica (&&, ||)
+        case '&':
+            if (match(lexer, '&')) return make_token(lexer, TOK_AND);
+            else return error_token(lexer, "Esperado '&' após '&'");
+        case '|':
+            if (match(lexer, '|')) return make_token(lexer, TOK_OR);
+            else return error_token(lexer, "Esperado '|' após '|'");
+
+        // Operadores Matemáticos Simples
+        case '+': return make_token(lexer, TOK_PLUS);
+        case '*': return make_token(lexer, TOK_STAR);
+        case '/': 
+            // Como skip_whitespace já tratou comentários (// e /*), 
+            // se chegamos aqui, é garantido que é uma divisão matemática.
+            return make_token(lexer, TOK_SLASH);
+
+        // Literais de Texto e Char
+        case '"': return string(lexer);
+        case '\'': return character(lexer);
+
+        default:
+            return error_token(lexer, "Caractere inesperado.");
+    }
+}
+</code></pre><h2 id=testando-a-implementação-completa><span class=heading-text>Testando a Implementação Completa</span><span class=heading-arabic>8.8</span></h2><p>Agora nosso compilador é capaz de entender a riqueza da linguagem. Vamos testar com um arquivo que usa todas as novas <em>features</em>: comentários, lógica textual, strings e comparações. Atualize o arquivo <code>teste.slang</code> para o conteúdo:</p><pre class="line-numbers language-slang" data-lang=SLANG><code class=language-slang>/* Exemplo Completo da Linguagem
+  Testando Lexer V2
+*/
+
+x: int = 5
+name: string = "Compiladores"
+valid: bool = true
+
+// Testando lógica textual e simbólica
+if x >= 5 and valid {
+    x = x + 1
+}
+
+if x == 6 || !valid {
+    print("Sucesso")
+}
+
+fn process(v: void) -> int {
+    return 0
+}
+</code></pre><div class="callout callout-danger"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1=12 x2=12 y1=9 y2=13 /><line x1=12 x2=12 y1=17 y2=17.01 /></svg></span><span class=callout-title-inner>Estilização do código</span></div><div class=callout-content><p>Observe que o código no VS Code não apresenta estilização, pois a linguagem <code>slang</code> não existe. Para facilitar o acompanhamento do restante da disciplina, foi desenvolvida uma extensão que pode ser instalada para aplicar a estilização adequada ao VS Code.</p><p>Faça o download da <a href=bin/slang-001.vsix>Extensão VSIX</a>. Para instalar, no VS Code vá até <strong>Extensões</strong>, clique no ícone de três pontos (<code>...</code>), selecione <strong>Install from VSIX</strong> e escolha o arquivo baixado.</p><p>Caso necessário, reinicie o programa para que o código passe a aparecer corretamente estilizado.</p></div></div><p>Compile e execute. A saída deve listar corretamente <code>TOK_STRING</code> ("Compiladores"), ignorar os comentários, identificar <code>TOK_AND</code>, <code>TOK_EQ_EQ</code> e <code>TOK_KW_VOID</code>.</p><p>Com isso, encerramos o <strong>Front-end Léxico</strong>. Temos um Scanner robusto, capaz de ignorar ruídos (espaços e comentários) e categorizar corretamente a entrada para o Parser, que será nosso próximo grande módulo.</p><div class="callout callout-tip"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .5 2.2 1.5 3.1.7.7 1.3 1.5 1.5 2.4"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span><span class=callout-title-inner>A ordem importa!!!</span></div><div class=callout-content><p>Lembre-se que a ordem que você define as funções no arquivo <code>lexer.c</code> importa, uma vez que não colocamos as definições das funções no arquivo.</p></div></div><p>Caso esteja tendo erro de importação, tente colar no arquivo <code>src/compiler/lexer.c</code> o seguinte código após as macros de <code>#include</code>.</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>static bool is_digit(char c);
+static bool is_alpha(char c);
+static bool is_at_end(Lexer *lexer);
+static char advance(Lexer *lexer);
+static Token make_token(Lexer *lexer, TokenType type);
+static Token error_token(Lexer *lexer, const char *message);
+static char peek(Lexer *lexer);
+static char peek_next(Lexer *lexer);
+static bool match(Lexer *lexer, char expected);
+static Token string(Lexer *lexer);
+static Token character(Lexer *lexer);
+static Token number(Lexer *lexer);
+static TokenType check_keyword(Lexer *lexer, int start, int length, const char *rest, TokenType type);
+static TokenType identifier_type(Lexer *lexer);
+static Token identifier(Lexer *lexer);
+static void skip_whitespace(Lexer *lexer);
+</code></pre><h2 id=próximos-passos><span class=heading-text>Próximos passos</span><span class=heading-arabic>8.9</span></h2><div class="callout callout-warning"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span><span class=callout-title-inner>Conteúdo em desenvolvimento!</span></div><div class=callout-content><p>Este conteúdo ainda não foi finalizado. Assim que estiver completo, este aviso será atualizado com o link correspondente.</p></div></div></div></article><footer class=footer><p>© 2025 · <a href=#>Gabriel Soares Baptista</a></p></footer></main></div><script>const toggle=document.querySelector(`.mobile-menu-toggle`),sidebar=document.querySelector(`.sidebar`),overlay=document.querySelector(`.mobile-menu-overlay`);function openMenu(){sidebar.classList.add(`open`),overlay.classList.add(`open`),toggle.classList.add(`open`),document.body.style.overflow=`hidden`}function closeMenu(){sidebar.classList.remove(`open`),overlay.classList.remove(`open`),toggle.classList.remove(`open`),document.body.style.overflow=``}toggle.addEventListener(`click`,()=>{sidebar.classList.contains(`open`)?closeMenu():openMenu()}),overlay.addEventListener(`click`,closeMenu);</script><script src=/js/bundle.min.js></script><script>document.addEventListener(`DOMContentLoaded`,function(){renderMathInElement(document.body,{delimiters:[{left:`$$`,right:`$$`,display:!0},{left:`$`,right:`$`,display:!1},{left:`\\(`,right:`\\)`,display:!1},{left:`\\[`,right:`\\]`,display:!0}],throwOnError:!1})});</script><script src=https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-clike.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-perl.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-java.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup-templating.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-php.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.js></script><script>document.addEventListener(`DOMContentLoaded`,function(){let isSubcourse=!1,courseName=`Compiladores`;CourseForgeNav.applyDynamicBreadcrumbs(`.breadcrumb`,!1),CourseForgeNav.initSidebar(),CourseForgeNav.initScrollSpy(),CourseForgeUI.initCopyButtons()});function handleBackNavigation(){let isSubcourse=!1,dynamic=CourseForgeNav.getBackLink(`contents.html`,`Voltar`,!1);window.location.href=dynamic.url}</script></body></html>

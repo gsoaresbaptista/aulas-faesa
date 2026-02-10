@@ -1,0 +1,202 @@
+<!doctype html><html lang=pt-BR><meta charset=UTF-8><meta content="width=device-width,initial-scale=1.0" name=viewport><title>Toposia - Redes</title><link media="(prefers-color-scheme: light)" href=/img/dark-favicon.svg rel=icon><link media="(prefers-color-scheme: dark)" href=/img/light-favicon.svg rel=icon><link href=https://fonts.googleapis.com rel=preconnect><link crossorigin href=https://fonts.gstatic.com rel=preconnect><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel=stylesheet><link href=/css/bundle.min.css rel=stylesheet><link href=https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.css rel=stylesheet><script src=https://unpkg.com/lucide@latest></script></head><body><div class=page-wrapper><nav class=sidebar><div class=sidebar-content><header class=sidebar-title-section><a class=course-title-link href=contents.html> <h1 class=sidebar-course-title>Redes</h1> </a><div class=sidebar-ornament>❧</div></header><section class=sidebar-toc-section><h2 class=toc-header>Tabela de Conteúdos</h2><ol class=toc-list><li class="toc-item level-2"><a href=#introdução>6.1. Introdução</a></li><li class="toc-item level-2"><a href=#definindo-o-quadro>6.2. Definindo o Quadro</a></li><li class="toc-item level-2"><a href=#cálculo-de-integridade-crc-8>6.3. Cálculo de integridade (CRC-8)</a></li><li class="toc-item level-2"><a href=#enquadramento-e-byte-stuffing>6.4. Enquadramento e Byte Stuffing</a></li><li class="toc-item level-2"><a href=#simulação>6.5. Simulação</a></li><li class="toc-item level-2"><a href=#executando-e-testando>6.6. Executando e Testando</a></li><li class="toc-item level-2"><a href=#próximos-passos>6.7. Próximos passos</a></li></ol></section><nav class=sidebar-nav-section><a class="sidebar-nav-link prev" href=5-config-setup.html><i class=nav-icon data-lucide=chevron-left></i> "Laboratório I: Configurando o setup"</a><a class="sidebar-nav-link back" href=javascript:void(0) onclick=handleBackNavigation()><i class=nav-icon data-lucide=arrow-left></i> Voltar</a></nav></div></nav><button aria-label=Menu class=mobile-menu-toggle><div class=hamburger-container><span class=hamburger-line></span><span class=hamburger-line></span><span class=hamburger-line></span></div></button><button aria-label="Alternar Barra Lateral" class=sidebar-toggle onclick=CourseForgeNav.toggleSidebar()><i class=toggle-icon data-lucide=chevron-left></i></button><div class=mobile-menu-overlay></div><main class=main-content><article class=article><header class=article-header><span class=chapter-number>6</span><h1 class=article-title><span class="title-ornament left">❧</span> <span class=title-text>"Laboratório I: Topologia e Enquadramento"</span> <span class="title-ornament right">❧</span></h1><p class=article-date>04/02/2026</p><nav aria-label=Breadcrumb class=breadcrumb><a class=breadcrumb-link href=contents.html>Redes</a><span class=breadcrumb-separator><i class=breadcrumb-icon data-lucide=chevron-right></i></span><a class=breadcrumb-link href=contents.html#part-III>III - Camada de Enlace</a><span class=breadcrumb-separator><i class=breadcrumb-icon data-lucide=chevron-right></i></span><span class=breadcrumb-current>"Laboratório I: Topologia e Enquadramento"</span></nav></header><div class=article-body><h2 id=introdução><span class=heading-text>Introdução</span><span class=heading-arabic>6.1</span></h2><p>Nas aulas anteriores, focamos principalmente na <strong>Camada Física</strong>. Dessa forma, aprendemos que, no nível mais baixo, a internet não passa de pulsos de luz, variações de voltagem ou ondas de rádio. Para a Camada Física, não existem "arquivos", "imagens" ou "mensagens de texto". Existe apenas um fluxo contínuo e caótico de bits (<code>0</code> e <code>1</code>).</p><p>Imagine tentar ler um livro onde todas as letras estão escritas em uma única linha infinita, sem espaços, sem parágrafos e sem pontuação. Seria impossível saber onde termina uma frase e começa outra. A rede física é exatamente assim.</p><p>O objetivo deste laboratório é construir a "inteligência" que organiza esse caos. Vamos implementar um protocolo de enlace capaz de:</p><ol><li><strong>Enquadrar (Framing):</strong> Definir onde uma mensagem começa e termina usando marcadores especiais.</li><li><strong>Proteger (Error Detection):</strong> Usar matemática para garantir que a mensagem não foi alterada por ruído elétrico.</li><li><strong>Endereçar:</strong> Garantir que sabemos quem enviou e para quem é a mensagem.</li></ol><h2 id=definindo-o-quadro><span class=heading-text>Definindo o Quadro</span><span class=heading-arabic>6.2</span></h2><p>Na computação de redes, nunca enviamos dados "soltos". Nós os encapsulamos os bits que irão trafegar nas camadas físicas em uma estrutura chamada <strong>Quadro</strong>. Pense no Quadro como um <strong>Envelope de Correio</strong>.</p><ul><li>O papel com a carta escrita é o seu dado útil (<strong>Payload</strong>).</li><li>O envelope contém as informações vitais para o carteiro (<strong>Cabeçalho</strong> e <strong>Rodapé</strong>).</li></ul><p>Para estruturarmos a comunicação, adotamos o modelo visualizado na figura abaixo, dividindo o quadro em três seções estratégicas: Cabeçalho (Header), Carga Útil (Payload) e Rodapé (Trailer). Esta organização não é uma mera simplificação educativa, mas reflete o padrão industrial de protocolos reais (como Ethernet e Wi-Fi). A disposição dos campos segue uma lógica de eficiência de hardware: o Cabeçalho vem primeiro para que os roteadores identifiquem o destino e tomem decisões de encaminhamento imediatamente; o Payload carrega a mensagem isolada; e o Rodapé contendo a verificação de erro (CRC) é posicionado ao final para permitir que o transmissor calcule a integridade em tempo real enquanto os dados trafegam, anexando o resultado apenas no último instante.</p><div class=no-break><div class=centered><svg class="svg-graph graphviz-img" viewbox="0.00 0.00 749.00 148.00" data-sketch=true width=650 xmlns=http://www.w3.org/2000/svg><g transform="scale(1 1) rotate(0) translate(4 144)" class=graph id=graph0><title>G</title><g class=node id=node1><title>quadro</title><polygon points="9.5,-106 9.5,-135 732.5,-135 732.5,-106 9.5,-106" fill=none stroke=black /><text font-family=Times,serif font-size=14.00 font-weight=bold text-anchor=start x=269 y=-117.8>ESTRUTURA DO QUADRO</text><polygon points="9.5,-64 9.5,-106 243.5,-106 243.5,-64 9.5,-64" fill=none stroke=black /><text font-family=Times,serif font-size=14.00 font-weight=bold text-anchor=start x=75.5 y=-88.8>CABEÇALHO</text><text font-family=Times,serif font-size=14.00 font-weight=bold text-anchor=start x=90.5 y=-74.8>(Header)</text><polygon points="243.5,-64 243.5,-106 531.5,-106 531.5,-64 243.5,-64" fill=none stroke=black /><text font-family=Times,serif font-size=14.00 font-weight=bold text-anchor=start x=350 y=-88.8>PAYLOAD</text><text font-family=Times,serif font-size=14.00 font-weight=bold text-anchor=start x=340.5 y=-74.8>(Carga Útil)</text><polygon points="531.5,-64 531.5,-106 732.5,-106 732.5,-64 531.5,-64" fill=none stroke=black /><text font-family=Times,serif font-size=14.00 font-weight=bold text-anchor=start x=598 y=-88.8>RODAPÉ</text><text font-family=Times,serif font-size=14.00 font-weight=bold text-anchor=start x=598.5 y=-74.8>(Trailer)</text><polygon points="9.5,-5 9.5,-64 243.5,-64 243.5,-5 9.5,-5" fill=none stroke=black /><text font-family=Times,serif font-size=14.00 text-anchor=start x=45 y=-45.8>           Origem: 1 Byte</text><text font-family=Times,serif font-size=14.00 text-anchor=start x=44 y=-30.8>           Destino: 1 Byte</text><text font-family=Times,serif font-size=14.00 text-anchor=start x=16.5 y=-15.8>           Tamanho: 1 Byte          </text><polygon points="243.5,-5 243.5,-64 531.5,-64 531.5,-5 243.5,-5" fill=none stroke=black /><text font-family=Times,serif font-size=14.00 text-anchor=start x=250.5 y=-30.8>           [ DADOS DO USUÁRIO ]          </text><polygon points="531.5,-5 531.5,-64 732.5,-64 732.5,-5 531.5,-5" fill=none stroke=black /><text font-family=Times,serif font-size=14.00 text-anchor=start x=538.5 y=-30.8>           CRC: 1 Byte          </text><polygon points="8,-4 8,-136 733,-136 733,-4 8,-4" fill=none stroke=black /></g></g></svg></div></div><p>Vamos definir a estrutura do nosso quadro na linguagem C. Diferente de linguagens de alto nível, em C precisamos ser precisos com o tamanho da memória. Usaremos <code>uint8_t</code> (da biblioteca <code>&lt;stdint.h></code>) para garantir que nossas variáveis tenham exatamente 8 bits (1 byte), independentemente do computador.</p><p>Abra seu editor e crie o arquivo <code>main.c</code>. Vamos começar definindo nossas "regras do jogo" (Constantes) e nossas estruturas.</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>#include &lt;stdio.h>
+#include &lt;string.h>
+#include &lt;stdlib.h>
+#include &lt;stdint.h> // Importante: Garante que uint8_t tenha 8 bits exatos
+
+// === CONSTANTES DO PROTOCOLO ===
+// Usaremos valores hexadecimais padrão para marcar início/fim
+#define FLAG 0x7E      // 01111110 em binário (Sinal de "Início/Fim")
+#define ESC  0x7D      // 01111101 em binário (Sinal de "Escape")
+#define MAX_SIZE 100   // Tamanho máximo da mensagem (payload)
+
+// === ESTRUTURA DO QUADRO ===
+// Esta struct representa a organização lógica dos dados na memória
+typedef struct {
+    uint8_t origem;          // ID do nó que enviou (0-255)
+    uint8_t destino;         // ID do nó que deve receber (0-255)
+    uint8_t tamanho;         // Quantos bytes de dados úteis temos?
+    uint8_t dados[MAX_SIZE]; // O buffer da mensagem
+    uint8_t crc;             // Byte de verificação de erro
+} Quadro;
+
+// Protótipos das funções que implementaremos
+uint8_t calcula_crc8(uint8_t *buffer, int len);
+int realizar_stuffing(uint8_t *entrada, int tam_entrada, uint8_t *saida);
+int remover_stuffing(uint8_t *entrada, int tam_entrada, uint8_t *saida);
+</code></pre><div class="callout callout-note"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span><span class=callout-title-inner></span></div><div class=callout-content><p>Por que usamos <code>uint8_t</code> e não <code>char</code> ou <code>int</code>? Em protocolos de rede, cada bit conta. Um <code>int</code> pode ter 16, 32 ou 64 bits dependendo do processador. O <code>uint8_t</code> nos dá controle absoluto sobre o fluxo de bytes.</p></div></div><h2 id=cálculo-de-integridade-crc-8><span class=heading-text>Cálculo de integridade (CRC-8)</span><span class=heading-arabic>6.3</span></h2><p>A Camada Física é um ambiente hostil. Motores elétricos, cabos dobrados ou interferência de rádio podem causar um <em>Bit Flip</em> (um bit 0 virar 1). Se enviarmos "Pagar 100" e um bit mudar, pode virar "Pagar 900". Para evitar catástrofes, usamos o <strong>CRC (Cyclic Redundancy Check)</strong>.</p><p>Imagine que todos os bits da sua mensagem formam um número gigante. Nós dividimos esse número por um divisor pré-definido (Polinômio). O que nos interessa não é o resultado da divisão, mas o <strong>RESTO</strong>.</p><ul><li>O transmissor calcula o resto e o envia junto (no campo CRC).</li><li>O receptor faz a mesma conta. Se o resto dele bater com o resto enviado, a mensagem está íntegra.</li></ul><p>Vamos implementar o algoritmo bit-a-bit. Não se preocupe em decorar a matemática dos polinômios agora, foque na lógica do loop: "Para cada bit, se for 1, aplicamos o XOR".</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>// Implementação do CRC-8 (Polinômio 0x07)
+// Retorna o "checksum" de um buffer de dados
+uint8_t calcula_crc8(uint8_t *buffer, int len) {
+    uint8_t crc = 0x00;           // Começamos zerado
+    uint8_t polinomio = 0x07;     // Valor matemático padrão para misturar bits
+
+    // Passamos por cada BYTE da mensagem
+    for (int i = 0; i &lt; len; i++) {
+        crc ^= buffer[i]; // XOR inicial com o dado atual
+
+        // Agora processamos cada BIT desse byte
+        for (int j = 0; j &lt; 8; j++) {
+            // Se o bit mais à esquerda for 1 (máscara 0x80 = 10000000)
+            if (crc & 0x80) {
+                // Desloca para esquerda e aplica XOR com polinômio
+                crc = (crc &lt;&lt; 1) ^ polinomio;
+            } else {
+                // Se for 0, apenas desloca
+                crc = (crc &lt;&lt; 1);
+            }
+        }
+    }
+    return crc;
+}
+</code></pre><h2 id=enquadramento-e-byte-stuffing><span class=heading-text>Enquadramento e Byte Stuffing</span><span class=heading-arabic>6.4</span></h2><p>Esta é a parte mais importante do laboratório. Precisamos enviar nossos dados pela "física". Decidimos que todo quadro começa e termina com o byte <code>FLAG (0x7E)</code>.</p><p>Entretanto, isso nos causa um problema, e se o usuário quiser enviar uma foto ou um texto que, por acaso, contenha o byte <code>0x7E</code> no meio? Dessa forma o receptor vai apenas achar que o quadro acabou antes da hora.</p><p><strong>A Solução (Byte Stuffing):</strong> Usamos um caractere de escape (<code>ESC = 0x7D</code>). A regra é simples:</p><ol><li>Se aparecer uma <code>FLAG</code> nos dados -> Inserimos <code>[ESC] [FLAG]</code>.</li><li>Se aparecer um <code>ESC</code> nos dados -> Inserimos <code>[ESC] [ESC]</code>.</li></ol><p>Uma visualização disso pode ser vista na tabela abaixo:</p><table><thead><tr><th style=text-align:left>Dado Original</th><th style=text-align:left>Transmitido na Rede</th></tr></thead><tbody><tr><td style=text-align:left><code>[ A ] [ B ]</code></td><td style=text-align:left><code>[FLAG] [ A ] [ B ] [FLAG]</code></td></tr><tr><td style=text-align:left><code>[ A ] [FLAG] [ B ]</code></td><td style=text-align:left><code>[FLAG] [ A ] [ESC] [FLAG] [ B ] [FLAG]</code></td></tr><tr><td style=text-align:left><code>[ A ] [ESC] [ B ]</code></td><td style=text-align:left><code>[FLAG] [ A ] [ESC] [ESC] [ B ] [FLAG]</code></td></tr></tbody></table><p>Portanto, adicione esta função ao seu código para realizar a tarefa. Ela pega os dados brutos e cria um "buffer seguro" para transmissão.</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>// Recebe dados brutos -> Retorna dados codificados com Flags e Escapes
+// Retorna o tamanho do buffer de saída
+int realizar_stuffing(uint8_t *entrada, int tam_entrada, uint8_t *saida) {
+    int j = 0; // Cursor do buffer de saída
+    
+    // 1. Abre o Quadro
+    saida[j++] = FLAG;
+
+    // 2. Processa o recheio (Payload + Cabeçalhos)
+    for (int i = 0; i &lt; tam_entrada; i++) {
+        uint8_t byte_atual = entrada[i];
+
+        // Se for um caractere especial, precisamos escapar!
+        if (byte_atual == FLAG || byte_atual == ESC) {
+            saida[j++] = ESC;         // Avisa: "O próximo é dado, não comando"
+            saida[j++] = byte_atual;  // Copia o dado
+        } else {
+            saida[j++] = byte_atual;  // Copia normal
+        }
+    }
+
+    // 3. Fecha o Quadro
+    saida[j++] = FLAG;
+    
+    return j; // Retorna o tamanho total para enviarmos na rede
+}
+</code></pre><p>Em contrapartida, o receptor deve ser capaz de remover essa proteção para ler a mensagem original. Portanto, adicione a função abaixo:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>// Recebe dados da rede -> Remove Escapes e Flags -> Retorna dados limpos
+int remover_stuffing(uint8_t *entrada, int tam_entrada, uint8_t *saida) {
+    int j = 0; // Cursor de saída (dados limpos)
+    int i = 0; // Cursor de entrada (rede)
+    
+    // Pula a FLAG inicial se houver
+    if (tam_entrada > 0 && entrada[0] == FLAG) i++;
+
+    while (i &lt; tam_entrada) {
+        uint8_t byte_atual = entrada[i];
+
+        // Se achou FLAG de fim, terminamos
+        if (byte_atual == FLAG && i == tam_entrada - 1) break;
+
+        // LÓGICA DO DESTUFFING
+        if (byte_atual == ESC) {
+            i++; // Pula o ESC
+            // E grava o próximo byte obrigatoriamente (mesmo que seja uma FLAG)
+            if (i &lt; tam_entrada) {
+                saida[j++] = entrada[i];
+            }
+        } else {
+            // Byte comum
+            saida[j++] = byte_atual;
+        }
+        i++;
+    }
+    return j; // Tamanho real da mensagem recuperada
+}
+</code></pre><h2 id=simulação><span class=heading-text>Simulação</span><span class=heading-arabic>6.5</span></h2><p>Agora vamos juntar todas as peças num fluxo lógico de execução. Nosso <code>main</code> vai simular a vida de um pacote: <strong>Nascer (Usuário) -> Ser Protegido (Enlace) -> Viajar (Rede) -> Ser Recebido (Destino).</strong></p><pre class="line-numbers language-c" data-lang=C><code class=language-c>int main() {
+    char mensagem_usuario[MAX_SIZE];
+    int id_destino;
+
+    // =============================================================
+    // 1. CAMADA DE APLICAÇÃO (Input do Usuário)
+    // =============================================================
+    printf("--- SIMULADOR DE ENLACE ---\n");
+    printf("Digite sua mensagem: ");
+    fgets(mensagem_usuario, MAX_SIZE, stdin);
+    mensagem_usuario[strcspn(mensagem_usuario, "\n")] = 0; // Remove \n
+    
+    printf("Digite o ID do Destino (Ex: 2): ");
+    scanf("%d", &id_destino);
+
+    // =============================================================
+    // 2. ENCAPSULAMENTO (Montando o Quadro)
+    // =============================================================
+    Quadro q_envio;
+    q_envio.origem = 1; // Vamos fingir que somos o nó 1
+    q_envio.destino = (uint8_t)id_destino;
+    q_envio.tamanho = strlen(mensagem_usuario);
+    memcpy(q_envio.dados, mensagem_usuario, q_envio.tamanho);
+    
+    // Passo crucial: Calcular o CRC sobre os dados antes de enviar
+    q_envio.crc = calcula_crc8(q_envio.dados, q_envio.tamanho);
+
+    printf("\n[TRANSMISSOR] Quadro montado.\n");
+    printf("   > Payload: %s\n", q_envio.dados);
+    printf("   > CRC Calculado: 0x%02X\n", q_envio.crc);
+
+    // =============================================================
+    // 3. SERIALIZAÇÃO E STUFFING (Preparando para o fio)
+    // =============================================================
+    // Primeiro, transformamos a struct em um array de bytes bruto
+    uint8_t buffer_bruto[MAX_SIZE + 10];
+    int k = 0;
+    buffer_bruto[k++] = q_envio.origem;
+    buffer_bruto[k++] = q_envio.destino;
+    buffer_bruto[k++] = q_envio.tamanho;
+    for(int i=0; i&lt;q_envio.tamanho; i++) buffer_bruto[k++] = q_envio.dados[i];
+    buffer_bruto[k++] = q_envio.crc;
+
+    // Agora aplicamos o Stuffing
+    uint8_t buffer_rede[MAX_SIZE * 2]; // Dobro do tamanho por segurança
+    int tam_rede = realizar_stuffing(buffer_bruto, k, buffer_rede);
+
+    printf("\n[REDE FÍSICA] Enviando bits pelo fio...\n   > Bytes: ");
+    for(int i=0; i&lt;tam_rede; i++) printf("%02X ", buffer_rede[i]);
+    printf("\n");
+
+    // =============================================================
+    // 4. SIMULAÇÃO DE ERRO (Opcional)
+    // =============================================================
+    char simular_erro;
+    printf("\n[DEUS] Deseja interferir no sinal e corromper um bit? (s/n): ");
+    scanf(" %c", &simular_erro);
+    
+    if (simular_erro == 's' || simular_erro == 'S') {
+        // Inverte bits no meio do buffer (corrompe o payload)
+        buffer_rede[tam_rede/2] ^= 0xFF; 
+        printf("[ERRO] Raio cósmico atingiu o cabo! Dados alterados.\n");
+    }
+
+    // =============================================================
+    // 5. RECEPÇÃO E VALIDAÇÃO
+    // =============================================================
+    uint8_t buffer_recebido[MAX_SIZE + 10];
+    int tam_rec = remover_stuffing(buffer_rede, tam_rede, buffer_recebido);
+
+    // Reconstrói a struct a partir dos bytes
+    Quadro q_rec;
+    int cursor = 0;
+    q_rec.origem = buffer_recebido[cursor++];
+    q_rec.destino = buffer_recebido[cursor++];
+    q_rec.tamanho = buffer_recebido[cursor++];
+    
+    for(int i=0; i&lt;q_rec.tamanho; i++) q_rec.dados[i] = buffer_recebido[cursor++];
+    
+    uint8_t crc_recebido = buffer_recebido[cursor++]; // O CRC que veio no pacote
+
+    // VALIDAÇÃO FINAL
+    printf("\n[RECEPTOR] Quadro recebido de %d.\n", q_rec.origem);
+    
+    // O Receptor calcula o CRC baseado no que ELE ouviu
+    uint8_t crc_novo = calcula_crc8(q_rec.dados, q_rec.tamanho);
+
+    if (crc_novo == crc_recebido) {
+        q_rec.dados[q_rec.tamanho] = '\0'; // Finaliza string para imprimir
+        printf("[SUCESSO] Integridade verificada. Mensagem: \"%s\"\n", q_rec.dados);
+    } else {
+        printf("[FALHA] Erro de CRC! Esperado 0x%02X, calculado 0x%02X.\n", crc_recebido, crc_novo);
+        printf("[AÇÃO] Quadro descartado silenciosamente.\n");
+    }
+
+    return 0;
+}
+</code></pre><h2 id=executando-e-testando><span class=heading-text>Executando e Testando</span><span class=heading-arabic>6.6</span></h2><ol><li>Compile o código: <code>gcc main.c -o simulador</code></li><li>Execute: <code>./simulador</code> <br><br></li></ol><ul><li><strong>Cenário de Teste 1: Sucesso</strong><ul><li>Tente enviar a mensagem <code>Ola</code>. Não solicite erro.</li><li>Você verá que o CRC calculado pelo transmissor será idêntico ao recalculado pelo receptor.</li></ul></li><li><strong>Cenário de Teste 2: Byte Stuffing</strong><ul><li>Tente enviar a mensagem: <code>Ola ~ Mundo</code>.</li><li>O caractere <code>~</code> é a nossa FLAG (<code>0x7E</code>).</li><li>Observe na saída <code>[REDE FÍSICA]</code> que o código substituirá o <code>7E</code> por <code>7D 7E</code>. O receptor, porém, mostrará a mensagem limpa no final. Isso prova que o enquadramento funcionou.</li></ul></li><li><strong>Cenário de Teste 3: Detecção de Erro</strong><ul><li>Envie qualquer mensagem e responda 's' (sim) para simular erro.</li><li>O programa irá alterar um byte aleatório durante a "transmissão". O receptor notará que o CRC calculado não bate com o recebido e rejeitará o pacote.</li></ul></li></ul><h2 id=próximos-passos><span class=heading-text>Próximos passos</span><span class=heading-arabic>6.7</span></h2><div class="callout callout-warning"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span><span class=callout-title-inner>Conteúdo em desenvolvimento!</span></div><div class=callout-content><p>Este conteúdo ainda não foi finalizado. Assim que estiver completo, este aviso será atualizado com o link correspondente.</p></div></div></div></article><footer class=footer><p>© 2025 · <a href=#>Gabriel Soares Baptista</a></p></footer></main></div><script>const toggle=document.querySelector(`.mobile-menu-toggle`),sidebar=document.querySelector(`.sidebar`),overlay=document.querySelector(`.mobile-menu-overlay`);function openMenu(){sidebar.classList.add(`open`),overlay.classList.add(`open`),toggle.classList.add(`open`),document.body.style.overflow=`hidden`}function closeMenu(){sidebar.classList.remove(`open`),overlay.classList.remove(`open`),toggle.classList.remove(`open`),document.body.style.overflow=``}toggle.addEventListener(`click`,()=>{sidebar.classList.contains(`open`)?closeMenu():openMenu()}),overlay.addEventListener(`click`,closeMenu);</script><script src=/js/bundle.min.js></script><script>document.addEventListener(`DOMContentLoaded`,function(){renderMathInElement(document.body,{delimiters:[{left:`$$`,right:`$$`,display:!0},{left:`$`,right:`$`,display:!1},{left:`\\(`,right:`\\)`,display:!1},{left:`\\[`,right:`\\]`,display:!0}],throwOnError:!1})});</script><script src=https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-clike.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-perl.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-java.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup-templating.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-php.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.js></script><script>document.addEventListener(`DOMContentLoaded`,function(){let isSubcourse=!1,courseName=`Redes`;CourseForgeNav.applyDynamicBreadcrumbs(`.breadcrumb`,!1),CourseForgeNav.initSidebar(),CourseForgeNav.initScrollSpy(),CourseForgeUI.initCopyButtons()});function handleBackNavigation(){let isSubcourse=!1,dynamic=CourseForgeNav.getBackLink(`contents.html`,`Voltar`,!1);window.location.href=dynamic.url}</script></body></html>

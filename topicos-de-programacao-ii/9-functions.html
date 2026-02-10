@@ -1,0 +1,206 @@
+<!doctype html><html lang=pt-BR><meta charset=UTF-8><meta content="width=device-width,initial-scale=1.0" name=viewport><title>Toposia - Tópicos de Programação II (TEP II)</title><link media="(prefers-color-scheme: light)" href=/img/dark-favicon.svg rel=icon><link media="(prefers-color-scheme: dark)" href=/img/light-favicon.svg rel=icon><link href=https://fonts.googleapis.com rel=preconnect><link crossorigin href=https://fonts.gstatic.com rel=preconnect><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel=stylesheet><link href=/css/bundle.min.css rel=stylesheet><link href=https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.css rel=stylesheet><script src=https://unpkg.com/lucide@latest></script></head><body><div class=page-wrapper><nav class=sidebar><div class=sidebar-content><header class=sidebar-title-section><a class=course-title-link href=contents.html> <h1 class=sidebar-course-title>Tópicos de Programação II (TEP II)</h1> </a><div class=sidebar-ornament>❧</div></header><section class=sidebar-toc-section><h2 class=toc-header>Tabela de Conteúdos</h2><ol class=toc-list><li class="toc-item level-2"><a href=#funções>9.1. Funções</a></li><li class="toc-item level-2"><a href=#estrutura-e-componentes-das-funções>9.2. Estrutura e Componentes das Funções</a></li><li class="toc-item level-3"><a href=#parâmetros-da-função>9.2.1. Parâmetros da Função</a></li><li class="toc-item level-4"><a href=#funções-sem-lista-de-parâmetros>9.2.1.1. Funções sem lista de parâmetros</a></li><li class="toc-item level-3"><a href=#corpo-da-função>9.2.2. Corpo da Função</a></li><li class="toc-item level-4"><a href=#generalidade-e-io-em-funções>9.2.2.1. Generalidade e I/O em Funções</a></li><li class="toc-item level-3"><a href=#retorno-da-função>9.2.3. Retorno da Função</a></li><li class="toc-item level-4"><a href=#funções-sem-retorno-codevoidcode>9.2.3.3. Limitações e Estruturas</a></li><li class="toc-item level-2"><a href=#passagem-de-parâmetros-avançada>9.3. Passagem de Parâmetros Avançada</a></li><li class="toc-item level-3"><a href=#passagem-por-valor-vs-referência>9.3.1. Passagem por Valor vs. Referência</a></li><li class="toc-item level-3"><a href=#passagem-de-arrays-como-parâmetros>9.3.2. Passagem de Arrays como Parâmetros</a></li><li class="toc-item level-4"><a href=#arrays-multidimensionais-matrizes>9.3.2.1. Arrays Multidimensionais (Matrizes)</a></li></ol></section><nav class=sidebar-nav-section><a class="sidebar-nav-link prev" href=8-strings.html><i class=nav-icon data-lucide=chevron-left></i> Arrays de Caracteres (Strings)</a><a class="sidebar-nav-link back" href=javascript:void(0) onclick=handleBackNavigation()><i class=nav-icon data-lucide=arrow-left></i> Voltar</a></nav></div></nav><button aria-label=Menu class=mobile-menu-toggle><div class=hamburger-container><span class=hamburger-line></span><span class=hamburger-line></span><span class=hamburger-line></span></div></button><button aria-label="Alternar Barra Lateral" class=sidebar-toggle onclick=CourseForgeNav.toggleSidebar()><i class=toggle-icon data-lucide=chevron-left></i></button><div class=mobile-menu-overlay></div><main class=main-content><article class=article><header class=article-header><span class=chapter-number>9</span><h1 class=article-title><span class="title-ornament left">❧</span> <span class=title-text>Funções</span> <span class="title-ornament right">❧</span></h1><p class=article-date>10/02/2026</p><nav aria-label=Breadcrumb class=breadcrumb><a class=breadcrumb-link href=contents.html>Tópicos de Programação II</a><span class=breadcrumb-separator><i class=breadcrumb-icon data-lucide=chevron-right></i></span><a class=breadcrumb-link href=contents.html#part-II>II - Linguagem C</a><span class=breadcrumb-separator><i class=breadcrumb-icon data-lucide=chevron-right></i></span><span class=breadcrumb-current>Funções</span></nav></header><div class=article-body><h2 id=funções><span class=heading-text>Funções</span><span class=heading-arabic>9.1</span></h2><p>Uma <strong>função</strong> nada mais é do que um bloco de código, composto por declarações e comandos, que pode ser nomeado e invocado de dentro de um programa. Em termos práticos, trata-se de uma sequência de instruções que recebe um nome identificador e pode ser chamada em qualquer parte do sistema, quantas vezes forem necessárias, durante a sua execução.</p><p>A linguagem <strong>C</strong> já possui inúmeras funções implementadas em suas bibliotecas padrão, as quais você tem utilizado constantemente, como as funções de entrada e saída <code>scanf()</code> e <code>printf()</code>. Como programador, você não precisa conhecer o código interno dessas funções para utilizá-las; basta compreender seu nome, sua finalidade e a forma correta de chamá-las.</p><p>Este capítulo apresenta os conceitos e detalhes técnicos fundamentais para que você possa criar suas próprias funções. Ao final deste estudo, você será capaz de:</p><ul><li><strong>Declarar</strong> e estruturar uma nova função.</li><li>Definir e manipular os <strong>parâmetros</strong> de entrada.</li><li>Estabelecer o tipo de <strong>retorno</strong> de uma função.</li><li>Compreender e aplicar a <strong>passagem de parâmetros por valor</strong>.</li><li>Dominar a <strong>passagem de parâmetros por referência</strong>.</li><li>Utilizar corretamente o <strong>operador de seta</strong>.</li><li>Implementar o conceito de <strong>recursão</strong> em suas funções.</li></ul><div class="callout callout-tip"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .5 2.2 1.5 3.1.7.7 1.3 1.5 1.5 2.4"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span><span class=callout-title-inner>Modularização</span></div><div class=callout-content><p>O uso de funções é a base da programação procedural e modular. Ele permite que você decomponha problemas complexos em módulos menores, mais simples de resolver, testar e manter.</p></div></div><h2 id=estrutura-e-componentes-das-funções><span class=heading-text>Estrutura e Componentes das Funções</span><span class=heading-arabic>9.2</span></h2><p>Para que você possa desenvolver programas modulares e eficientes, é essencial compreender os detalhes técnicos da construção de uma função: desde a declaração rigorosa de seus parâmetros até a lógica de processamento em seu corpo e a devolução de resultados.</p><h3 id=parâmetros-da-função><span class=heading-text>Parâmetros da Função</span><span class=heading-arabic>9.2.1</span></h3><p>Diferentemente da declaração de variáveis comuns, onde é possível agrupar várias delas sob um mesmo especificador (como <code>int x, y;</code>), na lista de parâmetros de uma função você deve obrigatoriamente especificar o tipo de <strong>cada variável individualmente</strong>.</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>// Declaração CORRETA de parâmetros
+int soma(int x, int y){
+   return x + y;
+}
+
+// Declaração ERRADA de parâmetros
+int soma(int x, y){ // O compilador não saberá o tipo de 'y'
+   return x + y;
+}
+</code></pre><h4 id=funções-sem-lista-de-parâmetros><span class=heading-text>Funções sem lista de parâmetros</span><span class=heading-arabic>9.2.1.1</span></h4><p>Existem situações em que uma função não necessita de dados de entrada para operar. Nesses casos, a linguagem <strong>C</strong> oferece duas abordagens, que possuem uma diferença técnica sutil, porém importante:</p><ul><li><strong>Lista vazia</strong>: <code>void imprime()</code>. O compilador não especifica parâmetros, permitindo que a função seja chamada com argumentos, embora ela não consiga acessá-los.</li><li><strong>Uso do void</strong>: <code>void imprime(void)</code>. Esta é a forma mais rigorosa; o programa acusará um erro caso você tente passar qualquer valor para a função.</li></ul><p>Observe a diferença de comportamento no exemplo abaixo:</p><div style=gap:2%;display:flex><div style=width:49%><pre class="line-numbers language-c" data-lang=C><code class=language-c>
+// Sem void
+#include &lt;stdio.h>
+#include &lt;stdlib.h>
+
+void imprime(){
+   printf("Teste de funcao\n");
+}
+
+int main(){
+   imprime();       // Correto
+   imprime(5);      // Compila (mas ignora o 5)
+   imprime(5, 'a'); // Compila (mas ignora)
+   system("pause");
+   return 0;
+}
+</code></pre></div><div style=width:49%><pre class="line-numbers language-c" data-lang=C><code class=language-c>
+// Com void
+#include &lt;stdio.h>
+#include &lt;stdlib.h>
+
+void imprime(void){
+   printf("Teste de funcao\n");
+}
+
+int main(){
+   imprime();       // Correto
+   imprime(5);      // ERRO de compilação
+   imprime(5, 'a'); // ERRO de compilação
+   system("pause");
+   return 0;
+}
+</code></pre></div></div><div class="callout callout-important"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span><span class=callout-title-inner>Escopo de Parâmetros</span></div><div class=callout-content><p>Todo parâmetro de uma função é considerado uma <strong>variável local</strong>. Isso significa que sua validade e acesso estão restritos exclusivamente ao interior da função na qual foi declarado.</p></div></div><h3 id=corpo-da-função><span class=heading-text>Corpo da Função</span><span class=heading-arabic>9.2.2</span></h3><p>O corpo de uma função é o local onde a tarefa pretendida é efetivamente definida e executada. Ele é composto por uma sequência de <strong>declarações</strong> (variáveis, constantes, arrays) e uma sequência de <strong>comandos</strong> (condicionais, repetições, chamadas de outras funções).</p><p>Toda a lógica que você aplicou na função <code>main()</code> até agora pode ser transportada para funções criadas por você. O objetivo é que cada função realize uma <strong>tarefa específica e bem definida</strong>.</p><h4 id=generalidade-e-io-em-funções><span class=heading-text>Generalidade e I/O em Funções</span><span class=heading-arabic>9.2.2.1</span></h4><p>Uma boa prática de programação é manter as funções "genéricas". Isso significa evitar operações de entrada (<code>scanf</code>) e saída (<code>printf</code>) dentro de funções de processamento, deixando que a função que a chamou (geralmente a <code>main</code>) cuide da interação com o usuário.</p><p>Compare o cálculo de um fatorial realizado diretamente na <code>main</code> versus em uma função própria:</p><div style=gap:2%;display:flex><div style=width:49%><pre class="line-numbers language-c" data-lang=C><code class=language-c>// Fatorial na main()
+#include &lt;stdio.h>
+#include &lt;stdlib.h>
+
+int main(){
+   printf("Digite um numero inteiro positivo:");
+   int x;
+   scanf("%d", &x);
+   int i, f = 1;
+   for (i = 1; i &lt;= x; i++)
+       f = f * i;
+   printf("O fatorial de %d eh: %d\", x, f);
+   system("pause");
+   return 0;
+}
+</code></pre></div><div style=width:49%><pre class="line-numbers language-c" data-lang=C><code class=language-c>// Fatorial em função PRÓPRIA
+#include &lt;stdio.h>
+#include &lt;stdlib.h>
+
+int fatorial(int n){
+   int i, f = 1;
+   for (i = 1; i &lt;= n; i++)
+       f = f * i;
+   return f; // Retorna apenas o resultado
+}
+
+int main(){
+   int x;
+   scanf("%d", &x);
+   int fat = fatorial(x); // I/O fica na main
+   printf("O fatorial de %d eh: %d\n", x, fat);
+   system("pause");
+   return 0;
+}
+</code></pre></div></div><p>Embora não seja proibido realizar leituras e escritas dentro de funções, você deve fazê-lo apenas quando esse for o <strong>objetivo primordial</strong> da função, como em um menu de opções:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>#include &lt;stdio.h>
+#include &lt;stdlib.h>
+
+int menu(){
+   int i;
+   do {
+       printf("Escolha uma opção:\n");
+       printf("(1) Opcao 1\n");
+       printf("(2) Opcao 2\n");
+       printf("(3) Opcao 3\n");
+       scanf("%d", &i);
+   } while ((i &lt; 1) || (i > 3));
+   return i;
+}
+
+int main(){
+   int op = menu();
+   printf("Vc escolheu a Opcao %d.\n", op);
+   system("pause");
+   return 0;
+}
+</code></pre><h3 id=retorno-da-função><span class=heading-text>Retorno da Função</span><span class=heading-arabic>9.2.3</span></h3><p>O retorno é o mecanismo pelo qual uma função devolve o resultado de seu processamento para quem a invocou. O <code>tipo_retornado</code> estabelecido na declaração pode ser qualquer tipo válido em <strong>C</strong>, desde tipos básicos (<code>int</code>, <code>char</code>, <code>float</code>, <code>void</code>, ponteiros) até tipos definidos pelo programador (<code>struct</code>).</p><h4 id=funções-sem-retorno-codevoidcode><span class=heading-text>Funções sem retorno (<code>void</code>)</span><span class=heading-arabic>9.2.3.1</span></h4><p>Quando uma função deve apenas executar uma ação (como imprimir algo) sem devolver um valor, utiliza-se o tipo <strong><code>void</code></strong> (tipo vazio).</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>void imprime(int n){
+   int i;
+   for (i = 1; i &lt;= n; i++)
+       printf("Linha %d \n", i);
+}
+</code></pre><h4 id=o-comando-codereturncode><span class=heading-text>O comando <code>return</code></span><span class=heading-arabic>9.2.3.2</span></h4><p>Se a função não for <code>void</code>, ela deve obrigatoriamente utilizar o comando <code>return</code> seguido de uma expressão compatível com o tipo de retorno declarado.</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>#include &lt;stdio.h>
+#include &lt;stdlib.h>
+
+int soma(int x, int y){
+   return x + y; // Devolve a soma
+}
+
+int main(){
+   int a = 10, b = 20;
+   // A chamada pode ser usada diretamente em outras funções
+   printf("Soma = %d\n", soma(a, b)); 
+   system("pause");
+   return 0;
+}
+</code></pre><div class="callout callout-warning"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span><span class=callout-title-inner>Encerramento Imediato</span></div><div class=callout-content><p>Assim que o programa atinge um comando <code>return</code>, a função é <strong>encerrada instantaneamente</strong>, ignorando qualquer código que venha abaixo. Você pode usar vários <code>return</code> em uma função (em condicionais, por exemplo), mas é recomendado usar apenas um para manter a clareza do código.</p></div></div><div style=gap:2%;display:flex><div style=width:49%><pre class="line-numbers language-c" data-lang=C><code class=language-c>
+// Vários comandos return
+int maior(int x, int y){
+   if(x > y)
+       return x;
+   else
+       return y;
+   printf("Jamais serei lido"); // Inalcançável
+}
+</code></pre></div><div style=width:49%><pre class="line-numbers language-c" data-lang=C><code class=language-c>
+// Único return (Recomendado)
+int maior(int x, int y){
+   int z;
+   if(x > y) z = x;
+   else z = y;
+   return z;
+}
+</code></pre></div></div><h4 id=limitações-e-estruturas><span class=heading-text>Limitações e Estruturas</span><span class=heading-arabic>9.2.3.3</span></h4><p>A linguagem <strong>C</strong> não permite que uma função retorne um <strong>array</strong> diretamente, pois ela não suporta atribuição direta entre arrays. Contudo, você pode contornar essa limitação inserindo o array dentro de uma <code>struct</code>, já que estruturas permitem atribuição e cópia de conteúdo.</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>struct vetor {
+   int v[5];
+};
+
+struct vetor retorna_array(){
+   struct vetor aux = {1, 2, 3, 4, 5};
+   return aux; // Retorna a estrutura contendo o array
+}
+</code></pre><h2 id=passagem-de-parâmetros-avançada><span class=heading-text>Passagem de Parâmetros Avançada</span><span class=heading-arabic>9.3</span></h2><p>Para desenvolver funções robustas e eficientes em <strong>C</strong>, você deve dominar como o computador manipula diferentes tipos de dados durante a execução. A escolha entre passar uma cópia do valor ou uma referência direta à memória altera o desempenho e o comportamento do seu software.</p><h3 id=passagem-por-valor-vs-referência><span class=heading-text>Passagem por Valor vs. Referência</span><span class=heading-arabic>9.3.1</span></h3><p>Na passagem <strong>por valor</strong>, uma cópia da variável é enviada; alterações dentro da função não afetam o original. Na passagem <strong>por referência</strong>, você envia o endereço de memória, permitindo que a função modifique a variável original fora de seu escopo.</p><p>No exemplo a seguir, a função <code>Troca</code> tenta permutar dois valores. Observe como apenas a versão por referência obtém sucesso em alterar as variáveis <code>x</code> e <code>y</code> da função <code>main()</code>:</p><div style=gap:2%;display:flex><div style=width:49%><pre class="line-numbers language-c" data-lang=C><code class=language-c>// Por valor
+#include &lt;stdio.h>
+#include &lt;stdlib.h>
+
+void Troca(int a, int b){
+   int temp;
+   temp = a;
+   a = b;
+   b = temp;
+   printf("Dentro: %d e %d\n", a, b);
+}
+
+int main(){
+   int x = 2, y = 3;
+   printf("Antes: %d e %d\n", x, y);
+   Troca(x, y);
+   printf("Depois: %d e %d\n", x, y);
+   system("pause");
+   return 0;
+}
+// Saída: Antes 2,3 | Dentro 3,2 | Depois 2,3
+</code></pre></div><div style=width:49%><pre class="line-numbers language-c" data-lang=C><code class=language-c>// Por referência
+#include &lt;stdio.h>
+#include &lt;stdlib.h>
+
+void Troca(int *a, int *b){
+   int temp;
+   temp = *a;
+   *a = *b;
+   *b = temp;
+   printf("Dentro: %d e %d\n", *a, *b);
+}
+
+int main(){
+   int x = 2, y = 3;
+   printf("Antes: %d e %d\n", x, y);
+   Troca(&x, &y);
+   printf("Depois: %d e %d\n", x, y);
+   system("pause");
+   return 0;
+}
+// Saída: Antes 2,3 | Dentro 3,2 | Depois 3,2
+</code></pre></div></div><h3 id=passagem-de-arrays-como-parâmetros><span class=heading-text>Passagem de Arrays como Parâmetros</span><span class=heading-arabic>9.3.2</span></h3><p>Diferente de variáveis simples, os <strong>arrays são sempre passados por referência</strong> para uma função. Isso ocorre para evitar a cópia custosa de grandes volumes de dados, o que prejudicaria o desempenho do programa.</p><p>Quando você passa um array, o que a função recebe é o endereço do seu primeiro elemento. Por convenção, você deve sempre passar um segundo parâmetro indicando o tamanho do array, já que a função não consegue deduzi-lo sozinha.</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>#include &lt;stdio.h>
+#include &lt;stdlib.h>
+
+// n é um ponteiro para o início do array
+void imprime (int *n, int m){
+   int i;
+   for (i = 0; i &lt; m; i++)
+       printf("%d \n", n[i]); // Acesso via colchetes continua válido
+}
+
+int main(){
+   int v[5] = {1, 2, 3, 4, 5};
+   imprime(v, 5); // Passa apenas o nome do array
+   system("pause");
+   return 0;
+}
+</code></pre><div class="callout callout-important"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span><span class=callout-title-inner>Notação de Arrays</span></div><div class=callout-content><p>Na chamada da função, você deve passar apenas o <strong>nome do array</strong>, sem colchetes, sem índices e sem o operador <code>&</code>. O nome do array, por definição, já representa seu endereço na memória.</p></div></div><h4 id=arrays-multidimensionais-matrizes><span class=heading-text>Arrays Multidimensionais (Matrizes)</span><span class=heading-arabic>9.3.2.1</span></h4><p>Para matrizes, você deve obrigatoriamente especificar o tamanho de todas as dimensões, <strong>exceto a primeira</strong>. Isso é necessário para que o compilador saiba como calcular o "salto" de memória entre as linhas, tratando a matriz como um "array de arrays".</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>// É necessário informar o número de colunas [2]
+void imprime_matriz(int m[][2], int n){
+   int i, j;
+   for (i = 0; i &lt; n; i++)
+       for (j = 0; j &lt; 2; j++)
+           printf("%d \n", m[i][j]);
+}
+</code></pre></div></article><footer class=footer><p>© 2025 · <a href=#>Gabriel Soares Baptista</a></p></footer></main></div><script>const toggle=document.querySelector(`.mobile-menu-toggle`),sidebar=document.querySelector(`.sidebar`),overlay=document.querySelector(`.mobile-menu-overlay`);function openMenu(){sidebar.classList.add(`open`),overlay.classList.add(`open`),toggle.classList.add(`open`),document.body.style.overflow=`hidden`}function closeMenu(){sidebar.classList.remove(`open`),overlay.classList.remove(`open`),toggle.classList.remove(`open`),document.body.style.overflow=``}toggle.addEventListener(`click`,()=>{sidebar.classList.contains(`open`)?closeMenu():openMenu()}),overlay.addEventListener(`click`,closeMenu);</script><script src=/js/bundle.min.js></script><script>document.addEventListener(`DOMContentLoaded`,function(){renderMathInElement(document.body,{delimiters:[{left:`$$`,right:`$$`,display:!0},{left:`$`,right:`$`,display:!1},{left:`\\(`,right:`\\)`,display:!1},{left:`\\[`,right:`\\]`,display:!0}],throwOnError:!1})});</script><script src=https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-clike.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-perl.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-java.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup-templating.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-php.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.js></script><script>document.addEventListener(`DOMContentLoaded`,function(){let isSubcourse=!1,courseName=`Tópicos de Programação II (TEP II)`;CourseForgeNav.applyDynamicBreadcrumbs(`.breadcrumb`,!1),CourseForgeNav.initSidebar(),CourseForgeNav.initScrollSpy(),CourseForgeUI.initCopyButtons()});function handleBackNavigation(){let isSubcourse=!1,dynamic=CourseForgeNav.getBackLink(`contents.html`,`Voltar`,!1);window.location.href=dynamic.url}</script></body></html>

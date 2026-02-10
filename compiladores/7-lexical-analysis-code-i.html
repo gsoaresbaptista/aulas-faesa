@@ -1,0 +1,239 @@
+<!doctype html><html lang=pt-BR><meta charset=UTF-8><meta content="width=device-width,initial-scale=1.0" name=viewport><title>Toposia - Compiladores</title><link media="(prefers-color-scheme: light)" href=/img/dark-favicon.svg rel=icon><link media="(prefers-color-scheme: dark)" href=/img/light-favicon.svg rel=icon><link href=https://fonts.googleapis.com rel=preconnect><link crossorigin href=https://fonts.gstatic.com rel=preconnect><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel=stylesheet><link href=/css/bundle.min.css rel=stylesheet><link href=https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.css rel=stylesheet><script src=https://unpkg.com/lucide@latest></script></head><body><div class=page-wrapper><nav class=sidebar><div class=sidebar-content><header class=sidebar-title-section><a class=course-title-link href=contents.html> <h1 class=sidebar-course-title>Compiladores</h1> </a><div class=sidebar-ornament>❧</div></header><section class=sidebar-toc-section><h2 class=toc-header>Tabela de Conteúdos</h2><ol class=toc-list><li class="toc-item level-2"><a href=#introdução>7.1. Introdução</a></li><li class="toc-item level-2"><a href=#definindo-o-token>7.2. Definindo o Token</a></li><li class="toc-item level-2"><a href=#o-lexer-e-o-algoritmo-de-sentinelas>7.3. O Lexer e o Algoritmo de Sentinelas</a></li><li class="toc-item level-2"><a href=#implementando-a-lógica-do-scanner>7.4. Implementando a Lógica do Scanner</a></li><li class="toc-item level-2"><a href=#entendendo-o-fluxo-de-execução>7.5. Entendendo o Fluxo de Execução</a></li><li class="toc-item level-2"><a href=#o-ponto-de-entrada-lendo-do-disco>7.6. O Ponto de Entrada: Lendo do Disco</a></li><li class="toc-item level-2"><a href=#testando-a-implementação>7.7. Testando a Implementação</a></li><li class="toc-item level-2"><a href=#próximos-passos>7.8. Próximos Passos</a></li></ol></section><nav class=sidebar-nav-section><a class="sidebar-nav-link prev" href=6-configuring-the-setup.html><i class=nav-icon data-lucide=chevron-left></i> Configurando o Setup</a><a class="sidebar-nav-link next" href=8-lexical-analysis-code-ii.html>Lab - Analisador Léxico II <i class=nav-icon data-lucide=chevron-right></i></a><a class="sidebar-nav-link back" href=javascript:void(0) onclick=handleBackNavigation()><i class=nav-icon data-lucide=arrow-left></i> Voltar</a></nav></div></nav><button aria-label=Menu class=mobile-menu-toggle><div class=hamburger-container><span class=hamburger-line></span><span class=hamburger-line></span><span class=hamburger-line></span></div></button><button aria-label="Alternar Barra Lateral" class=sidebar-toggle onclick=CourseForgeNav.toggleSidebar()><i class=toggle-icon data-lucide=chevron-left></i></button><div class=mobile-menu-overlay></div><main class=main-content><article class=article><header class=article-header><span class=chapter-number>7</span><h1 class=article-title><span class="title-ornament left">❧</span> <span class=title-text>Lab - Analisador Léxico I</span> <span class="title-ornament right">❧</span></h1><p class=article-date>29/01/2026</p><nav aria-label=Breadcrumb class=breadcrumb><a class=breadcrumb-link href=contents.html>Compiladores</a><span class=breadcrumb-separator><i class=breadcrumb-icon data-lucide=chevron-right></i></span><a class=breadcrumb-link href=contents.html#part-II>II - Análise Léxica</a><span class=breadcrumb-separator><i class=breadcrumb-icon data-lucide=chevron-right></i></span><span class=breadcrumb-current>Lab - Analisador Léxico I</span></nav></header><div class=article-body><h2 id=introdução><span class=heading-text>Introdução</span><span class=heading-arabic>7.1</span></h2><p>Agora que o nosso ambiente de desenvolvimento está devidamente configurado e o nosso sistema de build com o CMake está operacional, chegamos ao momento de sujar as mãos com código de verdade. O nosso objetivo neste laboratório é preparar o terreno para o algoritmo de análise léxica.</p><p>Um compilador não "lê" o código da mesma forma que nós lemos um livro. Para o computador, o arquivo de código fonte é apenas uma sequência longa e contínua de bytes. O trabalho do Analisador Léxico (ou Scanner) é agrupar esses caracteres em unidades mínimas de significado chamadas <strong>Tokens</strong>.</p><p>Nesta aula, não implementaremos a lógica de identificação de todos os tokens ainda. Em vez disso, focaremos na infraestrutura necessária para que isso aconteça: definiremos o que é um Token, criaremos a estrutura do nosso Lexer e implementaremos a rotina capaz de ler um arquivo de texto do disco e carregá-lo inteiramente na memória RAM, preparando o buffer para ser consumido pelo nosso algoritmo.</p><h2 id=definindo-o-token><span class=heading-text>Definindo o Token</span><span class=heading-arabic>7.2</span></h2><p>A unidade fundamental do nosso compilador é o Token. Você pode imaginar o Token como sendo a "palavra" de uma frase. Em vez de lidarmos com letras individuais 'i', 'f', '(', ')', queremos lidar com conceitos abstratos como <code>TOK_IF</code>, <code>TOK_LPAREN</code>, <code>TOK_RPAREN</code>.</p><p>Para organizar isso em C, precisamos de duas coisas fundamentais: um identificador numérico para cada tipo de token (um <code>enum</code>) e uma string que represente o nome desse token para fins de debug (um <code>char*</code>). Normalmente, programadores C escrevem isso duas vezes, uma no <code>enum</code> e outra em um array de strings. Contudo, isso viola o princípio DRY (<em>Don't Repeat Yourself</em>) e é propenso a erros. Se você adicionar um token no enum e esquecer de adicionar a string correspondente, seu compilador pode imprimir lixo de memória ao tentar debugar.</p><p>Para resolver isso de forma elegante, utilizaremos uma técnica avançada do pré-processador C chamada <strong>X-Macros</strong>.</p><p>Abra o arquivo <code>include/compiler/token.h</code> onde vamos definir uma lista mestra de tokens. A ideia é definir uma macro <code>TOKEN_LIST</code> que contém chamadas para uma macro indefinida <code>X</code>.</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>#ifndef COMPILER_TOKEN_H_
+#define COMPILER_TOKEN_H_
+
+// Lista Mestra de Tokens
+// Baseada na sintaxe: x: int = 5; if { } loop &lt; >
+#define TOKEN_LIST \
+    X(TOK_LPAREN)    X(TOK_RPAREN) \
+    X(TOK_LBRACE)    X(TOK_RBRACE) \
+    X(TOK_COLON)     X(TOK_SEMICOLON) \
+    X(TOK_COMMA)     X(TOK_EQUAL) \
+    X(TOK_PLUS)      X(TOK_MINUS) \
+    X(TOK_STAR)      X(TOK_SLASH) \
+    X(TOK_GT)        X(TOK_LT) \
+    X(TOK_ERROR)     X(TOK_EOF)
+
+// Passo 1: Definir o Enum
+typedef enum {
+#define X(name) name,
+    TOKEN_LIST
+#undef X
+} TokenType;
+
+// Passo 2: Definir o Array de Strings (para debug)
+static const char* const TokenNames[] = {
+#define X(name) #name,
+    TOKEN_LIST
+#undef X
+};
+
+// Estrutura do Token
+// Note o uso de 'String View' (ponteiro + tamanho) para evitar alocações.
+typedef struct {
+    TokenType type;
+    const char *start; // Aponta para o início do lexema no código fonte
+    int length;        // Tamanho do lexema
+    int line;          // Para mensagens de erro
+} Token;
+
+void token_print(Token *token);
+void token_println(Token *token);
+
+#endif
+</code></pre><p>Observe como é útil a utilização das X-macros para nos ajudar a evitar a repetição. Definimos a lista <code>TOKEN_LIST</code> apenas uma vez. Onde cada entrada começa com <code>X</code> seguindo e parênteses como nome que queremos dar dentro. Com essa lista definida, podemos pedir para o compilador do C expandir os elementos com padrões diferentes, que nós definimos. Vejamos como usamos nos dois casos:</p><ol><li>Na primeira passada, definimos <code>X(name)</code> como <code>name,</code>. Quando o pré-processador expande <code>TOKEN_LIST</code> dentro do <code>enum</code>, ele gera os nomes que colocamos na lista sem nenhuma informação extra se não a vírgula que colocamos, ficando <code>TOK_PLUS, TOK_IDENTIFIER, ...</code>.</li><li>Na segunda passada, redefinimos <code>X(name)</code> como <code>#name,</code> (o operador <code>#</code> transforma o argumento em string, vai colocar o nosso nome entre aspas). Dessa forma, quando expandido dentro de <code>TokenNames</code>, ele gera <code>"TOK_PLUS", "TOK_IDENTIFIER", ...</code>.</li></ol><p>Portanto, a ordem e a existência dos nomes estarão sempre garantidas de estarem sincronizadas. Necessitando que nós apenas adicionemos o token na lista principal para garantir que será criando tanto no <code>enum</code> quanto na lista de <code>TokenNames</code>.</p><p>Observem que, estamos criando um <code>enum</code> e o <code>TokenNames</code> com os memos nomes, apesar desse segundo ser uma lista de strings. Estamos fazendo isso para conseguirmos imprimir na tela o nome do Token, para nos auxiliar no debug. Dito isso, vamos implementar a função de impressão em <code>src/compiler/token.c</code>:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>#include &lt;stdio.h>
+#include "compiler/token.h"
+
+void token_print(Token *token) {
+    // %s diz apenas que é uma string fornecida por TokenNames[token->type]
+    
+    // Utilização do %.*s:
+    // O '*' diz ao printf que o tamanho da string vem de um
+    // argumento (token->length). Isso nos permite imprimir o
+    // lexema diretamente do código fonte original sem precisar
+    // copiar bytes ou alocar novas strings.
+    printf("&lt;%s, \"%.*s\">", 
+           TokenNames[token->type], 
+           token->length, 
+           token->start);
+}
+
+void token_println(Token *token) {
+    token_print(token);
+    printf("\n");
+}
+</code></pre><h2 id=o-lexer-e-o-algoritmo-de-sentinelas><span class=heading-text>O Lexer e o Algoritmo de Sentinelas</span><span class=heading-arabic>7.3</span></h2><p>Com o token definido, precisamos da estrutura que vai varrer o código fonte. O nosso analisador léxico precisa ser extremamente rápido, idealmente, para esse tipo de problema podemos esperar no melhor cenário uma complexidade $O(n)$, onde $n$ é o tamanho do arquivo fonte. Isso significa que devemos evitar cópias desnecessárias de strings e alocações de memória constantes.</p><p>Para atingir essa performance, utilizaremos uma estratégia de <strong>duas sentinelas</strong> (ponteiros) navegando sobre um único buffer gigante que contém todo o código fonte. Abra o arquivo <code>include/compiler/lexer.h</code>. Vamos definir a estrutura que manterá o estado da nossa leitura.</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>#ifndef LEXER_H_
+#define LEXER_H_
+
+#include "compiler/token.h"
+
+typedef struct {
+    const char *source;  // O código fonte completo
+    const char *start;   // Início do token atual
+    const char *current; // Cursor de leitura atual
+    int line;            // Contador de linhas
+} Lexer;
+
+void lexer_init(Lexer *lexer, const char *source);
+Token lexer_next_token(Lexer *lexer);
+
+#endif
+</code></pre><p>Visualizar como esses ponteiros funcionam é crucial. O algoritmo que utilizaremos é frequentemente chamado de Two Pointers (Dois Ponteiros). Imagine que estamos lendo a declaração <code>x: int</code>.</p><ol><li><strong>Sincronização</strong>: No início, tanto <code>start</code> quanto <code>current</code> apontam para o <code>x</code>.</li><li><strong>Avanço (Scan)</strong>: O ponteiro <code>current</code> avança, consumindo caracteres. Ele lê o x.</li><li><strong>Emissão</strong>: Ao encontrar o caractere <code>:</code>, o lexer percebe que o identificador acabou. Emitimos um token cujo lexema vai de <code>start</code> até (mas não incluindo) <code>current</code>.</li><li><strong>Reset</strong>: Após emitir o <code>token</code>, puxamos o ponteiro <code>start</code> para alcançar o <code>current</code>. Agora ambos estão prontos para começar a ler o próximo token (o dois-pontos).</li></ol><h2 id=implementando-a-lógica-do-scanner><span class=heading-text>Implementando a Lógica do Scanner</span><span class=heading-arabic>7.4</span></h2><p>Para tornar esse "balé" de ponteiros possível no código, precisamos de algumas funções auxiliares em <code>src/compiler/lexer.c</code> antes de escrevermos o loop principal. Elas servirão como nossa caixa de ferramentas para manipular a memória. Abra <code>src/compiler/lexer.c</code> e vamos implementar a lógica real.</p><p>Adicione estas funções estáticas (privadas) no topo do arquivo. Elas encapsulam a aritmética de ponteiros, tornando o código principal muito mais limpo e legível.</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>#include &lt;string.h>
+#include "compiler/lexer.h"
+
+void lexer_init(Lexer *lexer, const char *source) {
+    lexer->source = source;
+    lexer->start = source;
+    lexer->current = source;
+    lexer->line = 1;
+}
+
+// Implementaremos lexer_next_token no próximo capítulo
+Token lexer_next_token(Lexer *lexer) {
+    // Placeholder para o loop principal
+    Token token;
+    token.type = TOK_EOF;
+    return token; 
+}
+</code></pre><p>Compiladores, em sua maioria, não se importam com espaços, tabulações ou quebras de linha (com exceção de linguagens como Python). Na nossa linguagem, queremos ignorar completamente essa "sujeira" entre os tokens úteis. Ainda em <code>src/compiler/lexer.c</code>, adicione esta função. Ela é responsável por avançar o current silenciosamente sempre que encontrar formatação irrelevante.</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>// Consome espaços, tabs e quebras de linha.
+// Isso garante que o Lexer foque apenas no código útil.
+static void skip_whitespace(Lexer *lexer) {
+    for (;;) {
+        char c = *lexer->current;
+        switch (c) {
+            case ' ':
+            case '\r':
+            case '\t':
+                advance(lexer);
+                break;
+            case '\n':
+                lexer->line++; // Importante: contar linhas para mensagens de erro precisas
+                advance(lexer);
+                break;
+            default:
+                return; // Encontramos algo que não é espaço. O trabalho aqui acabou.
+        }
+    }
+}
+</code></pre><p>Agora vamos substituir aquele placeholder que deixamos anteriormente. Esta é a função que o Parser chamará repetidamente. A cada chamada, ela deve me entregar um token completo. Nesta etapa, implementaremos o reconhecimento dos símbolos da nossa linguagem (<code>:</code>, <code>=</code>, <code>{</code>, <code>}</code>, etc.), deixando identificadores e números para a próxima aula. Adicione, ainda no mesmo arquivo as funções abaixo:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>void lexer_init(Lexer *lexer, const char *source) {
+    lexer->source = source;
+    lexer->start = source;
+    lexer->current = source;
+    lexer->line = 1;
+}
+
+Token lexer_next_token(Lexer *lexer) {
+    // 1. Limpa a sujeira (espaços/tabs/newlines) antes de começar
+    skip_whitespace(lexer);
+
+    // 2. Marca o início do novo token
+    lexer->start = lexer->current;
+
+    // 3. Verifica se o arquivo acabou
+    if (is_at_end(lexer)) return make_token(lexer, TOK_EOF);
+
+    // 4. Lê o próximo caractere e decide o que fazer
+    char c = advance(lexer);
+
+    switch (c) {
+        // Delimitadores
+        case '(': return make_token(lexer, TOK_LPAREN);
+        case ')': return make_token(lexer, TOK_RPAREN);
+        case '{': return make_token(lexer, TOK_LBRACE);
+        case '}': return make_token(lexer, TOK_RBRACE);
+        case ';': return make_token(lexer, TOK_SEMICOLON);
+        case ',': return make_token(lexer, TOK_COMMA);
+
+        // Operadores e Pontuação Específica da Linguagem
+        case ':': return make_token(lexer, TOK_COLON); // Usado em "x: int"
+        case '=': return make_token(lexer, TOK_EQUAL); // Usado em "x = 5"
+        
+        // Matemática
+        case '+': return make_token(lexer, TOK_PLUS);
+        case '-': return make_token(lexer, TOK_MINUS);
+        case '*': return make_token(lexer, TOK_STAR);
+        case '/': return make_token(lexer, TOK_SLASH);
+
+        // Relacional
+        case '&lt;': return make_token(lexer, TOK_LT);
+        case '>': return make_token(lexer, TOK_GT);
+
+        // Se chegou aqui, é algo que ainda não sabemos ler (letras ou números)
+        default:
+            return error_token(lexer, "Caractere inesperado.");
+    }
+}
+</code></pre><h2 id=entendendo-o-fluxo-de-execução><span class=heading-text>Entendendo o Fluxo de Execução</span><span class=heading-arabic>7.5</span></h2><p>Você pode estar se perguntando: "Mas o código lê e para no primeiro token. E o <em>whitespace</em> que vem depois? Ele não atrapalha o próximo?". A resposta está no ciclo de chamadas. Lembre-se que lexer_next_token será chamada repetidamente dentro de um loop (veja o <code>main.c</code> abaixo).</p><ul><li><strong>Chamada 1:</strong> O Lexer é chamado. A primeira coisa que ele faz é <code>skip_whitespace</code>. Ele ignora os espaços iniciais, lê o primeiro token (digamos, <code>+</code>) e retorna. O cursor current parou após o <code>+</code>, mas antes dos próximos espaços.</li><li><strong>Chamada 2:</strong> O Lexer é chamado novamente para pegar o próximo item. A primeira coisa que ele faz? <code>skip_whitespace</code> de novo! Agora ele vai consumir os espaços que estavam depois do + até encontrar o próximo caractere útil.</li></ul><p>Assim, a cada nova chamada, a função "limpa a mesa" antes de começar a trabalhar.</p><h2 id=o-ponto-de-entrada-lendo-do-disco><span class=heading-text>O Ponto de Entrada: Lendo do Disco</span><span class=heading-arabic>7.6</span></h2><p>Agora precisamos conectar tudo no <code>src/main.c</code>. O nosso compilador deve ser capaz de receber o caminho de um arquivo como argumento via linha de comando, abrir esse arquivo, ler seu conteúdo para uma string e inicializar o lexer.</p><p>Esta é uma operação padrão em C, mas requer cuidado com a gestão de memória. Precisamos descobrir o tamanho do arquivo, alocar a memória exata necessária e garantir que a string termine com um caractere nulo <code>\0</code> para segurança.</p><p>Abra o arquivo <code>src/main.c</code> e substitua o código anterior por este:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>#include &lt;stdio.h>
+#include &lt;stdlib.h>
+#include "compiler/lexer.h"
+
+// Função auxiliar para ler todo o conteúdo de um arquivo
+static char* read_file(const char* path) {
+    FILE* file = fopen(path, "rb");
+    if (file == NULL) {
+        fprintf(stderr, "Erro: Não foi possível abrir o arquivo \"%s\".\n", path);
+        exit(74);
+    }
+
+    // Move o cursor para o final para descobrir o tamanho
+    fseek(file, 0L, SEEK_END);
+    size_t fileSize = ftell(file);
+    rewind(file); // Volta para o início
+
+    // Aloca memória: tamanho do arquivo + 1 para o caractere nulo '\0'
+    char* buffer = (char*)malloc(fileSize + 1);
+    if (buffer == NULL) {
+        fprintf(stderr, "Erro: Memória insuficiente para ler \"%s\".\n", path);
+        exit(74);
+    }
+
+    // Lê o arquivo para o buffer
+    size_t bytesRead = fread(buffer, sizeof(char), fileSize, file);
+    if (bytesRead &lt; fileSize) {
+        fprintf(stderr, "Erro: Falha na leitura do arquivo \"%s\".\n", path);
+        exit(74);
+    }
+
+    buffer[bytesRead] = '\0'; // Garante o final da string
+    fclose(file);
+    return buffer;
+}
+
+int main(int argc, char* argv[]) {
+    // Verifica se o usuário passou o argumento
+    if (argc != 2) {
+        fprintf(stderr, "Uso: compiler [caminho_do_arquivo]\n");
+        return 64;
+    }
+
+    const char* filePath = argv[1];
+    
+    // 1. Carrega o arquivo na memória
+    char* source = read_file(filePath);
+
+    // 2. Inicializa o Lexer com o código fonte
+    Lexer lexer;
+    lexer_init(&lexer, source);
+
+    printf("Sucesso! Arquivo lido e Lexer inicializado.\n");
+    printf("Conteúdo do arquivo:\n%s\n", source);
+
+    // Limpeza
+    free(source);
+    return 0;
+}
+</code></pre><p>O fluxo que implementamos aqui segue as boas práticas: alocamos exatamente a memória necessária usando <code>fseek/ftell</code> e garantimos uma sentinela nula <code>\0</code> ao final do buffer. Isso permite que nosso Lexer navegue sem medo de invadir memória proibida.</p><ol><li><strong>Verificação de Argumentos (<code>argc != 2</code>)</strong>: O programa exige exatamente um argumento além do seu próprio nome. Se o usuário digitar apenas <code>./build/compiler</code> sem um arquivo, ele receberá uma mensagem de ajuda.</li><li><strong><code>fseek</code> e <code>ftell</code>:</strong> Usamos essas funções para "viajar" até o final do arquivo e perguntar ao sistema operacional quantos bytes ele tem. Isso nos permite alocar (<code>malloc</code>) exatamente a quantidade de memória necessária, nem um byte a mais, nem a menos.</li><li><strong>Sentinela Nulo</strong>: Adicionamos manualmente <code>\0</code> ao final do buffer. Isso é crítico. As funções de string em C e o nosso futuro Lexer precisam saber onde o texto termina para não invadir memória proibida.</li></ol><h2 id=testando-a-implementação><span class=heading-text>Testando a Implementação</span><span class=heading-arabic>7.7</span></h2><p>Como ainda não implementamos identificadores ou números, testaremos apenas a estrutura de símbolos.</p><ol><li>Crie um arquivo chamado <code>teste.slang</code> na raiz do projeto (ou onde preferir) e escreva o seguinte "código" dentro dele</li></ol><pre class="line-numbers language-txt" data-lang=TXT><code class=language-txt>: = { }
++ - &lt; >
+</code></pre><ol start=2><li>Abra o terminal e recompile o projeto:</li></ol><pre class="line-numbers language-bash" data-lang=BASH><code class=language-bash>cmake --build build
+</code></pre><ol start=3><li>Execute o compilador passando o arquivo de teste:</li></ol><pre class="line-numbers language-bash" data-lang=BASH><code class=language-bash>./build/compiler teste.slang
+</code></pre><p>Se tudo estiver correto, você verá uma saída como a mostrada abaixo representando o conteúdo do seu arquivo impresso no terminal. Isso prova que nosso sistema de leitura de arquivos (IO) e a estrutura básica de memória estão prontos para receber a lógica de análise léxica restante.</p><pre class="line-numbers language-txt" data-lang=TXT><code class=language-txt>=== Iniciando Análise Léxica ===
+&lt;TOK_COLON, ":">
+&lt;TOK_EQUAL, "=">
+&lt;TOK_LBRACE, "{">
+&lt;TOK_RBRACE, "}">
+&lt;TOK_PLUS, "+">
+&lt;TOK_MINUS, "-">
+&lt;TOK_LT, "&lt;">
+&lt;TOK_GT, ">">
+&lt;TOK_EOF, "">
+=== Análise Concluída ===
+</code></pre><h2 id=próximos-passos><span class=heading-text>Próximos Passos</span><span class=heading-arabic>7.8</span></h2><p>Com a infraestrutura pronta, estamos preparados para o desafio algorítmico. No próximo capítulo, <a href=8-lexical-analysis-code-ii.html>Lab - Analisador Léxico II</a>, expandiremos o lexer_next_token para reconhecer as estruturas que faltam da nossa linguagem como os Identificadores e Literais (5, 3.14, 'a', 'b', "literal de texto"), completando nosso analisador léxico.</p></div></article><footer class=footer><p>© 2025 · <a href=#>Gabriel Soares Baptista</a></p></footer></main></div><script>const toggle=document.querySelector(`.mobile-menu-toggle`),sidebar=document.querySelector(`.sidebar`),overlay=document.querySelector(`.mobile-menu-overlay`);function openMenu(){sidebar.classList.add(`open`),overlay.classList.add(`open`),toggle.classList.add(`open`),document.body.style.overflow=`hidden`}function closeMenu(){sidebar.classList.remove(`open`),overlay.classList.remove(`open`),toggle.classList.remove(`open`),document.body.style.overflow=``}toggle.addEventListener(`click`,()=>{sidebar.classList.contains(`open`)?closeMenu():openMenu()}),overlay.addEventListener(`click`,closeMenu);</script><script src=/js/bundle.min.js></script><script>document.addEventListener(`DOMContentLoaded`,function(){renderMathInElement(document.body,{delimiters:[{left:`$$`,right:`$$`,display:!0},{left:`$`,right:`$`,display:!1},{left:`\\(`,right:`\\)`,display:!1},{left:`\\[`,right:`\\]`,display:!0}],throwOnError:!1})});</script><script src=https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-clike.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-perl.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-java.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup-templating.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-php.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.js></script><script>document.addEventListener(`DOMContentLoaded`,function(){let isSubcourse=!1,courseName=`Compiladores`;CourseForgeNav.applyDynamicBreadcrumbs(`.breadcrumb`,!1),CourseForgeNav.initSidebar(),CourseForgeNav.initScrollSpy(),CourseForgeUI.initCopyButtons()});function handleBackNavigation(){let isSubcourse=!1,dynamic=CourseForgeNav.getBackLink(`contents.html`,`Voltar`,!1);window.location.href=dynamic.url}</script></body></html>
