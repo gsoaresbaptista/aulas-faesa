@@ -1,0 +1,1449 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toposia - Processamento Digital de Sinais</title>
+    <link rel="icon" href="/aulas-faesa/img/dark-favicon.svg" media="(prefers-color-scheme: light)">
+    <link rel="icon" href="/aulas-faesa/img/light-favicon.svg" media="(prefers-color-scheme: dark)">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/aulas-faesa/css/bundle.min.css">
+    
+    
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body>
+    <script>
+        // Restore sidebar state instantly (before first paint) to avoid transition flash
+        (function() {
+            if (localStorage.getItem('cf_sidebar_hidden') === 'true') {
+                document.body.classList.add('sidebar-hidden', 'no-transition');
+            }
+            requestAnimationFrame(function() {
+                requestAnimationFrame(function() {
+                    document.body.classList.remove('no-transition');
+                });
+            });
+        })();
+    </script>
+    <div class="page-wrapper">
+        <nav class="sidebar">
+            <div class="sidebar-content">
+                <header class="sidebar-title-section">
+                    <a href="contents.html" class="course-title-link">
+                        <h1 class="sidebar-course-title">Processamento Digital de Sinais</h1>
+                    </a>
+                    <div class="sidebar-ornament">❧</div>
+                </header>
+
+                
+                <section class="sidebar-toc-section">
+                    <h2 class="toc-header">Tabela de Conteúdos</h2>
+                    <ol class="toc-list">
+                        
+                        <li class="toc-item level-2">
+                            <a href="#introdução">3.1. Introdução</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#sinais">3.1.1. Sinais</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#tamanho-do-sinal">3.1.2. Tamanho do Sinal</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#energia-do-sinal">3.1.3. Energia do Sinal</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#potência-do-sinal">3.1.4. Potência do Sinal</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#operações-com-sinais">3.2. Operações com Sinais</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#deslocamento-temporal">3.2.1. Deslocamento Temporal</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#escalonamento-temporal">3.2.2. Escalonamento Temporal</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#reversão-temporal">3.2.3. Reversão Temporal</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#operações-combinadas">3.2.4. Operações Combinadas</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#classificação-de-sinais">3.3. Classificação de Sinais</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#sinais-contínuos-e-discretos-no-tempo">3.3.1. Sinais Contínuos e Discretos no Tempo</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#sinais-analógicos-e-digitais">3.3.2. Sinais Analógicos e Digitais</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#sinais-periódicos-e-não-periódicos">3.3.3. Sinais Periódicos e Não Periódicos</a>
+                        </li>
+                        
+                        <li class="toc-item level-5">
+                            <a href="#causalidade">3.3.3.0.1. Causalidade</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#sinais-de-energia-e-potência">3.3.4. Sinais de Energia e Potência</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#sinais-determinísticos-e-aleatórios">3.3.5. Sinais Determinísticos e Aleatórios</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#alguns-modelos-úteis-de-sinais">3.4. Alguns Modelos Úteis de Sinais</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#função-degrau-unitário-latexplaceholder03db7331703442d3b6b5cbfc4801250en385">3.4.1. Função Degrau Unitário $\mu(t)$</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#a-função-impulso-unitário-latexplaceholder6cf6f9b03b854ee4a59e59b57c2281f5n531">3.4.2. A Função Impulso Unitário $\delta(t)$</a>
+                        </li>
+                        
+                        <li class="toc-item level-4">
+                            <a href="#multiplicação-de-uma-função-por-um-impulso">3.4.2.1. Multiplicação de uma Função por um Impulso</a>
+                        </li>
+                        
+                        <li class="toc-item level-4">
+                            <a href="#propriedade-de-amostragem">3.4.2.2. Propriedade de Amostragem</a>
+                        </li>
+                        
+                        <li class="toc-item level-4">
+                            <a href="#impulso-unitário-como-função-generalizada">3.4.2.3. Impulso Unitário como Função Generalizada</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#função-exponencial-latexplaceholderae263b9f000542abb4515de4547e3e5cn588">3.4.3. Função Exponencial $e^{st}$</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#funções-pares-e-ímpares">3.4.4. Funções Pares e Ímpares</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#algumas-propriedades-de-funções-pares-e-ímpares">3.4.5. Algumas Propriedades de Funções Pares e Ímpares</a>
+                        </li>
+                        
+                        <li class="toc-item level-4">
+                            <a href="#análise-de-área-sob-a-curva">3.4.5.1. Análise de Área sob a Curva</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#componentes-pares-e-ímpares-de-um-sinal">3.4.6. Componentes Pares e Ímpares de um Sinal</a>
+                        </li>
+                        
+                        <li class="toc-item level-4">
+                            <a href="#exemplo-prático-de-decomposição">3.4.6.1. Exemplo Prático de Decomposição</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#questões">3.5. Questões</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#próximos-passos">3.6. Próximos Passos</a>
+                        </li>
+                        
+                    </ol>
+                </section>
+                
+
+                <nav class="sidebar-nav-section">
+                    
+                    <a href="2-review.html" class="sidebar-nav-link prev"><i data-lucide="chevron-left" class="nav-icon"></i> Revisão - Números Complexos</a>
+                    
+                    
+                    <a href="4-systems.html" class="sidebar-nav-link next">Sistemas <i data-lucide="chevron-right" class="nav-icon"></i></a>
+                    
+                    <a href="javascript:void(0)" onclick="handleBackNavigation()"
+                        class="sidebar-nav-link back"><i data-lucide="arrow-left" class="nav-icon"></i> Voltar</a>
+                </nav>
+
+            </div>
+        </nav>
+
+        <button class="mobile-menu-toggle" aria-label="Menu">
+            <div class="hamburger-container">
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+            </div>
+        </button>
+
+        <button class="sidebar-toggle" onclick="CourseForgeNav.toggleSidebar()" aria-label="Alternar Barra Lateral">
+            <i data-lucide="chevron-left" class="toggle-icon"></i>
+        </button>
+
+        <div class="mobile-menu-overlay"></div>
+
+        <main class="main-content">
+            <article class="article">
+                <header class="article-header">
+                    <span class="chapter-number">3</span>
+                    <h1 class="article-title">
+                        <span class="title-ornament left">❧</span>
+                        <span class="title-text">Sinais</span>
+                        <span class="title-ornament right">❧</span>
+                    </h1>
+                    
+                    <p class="article-date">17/02/2026</p>
+                    
+                    
+                    <nav class="breadcrumb" aria-label="Breadcrumb">
+                        
+                        
+                        
+                        <a href="contents.html" class="breadcrumb-link">Processamento Digital de Sinais</a>
+                        
+                        <span class="breadcrumb-separator"><i data-lucide="chevron-right" class="breadcrumb-icon"></i></span>
+                        
+                        
+                        
+                        
+                        <a href="contents.html#part-II" class="breadcrumb-link">II - Análise de Sistemas LTI Contínuos</a>
+                        
+                        <span class="breadcrumb-separator"><i data-lucide="chevron-right" class="breadcrumb-icon"></i></span>
+                        
+                        
+                        
+                        <span class="breadcrumb-current">Sinais</span>
+                        
+                        
+                    </nav>
+                    
+                </header>
+                <div class="article-body">
+                    <h2 id="introdução"><span class="heading-text">Introdução</span><span class="heading-arabic">3.1</span></h2>
+<p>Neste capítulo, veremos alguns dos aspectos fundamentais dos <strong>sinais</strong>. Portanto, seremos expostos à conceitos básicos essenciais e explicações qualitativas sobre as razões e os métodos da <strong>teoria de sistemas</strong>. O objetivo é construir uma base sólida para que você possa compreender a análise que desenvolveremos ao longo do semestre.</p>
+<h3 id="sinais"><span class="heading-text">Sinais</span><span class="heading-arabic">3.1.1</span></h3>
+<p>Um <strong>sinal</strong> é um conjunto de dados ou informações qualquer. Como exemplos práticos, temos um sinal de telefone ou de televisão, o registro de vendas de uma corporação ou os valores de fechamento da bolsa de negócios, como a média do índice IBOVESPA. Em todos esses casos, os sinais são funções de uma variável independente: o <strong>tempo</strong>.</p>
+<p>Entretanto, este nem sempre é o caso. Quando uma carga elétrica é distribuída sobre um corpo, por exemplo, o sinal é a densidade de carga, sendo uma função do <strong>espaço</strong> em vez do tempo. Embora a discussão teórica se aplique de maneira equivalente a outros tipos de variáveis independentes, neste material trabalharemos quase exclusivamente com sinais que são funções do tempo.</p>
+<h3 id="tamanho-do-sinal"><span class="heading-text">Tamanho do Sinal</span><span class="heading-arabic">3.1.2</span></h3>
+<p>O tamanho de qualquer entidade é um número que indica a sua largura ou o seu comprimento. De modo geral, a <strong>amplitude</strong> de um sinal varia com o tempo.</p>
+<p>Surge então a seguinte questão: como um sinal que existe em um certo intervalo de tempo, com amplitude variante, pode ser medido por um número que indique o seu tamanho ou a força desse sinal? Tal medida deve considerar não apenas a amplitude do sinal, mas também a sua <strong>duração</strong>.</p>
+<div class="callout callout-example">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M12 11V7"/><path d="M9 11l3 3 3-3"/></svg></span>
+    <span class="callout-title-inner">Analogia com o corpo humano</span>
+  </div>
+  <div class="callout-content">
+<p>Se você quisesse utilizar um único número $V$ como medida do tamanho de um ser humano, deveria considerar não somente seu peso, mas também sua altura.</p>
+<p>Se considerarmos que a forma da pessoa é um cilindro cuja variável é o raio $r$ (o qual varia com a altura $h$), então uma possível medida do tamanho de uma pessoa de altura $H$ é o volume $V$ da pessoa.</p>
+  </div>
+</div>
+<p>Matematicamente, essa relação é dada por:</p>
+<p>$$
+V = \pi \int_{0}^{H} r^2(h) dh
+$$</p>
+<h3 id="energia-do-sinal"><span class="heading-text">Energia do Sinal</span><span class="heading-arabic">3.1.3</span></h3>
+<p>Seguindo esse raciocínio,  poderiamos considerar a área abaixo do sinal $x(t)$ como uma possível medida de seu tamanho, visto que a área engloba tanto a amplitude quanto a duração.</p>
+<p>Entretanto, essa abordagem apresenta o problema que, mesmo para um sinal grande $x(t)$, suas áreas positivas e negativas podem se cancelar mutuamente, resultando em um valor pequeno que não reflete a realidade do sinal.</p>
+<p>Para corrigir essa dificuldade, definimos o tamanho do sinal como a área sob $x^2(t)$, garantindo que o valor seja sempre positivo. Chamamos essa medida de <strong>energia do sinal</strong> ($E_x$). Para um sinal real, a definição é dada por:</p>
+<p>$$
+E_x = \int_{-\infty}^{\infty} x^2(t) dt
+$$</p>
+<p>Essa definição pode ser generalizada para um sinal complexo $x(t)$, assumindo a forma:</p>
+<p>$$
+E_x = \int_{-\infty}^{\infty} |x(t)|^2 dt
+$$</p>
+<h3 id="potência-do-sinal"><span class="heading-text">Potência do Sinal</span><span class="heading-arabic">3.1.4</span></h3>
+<p>Para que a <strong>energia do sinal</strong> seja uma medida significativa do seu tamanho, ela deve ser finita. Uma condição necessária para isso é que a amplitude do sinal tenda a zero ($0$) quando o tempo tende ao infinito ($|t| \rightarrow \infty$). Caso contrário, a integral não convergirá.</p>
+<p>Quando a amplitude do sinal $x(t)$ não tende a zero conforme $|t| \rightarrow \infty$, a energia total do sinal torna-se infinita. Nesses casos, uma medida mais apropriada para o tamanho do sinal é a energia média, caso ela exista. A essa medida damos o nome de <strong>potência do sinal</strong>. Para um sinal real $x(t)$, definimos sua potência $P_x$ como:</p>
+<p>$$
+P_x = \lim_{T \to \infty} \frac{1}{T} \int_{-T/2}^{T/2} x^2(t) dt
+$$</p>
+<p>Podemos generalizar esta definição para um sinal complexo $x(t)$ através da equação:</p>
+<p>$$
+P_x = \lim_{T \to \infty} \frac{1}{T} \int_{-T/2}^{T/2} |x(t)|^2 dt
+$$</p>
+<p>Para visualizar a diferença entre esses tipos de sinais, observe a figura abaixo. Em (a), temos um sinal que decai com o tempo (energia finita), enquanto em (b) temos um sinal que oscila indefinidamente (potência finita).</p>
+<img src="static/figura-1-1-exemplos-de-sinais.png" width="70%">
+
+<p>É importante que você note que a potência do sinal $P_x$ representa uma média temporal do quadrado da amplitude do sinal, ou seja, o valor <strong>médio quadrático</strong> de $x(t)$. De fato, a raiz quadrada de $P_x$ corresponde ao valor <em>rms</em> (<em>root mean square</em> ou raiz média quadrática) de $x(t)$, um conceito com o qual você provavelmente já está familiarizado.</p>
+<div class="callout callout-info">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></span>
+    <span class="callout-title-inner">O que os &quot;127V&quot; realmente significam?</span>
+  </div>
+  <div class="callout-content">
+<p>O valor de 127V é o <strong>valor eficaz</strong> (RMS) do sinal. Isso significa que essa tensão oscilante entrega para uma lâmpada ou resistência a <strong>mesma potência média</strong> que uma bateria de 127V constantes (DC) entregaria.</p>
+  </div>
+</div>
+<p>De modo geral, a média de uma entidade ao longo de um grande intervalo de tempo (aproximando-se do infinito) existe se a entidade for <strong>periódica</strong> ou se possuir uma <strong>regularidade estatística</strong>. Se tal condição não for satisfeita, a média não existirá.</p>
+<div class="callout callout-example">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M12 11V7"/><path d="M9 11l3 3 3-3"/></svg></span>
+    <span class="callout-title-inner">Exemplos de Convergência</span>
+  </div>
+  <div class="callout-content">
+<ul>
+<li>Um sinal em rampa, definido por $x(t) = t$, aumenta indefinidamente quando $|t| \rightarrow \infty$. Portanto, nem a energia nem a potência existirão para este sinal.</li>
+<li>Por outro lado, a função <strong>degrau unitário</strong>, embora não seja periódica e não possua regularidade estatística, possui uma potência finita.</li>
+</ul>
+  </div>
+</div>
+<p>Quando lidamos com um sinal $x(t)$ que é <strong>periódico</strong>, o termo $|x(t)|^2$ também será periódico. Isso simplifica drasticamente o cálculo: a potência de $x(t)$ pode ser obtida calculando a média de $|x(t)|^2$ apenas sobre <strong>um período</strong>, em vez de tomar o limite no infinito.</p>
+<p><div class="example">
+  <div class="example-title">Exemplo 1</div>
+  <p>Vamos determinar as medidas adequadas para quantificar o tamanho dos sinais apresentados na figura abaixo.</p>
+<img src="static/example_fig_1_2.png" width="75%">
+
+<p><strong>Análise do Sinal (a).</strong> Ao observarmos a <strong>figura (a)</strong>, notamos que a amplitude do sinal tende a $0$ quando o tempo $|t|$ tende ao infinito. Conforme estudamos anteriormente, essa característica indica que a medida adequada para esse sinal é a sua <strong>energia</strong> ($E_x$).</p>
+<p>O cálculo é realizado integrando o quadrado do sinal ao longo do tempo:</p>
+<p>$$
+E_x = \int_{-\infty}^{\infty} x^2(t) dt = \int_{-1}^{0} (2)^2 dt + \int_{0}^{\infty} \left(2e^{-t/2}\right)^2 dt
+$$</p>
+<p>Resolvendo as integrais separadamente:</p>
+<ol>
+<li>A primeira parte (intervalo de -1 a 0) resulta em $4$.</li>
+<li>A segunda parte (intervalo de 0 a $\infty$), que envolve a integração de $4e^{-t}$, também resulta em $4$.</li>
+</ol>
+<p>Portanto, a energia total é:</p>
+<p>$$
+\boxed{E_x = 4 + 4 = 8}
+$$</p>
+<hr />
+<p><strong>Análise do Sinal (b).</strong> Na <strong>figura (b)</strong>, o comportamento é diferente: a amplitude do sinal <strong>não</strong> tende a $0$ quando $|t| \to \infty$. Entretanto, identificamos que ele é <strong>periódico</strong> e, portanto, sua <strong>potência</strong> existe.</p>
+<p>Para determinar a potência de sinais periódicos, podemos simplificar o uso da equação geral. Como o sinal se repete regularmente a cada período (que neste caso é de 2 segundos), calcular a média em um intervalo infinito é matematicamente idêntico a calcular a média de $x^2(t)$ em <strong>um único período</strong>.</p>
+<p>Aplicando a fórmula da média para o período entre -1 e 1:</p>
+<p>$$
+P_x = \frac{1}{2} \int_{-1}^{1} x^2(t) dt = \frac{1}{2} \int_{-1}^{1} t^2 dt = \frac{1}{3}
+$$</p>
+<div class="callout callout-tip">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .5 2.2 1.5 3.1.7.7 1.3 1.5 1.5 2.4"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span>
+    <span class="callout-title-inner">Relação com valor RMS</span>
+  </div>
+  <div class="callout-content">
+<p>Lembre-se de que a potência do sinal corresponde ao <strong>quadrado</strong> de seu valor <em>rms</em> (raiz média quadrática). Portanto, para este exemplo, o valor <em>rms</em> desse sinal é $1/\sqrt{3}$.</p>
+  </div>
+</div>
+
+</div></p>
+<p><div class="example">
+  <div class="example-title">Exemplo 2</div>
+  <p>Neste exemplo, vamos determinar a <strong>potência</strong> e o <strong>valor rms</strong> para três tipos fundamentais de sinais. Acompanhe o raciocínio matemático detalhado para cada caso. Os sinais analisados serão:</p>
+<ol>
+<li><strong>Sinal Senoidal Simples:</strong> $x(t) = C \cos(\omega_0 t + \theta)$</li>
+<li><strong>Soma de Senoides:</strong> $x(t) = C_1 \cos(\omega_1 t + \theta_1) + C_2 \cos(\omega_2 t + \theta_2)$, com $\omega_1 \neq \omega_2$</li>
+<li><strong>Exponencial Complexa:</strong> $x(t) = D e^{j\omega_0 t}$</li>
+</ol>
+<hr />
+<p><strong>(a) Análise do Sinal Senoidal Simples</strong></p>
+<p>O sinal $x(t) = C \cos(\omega_0 t + \theta)$ é um sinal periódico com período fundamental $T_0 = 2\pi/\omega_0$. Como a amplitude não decai, a medida adequada para quantificar seu tamanho é a <strong>potência</strong>.</p>
+<p>Embora pudéssemos calcular a média da energia em apenas um período ($T_0$), para fins de demonstração e generalização, resolveremos este problema calculando a média em um intervalo infinitamente grande, utilizando a Equação:</p>
+<p>$$
+P_x = \lim_{T \to \infty} \frac{1}{T} \int_{-T/2}^{T/2} C^2 \cos^2 (\omega_0 t + \theta) dt
+$$</p>
+<p>Para resolver essa integral, utilizamos a identidade trigonométrica $\cos^2(x) = \frac{1}{2}[1 + \cos(2x)]$:</p>
+<p>$$
+P_x = \lim_{T \to \infty} \frac{C^2}{2T} \int_{-T/2}^{T/2} [1 + \cos(2\omega_0 t + 2\theta)] dt
+$$</p>
+<p>Podemos separar essa integral em dois termos:</p>
+<p>$$
+P_x = \lim_{T \to \infty} \frac{C^2}{2T} \int_{-T/2}^{T/2} dt + \lim_{T \to \infty} \frac{C^2}{2T} \int_{-T/2}^{T/2} \cos(2\omega_0 t + 2\theta) dt
+$$</p>
+<p>Vamos analisar cada termo:</p>
+<ol>
+<li><strong>Primeiro termo:</strong> A integral de uma constante resulta em $T$. Dividindo por $T$ e multiplicando pela constante externa, obtemos exatamente $C^2/2$.</li>
+<li><strong>Segundo termo:</strong> A integral representa a área sob uma senoide em um intervalo muito grande ($T \to \infty$). Devido ao cancelamento das áreas positivas e negativas da oscilação, o valor total dessa integral é limitado (no máximo, a área de meio período). Quando dividimos esse valor limitado por $T$ (que tende ao infinito), o termo todo vai a zero.</li>
+</ol>
+<p>Portanto, a potência é dada por:</p>
+<p>$$
+P_x = \frac{C^2}{2}
+$$</p>
+<p>Consequentemente, o <strong>valor rms</strong> (raiz média quadrática) é:</p>
+<p>$$
+\text{Valor rms} = \sqrt{\frac{C^2}{2}} = \frac{C}{\sqrt{2}}
+$$</p>
+<div class="callout callout-info">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></span>
+    <span class="callout-title-inner">Independência da Frequência</span>
+  </div>
+  <div class="callout-content">
+<p>Note que uma senoide de amplitude $C$ possui potência igual a $C^2/2$, <strong>independentemente</strong> do valor de sua frequência $\omega_0$ (desde que $\omega_0 \neq 0$) ou de sua fase $\theta$. Se a frequência fosse zero (sinal constante CC), a potência seria $C^2$.</p>
+  </div>
+</div>
+<hr />
+<p><strong>(b) Análise da Soma de Senoides</strong></p>
+<p>Para o sinal $x(t) = C_1 \cos(\omega_1 t + \theta_1) + C_2 \cos(\omega_2 t + \theta_2)$, a periodicidade depende da relação entre as frequências $\omega_1$ e $\omega_2$ (se a razão é um número racional ou não). Como o período pode não ser conhecido ou não existir, calcularemos a potência pela média no infinito:</p>
+<p>$$
+P_x = \lim_{T \to \infty} \frac{1}{T} \int_{-T/2}^{T/2} [C_1 \cos(\omega_1 t + \theta_1) + C_2 \cos(\omega_2 t + \theta_2)]^2 dt
+$$</p>
+<p>Ao expandir o quadrado $(a+b)^2 = a^2 + b^2 + 2ab$, obtemos três integrais:</p>
+<ol>
+<li>Um termo com $C_1^2 \cos^2(...)$;</li>
+<li>Um termo com $C_2^2 \cos^2(...)$;</li>
+<li>Um termo cruzado com $\frac{2C_1 C_2}{T} \int \cos(\dots)\cos(\dots) dt$.</li>
+</ol>
+<p>As duas primeiras integrais resultam nas potências individuais das senoides, que já calculamos no item (a): $C_1^2/2$ e $C_2^2/2$.</p>
+<p>O terceiro termo envolve o produto de duas senoides. Trigonometricamente, esse produto pode ser reescrito como a soma de duas novas senoides com frequências $(\omega_1 + \omega_2)$ e $(\omega_1 - \omega_2)$. Usando o mesmo argumento do item anterior, a média temporal dessas oscilações tende a zero (assumindo $\omega_1 \neq \omega_2$).</p>
+<p>Logo, a potência total é simplesmente a soma das potências individuais:</p>
+<p>$$
+P_x = \frac{C_1^2}{2} + \frac{C_2^2}{2}
+$$</p>
+<p>E o valor rms é:</p>
+<p>$$
+\text{Valor rms} = \sqrt{\frac{C_1^2 + C_2^2}{2}}
+$$</p>
+<div class="callout callout-tip">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .5 2.2 1.5 3.1.7.7 1.3 1.5 1.5 2.4"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span>
+    <span class="callout-title-inner">Generalização Importante</span>
+  </div>
+  <div class="callout-content">
+<p>Podemos estender este resultado para a soma de qualquer número de senoides com frequências distintas. Se $x(t) = \sum_{n=1}^{\infty} C_n \cos(\omega_n t + \theta_n)$, então:</p>
+<p>$$
+> P_x = \frac{1}{2} \sum_{n=1}^{\infty} C_n^2
+> $$</p>
+<p>Se houver também um componente constante (DC) $C_0$, a fórmula se torna:</p>
+<p>$$
+> P_x = C_0^2 + \frac{1}{2} \sum_{n=1}^{\infty} C_n^2}
+> $$</p>
+  </div>
+</div>
+<hr />
+<p><strong>(c) Análise da Exponencial Complexa</strong></p>
+<p>Neste caso, o sinal é complexo: $x(t) = D e^{j\omega_0 t}$. Devemos  calcular a potência, que considera o módulo ao quadrado do sinal:</p>
+<p>$$
+P_x = \lim_{T \to \infty} \frac{1}{T} \int_{-T/2}^{T/2} |D e^{j\omega_0 t}|^2 dt
+$$</p>
+<p>Lembre-se da propriedade fundamental dos números complexos: $|e^{j\theta}| = 1$. Portanto:
+$$
+|D e^{j\omega_0 t}|^2 = |D|^2 \cdot |e^{j\omega_0 t}|^2 = |D|^2 \cdot 1 = |D|^2
+$$</p>
+<p>A integral de uma constante $|D|^2$ média resulta na própria constante. Assim:</p>
+<p>$$
+P_x = |D|^2
+$$</p>
+<p>E o <strong>valor rms</strong> é simplesmente $|D|$.</p>
+
+</div></p>
+<h2 id="operações-com-sinais"><span class="heading-text">Operações com Sinais</span><span class="heading-arabic">3.2</span></h2>
+<p>Nesta etapa, discutiremos três operações extremamente úteis que você pode realizar com sinais: <strong>deslocamento</strong>, <strong>escalamento</strong> e <strong>inversão</strong>.</p>
+<p>Visto que a variável independente em nossa descrição padrão de sinais é o tempo, denominaremos essas operações tecnicamente como:</p>
+<ul>
+<li><strong>Deslocamento temporal</strong>;</li>
+<li><strong>Escalamento temporal</strong>;</li>
+<li><strong>Reversão</strong> (ou inversão) <strong>temporal</strong>.</li>
+</ul>
+<div class="callout callout-info">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></span>
+    <span class="callout-title-inner">Generalização do conceito</span>
+  </div>
+  <div class="callout-content">
+<p>Embora nosso foco principal seja o domínio do tempo, é importante que você saiba que esta discussão é igualmente válida para funções que dependem de outras variáveis independentes, como a <strong>frequência</strong> ou a <strong>distância</strong>.</p>
+  </div>
+</div>
+<h3 id="deslocamento-temporal"><span class="heading-text">Deslocamento Temporal</span><span class="heading-arabic">3.2.1</span></h3>
+<p>Vamos começar analisando um sinal $x(t)$ e uma versão desse mesmo sinal que foi atrasada em $T$ segundos, a qual chamaremos de $\phi(t)$.</p>
+<img src="static/figura-1-4-deslocamento-temporal.png">
+
+<p>A lógica fundamental aqui é que qualquer evento que ocorra em $x(t)$ em um determinado tempo $t$, acontecerá em $\phi(t)$ $T$ segundos depois, ou seja, no instante $t + T$. Portanto, podemos estabelecer a relação:</p>
+<p>$$
+\phi(t + T) = x(t) 
+$$</p>
+<p>E, consequentemente:</p>
+<p>$$
+\phi(t) = x(t - T) 
+$$</p>
+<p>Em resumo, no <strong>deslocamento temporal</strong> de um sinal por $T$ segundos, substituímos a variável $t$ por $t - T$. Assim, a expressão $x(t - T)$ representa o sinal $x(t)$ deslocado no tempo por $T$ segundos. Note que:</p>
+<ul>
+<li>Se $T$ for <strong>positivo</strong>, o deslocamento é para a <strong>direita</strong> (representando um atraso), conforme ilustrado na letra b da figura.</li>
+<li>Se $T$ for <strong>negativo</strong>, o deslocamento é para a <strong>esquerda</strong> (representando um avanço), como visto na letra c da figura.</li>
+</ul>
+<div class="callout callout-example">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M12 11V7"/><path d="M9 11l3 3 3-3"/></svg></span>
+    <span class="callout-title-inner">Exemplos Práticos</span>
+  </div>
+  <div class="callout-content">
+<ul>
+<li>$x(t - 2)$ é o sinal $x(t)$ <strong>atrasado</strong> (deslocado para a direita) em 2 segundos.</li>
+<li>$x(t + 2)$ é o sinal $x(t)$ <strong>adiantado</strong> (deslocado para a esquerda) em 2 segundos.</li>
+</ul>
+  </div>
+</div>
+<p><div class="example">
+  <div class="example-title">Exemplo 3</div>
+  <p>Considere a função exponencial $x(t) = e^{-2t}$, ilustrada no item (a) da figura abaixo. O objetivo é traçar e descrever matematicamente essa função quando ela sofre um <strong>atraso</strong> de 1 segundo e, posteriormente, quando sofre um <strong>avanço</strong> de 1 segundo.</p>
+<img src="static/fig_example_1_5.png" width="75%">
+
+<p>Primeiramente, observe que a função original $x(t)$ é definida matematicamente por partes: ela existe apenas para tempos positivos ($t \ge 0$) e é nula para tempos negativos ($t < 0$).</p>
+<p>$$
+x(t) = \begin{cases} e^{-2t} & t \ge 0 \\ 0 & t < 0 \end{cases} 
+$$</p>
+<hr />
+<p><strong>1. Atraso Temporal (Deslocamento para a Direita)</strong></p>
+<p>Seja $x_d(t)$ a representação da função $x(t)$ atrasada em 1 segundo. Graficamente, isso corresponde a deslocar todo o sinal para a <strong>direita</strong>, como mostrado no item (b) da figura.</p>
+<p>Matematicamente, essa função é representada por $x(t - 1)$. Para encontrar sua descrição algébrica, você deve substituir cada ocorrência de $t$ na equação por $(t - 1)$.</p>
+<p><strong>Atenção aos Intervalos.</strong> A substituição deve ser feita tanto na fórmula da função quanto na condição de existência (o intervalo de tempo).</p>
+<ul>
+<li>Onde tínhamos $t \ge 0$, agora teremos $t - 1 \ge 0$, o que implica $t \ge 1$.</li>
+<li>Onde tínhamos $t < 0$, agora teremos $t - 1 < 0$, o que implica $t < 1$.</li>
+</ul>
+<p>Assim, a equação resultante é:</p>
+<p>$$
+x_d(t) = x(t - 1) = \begin{cases} e^{-2(t-1)} & t \ge 1 \\ 0 & t < 1 \end{cases} 
+$$</p>
+<hr />
+<p><strong>2. Avanço Temporal (Deslocamento para a Esquerda)</strong></p>
+<p>Agora, seja $x_a(t)$ a representação da função $x(t)$ adiantada em 1 segundo. Graficamente, isso equivale a empurrar o sinal para a <strong>esquerda</strong>, conforme o item (c) da figura.</p>
+<p>Matematicamente, essa função é dada por $x(t + 1)$. Novamente, aplicamos a substituição de $t$ por $(t + 1)$ na equação original:</p>
+<ul>
+<li>A condição $t \ge 0$ transforma-se em $t + 1 \ge 0$, ou seja, $t \ge -1$.</li>
+<li>A condição $t < 0$ transforma-se em $t + 1 < 0$, ou seja, $t < -1$.</li>
+</ul>
+<p>Portanto, a descrição matemática final é:</p>
+<p>$$
+x_a(t) = x(t + 1) = \begin{cases} e^{-2(t+1)} & t \ge -1 \\ 0 & t < -1 \end{cases} 
+$$</p>
+
+</div></p>
+<h3 id="escalonamento-temporal"><span class="heading-text">Escalonamento Temporal</span><span class="heading-arabic">3.2.2</span></h3>
+<p>Chamamos de <strong>escalamento temporal</strong> o processo de compressão ou expansão de um sinal ao longo do tempo. Para compreender esse conceito, considere o sinal $x(t)$ apresentado na figura abaixo (item a).</p>
+<img src="static/figura-1-6-escalamento-temporal-de-um-sinal.png" width="50%">
+
+<p>Observe agora o sinal $\phi(t)$ no item (b). Ele representa o sinal $x(t)$ comprimido no tempo por um fator de 2. A lógica aqui é que qualquer evento que ocorra em $x(t)$ em um determinado instante $t$, também deve acontecer em $\phi(t)$, porém no instante $t/2$. Matematicamente, expressamos essa relação como:</p>
+<p>$$
+\phi\left(\frac{t}{2}\right) = x(t) 
+$$</p>
+<p>E, consequentemente:</p>
+<p>$$
+\phi(t) = x(2t) 
+$$</p>
+<p>Note que, como $x(t) = 0$ para $t = T_1$ e $T_2$, você deve ter $\phi(t) = 0$ para $t = T_1/2$ e $T_2/2$, exatamente como ilustrado no item (b) da figura.</p>
+<div class="callout callout-tip">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .5 2.2 1.5 3.1.7.7 1.3 1.5 1.5 2.4"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span>
+    <span class="callout-title-inner">Analogia do Vídeo</span>
+  </div>
+  <div class="callout-content">
+<p>Imagine que $x(t)$ foi gravado em um vídeo. Se você reproduzir esse vídeo com o <strong>dobro da velocidade</strong> de gravação, o resultado será o sinal comprimido $x(2t)$.</p>
+  </div>
+</div>
+<p>De modo geral, se o sinal $x(t)$ for comprimido no tempo por um fator $a$ (onde $a > 1$), o sinal resultante $\phi(t)$ é dado por:</p>
+<p>$$
+\phi(t) = x(at) 
+$$</p>
+<p>Utilizando um argumento similar, você pode demonstrar que quando $x(t)$ é expandido (ou &quot;desacelerado&quot;) no tempo por um fator $a$ (onde $a > 1$), temos:</p>
+<p>$$
+\phi(t) = x\left(\frac{t}{a}\right) 
+$$</p>
+<p>O item (c) da figura mostra justamente $x(t/2)$, que é o sinal $x(t)$ expandido no tempo por um fator de 2. É importante que você observe a propriedade fundamental de que, na operação de escalamento no tempo, a origem $t = 0$ é um <strong>ponto fixo</strong>. Ela permanece inalterada durante a operação, pois para $t = 0$, temos $x(t) = x(at) = 0$.</p>
+<p><div class="example">
+  <div class="example-title">Exemplo 4</div>
+  <p>Neste exemplo, analisaremos o sinal $x(t)$ apresentado no item (a) da figura abaixo. O objetivo é traçar os gráficos e descrever matematicamente o que acontece quando este sinal é <strong>comprimido</strong> no tempo por um fator de 3 e, posteriormente, quando é <strong>expandido</strong> no tempo por um fator de 2.</p>
+<img src="static/figura-1-7-operacoes-de-escalamento.png" width="75%">
+
+<p>Primeiramente, vamos definir a descrição matemática do sinal original $x(t)$. Observando o gráfico (a), notamos que ele é composto por duas partes distintas dentro do intervalo de interesse e é nulo fora dele:</p>
+<p>$$
+x(t) = \begin{cases} 2 & -1,5 \le t < 0 \\ 2e^{-t/2} & 0 \le t < 3 \\ 0 & \text{caso contrário} \end{cases} 
+$$</p>
+<hr />
+<p><strong>1. Compressão Temporal (Fator 3)</strong></p>
+<p>O item (b) da figura mostra $x_c(t)$, que representa o sinal $x(t)$ <strong>comprimido</strong> no tempo por um fator de 3.</p>
+<p>Matematicamente, descrevemos esse novo sinal como $x(3t)$. Para obter sua equação, você deve substituir a variável $t$ por $3t$ no lado direito da Equação (1.14). Essa substituição afeta tanto a função quanto os intervalos de tempo.</p>
+<p><strong>Ajuste dos Intervalos.</strong> Ao substituir $t$ por $3t$, as desigualdades mudam:</p>
+<ul>
+<li>O intervalo $-1,5 \le t < 0$ torna-se $-1,5 \le 3t < 0$. Dividindo tudo por 3, obtemos <strong>$-0,5 \le t < 0$</strong>.</li>
+<li>O intervalo $0 \le t < 3$ torna-se $0 \le 3t < 3$. Dividindo tudo por 3, obtemos <strong>$0 \le t < 1$</strong>.</li>
+</ul>
+<p>Além disso, a exponencial $2e^{-t/2}$ passa a ser $2e^{-(3t)/2}$. Logo, a descrição matemática final é:</p>
+<p>$$
+x_c(t) = x(3t) = \begin{cases} 2 & -0,5 \le t < 0 \\ 2e^{-3t/2} & 0 \le t < 1 \\ 0 & \text{caso contrário} \end{cases} 
+$$</p>
+<p>Observe que os instantes originais $t = -1,5$ e $3$ em $x(t)$ correspondem, respectivamente, aos instantes $t = -0,5$ e $1$ no sinal comprimido.</p>
+<hr />
+<p><strong>2. Expansão Temporal (Fator 2)</strong></p>
+<p>O item (c) da figura mostra $x_e(t)$, que representa o sinal $x(t)$ <strong>expandido</strong> no tempo por um fator de 2.</p>
+<p>Matematicamente, descrevemos esse sinal como $x(t/2)$. O procedimento é análogo: substituímos $t$ por $t/2$ na equação original.</p>
+<div class="callout callout-important">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">Ajuste dos Intervalos</span>
+  </div>
+  <div class="callout-content">
+<ul>
+<li>O intervalo $-1,5 \le t < 0$ torna-se $-1,5 \le t/2 < 0$. Multiplicando por 2, obtemos <strong>$-3 \le t < 0$</strong>.</li>
+<li>O intervalo $0 \le t < 3$ torna-se $0 \le t/2 < 3$. Multiplicando por 2, obtemos <strong>$0 \le t < 6$</strong>.</li>
+</ul>
+  </div>
+</div>
+<p>A função exponencial também se altera: $2e^{-t/2}$ torna-se $2e^{-(t/2)/2}$, ou seja, $2e^{-t/4}$. A descrição final é:</p>
+<p>$$
+x_e(t) = x\left(\frac{t}{2}\right) = \begin{cases} 2 & -3 \le t < 0 \\ 2e^{-t/4} & 0 \le t < 6 \\ 0 & \text{caso contrário} \end{cases} 
+$$</p>
+<p>Note que os instantes originais $t = -1,5$ e $3$ em $x(t)$ agora correspondem aos instantes $t = -3$ e $6$ no sinal expandido.</p>
+
+</div></p>
+<h3 id="reversão-temporal"><span class="heading-text">Reversão Temporal</span><span class="heading-arabic">3.2.3</span></h3>
+<p>Considere o sinal $x(t)$ apresentado na figura abaixo. Você pode visualizar $x(t)$ como uma forma rígida que está presa ao eixo vertical.</p>
+<img src="static/figura-1-8-reversao-temporal-de-um-sinal.png" width="50%">
+
+<p>Na operação de <strong>reversão temporal</strong> de $x(t)$, nós rotacionamos essa forma em $180^\circ$ em relação ao eixo vertical. Essa reversão, que nada mais é do que a reflexão de $x(t)$ pelo eixo vertical, nos fornece o sinal $\phi(t)$, ilustrado na figura.</p>
+<p>A lógica fundamental aqui é que o que acontece em um determinado instante $t$, também acontecerá no instante $-t$, e vice-versa. Portanto, temos a relação:</p>
+<p>$$
+\phi(t) = x(-t) 
+$$</p>
+<p>Em resumo, para reverter um sinal no tempo, você deve substituir a variável $t$ por $-t$, resultando no sinal $x(-t)$.</p>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Eixo de Referência</span>
+  </div>
+  <div class="callout-content">
+<p>Lembre-se sempre de que a reversão temporal é realizada em relação ao <strong>eixo vertical</strong>, que funciona como uma âncora ou eixo de referência para a rotação.</p>
+<p>Não confunda com a reversão de $x(t)$ em relação ao eixo <strong>horizontal</strong> (inversão de amplitude), cujo resultado seria $-x(t)$.</p>
+  </div>
+</div>
+<p><div class="example">
+  <div class="example-title">Exemplo 5</div>
+  <p>Para o sinal $x(t)$ mostrado na figura abaixo (item a), vamos traçar $x(-t)$, que representa a <strong>reversão temporal</strong> de $x(t)$.</p>
+<img src="static/figura-1-9-exemplo-de-reversao-temporal.png">
+
+<p>Ao analisarmos o gráfico, você deve notar que os instantes originais $-1$ e $-5$ em $x(t)$ são mapeados, respectivamente, nos instantes $1$ e $5$ em $x(-t)$. O sinal revertido é apresentado no item (b) da figura.</p>
+<p>Matematicamente, como a função original segue a lei $x(t) = e^{t/2}$, a função revertida terá o sinal do expoente trocado, resultando em $x(-t) = e^{-t/2}$.</p>
+<p>Podemos descrever o sinal original $x(t)$ pela seguinte equação por partes:</p>
+<p>$$
+x(t) = \begin{cases} e^{t/2} & -1 \ge t > -5 \\ 0 & \text{caso contrário} \end{cases}
+$$</p>
+<p>Para obter a expressão matemática da versão revertida no tempo $x(-t)$, você deve substituir a variável $t$ por $-t$ em toda a definição de $x(t)$, inclusive nos intervalos de tempo.</p>
+<div class="callout callout-tip">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .5 2.2 1.5 3.1.7.7 1.3 1.5 1.5 2.4"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span>
+    <span class="callout-title-inner">Inversão das Desigualdades</span>
+  </div>
+  <div class="callout-content">
+<p>Lembre-se que ao multiplicar uma desigualdade por $-1$, o sentido do sinal se inverte. Portanto, a condição $-1 \ge -t > -5$ torna-se $1 \le t < 5$.</p>
+  </div>
+</div>
+<p>Logo, a descrição final é:</p>
+<p>$$
+x(-t) = \begin{cases} e^{-t/2} & 1 \le t < 5 \\ 0 & \text{caso contrário} \end{cases}
+$$</p>
+
+</div></p>
+<h3 id="operações-combinadas"><span class="heading-text">Operações Combinadas</span><span class="heading-arabic">3.2.4</span></h3>
+<p>Certas operações complexas exigem que você utilize simultaneamente mais de uma das operações básicas descritas anteriormente. A forma mais geral, que envolve todas as três operações (deslocamento, escalamento e reversão), é representada pela expressão $x(at - b)$.</p>
+<p>Para realizar essa operação combinada, você possui duas sequências de passos possíveis. A escolha de qual utilizar é uma questão de preferência, mas é fundamental entender a diferença matemática entre elas para evitar erros.</p>
+<p><strong>1. Sequência: Deslocamento $\rightarrow$ Escalamento</strong></p>
+<p>Nesta abordagem, você prioriza o termo independente $b$:</p>
+<ol>
+<li>Realize o <strong>deslocamento temporal</strong> de $x(t)$ por $b$, obtendo o sinal intermediário $x(t - b)$.</li>
+<li>Em seguida, realize o <strong>escalamento temporal</strong> desse sinal deslocado por um fator $a$. Na prática, isso significa substituir a variável $t$ por $at$.</li>
+<li>O resultado final será $x(at - b)$.</li>
+</ol>
+<p><strong>2. Sequência: Escalamento $\rightarrow$ Deslocamento</strong></p>
+<p>Nesta abordagem, você prioriza o fator multiplicativo $a$:</p>
+<ol>
+<li>Realize o <strong>escalamento temporal</strong> de $x(t)$ por $a$, obtendo o sinal intermediário $x(at)$.</li>
+<li>Agora, realize o <strong>deslocamento temporal</strong> desse sinal escalado. <strong>Atenção aqui:</strong> o deslocamento não será por $b$, mas sim por $b/a$.</li>
+<li>Matematicamente, você deve substituir $t$ por $(t - b/a)$.</li>
+<li>O resultado será $x[a(t - b/a)]$, que ao distribuir o produto, resulta exatamente em $x(at - b)$.</li>
+</ol>
+<div class="callout callout-info">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></span>
+    <span class="callout-title-inner">Nota sobre Reversão</span>
+  </div>
+  <div class="callout-content">
+<p>Em qualquer um dos casos, se o fator $a$ for <strong>negativo</strong>, a etapa de escalamento no tempo envolverá também uma <strong>reversão temporal</strong>.</p>
+  </div>
+</div>
+<div class="answer">
+Para ilustrar, vamos analisar como obter o sinal $x(2t - 6)$ utilizando as duas formas:
+
+<p><strong>Primeiro método:</strong></p>
+<p>Você deve primeiro <strong>atrasar</strong> $x(t)$ em 6 unidades para obter $x(t - 6)$. Em seguida, deve <strong>comprimir</strong> esse sinal no tempo por um fator de 2 (substituindo $t$ por $2t$), chegando a $x(2t - 6)$.</p>
+<hr />
+<p><strong>Segundo método:</strong></p>
+<p>Você deve primeiro <strong>comprimir</strong> $x(t)$ por um fator de 2 para obter $x(2t)$. Em seguida, deve <strong>atrasar</strong> esse sinal resultante em 3 unidades (substituindo $t$ por $t - 3$), o que resulta em $x[2(t - 3)] = x(2t - 6)$.</p>
+</div>
+
+<h2 id="classificação-de-sinais"><span class="heading-text">Classificação de Sinais</span><span class="heading-arabic">3.3</span></h2>
+<p>Existem diversas classes de sinais no universo da teoria de sistemas. No entanto, para mantermos o foco no que é essencial para o escopo deste capítulo, consideraremos apenas as categorias fundamentais.</p>
+<p>Ao longo do texto, você explorará as seguintes definições e distinções:</p>
+<ol>
+<li><strong>Sinais contínuos</strong> e <strong>discretos no tempo</strong>;</li>
+<li><strong>Sinais analógicos</strong> e <strong>digitais</strong>;</li>
+<li><strong>Sinais periódicos</strong> e <strong>não periódicos</strong>;</li>
+<li><strong>Sinais de energia</strong> e <strong>potência</strong>;</li>
+<li><strong>Sinais determinísticos</strong> e <strong>probabilísticos</strong>.</li>
+</ol>
+<h3 id="sinais-contínuos-e-discretos-no-tempo"><span class="heading-text">Sinais Contínuos e Discretos no Tempo</span><span class="heading-arabic">3.3.1</span></h3>
+<p>Um sinal que é especificado para valores <strong>contínuos</strong> de tempo $t$ é denominado <strong>sinal contínuo no tempo</strong>. Você pode observar a representação gráfica desse tipo de sinal no item (a) da figura abaixo.</p>
+<p>Por outro lado, um sinal que é especificado apenas para valores <strong>discretos</strong> de $t$ é classificado como um <strong>sinal discreto no tempo</strong>, conforme ilustrado no item (b) da figura.</p>
+<img src="static/figura-1-10-sinal-continuo-e-discreto.png" width="75%">
+
+<p>Para facilitar sua compreensão, considere os seguintes exemplos do mundo real:</p>
+<ul>
+<li>A saída de um telefone ou de uma câmera de vídeo é um <strong>sinal contínuo no tempo</strong>, pois a informação existe a todo instante.</li>
+<li>Já dados como o produto interno bruto (PIB) trimestral, as vendas mensais de uma corporação e as médias diárias do mercado de ações são <strong>sinais discretos no tempo</strong>, pois são amostrados ou registrados em momentos específicos.</li>
+</ul>
+<h3 id="sinais-analógicos-e-digitais"><span class="heading-text">Sinais Analógicos e Digitais</span><span class="heading-arabic">3.3.2</span></h3>
+<p>É fundamental que você compreenda uma distinção que frequentemente gera confusão: o conceito de <strong>tempo contínuo</strong> não é sinônimo de <strong>analógico</strong>, assim como <strong>tempo discreto</strong> não é sinônimo de <strong>digital</strong>.</p>
+<p>Para clarificar essas definições, devemos observar os eixos do gráfico de um sinal:</p>
+<ul>
+<li><strong>Eixo Horizontal (Tempo):</strong> Os termos <em>contínuo no tempo</em> e <em>discreto no tempo</em> qualificam a natureza do sinal ao longo do tempo.</li>
+<li><strong>Eixo Vertical (Amplitude):</strong> Os termos <em>analógico</em> e <em>digital</em> qualificam a natureza da amplitude do sinal.</li>
+</ul>
+<div class="callout callout-info">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></span>
+    <span class="callout-title-inner">Definições de Amplitude</span>
+  </div>
+  <div class="callout-content">
+<ul>
+<li><strong>Sinal Analógico:</strong> É aquele cuja amplitude pode assumir qualquer valor dentro de uma faixa contínua. Isso significa que ele pode ter <strong>infinitos valores</strong> de amplitude.</li>
+<li><strong>Sinal Digital:</strong> É aquele cuja amplitude está restrita a um número <strong>finito</strong> de valores.</li>
+</ul>
+  </div>
+</div>
+<p>Os sinais associados a computadores digitais são classificados como digitais pois assumem apenas dois valores específicos (sinais binários). De forma mais geral, um sinal digital cuja amplitude pode assumir $M$ valores é chamado de <strong>sinal M-ário</strong>, onde o caso binário ($M = 2$) é apenas uma situação especial.</p>
+<p>Para visualizar essas diferenças, observe a figura abaixo, que apresenta exemplos de vários tipos de sinais .</p>
+<img src="static/figura-1-11-exemplos-de-sinais-de-varios-tipos.png" width="75%">
+
+<p>Ao analisar a figura, fica claro que:</p>
+<ol>
+<li>Um sinal analógico <strong>não é necessariamente</strong> um sinal contínuo no tempo.</li>
+<li>Um sinal digital <strong>não é necessariamente</strong> um sinal discreto no tempo.</li>
+</ol>
+<p>Note especificamente o item (c) da figura, que ilustra um exemplo de <strong>sinal analógico discreto no tempo</strong>.</p>
+<p>Por fim, vale ressaltar que é possível transformar um sinal analógico em um sinal digital, processo conhecido como <strong>conversão analógico/digital (A/D)</strong>. Isso é realizado através da <em>quantização</em> (arredondamento).</p>
+<h3 id="sinais-periódicos-e-não-periódicos"><span class="heading-text">Sinais Periódicos e Não Periódicos</span><span class="heading-arabic">3.3.3</span></h3>
+<p>Dizemos que um sinal $x(t)$ é <strong>periódico</strong> se, para alguma constante positiva $T_0$, a seguinte condição for satisfeita para todo $t$:</p>
+<p>$$
+x(t) = x(t + T_0) 
+$$</p>
+<p>O menor valor de $T_0$ que satisfaz essa condição de periodicidade é denominado <strong>período fundamental</strong> de $x(t)$.</p>
+<p>Para identificar se um sinal é periódico ou não, observe se ele possui esse padrão de repetição. Se o sinal não possuir um período, ele é classificado como <strong>não periódico</strong> (ou aperiódico).</p>
+<div class="callout callout-important">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">Duração Infinita</span>
+  </div>
+  <div class="callout-content">
+<p>Pela definição, um sinal periódico $x(t)$ permanece inalterado quando deslocado no tempo por um período. Por essa razão, um sinal periódico deve obrigatoriamente começar em $t = -\infty$.</p>
+<p>Se ele começasse em um instante de tempo finito, digamos $t = 0$, o sinal deslocado $x(t + T_0)$ começaria em $t = -T_0$. Nesse caso, $x(t + T_0)$ não seria idêntico a $x(t)$ na região entre $-T_0$ e $0$. Portanto, um sinal periódico, por definição, estende-se de $-\infty$ a $+\infty$.</p>
+  </div>
+</div>
+<p>Uma propriedade extremamente útil de um sinal periódico $x(t)$ é que ele pode ser gerado pela <strong>extensão periódica</strong> de qualquer segmento seu que tenha duração $T_0$ (o período).</p>
+<p>Basicamente, você pode recortar um pedaço de $x(t)$ com duração de um período e reproduzi-lo indefinidamente para ambos os lados, reconstruindo o sinal completo. A figura abaixo ilustra esse conceito. No item (a), um segmento sombreado começando em $t = -1$ é usado para gerar o sinal; no item (b), um segmento diferente começando em $t = 0$ gera o mesmo sinal.</p>
+<img src="static/figura-1-13-geracao-de-um-sinal-periodico.png">
+
+<p>Você pode verificar que essa construção é possível com <em>qualquer</em> segmento de $x(t)$, começando em qualquer instante, desde que a duração do recorte seja exatamente um período. Outra propriedade matemática relevante é que a área abaixo de $x(t)$ em <strong>qualquer</strong> intervalo de duração $T_0$ é sempre constante. Ou seja, para quaisquer números reais $a$ e $b$:</p>
+<p>$$
+\int_{a}^{a+T_0} x(t) dt = \int_{b}^{b+T_0} x(t) dt 
+$$</p>
+<p>Isso ocorre porque o sinal repete os mesmos valores a cada intervalo $T_0$. Por conveniência, representaremos a área sob $x(t)$ em um período pela notação simplificada $\int_{T_0} x(t) dt$. É útil identificarmos os sinais que começam em $t = -\infty$ e continuam para sempre como <strong>sinais de duração infinita</strong>. Um sinal periódico é, por definição, um sinal de duração infinita.</p>
+<h5 id="causalidade"><span class="heading-text">Causalidade</span><span class="heading-arabic">3.3.3.0.1</span></h5>
+<p>Além da periodicidade, podemos classificar os sinais quanto ao seu início no tempo:</p>
+<ol>
+<li><p><strong>Sinal Causal:</strong> É um sinal que não começa antes de $t = 0$. Em termos matemáticos, $x(t)$ é causal se:
+$$
+    x(t) = 0 \quad \text{para} \quad t < 0 
+    $$</p>
+</li>
+<li><p><strong>Sinal Não Causal:</strong> É um sinal que começa antes de $t = 0$.</p>
+<ul>
+<li>Note que um sinal de <strong>duração infinita</strong> é sempre não causal.</li>
+<li>Porém, o inverso não é verdadeiro: um sinal não causal não precisa ter duração infinita.</li>
+</ul>
+</li>
+<li><p><strong>Sinal Anti-causal:</strong> É um sinal que é zero para todo $t \ge 0$.</p>
+</li>
+</ol>
+<div class="callout callout-summary">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">Comentário sobre a Realidade Física</span>
+  </div>
+  <div class="callout-content">
+<p>Você pode se perguntar: &quot;Se um sinal de duração infinita verdadeiro não pode ser gerado na prática, por que devemos estudá-lo?&quot;</p>
+<p>A resposta está na utilidade matemática. Nos próximos capítulos, veremos que certos modelos ideais (como um impulso ou uma senoide de duração infinita), embora impossíveis de gerar perfeitamente na prática, são ferramentas extremamente poderosas para a análise e o estudo de sinais e sistemas reais.</p>
+  </div>
+</div>
+<h3 id="sinais-de-energia-e-potência"><span class="heading-text">Sinais de Energia e Potência</span><span class="heading-arabic">3.3.4</span></h3>
+<p>Um sinal que possui energia finita é classificado como um <strong>sinal de energia</strong>. Já um sinal que apresenta potência finita (e não nula) é denominado <strong>sinal de potência</strong>.</p>
+<p>Para exemplificar, você pode retomar os sinais da figura abaixo. Nota que eles são exemplos clássicos de sinais de energia e de potência, respectivamente.</p>
+<img src="static/example_fig_1_2.png" width="75%">
+
+<p>É importante que você observe que a potência é, essencialmente, a média temporal da energia. Como essa média é calculada sobre um intervalo de tempo infinitamente grande ($T \to \infty$), ocorre uma dicotomia matemática interessante:</p>
+<ul>
+<li>Um sinal com <strong>energia finita</strong> possui potência nula.</li>
+<li>Um sinal com <strong>potência finita</strong> possui energia infinita.</li>
+</ul>
+<p>Portanto, um sinal não pode ser classificado simultaneamente como de energia e de potência. Se ele pertence a uma categoria, automaticamente exclui a outra.</p>
+<p>Por outro lado, existem sinais que não se encaixam em nenhuma das duas definições (não são nem de energia, nem de potência). O <strong>sinal em rampa</strong> é um exemplo típico desse caso.</p>
+<p>Além disso, devido à sua natureza repetitiva, os <strong>sinais periódicos</strong> são classificados como <strong>sinais de potência</strong> (assumindo que a área sob $|x(t)|^2$ em um único período seja finita). Entretanto, fique atento: embora todo sinal periódico seja de potência, <strong>nem todo sinal de potência é periódico</strong>.</p>
+<p><div class="example">
+  <div class="example-title">Exemplo 6</div>
+  <p>Neste exercício, investigaremos as propriedades de energia e potência para o sinal exponencial de duração infinita definido por:</p>
+<p>$$
+x(t) = e^{-at}, \quad -\infty < t < \infty
+$$</p>
+<p>A análise será dividida em dois casos, dependendo da natureza do parâmetro $a$: primeiro consideraremos que $a$ é um número <strong>real</strong> e, em seguida, que $a$ é um número <strong>imaginário puro</strong>.</p>
+<hr />
+<p><strong>(a) Análise para $a$ Real</strong></p>
+<p>Para verificar se $x(t)$ é um sinal de energia ou de potência, devemos analisar o comportamento da integral do quadrado do sinal (para energia) e da sua média temporal (para potência).</p>
+<p><strong>1. Verificação de Energia ($E_x$)</strong></p>
+<p>A energia de um sinal é dada pela integral do seu módulo ao quadrado em todo o tempo:</p>
+<p>$$
+E_x = \int_{-\infty}^{\infty} |x(t)|^2 dt = \int_{-\infty}^{\infty} (e^{-at})^2 dt = \int_{-\infty}^{\infty} e^{-2at} dt
+$$</p>
+<p>Observe o comportamento da função integranda $e^{-2at}$ quando $a$ é um número real não nulo:</p>
+<ul>
+<li>Se <strong>$a > 0$</strong>: O termo $-2at$ torna-se positivo e muito grande quando $t$ tende a $-\infty$. Ou seja, o sinal cresce indefinidamente para o passado. Logo, a integral diverge para $\infty$.</li>
+<li>Se <strong>$a < 0$</strong>: O termo $-2at$ torna-se positivo e muito grande quando $t$ tende a $+\infty$. O sinal cresce indefinidamente para o futuro. A integral também diverge para $\infty$.</li>
+</ul>
+<div class="callout callout-failure">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg></span>
+    <span class="callout-title-inner">Conclusão sobre Energia</span>
+  </div>
+  <div class="callout-content">
+<p>Como a integral não converge para um valor finito, <strong>$x(t)$ não é um sinal de energia</strong> para valores reais de $a$.</p>
+  </div>
+</div>
+<p><strong>2. Verificação de Potência ($P_x$)</strong></p>
+<p>A potência média é calculada pelo limite da média da energia em um intervalo $T$:</p>
+<p>$$
+P_x = \lim_{T \to \infty} \frac{1}{T} \int_{-T/2}^{T/2} e^{-2at} dt
+$$</p>
+<p>Resolvendo a integral definida:</p>
+<p>$$
+\int_{-T/2}^{T/2} e^{-2at} dt = \left[ \frac{e^{-2at}}{-2a} \right]_{-T/2}^{T/2} = \frac{e^{-aT} - e^{aT}}{-2a} = \frac{e^{aT} - e^{-aT}}{2a}
+$$</p>
+<p>Agora, analisamos o limite dessa expressão dividida por $T$:</p>
+<ul>
+<li>Para qualquer $a \neq 0$, a função exponencial no numerador ($e^{aT}$ ou $e^{-aT}$) cresce muito mais rapidamente do que o denominador linear $T$.</li>
+<li>Matematicamente, pelo Teorema de L'Hôpital ou por análise de crescimento, o limite tende ao infinito ($\infty$).</li>
+</ul>
+<div class="callout callout-failure">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg></span>
+    <span class="callout-title-inner">Conclusão sobre Potência</span>
+  </div>
+  <div class="callout-content">
+<p>Como a potência média é infinita, <strong>$x(t)$ não é um sinal de potência</strong> para valores reais de $a$ (considerando $a \neq 0$).</p>
+  </div>
+</div>
+<hr />
+<p><strong>(b) Análise para $a$ Imaginário</strong></p>
+<p>Agora, considere que $a$ é um número imaginário puro. Podemos escrever $a = j\omega_0$, onde $\omega_0$ é um número real. O sinal torna-se:</p>
+<p>$$
+x(t) = e^{-j\omega_0 t}
+$$</p>
+<p><strong>1. Cálculo da Potência ($P_x$)</strong></p>
+<p>Para sinais complexos, utilizamos o módulo ao quadrado $|x(t)|^2$ na integral. Lembre-se da propriedade fundamental das exponenciais complexas: o módulo é sempre unitário.</p>
+<p>$$
+|x(t)| = |e^{-j\omega_0 t}| = 1
+$$</p>
+<p>Substituindo isso na definição de potência:</p>
+<p>$$
+P_x = \lim_{T \to \infty} \frac{1}{T} \int_{-T/2}^{T/2} |x(t)|^2 dt
+$$</p>
+<p>$$
+P_x = \lim_{T \to \infty} \frac{1}{T} \int_{-T/2}^{T/2} 1 dt
+$$</p>
+<p>A integral de 1 no intervalo $[-T/2, T/2]$ é simplesmente o comprimento do intervalo, que é $T$.</p>
+<p>$$
+P_x = \lim_{T \to \infty} \frac{1}{T} (T) = 1
+$$</p>
+<div class="callout callout-success">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></span>
+    <span class="callout-title-inner">Conclusão Final</span>
+  </div>
+  <div class="callout-content">
+<p>Se $a$ for imaginário, a exponencial de duração infinita é um <strong>sinal de potência</strong>, e sua potência é <strong>$P_x = 1$</strong>, independentemente do valor de $\omega_0$ (o valor de $a$).</p>
+  </div>
+</div>
+
+</div></p>
+<h3 id="sinais-determinísticos-e-aleatórios"><span class="heading-text">Sinais Determinísticos e Aleatórios</span><span class="heading-arabic">3.3.5</span></h3>
+<p>Um sinal cuja descrição física é completamente conhecida, seja na forma matemática ou na forma gráfica, é classificado como um <strong>sinal determinístico</strong>. Isso significa que, para qualquer instante de tempo que você escolher, é possível determinar o valor exato da amplitude do sinal sem qualquer ambiguidade.</p>
+<p>Por outro lado, existem os <strong>sinais aleatórios</strong>. Estes são sinais cujos valores não podem ser preditos precisamente. Você só consegue caracterizá-los em termos de uma <strong>descrição probabilística</strong>, utilizando ferramentas estatísticas como o <strong>valor médio</strong> ou o <strong>valor médio quadrático</strong>.</p>
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">Escopo do Estudo</span>
+  </div>
+  <div class="callout-content">
+<p>É importante destacar que, neste material, trabalharemos <strong>exclusivamente com sinais determinísticos</strong>. O estudo aprofundado de sinais aleatórios envolve conceitos mais complexos de probabilidade e estatística, estando além do escopo desta etapa do seu aprendizado.</p>
+  </div>
+</div>
+<h2 id="alguns-modelos-úteis-de-sinais"><span class="heading-text">Alguns Modelos Úteis de Sinais</span><span class="heading-arabic">3.4</span></h2>
+<p>No campo de <strong>sinais e sistemas</strong>, você verá que as funções <strong>degrau</strong>, <strong>impulso</strong> e <strong>exponencial</strong> desempenham um papel extremamente importante.</p>
+<p>Essas funções não servem apenas como a base fundamental para a representação de outros sinais mais complexos; você também poderá utilizá-las para simplificar diversos aspectos na análise de sinais e sistemas.</p>
+<h3 id="função-degrau-unitário-latexplaceholder03db7331703442d3b6b5cbfc4801250en385"><span class="heading-text">Função Degrau Unitário $\mu(t)$</span><span class="heading-arabic">3.4.1</span></h3>
+<p>Em várias de nossas discussões, os sinais começam em $t = 0$, sendo denominados <strong>sinais causais</strong>. Tais sinais podem ser convenientemente descritos em termos da <strong>função degrau unitário</strong> $u(t)$, ilustrada no item (a) da figura abaixo.</p>
+<img src="static/figura-1-14-funcao-degrau-unitario-e-exponencial.png" width="75%">
+
+<p>Matematicamente, definimos essa função por:</p>
+<p>$$
+u(t) = \begin{cases} 1 & t \ge 0 \\ 0 & t < 0 \end{cases} 
+$$</p>
+<p>Se você deseja obter um sinal que comece em $t = 0$ (de tal forma que ele possua valor nulo para $t < 0$), precisa apenas multiplicar o sinal original por $u(t)$.</p>
+<p>Por exemplo, o sinal $e^{-at}$ representa uma exponencial com duração infinita que começa, teoricamente, em $t = -\infty$. A forma <strong>causal</strong> desta exponencial, visualizada no item (b) da figura acima, pode ser descrita matematicamente como $e^{-at}u(t)$.</p>
+<div class="callout callout-tip">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .5 2.2 1.5 3.1.7.7 1.3 1.5 1.5 2.4"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span>
+    <span class="callout-title-inner">Utilidade Matemática</span>
+  </div>
+  <div class="callout-content">
+<p>A função degrau unitário é extremamente útil para especificar uma função que possui diferentes descrições matemáticas em diferentes intervalos de tempo.</p>
+  </div>
+</div>
+<p>Você deve lembrar dos exemplos mostrados nas figuras onde as funções possuíam descrições distintas em segmentos de tempo variados. Tais descrições, &quot;por partes&quot;, geralmente são trabalhosas e inconvenientes de serem manipuladas matematicamente. O uso da função degrau unitário permite descrever tais funções por meio de uma <strong>única expressão</strong> válida para todo $t$.</p>
+<p>Considere, por exemplo, o <strong>pulso retangular</strong> mostrado no item (a) da figura a seguir.</p>
+<img src="static/figura-1-15-pulso-retangular.png" width="75%">
+
+<p>Podemos descrever este pulso em termos de funções degrau se observarmos que o sinal $x(t)$ pode ser decomposto como a combinação de dois degraus unitários atrasados, conforme mostrado no item (b) da figura.</p>
+<p>Lembre-se que a função degrau unitário $u(t)$ atrasada em $T$ segundos é representada por $u(t - T)$. A partir da análise visual, é fácil ver que:</p>
+<p>$$
+x(t) = u(t - 2) - u(t - 4)
+$$</p>
+<p><div class="example">
+  <div class="example-title">Exemplo 7</div>
+  <p>Neste exemplo, seu objetivo é descrever matematicamente o sinal $x(t)$ apresentado no item (a) da figura abaixo.</p>
+<img src="static/figura-1-16-representacao-de-um-sinal-definido-intervalo-por-intervalo.png" width="75%">
+
+<p>Uma estratégia muito conveniente para você trabalhar com esse tipo de sinal é decompô-lo em duas componentes mais simples, $x_1(t)$ e $x_2(t)$, conforme ilustrado nos itens (b) e (c) da figura, respectivamente.</p>
+<p>Desta forma, o sinal total será dado pela soma: $x(t) = x_1(t) + x_2(t)$.</p>
+<hr />
+<p><strong>1. Análise da Primeira Componente $x_1(t)$</strong></p>
+<p>Observe o sinal $x_1(t)$ na <strong>letra (b)</strong>. Ele se comporta como uma rampa linear $t$ restrita ao intervalo de tempo entre $0$ e $2$.</p>
+<p>Para modelar isso matematicamente, multiplicamos a função rampa $t$ por um pulso retangular que &quot;liga&quot; em $t=0$ e &quot;desliga&quot; em $t=2$. Esse pulso é representado pela diferença de degraus $[u(t) - u(t - 2)]$.</p>
+<p>Logo, a equação para a primeira parte é:</p>
+<p>$$
+x_1(t) = t[u(t) - u(t - 2)]
+$$</p>
+<hr />
+<p><strong>2. Análise da Segunda Componente $x_2(t)$</strong></p>
+<p>Agora, analise o sinal $x_2(t)$ na <strong>letra (c))</strong>. Este sinal também é um recorte de uma rampa, mas desta vez ela é decrescente e existe apenas no intervalo entre $2$ e $3$. O pulso que seleciona esse intervalo é $[u(t - 2) - u(t - 3)]$.</p>
+<p>Precisamos determinar a equação dessa reta:</p>
+<ul>
+<li>A inclinação é negativa. O sinal varia de $2$ (em $t=2$) até $0$ (em $t=3$), logo a inclinação (derivada) é $-2$.</li>
+<li>A reta cruza o eixo zero em $t=3$. Portanto, podemos descrevê-la como $-2(t - 3)$ (ou $-2t + 6$).</li>
+</ul>
+<p>Assim, a expressão para a segunda parte é:</p>
+<p>$$
+x_2(t) = -2(t - 3)[u(t - 2) - u(t - 3)]
+$$</p>
+<hr />
+<p><strong>3. Combinação e Simplificação</strong></p>
+<p>Para obter a expressão final de $x(t)$, somamos as duas componentes encontradas:</p>
+<p>$$
+x(t) = x_1(t) + x_2(t)
+$$</p>
+<p>$$
+x(t) = t[u(t) - u(t - 2)] - 2(t - 3)[u(t - 2) - u(t - 3)]
+$$</p>
+<p>Embora essa equação esteja correta, podemos simplificá-la distribuindo os termos e reagrupando as funções degrau semelhantes:</p>
+<ol>
+<li>Expanda os produtos:
+$$x(t) = t u(t) - t u(t - 2) - 2(t - 3)u(t - 2) + 2(t - 3)u(t - 3)$$</li>
+<li>Coloque $u(t - 2)$ em evidência:
+Os coeficientes são $-t$ e $-2(t - 3)$. Somando-os:
+$$-t - 2t + 6 = -3t + 6 = -3(t - 2)$$</li>
+</ol>
+<p>Portanto, a descrição matemática final e simplificada é:</p>
+<p>$$
+x(t) = t u(t) - 3(t - 2)u(t - 2) + 2(t - 3)u(t - 3)
+$$</p>
+
+</div></p>
+<p><div class="example">
+  <div class="example-title">Exemplo 8</div>
+  <img src="static/figura-1-7-operacoes-de-escalamento.png" width="75%">
+
+<p>Neste exemplo, o objetivo é descrever o sinal $x(t)$ apresentado na <strong>letra (a)</strong> através de uma única expressão matemática válida para todo $t$.</p>
+<p>Para facilitar, vamos relembrar o formato gráfico desse sinal: ele possui uma parte constante e uma parte exponencial.</p>
+<hr />
+<p><strong>1. Análise por Intervalos</strong></p>
+<p>Podemos dividir o sinal em duas componentes baseadas nos intervalos de tempo onde ele é diferente de zero:</p>
+<ul>
+<li><p><strong>Intervalo 1 ($-1,5 \le t < 0$):</strong>
+Neste trecho, o sinal é constante com amplitude <strong>2</strong>.
+Para &quot;recortar&quot; esse intervalo usando funções degrau, fazemos o degrau ligar em $t = -1,5$ e desligar em $t = 0$.
+Matematicamente: $2[u(t + 1,5) - u(t)]$.</p>
+</li>
+<li><p><strong>Intervalo 2 ($0 \le t < 3$):</strong>
+Neste trecho, o sinal segue a função exponencial <strong>$2e^{-t/2}$</strong>.
+Para &quot;recortar&quot; esse intervalo, fazemos o degrau ligar em $t = 0$ e desligar em $t = 3$.
+Matematicamente: $2e^{-t/2}[u(t) - u(t - 3)]$.</p>
+</li>
+</ul>
+<hr />
+<p><strong>2. Montagem da Expressão Única</strong></p>
+<p>A expressão completa é a soma dessas duas componentes:</p>
+<p>$$
+x(t) = \underbrace{2[u(t + 1,5) - u(t)]}_{\text{Parte constante}} + \underbrace{2e^{-t/2}[u(t) - u(t - 3)]}_{\text{Parte exponencial}}
+$$</p>
+<p>Agora, vamos simplificar a expressão agrupando os termos semelhantes. Observe que temos dois termos multiplicados por $u(t)$ (um vindo da primeira parte e outro da segunda):</p>
+<ol>
+<li><p>Distribuindo os termos:
+$$x(t) = 2u(t + 1,5) - 2u(t) + 2e^{-t/2}u(t) - 2e^{-t/2}u(t - 3)$$</p>
+</li>
+<li><p>Colocando $-u(t)$ em evidência nos termos centrais:
+$$-2u(t) + 2e^{-t/2}u(t) = -2(1 - e^{-t/2})u(t)$$</p>
+</li>
+</ol>
+<p>Portanto, a expressão final simplificada é:</p>
+<p>$$
+x(t) = 2u(t + 1,5) - 2(1 - e^{-t/2})u(t) - 2e^{-t/2}u(t - 3)
+$$</p>
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">Comparação</span>
+  </div>
+  <div class="callout-content">
+<p>Compare esta expressão única com a  vista anteriormente. Enquanto a anterior exigia três linhas para definir o sinal (uma para cada intervalo e uma para &quot;caso contrário&quot;), o uso da função degrau $u(t)$ nos permite escrever tudo em uma única linha, o que é muito mais conveniente para operações matemáticas como integração e derivação.</p>
+  </div>
+</div>
+
+</div></p>
+<p><div class="example">
+  <div class="example-title">Exemplo 9</div>
+  <p>Neste exercício, aplicaremos a propriedade fundamental da <strong>multiplicação de uma função por um impulso</strong>. Esta propriedade afirma que, quando uma função contínua $\phi(t)$ é multiplicada por um impulso localizado em um instante $T$, o resultado é o valor da própria função naquele instante multiplicado pelo impulso:</p>
+<p>$$
+\phi(t)\delta(t - T) = \phi(T)\delta(t - T) 
+$$</p>
+<p>Para impulsos na origem ($t = 0$), a expressão simplifica-se para:</p>
+<p>$$
+\phi(t)\delta(t) = \phi(0)\delta(t) 
+$$</p>
+<p>Abaixo, resolvemos cada item passo a passo seguindo este princípio.</p>
+<hr />
+<p><strong>(a) $(t^3 + 3)\delta(t) = 3\delta(t)$</strong></p>
+<ol>
+<li><strong>Identificação:</strong> O impulso $\delta(t)$ está localizado em $t = 0$. A função multiplicada é $\phi(t) = t^3 + 3$.</li>
+<li><strong>Cálculo:</strong> Devemos avaliar a função exatamente no instante em que o impulso existe ($t=0$).<ul>
+<li>$\phi(0) = (0)^3 + 3 = 3$.</li>
+</ul>
+</li>
+<li><strong>Resultado:</strong> Substituindo o valor na propriedade, temos:<ul>
+<li>$(t^3 + 3)\delta(t) = 3\delta(t)$. <strong>(Demonstrado)</strong></li>
+</ul>
+</li>
+</ol>
+<hr />
+<p><strong>(b) $[\text{sen}(t^2 - \frac{\pi}{2})]\delta(t) = -\delta(t)$</strong></p>
+<ol>
+<li><strong>Identificação:</strong> O impulso $\delta(t)$ está em $t = 0$. A função é $\phi(t) = \text{sen}(t^2 - \frac{\pi}{2})$.</li>
+<li><strong>Cálculo:</strong> Avaliamos $\phi(0)$:<ul>
+<li>$\phi(0) = \text{sen}(0^2 - \frac{\pi}{2}) = \text{sen}(-\frac{\pi}{2})$.</li>
+</ul>
+</li>
+<li><strong>Trigonometria:</strong> Sabemos que o seno de $-90^\circ$ ($-\frac{\pi}{2}$ radianos) é $-1$.<ul>
+<li>$\phi(0) = -1$.</li>
+</ul>
+</li>
+<li><strong>Resultado:</strong><ul>
+<li>$[\text{sen}(t^2 - \frac{\pi}{2})]\delta(t) = -1\delta(t) = -\delta(t)$. <strong>(Demonstrado)</strong></li>
+</ul>
+</li>
+</ol>
+<hr />
+<p><strong>(c) $e^{-2t}\delta(t) = \delta(t)$</strong></p>
+<ol>
+<li><strong>Identificação:</strong> O impulso $\delta(t)$ está em $t = 0$. A função é $\phi(t) = e^{-2t}$.</li>
+<li><strong>Cálculo:</strong> Avaliamos $\phi(0)$:<ul>
+<li>$\phi(0) = e^{-2(0)} = e^0$.</li>
+</ul>
+</li>
+<li><strong>Matemática Básica:</strong> Qualquer número (exceto zero) elevado a zero é igual a 1.<ul>
+<li>$\phi(0) = 1$.</li>
+</ul>
+</li>
+<li><strong>Resultado:</strong><ul>
+<li>$e^{-2t}\delta(t) = 1\delta(t) = \delta(t)$. <strong>(Demonstrado)</strong></li>
+</ul>
+</li>
+</ol>
+<hr />
+<p><strong>(d) $\frac{\omega^2 + 1}{\omega^2 + 9}\delta(\omega - 1) = \frac{1}{5}\delta(\omega - 1)$</strong></p>
+<ol>
+<li><strong>Identificação:</strong> Note que a variável aqui é $\omega$. O impulso $\delta(\omega - 1)$ está localizado onde o argumento é zero, ou seja, em <strong>$\omega = 1$</strong>. A função é $\phi(\omega) = \frac{\omega^2 + 1}{\omega^2 + 9}$.</li>
+<li><strong>Cálculo:</strong> Devemos avaliar $\phi(\omega)$ no instante $\omega = 1$:<ul>
+<li>$\phi(1) = \frac{1^2 + 1}{1^2 + 9} = \frac{1 + 1}{1 + 9} = \frac{2}{10}$.</li>
+</ul>
+</li>
+<li><strong>Simplificação:</strong> Reduzindo a fração $\frac{2}{10}$, obtemos $\frac{1}{5}$.</li>
+<li><strong>Resultado:</strong> Aplicando a generalização da propriedade (Eq. 1.23b):<ul>
+<li>$\frac{\omega^2 + 1}{\omega^2 + 9}\delta(\omega - 1) = \frac{1}{5}\delta(\omega - 1)$. <strong>(Demonstrado)</strong></li>
+</ul>
+</li>
+</ol>
+
+</div></p>
+<p><div class="example">
+  <div class="example-title">Exemplo 10</div>
+  <p>Para resolver este exercício, utilizaremos a <strong>Propriedade de Amostragem</strong> do impulso unitário. Esta propriedade afirma que a integral do produto de uma função $\phi(t)$ por um impulso extrai o valor da função exatamente no instante em que o impulso ocorre:</p>
+<p>$$
+\int_{-\infty}^{\infty} \phi(t)\delta(t - T) dt = \phi(T) 
+$$</p>
+<p>Se o impulso estiver na origem ($T = 0$), a propriedade simplifica-se para:</p>
+<p>$$
+\int_{-\infty}^{\infty} \phi(t)\delta(t) dt = \phi(0) 
+$$</p>
+<hr />
+<p><strong>(a) $\int_{-\infty}^{\infty} \delta(t)e^{-j\omega t} dt = 1$</strong></p>
+<ol>
+<li><strong>Identificação:</strong> O impulso $\delta(t)$ está localizado em $t = 0$. A função contínua a ser amostrada é $\phi(t) = e^{-j\omega t}$.</li>
+<li><strong>Cálculo:</strong> Aplicamos a propriedade de amostragem substituindo $t$ por $0$ na função $\phi(t)$:<ul>
+<li>$\phi(0) = e^{-j\omega(0)} = e^0$.</li>
+</ul>
+</li>
+<li><strong>Resultado:</strong> Como qualquer número (ou exponencial) elevado a zero é igual a 1:<ul>
+<li>$\int_{-\infty}^{\infty} \delta(t)e^{-j\omega t} dt = 1$. <strong>(Demonstrado)</strong></li>
+</ul>
+</li>
+</ol>
+<hr />
+<p><strong>(b) $\int_{-\infty}^{\infty} \delta(t - 2) \cos \left( \frac{\pi t}{4} \right) dt = 0$</strong></p>
+<ol>
+<li><strong>Identificação:</strong> O impulso $\delta(t - 2)$ está localizado em $t = 2$. A função é $\phi(t) = \cos(\frac{\pi t}{4})$.</li>
+<li><strong>Cálculo:</strong> Avaliamos a função no ponto de localização do impulso ($t = 2$):<ul>
+<li>$\phi(2) = \cos \left( \frac{\pi \cdot 2}{4} \right) = \cos \left( \frac{\pi}{2} \right)$.</li>
+</ul>
+</li>
+<li><strong>Trigonometria:</strong> Sabemos que $\frac{\pi}{2}$ radianos equivale a $90^\circ$, e o cosseno de $90^\circ$ é zero.</li>
+<li><strong>Resultado:</strong><ul>
+<li>$\int_{-\infty}^{\infty} \delta(t - 2) \cos \left( \frac{\pi t}{4} \right) dt = 0$. <strong>(Demonstrado)</strong></li>
+</ul>
+</li>
+</ol>
+<hr />
+<p><strong>(c) $\int_{-\infty}^{\infty} e^{-2(x-t)}\delta(2 - t) dt = e^{-2(x-2)}$</strong></p>
+<ol>
+<li><strong>Identificação:</strong> O impulso $\delta(2 - t)$ ocorre quando seu argumento é zero, ou seja, em $t = 2$. A função em relação à variável de integração $t$ é $\phi(t) = e^{-2(x-t)}$.<ul>
+<li><em>Nota: $x$ é tratado aqui como uma constante em relação à integração em $t$.</em></li>
+</ul>
+</li>
+<li><strong>Cálculo:</strong> Substituímos $t = 2$ na expressão da função:<ul>
+<li>$\phi(2) = e^{-2(x - 2)}$.</li>
+</ul>
+</li>
+<li><strong>Resultado:</strong> Pela propriedade de amostragem, a integral assume exatamente esse valor:<ul>
+<li>$\int_{-\infty}^{\infty} e^{-2(x-t)}\delta(2 - t) dt = e^{-2(x-2)}$. <strong>(Demonstrado)</strong></li>
+</ul>
+</li>
+</ol>
+
+</div></p>
+<h3 id="a-função-impulso-unitário-latexplaceholder6cf6f9b03b854ee4a59e59b57c2281f5n531"><span class="heading-text">A Função Impulso Unitário $\delta(t)$</span><span class="heading-arabic">3.4.2</span></h3>
+<p>A função <strong>impulso unitário</strong> $\delta(t)$ é, sem dúvida, uma das ferramentas mais importantes no estudo de sinais e sistemas. Inicialmente definida por P. A. M. Dirac, ela é apresentada matematicamente da seguinte forma:</p>
+<p>$$
+\delta(t) = 0 \quad \text{para } t \neq 0
+$$</p>
+<p>$$
+\int_{-\infty}^{\infty} \delta(t) dt = 1 
+$$</p>
+<p>Para compreender o que isso significa fisicamente, você pode visualizar um impulso como um pulso retangular extremamente alto e estreito, com uma área unitária (igual a 1). Imagine que a largura desse pulso é um valor $\epsilon$ muito pequeno ($\epsilon \to 0$). Consequentemente, para manter a área igual a 1, sua altura deve ser um valor muito grande $1/\epsilon$ (que tende ao infinito).</p>
+<p>Portanto, o impulso unitário pode ser imaginado como um pulso de largura infinitamente pequena e altura infinitamente grande. Como $\delta(t) = 0$ em todo tempo exceto em $t = 0$ (onde é indefinido), representamos graficamente o impulso unitário por uma seta vertical, conforme ilustrado no item (a) da figura abaixo.</p>
+<img src="static/fig_1_19_impulso.png"  width="75%">
+
+<p>No item (b) da figura acima, você vê a representação do limite do pulso retangular. Contudo, outros formatos de pulsos, como exponencial, triangular ou Gaussiano, também podem ser utilizados para aproximar um impulso.</p>
+<p>A característica fundamental da função impulso unitário não é sua forma, mas o fato de que sua <strong>duração efetiva tende a zero enquanto sua área permanece unitária</strong>.</p>
+<p>Observe a figura a seguir. No item (a), temos um pulso exponencial $\alpha e^{-\alpha t} u(t)$. À medida que aumentamos o valor de $\alpha$, o pulso torna-se mais alto e mais estreito. No limite onde $\alpha \to \infty$, a altura tende ao infinito e a duração tende a zero, mas a área sob a curva permanece 1.</p>
+<img src="static/fig_1_20_impulso.png" width="75%">
+
+<p>Obviamente, você não consegue gerar uma função impulso perfeita na prática; ela serve como uma idealização matemática que pode ser aproximada.</p>
+<div class="callout callout-info">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></span>
+    <span class="callout-title-inner">Impulso com área $k$</span>
+  </div>
+  <div class="callout-content">
+<p>A partir da definição, sabemos que $k\delta(t) = 0$ para todo $t \neq 0$ e sua área total é $k$. Portanto, representamos um impulso com força (ou área) $k$ graficamente indicando esse valor ao lado da seta.</p>
+  </div>
+</div>
+<h4 id="multiplicação-de-uma-função-por-um-impulso"><span class="heading-text">Multiplicação de uma Função por um Impulso</span><span class="heading-arabic">3.4.2.1</span></h4>
+<p>Vamos analisar o que acontece quando você multiplica o impulso unitário $\delta(t)$ por uma função $\phi(t)$ que é contínua em $t=0$.</p>
+<p>Como o impulso possui valor nulo em qualquer lugar que não seja $t=0$, o único valor de $\phi(t)$ que &quot;sobrevive&quot; à multiplicação é aquele no instante $t=0$, ou seja, $\phi(0)$. Assim, obtemos:</p>
+<p>$$
+\phi(t)\delta(t) = \phi(0)\delta(t) 
+$$</p>
+<p>Isso significa que a multiplicação de uma função contínua $\phi(t)$ por um impulso na origem resulta em um novo impulso, ainda localizado na origem, mas agora com &quot;força&quot; (área) igual a $\phi(0)$.</p>
+<p>Podemos generalizar esse conceito para um impulso deslocado no tempo. Se tivermos um impulso $\delta(t - T)$ localizado em $t = T$, a multiplicação selecionará o valor da função nesse instante:</p>
+<p>$$
+\phi(t)\delta(t - T) = \phi(T)\delta(t - T) 
+$$</p>
+<h4 id="propriedade-de-amostragem"><span class="heading-text">Propriedade de Amostragem</span><span class="heading-arabic">3.4.2.2</span></h4>
+<p>A partir das relações de multiplicação acima, se integrarmos o resultado, chegamos a uma das propriedades mais úteis do impulso. Ao integrar a equação do impulso no intervalo de $-\infty$ a $+\infty$:</p>
+<p>$$
+\int_{-\infty}^{\infty} \phi(t)\delta(t) dt = \phi(0) \int_{-\infty}^{\infty} \delta(t) dt = \phi(0) 
+$$</p>
+<p>Este resultado nos diz que a área sob o produto de uma função com o impulso $\delta(t)$ é igual ao valor da função no instante onde o impulso está localizado. Chamamos isso de <strong>propriedade de amostragem</strong> do impulso unitário.</p>
+<p>De forma análoga, para um impulso deslocado, temos:</p>
+<p>$$
+\int_{-\infty}^{\infty} \phi(t)\delta(t - T) dt = \phi(T) 
+$$</p>
+<p>Neste caso, o impulso &quot;captura&quot; ou &quot;amostra&quot; o valor da função $\phi(t)$ exatamente no instante $t = T$.</p>
+<h4 id="impulso-unitário-como-função-generalizada"><span class="heading-text">Impulso Unitário como Função Generalizada</span><span class="heading-arabic">3.4.2.3</span></h4>
+<p>A definição clássica de Dirac não é matematicamente rigorosa e pode levar a inconsistências, pois uma função que é zero em quase todos os pontos e infinita em um único ponto não é uma função no sentido ordinário.</p>
+<p>Para resolver isso, tratamos o impulso como uma <strong>função generalizada</strong>. Nessa abordagem, definimos o impulso não pelo seu valor em cada instante, mas pelo seu <strong>efeito</strong> sobre outras funções (chamadas funções de teste) dentro de uma integral.</p>
+<p>Basicamente, definimos o impulso unitário como a entidade que satisfaz a propriedade de amostragem. Desta forma, não precisamos nos preocupar com a &quot;aparência&quot; ou o valor instantâneo do impulso, apenas com como ele atua sob integração.</p>
+<p><strong>Aplicação: A Derivada do Degrau Unitário</strong></p>
+<p>Uma aplicação interessante dessa definição generalizada surge ao analisarmos a função degrau unitário $u(t)$. No sentido ordinário, a derivada $du/dt$ não existe em $t=0$, pois a função é descontínua ali. No entanto, no sentido generalizado, podemos mostrar que sua derivada é, de fato, o impulso $\delta(t)$.</p>
+<p>Para provar isso, vamos calcular a integral de $(du/dt)\phi(t)$ usando integração por partes:</p>
+<p>$$
+\int_{-\infty}^{\infty} \frac{du}{dt} \phi(t) dt = u(t)\phi(t) \Big|_{-\infty}^{\infty} - \int_{-\infty}^{\infty} u(t)\dot{\phi}(t) dt 
+$$</p>
+<p>Sabendo que $u(t)$ é 0 para $t<0$ e 1 para $t>0$, e assumindo que $\phi(t)$ decai para zero no infinito ($\phi(\infty) = 0$), temos:</p>
+<p>$$
+= \left[ 1 \cdot \phi(\infty) - 0 \right] - \int_{0}^{\infty} \dot{\phi}(t) dt
+$$
+$$
+= 0 - \phi(t) \Big|_{0}^{\infty} = -[\phi(\infty) - \phi(0)] = \phi(0) 
+$$</p>
+<p>O resultado final é $\phi(0)$. Observe que isso é exatamente o que a propriedade de amostragem do impulso faria. Portanto, concluímos que $du/dt$ comporta-se como $\delta(t)$ no sentido generalizado:</p>
+<p>$$
+\frac{du}{dt} = \delta(t) 
+$$</p>
+<p>Consequentemente, a operação inversa também é válida. A função degrau unitário pode ser obtida integrando a função impulso unitário:</p>
+<p>$$
+u(t) = \int_{-\infty}^{t} \delta(\tau) d\tau = \begin{cases} 0 & t < 0 \\ 1 & t \ge 0 \end{cases} 
+$$</p>
+<div class="callout callout-summary">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">Funções de Singularidade</span>
+  </div>
+  <div class="callout-content">
+<p>Esse relacionamento pode ser estendido. Integrando o degrau, obtemos a <strong>rampa unitária</strong> ($tu(t)$). Integrando a rampa, obtemos a <strong>parábola unitária</strong> ($t^2/2$), e assim por diante.</p>
+  </div>
+</div>
+<h3 id="função-exponencial-latexplaceholderae263b9f000542abb4515de4547e3e5cn588"><span class="heading-text">Função Exponencial $e^{st}$</span><span class="heading-arabic">3.4.3</span></h3>
+<p>O sinal exponencial $e^{st}$ é um dos modelos mais fundamentais na engenharia, pois serve como base para descrever uma vasta gama de sinais reais. Diferente da exponencial simples, aqui o expoente $s$ é, em geral, um <strong>número complexo</strong>.</p>
+<p>A variável $s$, conhecida como <strong>frequência complexa</strong>, é composta por uma parte real e uma parte imaginária:</p>
+<p>$$s = \sigma + j\omega $$</p>
+<p>Ao substituirmos essa definição na função exponencial e utilizarmos a <strong>Fórmula de Euler</strong>, obtemos a forma expandida do sinal:</p>
+<p>$$e^{st} = e^{(\sigma + j\omega)t} = e^{\sigma t} e^{j\omega t} = e^{\sigma t}(\cos \omega t + j \text{ sen } \omega t)$$</p>
+<p>Nesta expressão, podemos identificar o papel de cada componente:</p>
+<ul>
+<li><strong>$\sigma$ (Parte Real):</strong> Chamada de frequência neperiana, determina a taxa de crescimento ou decaimento da amplitude.</li>
+<li><strong>$\omega$ (Parte Imaginária):</strong> Chamada de frequência angular, determina a taxa de oscilação do sinal.</li>
+</ul>
+<p>A função $e^{st}$ é extremamente versátil porque, dependendo dos valores de $\sigma$ e $\omega$, ela se transforma em outros sinais conhecidos:</p>
+<ol>
+<li><strong>Constante ($k$):</strong> Ocorre quando $s = 0$.</li>
+<li><strong>Exponencial Monotônica ($e^{\sigma t}$):</strong> Ocorre quando a parte imaginária é nula ($\omega = 0$).</li>
+<li><strong>Senóide de Amplitude Constante ($\cos \omega t$):</strong> Ocorre quando a parte real é nula ($\sigma = 0$).</li>
+<li><strong>Senóide Amortecida ou Crescente ($e^{\sigma t} \cos \omega t$):</strong> Ocorre quando ambos os termos ($\sigma$ e $\omega$) são diferentes de zero.</li>
+</ol>
+<p>Para visualizar essas variações, utilizamos o <strong>Plano $s$</strong>, onde o eixo horizontal representa a parte real ($\sigma$) e o eixo vertical representa a parte imaginária ($j\omega$).</p>
+<p>O comportamento do sinal é ditado pela localização de $s$ neste plano:</p>
+<ul>
+<li><strong>Eixo Imaginário ($\sigma = 0$):</strong> Resulta em sinais de amplitude constante (senóides puras).</li>
+<li><strong>Semi-plano Esquerdo (SPE, $\sigma < 0$):</strong> Resulta em sinais que decaem exponencialmente com o tempo (estáveis).</li>
+<li><strong>Semi-plano Direito (SPD, $\sigma > 0$):</strong> Resulta em sinais que crescem exponencialmente com o tempo (instáveis).</li>
+</ul>
+<h3 id="funções-pares-e-ímpares"><span class="heading-text">Funções Pares e Ímpares</span><span class="heading-arabic">3.4.4</span></h3>
+<p>No estudo de sinais e sistemas, você encontrará funções que apresentam propriedades específicas de simetria em relação ao eixo vertical. Uma função real $x_e(t)$ é classificada como uma <strong>função par</strong> de $t$ quando ela satisfaz a seguinte condição matemática:</p>
+<p>$$x_e(t) = x_e(-t)$$</p>
+<p>Isso significa que uma função par mantém exatamente o mesmo valor para os instantes $t$ e $-t$, independentemente do valor de $t$ escolhido. Visualmente, você notará que $x_e(t)$ é perfeitamente <strong>simétrica</strong> em relação ao eixo vertical, como pode ser observado na imagem abaixo:</p>
+<img src="static/figura-1-23a-representacao-de-uma-funcao-par.png" width="40%">
+
+<p>Por outro lado, uma função real $x_o(t)$ é denominada <strong>função ímpar</strong> de $t$ se ela obedecer à seguinte igualdade:</p>
+<p>$$x_o(t) = -x_o(-t)$$</p>
+<p>Neste caso, o valor assumido por uma função ímpar no instante $t$ corresponde ao negativo do valor registrado no instante $-t$. Em termos geométricos, dizemos que $x_o(t)$ é <strong>anti-simétrica</strong> em relação ao eixo vertical, apresentando uma simetria de reflexão em relação à origem, conforme ilustrado no diagrama a seguir:</p>
+<img src="static/figura-1-23b-representacao-de-uma-funcao-impar.png" width="40%">
+
+<div class="callout callout-tip">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .5 2.2 1.5 3.1.7.7 1.3 1.5 1.5 2.4"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span>
+    <span class="callout-title-inner">Dica de Estudo</span>
+  </div>
+  <div class="callout-content">
+<p>Para identificar rapidamente o tipo de simetria, imagine dobrar o gráfico sobre o eixo vertical. Se as duas metades coincidirem perfeitamente, a função é <strong>par</strong>. Se for necessário dobrar o gráfico sobre o eixo vertical e, em seguida, sobre o eixo horizontal para que coincidam, a função é <strong>ímpar</strong>.</p>
+  </div>
+</div>
+<h3 id="algumas-propriedades-de-funções-pares-e-ímpares"><span class="heading-text">Algumas Propriedades de Funções Pares e Ímpares</span><span class="heading-arabic">3.4.5</span></h3>
+<p>Para que você possa manipular sinais e funções com maior agilidade, é fundamental compreender como elas interagem entre si. As funções pares e ímpares apresentam propriedades multiplicativas específicas, que funcionam de forma análoga à regra de sinais da aritmética:</p>
+<ul>
+<li><strong>Função Par</strong> $\times$ <strong>Função Ímpar</strong> = <strong>Função Ímpar</strong></li>
+<li><strong>Função Ímpar</strong> $\times$ <strong>Função Ímpar</strong> = <strong>Função Par</strong></li>
+<li><strong>Função Par</strong> $\times$ <strong>Função Par</strong> = <strong>Função Par</strong></li>
+</ul>
+<p>Estas relações derivam diretamente das definições matemáticas que vimos anteriormente. Compreender esse comportamento ajudará você a simplificar expressões complexas sem a necessidade de cálculos exaustivos em cada etapa.</p>
+<h4 id="análise-de-área-sob-a-curva"><span class="heading-text">Análise de Área sob a Curva</span><span class="heading-arabic">3.4.5.1</span></h4>
+<p>A simetria dessas funções também nos permite extrair conclusões imediatas sobre a integral (ou a área) de um sinal em um intervalo simétrico em relação à origem, ou seja, de $-a$ até $a$.</p>
+ <img src="static/figura-1-23a-representacao-de-uma-funcao-par.png" width="40%">
+
+<p>Observe a figura novamente. Como $x_e(t)$ é <strong>simétrica</strong> em relação ao eixo vertical, a área acumulada no lado negativo do eixo $t$ é exatamente igual à área no lado positivo.</p>
+<img src="static/figura-1-23b-representacao-de-uma-funcao-impar.png" width="40%">
+
+<p>Portanto, temos:</p>
+<p>$$\int_{-a}^{a} x_e(t) dt = 2 \int_{0}^{a} x_e(t) dt$$</p>
+<p>Já para a função ímpar, ao analisar a figura acima, você perceberá que a área de um lado do eixo vertical possui o sinal oposto à área do outro lado. Devido a essa <strong>anti-simetria</strong>, as áreas se anulam perfeitamente:</p>
+<p>$$\int_{-a}^{a} x_o(t) dt = 0$$</p>
+<p>O domínio dessas propriedades de simetria será uma ferramenta poderosa para você nos próximos tópicos, facilitando a resolução de problemas de análise de sinais e transformadas.</p>
+<h3 id="componentes-pares-e-ímpares-de-um-sinal"><span class="heading-text">Componentes Pares e Ímpares de um Sinal</span><span class="heading-arabic">3.4.6</span></h3>
+<p>Um conceito fundamental na análise de sinais é que <strong>todo sinal</strong> $x(t)$ pode ser decomposto e descrito como a soma de duas partes distintas: uma componente par e uma componente ímpar. Esta relação é expressa pela seguinte equação matemática:</p>
+<p>$$x(t) = \underbrace{\frac{x(t) + x(-t)}{2}}_{\text{par}} + \underbrace{\frac{x(t) - x(-t)}{2}}_{\text{ímpar}}$$</p>
+<p>Essa decomposição é possível porque a primeira parte da equação satisfaz a condição de simetria das funções pares (substituir $t$ por $-t$ mantém o sinal inalterado), enquanto a segunda parte satisfaz a condição das funções ímpares (a substituição resulta no valor negativo da componente).</p>
+<h4 id="exemplo-prático-de-decomposição"><span class="heading-text">Exemplo Prático de Decomposição</span><span class="heading-arabic">3.4.6.1</span></h4>
+<p>Para ilustrar como essa técnica é aplicada, considere o sinal exponencial causal definido por:</p>
+<p>$$x(t) = e^{-at}u(t)$$</p>
+<p>Podemos expressar este sinal como a soma de suas componentes $x_e(t)$ (par) e $x_o(t)$ (ímpar). Utilizando a fórmula de decomposição apresentada anteriormente, obtemos os seguintes resultados:</p>
+<ul>
+<li><strong>Componente Par ($x_e$):</strong>
+$$x_e(t) = \frac{e^{-at}u(t) + e^{at}u(-t)}{2}$$</li>
+<li><strong>Componente Ímpar ($x_o$):</strong>
+$$x_o(t) = \frac{e^{-at}u(t) - e^{at}u(-t)}{2}$$</li>
+</ul>
+<p><div class="example">
+  <div class="example-title">Exemplo 11</div>
+  <p>Agora, determine as componentes par e ímpar de $e^{jt}$:</p>
+<ol>
+<li><strong>Sinal original:</strong> $x(t) = e^{jt}$.</li>
+<li><strong>Sinal refletido:</strong> $x(-t) = e^{-jt}$.</li>
+<li><strong>Componente Par ($x_e$):</strong><ul>
+<li>Pela fórmula: $x_e(t) = \frac{1}{2}[e^{jt} + e^{-jt}]$.</li>
+<li>Pela identidade de Euler, sabemos que essa expressão resulta em: <strong>$\cos t$</strong>.</li>
+</ul>
+</li>
+<li><strong>Componente Ímpar ($x_o$):</strong><ul>
+<li>Pela fórmula: $x_o(t) = \frac{1}{2}[e^{jt} - e^{-jt}]$.</li>
+<li>Novamente, pela identidade de Euler, isso resulta em: <strong>$j \operatorname{sen} t$</strong>.</li>
+</ul>
+</li>
+</ol>
+<p>Portanto, o sinal pode ser reescrito como a soma de sua parte par e ímpar: $e^{jt} = \cos t + j \operatorname{sen} t$.</p>
+<div class="callout callout-tip">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .5 2.2 1.5 3.1.7.7 1.3 1.5 1.5 2.4"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span>
+    <span class="callout-title-inner">Dica de Verificação</span>
+  </div>
+  <div class="callout-content">
+<p>Ao final de qualquer decomposição, você pode verificar seu trabalho somando as duas componentes encontradas ($x_e(t) + x_o(t)$). O resultado deve ser sempre igual ao sinal original $x(t)$.</p>
+  </div>
+</div>
+
+</div></p>
+<h2 id="questões"><span class="heading-text">Questões</span><span class="heading-arabic">3.5</span></h2>
+<h2 id="próximos-passos"><span class="heading-text">Próximos Passos</span><span class="heading-arabic">3.6</span></h2>
+
+                </div>
+            </article>
+            <footer class="footer">
+                <p>© 2025 · <a href="#">Gabriel Soares Baptista</a></p>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        const toggle = document.querySelector('.mobile-menu-toggle');
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.querySelector('.mobile-menu-overlay');
+
+        function openMenu() {
+            sidebar.classList.add('open');
+            overlay.classList.add('open');
+            toggle.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMenu() {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('open');
+            toggle.classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        toggle.addEventListener('click', () => {
+            if (sidebar.classList.contains('open')) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        overlay.addEventListener('click', closeMenu);
+    </script>
+
+    <script src="/aulas-faesa/js/bundle.min.js"></script>
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    { left: "$$", right: "$$", display: true },
+                    { left: "$", right: "$", display: false },
+                    { left: "\\(", right: "\\)", display: false },
+                    { left: "\\[", right: "\\]", display: true }
+                ],
+                throwOnError: false
+            });
+        });
+    </script>
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-clike.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-perl.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-java.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup-templating.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-php.min.js"></script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+    
+    
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const isSubcourse = false;
+        const courseName = "Processamento Digital de Sinais";
+        CourseForgeNav.applyDynamicBreadcrumbs('.breadcrumb', isSubcourse);
+        CourseForgeNav.initScrollSpy();
+        CourseForgeUI.initCopyButtons();
+        CourseForgeUI.initExamples();
+        });
+
+        function handleBackNavigation() {
+            const isSubcourse = false;
+        const dynamic = CourseForgeNav.getBackLink('contents.html', 'Voltar', isSubcourse);
+        window.location.href = dynamic.url;
+        }
+    </script>
+</body>
+
+</html>

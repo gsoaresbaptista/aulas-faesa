@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tokenizer Applet - SLANG</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Prism for syntax highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/rough.js/3.1.0/rough.js"></script>
+</head>
+
+<body>
+    <div class="applet-wrapper">
+        <header class="applet-header">
+            <h2>Tokenizer SLANG</h2>
+            <p>Digite seu código abaixo para ver a tokenização em tempo real.</p>
+        </header>
+
+        <div class="main-layout">
+            <div class="input-section">
+                <!-- Code Editor with highlighting overlay -->
+                <div class="editor-container">
+                    <pre id="highlighting"
+                        aria-hidden="true"><code class="language-slang" id="highlighting-content"></code></pre>
+                    <textarea id="code-input" spellcheck="false" placeholder="fn main() { ... }"></textarea>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <h3>Tabela de Símbolos</h3>
+                <div id="symbol-table-container">
+                    <table id="symbol-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 30%">ID</th>
+                                <th style="width: 70%">Identificador</th>
+                            </tr>
+                        </thead>
+                        <tbody id="symbol-table-body">
+                            <!-- Symbol table entries -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="pagination-controls">
+                    <button id="prev-page" title="Página Anterior">←</button>
+                    <span id="page-info">Página 1</span>
+                    <button id="next-page" title="Próxima Página">→</button>
+                </div>
+            </div>
+
+            <div class="visualizer-section" id="token-visualizer">
+                <!-- Tokens will be rendered here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="lexer.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>
