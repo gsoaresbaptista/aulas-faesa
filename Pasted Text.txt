@@ -1,1 +1,0 @@
-Converta o bin�rio puro 1010210102\u200b para o c�digo Gray utilizando o m�todo da opera��o XOR.

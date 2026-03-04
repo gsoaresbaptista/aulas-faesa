@@ -53,7 +53,7 @@
                         </li>
                         
                         <li class="toc-item level-2">
-                            <a href="#a-resposta-latexplaceholder5b03de48546e4506ae3a627689b3ebd3n0-ao-impulso-unitário">5.2. A Resposta $h(t)$ ao Impulso Unitário</a>
+                            <a href="#a-resposta-ao-impulso-unitário">5.2. A Resposta $h(t)$ ao Impulso Unitário</a>
                         </li>
                         
                         <li class="toc-item level-2">
@@ -174,9 +174,9 @@
                 </header>
                 <div class="article-body">
                     <h2 id="introdução"><span class="heading-text">Introdução</span><span class="heading-arabic">5.1</span></h2>
-<h2 id="a-resposta-latexplaceholder5b03de48546e4506ae3a627689b3ebd3n0-ao-impulso-unitário"><span class="heading-text">A Resposta $h(t)$ ao Impulso Unitário</span><span class="heading-arabic">5.2</span></h2>
+<h2 id="a-resposta-ao-impulso-unitário"><span class="heading-text">A Resposta $h(t)$ ao Impulso Unitário</span><span class="heading-arabic">5.2</span></h2>
 <p>A resposta ao impulso unitário, denotada por $h(t)$, é a saída de um sistema linear invariante no tempo quando a entrada é um impulso de Dirac $\delta(t)$. Conhecendo $h(t)$, podemos calcular a resposta a qualquer entrada $x(t)$ através da integral de convolução.</p>
-<p>Para sistemas descritos por equações diferenciais lineares com coeficientes constantes da forma $Q(D)y(t) = P(D)x(t)$, onde $Q(D)$ é um polinômio de ordem $N$ e $P(D)$ é um polinômio de ordem $M$ (com $M \le N$ por razões de causalidade física), existe um procedimento sistemático para determinar $h(t)$.</p>
+<p>Para sistemas descritos por equações diferenciais lineares com coeficientes constantes da forma $Q(D)y(t) = P(D)x(t)$, onde $Q(D)$ é um polinômio de ordem $N$ e $P(D)$ é um polinômio de ordem $M$ (com $M \le N$ por razões de causalidade física), existe um procedimento sistemático para determinar $h(t)$1.</p>
 <p>Quando $M < N$, a resposta ao impulso não contém impulsos propriamente ditos. Ela é composta apenas por uma combinação linear dos modos característicos do sistema, multiplicada pela função degrau unitário $u(t)$. Os modos característicos são funções exponenciais $e^{\lambda_i t}$, onde $\lambda_i$ são as raízes do polinômio característico $Q(\lambda)=0$.</p>
 <p>Assim, escrevemos:</p>
 <p>$$h(t) = \big( c_1 e^{\lambda_1 t} + c_2 e^{\lambda_2 t} + \dots + c_N e^{\lambda_N t} \big) u(t).$$</p>
@@ -190,10 +190,10 @@
 <p>$$\frac{d^2y}{dt^2} + 5\frac{dy}{dt} + 6y(t) = \frac{dx}{dt} + x(t).$$</p>
 <hr />
 <p><strong>Ideia geral do método</strong></p>
-<p>Você deve lembrar que a resposta ao impulso $h(t)$ é, por definição, a saída $y(t)$ do sistema quando a entrada $x(t)$ é um impulso unitário $\delta(t)$.</p>
+<p>Você deve lembrar que a resposta ao impulso $h(t)$ é, por definição, a saída $y(t)$ do sistema quando a entrada $x(t)$ é um impulso unitário $\delta(t)$8.</p>
 <p>O nosso objetivo é encontrar uma solução que satisfaça a equação diferencial para essa entrada específica. Como sistemas físicos causais só respondem após o estímulo, sabemos que $h(t) = 0$ para $t < 0$. Para $t > 0$, a resposta será governada pela dinâmica natural do sistema. O desafio principal aqui é descobrir como o impulso &quot;dispara&quot; as condições iniciais em $t=0$.</p>
 <hr />
-<p><strong>Passo 1: Encontrar a forma funcional de $h(t)$ para $t>0$</strong></p>
+<p><strong>Passo 1: Encontrar a forma funcional de $h(t)$3 para $t>0$</strong></p>
 <p>Para $t > 0$, o impulso de entrada já ocorreu (em $t=0$) e é nulo. Portanto, a equação que descreve o sistema torna-se a <strong>equação homogênea</strong>:</p>
 <p>$$\frac{d^2y}{dt^2} + 5\frac{dy}{dt} + 6y(t) = 0.$$</p>
 <p>Para resolvermos essa equação, propomos uma solução exponencial do tipo $y(t) = e^{\lambda t}$. Substituindo na equação diferencial, encontramos a <strong>equação característica</strong>:</p>
@@ -334,7 +334,7 @@ c_1 = 1 - 2 \implies \boxed{c_1 = -1}
 $$</p>
 <hr />
 <p><strong>Passo 5: Expressão final</strong></p>
-<p>Com as constantes determinadas, podemos escrever a expressão final para $h(t)$. Substituímos $c_1$ e $c_2$ na expressão de $f(t)$ e multiplicamos pelo degrau unitário:</p>
+<p>Com as constantes determinadas, podemos escrever a expressão final para $h(t)$05. Substituímos $c_1$ e $c_2$ na expressão de $f(t)$ e multiplicamos pelo degrau unitário:</p>
 <p>$$
 \boxed{h(t) = (-e^{-2t} + 2e^{-3t})u(t)}
 $$</p>
@@ -343,7 +343,7 @@ $$</p>
 </div></p>
 <p><div class="example">
   <div class="example-title">Exemplo 2</div>
-  <p>Vamos determinar a resposta ao impulso $h(t)$ para o sistema LCIT:</p>
+  <p>Vamos determinar a resposta ao impulso $h(t)$10 para o sistema LCIT:</p>
 <p>$$(D + 2)y(t) = (3D + 5)x(t)$$</p>
 <p>Ou na forma diferencial:</p>
 <p>$$\frac{dy}{dt} + 2y(t) = 3\frac{dx}{dt} + 5x(t)$$</p>
@@ -366,7 +366,7 @@ $$</p>
   </div>
 </div>
 <hr />
-<p><strong>Passo 1: Encontrar a forma funcional de $h(t)$</strong></p>
+<p><strong>Passo 1: Encontrar a forma funcional de $h(t)$30</strong></p>
 <p>Para $t > 0$ (solução homogênea), temos a equação característica $\lambda + 2 = 0 \to \lambda = -2$. A resposta natural é $y_n(t) = K e^{-2t}$.</p>
 <p>Devido à regra acima ($N=M$), a resposta completa deve ser a soma do impulso com a resposta natural:</p>
 <p>$$
@@ -375,7 +375,7 @@ $$</p>
 <p>Nosso objetivo é achar <strong>$A$</strong> e <strong>$K$</strong>.</p>
 <hr />
 <p><strong>Passo 2: Calcular a derivada da resposta ao impulso</strong></p>
-<p>Derivamos $h(t)$ usando a regra do produto e a propriedade da amostragem ($g(t)\delta(t) = g(0)\delta(t)$):</p>
+<p>Derivamos $h(t)$38 usando a regra do produto e a propriedade da amostragem ($g(t)\delta(t) = g(0)\delta(t)$):</p>
 <p>$$
 h(t) = A\delta(t) + y_n(t)u(t)
 $$</p>
@@ -425,7 +425,7 @@ $$</p>
 </div></p>
 <p><div class="example">
   <div class="example-title">Exemplo 3</div>
-  <p>Vamos determinar a resposta ao impulso $h(t)$ para o sistema descrito pela equação:</p>
+  <p>Vamos determinar a resposta ao impulso $h(t)$68 para o sistema descrito pela equação:</p>
 <p>$$D(D + 2)y(t) = (D + 4)x(t)$$</p>
 <p>Primeiro, expandimos os operadores para visualizar a equação diferencial completa:</p>
 <p>$$(D^2 + 2D)y(t) = (D + 4)x(t)$$</p>
@@ -440,7 +440,7 @@ $$</p>
 </ul>
 <p>Como <strong>$N > M$</strong> ($2 > 1$), este sistema possui &quot;inércia&quot;. Isso significa que a entrada não consegue &quot;vazar&quot; instantaneamente para a saída. Portanto, <strong>não teremos um termo $A\delta(t)$ isolado</strong> na resposta final. A resposta ao impulso será composta apenas por termos exponenciais que começam em $t=0$.</p>
 <hr />
-<p><strong>Passo 1: Encontrar a forma funcional de $h(t)$ para $t>0$</strong></p>
+<p><strong>Passo 1: Encontrar a forma funcional de $h(t)$82 para $t>0$</strong></p>
 <p>Para $t > 0$, a entrada $x(t) = \delta(t)$ já passou e vale zero. Resolvemos a <strong>equação homogênea</strong>:</p>
 <p>$$\frac{d^2y}{dt^2} + 2\frac{dy}{dt} = 0$$</p>
 <p>A equação característica é:</p>
@@ -495,7 +495,7 @@ O que sobrou deve ser igual ao lado direito da entrada ($\dot{\delta}(t) + 4\del
 <li><p><strong>Para $\dot{\delta}(t)$:</strong>
 $$f(0) = 1$$</p>
 </li>
-<li><p><strong>Para $\delta(t)$:</strong>
+<li><p><strong>Para $\delta(t)$10:</strong>
 $$\dot{f}(0) + 2f(0) = 4$$
 Substituindo $f(0) = 1$:
 $$\dot{f}(0) + 2(1) = 4 \implies \dot{f}(0) = 2$$</p>
@@ -588,7 +588,7 @@ $$f(0)\dot{\delta}(t) + [\dot{f}(0) + 2f(0)]\delta(t) = 1\dot{\delta}(t) + 0\del
 <li><p><strong>Para $\dot{\delta}(t)$:</strong>
 $$f(0) = 1$$</p>
 </li>
-<li><p><strong>Para $\delta(t)$:</strong>
+<li><p><strong>Para $\delta(t)$64:</strong>
 $$\dot{f}(0) + 2f(0) = 0$$
 Substituindo $f(0) = 1$:
 $$\dot{f}(0) + 2(1) = 0 \implies \dot{f}(0) = -2$$</p>
@@ -622,13 +622,9 @@ $$c_2 - 1 = -2 \implies \boxed{c_2 = -1}$$</p>
 </div></p>
 <h2 id="resposta-do-sistema-à-entrada-externa-resposta-de-estado-nulo"><span class="heading-text">Resposta do Sistema à Entrada Externa: Resposta de Estado Nulo</span><span class="heading-arabic">5.3</span></h2>
 <p>Nesta sessão, você aprenderá como determinar a <strong>resposta de estado nulo</strong> de um sistema <strong>LCIT</strong> (Linear e Invariante no Tempo com Coeficientes Constantes). Esse termo refere-se à saída $y(t)$ produzida quando o sistema recebe uma entrada $x(t)$, partindo do pressuposto de que <strong>todas as condições iniciais são nulas</strong>. Para fins didáticos, trataremos essa resposta como a resposta total do sistema.</p>
-<p>Para compreendermos como o sistema reage a uma entrada qualquer, utilizaremos o <strong>princípio da superposição</strong>. O primeiro passo é decompor o sinal $x(t)$ em componentes mais simples. Imagine um pulso básico $p(t)$, com altura unitária e uma largura muito estreita $\Delta\tau$, começando em $t = 0$, conforme você pode observar no diagrama abaixo:</p>
-<img src="static/image-68cbe3-a-pulso-basico.png">
-
-<p>Qualquer sinal complexo $x(t)$ pode ser visto como uma soma de diversos pulsos retangulares desse tipo. Se pegarmos um pulso que começa no instante $t = n\Delta\tau$, sua altura será dada pelo valor da função naquele ponto, ou seja, $x(n\Delta\tau)$. Esse pequeno pulso individual é representado matematicamente por $x(n\Delta\tau)p(t - n\Delta\tau)$, como ilustrado na representação a seguir:</p>
-<img src="static/image-68cbe3-b-aproximacao-por-pulsos.png">
-
-<p>Ao somarmos todos esses pulsos, reconstruímos a função original. A manipulação matemática fundamental ocorre quando fazemos a largura do pulso ($\Delta\tau$) tender a zero. Nesse limite, o pulso retangular se transforma em um <strong>impulso unitário</strong> $\delta(t)$. Assim, a entrada $x(t)$ pode ser reescrita como uma soma infinita (integral) de impulsos deslocados e escalonados:</p>
+<p>Para compreendermos como o sistema reage a uma entrada qualquer, utilizaremos o <strong>princípio da superposição</strong>. O primeiro passo é decompor o sinal $x(t)$ em componentes mais simples. Imagine um pulso básico $p(t)$, com altura unitária e uma largura muito estreita $\Delta\tau$, começando em $t = 0$.</p>
+<p>Qualquer sinal complexo $x(t)$ pode ser visto como uma soma de diversos pulsos retangulares desse tipo. Se pegarmos um pulso que começa no instante $t = n\Delta\tau$, sua altura será dada pelo valor da função naquele ponto, ou seja, $x(n\Delta\tau)$. Esse pequeno pulso individual é representado matematicamente por $x(n\Delta\tau)p(t - n\Delta\tau)$.</p>
+<p>Ao somarmos todos esses pulsos, reconstruímos a função original. A manipulação matemática fundamental ocorre quando fazemos a largura do pulso ($\Delta\tau$) tender a zero. Nesse limite, o pulso retangular se transforma em um <strong>impulso unitário</strong> $\delta(t)$97. Assim, a entrada $x(t)$ pode ser reescrita como uma soma infinita (integral) de impulsos deslocados e escalonados:</p>
 <p>$$x(t) = \lim_{\Delta\tau \to 0} \sum_{\tau} x(n\Delta\tau)\delta(t - n\Delta\tau) \Delta\tau$$</p>
 <div class="callout callout-info">
   <div class="callout-title">
@@ -636,26 +632,26 @@ $$c_2 - 1 = -2 \implies \boxed{c_2 = -1}$$</p>
     <span class="callout-title-inner">O Conceito Chave: Resposta de Estado Nulo</span>
   </div>
   <div class="callout-content">
-<p>Agora, entra em jogo o motivo de termos estudado a <strong>resposta ao impulso</strong> $h(t)$. Lembre-se: a resposta ao impulso $h(t)$ é, <strong>por definição, a saída do sistema quando a entrada é um impulso unitário e todas as suas condições iniciais são zero</strong>.</p>
+<p>Agora, entra em jogo o motivo de termos estudado a <strong>resposta ao impulso</strong> $h(t)$00. Lembre-se: a resposta ao impulso $h(t)$01 é, <strong>por definição, a saída do sistema quando a entrada é um impulso unitário e todas as suas condições iniciais são zero</strong>.</p>
 <p>Portanto, quando usamos a resposta ao impulso para calcular a saída para uma entrada qualquer, estamos, automaticamente, calculando a <strong>resposta de estado nulo</strong>. A saída resultante $y(t)$ será a resposta do sistema excitado apenas pela entrada $x(t)$, como se ele tivesse partido do repouso completo (sem energia armazenada).</p>
   </div>
 </div>
 <p>Pelas propriedades de sistemas <strong>LCIT</strong>, sabemos como o sistema reage a impulsos:</p>
 <ul>
-<li>Se a entrada é $\delta(t)$, a saída é $h(t)$.</li>
+<li>Se a entrada é $\delta(t)$, a saída é $h(t)$05.</li>
 <li>Como o sistema é <strong>invariante no tempo</strong>, se atrasarmos o impulso para $\delta(t - n\Delta\tau)$, a saída será simplesmente $h(t - n\Delta\tau)$.</li>
 <li>Como o sistema é <strong>linear</strong>, se multiplicarmos o impulso por um peso $x(n\Delta\tau)\Delta\tau$, a saída será multiplicada pelo mesmo valor.</li>
 </ul>
 <p>Ao aplicarmos a superposição para todos os infinitos impulsos que compõem $x(t)$, a soma se transforma em uma integral. O resultado é a expressão que define a saída do sistema para qualquer entrada:</p>
 <p>$$y(t) = \int_{-\infty}^{\infty} x(\tau)h(t - \tau) d\tau$$</p>
-<p>Essa operação é o que chamamos de <strong>Integral de Convolução</strong>. Ela nos mostra que a resposta de um sistema é determinada pela interação entre a entrada e os <strong>modos característicos</strong> do sistema, que estão &quot;guardados&quot; dentro da função $h(t)$.</p>
+<p>Essa operação é o que chamamos de <strong>Integral de Convolução</strong>. Ela nos mostra que a resposta de um sistema é determinada pela interação entre a entrada e os <strong>modos característicos</strong> do sistema, que estão &quot;guardados&quot; dentro da função $h(t)$11.</p>
 <div class="callout callout-tip">
   <div class="callout-title">
     <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .5 2.2 1.5 3.1.7.7 1.3 1.5 1.5 2.4"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span>
     <span class="callout-title-inner">Conclusão</span>
   </div>
   <div class="callout-content">
-<p>Note que $h(t)$ funciona como uma &quot;impressão digital&quot; do sistema. Uma vez que você conhece a resposta ao impulso unitário (que já presume condições iniciais nulas), você tem em mãos a ferramenta para prever o comportamento do sistema diante de qualquer sinal de entrada imaginável, ou seja, para calcular a <strong>resposta de estado nulo</strong> para qualquer $x(t)$.</p>
+<p>Note que $h(t)$12 funciona como uma &quot;impressão digital&quot; do sistema. Uma vez que você conhece a resposta ao impulso unitário (que já presume condições iniciais nulas), você tem em mãos a ferramenta para prever o comportamento do sistema diante de qualquer sinal de entrada imaginável, ou seja, para calcular a <strong>resposta de estado nulo</strong> para qualquer $x(t)$.</p>
   </div>
 </div>
 <h3 id="a-integral-de-convolução"><span class="heading-text">A Integral de Convolução</span><span class="heading-arabic">5.3.1</span></h3>
@@ -702,7 +698,7 @@ $$y(t) = \int_{-\infty}^{\infty} x(\tau)h(t, \tau) d\tau$$</p>
 <p>Como estudamos anteriormente, a resposta de estado nulo $y(t)$ de um sistema <strong>LCIT</strong> é expressa pela integral de convolução entre a entrada e a resposta ao impulso:</p>
 <p>$$y(t) = x(t) * h(t) = \int_{-\infty}^{\infty} x(\tau)h(t - \tau) d\tau$$</p>
 <p>Na prática, você lidará majoritariamente com sistemas <strong>causais</strong>, nos quais a resposta não pode ocorrer antes da aplicação da entrada. Além disso, a maioria dos sinais de entrada que utilizaremos também são <strong>causais</strong>, iniciando em $t = 0$.</p>
-<p>Essa restrição física simplifica significativamente os limites de integração. Se o sistema é causal, sua resposta ao impulso unitário $\delta(t)$ não começa antes de $t = 0$, logo, $h(t)$ é um sinal causal. Se a entrada $x(t)$ também é causal, ela será nula para todo tempo negativo. Graficamente, isso significa que o produto $x(\tau)h(t - \tau)$ será zero em quase todo lugar, exceto no intervalo entre $0$ e $t$.</p>
+<p>Essa restrição física simplifica significativamente os limites de integração. Se o sistema é causal, sua resposta ao impulso unitário $\delta(t)$ não começa antes de $t = 0$, logo, $h(t)$49 é um sinal causal. Se a entrada $x(t)$ também é causal, ela será nula para todo tempo negativo. Graficamente, isso significa que o produto $x(\tau)h(t - \tau)$ será zero em quase todo lugar, exceto no intervalo entre $0$ e $t$.</p>
 <img src="static/figura-2-5-limites-da-integral-de-convolucao.png">
 
 <p>Portanto, para sinais e sistemas causais, a integral de convolução se reduz a:</p>
