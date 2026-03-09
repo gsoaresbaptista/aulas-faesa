@@ -913,7 +913,29 @@ $$h_p(t) = h_1(t) + h_2(t) \quad (2.43a)$$</p>
 $$h_c(t) = h_1(t) * h_2(t) \quad (2.43b)$$</p>
 <p>Devido à <strong>propriedade comutativa</strong> da convolução, você pode alternar a ordem dos sistemas $S_1$ e $S_2$ sem alterar a resposta impulsiva total, como mostrado na <strong>letra (c)</strong>. Teoricamente, a ordem em que as operações lineares em série são executadas não é importante, embora limitações físicas reais possam influenciar a performance final.</p>
 <h2 id="questões"><span class="heading-text">Questões</span><span class="heading-arabic">5.4</span></h2>
+<p><strong>1.</strong> Considere um sistema descrito pela equação diferencial: $$(D+2)y(t) = (3D+5)x(t)$$</p>
+<ul>
+<li>a) Identifique as ordens $N$ (saída) e $M$ (entrada) e explique por que a resposta $h(t)$ deve conter um termo impulsivo $A\delta(t)$.</li>
+<li>b) Seguindo o procedimento do <strong>Exemplo 2</strong>, determine os valores de $A$ e da constante $K$ para a resposta natural $Ke^{-2t}u(t)$.</li>
+</ul>
+<p><strong>2.</strong> Analise o sistema do <strong>Exemplo 3</strong>: $D(D+2)y(t) = (D+4)x(t)$. Explique, com base na relação entre $N$ e $M$, por que este sistema não apresenta um termo $\delta(t)$ isolado na saída e como isso se relaciona com a &quot;inércia&quot; do sistema.</p>
+<p><strong>3.</strong> Utilizando a integral de convolução para sistemas causais $y(t) = \int_{0}^{t} x(\tau)h(t - \tau) d\tau$, resolva o cenário proposto no <strong>Exemplo 5</strong>:</p>
+<ul>
+<li>Determine a saída $y(t)$ para a entrada $x(t) = e^{-t}u(t)$ em um sistema com $h(t) = e^{-2t}u(t)$.</li>
+<li>Apresente o resultado final indicando a causalidade através da função degrau $u(t)$.</li>
+</ul>
+<p><strong>4.</strong> Demonstre seu entendimento sobre as propriedades operatórias:</p>
+<ul>
+<li>a) Se $x(t) * h(t) = y(t)$, qual será o resultado de $x(t - T_1) * h(t - T_2)$ segundo a <strong>Propriedade de Deslocamento</strong>?</li>
+<li>b) Se uma entrada possui duração de $3$ segundos e a resposta ao impulso do sistema dura $5$ segundos, qual será a largura total do sinal de saída $y(t)$?</li>
+</ul>
+<p><strong>5.</strong> Projetos complexos são formados por subsistemas em série ou paralelo.</p>
+<ul>
+<li>a) Determine a resposta ao impulso equivalente $h_p(t)$ para dois sistemas $h_1(t)$ e $h_2(t)$ conectados em <strong>paralelo</strong>.</li>
+<li>b) No caso de uma conexão em <strong>série (cascata)</strong>, explique por que a ordem dos sistemas ($h_1 * h_2$ ou $h_2 * h_1$) não altera o resultado final, citando a propriedade matemática relevante.</li>
+</ul>
 <h2 id="próximos-passos"><span class="heading-text">Próximos Passos</span><span class="heading-arabic">5.5</span></h2>
+<p>No próximo capítulo, <strong><a href="6-laplace.html">6 - Transformada de Laplace</a></strong>, daremos um salto fundamental para o <strong>domínio da frequência complexa $s$</strong>. Veremos como a Transformada de Laplace simplifica drasticamente a análise de sistemas, convertendo operações de convolução em multiplicações algébricas e equações diferenciais em simples equações lineares.</p>
 
                 </div>
             </article>
