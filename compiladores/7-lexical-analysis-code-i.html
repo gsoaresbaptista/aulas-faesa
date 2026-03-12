@@ -66,6 +66,7 @@ void token_println(Token *token) {
 #define LEXER_H_
 
 #include "compiler/token.h"
+#include &lt;stdbool.h>
 
 typedef struct {
     const char *source;  // O código fonte completo
@@ -88,6 +89,33 @@ void lexer_init(Lexer *lexer, const char *source) {
     lexer->line = 1;
 }
 
+static Token make_token(Lexer *lexer, TokenType type) {
+    Token token;
+    token.type = type;
+    token.start = lexer->start;
+    token.length = (int)(lexer->current - lexer->start);
+    token.line = lexer->line;
+    return token;
+}
+
+static Token error_token(Lexer *lexer, const char *message) {
+    Token token;
+    token.type = TOK_ERROR;
+    token.start = message;
+    token.length = (int)strlen(message);
+    token.line = lexer->line;
+    return token;
+}
+
+static bool is_at_end(Lexer *lexer) {
+    return *lexer->current == '\0';
+}
+
+static char advance(Lexer *lexer) {
+    lexer->current++;
+    return lexer->current[-1]; 
+}
+
 // Implementaremos lexer_next_token no próximo capítulo
 Token lexer_next_token(Lexer *lexer) {
     // Placeholder para o loop principal
@@ -95,7 +123,7 @@ Token lexer_next_token(Lexer *lexer) {
     token.type = TOK_EOF;
     return token; 
 }
-</code></pre><p>Compiladores, em sua maioria, não se importam com espaços, tabulações ou quebras de linha (com exceção de linguagens como Python). Na nossa linguagem, queremos ignorar completamente essa "sujeira" entre os tokens úteis. Ainda em <code>src/compiler/lexer.c</code>, adicione esta função. Ela é responsável por avançar o current silenciosamente sempre que encontrar formatação irrelevante.</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>// Consome espaços, tabs e quebras de linha.
+</code></pre><p>Compiladores, em sua maioria, não se importam com espaços, tabulações ou quebras de linha (com exceção de linguagens como Python). Na nossa linguagem, queremos ignorar completamente essa "sujeira" entre os tokens úteis. Ainda em <code>src/compiler/lexer.c</code>, adicione esta função. Ela é responsável por avançar o current silenciosamente sempre que encontrar formatação irrelevante.</p><div class="callout callout-bug"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="m8 2 1.88 1.88"/><path d="M14.12 3.88 16 2"/><path d="M9 7.13v-1a3.003 3.003 0 1 1 6 0v1"/><path d="M12 20c-3.3 0-6-2.7-6-6v-3a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v3c0 3.3-2.7 6-6 6"/><path d="M12 20v-9"/><path d="M6.53 9C4.6 8.8 3 7.1 3 5"/><path d="M6 13H2"/><path d="M3 21c0-2.1 1.7-3.9 3.8-4"/><path d="M20.97 5c0 2.1-1.6 3.8-3.53 4"/><path d="M18 13h4"/><path d="M21 21c0-2.1-1.7-3.9-3.8-4"/></svg></span><span class=callout-title-inner>Posição da função!</span></div><div class=callout-content><p>Coloque essa função antes de <code>lexer_next_token</code>, caso contrário, terá um erro de função ainda não definida na hora de utilizá-la.</p></div></div><pre class="line-numbers language-c" data-lang=C><code class=language-c>// Consome espaços, tabs e quebras de linha.
 // Isso garante que o Lexer foque apenas no código útil.
 static void skip_whitespace(Lexer *lexer) {
     for (;;) {
@@ -115,14 +143,7 @@ static void skip_whitespace(Lexer *lexer) {
         }
     }
 }
-</code></pre><p>Agora vamos substituir aquele placeholder que deixamos anteriormente. Esta é a função que o Parser chamará repetidamente. A cada chamada, ela deve me entregar um token completo. Nesta etapa, implementaremos o reconhecimento dos símbolos da nossa linguagem (<code>:</code>, <code>=</code>, <code>{</code>, <code>}</code>, etc.), deixando identificadores e números para a próxima aula. Adicione, ainda no mesmo arquivo as funções abaixo:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>void lexer_init(Lexer *lexer, const char *source) {
-    lexer->source = source;
-    lexer->start = source;
-    lexer->current = source;
-    lexer->line = 1;
-}
-
-Token lexer_next_token(Lexer *lexer) {
+</code></pre><p>Agora vamos substituir aquele placeholder que deixamos anteriormente. Esta é a função que o Parser chamará repetidamente. A cada chamada, ela deve me entregar um token completo. Nesta etapa, implementaremos o reconhecimento dos símbolos da nossa linguagem (<code>:</code>, <code>=</code>, <code>{</code>, <code>}</code>, etc.), deixando identificadores e números para a próxima aula. Substitua, ainda no mesmo arquivo a função abaixo:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>Token lexer_next_token(Lexer *lexer) {
     // 1. Limpa a sujeira (espaços/tabs/newlines) antes de começar
     skip_whitespace(lexer);
 
