@@ -221,25 +221,28 @@ static char* read_file(const char* path) {
 }
 
 int main(int argc, char* argv[]) {
-    // Verifica se o usuário passou o argumento
     if (argc != 2) {
         fprintf(stderr, "Uso: compiler [caminho_do_arquivo]\n");
         return 64;
     }
 
-    const char* filePath = argv[1];
-    
-    // 1. Carrega o arquivo na memória
-    char* source = read_file(filePath);
-
-    // 2. Inicializa o Lexer com o código fonte
+    char* source = read_file(argv[1]);
     Lexer lexer;
     lexer_init(&lexer, source);
 
-    printf("Sucesso! Arquivo lido e Lexer inicializado.\n");
-    printf("Conteúdo do arquivo:\n%s\n", source);
+    printf("=== Iniciando Análise Léxica ===\n");
 
-    // Limpeza
+    Token token;
+    do {
+        token = lexer_next_token(&lexer);
+        token_println(&token);
+
+        if (token.type == TOK_ERROR) break;
+
+    } while (token.type != TOK_EOF);
+
+    printf("=== Análise Concluída ===\n");
+
     free(source);
     return 0;
 }

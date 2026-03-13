@@ -303,32 +303,22 @@ static Token identifier(Lexer *lexer) {
             return error_token(lexer, "Caractere inesperado.");
     }
 }
-</code></pre><p>Agora, temos que atualizar nossa função main em <code>src/main.c</code> para que leia o arquivo e, temporariamente, gere todos os tokens de uma só vez. Para isso, troque a sua função <code>main</code> pela abaixo:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>int main(int argc, char* argv[]) {
-    if (argc != 2) {
-        fprintf(stderr, "Uso: compiler [caminho_do_arquivo]\n");
-        return 64;
-    }
-
-    char* source = read_file(argv[1]);
-    Lexer lexer;
-    lexer_init(&lexer, source);
-
-    printf("=== Iniciando Análise Léxica ===\n");
-
-    Token token;
-    do {
-        token = lexer_next_token(&lexer);
-        token_println(&token);
-
-        if (token.type == TOK_ERROR) break;
-
-    } while (token.type != TOK_EOF);
-
-    printf("=== Análise Concluída ===\n");
-
-    free(source);
-    return 0;
-}
+</code></pre><p>Caso esteja tendo erro de importação, tente colar no arquivo <code>src/compiler/lexer.c</code> o seguinte código após as macros de <code>#include</code>.</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>static bool is_digit(char c);
+static bool is_alpha(char c);
+static bool is_at_end(Lexer *lexer);
+static char advance(Lexer *lexer);
+static Token make_token(Lexer *lexer, TokenType type);
+static Token error_token(Lexer *lexer, const char *message);
+static char peek(Lexer *lexer);
+static char peek_next(Lexer *lexer);
+static bool match(Lexer *lexer, char expected);
+static Token string(Lexer *lexer);
+static Token character(Lexer *lexer);
+static Token number(Lexer *lexer);
+static TokenType check_keyword(Lexer *lexer, int start, int length, const char *rest, TokenType type);
+static TokenType identifier_type(Lexer *lexer);
+static Token identifier(Lexer *lexer);
+static void skip_whitespace(Lexer *lexer);
 </code></pre><h2 id=testando-a-implementação-completa><span class=heading-text>Testando a Implementação Completa</span><span class=heading-arabic>8.8</span></h2><p>Agora nosso compilador é capaz de entender a riqueza da linguagem. Vamos testar com um arquivo que usa todas as novas <em>features</em>: comentários, lógica textual, strings e comparações. Atualize o arquivo <code>teste.slang</code> para o conteúdo:</p><pre class="line-numbers language-slang" data-lang=SLANG><code class=language-slang>/* Exemplo Completo da Linguagem
   Testando Lexer V2
 */
@@ -349,20 +339,61 @@ if x == 6 || !valid {
 fn process(v: void) -> int {
     return 0
 }
-</code></pre><div class="callout callout-danger"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1=12 x2=12 y1=9 y2=13 /><line x1=12 x2=12 y1=17 y2=17.01 /></svg></span><span class=callout-title-inner>Estilização do código</span></div><div class=callout-content><p>Observe que o código no VS Code não apresenta estilização, pois a linguagem <code>slang</code> não existe. Para facilitar o acompanhamento do restante da disciplina, foi desenvolvida uma extensão que pode ser instalada para aplicar a estilização adequada ao VS Code.</p><p>Faça o download da <a href=bin/slang-002.vsix>Extensão VSIX</a>. Para instalar, no VS Code vá até <strong>Extensões</strong>, clique no ícone de três pontos (<code>...</code>), selecione <strong>Install from VSIX</strong> e escolha o arquivo baixado.</p><p>Caso necessário, reinicie o programa para que o código passe a aparecer corretamente estilizado.</p></div></div><p>Compile e execute. A saída deve listar corretamente <code>TOK_STRING</code> ("Compiladores"), ignorar os comentários, identificar <code>TOK_AND</code>, <code>TOK_EQ_EQ</code> e <code>TOK_KW_VOID</code>.</p><blockquote><p>Para rodar, caso não tenha feita na etapa anterior ainda, crie uma pasta chamada <code>build</code> e roda <code>cmake -B build</code>. Caso tenha feito apenas uma mudança em um arquivo existente basta rodar <code>cmake --build build</code> para recompilá-lo. <strong>Entretanto, caso adicione um novo arquivo <code>.h</code> ou <code>.c</code> precisará rodar o primeiro e o segundo comando novamente.</strong></p><p>Após compilar o projeto basta chamar o binário pelo terminal passando o nome do arquivo que quer "compiler", no nosso caso <code>./build/compiler teste.slang</code></p></blockquote><p>Com isso, encerramos o <strong>Front-end Léxico</strong>. Temos um Scanner robusto, capaz de ignorar ruídos (espaços e comentários) e categorizar corretamente a entrada para o Parser, que será nosso próximo grande módulo.</p><div class="callout callout-tip"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .5 2.2 1.5 3.1.7.7 1.3 1.5 1.5 2.4"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span><span class=callout-title-inner>A ordem importa!!!</span></div><div class=callout-content><p>Lembre-se que a ordem que você define as funções no arquivo <code>lexer.c</code> importa, uma vez que não colocamos as definições das funções no arquivo.</p></div></div><p>Caso esteja tendo erro de importação, tente colar no arquivo <code>src/compiler/lexer.c</code> o seguinte código após as macros de <code>#include</code>.</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>static bool is_digit(char c);
-static bool is_alpha(char c);
-static bool is_at_end(Lexer *lexer);
-static char advance(Lexer *lexer);
-static Token make_token(Lexer *lexer, TokenType type);
-static Token error_token(Lexer *lexer, const char *message);
-static char peek(Lexer *lexer);
-static char peek_next(Lexer *lexer);
-static bool match(Lexer *lexer, char expected);
-static Token string(Lexer *lexer);
-static Token character(Lexer *lexer);
-static Token number(Lexer *lexer);
-static TokenType check_keyword(Lexer *lexer, int start, int length, const char *rest, TokenType type);
-static TokenType identifier_type(Lexer *lexer);
-static Token identifier(Lexer *lexer);
-static void skip_whitespace(Lexer *lexer);
-</code></pre><h2 id=próximos-passos><span class=heading-text>Próximos passos</span><span class=heading-arabic>8.9</span></h2><div class="callout callout-warning"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span><span class=callout-title-inner>Conteúdo em desenvolvimento!</span></div><div class=callout-content><p>Este conteúdo ainda não foi finalizado. Assim que estiver completo, este aviso será atualizado com o link correspondente.</p></div></div></div></article><footer class=footer><p>© 2025 · <a href=#>Gabriel Soares Baptista</a></p></footer></main></div><script>const toggle=document.querySelector(`.mobile-menu-toggle`),sidebar=document.querySelector(`.sidebar`),overlay=document.querySelector(`.mobile-menu-overlay`);function openMenu(){sidebar.classList.add(`open`),overlay.classList.add(`open`),toggle.classList.add(`open`),document.body.style.overflow=`hidden`}function closeMenu(){sidebar.classList.remove(`open`),overlay.classList.remove(`open`),toggle.classList.remove(`open`),document.body.style.overflow=``}toggle.addEventListener(`click`,()=>{sidebar.classList.contains(`open`)?closeMenu():openMenu()}),overlay.addEventListener(`click`,closeMenu);</script><script src=/aulas-faesa/js/bundle.min.js></script><script>document.addEventListener(`DOMContentLoaded`,function(){renderMathInElement(document.body,{delimiters:[{left:`$$`,right:`$$`,display:!0},{left:`$`,right:`$`,display:!1},{left:`\\(`,right:`\\)`,display:!1},{left:`\\[`,right:`\\]`,display:!0}],throwOnError:!1})});</script><script src=https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-clike.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-perl.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-java.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup-templating.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-php.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.js></script><script>document.addEventListener(`DOMContentLoaded`,function(){let isSubcourse=!1,courseName=`Compiladores`;CourseForgeNav.applyDynamicBreadcrumbs(`.breadcrumb`,!1),CourseForgeNav.initScrollSpy(),CourseForgeUI.initCopyButtons(),CourseForgeUI.initExamples()});function handleBackNavigation(){let isSubcourse=!1,dynamic=CourseForgeNav.getBackLink(`contents.html`,`Voltar`,!1);window.location.href=dynamic.url}</script></body></html>
+</code></pre><p>Para a entrada a cima sua saída deve ser semelhante à seguinte:</p><pre class="line-numbers language-text" data-lang=TEXT><code class=language-text>=== Iniciando Análise Léxica ===
+&lt;TOK_IDENTIFIER, "x">
+&lt;TOK_COLON, ":">
+&lt;TOK_KW_INT, "int">
+&lt;TOK_ASSIGN, "=">
+&lt;TOK_NUMBER, "5">
+&lt;TOK_IDENTIFIER, "name">
+&lt;TOK_COLON, ":">
+&lt;TOK_KW_STRING, "string">
+&lt;TOK_ASSIGN, "=">
+&lt;TOK_STRING, ""Compiladores"">
+&lt;TOK_IDENTIFIER, "valid">
+&lt;TOK_COLON, ":">
+&lt;TOK_KW_BOOL, "bool">
+&lt;TOK_ASSIGN, "=">
+&lt;TOK_KW_TRUE, "true">
+&lt;TOK_KW_IF, "if">
+&lt;TOK_IDENTIFIER, "x">
+&lt;TOK_GT_EQ, ">=">
+&lt;TOK_NUMBER, "5">
+&lt;TOK_AND, "and">
+&lt;TOK_IDENTIFIER, "valid">
+&lt;TOK_LBRACE, "{">
+&lt;TOK_IDENTIFIER, "x">
+&lt;TOK_ASSIGN, "=">
+&lt;TOK_IDENTIFIER, "x">
+&lt;TOK_PLUS, "+">
+&lt;TOK_NUMBER, "1">
+&lt;TOK_RBRACE, "}">
+&lt;TOK_KW_IF, "if">
+&lt;TOK_IDENTIFIER, "x">
+&lt;TOK_EQ, "==">
+&lt;TOK_NUMBER, "6">
+&lt;TOK_OR, "||">
+&lt;TOK_NOT, "!">
+&lt;TOK_IDENTIFIER, "valid">
+&lt;TOK_LBRACE, "{">
+&lt;TOK_IDENTIFIER, "print">
+&lt;TOK_LPAREN, "(">
+&lt;TOK_STRING, ""Sucesso"">
+&lt;TOK_RPAREN, ")">
+&lt;TOK_RBRACE, "}">
+&lt;TOK_KW_FN, "fn">
+&lt;TOK_IDENTIFIER, "process">
+&lt;TOK_LPAREN, "(">
+&lt;TOK_IDENTIFIER, "v">
+&lt;TOK_COLON, ":">
+&lt;TOK_KW_VOID, "void">
+&lt;TOK_RPAREN, ")">
+&lt;TOK_ARROW, "->">
+&lt;TOK_KW_INT, "int">
+&lt;TOK_LBRACE, "{">
+&lt;TOK_KW_RETURN, "return">
+&lt;TOK_NUMBER, "0">
+&lt;TOK_RBRACE, "}">
+&lt;TOK_EOF, "">
+=== Análise Concluída ===
+</code></pre><div class="callout callout-danger"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1=12 x2=12 y1=9 y2=13 /><line x1=12 x2=12 y1=17 y2=17.01 /></svg></span><span class=callout-title-inner>Estilização do código</span></div><div class=callout-content><p>Observe que o código no VS Code não apresenta estilização, pois a linguagem <code>slang</code> não existe. Para facilitar o acompanhamento do restante da disciplina, foi desenvolvida uma extensão que pode ser instalada para aplicar a estilização adequada ao VS Code.</p><p>Faça o download da <a href=bin/slang-002.vsix>Extensão VSIX</a>. Para instalar, no VS Code vá até <strong>Extensões</strong>, clique no ícone de três pontos (<code>...</code>), selecione <strong>Install from VSIX</strong> e escolha o arquivo baixado.</p><p>Caso necessário, reinicie o programa para que o código passe a aparecer corretamente estilizado.</p></div></div><p>Compile e execute. A saída deve listar corretamente <code>TOK_STRING</code> ("Compiladores"), ignorar os comentários, identificar <code>TOK_AND</code>, <code>TOK_EQ_EQ</code> e <code>TOK_KW_VOID</code>.</p><blockquote><p>Para rodar, caso não tenha feita na etapa anterior ainda, crie uma pasta chamada <code>build</code> e roda <code>cmake -B build</code>. Caso tenha feito apenas uma mudança em um arquivo existente basta rodar <code>cmake --build build</code> para recompilá-lo. <strong>Entretanto, caso adicione um novo arquivo <code>.h</code> ou <code>.c</code> precisará rodar o primeiro e o segundo comando novamente.</strong></p><p>Após compilar o projeto basta chamar o binário pelo terminal passando o nome do arquivo que quer "compiler", no nosso caso <code>./build/compiler teste.slang</code></p></blockquote><p>Com isso, encerramos o <strong>Front-end Léxico</strong>. Temos um Scanner robusto, capaz de ignorar ruídos (espaços e comentários) e categorizar corretamente a entrada para o Parser, que será nosso próximo grande módulo.</p><h2 id=próximos-passos><span class=heading-text>Próximos passos</span><span class=heading-arabic>8.9</span></h2><div class="callout callout-warning"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span><span class=callout-title-inner>Conteúdo em desenvolvimento!</span></div><div class=callout-content><p>Este conteúdo ainda não foi finalizado. Assim que estiver completo, este aviso será atualizado com o link correspondente.</p></div></div></div></article><footer class=footer><p>© 2025 · <a href=#>Gabriel Soares Baptista</a></p></footer></main></div><script>const toggle=document.querySelector(`.mobile-menu-toggle`),sidebar=document.querySelector(`.sidebar`),overlay=document.querySelector(`.mobile-menu-overlay`);function openMenu(){sidebar.classList.add(`open`),overlay.classList.add(`open`),toggle.classList.add(`open`),document.body.style.overflow=`hidden`}function closeMenu(){sidebar.classList.remove(`open`),overlay.classList.remove(`open`),toggle.classList.remove(`open`),document.body.style.overflow=``}toggle.addEventListener(`click`,()=>{sidebar.classList.contains(`open`)?closeMenu():openMenu()}),overlay.addEventListener(`click`,closeMenu);</script><script src=/aulas-faesa/js/bundle.min.js></script><script>document.addEventListener(`DOMContentLoaded`,function(){renderMathInElement(document.body,{delimiters:[{left:`$$`,right:`$$`,display:!0},{left:`$`,right:`$`,display:!1},{left:`\\(`,right:`\\)`,display:!1},{left:`\\[`,right:`\\]`,display:!0}],throwOnError:!1})});</script><script src=https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-clike.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-perl.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-java.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup-templating.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-php.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.js></script><script>document.addEventListener(`DOMContentLoaded`,function(){let isSubcourse=!1,courseName=`Compiladores`;CourseForgeNav.applyDynamicBreadcrumbs(`.breadcrumb`,!1),CourseForgeNav.initScrollSpy(),CourseForgeUI.initCopyButtons(),CourseForgeUI.initExamples()});function handleBackNavigation(){let isSubcourse=!1,dynamic=CourseForgeNav.getBackLink(`contents.html`,`Voltar`,!1);window.location.href=dynamic.url}</script></body></html>
