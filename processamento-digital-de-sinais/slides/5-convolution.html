@@ -211,6 +211,17 @@
     <script
         src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/show-language/prism-show-language.min.js"></script>
     <script src="/aulas-faesa/js/bundle.min.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            mermaid.initialize({
+                startOnLoad: true,
+                theme: 'default',
+                securityLevel: 'loose',
+                fontFamily: 'Inter, system-ui, sans-serif',
+            });
+        });
+    </script>
     <script>
         Reveal.initialize({
             hash: true,
@@ -218,6 +229,10 @@
             center: false,
             controls: false,
             plugins: [RevealMarkdown, RevealNotes, RevealMath.KaTeX],
+            katex: {
+                output: 'html',
+                throwOnError: false,
+            },
             width: 960,
             height: 800,
             margin: 0.15,

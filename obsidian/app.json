@@ -1,0 +1,10 @@
+{
+  "focusNewTab": false,
+  "defaultViewMode": "preview",
+  "livePreview": false,
+  "showLineNumber": true,
+  "autoPairBrackets": false,
+  "autoPairMarkdown": false,
+  "useTab": false,
+  "autoConvertHtml": false
+}
