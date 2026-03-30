@@ -7,15 +7,11 @@
     <title>Toposia - Processamento Digital de Sinais</title>
     <link rel="icon" href="/aulas-faesa/img/dark-favicon.svg" media="(prefers-color-scheme: light)">
     <link rel="icon" href="/aulas-faesa/img/light-favicon.svg" media="(prefers-color-scheme: dark)">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
-        rel="stylesheet">
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/fonts.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/js/vendor/katex/dist/katex.min.css" data-no-bundle>
     <link rel="stylesheet" href="/aulas-faesa/css/bundle.min.css">
     
-    
-    <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.css">
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css" data-no-bundle>
     <script src="/aulas-faesa/js/bundle.min.js"></script>
 </head>
 
@@ -248,7 +244,7 @@
 <div class="callout callout-example">
   <div class="callout-title">
     <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M12 11V7"/><path d="M9 11l3 3 3-3"/></svg></span>
-    <span class="callout-title-inner">Analogia com o corpo humano</span>
+    <span class="callout-title-inner">Analogia com o corpo humano<br /></span>
   </div>
   <div class="callout-content">
 <p>Se você quisesse utilizar um único número $V$ como medida do tamanho de um ser humano, deveria considerar não somente seu peso, mas também sua altura.</p>
@@ -287,7 +283,7 @@ $$</p>
 <div class="callout callout-info">
   <div class="callout-title">
     <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></span>
-    <span class="callout-title-inner">O que os &quot;127V&quot; realmente significam?</span>
+    <span class="callout-title-inner">O que os &quot;127V&quot; realmente significam?<br /></span>
   </div>
   <div class="callout-content">
 <p>O valor de 127V é o <strong>valor eficaz</strong> (RMS) do sinal. Isso significa que essa tensão oscilante entrega para uma lâmpada ou resistência a <strong>mesma potência média</strong> que uma bateria de 127V constantes (DC) entregaria.</p>
@@ -307,7 +303,7 @@ $$</p>
   </div>
 </div>
 <p>Quando lidamos com um sinal $x(t)$ que é <strong>periódico</strong>, o termo $|x(t)|^2$ também será periódico. Isso simplifica drasticamente o cálculo: a potência de $x(t)$ pode ser obtida calculando a média de $|x(t)|^2$ apenas sobre <strong>um período</strong>, em vez de tomar o limite no infinito.</p>
-<p><div class="example">
+<div class="example">
   <div class="example-title">Exemplo 1</div>
   <p>Vamos determinar as medidas adequadas para quantificar o tamanho dos sinais apresentados na figura abaixo.</p>
 <img src="static/example_fig_1_2.png" width="75%">
@@ -336,15 +332,14 @@ $$</p>
 <div class="callout callout-tip">
   <div class="callout-title">
     <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .5 2.2 1.5 3.1.7.7 1.3 1.5 1.5 2.4"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span>
-    <span class="callout-title-inner">Relação com valor RMS</span>
+    <span class="callout-title-inner">Relação com valor RMS<br /></span>
   </div>
   <div class="callout-content">
 <p>Lembre-se de que a potência do sinal corresponde ao <strong>quadrado</strong> de seu valor <em>rms</em> (raiz média quadrática). Portanto, para este exemplo, o valor <em>rms</em> desse sinal é $1/\sqrt{3}$.</p>
   </div>
 </div>
-
-</div></p>
-<p><div class="example">
+</div>
+<div class="example">
   <div class="example-title">Exemplo 2</div>
   <p>Neste exemplo, vamos determinar a <strong>potência</strong> e o <strong>valor rms</strong> para três tipos fundamentais de sinais. Acompanhe o raciocínio matemático detalhado para cada caso. Os sinais analisados serão:</p>
 <ol>
@@ -383,7 +378,7 @@ $$</p>
 <div class="callout callout-info">
   <div class="callout-title">
     <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></span>
-    <span class="callout-title-inner">Independência da Frequência</span>
+    <span class="callout-title-inner">Independência da Frequência<br /></span>
   </div>
   <div class="callout-content">
 <p>Note que uma senoide de amplitude $C$ possui potência igual a $C^2/2$, <strong>independentemente</strong> do valor de sua frequência $\omega_0$ (desde que $\omega_0 \neq 0$) ou de sua fase $\theta$. Se a frequência fosse zero (sinal constante CC), a potência seria $C^2$.</p>
@@ -414,7 +409,7 @@ $$</p>
 <div class="callout callout-tip">
   <div class="callout-title">
     <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .5 2.2 1.5 3.1.7.7 1.3 1.5 1.5 2.4"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span>
-    <span class="callout-title-inner">Generalização Importante</span>
+    <span class="callout-title-inner">Generalização Importante<br /></span>
   </div>
   <div class="callout-content">
 <p>Podemos estender este resultado para a soma de qualquer número de senoides com frequências distintas. Se $x(t) = \sum_{n=1}^{\infty} C_n \cos(\omega_n t + \theta_n)$, então:</p>
@@ -429,7 +424,7 @@ $$</p>
 <p>$$
 P_x = \lim_{T \to \infty} \frac{1}{T} \int_{-T/2}^{T/2} |D e^{j\omega_0 t}|^2 dt
 $$</p>
-<p>Lembre-se da propriedade fundamental dos números complexos: $|e^{j\theta}| = 1$. Portanto:
+<p>Lembre-se da propriedade fundamental dos números complexos: $|e^{j\theta}| = 1$. Portanto:<br />
 $$
 |D e^{j\omega_0 t}|^2 = |D|^2 \cdot |e^{j\omega_0 t}|^2 = |D|^2 \cdot 1 = |D|^2
 $$</p>
@@ -438,8 +433,7 @@ $$</p>
 P_x = |D|^2
 $$</p>
 <p>E o <strong>valor rms</strong> é simplesmente $|D|$.</p>
-
-</div></p>
+</div>
 <h2 id="operações-com-sinais"><span class="heading-text">Operações com Sinais</span><span class="heading-arabic">3.2</span></h2>
 <p>Nesta etapa, discutiremos três operações extremamente úteis que você pode realizar com sinais: <strong>deslocamento</strong>, <strong>escalamento</strong> e <strong>inversão</strong>.</p>
 <p>Visto que a variável independente em nossa descrição padrão de sinais é o tempo, denominaremos essas operações tecnicamente como:</p>
@@ -451,7 +445,7 @@ $$</p>
 <div class="callout callout-info">
   <div class="callout-title">
     <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></span>
-    <span class="callout-title-inner">Generalização do conceito</span>
+    <span class="callout-title-inner">Generalização do conceito<br /></span>
   </div>
   <div class="callout-content">
 <p>Embora nosso foco principal seja o domínio do tempo, é importante que você saiba que esta discussão é igualmente válida para funções que dependem de outras variáveis independentes, como a <strong>frequência</strong> ou a <strong>distância</strong>.</p>
@@ -486,7 +480,7 @@ $$</p>
 </ul>
   </div>
 </div>
-<p><div class="example">
+<div class="example">
   <div class="example-title">Exemplo 3</div>
   <p>Considere a função exponencial $x(t) = e^{-2t}$, ilustrada no item (a) da figura abaixo. O objetivo é traçar e descrever matematicamente essa função quando ela sofre um <strong>atraso</strong> de 1 segundo e, posteriormente, quando sofre um <strong>avanço</strong> de 1 segundo.</p>
 <img src="static/fig_example_1_5.png" width="75%">
@@ -520,8 +514,7 @@ $$</p>
 <p>$$
 x_a(t) = x(t + 1) = \begin{cases} e^{-2(t+1)} & t \ge -1 \\ 0 & t < -1 \end{cases} 
 $$</p>
-
-</div></p>
+</div>
 <h3 id="escalonamento-temporal"><span class="heading-text">Escalonamento Temporal</span><span class="heading-arabic">3.2.2</span></h3>
 <p>Chamamos de <strong>escalamento temporal</strong> o processo de compressão ou expansão de um sinal ao longo do tempo. Para compreender esse conceito, considere o sinal $x(t)$ apresentado na figura abaixo (item a).</p>
 <img src="static/figura-1-6-escalamento-temporal-de-um-sinal.png" width="50%">
@@ -538,7 +531,7 @@ $$</p>
 <div class="callout callout-tip">
   <div class="callout-title">
     <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .5 2.2 1.5 3.1.7.7 1.3 1.5 1.5 2.4"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span>
-    <span class="callout-title-inner">Analogia do Vídeo</span>
+    <span class="callout-title-inner">Analogia do Vídeo<br /></span>
   </div>
   <div class="callout-content">
 <p>Imagine que $x(t)$ foi gravado em um vídeo. Se você reproduzir esse vídeo com o <strong>dobro da velocidade</strong> de gravação, o resultado será o sinal comprimido $x(2t)$.</p>
@@ -553,7 +546,7 @@ $$</p>
 \phi(t) = x\left(\frac{t}{a}\right) 
 $$</p>
 <p>O item (c) da figura mostra justamente $x(t/2)$, que é o sinal $x(t)$ expandido no tempo por um fator de 2. É importante que você observe a propriedade fundamental de que, na operação de escalamento no tempo, a origem $t = 0$ é um <strong>ponto fixo</strong>. Ela permanece inalterada durante a operação, pois para $t = 0$, temos $x(t) = x(at) = 0$.</p>
-<p><div class="example">
+<div class="example">
   <div class="example-title">Exemplo 4</div>
   <p>Neste exemplo, analisaremos o sinal $x(t)$ apresentado no item (a) da figura abaixo. O objetivo é traçar os gráficos e descrever matematicamente o que acontece quando este sinal é <strong>comprimido</strong> no tempo por um fator de 3 e, posteriormente, quando é <strong>expandido</strong> no tempo por um fator de 2.</p>
 <img src="static/figura-1-7-operacoes-de-escalamento.png" width="75%">
@@ -597,8 +590,7 @@ $$</p>
 x_e(t) = x\left(\frac{t}{2}\right) = \begin{cases} 2 & -3 \le t < 0 \\ 2e^{-t/4} & 0 \le t < 6 \\ 0 & \text{caso contrário} \end{cases} 
 $$</p>
 <p>Note que os instantes originais $t = -1,5$ e $3$ em $x(t)$ agora correspondem aos instantes $t = -3$ e $6$ no sinal expandido.</p>
-
-</div></p>
+</div>
 <h3 id="reversão-temporal"><span class="heading-text">Reversão Temporal</span><span class="heading-arabic">3.2.3</span></h3>
 <p>Considere o sinal $x(t)$ apresentado na figura abaixo. Você pode visualizar $x(t)$ como uma forma rígida que está presa ao eixo vertical.</p>
 <img src="static/figura-1-8-reversao-temporal-de-um-sinal.png" width="50%">
@@ -612,14 +604,14 @@ $$</p>
 <div class="callout callout-warning">
   <div class="callout-title">
     <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
-    <span class="callout-title-inner">Eixo de Referência</span>
+    <span class="callout-title-inner">Eixo de Referência<br /></span>
   </div>
   <div class="callout-content">
 <p>Lembre-se sempre de que a reversão temporal é realizada em relação ao <strong>eixo vertical</strong>, que funciona como uma âncora ou eixo de referência para a rotação.</p>
 <p>Não confunda com a reversão de $x(t)$ em relação ao eixo <strong>horizontal</strong> (inversão de amplitude), cujo resultado seria $-x(t)$.</p>
   </div>
 </div>
-<p><div class="example">
+<div class="example">
   <div class="example-title">Exemplo 5</div>
   <p>Para o sinal $x(t)$ mostrado na figura abaixo (item a), vamos traçar $x(-t)$, que representa a <strong>reversão temporal</strong> de $x(t)$.</p>
 <img src="static/figura-1-9-exemplo-de-reversao-temporal.png">
@@ -634,7 +626,7 @@ $$</p>
 <div class="callout callout-tip">
   <div class="callout-title">
     <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .5 2.2 1.5 3.1.7.7 1.3 1.5 1.5 2.4"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span>
-    <span class="callout-title-inner">Inversão das Desigualdades</span>
+    <span class="callout-title-inner">Inversão das Desigualdades<br /></span>
   </div>
   <div class="callout-content">
 <p>Lembre-se que ao multiplicar uma desigualdade por $-1$, o sentido do sinal se inverte. Portanto, a condição $-1 \ge -t > -5$ torna-se $1 \le t < 5$.</p>
@@ -644,8 +636,7 @@ $$</p>
 <p>$$
 x(-t) = \begin{cases} e^{-t/2} & 1 \le t < 5 \\ 0 & \text{caso contrário} \end{cases}
 $$</p>
-
-</div></p>
+</div>
 <h3 id="operações-combinadas"><span class="heading-text">Operações Combinadas</span><span class="heading-arabic">3.2.4</span></h3>
 <p>Certas operações complexas exigem que você utilize simultaneamente mais de uma das operações básicas descritas anteriormente. A forma mais geral, que envolve todas as três operações (deslocamento, escalamento e reversão), é representada pela expressão $x(at - b)$.</p>
 <p>Para realizar essa operação combinada, você possui duas sequências de passos possíveis. A escolha de qual utilizar é uma questão de preferência, mas é fundamental entender a diferença matemática entre elas para evitar erros.</p>
@@ -667,7 +658,7 @@ $$</p>
 <div class="callout callout-info">
   <div class="callout-title">
     <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></span>
-    <span class="callout-title-inner">Nota sobre Reversão</span>
+    <span class="callout-title-inner">Nota sobre Reversão<br /></span>
   </div>
   <div class="callout-content">
 <p>Em qualquer um dos casos, se o fator $a$ for <strong>negativo</strong>, a etapa de escalamento no tempo envolverá também uma <strong>reversão temporal</strong>.</p>
@@ -743,7 +734,7 @@ $$</p>
 <div class="callout callout-important">
   <div class="callout-title">
     <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
-    <span class="callout-title-inner">Duração Infinita</span>
+    <span class="callout-title-inner">Duração Infinita<br /></span>
   </div>
   <div class="callout-content">
 <p>Pela definição, um sinal periódico $x(t)$ permanece inalterado quando deslocado no tempo por um período. Por essa razão, um sinal periódico deve obrigatoriamente começar em $t = -\infty$.</p>
@@ -762,7 +753,7 @@ $$</p>
 <h5 id="causalidade"><span class="heading-text">Causalidade</span><span class="heading-arabic">3.3.3.0.1</span></h5>
 <p>Além da periodicidade, podemos classificar os sinais quanto ao seu início no tempo:</p>
 <ol>
-<li><p><strong>Sinal Causal:</strong> É um sinal que não começa antes de $t = 0$. Em termos matemáticos, $x(t)$ é causal se:
+<li><p><strong>Sinal Causal:</strong> É um sinal que não começa antes de $t = 0$. Em termos matemáticos, $x(t)$ é causal se:<br />
 $$
     x(t) = 0 \quad \text{para} \quad t < 0 
     $$</p>
@@ -779,7 +770,7 @@ $$
 <div class="callout callout-summary">
   <div class="callout-title">
     <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
-    <span class="callout-title-inner">Comentário sobre a Realidade Física</span>
+    <span class="callout-title-inner">Comentário sobre a Realidade Física<br /></span>
   </div>
   <div class="callout-content">
 <p>Você pode se perguntar: &quot;Se um sinal de duração infinita verdadeiro não pode ser gerado na prática, por que devemos estudá-lo?&quot;</p>
@@ -799,7 +790,7 @@ $$
 <p>Portanto, um sinal não pode ser classificado simultaneamente como de energia e de potência. Se ele pertence a uma categoria, automaticamente exclui a outra.</p>
 <p>Por outro lado, existem sinais que não se encaixam em nenhuma das duas definições (não são nem de energia, nem de potência). O <strong>sinal em rampa</strong> é um exemplo típico desse caso.</p>
 <p>Além disso, devido à sua natureza repetitiva, os <strong>sinais periódicos</strong> são classificados como <strong>sinais de potência</strong> (assumindo que a área sob $|x(t)|^2$ em um único período seja finita). Entretanto, fique atento: embora todo sinal periódico seja de potência, <strong>nem todo sinal de potência é periódico</strong>.</p>
-<p><div class="example">
+<div class="example">
   <div class="example-title">Exemplo 6</div>
   <p>Neste exercício, investigaremos as propriedades de energia e potência para o sinal exponencial de duração infinita definido por:</p>
 <p>$$
@@ -822,7 +813,7 @@ $$</p>
 <div class="callout callout-failure">
   <div class="callout-title">
     <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg></span>
-    <span class="callout-title-inner">Conclusão sobre Energia</span>
+    <span class="callout-title-inner">Conclusão sobre Energia<br /></span>
   </div>
   <div class="callout-content">
 <p>Como a integral não converge para um valor finito, <strong>$x(t)$ não é um sinal de energia</strong> para valores reais de $a$.</p>
@@ -845,7 +836,7 @@ $$</p>
 <div class="callout callout-failure">
   <div class="callout-title">
     <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg></span>
-    <span class="callout-title-inner">Conclusão sobre Potência</span>
+    <span class="callout-title-inner">Conclusão sobre Potência<br /></span>
   </div>
   <div class="callout-content">
 <p>Como a potência média é infinita, <strong>$x(t)$ não é um sinal de potência</strong> para valores reais de $a$ (considerando $a \neq 0$).</p>
@@ -876,21 +867,20 @@ $$</p>
 <div class="callout callout-success">
   <div class="callout-title">
     <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></span>
-    <span class="callout-title-inner">Conclusão Final</span>
+    <span class="callout-title-inner">Conclusão Final<br /></span>
   </div>
   <div class="callout-content">
 <p>Se $a$ for imaginário, a exponencial de duração infinita é um <strong>sinal de potência</strong>, e sua potência é <strong>$P_x = 1$</strong>, independentemente do valor de $\omega_0$ (o valor de $a$).</p>
   </div>
 </div>
-
-</div></p>
+</div>
 <h3 id="sinais-determinísticos-e-aleatórios"><span class="heading-text">Sinais Determinísticos e Aleatórios</span><span class="heading-arabic">3.3.5</span></h3>
 <p>Um sinal cuja descrição física é completamente conhecida, seja na forma matemática ou na forma gráfica, é classificado como um <strong>sinal determinístico</strong>. Isso significa que, para qualquer instante de tempo que você escolher, é possível determinar o valor exato da amplitude do sinal sem qualquer ambiguidade.</p>
 <p>Por outro lado, existem os <strong>sinais aleatórios</strong>. Estes são sinais cujos valores não podem ser preditos precisamente. Você só consegue caracterizá-los em termos de uma <strong>descrição probabilística</strong>, utilizando ferramentas estatísticas como o <strong>valor médio</strong> ou o <strong>valor médio quadrático</strong>.</p>
 <div class="callout callout-note">
   <div class="callout-title">
     <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
-    <span class="callout-title-inner">Escopo do Estudo</span>
+    <span class="callout-title-inner">Escopo do Estudo<br /></span>
   </div>
   <div class="callout-content">
 <p>É importante destacar que, neste material, trabalharemos <strong>exclusivamente com sinais determinísticos</strong>. O estudo aprofundado de sinais aleatórios envolve conceitos mais complexos de probabilidade e estatística, estando além do escopo desta etapa do seu aprendizado.</p>
@@ -912,7 +902,7 @@ $$</p>
 <div class="callout callout-tip">
   <div class="callout-title">
     <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .5 2.2 1.5 3.1.7.7 1.3 1.5 1.5 2.4"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span>
-    <span class="callout-title-inner">Utilidade Matemática</span>
+    <span class="callout-title-inner">Utilidade Matemática<br /></span>
   </div>
   <div class="callout-content">
 <p>A função degrau unitário é extremamente útil para especificar uma função que possui diferentes descrições matemáticas em diferentes intervalos de tempo.</p>
@@ -927,7 +917,7 @@ $$</p>
 <p>$$
 x(t) = u(t - 2) - u(t - 4)
 $$</p>
-<p><div class="example">
+<div class="example">
   <div class="example-title">Exemplo 7</div>
   <p>Neste exemplo, seu objetivo é descrever matematicamente o sinal $x(t)$ apresentado no item (a) da figura abaixo.</p>
 <img src="static/figura-1-16-representacao-de-um-sinal-definido-intervalo-por-intervalo.png" width="75%">
@@ -965,19 +955,18 @@ x(t) = t[u(t) - u(t - 2)] - 2(t - 3)[u(t - 2) - u(t - 3)]
 $$</p>
 <p>Embora essa equação esteja correta, podemos simplificá-la distribuindo os termos e reagrupando as funções degrau semelhantes:</p>
 <ol>
-<li>Expanda os produtos:
+<li>Expanda os produtos:<br />
 $$x(t) = t u(t) - t u(t - 2) - 2(t - 3)u(t - 2) + 2(t - 3)u(t - 3)$$</li>
-<li>Coloque $u(t - 2)$ em evidência:
-Os coeficientes são $-t$ e $-2(t - 3)$. Somando-os:
+<li>Coloque $u(t - 2)$ em evidência:<br />
+Os coeficientes são $-t$ e $-2(t - 3)$. Somando-os:<br />
 $$-t - 2t + 6 = -3t + 6 = -3(t - 2)$$</li>
 </ol>
 <p>Portanto, a descrição matemática final e simplificada é:</p>
 <p>$$
 x(t) = t u(t) - 3(t - 2)u(t - 2) + 2(t - 3)u(t - 3)
 $$</p>
-
-</div></p>
-<p><div class="example">
+</div>
+<div class="example">
   <div class="example-title">Exemplo 8</div>
   <img src="static/figura-1-7-operacoes-de-escalamento.png" width="75%">
 
@@ -987,14 +976,14 @@ $$</p>
 <p><strong>1. Análise por Intervalos</strong></p>
 <p>Podemos dividir o sinal em duas componentes baseadas nos intervalos de tempo onde ele é diferente de zero:</p>
 <ul>
-<li><p><strong>Intervalo 1 ($-1,5 \le t < 0$):</strong>
-Neste trecho, o sinal é constante com amplitude <strong>2</strong>.
-Para &quot;recortar&quot; esse intervalo usando funções degrau, fazemos o degrau ligar em $t = -1,5$ e desligar em $t = 0$.
+<li><p><strong>Intervalo 1 ($-1,5 \le t < 0$):</strong><br />
+Neste trecho, o sinal é constante com amplitude <strong>2</strong>.<br />
+Para &quot;recortar&quot; esse intervalo usando funções degrau, fazemos o degrau ligar em $t = -1,5$ e desligar em $t = 0$.<br />
 Matematicamente: $2[u(t + 1,5) - u(t)]$.</p>
 </li>
-<li><p><strong>Intervalo 2 ($0 \le t < 3$):</strong>
-Neste trecho, o sinal segue a função exponencial <strong>$2e^{-t/2}$</strong>.
-Para &quot;recortar&quot; esse intervalo, fazemos o degrau ligar em $t = 0$ e desligar em $t = 3$.
+<li><p><strong>Intervalo 2 ($0 \le t < 3$):</strong><br />
+Neste trecho, o sinal segue a função exponencial <strong>$2e^{-t/2}$</strong>.<br />
+Para &quot;recortar&quot; esse intervalo, fazemos o degrau ligar em $t = 0$ e desligar em $t = 3$.<br />
 Matematicamente: $2e^{-t/2}[u(t) - u(t - 3)]$.</p>
 </li>
 </ul>
@@ -1006,10 +995,10 @@ x(t) = \underbrace{2[u(t + 1,5) - u(t)]}_{\text{Parte constante}} + \underbrace{
 $$</p>
 <p>Agora, vamos simplificar a expressão agrupando os termos semelhantes. Observe que temos dois termos multiplicados por $u(t)$ (um vindo da primeira parte e outro da segunda):</p>
 <ol>
-<li><p>Distribuindo os termos:
+<li><p>Distribuindo os termos:<br />
 $$x(t) = 2u(t + 1,5) - 2u(t) + 2e^{-t/2}u(t) - 2e^{-t/2}u(t - 3)$$</p>
 </li>
-<li><p>Colocando $-u(t)$ em evidência nos termos centrais:
+<li><p>Colocando $-u(t)$ em evidência nos termos centrais:<br />
 $$-2u(t) + 2e^{-t/2}u(t) = -2(1 - e^{-t/2})u(t)$$</p>
 </li>
 </ol>
@@ -1020,15 +1009,14 @@ $$</p>
 <div class="callout callout-note">
   <div class="callout-title">
     <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
-    <span class="callout-title-inner">Comparação</span>
+    <span class="callout-title-inner">Comparação<br /></span>
   </div>
   <div class="callout-content">
 <p>Compare esta expressão única com a  vista anteriormente. Enquanto a anterior exigia três linhas para definir o sinal (uma para cada intervalo e uma para &quot;caso contrário&quot;), o uso da função degrau $u(t)$ nos permite escrever tudo em uma única linha, o que é muito mais conveniente para operações matemáticas como integração e derivação.</p>
   </div>
 </div>
-
-</div></p>
-<p><div class="example">
+</div>
+<div class="example">
   <div class="example-title">Exemplo 9</div>
   <p>Neste exercício, aplicaremos a propriedade fundamental da <strong>multiplicação de uma função por um impulso</strong>. Esta propriedade afirma que, quando uma função contínua $\phi(t)$ é multiplicada por um impulso localizado em um instante $T$, o resultado é o valor da própria função naquele instante multiplicado pelo impulso:</p>
 <p>$$
@@ -1100,9 +1088,8 @@ $$</p>
 </ul>
 </li>
 </ol>
-
-</div></p>
-<p><div class="example">
+</div>
+<div class="example">
   <div class="example-title">Exemplo 10</div>
   <p>Para resolver este exercício, utilizaremos a <strong>Propriedade de Amostragem</strong> do impulso unitário. Esta propriedade afirma que a integral do produto de uma função $\phi(t)$ por um impulso extrai o valor da função exatamente no instante em que o impulso ocorre:</p>
 <p>$$
@@ -1155,8 +1142,7 @@ $$</p>
 </ul>
 </li>
 </ol>
-
-</div></p>
+</div>
 <h3 id="a-função-impulso-unitário"><span class="heading-text">A Função Impulso Unitário $\delta(t)$</span><span class="heading-arabic">3.4.2</span></h3>
 <p>A função <strong>impulso unitário</strong> $\delta(t)$ é, sem dúvida, uma das ferramentas mais importantes no estudo de sinais e sistemas. Inicialmente definida por P. A. M. Dirac, ela é apresentada matematicamente da seguinte forma:</p>
 <p>$$
@@ -1178,7 +1164,7 @@ $$</p>
 <div class="callout callout-info">
   <div class="callout-title">
     <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></span>
-    <span class="callout-title-inner">Impulso com área $k$</span>
+    <span class="callout-title-inner">Impulso com área $k$<br /></span>
   </div>
   <div class="callout-content">
 <p>A partir da definição, sabemos que $k\delta(t) = 0$ para todo $t \neq 0$ e sua área total é $k$. Portanto, representamos um impulso com força (ou área) $k$ graficamente indicando esse valor ao lado da seta.</p>
@@ -1219,7 +1205,7 @@ $$</p>
 <p>Sabendo que $u(t)$ é 0 para $t<0$ e 1 para $t>0$, e assumindo que $\phi(t)$ decai para zero no infinito ($\phi(\infty) = 0$), temos:</p>
 <p>$$
 = \left[ 1 \cdot \phi(\infty) - 0 \right] - \int_{0}^{\infty} \dot{\phi}(t) dt
-$$
+$$<br />
 $$
 = 0 - \phi(t) \Big|_{0}^{\infty} = -[\phi(\infty) - \phi(0)] = \phi(0) 
 $$</p>
@@ -1234,7 +1220,7 @@ $$</p>
 <div class="callout callout-summary">
   <div class="callout-title">
     <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
-    <span class="callout-title-inner">Funções de Singularidade</span>
+    <span class="callout-title-inner">Funções de Singularidade<br /></span>
   </div>
   <div class="callout-content">
 <p>Esse relacionamento pode ser estendido. Integrando o degrau, obtemos a <strong>rampa unitária</strong> ($tu(t)$). Integrando a rampa, obtemos a <strong>parábola unitária</strong> ($t^2/2$), e assim por diante.</p>
@@ -1279,7 +1265,7 @@ $$</p>
 <div class="callout callout-tip">
   <div class="callout-title">
     <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .5 2.2 1.5 3.1.7.7 1.3 1.5 1.5 2.4"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span>
-    <span class="callout-title-inner">Dica de Estudo</span>
+    <span class="callout-title-inner">Dica de Estudo<br /></span>
   </div>
   <div class="callout-content">
 <p>Para identificar rapidamente o tipo de simetria, imagine dobrar o gráfico sobre o eixo vertical. Se as duas metades coincidirem perfeitamente, a função é <strong>par</strong>. Se for necessário dobrar o gráfico sobre o eixo vertical e, em seguida, sobre o eixo horizontal para que coincidam, a função é <strong>ímpar</strong>.</p>
@@ -1314,12 +1300,12 @@ $$</p>
 <p>$$x(t) = e^{-at}u(t)$$</p>
 <p>Podemos expressar este sinal como a soma de suas componentes $x_e(t)$ (par) e $x_o(t)$ (ímpar). Utilizando a fórmula de decomposição apresentada anteriormente, obtemos os seguintes resultados:</p>
 <ul>
-<li><strong>Componente Par ($x_e$):</strong>
+<li><strong>Componente Par ($x_e$):</strong><br />
 $$x_e(t) = \frac{e^{-at}u(t) + e^{at}u(-t)}{2}$$</li>
-<li><strong>Componente Ímpar ($x_o$):</strong>
+<li><strong>Componente Ímpar ($x_o$):</strong><br />
 $$x_o(t) = \frac{e^{-at}u(t) - e^{at}u(-t)}{2}$$</li>
 </ul>
-<p><div class="example">
+<div class="example">
   <div class="example-title">Exemplo 11</div>
   <p>Agora, determine as componentes par e ímpar de $e^{jt}$:</p>
 <ol>
@@ -1340,14 +1326,13 @@ $$x_o(t) = \frac{e^{-at}u(t) - e^{at}u(-t)}{2}$$</li>
 <div class="callout callout-tip">
   <div class="callout-title">
     <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .5 2.2 1.5 3.1.7.7 1.3 1.5 1.5 2.4"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span>
-    <span class="callout-title-inner">Dica de Verificação</span>
+    <span class="callout-title-inner">Dica de Verificação<br /></span>
   </div>
   <div class="callout-content">
 <p>Ao final de qualquer decomposição, você pode verificar seu trabalho somando as duas componentes encontradas ($x_e(t) + x_o(t)$). O resultado deve ser sempre igual ao sinal original $x(t)$.</p>
   </div>
 </div>
-
-</div></p>
+</div>
 <h2 id="questões"><span class="heading-text">Questões</span><span class="heading-arabic">3.5</span></h2>
 <p><strong>1.</strong> Considere um sinal causal definido por $x(t) = 3e^{-t}u(t)$. Com base no raciocínio do <strong>Exemplo 1</strong>, determine se este é um sinal de energia ou de potência e calcule o seu valor.</p>
 <ul>
@@ -1406,8 +1391,8 @@ $$x_o(t) = \frac{e^{-at}u(t) - e^{at}u(-t)}{2}$$</li>
         overlay.addEventListener('click', closeMenu);
     </script>
 
-    
-    
+    <script src="/aulas-faesa/js/vendor/katex/dist/katex.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/katex/dist/contrib/auto-render.min.js" data-no-bundle></script>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             renderMathInElement(document.body, {
@@ -1418,25 +1403,25 @@ $$x_o(t) = \frac{e^{-at}u(t) - e^{at}u(-t)}{2}$$</li>
                     { left: "\\(", right: "\\)", display: false },
                     { left: "\\[", right: "\\]", display: true }
                 ],
-                throwOnError: false
+                throwOnError: false,
+                strict: false
             });
         });
     </script>
     
     
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-cpp.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-clike.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-perl.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-java.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-mermaid.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup-templating.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-php.min.js"></script>
-    <script
-        src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+    <script src="/aulas-faesa/js/vendor/prism/prism.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-c.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-cpp.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-python.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-clike.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-perl.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-java.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-mermaid.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-php.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js" data-no-bundle></script>
     
     
     

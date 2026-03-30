@@ -7,15 +7,11 @@
     <title>Toposia - Processamento Digital de Sinais</title>
     <link rel="icon" href="/aulas-faesa/img/dark-favicon.svg" media="(prefers-color-scheme: light)">
     <link rel="icon" href="/aulas-faesa/img/light-favicon.svg" media="(prefers-color-scheme: dark)">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
-        rel="stylesheet">
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/fonts.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/js/vendor/katex/dist/katex.min.css" data-no-bundle>
     <link rel="stylesheet" href="/aulas-faesa/css/bundle.min.css">
     
-    
-    <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.css">
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css" data-no-bundle>
     <script src="/aulas-faesa/js/bundle.min.js"></script>
 </head>
 
@@ -178,7 +174,7 @@
 <p>$$h(t) = \big( c_1 e^{\lambda_1 t} + c_2 e^{\lambda_2 t} + \dots + c_N e^{\lambda_N t} \big) u(t).$$</p>
 <p>As constantes $c_i$ são determinadas pelas condições iniciais geradas pelo impulso em $t=0$. Para encontrá-las, substituímos $x(t)=\delta(t)$ e $y(t)=h(t)$ na equação diferencial original e igualamos os coeficientes dos termos singulares (impulsos e suas derivadas) que aparecem em ambos os lados.</p>
 <p>Vamos ilustrar esse método com um exemplo completo, resolvido passo a passo.</p>
-<p><div class="example">
+<div class="example">
   <div class="example-title">Exemplo 1</div>
   <p>Vamos determinar a resposta ao impulso $h(t)$ para o sistema descrito pela equação diferencial:</p>
 <p>$$(D^2 + 5D + 6)y(t) = (D + 1)x(t)$$</p>
@@ -215,32 +211,32 @@ $$</p>
 <div class="callout callout-info">
   <div class="callout-title">
     <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></span>
-    <span class="callout-title-inner">Propriedade da Derivada de Distribuições</span>
+    <span class="callout-title-inner">Propriedade da Derivada de Distribuições<br /></span>
   </div>
   <div class="callout-content">
 <p>Lembre-se da regra do produto envolvendo o degrau: a derivada de $u(t)$ é o impulso $\delta(t)$. Além disso, usaremos a propriedade de amostragem: $g(t)\delta(t) = g(0)\delta(t)$.</p>
   </div>
 </div>
-<p><strong>Primeira derivada $\dot{h}(t)$:</strong>
+<p><strong>Primeira derivada $\dot{h}(t)$:</strong><br />
 $$
 \dot{h}(t) = \frac{d}{dt}[f(t)u(t)] = \dot{f}(t)u(t) + f(t)\dot{u}(t)
-$$
+$$<br />
 $$
 \dot{h}(t) = \dot{f}(t)u(t) + f(t)\delta(t)
-$$
-Pela propriedade da amostragem, $f(t)\delta(t)$ vira $f(0)\delta(t)$:
+$$<br />
+Pela propriedade da amostragem, $f(t)\delta(t)$ vira $f(0)\delta(t)$:<br />
 $$
 \dot{h}(t) = \dot{f}(t)u(t) + f(0)\delta(t)
 $$</p>
-<p><strong>Segunda derivada $\ddot{h}(t)$:</strong>
-Derivamos a expressão acima novamente:
+<p><strong>Segunda derivada $\ddot{h}(t)$:</strong><br />
+Derivamos a expressão acima novamente:<br />
 $$
 \ddot{h}(t) = \frac{d}{dt}[\dot{f}(t)u(t)] + \frac{d}{dt}[f(0)\delta(t)]
-$$
+$$<br />
 $$
 \ddot{h}(t) = \left[ \ddot{f}(t)u(t) + \dot{f}(t)\delta(t) \right] + f(0)\dot{\delta}(t)
-$$
-Aplicando a amostragem novamente em $\dot{f}(t)\delta(t)$:
+$$<br />
+Aplicando a amostragem novamente em $\dot{f}(t)\delta(t)$:<br />
 $$
 \ddot{h}(t) = \ddot{f}(t)u(t) + \dot{f}(0)\delta(t) + f(0)\dot{\delta}(t)
 $$</p>
@@ -261,11 +257,11 @@ $$</p>
 $$</p>
 <p>Vamos agrupar os termos por tipo: os que multiplicam $u(t)$, os que multiplicam $\delta(t)$ e os que multiplicam $\dot{\delta}(t)$.</p>
 <ol>
-<li><p><strong>Termos com $u(t)$:</strong>
-$$[\ddot{f}(t) + 5\dot{f}(t) + 6f(t)]u(t)$$
+<li><p><strong>Termos com $u(t)$:</strong><br />
+$$[\ddot{f}(t) + 5\dot{f}(t) + 6f(t)]u(t)$$<br />
 Observe que o termo entre colchetes é exatamente a equação homogênea que resolvemos no Passo 1. Portanto, <strong>toda essa parte é igual a zero</strong>.</p>
 </li>
-<li><p><strong>Termos Singulares (Sobras):</strong>
+<li><p><strong>Termos Singulares (Sobras):</strong><br />
 O que sobra no lado esquerdo deve ser igual ao lado direito da equação ($\dot{\delta}(t) + \delta(t)$).</p>
 <p>Vamos escrever a equação de balanço apenas com o que sobrou:</p>
 <p>$$
@@ -278,18 +274,18 @@ O que sobra no lado esquerdo deve ser igual ao lado direito da equação ($\dot{
 <p><strong>Comparando os coeficientes:</strong></p>
 <p>Para que a igualdade seja verdadeira, o que multiplica $\dot{\delta}(t)$ de um lado deve ser igual ao que multiplica do outro, e o mesmo vale para $\delta(t)$.</p>
 <ul>
-<li><p>Comparando $\dot{\delta}(t)$:
+<li><p>Comparando $\dot{\delta}(t)$:<br />
 $$f(0) = 1$$</p>
 </li>
-<li><p>Comparando $\delta(t)$:
+<li><p>Comparando $\delta(t)$:<br />
 $$\dot{f}(0) + 5f(0) = 1$$</p>
 </li>
 </ul>
-<p>Como já sabemos que $f(0)=1$, substituímos na segunda equação:
+<p>Como já sabemos que $f(0)=1$, substituímos na segunda equação:<br />
 $$
     \dot{f}(0) + 5(1) = 1 \implies \dot{f}(0) = -4
     $$</p>
-<p>Acabamos de descobrir as <strong>condições iniciais</strong> que $f(t)$ deve satisfazer:
+<p>Acabamos de descobrir as <strong>condições iniciais</strong> que $f(t)$ deve satisfazer:<br />
 $$f(0) = 1 \quad \text{e} \quad \dot{f}(0) = -4$$</p>
 </li>
 </ol>
@@ -307,24 +303,24 @@ $$</p>
 <li>$f(0) = c_1 + c_2 = 1$</li>
 <li>$\dot{f}(0) = -2c_1 - 3c_2 = -4$</li>
 </ol>
-<p>Agora temos um sistema linear simples:
+<p>Agora temos um sistema linear simples:<br />
 $$
 \begin{cases}
 c_1 + c_2 = 1 \implies c_1 = 1 - c_2 \\
 -2c_1 - 3c_2 = -4
 \end{cases}
 $$</p>
-<p>Substituindo a primeira na segunda:
+<p>Substituindo a primeira na segunda:<br />
 $$
 -2(1 - c_2) - 3c_2 = -4
-$$
+$$<br />
 $$
 -2 + 2c_2 - 3c_2 = -4
-$$
+$$<br />
 $$
 -c_2 = -2 \implies \boxed{c_2 = 2}
 $$</p>
-<p>Voltando para achar $c_1$:
+<p>Voltando para achar $c_1$:<br />
 $$
 c_1 = 1 - 2 \implies \boxed{c_1 = -1}
 $$</p>
@@ -335,9 +331,8 @@ $$</p>
 \boxed{h(t) = (-e^{-2t} + 2e^{-3t})u(t)}
 $$</p>
 <p>Esta é a resposta ao impulso do sistema.</p>
-
-</div></p>
-<p><div class="example">
+</div>
+<div class="example">
   <div class="example-title">Exemplo 2</div>
   <p>Vamos determinar a resposta ao impulso $h(t)$ para o sistema LCIT:</p>
 <p>$$(D + 2)y(t) = (3D + 5)x(t)$$</p>
@@ -349,7 +344,7 @@ $$</p>
 <div class="callout callout-important">
   <div class="callout-title">
     <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
-    <span class="callout-title-inner">Regra das Ordens ($N$ vs $M$)</span>
+    <span class="callout-title-inner">Regra das Ordens ($N$ vs $M$)<br /></span>
   </div>
   <div class="callout-content">
 <p>Observe a maior derivada de cada lado:</p>
@@ -375,7 +370,7 @@ $$</p>
 <p>$$
 h(t) = A\delta(t) + y_n(t)u(t)
 $$</p>
-<p><strong>Primeira derivada $\dot{h}(t)$:</strong>
+<p><strong>Primeira derivada $\dot{h}(t)$:</strong><br />
 $$
 \dot{h}(t) = A\dot{\delta}(t) + \dot{y}_n(t)u(t) + y_n(0)\delta(t)
 $$</p>
@@ -388,28 +383,28 @@ $$</p>
 <p>Agrupando os termos por tipo ($\dot{\delta}$, $\delta$ e $u$):</p>
 <ol>
 <li><strong>Termos com $u(t)$:</strong> $[\dot{y}_n(t) + 2y_n(t)]u(t) = 0$ (pois é a solução homogênea).</li>
-<li><strong>Termos Singulares:</strong>
+<li><strong>Termos Singulares:</strong><br />
 $$
     A\dot{\delta}(t) + [y_n(0) + 2A]\delta(t) = 3\dot{\delta}(t) + 5\delta(t)
     $$</li>
 </ol>
 <p><strong>Comparando os lados:</strong></p>
 <ul>
-<li><p>Para $\dot{\delta}(t)$:
+<li><p>Para $\dot{\delta}(t)$:<br />
 $$A = 3$$</p>
 </li>
-<li><p>Para $\delta(t)$:
-$$y_n(0) + 2A = 5$$
-Substituindo $A=3$:
+<li><p>Para $\delta(t)$:<br />
+$$y_n(0) + 2A = 5$$<br />
+Substituindo $A=3$:<br />
 $$y_n(0) + 6 = 5 \implies y_n(0) = -1$$</p>
 </li>
 </ul>
 <p>Temos então: $A=3$ e a condição inicial $y_n(0)=-1$.</p>
 <hr />
 <p><strong>Passo 4: Determinar a constante $K$</strong></p>
-<p>A parte natural é $y_n(t) = K e^{-2t}$.
+<p>A parte natural é $y_n(t) = K e^{-2t}$.<br />
 Em $t=0$, temos $y_n(0) = K$.</p>
-<p>Como encontramos que $y_n(0) = -1$, então <strong>$K = -1$</strong>.
+<p>Como encontramos que $y_n(0) = -1$, então <strong>$K = -1$</strong>.<br />
 Logo, $y_n(t) = -e^{-2t}$.</p>
 <hr />
 <p><strong>Passo 5: Expressão final</strong></p>
@@ -417,9 +412,8 @@ Logo, $y_n(t) = -e^{-2t}$.</p>
 <p>$$
 \boxed{h(t) = 3\delta(t) - e^{-2t}u(t)}
 $$</p>
-
-</div></p>
-<p><div class="example">
+</div>
+<div class="example">
   <div class="example-title">Exemplo 3</div>
   <p>Vamos determinar a resposta ao impulso $h(t)$ para o sistema descrito pela equação:</p>
 <p>$$D(D + 2)y(t) = (D + 4)x(t)$$</p>
@@ -448,7 +442,7 @@ $$</p>
 </ul>
 <p>A forma da solução natural $f(t)$ será uma combinação linear dessas exponenciais:</p>
 <p>$$f(t) = c_1 e^{0t} + c_2 e^{-2t} \implies f(t) = c_1 + c_2 e^{-2t}$$</p>
-<p>Nossa resposta ao impulso completa será:
+<p>Nossa resposta ao impulso completa será:<br />
 $$h(t) = f(t)u(t) = (c_1 + c_2 e^{-2t})u(t)$$</p>
 <hr />
 <p><strong>Passo 2: Calcular as derivadas da resposta ao impulso</strong></p>
@@ -456,15 +450,15 @@ $$h(t) = f(t)u(t) = (c_1 + c_2 e^{-2t})u(t)$$</p>
 <div class="callout callout-info">
   <div class="callout-title">
     <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></span>
-    <span class="callout-title-inner">Propriedade de Distribuição</span>
+    <span class="callout-title-inner">Propriedade de Distribuição<br /></span>
   </div>
   <div class="callout-content">
 <p>Lembre-se: $\frac{d}{dt}u(t) = \delta(t)$ e $g(t)\delta(t) = g(0)\delta(t)$.</p>
   </div>
 </div>
-<p><strong>Primeira derivada $\dot{h}(t)$:</strong>
+<p><strong>Primeira derivada $\dot{h}(t)$:</strong><br />
 $$\dot{h}(t) = \dot{f}(t)u(t) + f(0)\delta(t)$$</p>
-<p><strong>Segunda derivada $\ddot{h}(t)$:</strong>
+<p><strong>Segunda derivada $\ddot{h}(t)$:</strong><br />
 $$\ddot{h}(t) = \ddot{f}(t)u(t) + \dot{f}(0)\delta(t) + f(0)\dot{\delta}(t)$$</p>
 <hr />
 <p><strong>Passo 3: Substituição e Balanceamento de Singularidades</strong></p>
@@ -481,19 +475,19 @@ $$</p>
 <ol>
 <li><p><strong>Termos com $u(t)$:</strong> $[\ddot{f}(t) + 2\dot{f}(t)]u(t) = 0$ (Cai na equação homogênea).</p>
 </li>
-<li><p><strong>Termos Singulares (Balanceamento):</strong>
+<li><p><strong>Termos Singulares (Balanceamento):</strong><br />
 O que sobrou deve ser igual ao lado direito da entrada ($\dot{\delta}(t) + 4\delta(t)$):</p>
 <p>$$f(0)\dot{\delta}(t) + [\dot{f}(0) + 2f(0)]\delta(t) = 1\dot{\delta}(t) + 4\delta(t)$$</p>
 </li>
 </ol>
 <p><strong>Comparando os coeficientes:</strong></p>
 <ul>
-<li><p><strong>Para $\dot{\delta}(t)$:</strong>
+<li><p><strong>Para $\dot{\delta}(t)$:</strong><br />
 $$f(0) = 1$$</p>
 </li>
-<li><p><strong>Para $\delta(t)$:</strong>
-$$\dot{f}(0) + 2f(0) = 4$$
-Substituindo $f(0) = 1$:
+<li><p><strong>Para $\delta(t)$:</strong><br />
+$$\dot{f}(0) + 2f(0) = 4$$<br />
+Substituindo $f(0) = 1$:<br />
 $$\dot{f}(0) + 2(1) = 4 \implies \dot{f}(0) = 2$$</p>
 </li>
 </ul>
@@ -501,17 +495,17 @@ $$\dot{f}(0) + 2(1) = 4 \implies \dot{f}(0) = 2$$</p>
 <hr />
 <p><strong>Passo 4: Resolver o sistema para $c_1$ e $c_2$</strong></p>
 <p>Usamos as condições encontradas na nossa expressão de $f(t)$:</p>
-<p>$$f(t) = c_1 + c_2 e^{-2t}$$
+<p>$$f(t) = c_1 + c_2 e^{-2t}$$<br />
 $$\dot{f}(t) = -2c_2 e^{-2t}$$</p>
 <ol>
-<li><p><strong>Aplicando $f(0) = 1$:</strong>
+<li><p><strong>Aplicando $f(0) = 1$:</strong><br />
 $$c_1 + c_2 = 1$$</p>
 </li>
-<li><p><strong>Aplicando $\dot{f}(0) = 2$:</strong>
+<li><p><strong>Aplicando $\dot{f}(0) = 2$:</strong><br />
 $$-2c_2 = 2 \implies \boxed{c_2 = -1}$$</p>
 </li>
 </ol>
-<p>Substituindo $c_2$ na primeira equação:
+<p>Substituindo $c_2$ na primeira equação:<br />
 $$c_1 + (-1) = 1 \implies \boxed{c_1 = 2}$$</p>
 <hr />
 <p><strong>Passo 5: Expressão final</strong></p>
@@ -520,9 +514,8 @@ $$c_1 + (-1) = 1 \implies \boxed{c_1 = 2}$$</p>
 <p>Multiplicando pelo degrau unitário para indicar que o sistema é causal ($h(t)=0$ para $t<0$):</p>
 <p>$$\boxed{h(t) = (2 - e^{-2t})u(t)}$$</p>
 <p>Este resultado bate exatamente com a resposta fornecida no gabarito da imagem.</p>
-
-</div></p>
-<p><div class="example">
+</div>
+<div class="example">
   <div class="example-title">Exemplo 4</div>
   <p>Vamos determinar a resposta ao impulso $h(t)$ para o sistema descrito pela equação:</p>
 <p>$$(D^2 + 2D + 1)y(t) = Dx(t)$$</p>
@@ -539,27 +532,27 @@ $$c_1 + (-1) = 1 \implies \boxed{c_1 = 2}$$</p>
 <p><strong>Passo 1: Encontrar a forma funcional de $h(t)$ (Raízes Repetidas)</strong></p>
 <p>Para $t > 0$, resolvemos a equação homogênea:</p>
 <p>$$\frac{d^2y}{dt^2} + 2\frac{dy}{dt} + y(t) = 0$$</p>
-<p>A equação característica é:
+<p>A equação característica é:<br />
 $$\lambda^2 + 2\lambda + 1 = 0 \implies (\lambda + 1)^2 = 0$$</p>
 <p>Temos uma raiz real repetida: <strong>$\lambda_1 = \lambda_2 = -1$</strong>.</p>
 <div class="callout callout-important">
   <div class="callout-title">
     <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
-    <span class="callout-title-inner">Atenção</span>
+    <span class="callout-title-inner">Atenção<br /></span>
   </div>
   <div class="callout-content">
-<p>Quando as raízes são repetidas, a solução natural não pode ser apenas $e^{-t}$, pois precisamos de duas funções linearmente independentes. A forma correta é:
+<p>Quando as raízes são repetidas, a solução natural não pode ser apenas $e^{-t}$, pois precisamos de duas funções linearmente independentes. A forma correta é:<br />
 $$f(t) = (c_1 + c_2 t)e^{-t}$$</p>
   </div>
 </div>
-<p>Nossa resposta ao impulso completa será:
+<p>Nossa resposta ao impulso completa será:<br />
 $$h(t) = (c_1 + c_2 t)e^{-t}u(t)$$</p>
 <hr />
 <p><strong>Passo 2: Calcular as derivadas da resposta ao impulso</strong></p>
 <p>Usaremos as fórmulas padrão para as derivadas de $h(t) = f(t)u(t)$:</p>
-<p><strong>Primeira derivada $\dot{h}(t)$:</strong>
+<p><strong>Primeira derivada $\dot{h}(t)$:</strong><br />
 $$\dot{h}(t) = \dot{f}(t)u(t) + f(0)\delta(t)$$</p>
-<p><strong>Segunda derivada $\ddot{h}(t)$:</strong>
+<p><strong>Segunda derivada $\ddot{h}(t)$:</strong><br />
 $$\ddot{h}(t) = \ddot{f}(t)u(t) + \dot{f}(0)\delta(t) + f(0)\dot{\delta}(t)$$</p>
 <hr />
 <p><strong>Passo 3: Substituição e Balanceamento de Singularidades</strong></p>
@@ -576,34 +569,34 @@ $$</p>
 <p>Agrupando os termos:</p>
 <ol>
 <li><strong>Termos com $u(t)$:</strong> $[\ddot{f}(t) + 2\dot{f}(t) + f(t)]u(t) = 0$ (Solução homogênea).</li>
-<li><strong>Termos Singulares:</strong>
+<li><strong>Termos Singulares:</strong><br />
 $$f(0)\dot{\delta}(t) + [\dot{f}(0) + 2f(0)]\delta(t) = 1\dot{\delta}(t) + 0\delta(t)$$</li>
 </ol>
 <p><strong>Comparando os coeficientes:</strong></p>
 <ul>
-<li><p><strong>Para $\dot{\delta}(t)$:</strong>
+<li><p><strong>Para $\dot{\delta}(t)$:</strong><br />
 $$f(0) = 1$$</p>
 </li>
-<li><p><strong>Para $\delta(t)$:</strong>
-$$\dot{f}(0) + 2f(0) = 0$$
-Substituindo $f(0) = 1$:
+<li><p><strong>Para $\delta(t)$:</strong><br />
+$$\dot{f}(0) + 2f(0) = 0$$<br />
+Substituindo $f(0) = 1$:<br />
 $$\dot{f}(0) + 2(1) = 0 \implies \dot{f}(0) = -2$$</p>
 </li>
 </ul>
 <p>As condições iniciais para $f(t)$ são $f(0) = 1$ e $\dot{f}(0) = -2$.</p>
 <hr />
 <p><strong>Passo 4: Resolver o sistema para $c_1$ e $c_2$</strong></p>
-<p>Temos a função e sua derivada (usando a regra do produto):
-$$f(t) = (c_1 + c_2 t)e^{-t}$$
+<p>Temos a função e sua derivada (usando a regra do produto):<br />
+$$f(t) = (c_1 + c_2 t)e^{-t}$$<br />
 $$\dot{f}(t) = c_2 e^{-t} - (c_1 + c_2 t)e^{-t}$$</p>
 <ol>
-<li><p><strong>Aplicando $f(0) = 1$:</strong>
+<li><p><strong>Aplicando $f(0) = 1$:</strong><br />
 $$(c_1 + c_2 \cdot 0)e^{0} = 1 \implies \boxed{c_1 = 1}$$</p>
 </li>
-<li><p><strong>Aplicando $\dot{f}(0) = -2$:</strong>
-$$c_2 e^{0} - (c_1 + c_2 \cdot 0)e^{0} = -2$$
-$$c_2 - c_1 = -2$$
-Substituindo $c_1 = 1$:
+<li><p><strong>Aplicando $\dot{f}(0) = -2$:</strong><br />
+$$c_2 e^{0} - (c_1 + c_2 \cdot 0)e^{0} = -2$$<br />
+$$c_2 - c_1 = -2$$<br />
+Substituindo $c_1 = 1$:<br />
 $$c_2 - 1 = -2 \implies \boxed{c_2 = -1}$$</p>
 </li>
 </ol>
@@ -614,8 +607,7 @@ $$c_2 - 1 = -2 \implies \boxed{c_2 = -1}$$</p>
 <p>Adicionando o degrau unitário:</p>
 <p>$$\boxed{h(t) = (1 - t)e^{-t}u(t)}$$</p>
 <p>Este resultado coincide exatamente com a alternativa (c) do seu exercício.</p>
-
-</div></p>
+</div>
 <h2 id="resposta-do-sistema-à-entrada-externa-resposta-de-estado-nulo"><span class="heading-text">Resposta do Sistema à Entrada Externa: Resposta de Estado Nulo</span><span class="heading-arabic">5.3</span></h2>
 <p>Nesta sessão, você aprenderá como determinar a <strong>resposta de estado nulo</strong> de um sistema <strong>LCIT</strong> (Linear e Invariante no Tempo com Coeficientes Constantes). Esse termo refere-se à saída $y(t)$ produzida quando o sistema recebe uma entrada $x(t)$, partindo do pressuposto de que <strong>todas as condições iniciais são nulas</strong>. Para fins didáticos, trataremos essa resposta como a resposta total do sistema.</p>
 <p>Para compreendermos como o sistema reage a uma entrada qualquer, utilizaremos o <strong>princípio da superposição</strong>. O primeiro passo é decompor o sinal $x(t)$ em componentes mais simples. Imagine um pulso básico $p(t)$, com altura unitária e uma largura muito estreita $\Delta\tau$, começando em $t = 0$.</p>
@@ -625,7 +617,7 @@ $$c_2 - 1 = -2 \implies \boxed{c_2 = -1}$$</p>
 <div class="callout callout-info">
   <div class="callout-title">
     <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></span>
-    <span class="callout-title-inner">O Conceito Chave: Resposta de Estado Nulo</span>
+    <span class="callout-title-inner">O Conceito Chave: Resposta de Estado Nulo<br /></span>
   </div>
   <div class="callout-content">
 <p>Agora, entra em jogo o motivo de termos estudado a <strong>resposta ao impulso</strong> $h(t)$. Lembre-se: a resposta ao impulso $h(t)$ é, <strong>por definição, a saída do sistema quando a entrada é um impulso unitário e todas as suas condições iniciais são zero</strong>.</p>
@@ -644,7 +636,7 @@ $$c_2 - 1 = -2 \implies \boxed{c_2 = -1}$$</p>
 <div class="callout callout-tip">
   <div class="callout-title">
     <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .5 2.2 1.5 3.1.7.7 1.3 1.5 1.5 2.4"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span>
-    <span class="callout-title-inner">Conclusão</span>
+    <span class="callout-title-inner">Conclusão<br /></span>
   </div>
   <div class="callout-content">
 <p>Note que $h(t)$ funciona como uma &quot;impressão digital&quot; do sistema. Uma vez que você conhece a resposta ao impulso unitário (que já presume condições iniciais nulas), você tem em mãos a ferramenta para prever o comportamento do sistema diante de qualquer sinal de entrada imaginável, ou seja, para calcular a <strong>resposta de estado nulo</strong> para qualquer $x(t)$.</p>
@@ -669,10 +661,10 @@ $$c_2 - 1 = -2 \implies \boxed{c_2 = -1}$$</p>
 <div class="callout callout-note">
   <div class="callout-title">
     <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
-    <span class="callout-title-inner">Nota sobre Invariância</span>
+    <span class="callout-title-inner">Nota sobre Invariância<br /></span>
   </div>
   <div class="callout-content">
-<p>É fundamental lembrar que, para que esses resultados sejam válidos, assumimos que o sistema é invariante no tempo. Caso o sistema seja variante, a resposta ao impulso assumirá a forma $h(t, \tau)$ e a integral será modificada para:
+<p>É fundamental lembrar que, para que esses resultados sejam válidos, assumimos que o sistema é invariante no tempo. Caso o sistema seja variante, a resposta ao impulso assumirá a forma $h(t, \tau)$ e a integral será modificada para:<br />
 $$y(t) = \int_{-\infty}^{\infty} x(\tau)h(t, \tau) d\tau$$</p>
   </div>
 </div>
@@ -699,7 +691,7 @@ $$y(t) = \int_{-\infty}^{\infty} x(\tau)h(t, \tau) d\tau$$</p>
 
 <p>Portanto, para sinais e sistemas causais, a integral de convolução se reduz a:</p>
 <p>$$y(t) = \int_{0^{-}}^{t} x(\tau)h(t - \tau) d\tau, \quad t \geq 0$$</p>
-<p><div class="example">
+<div class="example">
   <div class="example-title">Exemplo 5</div>
   <p>Para um sistema LCIT com resposta ao impulso unitário dada por</p>
 <p>$$h(t) = e^{-2t}u(t),$$</p>
@@ -766,9 +758,8 @@ y(t) = \big(e^{-t} - e^{-2t}\big)u(t)
 }
 $$</p>
 <p>Essa é a resposta do sistema à entrada $x(t)=e^{-t}u(t)$.</p>
-
-</div></p>
-<p><div class="example">
+</div>
+<div class="example">
   <div class="example-title">Exemplo 6</div>
   <p>Para um sistema LCIT com resposta ao impulso unitário dada por</p>
 <p>$$h(t) = 6e^{-t}u(t),$$</p>
@@ -826,9 +817,8 @@ y(t) = 12(1 - e^{-t})u(t)
 }
 $$</p>
 <p>Essa é a resposta do sistema para a entrada $x(t)=2u(t)$.</p>
-
-</div></p>
-<p><div class="example">
+</div>
+<div class="example">
   <div class="example-title">Exemplo 7</div>
   <p>Para um sistema LCIT com resposta ao impulso unitário dada por</p>
 <p>$$h(t) = 6e^{-t}u(t),$$</p>
@@ -894,8 +884,7 @@ y(t) = 9\big(e^{-t} - e^{-3t}\big)u(t)
 }
 $$</p>
 <p>Essa é a resposta do sistema para a entrada $x(t)=3e^{-3t}u(t)$.</p>
-
-</div></p>
+</div>
 <h3 id="sistemas-interconectados"><span class="heading-text">Sistemas Interconectados</span><span class="heading-arabic">5.3.9</span></h3>
 <p>Sistemas maiores e mais complexos geralmente podem ser compreendidos como a interconexão de diversos subsistemas menores, cada um mais fácil de ser caracterizado individualmente. Ao conhecer as propriedades desses subsistemas, torna-se muito mais simples analisar o comportamento do sistema global. Neste capítulo, você deve considerar duas conexões básicas: a conexão em <strong>série</strong> (também chamada de <em>cascade</em>) e a conexão em <strong>paralelo</strong>.</p>
 <p>Para ilustrar esses conceitos, a imagem abaixo apresenta na <strong>letra (a)</strong> da figura abaixo dois subsistemas <strong>LCIT</strong> conectados em paralelo e, na <strong>letra (b)</strong>, os mesmos subsistemas conectados em série:</p>
@@ -903,9 +892,9 @@ $$</p>
 
 <p>Na <strong>letra (a)</strong>, você observará um dispositivo representado pelo símbolo $\Sigma$ dentro de um círculo, que atua como um <strong>somador</strong> de sinais. Além disso, o ponto onde dois ou mais ramos se dividem é chamado de <strong>nó de separação</strong>, onde cada ramo resultante carrega exatamente o mesmo sinal da junção original. No exemplo da <strong>letra (a)</strong>, a entrada é aplicada a um nó de separação que irradia o sinal para ambos os subsistemas.</p>
 <p>Considerando que as respostas ao impulso de $S_1$ e $S_2$ sejam $h_1(t)$ e $h_2(t)$, respectivamente, assumimos que a conexão não altera suas características individuais (ou seja, os sistemas não se &quot;carregam&quot;).</p>
-<p>Para determinar $h_p(t)$, que é a <strong>resposta ao impulso do sistema paralelo</strong>, aplicamos um impulso $\delta(t)$ na entrada. Isso resulta no sinal $\delta(t)$ chegando simultaneamente em $S_1$ e $S_2$, gerando as saídas $h_1(t)$ e $h_2(t)$, que são somadas ao final. Consequentemente, a resposta total é:
+<p>Para determinar $h_p(t)$, que é a <strong>resposta ao impulso do sistema paralelo</strong>, aplicamos um impulso $\delta(t)$ na entrada. Isso resulta no sinal $\delta(t)$ chegando simultaneamente em $S_1$ e $S_2$, gerando as saídas $h_1(t)$ e $h_2(t)$, que são somadas ao final. Consequentemente, a resposta total é:<br />
 $$h_p(t) = h_1(t) + h_2(t) \quad (2.43a)$$</p>
-<p>No caso do sistema em série $S_c$ (<strong>letra (b)</strong>), ao aplicarmos $\delta(t)$, ele passa primeiro por $S_1$, produzindo a saída $h_1(t)$. Este sinal torna-se a entrada de $S_2$, e a resposta final de $S_2$ a essa entrada será a convolução entre os dois:
+<p>No caso do sistema em série $S_c$ (<strong>letra (b)</strong>), ao aplicarmos $\delta(t)$, ele passa primeiro por $S_1$, produzindo a saída $h_1(t)$. Este sinal torna-se a entrada de $S_2$, e a resposta final de $S_2$ a essa entrada será a convolução entre os dois:<br />
 $$h_c(t) = h_1(t) * h_2(t) \quad (2.43b)$$</p>
 <p>Devido à <strong>propriedade comutativa</strong> da convolução, você pode alternar a ordem dos sistemas $S_1$ e $S_2$ sem alterar a resposta impulsiva total, como mostrado na <strong>letra (c)</strong>. Teoricamente, a ordem em que as operações lineares em série são executadas não é importante, embora limitações físicas reais possam influenciar a performance final.</p>
 <h2 id="questões"><span class="heading-text">Questões</span><span class="heading-arabic">5.4</span></h2>
@@ -975,8 +964,8 @@ $$h_c(t) = h_1(t) * h_2(t) \quad (2.43b)$$</p>
         overlay.addEventListener('click', closeMenu);
     </script>
 
-    
-    
+    <script src="/aulas-faesa/js/vendor/katex/dist/katex.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/katex/dist/contrib/auto-render.min.js" data-no-bundle></script>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             renderMathInElement(document.body, {
@@ -987,25 +976,25 @@ $$h_c(t) = h_1(t) * h_2(t) \quad (2.43b)$$</p>
                     { left: "\\(", right: "\\)", display: false },
                     { left: "\\[", right: "\\]", display: true }
                 ],
-                throwOnError: false
+                throwOnError: false,
+                strict: false
             });
         });
     </script>
     
     
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-cpp.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-clike.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-perl.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-java.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-mermaid.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup-templating.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-php.min.js"></script>
-    <script
-        src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+    <script src="/aulas-faesa/js/vendor/prism/prism.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-c.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-cpp.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-python.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-clike.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-perl.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-java.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-mermaid.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-php.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js" data-no-bundle></script>
     
     
     

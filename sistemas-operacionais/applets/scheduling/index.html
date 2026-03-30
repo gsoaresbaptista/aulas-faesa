@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scheduling Applet - OS</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/rough.js/3.1.0/rough.js"></script>
+</head>
+<body>
+    <div class="applet-wrapper">
+        <header class="applet-header">
+            <h2>CPU Scheduler Explorer</h2>
+            <p>Configure processos e analise o comportamento dos algoritmos.</p>
+        </header>
+
+        <div class="tabs-container">
+            <div class="tabs-header">
+                <button class="tab-btn active" onclick="openTab(event, 'config')">CONFIGURAÇÃO</button>
+                <button class="tab-btn" onclick="openTab(event, 'visualizer')">DIAGRAMA DE GANTT</button>
+                <button class="tab-btn" onclick="openTab(event, 'metrics-tab')">MÉTRICAS DETALHADAS</button>
+            </div>
+
+            <!-- Tab 1: Config -->
+            <div id="config" class="tab-content active">
+                <div class="controls">
+                    <div>
+                        <label style="font-size: 0.7rem; display: block; margin-bottom: 4px;">ALGORITMO</label>
+                        <select id="algo">
+                            <option value="fcfs">FCFS</option>
+                            <option value="sjf">SJF (N-P)</option>
+                            <option value="srtn">SRTN (P)</option>
+                            <option value="rr">Round Robin</option>
+                        </select>
+                    </div>
+                    <div id="quantum-container" style="display:none;">
+                        <label style="font-size: 0.7rem; display: block; margin-bottom: 4px;">QUANTUM</label>
+                        <input type="number" id="quantum" value="2" min="1" style="width: 60px;">
+                    </div>
+                    <div style="flex-grow: 1; text-align: right; align-self: flex-end;">
+                        <button onclick="addProcess()">ADICIONAR PROCESSO</button>
+                    </div>
+                </div>
+
+                <table id="process-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 15%">ID</th>
+                            <th style="width: 25%">CHEGADA (ms)</th>
+                            <th style="width: 25%">BURST (ms)</th>
+                            <th style="width: 20%">COR</th>
+                            <th style="width: 15%"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="process-list">
+                        <!-- Processes -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Tab 2: Visualizer -->
+            <div id="visualizer" class="tab-content">
+                <div class="controls" style="margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px;">
+                    <button id="sim-btn" onclick="toggleSimulation()" style="background: var(--accent); color: white; border-color: #388e3c;">SIMULAR</button>
+                    <button id="reset-btn" onclick="resetSimulation()">RESET</button>
+                    <div style="margin-left: 15px; display: flex; align-items: center; gap: 8px;">
+                        <label style="font-size: 0.7rem; font-weight: bold;">VELOCIDADE</label>
+                        <input type="number" id="sim-speed" value="1" min="1" max="10" style="width: 50px;">
+                        <span style="font-size: 0.8rem; color: #666;">x</span>
+                    </div>
+                    <div style="flex-grow: 1; text-align: right;">
+                        <div id="timeline-info" style="font-family: var(--font-mono); font-weight: bold; font-size: 0.9rem;"></div>
+                    </div>
+                </div>
+                <div class="gantt-container" id="gantt-container">
+                    <canvas id="gantt-canvas"></canvas>
+                </div>
+            </div>
+
+            <!-- Tab 3: Metrics -->
+            <div id="metrics-tab" class="tab-content">
+                <table class="metrics-table">
+                    <thead>
+                        <tr>
+                            <th>PROCESSO</th>
+                            <th>CHEGADA</th>
+                            <th>BURST</th>
+                            <th>TÉRMINO</th>
+                            <th>RETORNO (TA)</th>
+                            <th>ESPERA (WT)</th>
+                            <th>RESPOSTA (RT)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="metrics-body">
+                        <!-- Metrics Rows -->
+                    </tbody>
+                </table>
+
+                <div class="metrics-summary">
+                    <div class="summary-card">
+                        <div class="summary-label">MÉDIA DE RETORNO</div>
+                        <div class="summary-value" id="avg-ta">0.00</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-label">MÉDIA DE ESPERA</div>
+                        <div class="summary-value" id="avg-wt">0.00</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-label">MÉDIA DE RESPOSTA</div>
+                        <div class="summary-value" id="avg-rt">0.00</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let processIdCounter = 1;
+        const colors = ['#e6194b', '#3cb44b', '#ffe119', '#4363d8', '#f58231', '#911eb4', '#46f0f0', '#f032e6', '#bcf60c', '#fabebe'];
+        const canvas = document.getElementById('gantt-canvas');
+        const rc = rough.canvas(canvas);
+
+        let isSimulating = false;
+        let simulationTime = null; // null means show full timeline
+        let animationId = null;
+        let lastTimestamp = 0;
+
+        function openTab(evt, tabName) {
+            const contents = document.getElementsByClassName("tab-content");
+            for (let i = 0; i < contents.length; i++) contents[i].classList.remove("active");
+            const btns = document.getElementsByClassName("tab-btn");
+            for (let i = 0; i < btns.length; i++) btns[i].classList.remove("active");
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+            
+            if (tabName !== 'visualizer') {
+                stopSimulation();
+            }
+            update();
+        }
+
+        document.getElementById('algo').addEventListener('change', function() {
+            document.getElementById('quantum-container').style.display = this.value === 'rr' ? 'block' : 'none';
+            simulationTime = null;
+            stopSimulation();
+            update();
+        });
+        document.getElementById('quantum').addEventListener('input', () => { simulationTime = null; stopSimulation(); update(); });
+
+        function addProcess(arrival = null, burst = null) {
+            const tbody = document.getElementById('process-list');
+            const tr = document.createElement('tr');
+            const pid = `P${processIdCounter++}`;
+            const color = colors[(processIdCounter - 2) % colors.length];
+            
+            if (arrival === null) arrival = Math.floor(Math.random() * 5);
+            if (burst === null) burst = Math.floor(Math.random() * 8) + 2;
+
+            tr.innerHTML = `
+                <td style="font-weight: bold; font-family: var(--font-mono);">${pid}</td>
+                <td><input type="number" class="arr" value="${arrival}" min="0"></td>
+                <td><input type="number" class="burst" value="${burst}" min="1"></td>
+                <td><div style="width: 20px; height: 20px; background: ${color}; border: 1px solid #333; border-radius: 2px;"></div></td>
+                <td style="text-align: right;"><button style="padding: 2px 8px;" onclick="this.parentElement.parentElement.remove(); simulationTime = null; stopSimulation(); update();">X</button></td>
+            `;
+            tr.dataset.pid = pid;
+            tr.dataset.color = color;
+            tbody.appendChild(tr);
+            
+            tr.querySelectorAll('input').forEach(input => input.addEventListener('input', () => { simulationTime = null; stopSimulation(); update(); }));
+            update();
+        }
+
+        // Init defaults
+        addProcess(0, 8);
+        addProcess(1, 4);
+        addProcess(2, 9);
+        addProcess(3, 5);
+
+        function toggleSimulation() {
+            if (isSimulating) {
+                stopSimulation();
+            } else {
+                startSimulation();
+            }
+        }
+
+        function startSimulation() {
+            const procs = getProcesses();
+            if (procs.length === 0) return;
+            
+            if (simulationTime === null) simulationTime = 0;
+
+            const algo = document.getElementById('algo').value;
+            const quantum = parseInt(document.getElementById('quantum').value) || 1;
+            let timeline = [];
+            if (algo === 'fcfs') timeline = simulateFCFS(procs);
+            else if (algo === 'sjf') timeline = simulateSJF(procs);
+            else if (algo === 'srtn') timeline = simulateSRTN(procs);
+            else if (algo === 'rr') timeline = simulateRR(procs, quantum);
+            
+            const totalTime = timeline.length > 0 ? timeline[timeline.length-1].end : 0;
+            
+            if (simulationTime >= totalTime) {
+                simulationTime = 0;
+            }
+
+            isSimulating = true;
+            document.getElementById('sim-btn').innerText = 'PAUSAR';
+            document.getElementById('sim-btn').style.background = '#f44336';
+            
+            lastTimestamp = performance.now();
+            requestAnimationFrame(simLoop);
+        }
+
+        function stopSimulation() {
+            isSimulating = false;
+            document.getElementById('sim-btn').innerText = 'SIMULAR';
+            document.getElementById('sim-btn').style.background = 'var(--accent)';
+            if (animationId) cancelAnimationFrame(animationId);
+        }
+
+        function resetSimulation() {
+            stopSimulation();
+            simulationTime = 0;
+            update();
+        }
+
+        function simLoop(timestamp) {
+            if (!isSimulating) return;
+
+            const elapsed = timestamp - lastTimestamp;
+            lastTimestamp = timestamp;
+            
+            const speed = parseFloat(document.getElementById('sim-speed').value) || 1;
+            // No speed 1x: 1s (1000ms) real = 1ms sim
+            // simulationTime += (elapsed / 1000) * speed;
+            simulationTime += (elapsed / 1000) * speed; 
+
+            update();
+
+            const procs = getProcesses();
+            const algo = document.getElementById('algo').value;
+            const quantum = parseInt(document.getElementById('quantum').value) || 1;
+            let timeline = [];
+            if (algo === 'fcfs') timeline = simulateFCFS(procs);
+            else if (algo === 'sjf') timeline = simulateSJF(procs);
+            else if (algo === 'srtn') timeline = simulateSRTN(procs);
+            else if (algo === 'rr') timeline = simulateRR(procs, quantum);
+            
+            const totalTime = timeline.length > 0 ? timeline[timeline.length-1].end : 0;
+
+            if (simulationTime >= totalTime) {
+                simulationTime = totalTime;
+                stopSimulation();
+                update();
+            } else {
+                animationId = requestAnimationFrame(simLoop);
+            }
+        }
+
+        function update() {
+            const procs = getProcesses();
+            if(procs.length === 0) return;
+            
+            const algo = document.getElementById('algo').value;
+            const quantum = parseInt(document.getElementById('quantum').value) || 1;
+            
+            let timeline = [];
+            if (algo === 'fcfs') timeline = simulateFCFS(procs);
+            else if (algo === 'sjf') timeline = simulateSJF(procs);
+            else if (algo === 'srtn') timeline = simulateSRTN(procs);
+            else if (algo === 'rr') timeline = simulateRR(procs, quantum);
+
+            const totalTime = timeline.length > 0 ? timeline[timeline.length-1].end : 0;
+            
+            let displayTime = (simulationTime === null) ? totalTime : simulationTime;
+            
+            const metrics = calculateMetrics(procs, timeline, displayTime);
+            
+            renderGantt(timeline, procs, displayTime);
+            renderMetrics(procs, metrics);
+        }
+
+        function getProcesses() {
+            const rows = document.querySelectorAll('#process-list tr');
+            let procs = [];
+            rows.forEach(r => {
+                procs.push({
+                    id: r.dataset.pid,
+                    arrival: parseInt(r.querySelector('.arr').value) || 0,
+                    burst: parseInt(r.querySelector('.burst').value) || 1,
+                    color: r.dataset.color
+                });
+            });
+            return procs;
+        }
+
+        function renderGantt(timeline, procs, currentTime) {
+            const container = document.getElementById('gantt-container');
+            const width = container.clientWidth - 100; // Leave space for labels
+            const totalTime = timeline.length > 0 ? timeline[timeline.length-1].end : 0;
+            const rowHeight = 60;
+            canvas.width = container.clientWidth;
+            canvas.height = procs.length * rowHeight + 40;
+            
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            if(timeline.length === 0) return;
+
+            document.getElementById('timeline-info').innerText = (simulationTime !== null) ? `TEMPO ATUAL: ${currentTime.toFixed(1)}ms / TOTAL: ${totalTime}ms` : `DURAÇÃO TOTAL: ${totalTime}ms`;
+
+            // Draw grid lines
+            ctx.strokeStyle = '#eee';
+            ctx.lineWidth = 1;
+            const gridEnd = Math.max(totalTime, 10);
+            for(let t=0; t<=gridEnd; t++) {
+                const x = 80 + (t / gridEnd) * width;
+                ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height - 30); ctx.stroke();
+            }
+
+            procs.forEach((p, idx) => {
+                const y = idx * rowHeight + 10;
+                
+                // Label
+                ctx.fillStyle = '#333';
+                ctx.font = 'bold 12px var(--font-mono)';
+                ctx.textAlign = 'right';
+                ctx.fillText(p.id, 70, y + 30);
+
+                // Row background line
+                ctx.beginPath();
+                ctx.strokeStyle = '#f0f0f0';
+                ctx.moveTo(80, y + 25);
+                ctx.lineTo(80 + width, y + 25);
+                ctx.stroke();
+
+                // Segments for this process
+                timeline.filter(seg => seg.id === p.id).forEach(seg => {
+                    if (seg.start >= currentTime) return;
+                    
+                    let end = Math.min(seg.end, currentTime);
+                    const x = 80 + (seg.start / gridEnd) * width;
+                    const w = ((end - seg.start) / gridEnd) * width;
+                    
+                    if (w > 0) {
+                        rc.rectangle(x, y, w, 45, {
+                            fill: p.color,
+                            fillStyle: 'hachure',
+                            stroke: '#333',
+                            strokeWidth: 2,
+                            roughness: 1
+                        });
+                    }
+                });
+            });
+
+            // Current time indicator
+            if (isSimulating || (simulationTime > 0 && simulationTime < totalTime)) {
+                const curX = 80 + (currentTime / gridEnd) * width;
+                ctx.strokeStyle = 'red';
+                ctx.lineWidth = 2;
+                ctx.setLineDash([5, 5]);
+                ctx.beginPath();
+                ctx.moveTo(curX, 0);
+                ctx.lineTo(curX, canvas.height - 30);
+                ctx.stroke();
+                ctx.setLineDash([]);
+            }
+
+            // Time markers at bottom
+            ctx.fillStyle = '#666';
+            ctx.font = '10px var(--font-mono)';
+            ctx.textAlign = 'center';
+            for(let t=0; t<=gridEnd; t += Math.max(1, Math.ceil(gridEnd/10))) {
+                const x = 80 + (t / gridEnd) * width;
+                ctx.fillText(t, x, canvas.height - 10);
+            }
+        }
+
+        function renderMetrics(procs, m) {
+            const tbody = document.getElementById('metrics-body');
+            tbody.innerHTML = '';
+            
+            procs.forEach(p => {
+                const data = m.perProcess[p.id];
+                tbody.innerHTML += `
+                    <tr>
+                        <td style="font-weight:bold;">${p.id}</td>
+                        <td>${p.arrival}</td>
+                        <td>${p.burst}</td>
+                        <td>${data.completion}</td>
+                        <td>${data.turnaround}</td>
+                        <td>${data.waiting}</td>
+                        <td>${data.response}</td>
+                    </tr>
+                `;
+            });
+
+            document.getElementById('avg-ta').innerText = m.avgTurnaround;
+            document.getElementById('avg-wt').innerText = m.avgWaiting;
+            document.getElementById('avg-rt').innerText = m.avgResponse;
+        }
+
+        function calculateMetrics(procs, timeline, currentTime) {
+            let perProcess = {};
+            procs.forEach(p => {
+                const pTimeline = timeline.filter(t => t.id === p.id && t.start < currentTime);
+                const fullTimeline = timeline.filter(t => t.id === p.id);
+                
+                const lastSeg = pTimeline[pTimeline.length - 1];
+                const isFinished = lastSeg && lastSeg.end <= currentTime && lastSeg.end === fullTimeline[fullTimeline.length-1].end;
+                
+                const completion = isFinished ? lastSeg.end : '-';
+                const firstStartSeg = pTimeline[0];
+                const hasStarted = !!firstStartSeg;
+                
+                const ta = isFinished ? (completion - p.arrival) : '-';
+                const wt = isFinished ? (ta - p.burst) : '-';
+                const rt = hasStarted ? (firstStartSeg.start - p.arrival) : '-';
+                
+                perProcess[p.id] = { 
+                    completion, 
+                    turnaround: ta, 
+                    waiting: wt, 
+                    response: rt,
+                    isFinished
+                };
+            });
+
+            const finished = Object.values(perProcess).filter(x => x.isFinished);
+            const started = Object.values(perProcess).filter(x => x.response !== '-');
+            
+            const avgTA = finished.length > 0 ? (finished.reduce((s, x) => s + x.turnaround, 0) / finished.length).toFixed(2) : '0.00';
+            const avgWT = finished.length > 0 ? (finished.reduce((s, x) => s + x.waiting, 0) / finished.length).toFixed(2) : '0.00';
+            const avgRT = started.length > 0 ? (started.reduce((s, x) => s + x.response, 0) / started.length).toFixed(2) : '0.00';
+
+            return { perProcess, avgTurnaround: avgTA, avgWaiting: avgWT, avgResponse: avgRT };
+        }
+
+        // Simulators
+        function simulateFCFS(procs) {
+            let time = 0, tl = [];
+            const sorted = [...procs].sort((a,b) => a.arrival - b.arrival);
+            sorted.forEach(p => {
+                if (time < p.arrival) time = p.arrival;
+                tl.push({id: p.id, start: time, end: time + p.burst});
+                time += p.burst;
+            });
+            return tl;
+        }
+
+        function simulateSJF(procs) {
+            let time = 0, tl = [], rem = procs.map(p => ({...p}));
+            while(rem.length > 0) {
+                let avail = rem.filter(p => p.arrival <= time);
+                if (avail.length === 0) { time = Math.min(...rem.map(p => p.arrival)); continue; }
+                avail.sort((a,b) => a.burst - b.burst || a.arrival - b.arrival);
+                let p = avail[0];
+                tl.push({id: p.id, start: time, end: time + p.burst});
+                time += p.burst;
+                rem = rem.filter(x => x.id !== p.id);
+            }
+            return tl;
+        }
+
+        function simulateSRTN(procs) {
+            let time = 0, tl = [], rem = procs.map(p => ({...p, r: p.burst}));
+            let current = null, start = 0;
+            while(rem.some(p => p.r > 0)) {
+                let avail = rem.filter(p => p.arrival <= time && p.r > 0);
+                if (avail.length === 0) {
+                    if(current) { tl.push({id: current.id, start, end: time}); current = null; }
+                    time = Math.min(...rem.filter(p => p.r > 0).map(p => p.arrival)); continue;
+                }
+                avail.sort((a,b) => a.r - b.r || a.arrival - b.arrival);
+                let nextP = avail[0];
+                if (!current || current.id !== nextP.id) {
+                    if (current) tl.push({id: current.id, start, end: time});
+                    current = nextP; start = time;
+                }
+                nextP.r--; time++;
+            }
+            if (current) tl.push({id: current.id, start, end: time});
+            return mergeTimeline(tl);
+        }
+
+        function simulateRR(procs, q) {
+            let time = 0, tl = [], rem = procs.map(p => ({...p, r: p.burst})).sort((a,b) => a.arrival - b.arrival);
+            let queue = [], completed = 0;
+            while(completed < procs.length) {
+                rem.forEach(p => { if(p.arrival <= time && p.r > 0 && !queue.includes(p)) queue.push(p); });
+                if (queue.length === 0) { time = rem.find(p => p.r > 0).arrival; continue; }
+                let p = queue.shift();
+                let run = Math.min(p.r, q);
+                tl.push({id: p.id, start: time, end: time + run});
+                time += run; p.r -= run;
+                rem.forEach(np => { if(np.arrival > time - run && np.arrival <= time && np.r > 0 && !queue.includes(np) && np !== p) queue.push(np); });
+                if (p.r > 0) queue.push(p); else completed++;
+            }
+            return mergeTimeline(tl);
+        }
+
+        function mergeTimeline(tl) {
+            if(tl.length === 0) return [];
+            let m = [tl[0]];
+            for(let i=1; i<tl.length; i++) {
+                let last = m[m.length-1];
+                if(last.id === tl[i].id && last.end === tl[i].start) last.end = tl[i].end;
+                else m.push({...tl[i]});
+            }
+            return m;
+        }
+
+        window.addEventListener('resize', update);
+    </script>
+</body>
+</html>
