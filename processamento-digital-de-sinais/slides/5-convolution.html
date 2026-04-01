@@ -212,7 +212,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             mermaid.initialize({
-                startOnLoad: true,
+                startOnLoad: false,
                 theme: 'default',
                 securityLevel: 'loose',
                 fontFamily: 'Inter, system-ui, sans-serif',
@@ -239,8 +239,24 @@
         });
 
         // Ensure Prism highlights code on slide changes
-        Reveal.on('slideready', event => Prism.highlightAll());
-        Reveal.on('slidechanged', event => Prism.highlightAll());
+        Reveal.on('slideready', event => {
+            Prism.highlightAll();
+            try {
+                let mermaids = event.currentSlide.querySelectorAll('.mermaid');
+                if (mermaids.length > 0) {
+                    mermaid.init(undefined, mermaids);
+                }
+            } catch (err) { console.warn("Mermaid init failed", err); }
+        });
+        Reveal.on('slidechanged', event => {
+            Prism.highlightAll();
+            try {
+                let mermaids = event.currentSlide.querySelectorAll('.mermaid');
+                if (mermaids.length > 0) {
+                    mermaid.init(undefined, mermaids);
+                }
+            } catch (err) { console.warn("Mermaid init failed", err); }
+        });
     </script>
     <script src="/aulas-faesa/js/rough.min.js" data-no-bundle></script>
     <script src="/aulas-faesa/js/apply_sketch.js" data-no-bundle></script>
@@ -458,6 +474,10 @@
             overflow: visible !important; /* Prevent labels from being cut off */
             max-width: 100%;
             height: auto;
+        }
+
+        .reveal .mermaid-switcher {
+            display: none !important;
         }
 
         .centered {

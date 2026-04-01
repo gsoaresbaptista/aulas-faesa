@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toposia - Engenharia de Software</title>
+    <link rel="icon" href="/aulas-faesa/img/dark-favicon.svg" media="(prefers-color-scheme: light)">
+    <link rel="icon" href="/aulas-faesa/img/light-favicon.svg" media="(prefers-color-scheme: dark)">
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/fonts.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/js/vendor/katex/dist/katex.min.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/bundle.min.css">
+    
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css" data-no-bundle>
+    <script src="/aulas-faesa/js/bundle.min.js"></script>
+</head>
+
+<body>
+    <script>
+        // Restore sidebar state instantly (before first paint) to avoid transition flash
+        (function() {
+            if (localStorage.getItem('cf_sidebar_hidden') === 'true') {
+                document.body.classList.add('sidebar-hidden', 'no-transition');
+            }
+            requestAnimationFrame(function() {
+                requestAnimationFrame(function() {
+                    document.body.classList.remove('no-transition');
+                });
+            });
+        })();
+    </script>
+    <div class="page-wrapper">
+        <nav class="sidebar">
+            <div class="sidebar-content">
+                <header class="sidebar-title-section">
+                    <a href="contents.html" class="course-title-link">
+                        <h1 class="sidebar-course-title">Engenharia de Software</h1>
+                    </a>
+                    <div class="sidebar-ornament">❧</div>
+                </header>
+
+                
+                <section class="sidebar-toc-section">
+                    <h2 class="toc-header">Tabela de Conteúdos</h2>
+                    <ol class="toc-list">
+                        
+                        <li class="toc-item level-2">
+                            <a href="#introdução-à-modelagem-de-sistemas">6.1. Introdução à Modelagem de Sistemas</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#o-caso-base-pet-shop-quotamigo-fielquot">6.2. O Caso Base: Pet Shop &quot;Amigo Fiel&quot;</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#perspectiva-externa-modelos-de-contexto">6.3. Perspectiva Externa: Modelos de Contexto</a>
+                        </li>
+                        
+                        <li class="toc-item level-4">
+                            <a href="#diagrama-de-atividades-e-sua-simbologia">6.3.0.1. Diagrama de Atividades e sua Simbologia</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#perspectiva-de-interação-casos-de-uso-e-sequência">6.4. Perspectiva de Interação: Casos de Uso e Sequência</a>
+                        </li>
+                        
+                        <li class="toc-item level-4">
+                            <a href="#diagramas-de-caso-de-uso-e-sua-simbologia">6.4.0.1. Diagramas de Caso de Uso e sua Simbologia</a>
+                        </li>
+                        
+                        <li class="toc-item level-4">
+                            <a href="#diagramas-de-sequência-e-sua-simbologia">6.4.0.2. Diagramas de Sequência e sua Simbologia</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#perspectiva-estrutural-modelos-de-classe">6.5. Perspectiva Estrutural: Modelos de Classe</a>
+                        </li>
+                        
+                        <li class="toc-item level-4">
+                            <a href="#diagramas-de-classe-e-sua-simbologia">6.5.0.1. Diagramas de Classe e sua Simbologia</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#cardinalidade-multiplicidade">6.6. Cardinalidade (Multiplicidade)</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#do-diagrama-para-o-código-c">6.7. Do Diagrama para o Código (C++)</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#do-código-para-o-diagrama-engenharia-reversa">6.8. Do Código para o Diagrama (Engenharia Reversa)</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#perspectiva-comportamental-modelos-de-estado">6.9. Perspectiva Comportamental: Modelos de Estado</a>
+                        </li>
+                        
+                        <li class="toc-item level-4">
+                            <a href="#diagramas-de-estado-e-sua-simbologia">6.9.0.1. Diagramas de Estado e sua Simbologia</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#engenharia-dirigida-a-modelos-mde">6.10. Engenharia Dirigida a Modelos (MDE)</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#questões">6.11. Questões</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#próximos-passos">6.12. Próximos passos</a>
+                        </li>
+                        
+                    </ol>
+                </section>
+                
+
+                <nav class="sidebar-nav-section">
+                    
+                    
+                    <a href="2-introduction-to-software-engineering.html" class="sidebar-nav-link next">Introdução à Engenharia de Software <i data-lucide="chevron-right" class="nav-icon"></i></a>
+                    
+                    <a href="javascript:void(0)" onclick="handleBackNavigation()"
+                        class="sidebar-nav-link back"><i data-lucide="arrow-left" class="nav-icon"></i> Voltar</a>
+                </nav>
+
+            </div>
+        </nav>
+
+        <button class="mobile-menu-toggle" aria-label="Menu">
+            <i data-lucide="menu"></i>
+        </button>
+
+        <button class="sidebar-toggle" onclick="CourseForgeNav.toggleSidebar()" aria-label="Alternar Barra Lateral">
+            <i data-lucide="chevron-left" class="toggle-icon" id="sidebar-toggle-icon"></i>
+        </button>
+
+        <div class="mobile-menu-overlay"></div>
+
+        <main class="main-content">
+            <article class="article">
+                <header class="article-header">
+                    <span class="chapter-number">1</span>
+                    <h1 class="article-title">
+                        <span class="title-ornament left">❧</span>
+                        <span class="title-text">Modelagem de Sistemas com UML</span>
+                        <span class="title-ornament right">❧</span>
+                    </h1>
+                    
+                    <p class="article-date">26/03/2026</p>
+                    
+                    
+                    <nav class="breadcrumb" aria-label="Breadcrumb">
+                        
+                        
+                        
+                        <a href="contents.html" class="breadcrumb-link">Engenharia de Software</a>
+                        
+                        <span class="breadcrumb-separator"><i data-lucide="chevron-right" class="breadcrumb-icon"></i></span>
+                        
+                        
+                        
+                        <span class="breadcrumb-current">Modelagem de Sistemas com UML</span>
+                        
+                        
+                    </nav>
+                    
+                </header>
+                <div class="article-body">
+                    <h2 id="introdução-à-modelagem-de-sistemas"><span class="heading-text">Introdução à Modelagem de Sistemas</span><span class="heading-arabic">6.1</span></h2>
+<p>A modelagem de sistemas é o processo fundamental de desenvolver modelos abstratos de um sistema, onde cada modelo apresenta uma visão ou perspectiva diferente desse sistema. Segundo a visão clássica de Ian Sommerville em sua 9ª edição, a modelagem serve como uma ponte entre a especificação de requisitos e o projeto de software. Ela nos permite representar o sistema de uma maneira que seja compreensível tanto para os desenvolvedores quanto para os interessados (stakeholders), abstraindo detalhes irrelevantes da implementação para focar na essência do que o sistema deve ser e como ele deve se comportar.</p>
+<p>É importante compreender que um modelo não é o sistema em si, mas uma simplificação da realidade. Utilizamos a modelagem para gerenciar a complexidade, permitindo que a equipe visualize a infraestrutura do sistema, as interações entre os componentes e as interfaces com o ambiente externo antes que o código comece a ser escrito. Na prática da Engenharia de Software moderna, a Unified Modeling Language (UML) tornou-se o padrão <em>de facto</em> para essas representações, oferecendo um vocabulário gráfico rico que abrange desde a visão externa do usuário até a estrutura interna dos dados.</p>
+<p>Para orientar nosso estudo, dividiremos a modelagem em quatro perspectivas essenciais: a perspectiva externa, que define o contexto e os limites do sistema; a perspectiva de interação, que descreve como o sistema interage com usuários e outros sistemas; a perspectiva estrutural, que foca na organização dos dados e componentes; e a perspectiva comportamental, que detalha como o sistema reage a eventos e processos ao longo do tempo.</p>
+<h2 id="o-caso-base-pet-shop-quotamigo-fielquot"><span class="heading-text">O Caso Base: Pet Shop &quot;Amigo Fiel&quot;</span><span class="heading-arabic">6.2</span></h2>
+<p>Para que possamos aplicar esses conceitos de forma prática e imediata, utilizaremos como fio condutor o desenvolvimento do sistema para o Pet Shop &quot;Amigo Fiel&quot;. Este estabelecimento oferece serviços de banho e tosa, consultas veterinárias e venda de produtos especializados. O proprietário deseja automatizar o agendamento de serviços, o controle de estoque e o histórico de atendimento dos pets.</p>
+<p>Atualmente, o processo é manual e gera confusão. Clientes ligam para agendar horários, funcionários anotam em agendas de papel e nem sempre sabem se há produtos disponíveis para os procedimentos. O novo sistema deve permitir que o recepcionista cadastre clientes e seus animais, realize agendamentos vinculando-os a um funcionário específico e registre a finalização do serviço para fins de cobrança. Ao longo desta aula, construiremos a modelagem deste sistema passo a passo, aplicando as perspectivas de Sommerville.</p>
+<h2 id="perspectiva-externa-modelos-de-contexto"><span class="heading-text">Perspectiva Externa: Modelos de Contexto</span><span class="heading-arabic">6.3</span></h2>
+<p>A perspectiva externa preocupa-se com o ambiente em que o sistema operará. O primeiro passo da modelagem é definir os limites do sistema: o que faz parte dele e o que é externo a ele. Modelos de contexto ajudam a decidir quais funcionalidades devem ser implementadas e quais dependem de serviços externos. Muitas vezes, o contexto social e organizacional é tão importante quanto o contexto técnico, pois o sistema precisa se encaixar nos processos de trabalho existentes na empresa.</p>
+<p>Para representar como o sistema se integra aos processos de negócio, utilizamos frequentemente o <strong>Diagrama de Atividades</strong>. Este diagrama foca no fluxo de dados ou de controle em um processo, sendo excelente para mostrar a sequência de passos necessária para atingir um objetivo organizacional. No contexto do Pet Shop, precisamos entender como um animal é recebido para um serviço.</p>
+<h4 id="diagrama-de-atividades-e-sua-simbologia"><span class="heading-text">Diagrama de Atividades e sua Simbologia</span><span class="heading-arabic">6.3.0.1</span></h4>
+<p>Para ler corretamente um diagrama de atividades, você deve identificar os seguintes elementos gráficos padrão:</p>
+<ul>
+<li><strong>Círculo Sólido</strong>: Representa o <strong>Início</strong> do processo.</li>
+<li><strong>Retângulos de Cantos Arredondados</strong>: Representam as <strong>Atividades</strong> ou ações executadas.</li>
+<li><strong>Losangos (Diamantes)</strong>: Representam <strong>Pontos de Decisão</strong>, onde o fluxo se divide baseando-se em uma condição (guard).</li>
+<li><strong>Seta</strong>: Indica a direção do <strong>Fluxo de Controle</strong>.</li>
+<li><strong>Círculo com Borda (Bullseye)</strong>: Representa o <strong>Fim</strong> do processo.</li>
+</ul>
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">Prática: Fluxo de Recepção no Pet Shop<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Abaixo, modelamos o processo de negócio desde a chegada do cliente até o início do serviço. Observe como as atividades fluem entre o cliente, a recepção e o setor de estética.</p>
+  </div>
+</div>
+<div class="mermaid-outer-container">  <div class="mermaid-switcher">    <div class="switcher-track">      <button class="switcher-btn active" onclick="CourseForgeUI.switchMermaidView(this, 'diagram')"><i data-lucide="eye"></i> Diagrama</button>      <button class="switcher-btn" onclick="CourseForgeUI.switchMermaidView(this, 'code')"><i data-lucide="code"></i> Código</button>      <div class="switcher-slider"></div>    </div>  </div>  <div class="mermaid-content">    <div class="mermaid-display centered" style="width: 400px">      <pre class="mermaid">graph TD
+    A[Início: Chegada do Cliente] --&gt; B{Cliente cadastrado?}
+    B -- Não --&gt; C[Realizar Cadastro do Cliente e Pet]
+    B -- Sim --&gt; D[Verificar Agendamento]
+    C --&gt; D
+    D --&gt; E{Possui Horário?}
+    E -- Não --&gt; F[Encaminhar para Encaixe ou Futura Data]
+    E -- Sim --&gt; G[Confirmar Dados do Serviço]
+    G --&gt; H[Encaminhar Pet para tosa/banho]
+    H --&gt; I[Fim: Início do Atendimento]</pre>    </div>    <div class="mermaid-source" style="display: none;">      <pre class="language-mermaid"><code>graph TD
+    A[Início: Chegada do Cliente] --&gt; B{Cliente cadastrado?}
+    B -- Não --&gt; C[Realizar Cadastro do Cliente e Pet]
+    B -- Sim --&gt; D[Verificar Agendamento]
+    C --&gt; D
+    D --&gt; E{Possui Horário?}
+    E -- Não --&gt; F[Encaminhar para Encaixe ou Futura Data]
+    E -- Sim --&gt; G[Confirmar Dados do Serviço]
+    G --&gt; H[Encaminhar Pet para tosa/banho]
+    H --&gt; I[Fim: Início do Atendimento]</code></pre>    </div>  </div></div>
+
+<h2 id="perspectiva-de-interação-casos-de-uso-e-sequência"><span class="heading-text">Perspectiva de Interação: Casos de Uso e Sequência</span><span class="heading-arabic">6.4</span></h2>
+<p>Uma vez definido o contexto, precisamos detalhar como o sistema interage com seus usuários e com outros sistemas. A modelagem de interação ajuda a identificar requisitos funcionais e a entender como as mensagens trafegam entre os agentes. Sommerville destaca que esta perspectiva é vital para projetar interfaces de usuário e protocolos de comunicação eficientes.</p>
+<p>O <strong>Diagrama de Casos de Uso</strong> é a ferramenta principal aqui. Ele descreve as funções que o sistema fornece para os atores externos (usuários humanos ou sistemas). Cada &quot;Caso de Uso&quot; representa uma funcionalidade discreta que entrega um valor ao ator. É importante não confundir casos de uso com passos individuais de um algoritmo; eles devem ser vistos como metas completas do usuário.</p>
+<h4 id="diagramas-de-caso-de-uso-e-sua-simbologia"><span class="heading-text">Diagramas de Caso de Uso e sua Simbologia</span><span class="heading-arabic">6.4.0.1</span></h4>
+<p>A notação gráfica destes diagramas é simplificada para facilitar a comunicação com o cliente:</p>
+<ul>
+<li><strong>Boneco de Palito (Stickman)</strong>: Representa o <strong>Ator</strong>, que é qualquer entidade externa (humano ou sistema) que interage com o software.</li>
+<li><strong>Elipse</strong>: Representa o <strong>Caso de Uso</strong>, ou seja, a funcionalidade ou serviço oferecido pelo sistema.</li>
+<li><strong>Linha Sólida</strong>: Representa a <strong>Associação</strong> entre o ator e o caso de uso.</li>
+<li><strong>Retângulo (Fronteira)</strong>: Opcionalmente, delimita os limites do sistema, separando o que está &quot;dentro&quot; do que é &quot;externo&quot;.</li>
+<li><strong>Seta tracejada (&lt;<include>&gt;/&lt;<extend>&gt;)</strong>: Representa relacionamentos entre casos de uso. O <em>include</em> indica que uma funcionalidade é obrigatoriamente parte de outra.</li>
+</ul>
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">Prática 1: Funcionalidades Principais<br /></span>
+  </div>
+  <div class="callout-content">
+<p>No sistema &quot;Amigo Fiel&quot;, identificamos três atores principais: o Recepcionista, o Veterinário/Esteticista e o Administrador. O diagrama abaixo resume as interações fundamentais.</p>
+  </div>
+</div>
+<div class="mermaid-outer-container">  <div class="mermaid-switcher">    <div class="switcher-track">      <button class="switcher-btn active" onclick="CourseForgeUI.switchMermaidView(this, 'diagram')"><i data-lucide="eye"></i> Diagrama</button>      <button class="switcher-btn" onclick="CourseForgeUI.switchMermaidView(this, 'code')"><i data-lucide="code"></i> Código</button>      <div class="switcher-slider"></div>    </div>  </div>  <div class="mermaid-content">    <div class="mermaid-display centered" style="width: 600px">      <pre class="mermaid">graph LR
+    subgraph &quot;Pet Shop Amigo Fiel&quot;
+        UC1([Cadastrar Cliente])
+        UC2([Agendar Serviço])
+        UC3([Registrar Atendimento])
+        UC4([Gerar Relatório de Vendas])
+        UC5([Consultar Disponibilidade])
+    end
+    R[Recepcionista] --&gt; UC1
+    R --&gt; UC2
+    V[Veterinário] --&gt; UC3
+    A[Administrador] --&gt; UC4
+    UC2 -.-&gt;|include| UC5</pre>    </div>    <div class="mermaid-source" style="display: none;">      <pre class="language-mermaid"><code>graph LR
+    subgraph &quot;Pet Shop Amigo Fiel&quot;
+        UC1([Cadastrar Cliente])
+        UC2([Agendar Serviço])
+        UC3([Registrar Atendimento])
+        UC4([Gerar Relatório de Vendas])
+        UC5([Consultar Disponibilidade])
+    end
+    R[Recepcionista] --&gt; UC1
+    R --&gt; UC2
+    V[Veterinário] --&gt; UC3
+    A[Administrador] --&gt; UC4
+    UC2 -.-&gt;|include| UC5</code></pre>    </div>  </div></div>
+
+<p>Após identificar <em>o que</em> o sistema faz, o <strong>Diagrama de Sequência</strong> nos mostra <em>como</em> os objetos internos colaboram para realizar esse caso de uso ao longo do tempo. Ele é lido de cima para baixo e destaca a troca de mensagens entre atores e objetos do sistema.</p>
+<h4 id="diagramas-de-sequência-e-sua-simbologia"><span class="heading-text">Diagramas de Sequência e sua Simbologia</span><span class="heading-arabic">6.4.0.2</span></h4>
+<p>Este diagrama introduz a dimensão temporal na modelagem:</p>
+<ul>
+<li><strong>Retângulos no Topo</strong>: Representam as <strong>Instâncias de Objetos</strong> ou atores participantes da interação.</li>
+<li><strong>Linha Tracejada Vertical</strong>: É a <strong>Linha de Vida</strong> (Lifeline), representando a existência do objeto durante o tempo da interação.</li>
+<li><strong>Retângulo Estrito sobre a Linha de Vida</strong>: Chamado de <strong>Barra de Ativação</strong>, indica quando o objeto está executando uma operação ou esperando uma resposta.</li>
+<li><strong>Seta Sólida</strong>: Representa uma <strong>Chamada Síncrona</strong> (o remetente espera pela resposta).</li>
+<li><strong>Seta Tracejada</strong>: Representa o <strong>Retorno</strong> da mensagem ou resposta.</li>
+</ul>
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">Prática 2: Sequência de um Agendamento<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Vamos detalhar o fluxo de mensagens quando o Recepcionista tenta agendar um banho no sistema.</p>
+  </div>
+</div>
+<div class="mermaid-outer-container">  <div class="mermaid-switcher">    <div class="switcher-track">      <button class="switcher-btn active" onclick="CourseForgeUI.switchMermaidView(this, 'diagram')"><i data-lucide="eye"></i> Diagrama</button>      <button class="switcher-btn" onclick="CourseForgeUI.switchMermaidView(this, 'code')"><i data-lucide="code"></i> Código</button>      <div class="switcher-slider"></div>    </div>  </div>  <div class="mermaid-content">    <div class="mermaid-display">      <pre class="mermaid">sequenceDiagram
+    participant R as Recepcionista
+    participant S as Sistema
+    participant DB as Banco de Dados
+    R-&gt;&gt;S: Solicitar Agendamento(PetID, Data, Hora)
+    S-&gt;&gt;S: Validar Data/Hora
+    S-&gt;&gt;DB: Consultar Disponibilidade(Data, Hora)
+    DB--&gt;&gt;S: Disponível
+    S-&gt;&gt;DB: Salvar Agendamento(PetID, Data, Hora)
+    DB--&gt;&gt;S: Confirmação
+    S--&gt;&gt;R: Exibir &quot;Agendamento Realizado com Sucesso&quot;</pre>    </div>    <div class="mermaid-source" style="display: none;">      <pre class="language-mermaid"><code>sequenceDiagram
+    participant R as Recepcionista
+    participant S as Sistema
+    participant DB as Banco de Dados
+    R-&gt;&gt;S: Solicitar Agendamento(PetID, Data, Hora)
+    S-&gt;&gt;S: Validar Data/Hora
+    S-&gt;&gt;DB: Consultar Disponibilidade(Data, Hora)
+    DB--&gt;&gt;S: Disponível
+    S-&gt;&gt;DB: Salvar Agendamento(PetID, Data, Hora)
+    DB--&gt;&gt;S: Confirmação
+    S--&gt;&gt;R: Exibir &quot;Agendamento Realizado com Sucesso&quot;</code></pre>    </div>  </div></div>
+
+<h2 id="perspectiva-estrutural-modelos-de-classe"><span class="heading-text">Perspectiva Estrutural: Modelos de Classe</span><span class="heading-arabic">6.5</span></h2>
+<p>A perspectiva estrutural descreve a organização do sistema em termos dos componentes que o compõem e seus relacionamentos. Diferente da perspectiva de interação, que é dinâmica, a estrutural é estática: ela define o &quot;esqueleto&quot; do software. O modelo mais comum nesta categoria é o <strong>Diagrama de Classes</strong>.</p>
+<h4 id="diagramas-de-classe-e-sua-simbologia"><span class="heading-text">Diagramas de Classe e sua Simbologia</span><span class="heading-arabic">6.5.0.1</span></h4>
+<p>Aqui, os símbolos são mais técnicos e detalhados:</p>
+<ul>
+<li><strong>Retângulo Dividido em 3 Partes</strong>: Representa a <strong>Classe</strong>. A parte superior contém o nome, a do meio os atributos (dados) e a inferior os métodos (comportamento).</li>
+<li><strong>Prefixos (+, -, #)</strong>: Indicam a <strong>Visibilidade</strong> (+ público, - privado, # protegido).</li>
+<li><strong>Linha Sólida</strong>: Representa uma <strong>Associação</strong> genérica entre classes.</li>
+<li><strong>Setas de Cabeça Oca</strong>: Representam <strong>Herança ou Generalização</strong>.</li>
+<li><strong>Losangos na Ponta da Linha</strong>: Representam <strong>Agregação</strong> (losango vazio) ou <strong>Composição</strong> (losango preenchido).</li>
+</ul>
+<p>Em um diagrama de classes, representamos as entidades do domínio, seus atributos (dados) e métodos (operações), além das associações entre elas (como elas se conhecem). Sommerville enfatiza a importância de entender as relações de generalização (herança) e agregação para criar sistemas modulares e reutilizáveis. No nosso Pet Shop, precisamos gerenciar Pets, mas alguns Pets podem ter características específicas se pensarmos em espécies diferentes ou necessidades especiais.</p>
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">Prática: O Domínio do Pet Shop<br /></span>
+  </div>
+  <div class="callout-content">
+<p>O diagrama abaixo mostra como os objetos do mundo real se traduzem em classes de software e como elas se relacionam.</p>
+  </div>
+</div>
+<div class="mermaid-outer-container">  <div class="mermaid-switcher">    <div class="switcher-track">      <button class="switcher-btn active" onclick="CourseForgeUI.switchMermaidView(this, 'diagram')"><i data-lucide="eye"></i> Diagrama</button>      <button class="switcher-btn" onclick="CourseForgeUI.switchMermaidView(this, 'code')"><i data-lucide="code"></i> Código</button>      <div class="switcher-slider"></div>    </div>  </div>  <div class="mermaid-content">    <div class="mermaid-display centered">      <pre class="mermaid">classDiagram
+    direction LR
+    class Cliente {
+        +String nome
+        +String telefone
+        +cadastrar()
+    }
+    class Pet {
+        +String nome
+        +String especie
+        +int idade
+        +vincularDono()
+    }
+    class Agendamento {
+        +DateTime dataHora
+        +String status
+        +cancelar()
+    }
+    class Servico {
+        +String descricao
+        +float preco
+    }
+    Cliente &quot;1&quot; -- &quot;0..*&quot; Pet : possui
+    Pet &quot;1&quot; -- &quot;0..*&quot; Agendamento : realiza
+    Agendamento &quot;0..*&quot; -- &quot;1&quot; Servico : refere-se a</pre>    </div>    <div class="mermaid-source" style="display: none;">      <pre class="language-mermaid"><code>classDiagram
+    direction LR
+    class Cliente {
+        +String nome
+        +String telefone
+        +cadastrar()
+    }
+    class Pet {
+        +String nome
+        +String especie
+        +int idade
+        +vincularDono()
+    }
+    class Agendamento {
+        +DateTime dataHora
+        +String status
+        +cancelar()
+    }
+    class Servico {
+        +String descricao
+        +float preco
+    }
+    Cliente &quot;1&quot; -- &quot;0..*&quot; Pet : possui
+    Pet &quot;1&quot; -- &quot;0..*&quot; Agendamento : realiza
+    Agendamento &quot;0..*&quot; -- &quot;1&quot; Servico : refere-se a</code></pre>    </div>  </div></div>
+
+<h2 id="cardinalidade-multiplicidade"><span class="heading-text">Cardinalidade (Multiplicidade)</span><span class="heading-arabic">6.6</span></h2>
+<p>Um dos pontos mais críticos na modelagem estrutural é a definição da <strong>Cardinalidade</strong> (ou multiplicidade), que indica quantos objetos de uma classe podem estar associados a quantos objetos de outra. Sommerville destaca que a precisão aqui é fundamental para o projeto do banco de dados e para a implementação da lógica de coleções no código.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Notação</th>
+  <th style="text-align:left">Significado</th>
+  <th style="text-align:left">Exemplo no Pet Shop</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><strong>1</strong></td>
+  <td style="text-align:left">Exatamente um</td>
+  <td style="text-align:left">Cada Pet possui exatamente <strong>1</strong> Dono (simplificando para o sistema).</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>0..*</strong></td>
+  <td style="text-align:left">Zero ou muitos</td>
+  <td style="text-align:left">Um Cliente pode possuir <strong>0 ou vários</strong> Pets cadastrados.</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>1..*</strong></td>
+  <td style="text-align:left">Um ou muitos</td>
+  <td style="text-align:left">Um Agendamento deve ter pelo menos <strong>1</strong> Serviço vinculado.</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>0..1</strong></td>
+  <td style="text-align:left">Zero ou um</td>
+  <td style="text-align:left">Um Pet pode (ou não) ter <strong>1</strong> Coleira Eletrônica vinculada.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="do-diagrama-para-o-código-c"><span class="heading-text">Do Diagrama para o Código (C++)</span><span class="heading-arabic">6.7</span></h2>
+<p>Para que o modelo deixe de ser apenas um desenho e se torne software, precisamos traduzir as associações e cardinalidades para construções da linguagem. Em C++, associações &quot;para muitos&quot; (como de Cliente para Pet) são geralmente implementadas usando containers da STL, como <code>std::vector</code>.</p>
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">Prática: Implementação em C++<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Abaixo, mostramos como a relação <strong>1:N</strong> entre <code>Cliente</code> e <code>Pet</code> é codificada. Observe o uso de ponteiros e coleções para manter a integridade do modelo.</p>
+  </div>
+</div>
+<pre class="line-numbers language-cpp" data-lang="CPP"><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;string&gt;
+
+class Pet {
+public:
+    std::string nome;
+    Pet(std::string n) : nome(n) {}
+};
+
+class Cliente {
+private:
+    std::string nome;
+    // Tradução da cardinalidade 0..* (lista de pets)
+    std::vector&lt;Pet*&gt; meusPets; 
+
+public:
+    Cliente(std::string n) : nome(n) {}
+    
+    void adicionarPet(Pet* p) {
+        meusPets.push_back(p);
+    }
+
+    void listarPets() {
+        std::cout &lt;&lt; &quot;Cliente: &quot; &lt;&lt; nome &lt;&lt; &quot;\n&quot;;
+        for (auto p : meusPets) {
+            std::cout &lt;&lt; &quot;- Pet: &quot; &lt;&lt; p-&gt;nome &lt;&lt; &quot;\n&quot;;
+        }
+    }
+};
+</code></pre>
+<h2 id="do-código-para-o-diagrama-engenharia-reversa"><span class="heading-text">Do Código para o Diagrama (Engenharia Reversa)</span><span class="heading-arabic">6.8</span></h2>
+<p>Muitas vezes, você receberá um código legado e precisará documentá-lo. A capacidade de &quot;ler&quot; o código e abstrair um diagrama é essencial. Considere o seguinte trecho:</p>
+<pre class="line-numbers language-cpp" data-lang="CPP"><code class="language-cpp">class Servico {
+    float valor;
+};
+
+class OrdemServico {
+    Cliente* solicitante;
+    std::vector&lt;Servico&gt; itens;
+};
+</code></pre>
+<p>Ao analisar esse código, o engenheiro de software identifica imediatamente:</p>
+<ol>
+<li>Uma associação de <strong>1 para 1</strong> entre <code>OrdemServico</code> e <code>Cliente</code> (um ponteiro simples).</li>
+<li>Uma composição ou agregação de <strong>1 para muitos</strong> entre <code>OrdemServico</code> e <code>Servico</code> (um <code>vector</code>).</li>
+</ol>
+<h2 id="perspectiva-comportamental-modelos-de-estado"><span class="heading-text">Perspectiva Comportamental: Modelos de Estado</span><span class="heading-arabic">6.9</span></h2>
+<p>Por fim, a perspectiva comportamental descreve o que acontece ou o que deveria acontecer quando o sistema recebe um estímulo externo. Enquanto o diagrama de sequência mostra o comportamento de uma interação específica, os modelos comportamentais mostram como o sistema, ou um objeto dele, reage ao longo de todo o seu ciclo de vida.</p>
+<p>O <strong>Diagrama de Estados</strong> (Statecharts) é ideal para modelar objetos que mudam seu comportamento dependendo do que aconteceu com eles anteriormente. No &quot;Amigo Fiel&quot;, o objeto &quot;Agendamento&quot; possui um ciclo de vida claro. Ele não pode ser &quot;Finalizado&quot; se ainda não foi &quot;Iniciado&quot;, por exemplo. Modelar esses estados evita bugs lógicos onde o usuário tenta realizar ações em momentos errados.</p>
+<h4 id="diagramas-de-estado-e-sua-simbologia"><span class="heading-text">Diagramas de Estado e sua Simbologia</span><span class="heading-arabic">6.9.0.1</span></h4>
+<p>Este diagrama foca na evolução interna de um único objeto:</p>
+<ul>
+<li><strong>Círculo Sólido Preto</strong>: Representa o <strong>Estado Inicial</strong>.</li>
+<li><strong>Retângulos de Cantos Arredondados</strong>: Representam os <strong>Estados</strong> possíveis do objeto (ex: &quot;Em Aberto&quot;, &quot;Cancelado&quot;).</li>
+<li><strong>Setas</strong>: Representam as <strong>Transições</strong>, ou seja, a mudança de um estado para outro.</li>
+<li><strong>Rótulo na Seta</strong>: Descreve o <strong>Evento</strong> ou estímulo que causou a transição (ex: &quot;Receber Pagamento&quot;).</li>
+<li><strong>Círculo com Borda</strong>: Representa o <strong>Estado Final</strong> ou encerramento do ciclo de vida daquele objeto.</li>
+</ul>
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">Prática: Vida de um Agendamento<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Veja como o status de um agendamento transita baseando-se em eventos do mundo real (chegada do pet, término do banho, pagamento).</p>
+  </div>
+</div>
+<div class="mermaid-outer-container">  <div class="mermaid-switcher">    <div class="switcher-track">      <button class="switcher-btn active" onclick="CourseForgeUI.switchMermaidView(this, 'diagram')"><i data-lucide="eye"></i> Diagrama</button>      <button class="switcher-btn" onclick="CourseForgeUI.switchMermaidView(this, 'code')"><i data-lucide="code"></i> Código</button>      <div class="switcher-slider"></div>    </div>  </div>  <div class="mermaid-content">    <div class="mermaid-display centered" style="width: 400px">      <pre class="mermaid">stateDiagram-v2
+    [*] --&gt; Agendado
+    Agendado --&gt; EmAndamento: Pet Chegou
+    EmAndamento --&gt; Concluido: Banho/Tosa Terminado
+    Agendado --&gt; Cancelado: Cliente Desistiu
+    Concluido --&gt; Finalizado: Pagamento Realizado
+    Finalizado --&gt; [*]</pre>    </div>    <div class="mermaid-source" style="display: none;">      <pre class="language-mermaid"><code>stateDiagram-v2
+    [*] --&gt; Agendado
+    Agendado --&gt; EmAndamento: Pet Chegou
+    EmAndamento --&gt; Concluido: Banho/Tosa Terminado
+    Agendado --&gt; Cancelado: Cliente Desistiu
+    Concluido --&gt; Finalizado: Pagamento Realizado
+    Finalizado --&gt; [*]</code></pre>    </div>  </div></div>
+
+<h2 id="engenharia-dirigida-a-modelos-mde"><span class="heading-text">Engenharia Dirigida a Modelos (MDE)</span><span class="heading-arabic">6.10</span></h2>
+<p>Para encerrar a base conceitual, Sommerville introduz a Engenharia Dirigida a Modelos (Model-Driven Engineering - MDE). Esta é uma abordagem onde, em vez de focar no código-fonte, os desenvolvedores focam na criação de modelos de alto nível. Ferramentas automatizadas são então usadas para traduzir esses modelos em código executável.</p>
+<p>Embora ainda não seja a norma em todos os setores devido à complexidade das ferramentas, a abordagem MDA (Model-Driven Architecture) propõe três níveis de abstração:</p>
+<ol>
+<li><strong>CIM (Computation Independent Model)</strong>: Focado apenas nos requisitos de negócio.</li>
+<li><strong>PIM (Platform Independent Model)</strong>: Descreve o sistema sem detalhes de plataforma (ex: sem saber se é Java ou C#).</li>
+<li><strong>PSM (Platform Specific Model)</strong>: Onde o modelo é refinado para uma tecnologia específica.</li>
+</ol>
+<p>A grande vantagem prometida pela MDE é que, se a tecnologia mudar (ex: migrar de um servidor local para a nuvem), você só precisa atualizar o PSM, mantendo toda a lógica de negócio intacta no PIM.</p>
+<h2 id="questões"><span class="heading-text">Questões</span><span class="heading-arabic">6.11</span></h2>
+<p>As questões abaixo servem para consolidar o entendimento teórico e a aplicação prática vista hoje.</p>
+<ol>
+<li>Diferencie a perspectiva estrutural da perspectiva comportamental na modelagem de sistemas. Em que situações cada uma é mais útil?</li>
+<li>No diagrama de classes do Pet Shop, utilizamos a multiplicidade &quot;1 para muitos&quot; entre Cliente e Pet. Explique o que isso significa na prática do banco de dados e do sistema.</li>
+<li><strong>Desafio C++</strong>: Como você alteraria o código apresentado para garantir que um <code>Pet</code> saiba quem é seu <code>Dono</code> (associação bidirecional)? Quais riscos isso traz para a memória?</li>
+<li>Por que o Diagrama de Sequência é considerado um modelo de &quot;Interação Dinâmica&quot;? O que as linhas de vida dos objetos representam?</li>
+<li>Considere o caso de uso &quot;Agendar Serviço&quot;. Se o cliente esquecer de trazer o animal, o agendamento muda para o estado &quot;Cancelado&quot;. Como você representaria essa ramificação no Diagrama de Atividades apresentado no início da aula?</li>
+<li>Discuta as vantagens e desvantagens de adotar a Engenharia Dirigida a Modelos (MDE) em um projeto de pequeno porte como o do Pet Shop &quot;Amigo Fiel&quot;.</li>
+</ol>
+<h2 id="próximos-passos"><span class="heading-text">Próximos passos</span><span class="heading-arabic">6.12</span></h2>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Conteúdo em desenvolvimento!<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Na próxima aula, avançaremos para o <strong>Projeto de Arquitetura</strong>, onde decidiremos como organizar esses componentes de software em camadas e serviços. Salve seus diagramas, pois eles serão a base para nossa implementação.</p>
+  </div>
+</div>
+
+                </div>
+            </article>
+            <footer class="footer">
+                <p>© 2025 · <a href="#">Gabriel Soares Baptista</a></p>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        const toggle = document.querySelector('.mobile-menu-toggle');
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.querySelector('.mobile-menu-overlay');
+
+        function openMenu() {
+            sidebar.classList.add('open');
+            overlay.classList.add('open');
+            toggle.classList.add('open');
+            toggle.innerHTML = '<i data-lucide="x"></i>';
+            CourseForgeUI.initIcons();
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMenu() {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('open');
+            toggle.classList.remove('open');
+            toggle.innerHTML = '<i data-lucide="menu"></i>';
+            CourseForgeUI.initIcons();
+            document.body.style.overflow = '';
+        }
+
+        toggle.addEventListener('click', () => {
+            if (sidebar.classList.contains('open')) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        overlay.addEventListener('click', closeMenu);
+    </script>
+
+    <script src="/aulas-faesa/js/vendor/katex/dist/katex.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/katex/dist/contrib/auto-render.min.js" data-no-bundle></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            renderMathInElement(document.body, {
+                output: 'html',
+                delimiters: [
+                    { left: "$$", right: "$$", display: true },
+                    { left: "$", right: "$", display: false },
+                    { left: "\\(", right: "\\)", display: false },
+                    { left: "\\[", right: "\\]", display: true }
+                ],
+                throwOnError: false,
+                strict: false
+            });
+        });
+    </script>
+    
+    
+    <script src="/aulas-faesa/js/vendor/prism/prism.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-c.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-cpp.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-python.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-clike.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-perl.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-java.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-mermaid.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-php.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js" data-no-bundle></script>
+    
+    
+    
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            mermaid.initialize({
+                startOnLoad: true,
+                theme: 'default',
+                securityLevel: 'loose',
+                fontFamily: 'Inter, system-ui, sans-serif',
+                themeVariables: {
+                    fontSize: '16px',
+                    edgeLabelFontSize: '16px',
+                    multiplicityFontSize: '18px'
+                }
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const isSubcourse = false;
+        const courseName = "Engenharia de Software";
+        CourseForgeNav.applyDynamicBreadcrumbs('.breadcrumb', isSubcourse);
+        CourseForgeNav.initScrollSpy();
+        CourseForgeUI.initCopyButtons();
+        CourseForgeUI.initExamples();
+        });
+
+        function handleBackNavigation() {
+            const isSubcourse = false;
+        const dynamic = CourseForgeNav.getBackLink('contents.html', 'Voltar', isSubcourse);
+        window.location.href = dynamic.url;
+        }
+    </script>
+</body>
+
+</html>
