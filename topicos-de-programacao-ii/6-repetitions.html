@@ -1,131 +1,526 @@
-<!doctype html><html lang=pt-BR><meta charset=UTF-8><meta content="width=device-width,initial-scale=1.0" name=viewport><title>Toposia - Tópicos de Programação II (TEP II)</title><link media="(prefers-color-scheme: light)" href=/aulas-faesa/img/dark-favicon.svg rel=icon><link media="(prefers-color-scheme: dark)" href=/aulas-faesa/img/light-favicon.svg rel=icon><link data-no-bundle href=/aulas-faesa/css/vendor/fonts.css rel=stylesheet><link data-no-bundle href=/aulas-faesa/js/vendor/katex/dist/katex.min.css rel=stylesheet><link href=/aulas-faesa/css/bundle.min.css rel=stylesheet><link data-no-bundle href=/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css rel=stylesheet><script src=/aulas-faesa/js/bundle.min.js></script></head><body><script>// Restore sidebar state instantly (before first paint) to avoid transition flash
-(function(){localStorage.getItem(`cf_sidebar_hidden`)===`true`&&document.body.classList.add(`sidebar-hidden`,`no-transition`),requestAnimationFrame(function(){requestAnimationFrame(function(){document.body.classList.remove(`no-transition`)})})})();</script><div class=page-wrapper><nav class=sidebar><div class=sidebar-content><header class=sidebar-title-section><a class=course-title-link href=contents.html> <h1 class=sidebar-course-title>Tópicos de Programação II (TEP II)</h1> </a><div class=sidebar-ornament>❧</div></header><section class=sidebar-toc-section><h2 class=toc-header>Tabela de Conteúdos</h2><ol class=toc-list><li class="toc-item level-2"><a href=#repetições>6.1. Repetições</a></li><li class="toc-item level-2"><a href=#repetição-por-condição>6.2. Repetição por Condição</a></li><li class="toc-item level-2"><a href=#laço-infinito>6.3. Laço infinito</a></li><li class="toc-item level-3"><a href=#exemplo-condição-errônea>6.3.1. Exemplo: Condição Errônea</a></li><li class="toc-item level-3"><a href=#exemplo-ausência-de-modificação-de-valor>6.3.2. Exemplo: Ausência de Modificação de Valor</a></li><li class="toc-item level-2"><a href=#comando-while>6.4. Comando while</a></li><li class="toc-item level-3"><a href=#regras-de-sintaxe-e-boas-práticas>6.4.1. Regras de Sintaxe e Boas Práticas</a></li><li class="toc-item level-2"><a href=#comando-for>6.5. Comando for</a></li><li class="toc-item level-3"><a href=#flexibilidade-e-comparação-com-o-while>6.5.1. Flexibilidade e Comparação com o while</a></li><li class="toc-item level-3"><a href=#omitindo-cláusulas-no-for>6.5.2. Omitindo Cláusulas no for</a></li><li class="toc-item level-3"><a href=#operador-de-vírgula-e-tipos-de-dados>6.5.3. Operador de Vírgula e Tipos de Dados</a></li><li class="toc-item level-2"><a href=#comando-do-while>6.6. Comando do-while</a></li><li class="toc-item level-3"><a href=#diferença-prática-entre-while-e-do-while>6.6.1. Diferença Prática entre while e do-while</a></li><li class="toc-item level-3"><a href=#regras-de-sintaxe-importantes>6.6.2. Regras de Sintaxe Importantes</a></li><li class="toc-item level-2"><a href=#aninhamento-de-repetições>6.7. Aninhamento de Repetições</a></li><li class="toc-item level-3"><a href=#aplicação-prática>6.7.1. Aplicação Prática</a></li><li class="toc-item level-2"><a href=#comando-continue>6.8. Comando continue</a></li><li class="toc-item level-2"><a href=#comando-continue>6.9. Comando continue</a></li><li class="toc-item level-3"><a href=#regras-de-uso-e-riscos-de-lógica>6.9.1. Regras de Uso e Riscos de Lógica</a></li><li class="toc-item level-2"><a href=#questões>6.10. Questões</a></li><li class="toc-item level-2"><a href=#próximos-passos>6.11. Próximos passos</a></li></ol></section><nav class=sidebar-nav-section><a class="sidebar-nav-link prev" href=5-conditionals.html><i class=nav-icon data-lucide=chevron-left></i> Condicionais</a><a class="sidebar-nav-link next" href=7-arrays.html>Arrays (Vetores e Matrizes) <i class=nav-icon data-lucide=chevron-right></i></a><a class="sidebar-nav-link back" href=javascript:void(0) onclick=handleBackNavigation()><i class=nav-icon data-lucide=arrow-left></i> Voltar</a></nav></div></nav><button aria-label=Menu class=mobile-menu-toggle><i data-lucide=menu></i></button><button aria-label="Alternar Barra Lateral" class=sidebar-toggle onclick=CourseForgeNav.toggleSidebar()><i class=toggle-icon data-lucide=chevron-left id=sidebar-toggle-icon></i></button><div class=mobile-menu-overlay></div><main class=main-content><article class=article><header class=article-header><span class=chapter-number>6</span><h1 class=article-title><span class="title-ornament left">❧</span> <span class=title-text>Repetições</span> <span class="title-ornament right">❧</span></h1><p class=article-date>10/02/2026</p><nav aria-label=Breadcrumb class=breadcrumb><a class=breadcrumb-link href=contents.html>Tópicos de Programação II</a><span class=breadcrumb-separator><i class=breadcrumb-icon data-lucide=chevron-right></i></span><a class=breadcrumb-link href=contents.html#part-II>II - Linguagem C</a><span class=breadcrumb-separator><i class=breadcrumb-icon data-lucide=chevron-right></i></span><span class=breadcrumb-current>Repetições</span></nav></header><div class=article-body><h2 id=repetições><span class=heading-text>Repetições</span><span class=heading-arabic>6.1</span></h2><p>Este capítulo tem como objetivo fundamental apresentar o funcionamento de cada uma das estruturas de repetição disponíveis na linguagem <strong>C</strong>. Ao longo deste estudo, você desenvolverá as competências necessárias para manipular o fluxo de execução de seus programas de forma eficiente. Ao final da leitura, você será capaz de compreender e definir o conceito de um <strong>laço</strong> (<em>loop</em>), identificar e prevenir a ocorrência de um <strong>laço infinito</strong>, além de dominar a utilização prática dos comandos <strong>while</strong>, <strong>for</strong> (incluindo a técnica de omissão de cláusulas) e <strong>do-while</strong>. Adicionalmente, você aprenderá a estruturar o <strong>aninhamento de repetições</strong> e a controlar o fluxo interno desses ciclos utilizando os comandos de interrupção e salto <strong>break</strong> e <strong>continue</strong>.</p><div class="callout callout-info"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><circle cx=12 cy=12 r=10 /><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></span><span class=callout-title-inner>Objetivos de Aprendizado</span></div><div class=callout-content><ul><li>Compreender a definição e a aplicação de um <strong>laço</strong> de repetição.</li><li>Identificar as causas e os riscos de um <strong>laço infinito</strong>.</li><li>Dominar a sintaxe e a lógica dos comandos <strong>while</strong>, <strong>for</strong> e <strong>do-while</strong>.</li><li>Aprender a flexibilizar o comando <strong>for</strong> através da omissão de cláusulas.</li><li>Desenvolver habilidades para criar <strong>repetições aninhadas</strong>.</li><li>Utilizar os comandos <strong>break</strong> e <strong>continue</strong> para o controle refinado do fluxo.</li></ul></div></div><h2 id=repetição-por-condição><span class=heading-text>Repetição por Condição</span><span class=heading-arabic>6.2</span></h2><p>Nas etapas anteriores, você aprendeu a utilizar os desvios condicionais para garantir que um bloco de comandos fosse executado apenas quando uma condição específica fosse atendida. Contudo, em diversas situações de programação, surge a necessidade de que um bloco de instruções não seja executado apenas uma única vez, mas sim repetidamente, enquanto uma determinada condição permanecer verdadeira.</p><p>A lógica fundamental dessa estrutura pode ser resumida pelo conceito: "<strong>enquanto</strong> uma condição for válida, <strong>faça</strong> a sequência de comandos". Esse processo cria um ciclo que se encerra somente quando a condição avaliada se torna falsa.</p><p>Essa dinâmica é muito semelhante ao funcionamento de um fluxograma. Neles, utilizamos o símbolo do losango para decidir entre diferentes caminhos baseados em uma resposta do tipo verdadeiro ou falso. A diferença fundamental na estrutura de repetição é que, ao atingir o final da sequência de comandos, o fluxo do programa não segue adiante, mas é desviado novamente para o ponto de avaliação da condição, reiniciando o processo.</p><div style=justify-content:center;display:flex><div style="border:1px dashed #333;border-radius:8px 0 0 8px;flex-direction:column;justify-content:center;width:225px;padding:30px;font-weight:bolder;display:flex"><p style=margin:0>Leia A e B;</p><p style=margin:0>Enquanto A &lt; B</p><p style=margin:0>     A recebe A + 1;</p><p style=margin:0>     Imprima A;</p><p style=margin:0>Fim Enquanto</p></div><div style="border:1px dashed #333;border-left:none;border-radius:0 8px 8px 0;width:300px;padding:30px"><div class=no-break><div class=centered><svg class="svg-graph graphviz-img" viewbox="0.00 0.00 222.00 323.00" data-sketch=true xmlns=http://www.w3.org/2000/svg><g transform="scale(1 1) rotate(0) translate(4 319)" class=graph id=graph0><title>Flowchart</title><polygon points="-4,4 -4,-319 218.05,-319 218.05,4 -4,4" fill=white stroke=none /><g class=node id=node1><title>Inicio</title><ellipse cx=77.05 cy=-297 fill=#e1f5fe rx=28.3 ry=18 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=77.05 xml:space=preserve y=-292.73>Início</text></g><g class=node id=node3><title>ReadAB</title><path d="M100.42,-248C100.42,-248 53.67,-248 53.67,-248 47.67,-248 41.67,-242 41.67,-236 41.67,-236 41.67,-224 41.67,-224 41.67,-218 47.67,-212 53.67,-212 53.67,-212 100.42,-212 100.42,-212 106.42,-212 112.42,-218 112.42,-224 112.42,-224 112.42,-236 112.42,-236 112.42,-242 106.42,-248 100.42,-248" fill=#f9f9f9 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=77.05 xml:space=preserve y=-225.72>Leia A e B</text></g><g class=edge id=edge1><title>Inicio->ReadAB</title><path d="M77.05,-278.58C77.05,-272.9 77.05,-266.42 77.05,-260.12" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="80.55,-260.28 77.05,-250.28 73.55,-260.28 80.55,-260.28" fill=#333333 stroke=#333333 stroke-width=1.2 /></g><g class=node id=node2><title>Fim</title><ellipse cx=187.05 cy=-85 fill=#e1f5fe rx=27 ry=18 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=187.05 xml:space=preserve y=-80.72>Fim</text></g><g class=node id=node4><title>Condicao</title><polygon points="77.05,-181 30.95,-163 77.05,-145 123.15,-163 77.05,-181" fill=#fff9c4 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=77.05 xml:space=preserve y=-158.72>A &lt; B?</text></g><g class=edge id=edge2><title>ReadAB->Condicao</title><path d="M77.05,-211.58C77.05,-205.9 77.05,-199.42 77.05,-193.12" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="80.55,-193.28 77.05,-183.28 73.55,-193.28 80.55,-193.28" fill=#333333 stroke=#333333 stroke-width=1.2 /></g><g class=edge id=edge6><title>Condicao->Fim</title><path d="M92.81,-151.11C110.07,-139.19 138.07,-119.84 159.08,-105.32" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="161.02,-108.24 167.26,-99.67 157.04,-102.48 161.02,-108.24" fill=#333333 stroke=#333333 stroke-width=1.2 /><text font-family=Arial font-size=10.00 text-anchor=middle x=147.64 xml:space=preserve y=-120.5>Não</text></g><g class=node id=node5><title>SomaA</title><path d="M112.42,-103C112.42,-103 41.67,-103 41.67,-103 35.67,-103 29.67,-97 29.67,-91 29.67,-91 29.67,-79 29.67,-79 29.67,-73 35.67,-67 41.67,-67 41.67,-67 112.42,-67 112.42,-67 118.42,-67 124.42,-73 124.42,-79 124.42,-79 124.42,-91 124.42,-91 124.42,-97 118.42,-103 112.42,-103" fill=#f9f9f9 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=77.05 xml:space=preserve y=-80.72>Some +1 em A</text></g><g class=edge id=edge3><title>Condicao->SomaA</title><path d="M77.05,-144.75C77.05,-135.97 77.05,-125.06 77.05,-115.03" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="80.55,-115.26 77.05,-105.26 73.55,-115.26 80.55,-115.26" fill=#333333 stroke=#333333 stroke-width=1.2 /><text font-family=Arial font-size=10.00 text-anchor=middle x=85.67 xml:space=preserve y=-120.5>Sim</text></g><g class=node id=node6><title>PrintA</title><path d="M63.05,-36C63.05,-36 17.05,-36 17.05,-36 11.05,-36 5.05,-30 5.05,-24 5.05,-24 5.05,-12 5.05,-12 5.05,-6 11.05,0 17.05,0 17.05,0 63.05,0 63.05,0 69.05,0 75.05,-6 75.05,-12 75.05,-12 75.05,-24 75.05,-24 75.05,-30 69.05,-36 63.05,-36" fill=#f9f9f9 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=40.05 xml:space=preserve y=-13.72>Imprima A</text></g><g class=edge id=edge4><title>SomaA->PrintA</title><path d="M67.13,-66.58C63.65,-60.46 59.64,-53.42 55.8,-46.67" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="58.88,-45 50.89,-38.05 52.8,-48.47 58.88,-45" fill=#333333 stroke=#333333 stroke-width=1.2 /></g><g class=edge id=edge5><title>PrintA:w->Condicao:w</title><path d="M4.05,-18C-0.32,-18 -5.71,-133.02 18.66,-158.18" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="16.85,-161.19 27.4,-162.23 19.8,-154.85 16.85,-161.19" fill=#333333 stroke=#333333 stroke-width=1.2 /><text font-family=Arial font-size=10.00 text-anchor=middle x=3.65 xml:space=preserve y=-81.5></text></g></g></svg></div></div></div></div><div class="callout callout-tip"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .5 2.2 1.5 3.1.7.7 1.3 1.5 1.5 2.4"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span><span class=callout-title-inner>Entendendo o Ciclo<br></span></div><div class=callout-content><p>A repetição por condição permite que você execute um conjunto de instruções quantas vezes forem necessárias, sem que precise escrever o mesmo código repetidamente. É o computador quem decide o momento de parar, baseando-se no teste lógico que você definiu.</p></div></div><h2 id=laço-infinito><span class=heading-text>Laço infinito</span><span class=heading-arabic>6.3</span></h2><p>Um <strong>laço infinito</strong> (<em>infinite loop</em>) caracteriza-se por uma sequência de comandos que se repete indefinidamente durante a execução de um programa. Essa situação é, na maioria das vezes, fruto de um erro de lógica ou de programação e ocorre principalmente por dois motivos fundamentais:</p><ul><li><strong>Ausência de uma condição de parada</strong>: Você não define um critério que interrompa o ciclo de repetição.</li><li><strong>Condição de parada inalcançável</strong>: Existe um critério de interrupção, mas, devido à lógica do código, ele nunca é satisfeito.</li></ul><p>Essencialmente, o laço infinito surge de falhas ao especificar a expressão condicional que controla a estrutura de repetição.</p><h3 id=exemplo-condição-errônea><span class=heading-text>Exemplo: Condição Errônea</span><span class=heading-arabic>6.3.1</span></h3><p>No cenário ilustrado abaixo, você pode observar um erro na lógica de atualização da variável de controle:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>X recebe 4;
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toposia - Tópicos de Programação II (TEP II)</title>
+    <link rel="icon" href="/aulas-faesa/img/dark-favicon.svg" media="(prefers-color-scheme: light)">
+    <link rel="icon" href="/aulas-faesa/img/light-favicon.svg" media="(prefers-color-scheme: dark)">
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/fonts.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/bundle.min.css">
+    
+    
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css" data-no-bundle>
+    <script src="/aulas-faesa/js/bundle.min.js"></script>
+</head>
+
+<body>
+    <script>
+        // Restore sidebar state instantly (before first paint) to avoid transition flash
+        (function() {
+            if (localStorage.getItem('cf_sidebar_hidden') === 'true') {
+                document.body.classList.add('sidebar-hidden', 'no-transition');
+            }
+            requestAnimationFrame(function() {
+                requestAnimationFrame(function() {
+                    document.body.classList.remove('no-transition');
+                });
+            });
+        })();
+    </script>
+    <div class="page-wrapper">
+        <nav class="sidebar">
+            <div class="sidebar-content">
+                <header class="sidebar-title-section">
+                    <a href="contents.html" class="course-title-link">
+                        <h1 class="sidebar-course-title">Tópicos de Programação II (TEP II)</h1>
+                    </a>
+                    <div class="sidebar-ornament">❧</div>
+                </header>
+
+                
+                <section class="sidebar-toc-section">
+                    <h2 class="toc-header">Tabela de Conteúdos</h2>
+                    <ol class="toc-list">
+                        
+                        <li class="toc-item level-2">
+                            <a href="#repetições">6.1. Repetições</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#repetição-por-condição">6.2. Repetição por Condição</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#laço-infinito">6.3. Laço infinito</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#exemplo-condição-errônea">6.3.1. Exemplo: Condição Errônea</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#exemplo-ausência-de-modificação-de-valor">6.3.2. Exemplo: Ausência de Modificação de Valor</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#comando-while">6.4. Comando while</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#regras-de-sintaxe-e-boas-práticas">6.4.1. Regras de Sintaxe e Boas Práticas</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#comando-for">6.5. Comando for</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#flexibilidade-e-comparação-com-o-while">6.5.1. Flexibilidade e Comparação com o while</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#omitindo-cláusulas-no-for">6.5.2. Omitindo Cláusulas no for</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#operador-de-vírgula-e-tipos-de-dados">6.5.3. Operador de Vírgula e Tipos de Dados</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#comando-do-while">6.6. Comando do-while</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#diferença-prática-entre-while-e-do-while">6.6.1. Diferença Prática entre while e do-while</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#regras-de-sintaxe-importantes">6.6.2. Regras de Sintaxe Importantes</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#aninhamento-de-repetições">6.7. Aninhamento de Repetições</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#aplicação-prática">6.7.1. Aplicação Prática</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#comando-continue">6.8. Comando continue</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#comando-continue">6.9. Comando continue</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#regras-de-uso-e-riscos-de-lógica">6.9.1. Regras de Uso e Riscos de Lógica</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#questões">6.10. Questões</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#próximos-passos">6.11. Próximos passos</a>
+                        </li>
+                        
+                    </ol>
+                </section>
+                
+
+                <nav class="sidebar-nav-section">
+                    
+                    <a href="5-conditionals.html" class="sidebar-nav-link prev"><i data-lucide="chevron-left" class="nav-icon"></i> Condicionais</a>
+                    
+                    
+                    <a href="7-arrays.html" class="sidebar-nav-link next">Arrays (Vetores e Matrizes) <i data-lucide="chevron-right" class="nav-icon"></i></a>
+                    
+                    <a href="javascript:void(0)" onclick="handleBackNavigation()"
+                        class="sidebar-nav-link back"><i data-lucide="arrow-left" class="nav-icon"></i> Voltar</a>
+                </nav>
+
+            </div>
+        </nav>
+
+        <button class="mobile-menu-toggle" aria-label="Menu">
+            <i data-lucide="menu"></i>
+        </button>
+
+        <button class="sidebar-toggle" onclick="CourseForgeNav.toggleSidebar()" aria-label="Alternar Barra Lateral">
+            <i data-lucide="chevron-left" class="toggle-icon" id="sidebar-toggle-icon"></i>
+        </button>
+
+        <div class="mobile-menu-overlay"></div>
+
+        <main class="main-content">
+            <article class="article">
+                <header class="article-header">
+                    <span class="chapter-number">6</span>
+                    <h1 class="article-title">
+                        <span class="title-ornament left">❧</span>
+                        <span class="title-text">Repetições</span>
+                        <span class="title-ornament right">❧</span>
+                    </h1>
+                    
+                    <p class="article-date">10/02/2026</p>
+                    
+                    
+                    <nav class="breadcrumb" aria-label="Breadcrumb">
+                        
+                        
+                        
+                        <a href="contents.html" class="breadcrumb-link">Tópicos de Programação II</a>
+                        
+                        <span class="breadcrumb-separator"><i data-lucide="chevron-right" class="breadcrumb-icon"></i></span>
+                        
+                        
+                        
+                        
+                        <a href="contents.html#part-II" class="breadcrumb-link">II - Linguagem C</a>
+                        
+                        <span class="breadcrumb-separator"><i data-lucide="chevron-right" class="breadcrumb-icon"></i></span>
+                        
+                        
+                        
+                        <span class="breadcrumb-current">Repetições</span>
+                        
+                        
+                    </nav>
+                    
+                </header>
+                <div class="article-body">
+                    <h2 id="repetições"><span class="heading-text">Repetições</span><span class="heading-arabic">6.1</span></h2>
+<p>Este capítulo tem como objetivo fundamental apresentar o funcionamento de cada uma das estruturas de repetição disponíveis na linguagem <strong>C</strong>. Ao longo deste estudo, você desenvolverá as competências necessárias para manipular o fluxo de execução de seus programas de forma eficiente. Ao final da leitura, você será capaz de compreender e definir o conceito de um <strong>laço</strong> (<em>loop</em>), identificar e prevenir a ocorrência de um <strong>laço infinito</strong>, além de dominar a utilização prática dos comandos <strong>while</strong>, <strong>for</strong> (incluindo a técnica de omissão de cláusulas) e <strong>do-while</strong>. Adicionalmente, você aprenderá a estruturar o <strong>aninhamento de repetições</strong> e a controlar o fluxo interno desses ciclos utilizando os comandos de interrupção e salto <strong>break</strong> e <strong>continue</strong>.</p>
+<div class="callout callout-info">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></span>
+    <span class="callout-title-inner">Objetivos de Aprendizado</span>
+  </div>
+  <div class="callout-content">
+<ul>
+<li>Compreender a definição e a aplicação de um <strong>laço</strong> de repetição.</li>
+<li>Identificar as causas e os riscos de um <strong>laço infinito</strong>.</li>
+<li>Dominar a sintaxe e a lógica dos comandos <strong>while</strong>, <strong>for</strong> e <strong>do-while</strong>.</li>
+<li>Aprender a flexibilizar o comando <strong>for</strong> através da omissão de cláusulas.</li>
+<li>Desenvolver habilidades para criar <strong>repetições aninhadas</strong>.</li>
+<li>Utilizar os comandos <strong>break</strong> e <strong>continue</strong> para o controle refinado do fluxo.</li>
+</ul>
+  </div>
+</div>
+<h2 id="repetição-por-condição"><span class="heading-text">Repetição por Condição</span><span class="heading-arabic">6.2</span></h2>
+<p>Nas etapas anteriores, você aprendeu a utilizar os desvios condicionais para garantir que um bloco de comandos fosse executado apenas quando uma condição específica fosse atendida. Contudo, em diversas situações de programação, surge a necessidade de que um bloco de instruções não seja executado apenas uma única vez, mas sim repetidamente, enquanto uma determinada condição permanecer verdadeira.</p>
+<p>A lógica fundamental dessa estrutura pode ser resumida pelo conceito: &quot;<strong>enquanto</strong> uma condição for válida, <strong>faça</strong> a sequência de comandos&quot;. Esse processo cria um ciclo que se encerra somente quando a condição avaliada se torna falsa.</p>
+<p>Essa dinâmica é muito semelhante ao funcionamento de um fluxograma. Neles, utilizamos o símbolo do losango para decidir entre diferentes caminhos baseados em uma resposta do tipo verdadeiro ou falso. A diferença fundamental na estrutura de repetição é que, ao atingir o final da sequência de comandos, o fluxo do programa não segue adiante, mas é desviado novamente para o ponto de avaliação da condição, reiniciando o processo.</p>
+<div style="display: flex; justify-content: center;"><div style="width: 225px; font-weight: bolder; border: 1px dashed #333333; padding: 30px; border-radius: 8px 0 0 8px; display: flex; flex-direction: column; justify-content: center;">
+<p style="margin: 0">Leia A e B;</p>
+<p style="margin: 0">Enquanto A < B</p>
+<p style="margin: 0">&nbsp;&nbsp;&nbsp;&nbsp; A recebe A + 1;</p>
+<p style="margin: 0">&nbsp;&nbsp;&nbsp;&nbsp; Imprima A;</p>
+<p style="margin: 0">Fim Enquanto</p>
+</div><div style="width: 300px; border: 1px dashed #333333; border-left: none; padding: 30px; border-radius: 0 8px 8px 0">
+
+<div class="error">Graphviz error: failed to execute PosixPath('dot'), make sure the Graphviz executables are on your systems' PATH</div>
+</div></div>
+
+<div class="callout callout-tip">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .5 2.2 1.5 3.1.7.7 1.3 1.5 1.5 2.4"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span>
+    <span class="callout-title-inner">Entendendo o Ciclo<br /></span>
+  </div>
+  <div class="callout-content">
+<p>A repetição por condição permite que você execute um conjunto de instruções quantas vezes forem necessárias, sem que precise escrever o mesmo código repetidamente. É o computador quem decide o momento de parar, baseando-se no teste lógico que você definiu.</p>
+  </div>
+</div>
+<h2 id="laço-infinito"><span class="heading-text">Laço infinito</span><span class="heading-arabic">6.3</span></h2>
+<p>Um <strong>laço infinito</strong> (<em>infinite loop</em>) caracteriza-se por uma sequência de comandos que se repete indefinidamente durante a execução de um programa. Essa situação é, na maioria das vezes, fruto de um erro de lógica ou de programação e ocorre principalmente por dois motivos fundamentais:</p>
+<ul>
+<li><strong>Ausência de uma condição de parada</strong>: Você não define um critério que interrompa o ciclo de repetição.</li>
+<li><strong>Condição de parada inalcançável</strong>: Existe um critério de interrupção, mas, devido à lógica do código, ele nunca é satisfeito.</li>
+</ul>
+<p>Essencialmente, o laço infinito surge de falhas ao especificar a expressão condicional que controla a estrutura de repetição.</p>
+<h3 id="exemplo-condição-errônea"><span class="heading-text">Exemplo: Condição Errônea</span><span class="heading-arabic">6.3.1</span></h3>
+<p>No cenário ilustrado abaixo, você pode observar um erro na lógica de atualização da variável de controle:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">X recebe 4;
 enquanto (X &lt; 5) faca
     X recebe X – 1;
     Imprima X;
 fim enquanto
-</code></pre><p>Neste código, a variável $X$ inicia com o valor 4 e a repetição continua enquanto $X &lt; 5$. No entanto, a instrução interna subtrai uma unidade de $X$ a cada iteração ($X = X - 1$). Como o valor de $X$ torna-se cada vez menor e mais negativo, a condição $X &lt; 5$ será permanentemente verdadeira, impedindo que você saia do laço.</p><h3 id=exemplo-ausência-de-modificação-de-valor><span class=heading-text>Exemplo: Ausência de Modificação de Valor</span><span class=heading-arabic>6.3.2</span></h3><p>Outro erro frequente que produz um laço infinito é a omissão de comandos que alterem o estado das variáveis de controle dentro do bloco de repetição:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>X recebe 4;
+</code></pre>
+<p>Neste código, a variável $X$ inicia com o valor 4 e a repetição continua enquanto $X < 5$. No entanto, a instrução interna subtrai uma unidade de $X$ a cada iteração ($X = X - 1$). Como o valor de $X$ torna-se cada vez menor e mais negativo, a condição $X < 5$ será permanentemente verdadeira, impedindo que você saia do laço.</p>
+<h3 id="exemplo-ausência-de-modificação-de-valor"><span class="heading-text">Exemplo: Ausência de Modificação de Valor</span><span class="heading-arabic">6.3.2</span></h3>
+<p>Outro erro frequente que produz um laço infinito é a omissão de comandos que alterem o estado das variáveis de controle dentro do bloco de repetição:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">X recebe 4;
 enquanto (X &lt; 5) faca
     Imprima X;
 fim enquanto
-</code></pre><p>Como demonstrado acima, você define o valor de $X$ como 4 e a condição de entrada como $X &lt; 5$. Contudo, não existe nenhuma instrução dentro do laço que modifique o conteúdo de $X$. Dessa forma, a condição permanece eternamente verdadeira, fazendo com que o programa imprima o valor de $X$ sem nunca encerrar a execução.</p><div class="callout callout-warning"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span><span class=callout-title-inner>Atenção ao Desenvolver<br></span></div><div class=callout-content><p>Ao criar estruturas de repetição, você deve garantir que o bloco de comandos contenha uma instrução que aproxime o sistema da condição de parada. Sem essa evolução, o seu programa ficará travado em um ciclo eterno, consumindo processamento sem concluir a tarefa pretendida.</p></div></div><h2 id=comando-while><span class=heading-text>Comando while</span><span class=heading-arabic>6.4</span></h2><p>O comando <strong>while</strong> é a implementação direta na linguagem <strong>C</strong> da estrutura de repetição por condição "enquanto". Ele permite que um bloco de código seja executado repetidamente enquanto uma expressão lógica for considerada válida.</p><p>A forma geral do comando é:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>while (condição) {
+</code></pre>
+<p>Como demonstrado acima, você define o valor de $X$ como 4 e a condição de entrada como $X < 5$. Contudo, não existe nenhuma instrução dentro do laço que modifique o conteúdo de $X$. Dessa forma, a condição permanece eternamente verdadeira, fazendo com que o programa imprima o valor de $X$ sem nunca encerrar a execução.</p>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Atenção ao Desenvolver<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Ao criar estruturas de repetição, você deve garantir que o bloco de comandos contenha uma instrução que aproxime o sistema da condição de parada. Sem essa evolução, o seu programa ficará travado em um ciclo eterno, consumindo processamento sem concluir a tarefa pretendida.</p>
+  </div>
+</div>
+<h2 id="comando-while"><span class="heading-text">Comando while</span><span class="heading-arabic">6.4</span></h2>
+<p>O comando <strong>while</strong> é a implementação direta na linguagem <strong>C</strong> da estrutura de repetição por condição &quot;enquanto&quot;. Ele permite que um bloco de código seja executado repetidamente enquanto uma expressão lógica for considerada válida.</p>
+<p>A forma geral do comando é:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">while (condição) {
     sequência de comandos;
 }
-</code></pre><p>Durante a execução, o funcionamento do <strong>while</strong> segue este fluxo lógico:</p><ul><li><strong>Avaliação da Condição</strong>: O programa testa a expressão entre parênteses.</li><li><strong>Condição Verdadeira</strong>: Se o resultado for diferente de zero, a sequência de comandos interna é processada. Após a execução da última instrução do bloco, o fluxo retorna automaticamente ao teste da condição para uma nova validação.</li><li><strong>Condição Falsa</strong>: Se o resultado for igual a zero, o bloco de comandos é ignorado e o programa segue para a instrução imediatamente após o fechamento das chaves.</li></ul><div class=no-break><div class=centered><svg class="svg-graph graphviz-img" viewbox="0.00 0.00 336.00 324.00" data-sketch=true width=350 xmlns=http://www.w3.org/2000/svg><g transform="scale(1 1) rotate(0) translate(4 319.5)" class=graph id=graph0><title>Flowchart</title><polygon points="-4,4 -4,-319.5 331.59,-319.5 331.59,4 -4,4" fill=white stroke=none /><g class=node id=node1><title>ScanA</title><path d="M229.94,-315.5C229.94,-315.5 148.69,-315.5 148.69,-315.5 142.69,-315.5 136.69,-309.5 136.69,-303.5 136.69,-303.5 136.69,-291.5 136.69,-291.5 136.69,-285.5 142.69,-279.5 148.69,-279.5 148.69,-279.5 229.94,-279.5 229.94,-279.5 235.94,-279.5 241.94,-285.5 241.94,-291.5 241.94,-291.5 241.94,-303.5 241.94,-303.5 241.94,-309.5 235.94,-315.5 229.94,-315.5" fill=#f9f9f9 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=189.32 xml:space=preserve y=-293.23>scanf ("%d", &a);</text></g><g class=node id=node2><title>ScanB</title><path d="M229.94,-248.5C229.94,-248.5 148.69,-248.5 148.69,-248.5 142.69,-248.5 136.69,-242.5 136.69,-236.5 136.69,-236.5 136.69,-224.5 136.69,-224.5 136.69,-218.5 142.69,-212.5 148.69,-212.5 148.69,-212.5 229.94,-212.5 229.94,-212.5 235.94,-212.5 241.94,-218.5 241.94,-224.5 241.94,-224.5 241.94,-236.5 241.94,-236.5 241.94,-242.5 235.94,-248.5 229.94,-248.5" fill=#f9f9f9 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=189.32 xml:space=preserve y=-226.22>scanf ("%d", &b);</text></g><g class=edge id=edge1><title>ScanA->ScanB</title><path d="M189.32,-279.08C189.32,-273.4 189.32,-266.92 189.32,-260.62" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="192.82,-260.78 189.32,-250.78 185.82,-260.78 192.82,-260.78" fill=#333333 stroke=#333333 stroke-width=1.2 /></g><g class=node id=node3><title>While</title><polygon points="189.32,-181.5 112.86,-163.5 189.32,-145.5 265.77,-163.5 189.32,-181.5" fill=#fff9c4 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=189.32 xml:space=preserve y=-159.22>while (a &lt; b){</text></g><g class=edge id=edge2><title>ScanB->While</title><path d="M189.32,-212.08C189.32,-206.4 189.32,-199.92 189.32,-193.62" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="192.82,-193.78 189.32,-183.78 185.82,-193.78 192.82,-193.78" fill=#333333 stroke=#333333 stroke-width=1.2 /></g><g class=node id=node4><title>Incremento</title><path d="M209.69,-103.25C209.69,-103.25 168.94,-103.25 168.94,-103.25 162.94,-103.25 156.94,-97.25 156.94,-91.25 156.94,-91.25 156.94,-79.25 156.94,-79.25 156.94,-73.25 162.94,-67.25 168.94,-67.25 168.94,-67.25 209.69,-67.25 209.69,-67.25 215.69,-67.25 221.69,-73.25 221.69,-79.25 221.69,-79.25 221.69,-91.25 221.69,-91.25 221.69,-97.25 215.69,-103.25 209.69,-103.25" fill=#f9f9f9 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=189.32 xml:space=preserve y=-80.97>a = a + 1;</text></g><g class=edge id=edge3><title>While->Incremento:n</title><path d="M189.32,-145.2C189.32,-136.66 189.32,-125.92 189.32,-115.31" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="192.82,-115.32 189.32,-105.32 185.82,-115.32 192.82,-115.32" fill=#333333 stroke=#333333 stroke-width=1.2 /><text font-family=Arial font-size=10.00 text-anchor=middle x=198.32 xml:space=preserve y=-121>SIM</text></g><g class=node id=node6><title>Continua</title><path d="M109.19,-103.5C109.19,-103.5 29.44,-103.5 29.44,-103.5 23.44,-103.5 17.44,-97.5 17.44,-91.5 17.44,-91.5 17.44,-79 17.44,-79 17.44,-73 23.44,-67 29.44,-67 29.44,-67 109.19,-67 109.19,-67 115.19,-67 121.19,-73 121.19,-79 121.19,-79 121.19,-91.5 121.19,-91.5 121.19,-97.5 115.19,-103.5 109.19,-103.5" fill=#f9f9f9 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=69.32 xml:space=preserve y=-88.1>Continuação do</text><text font-family=Arial font-size=12.00 text-anchor=middle x=69.32 xml:space=preserve y=-73.85>programa</text></g><g class=edge id=edge6><title>While:w->Continua:w</title><path d="M109.96,-163.5C60.85,-163.5 -20.56,-99.23 4.94,-87.18" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="5.37,-90.66 14.65,-85.55 4.21,-83.76 5.37,-90.66" fill=#333333 stroke=#333333 stroke-width=1.2 /><text font-family=Arial font-size=10.00 text-anchor=middle x=39.29 xml:space=preserve y=-121>NÃO</text></g><g class=node id=node5><title>Print</title><path d="M269.07,-36C269.07,-36 185.57,-36 185.57,-36 179.57,-36 173.57,-30 173.57,-24 173.57,-24 173.57,-12 173.57,-12 173.57,-6 179.57,0 185.57,0 185.57,0 269.07,0 269.07,0 275.07,0 281.07,-6 281.07,-12 281.07,-12 281.07,-24 281.07,-24 281.07,-30 275.07,-36 269.07,-36" fill=#f9f9f9 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=227.32 xml:space=preserve y=-13.72>printf ("%d \n", a);</text></g><g class=edge id=edge4><title>Incremento->Print</title><path d="M199.5,-66.76C203.23,-60.37 207.53,-52.99 211.62,-45.96" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="214.45,-48.05 216.46,-37.65 208.4,-44.53 214.45,-48.05" fill=#333333 stroke=#333333 stroke-width=1.2 /></g><g class=edge id=edge5><title>Print:e->While:e</title><path d="M282.07,-18C342.95,-18 334.99,-145.88 280.24,-161.87" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="279.89,-158.38 270.48,-163.25 280.87,-165.31 279.89,-158.38" fill=#333333 stroke=#333333 stroke-width=1.2 /><text font-family=Arial font-size=10.00 text-anchor=middle x=326.09 xml:space=preserve y=-81.75></text></g></g></svg></div></div><p>O exemplo abaixo demonstra um programa que solicita dois números inteiros ao usuário e imprime todos os valores existentes entre eles:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>#include &lt;stdio.h>
-#include &lt;stdlib.h>
+</code></pre>
+<p>Durante a execução, o funcionamento do <strong>while</strong> segue este fluxo lógico:</p>
+<ul>
+<li><strong>Avaliação da Condição</strong>: O programa testa a expressão entre parênteses.</li>
+<li><strong>Condição Verdadeira</strong>: Se o resultado for diferente de zero, a sequência de comandos interna é processada. Após a execução da última instrução do bloco, o fluxo retorna automaticamente ao teste da condição para uma nova validação.</li>
+<li><strong>Condição Falsa</strong>: Se o resultado for igual a zero, o bloco de comandos é ignorado e o programa segue para a instrução imediatamente após o fechamento das chaves.</li>
+</ul>
+<div class="error">Graphviz error: failed to execute PosixPath('dot'), make sure the Graphviz executables are on your systems' PATH</div>
+
+<p>O exemplo abaixo demonstra um programa que solicita dois números inteiros ao usuário e imprime todos os valores existentes entre eles:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
 
 int main(){
     int a, b;
-    printf("Digite o valor de a: ");
-    scanf("%d", &a);
-    printf("Digite o valor de b: ");
-    scanf("%d", &b);
+    printf(&quot;Digite o valor de a: &quot;);
+    scanf(&quot;%d&quot;, &amp;a);
+    printf(&quot;Digite o valor de b: &quot;);
+    scanf(&quot;%d&quot;, &amp;b);
 
     while (a &lt; b){
         a = a + 1;
-        printf("%d \n", a);
+        printf(&quot;%d \n&quot;, a);
     }
 
-    system("pause");
+    system(&quot;pause&quot;);
     return 0;
 }
-</code></pre><h3 id=regras-de-sintaxe-e-boas-práticas><span class=heading-text>Regras de Sintaxe e Boas Práticas</span><span class=heading-arabic>6.4.1</span></h3><p>Assim como você aprendeu no estudo do comando <strong>if</strong>, o <strong>while</strong> compartilha diversas regras estruturais essenciais:</p><ul><li><strong>Expressões Lógicas</strong>: A condição pode ser qualquer expressão que utilize operadores matemáticos, relacionais ou lógicos, desde que resulte em um valor falso (zero) ou verdadeiro (diferente de zero).</li><li><strong>Uso de Chaves</strong>: O comando atua apenas sobre a instrução imediatamente seguinte. Para executar um conjunto de comandos, você deve obrigatoriamente delimitá-los entre chaves <code>{ }</code>.</li><li><strong>Ponto e Vírgula</strong>: Nunca utilize o ponto e vírgula (<code>;</code>) logo após a condição.</li></ul><div class="callout callout-danger"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1=12 x2=12 y1=9 y2=13 /><line x1=12 x2=12 y1=17 y2=17.01 /></svg></span><span class=callout-title-inner>Erro Comum: Ponto e Vírgula após a Condição<br></span></div><div class=callout-content><p>Inserir um <code>;</code> após o parêntese do <strong>while</strong> faz com que o compilador interprete que o laço terminou ali mesmo, possuindo um corpo vazio. Veja o exemplo do impacto negativo desta prática:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>while (a &lt; b); { // ERRADO! O ponto e vírgula interrompe o laço.
+</code></pre>
+<h3 id="regras-de-sintaxe-e-boas-práticas"><span class="heading-text">Regras de Sintaxe e Boas Práticas</span><span class="heading-arabic">6.4.1</span></h3>
+<p>Assim como você aprendeu no estudo do comando <strong>if</strong>, o <strong>while</strong> compartilha diversas regras estruturais essenciais:</p>
+<ul>
+<li><strong>Expressões Lógicas</strong>: A condição pode ser qualquer expressão que utilize operadores matemáticos, relacionais ou lógicos, desde que resulte em um valor falso (zero) ou verdadeiro (diferente de zero).</li>
+<li><strong>Uso de Chaves</strong>: O comando atua apenas sobre a instrução imediatamente seguinte. Para executar um conjunto de comandos, você deve obrigatoriamente delimitá-los entre chaves <code>{ }</code>.</li>
+<li><strong>Ponto e Vírgula</strong>: Nunca utilize o ponto e vírgula (<code>;</code>) logo após a condição.</li>
+</ul>
+<div class="callout callout-danger">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12" y2="17.01"/></svg></span>
+    <span class="callout-title-inner">Erro Comum: Ponto e Vírgula após a Condição<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Inserir um <code>;</code> após o parêntese do <strong>while</strong> faz com que o compilador interprete que o laço terminou ali mesmo, possuindo um corpo vazio. Veja o exemplo do impacto negativo desta prática:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">while (a &lt; b); { // ERRADO! O ponto e vírgula interrompe o laço.
     a = a + 1;   // Este comando agora está FORA do while.
-    printf("%d \n", a);
+    printf(&quot;%d \n&quot;, a);
 }
-</code></pre><p>No código acima, se a condição inicial for verdadeira, você criará um <strong>laço infinito</strong>, pois as variáveis de controle nunca serão alteradas dentro do laço vazio.</p></div></div><p><strong>Lembre-se:</strong> é sua total responsabilidade como programador garantir que o valor de algum elemento da condição seja modificado dentro do bloco de comandos, assegurando que o programa eventualmente atinja a condição de parada.</p><h2 id=comando-for><span class=heading-text>Comando for</span><span class=heading-arabic>6.5</span></h2><p>O comando <strong>for</strong> possui uma funcionalidade muito similar ao <strong>while</strong>, sendo projetado para repetir um comando ou um bloco de instruções diversas vezes. Sua principal característica é a capacidade de condensar a inicialização, a condição de parada e a atualização das variáveis em uma única linha.</p><p>A forma geral do comando é:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>for (inicialização; condição; incremento) {
+</code></pre>
+<p>No código acima, se a condição inicial for verdadeira, você criará um <strong>laço infinito</strong>, pois as variáveis de controle nunca serão alteradas dentro do laço vazio.</p>
+  </div>
+</div>
+<p><strong>Lembre-se:</strong> é sua total responsabilidade como programador garantir que o valor de algum elemento da condição seja modificado dentro do bloco de comandos, assegurando que o programa eventualmente atinja a condição de parada.</p>
+<h2 id="comando-for"><span class="heading-text">Comando for</span><span class="heading-arabic">6.5</span></h2>
+<p>O comando <strong>for</strong> possui uma funcionalidade muito similar ao <strong>while</strong>, sendo projetado para repetir um comando ou um bloco de instruções diversas vezes. Sua principal característica é a capacidade de condensar a inicialização, a condição de parada e a atualização das variáveis em uma única linha.</p>
+<p>A forma geral do comando é:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">for (inicialização; condição; incremento) {
     sequência de comandos;
 }
-</code></pre><p>Durante a execução deste laço, você deve observar a seguinte sequência de passos:</p><ul><li><strong>Inicialização</strong>: Esta cláusula é executada apenas uma vez, no início do processo. Nela, você atribui valores iniciais às variáveis que controlam o laço.</li><li><strong>Teste de Condição</strong>: Antes de cada repetição, a expressão lógica é avaliada.<ul><li>Se for <strong>verdadeira</strong> (valor diferente de zero), o bloco de comandos interno é executado.</li><li>Se for <strong>falsa</strong> (zero), o laço é encerrado imediatamente.</li></ul></li><li><strong>Incremento</strong>: Após a execução dos comandos internos, o programa executa a etapa de incremento ou atualização das variáveis. Finalizada esta etapa, o fluxo retorna ao teste de condição.</li></ul><p>O código abaixo exemplifica o uso do <strong>for</strong> para imprimir todos os números inteiros entre dois valores, <strong>a</strong> e <strong>b</strong>, fornecidos por você:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>#include &lt;stdio.h>
-#include &lt;stdlib.h>
+</code></pre>
+<p>Durante a execução deste laço, você deve observar a seguinte sequência de passos:</p>
+<ul>
+<li><strong>Inicialização</strong>: Esta cláusula é executada apenas uma vez, no início do processo. Nela, você atribui valores iniciais às variáveis que controlam o laço.</li>
+<li><strong>Teste de Condição</strong>: Antes de cada repetição, a expressão lógica é avaliada.<ul>
+<li>Se for <strong>verdadeira</strong> (valor diferente de zero), o bloco de comandos interno é executado.</li>
+<li>Se for <strong>falsa</strong> (zero), o laço é encerrado imediatamente.</li>
+</ul>
+</li>
+<li><strong>Incremento</strong>: Após a execução dos comandos internos, o programa executa a etapa de incremento ou atualização das variáveis. Finalizada esta etapa, o fluxo retorna ao teste de condição.</li>
+</ul>
+<p>O código abaixo exemplifica o uso do <strong>for</strong> para imprimir todos os números inteiros entre dois valores, <strong>a</strong> e <strong>b</strong>, fornecidos por você:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
 
 int main(){
     int a, b, c;
-    printf("Digite o valor de a: ");
-    scanf("%d", &a);
-    printf("Digite o valor de b: ");
-    scanf("%d", &b);
+    printf(&quot;Digite o valor de a: &quot;);
+    scanf(&quot;%d&quot;, &amp;a);
+    printf(&quot;Digite o valor de b: &quot;);
+    scanf(&quot;%d&quot;, &amp;b);
 
     for (c = a; c &lt;= b; c++){
-        printf("%d \n", c);
+        printf(&quot;%d \n&quot;, c);
     }
 
-    system("pause");
+    system(&quot;pause&quot;);
     return 0;
 }
-</code></pre><p>Podemos ter uma visão diferente, talvez mais intuitiva para você, através do seguinte diagrama de blocos:</p><div class=no-break><div class=centered><svg class="svg-graph graphviz-img" viewbox="0.00 0.00 245.00 391.00" data-sketch=true width=300 xmlns=http://www.w3.org/2000/svg><g transform="scale(1 1) rotate(0) translate(4 386.5)" class=graph id=graph0><title>Flowchart</title><polygon points="-4,4 -4,-386.5 241.12,-386.5 241.12,4 -4,4" fill=white stroke=none /><g class=node id=node1><title>Decl</title><path d="M204.38,-382.5C204.38,-382.5 162.12,-382.5 162.12,-382.5 156.12,-382.5 150.12,-376.5 150.12,-370.5 150.12,-370.5 150.12,-358.5 150.12,-358.5 150.12,-352.5 156.12,-346.5 162.12,-346.5 162.12,-346.5 204.38,-346.5 204.38,-346.5 210.38,-346.5 216.38,-352.5 216.38,-358.5 216.38,-358.5 216.38,-370.5 216.38,-370.5 216.38,-376.5 210.38,-382.5 204.38,-382.5" fill=#f9f9f9 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=183.25 xml:space=preserve y=-360.23>int a, b, c;</text></g><g class=node id=node2><title>ScanA</title><path d="M222.38,-315.5C222.38,-315.5 144.12,-315.5 144.12,-315.5 138.12,-315.5 132.12,-309.5 132.12,-303.5 132.12,-303.5 132.12,-291.5 132.12,-291.5 132.12,-285.5 138.12,-279.5 144.12,-279.5 144.12,-279.5 222.38,-279.5 222.38,-279.5 228.38,-279.5 234.38,-285.5 234.38,-291.5 234.38,-291.5 234.38,-303.5 234.38,-303.5 234.38,-309.5 228.38,-315.5 222.38,-315.5" fill=#f9f9f9 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=183.25 xml:space=preserve y=-293.23>scanf ("%d",&a);</text></g><g class=edge id=edge1><title>Decl->ScanA</title><path d="M183.25,-346.08C183.25,-340.4 183.25,-333.92 183.25,-327.62" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="186.75,-327.78 183.25,-317.78 179.75,-327.78 186.75,-327.78" fill=#333333 stroke=#333333 stroke-width=1.2 /></g><g class=node id=node3><title>ScanB</title><path d="M222.38,-248.5C222.38,-248.5 144.12,-248.5 144.12,-248.5 138.12,-248.5 132.12,-242.5 132.12,-236.5 132.12,-236.5 132.12,-224.5 132.12,-224.5 132.12,-218.5 138.12,-212.5 144.12,-212.5 144.12,-212.5 222.38,-212.5 222.38,-212.5 228.38,-212.5 234.38,-218.5 234.38,-224.5 234.38,-224.5 234.38,-236.5 234.38,-236.5 234.38,-242.5 228.38,-248.5 222.38,-248.5" fill=#f9f9f9 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=183.25 xml:space=preserve y=-226.22>scanf ("%d",&b);</text></g><g class=edge id=edge2><title>ScanA->ScanB</title><path d="M183.25,-279.08C183.25,-273.4 183.25,-266.92 183.25,-260.62" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="186.75,-260.78 183.25,-250.78 179.75,-260.78 186.75,-260.78" fill=#333333 stroke=#333333 stroke-width=1.2 /></g><g class=node id=node4><title>ForInit</title><path d="M205.5,-181.5C205.5,-181.5 161,-181.5 161,-181.5 155,-181.5 149,-175.5 149,-169.5 149,-169.5 149,-157.5 149,-157.5 149,-151.5 155,-145.5 161,-145.5 161,-145.5 205.5,-145.5 205.5,-145.5 211.5,-145.5 217.5,-151.5 217.5,-157.5 217.5,-157.5 217.5,-169.5 217.5,-169.5 217.5,-175.5 211.5,-181.5 205.5,-181.5" fill=#f9f9f9 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=183.25 xml:space=preserve y=-159.22>for (c = a);</text></g><g class=edge id=edge3><title>ScanB->ForInit</title><path d="M183.25,-212.08C183.25,-206.4 183.25,-199.92 183.25,-193.62" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="186.75,-193.78 183.25,-183.78 179.75,-193.78 186.75,-193.78" fill=#333333 stroke=#333333 stroke-width=1.2 /></g><g class=node id=node5><title>ForCond</title><polygon points="183.25,-114.5 137.15,-96.5 183.25,-78.5 229.35,-96.5 183.25,-114.5" fill=#fff9c4 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=183.25 xml:space=preserve y=-92.22>c &lt;= b;</text></g><g class=edge id=edge4><title>ForInit->ForCond</title><path d="M183.25,-145.08C183.25,-139.4 183.25,-132.92 183.25,-126.62" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="186.75,-126.78 183.25,-116.78 179.75,-126.78 186.75,-126.78" fill=#333333 stroke=#333333 stroke-width=1.2 /></g><g class=node id=node7><title>Print</title><path d="M92.5,-36.25C92.5,-36.25 12,-36.25 12,-36.25 6,-36.25 0,-30.25 0,-24.25 0,-24.25 0,-12.25 0,-12.25 0,-6.25 6,-0.25 12,-0.25 12,-0.25 92.5,-0.25 92.5,-0.25 98.5,-0.25 104.5,-6.25 104.5,-12.25 104.5,-12.25 104.5,-24.25 104.5,-24.25 104.5,-30.25 98.5,-36.25 92.5,-36.25" fill=#f9f9f9 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=52.25 xml:space=preserve y=-13.97>printf("%d \n",c);}</text></g><g class=edge id=edge5><title>ForCond->Print</title><path d="M165.31,-85.06C146.61,-74.17 116.69,-56.76 92.32,-42.57" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="94.24,-39.64 83.84,-37.64 90.72,-45.69 94.24,-39.64" fill=#333333 stroke=#333333 stroke-width=1.2 /><text font-family=Arial font-size=10.00 text-anchor=middle x=134.59 xml:space=preserve y=-54>SIM</text></g><g class=node id=node8><title>Continua</title><path d="M225.12,-36.5C225.12,-36.5 145.38,-36.5 145.38,-36.5 139.38,-36.5 133.38,-30.5 133.38,-24.5 133.38,-24.5 133.38,-12 133.38,-12 133.38,-6 139.38,0 145.38,0 145.38,0 225.12,0 225.12,0 231.12,0 237.12,-6 237.12,-12 237.12,-12 237.12,-24.5 237.12,-24.5 237.12,-30.5 231.12,-36.5 225.12,-36.5" fill=#f9f9f9 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=185.25 xml:space=preserve y=-21.1>Continuação do</text><text font-family=Arial font-size=12.00 text-anchor=middle x=185.25 xml:space=preserve y=-6.85>programa</text></g><g class=edge id=edge8><title>ForCond->Continua</title><path d="M183.7,-78.2C183.93,-69.39 184.22,-58.44 184.49,-48.38" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="187.98,-48.65 184.74,-38.56 180.98,-48.47 187.98,-48.65" fill=#333333 stroke=#333333 stroke-width=1.2 /><text font-family=Arial font-size=10.00 text-anchor=middle x=195.24 xml:space=preserve y=-54>NÃO</text></g><g class=node id=node6><title>ForInc</title><path d="M67.25,-114.5C67.25,-114.5 37.25,-114.5 37.25,-114.5 31.25,-114.5 25.25,-108.5 25.25,-102.5 25.25,-102.5 25.25,-90.5 25.25,-90.5 25.25,-84.5 31.25,-78.5 37.25,-78.5 37.25,-78.5 67.25,-78.5 67.25,-78.5 73.25,-78.5 79.25,-84.5 79.25,-90.5 79.25,-90.5 79.25,-102.5 79.25,-102.5 79.25,-108.5 73.25,-114.5 67.25,-114.5" fill=#f9f9f9 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=52.25 xml:space=preserve y=-92.22>c++){</text></g><g class=edge id=edge7><title>ForInc->ForCond</title><path d="M79.63,-96.5C94.57,-96.5 109.52,-96.5 124.46,-96.5" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="124.07,-100 134.07,-96.5 124.07,-93 124.07,-100" fill=#333333 stroke=#333333 stroke-width=1.2 /></g><g class=edge id=edge6><title>Print->ForInc</title><path d="M52.25,-36.75C52.25,-45.59 52.25,-56.55 52.25,-66.59" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="48.75,-66.38 52.25,-76.38 55.75,-66.38 48.75,-66.38" fill=#333333 stroke=#333333 stroke-width=1.2 /></g></g></svg></div></div><h3 id=flexibilidade-e-comparação-com-o-while><span class=heading-text>Flexibilidade e Comparação com o while</span><span class=heading-arabic>6.5.1</span></h3><p>O comando <strong>for</strong> respeita as mesmas normas de sintaxe que o <strong>if</strong> e o <strong>while</strong>: a condição pode envolver qualquer expressão lógica ou matemática, e o uso de chaves <code>{ }</code> é indispensável para agrupar múltiplos comandos. Para facilitar a compreensão, veja como uma mesma tarefa (somar números de 1 a 10) pode ser escrita em ambas as estruturas:</p><div style=gap:2%;display:flex><div style=width:49%><pre class="line-numbers language-c" data-lang=C><code class=language-c>
+</code></pre>
+<p>Podemos ter uma visão diferente, talvez mais intuitiva para você, através do seguinte diagrama de blocos:</p>
+<div class="error">Graphviz error: failed to execute PosixPath('dot'), make sure the Graphviz executables are on your systems' PATH</div>
+
+<h3 id="flexibilidade-e-comparação-com-o-while"><span class="heading-text">Flexibilidade e Comparação com o while</span><span class="heading-arabic">6.5.1</span></h3>
+<p>O comando <strong>for</strong> respeita as mesmas normas de sintaxe que o <strong>if</strong> e o <strong>while</strong>: a condição pode envolver qualquer expressão lógica ou matemática, e o uso de chaves <code>{ }</code> é indispensável para agrupar múltiplos comandos. Para facilitar a compreensão, veja como uma mesma tarefa (somar números de 1 a 10) pode ser escrita em ambas as estruturas:</p>
+<div style="display: flex; gap: 2%"><div style="width: 49%">
+
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">
 // Versão com FOR
 for(i = 1; i &lt;= 10; i++){
     s = s + i;
 }
-</code></pre></div><div style=width:49%><pre class="line-numbers language-c" data-lang=C><code class=language-c>
+</code></pre>
+</div><div style="width: 49%">
+
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">
 // Versão com WHILE
 i = 1;
 while (i &lt;= 10){
     s = s + i;
     i++;
 }
-</code></pre></div></div><h3 id=omitindo-cláusulas-no-for><span class=heading-text>Omitindo Cláusulas no for</span><span class=heading-arabic>6.5.2</span></h3><p>Você pode omitir qualquer uma das três cláusulas do <strong>for</strong> (inicialização, condição ou incremento), dependendo da lógica do seu programa. Entretanto, é obrigatório manter os dois operadores de ponto e vírgula (<code>;</code>), que servem como delimitadores para o compilador.</p><ul><li><strong>Sem Inicialização</strong>: Útil quando a variável de controle já foi definida anteriormente no código.<pre class="line-numbers language-c" data-lang=C><code class=language-c>for (; a &lt;= b; a++) { ... }
-</code></pre></li><li><strong>Sem Condição</strong>: Cria um <strong>laço infinito</strong>, pois a ausência de teste é interpretada como uma condição sempre verdadeira.<pre class="line-numbers language-c" data-lang=C><code class=language-c>for (c = a; ; c++) { ... }
-</code></pre></li><li><strong>Sem Incremento</strong>: Frequentemente utilizado quando a atualização da variável ocorre de forma personalizada dentro do bloco de comandos.<pre class="line-numbers language-c" data-lang=C><code class=language-c>for (c = a; c &lt;= b; ) {
-    printf("%d \n", c);
+</code></pre>
+</div></div>
+
+<h3 id="omitindo-cláusulas-no-for"><span class="heading-text">Omitindo Cláusulas no for</span><span class="heading-arabic">6.5.2</span></h3>
+<p>Você pode omitir qualquer uma das três cláusulas do <strong>for</strong> (inicialização, condição ou incremento), dependendo da lógica do seu programa. Entretanto, é obrigatório manter os dois operadores de ponto e vírgula (<code>;</code>), que servem como delimitadores para o compilador.</p>
+<ul>
+<li><strong>Sem Inicialização</strong>: Útil quando a variável de controle já foi definida anteriormente no código.<pre class="line-numbers language-c" data-lang="C"><code class="language-c">for (; a &lt;= b; a++) { ... }
+</code></pre>
+</li>
+<li><strong>Sem Condição</strong>: Cria um <strong>laço infinito</strong>, pois a ausência de teste é interpretada como uma condição sempre verdadeira.<pre class="line-numbers language-c" data-lang="C"><code class="language-c">for (c = a; ; c++) { ... }
+</code></pre>
+</li>
+<li><strong>Sem Incremento</strong>: Frequentemente utilizado quando a atualização da variável ocorre de forma personalizada dentro do bloco de comandos.<pre class="line-numbers language-c" data-lang="C"><code class="language-c">for (c = a; c &lt;= b; ) {
+    printf(&quot;%d \n&quot;, c);
     c++; // Incremento manual
 }
-</code></pre></li></ul><div class="callout callout-tip"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .5 2.2 1.5 3.1.7.7 1.3 1.5 1.5 2.4"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span><span class=callout-title-inner>Além do Simples Incremento<br></span></div><div class=callout-content><p>A cláusula de incremento não se limita ao operador <code>++</code>. Você pode utilizar qualquer instrução que altere o valor da variável, como <code>c = c + 2</code> ou até mesmo um comando <code>scanf()</code>.</p></div></div><h3 id=operador-de-vírgula-e-tipos-de-dados><span class=heading-text>Operador de Vírgula e Tipos de Dados</span><span class=heading-arabic>6.5.3</span></h3><p>O operador vírgula (<code>,</code>) funciona como um separador, permitindo que você execute múltiplas instruções sequencialmente dentro das cláusulas do <strong>for</strong>. Isso possibilita, por exemplo, controlar duas variáveis simultaneamente no mesmo laço:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>for (i = 0, j = 100; i &lt; j; i++, j--) {
-    printf("i = %d e j = %d \n", i, j);
+</code></pre>
+</li>
+</ul>
+<div class="callout callout-tip">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .5 2.2 1.5 3.1.7.7 1.3 1.5 1.5 2.4"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span>
+    <span class="callout-title-inner">Além do Simples Incremento<br /></span>
+  </div>
+  <div class="callout-content">
+<p>A cláusula de incremento não se limita ao operador <code>++</code>. Você pode utilizar qualquer instrução que altere o valor da variável, como <code>c = c + 2</code> ou até mesmo um comando <code>scanf()</code>.</p>
+  </div>
+</div>
+<h3 id="operador-de-vírgula-e-tipos-de-dados"><span class="heading-text">Operador de Vírgula e Tipos de Dados</span><span class="heading-arabic">6.5.3</span></h3>
+<p>O operador vírgula (<code>,</code>) funciona como um separador, permitindo que você execute múltiplas instruções sequencialmente dentro das cláusulas do <strong>for</strong>. Isso possibilita, por exemplo, controlar duas variáveis simultaneamente no mesmo laço:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">for (i = 0, j = 100; i &lt; j; i++, j--) {
+    printf(&quot;i = %d e j = %d \n&quot;, i, j);
 }
-</code></pre><p>Além disso, a variável de controle não precisa ser apenas do tipo <code>int</code>. Você pode utilizar uma variável do tipo <code>char</code> para percorrer, por exemplo, o alfabeto de 'A' até 'Z'.</p><h2 id=comando-do-while><span class=heading-text>Comando do-while</span><span class=heading-arabic>6.6</span></h2><p>O comando <strong>do-while</strong> é uma estrutura de repetição bastante similar ao <strong>while</strong>, porém com uma diferença fundamental na ordem de processamento: enquanto o <strong>while</strong> avalia a condição antes de executar os comandos, o <strong>do-while</strong> executa o bloco de instruções primeiro para somente depois testar a condição.</p><p>A forma geral do comando é:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>do {
+</code></pre>
+<p>Além disso, a variável de controle não precisa ser apenas do tipo <code>int</code>. Você pode utilizar uma variável do tipo <code>char</code> para percorrer, por exemplo, o alfabeto de 'A' até 'Z'.</p>
+<h2 id="comando-do-while"><span class="heading-text">Comando do-while</span><span class="heading-arabic">6.6</span></h2>
+<p>O comando <strong>do-while</strong> é uma estrutura de repetição bastante similar ao <strong>while</strong>, porém com uma diferença fundamental na ordem de processamento: enquanto o <strong>while</strong> avalia a condição antes de executar os comandos, o <strong>do-while</strong> executa o bloco de instruções primeiro para somente depois testar a condição.</p>
+<p>A forma geral do comando é:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">do {
     sequência de comandos;
 } while (condição);
-</code></pre><p>Ao utilizar o <strong>do-while</strong>, você garante que o programa siga esta ordem de execução:</p><ul><li><strong>Execução Inicial</strong>: A sequência de comandos dentro das chaves é processada imediatamente.</li><li><strong>Avaliação da Condição</strong>: Após a execução do bloco, o programa testa a expressão lógica.<ul><li>Se for <strong>verdadeira</strong> (valor diferente de zero), o fluxo retorna ao comando <code>do</code>, repetindo o bloco.</li><li>Se for <strong>falsa</strong> (zero), o laço é encerrado.</li></ul></li></ul><h3 id=diferença-prática-entre-while-e-do-while><span class=heading-text>Diferença Prática entre while e do-while</span><span class=heading-arabic>6.6.1</span></h3><p>A escolha entre essas duas estruturas depende de quantas vezes você precisa que o código seja executado no mínimo:</p><ul><li><strong>while</strong>: Como a condição é testada no início, se ela for falsa logo de cara, o bloco de comandos <strong>nunca</strong> será executado (zero ou mais repetições).</li><li><strong>do-while</strong>: Como a execução ocorre antes do teste, o bloco de comandos será processado <strong>pelo menos uma vez</strong>, independentemente da condição (uma ou mais repetições).</li></ul><div class=no-break><div class=centered><svg class="svg-graph graphviz-img" viewbox="0.00 0.00 266.00 535.00" data-sketch=true width=300 xmlns=http://www.w3.org/2000/svg><g transform="scale(1 1) rotate(0) translate(4 531)" class=graph id=graph0><title>Flowchart</title><polygon points="-4,4 -4,-531 262.31,-531 262.31,4 -4,4" fill=white stroke=none /><g class=node id=node1><title>Do</title><path d="M130.06,-527C130.06,-527 100.06,-527 100.06,-527 94.06,-527 88.06,-521 88.06,-515 88.06,-515 88.06,-503 88.06,-503 88.06,-497 94.06,-491 100.06,-491 100.06,-491 130.06,-491 130.06,-491 136.06,-491 142.06,-497 142.06,-503 142.06,-503 142.06,-515 142.06,-515 142.06,-521 136.06,-527 130.06,-527" fill=none stroke=none /><text font-family=Arial font-size=12.00 text-anchor=middle x=115.06 xml:space=preserve y=-504.73>do {</text></g><g class=node id=node2><title>Menu</title><path d="M194.68,-460C194.68,-460 35.43,-460 35.43,-460 29.43,-460 23.43,-454 23.43,-448 23.43,-448 23.43,-436 23.43,-436 23.43,-430 29.43,-424 35.43,-424 35.43,-424 194.68,-424 194.68,-424 200.68,-424 206.68,-430 206.68,-436 206.68,-436 206.68,-448 206.68,-448 206.68,-454 200.68,-460 194.68,-460" fill=#f9f9f9 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=115.06 xml:space=preserve y=-437.73>printf ("Escolha uma opção:\n");</text></g><g class=node id=node3><title>Op1</title><path d="M147.43,-393C147.43,-393 34.68,-393 34.68,-393 28.68,-393 22.68,-387 22.68,-381 22.68,-381 22.68,-369 22.68,-369 22.68,-363 28.68,-357 34.68,-357 34.68,-357 147.43,-357 147.43,-357 153.43,-357 159.43,-363 159.43,-369 159.43,-369 159.43,-381 159.43,-381 159.43,-387 153.43,-393 147.43,-393" fill=#f9f9f9 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=91.06 xml:space=preserve y=-370.73>printf ("(1) Opção 1\n");</text></g><g class=edge id=edge2><title>Menu->Op1</title><path d="M108.63,-423.58C106.42,-417.61 103.89,-410.76 101.45,-404.15" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="104.88,-403.34 98.14,-395.17 98.32,-405.76 104.88,-403.34" fill=#333333 stroke=#333333 stroke-width=1.2 /></g><g class=node id=node4><title>Op2</title><path d="M147.43,-326C147.43,-326 34.68,-326 34.68,-326 28.68,-326 22.68,-320 22.68,-314 22.68,-314 22.68,-302 22.68,-302 22.68,-296 28.68,-290 34.68,-290 34.68,-290 147.43,-290 147.43,-290 153.43,-290 159.43,-296 159.43,-302 159.43,-302 159.43,-314 159.43,-314 159.43,-320 153.43,-326 147.43,-326" fill=#f9f9f9 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=91.06 xml:space=preserve y=-303.73>printf ("(2) Opção 2\n");</text></g><g class=edge id=edge3><title>Op1->Op2</title><path d="M91.06,-356.58C91.06,-350.9 91.06,-344.42 91.06,-338.12" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="94.56,-338.28 91.06,-328.28 87.56,-338.28 94.56,-338.28" fill=#333333 stroke=#333333 stroke-width=1.2 /></g><g class=node id=node5><title>Op3</title><path d="M147.43,-248C147.43,-248 34.68,-248 34.68,-248 28.68,-248 22.68,-242 22.68,-236 22.68,-236 22.68,-224 22.68,-224 22.68,-218 28.68,-212 34.68,-212 34.68,-212 147.43,-212 147.43,-212 153.43,-212 159.43,-218 159.43,-224 159.43,-224 159.43,-236 159.43,-236 159.43,-242 153.43,-248 147.43,-248" fill=#f9f9f9 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=91.06 xml:space=preserve y=-225.72>printf ("(3) Opção 3\n");</text></g><g class=edge id=edge4><title>Op2->Op3</title><path d="M91.06,-289.75C91.06,-280.97 91.06,-270.06 91.06,-260.03" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="94.56,-260.26 91.06,-250.26 87.56,-260.26 94.56,-260.26" fill=#333333 stroke=#333333 stroke-width=1.2 /></g><g class=node id=node6><title>Scan</title><path d="M141.81,-181C141.81,-181 70.31,-181 70.31,-181 64.31,-181 58.31,-175 58.31,-169 58.31,-169 58.31,-157 58.31,-157 58.31,-151 64.31,-145 70.31,-145 70.31,-145 141.81,-145 141.81,-145 147.81,-145 153.81,-151 153.81,-157 153.81,-157 153.81,-169 153.81,-169 153.81,-175 147.81,-181 141.81,-181" fill=#f9f9f9 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=106.06 xml:space=preserve y=-158.72>scanf("%d",&i);</text></g><g class=edge id=edge5><title>Op3->Scan</title><path d="M95.08,-211.58C96.42,-205.75 97.96,-199.09 99.45,-192.64" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="102.78,-193.77 101.62,-183.24 95.96,-192.19 102.78,-193.77" fill=#333333 stroke=#333333 stroke-width=1.2 /></g><g class=node id=node7><title>While</title><polygon points="118.06,-114 29.46,-96 118.06,-78 206.66,-96 118.06,-114" fill=#fff9c4 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=118.06 xml:space=preserve y=-91.72>((i &lt; 1) || (i > 3));</text></g><g class=edge id=edge6><title>Scan->While</title><path d="M109.27,-144.58C110.39,-138.56 111.66,-131.66 112.89,-125.01" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="116.3,-125.83 114.67,-115.36 109.41,-124.55 116.3,-125.83" fill=#333333 stroke=#333333 stroke-width=1.2 /></g><g class=edge id=edge7><title>While:e->Menu:e</title><path d="M209.86,-96C239.26,-96 214.06,-132.61 214.06,-162 214.06,-376 214.06,-376 214.06,-376 214.06,-400.17 229.6,-429.1 218.92,-438.71" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="218.04,-435.32 209.43,-441.49 220.01,-442.04 218.04,-435.32" fill=#333333 stroke=#333333 stroke-width=1.2 /><text font-family=Arial font-size=10.00 text-anchor=middle x=223.06 xml:space=preserve y=-265.5>SIM</text></g><g class=node id=node8><title>Result</title><path d="M246.31,-36C246.31,-36 39.81,-36 39.81,-36 33.81,-36 27.81,-30 27.81,-24 27.81,-24 27.81,-12 27.81,-12 27.81,-6 33.81,0 39.81,0 39.81,0 246.31,0 246.31,0 252.31,0 258.31,-6 258.31,-12 258.31,-12 258.31,-24 258.31,-24 258.31,-30 252.31,-36 246.31,-36" fill=#f9f9f9 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=143.06 xml:space=preserve y=-13.72>printf ("Você escolheu a Opção %d.\n",i);</text></g><g class=edge id=edge8><title>While:w->Result:w</title><path d="M26.25,-96C-4.21,-96 -7.48,-35.75 15.72,-21.15" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="16.4,-24.6 25.06,-18.5 14.49,-17.87 16.4,-24.6" fill=#333333 stroke=#333333 stroke-width=1.2 /><text font-family=Arial font-size=10.00 text-anchor=middle x=27.36 xml:space=preserve y=-53.5>NÃO } while</text></g></g></svg></div></div><p>O exemplo abaixo ilustra o uso do <strong>do-while</strong> para criar um menu de opções. O programa exibe as alternativas e captura a sua entrada, repetindo o processo enquanto você digitar um valor inválido:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>#include &lt;stdio.h>
-#include &lt;stdlib.h>
+</code></pre>
+<p>Ao utilizar o <strong>do-while</strong>, você garante que o programa siga esta ordem de execução:</p>
+<ul>
+<li><strong>Execução Inicial</strong>: A sequência de comandos dentro das chaves é processada imediatamente.</li>
+<li><strong>Avaliação da Condição</strong>: Após a execução do bloco, o programa testa a expressão lógica.<ul>
+<li>Se for <strong>verdadeira</strong> (valor diferente de zero), o fluxo retorna ao comando <code>do</code>, repetindo o bloco.</li>
+<li>Se for <strong>falsa</strong> (zero), o laço é encerrado.</li>
+</ul>
+</li>
+</ul>
+<h3 id="diferença-prática-entre-while-e-do-while"><span class="heading-text">Diferença Prática entre while e do-while</span><span class="heading-arabic">6.6.1</span></h3>
+<p>A escolha entre essas duas estruturas depende de quantas vezes você precisa que o código seja executado no mínimo:</p>
+<ul>
+<li><strong>while</strong>: Como a condição é testada no início, se ela for falsa logo de cara, o bloco de comandos <strong>nunca</strong> será executado (zero ou mais repetições).</li>
+<li><strong>do-while</strong>: Como a execução ocorre antes do teste, o bloco de comandos será processado <strong>pelo menos uma vez</strong>, independentemente da condição (uma ou mais repetições).</li>
+</ul>
+<div class="error">Graphviz error: failed to execute PosixPath('dot'), make sure the Graphviz executables are on your systems' PATH</div>
+
+<p>O exemplo abaixo ilustra o uso do <strong>do-while</strong> para criar um menu de opções. O programa exibe as alternativas e captura a sua entrada, repetindo o processo enquanto você digitar um valor inválido:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
 
 int main(){
     int i;
     do {
-        printf ("Escolha uma opcao:\n");
-        printf ("(1) Opção 1\n");
-        printf ("(2) Opção 2\n");
-        printf ("(3) Opção 3\n");
-        scanf("%d", &i);
-    } while ((i &lt; 1) || (i > 3));
+        printf (&quot;Escolha uma opcao:\n&quot;);
+        printf (&quot;(1) Opção 1\n&quot;);
+        printf (&quot;(2) Opção 2\n&quot;);
+        printf (&quot;(3) Opção 3\n&quot;);
+        scanf(&quot;%d&quot;, &amp;i);
+    } while ((i &lt; 1) || (i &gt; 3));
 
-    printf ("Voce escolheu a Opcao %d.\n", i);
-    system("pause");
+    printf (&quot;Voce escolheu a Opcao %d.\n&quot;, i);
+    system(&quot;pause&quot;);
     return 0;
 }
-</code></pre><h3 id=regras-de-sintaxe-importantes><span class=heading-text>Regras de Sintaxe Importantes</span><span class=heading-arabic>6.6.2</span></h3><p>O comando <strong>do-while</strong> segue as mesmas recomendações de uso de chaves e definições lógicas dos comandos anteriores. No entanto, ele possui uma particularidade sintática exclusiva:</p><div class="callout callout-warning"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span><span class=callout-title-inner>Uso Obrigatório do Ponto e Vírgula<br></span></div><div class=callout-content><p>Diferente do <code>if</code>, <code>while</code> ou <code>for</code>, você <strong>deve</strong> colocar um ponto e vírgula (<code>;</code>) logo após o fechamento do parêntese da condição do <strong>do-while</strong>.</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>do {
-    printf("Valor %d\n", i);
+</code></pre>
+<h3 id="regras-de-sintaxe-importantes"><span class="heading-text">Regras de Sintaxe Importantes</span><span class="heading-arabic">6.6.2</span></h3>
+<p>O comando <strong>do-while</strong> segue as mesmas recomendações de uso de chaves e definições lógicas dos comandos anteriores. No entanto, ele possui uma particularidade sintática exclusiva:</p>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Uso Obrigatório do Ponto e Vírgula<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Diferente do <code>if</code>, <code>while</code> ou <code>for</code>, você <strong>deve</strong> colocar um ponto e vírgula (<code>;</code>) logo após o fechamento do parêntese da condição do <strong>do-while</strong>.</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">do {
+    printf(&quot;Valor %d\n&quot;, i);
     i++;
 } while(i &lt; 10); // Este ponto e vírgula é obrigatório!
-</code></pre></div></div><p>Essa exigência ocorre porque a condição é o último elemento da estrutura. O ponto e vírgula sinaliza ao compilador que a definição daquele laço específico foi finalizada. Assim como nas outras estruturas de repetição, lembre-se que é sua responsabilidade garantir que a variável de controle seja alterada dentro do bloco para evitar um <strong>laço infinito</strong>.</p><h2 id=aninhamento-de-repetições><span class=heading-text>Aninhamento de Repetições</span><span class=heading-arabic>6.7</span></h2><p>Uma <strong>repetição aninhada</strong> ocorre quando você utiliza um comando de repetição dentro do bloco de comandos de outro comando de repetição. Essa estrutura é conceitualmente idêntica ao aninhamento que você já praticou com o comando <strong>if</strong>, permitindo criar ciclos de execução dentro de outros ciclos.</p><p>A forma geral de uma repetição aninhada é:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>repetição (condição 1) {
+</code></pre></p>
+  </div>
+</div>
+<p>Essa exigência ocorre porque a condição é o último elemento da estrutura. O ponto e vírgula sinaliza ao compilador que a definição daquele laço específico foi finalizada. Assim como nas outras estruturas de repetição, lembre-se que é sua responsabilidade garantir que a variável de controle seja alterada dentro do bloco para evitar um <strong>laço infinito</strong>.</p>
+<h2 id="aninhamento-de-repetições"><span class="heading-text">Aninhamento de Repetições</span><span class="heading-arabic">6.7</span></h2>
+<p>Uma <strong>repetição aninhada</strong> ocorre quando você utiliza um comando de repetição dentro do bloco de comandos de outro comando de repetição. Essa estrutura é conceitualmente idêntica ao aninhamento que você já praticou com o comando <strong>if</strong>, permitindo criar ciclos de execução dentro de outros ciclos.</p>
+<p>A forma geral de uma repetição aninhada é:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">repetição (condição 1) {
     sequência de comandos;
     repetição (condição 2) {
         sequência de comandos;
         repetição...
     }
 }
-</code></pre><p>Neste contexto, o termo "repetição" pode representar qualquer um dos três comandos da linguagem <strong>C</strong>: <strong>while</strong>, <strong>for</strong> ou <strong>do-while</strong>.</p><p>Durante a execução, o programa avalia primeiramente a <strong>condição 1</strong>. Se o resultado for verdadeiro (diferente de zero), ele inicia o processamento do seu bloco interno, o que inclui a avaliação da <strong>condição 2</strong>. É fundamental notar que os comandos da segunda repetição só serão processados se a condição da primeira for satisfeita. Esse comportamento se replica em cascata para cada novo nível de aninhamento que você encontrar.</p><h3 id=aplicação-prática><span class=heading-text>Aplicação Prática</span><span class=heading-arabic>6.7.1</span></h3><p>O aninhamento de repetições é extremamente útil quando você precisa percorrer dois ou mais conjuntos de valores relacionados. Um exemplo clássico é a impressão de uma <strong>matriz identidade</strong> de tamanho $4 \times 4$. Para realizar essa tarefa, você precisa percorrer as quatro linhas da matriz e, para cada uma dessas linhas, percorrer as suas quatro colunas correspondentes. Um único comando de repetição não seria suficiente para gerenciar essas duas dimensões simultaneamente.</p><p>Abaixo, você pode comparar como essa lógica é implementada utilizando diferentes estruturas:</p><div style=gap:2%;display:flex><div style=width:49%><pre class="line-numbers language-c" data-lang=C><code class=language-c>// Versão com FOR
-#include &lt;stdio.h>
-#include &lt;stdlib.h>
+</code></pre>
+<p>Neste contexto, o termo &quot;repetição&quot; pode representar qualquer um dos três comandos da linguagem <strong>C</strong>: <strong>while</strong>, <strong>for</strong> ou <strong>do-while</strong>.</p>
+<p>Durante a execução, o programa avalia primeiramente a <strong>condição 1</strong>. Se o resultado for verdadeiro (diferente de zero), ele inicia o processamento do seu bloco interno, o que inclui a avaliação da <strong>condição 2</strong>. É fundamental notar que os comandos da segunda repetição só serão processados se a condição da primeira for satisfeita. Esse comportamento se replica em cascata para cada novo nível de aninhamento que você encontrar.</p>
+<h3 id="aplicação-prática"><span class="heading-text">Aplicação Prática</span><span class="heading-arabic">6.7.1</span></h3>
+<p>O aninhamento de repetições é extremamente útil quando você precisa percorrer dois ou mais conjuntos de valores relacionados. Um exemplo clássico é a impressão de uma <strong>matriz identidade</strong> de tamanho $4 \times 4$. Para realizar essa tarefa, você precisa percorrer as quatro linhas da matriz e, para cada uma dessas linhas, percorrer as suas quatro colunas correspondentes. Um único comando de repetição não seria suficiente para gerenciar essas duas dimensões simultaneamente.</p>
+<p>Abaixo, você pode comparar como essa lógica é implementada utilizando diferentes estruturas:</p>
+<div style="display: flex; gap: 2%"><div style="width: 49%">
+
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">// Versão com FOR
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
 
 int main(){
     int i, j;
     for (i = 1; i &lt; 5; i++){
         for (j = 1; j &lt; 5; j++){
             if(i == j)
-                printf("1 ");
+                printf(&quot;1 &quot;);
             else
-                printf("0 ");
+                printf(&quot;0 &quot;);
         }
-        printf("\n");
+        printf(&quot;\n&quot;);
     }
-    system("pause");
+    system(&quot;pause&quot;);
     return 0;
 }
-</code></pre></div><div style=width:49%><pre class="line-numbers language-c" data-lang=C><code class=language-c>// Versão com WHILE
-#include &lt;stdio.h>
-#include &lt;stdlib.h>
+</code></pre>
+</div><div style="width: 49%">
+
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">// Versão com WHILE
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
 
 int main(){
     int i = 1, j;
@@ -133,63 +528,288 @@ int main(){
         j = 1;
         while(j &lt; 5){
             if(i == j)
-                printf("1 ");
+                printf(&quot;1 &quot;);
             else
-                printf("0 ");
+                printf(&quot;0 &quot;);
             j++;
         }
-        printf("\n");
+        printf(&quot;\n&quot;);
         i++;
     }
-    system("pause");
+    system(&quot;pause&quot;);
     return 0;
 }
-</code></pre></div></div><div class="callout callout-tip"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .5 2.2 1.5 3.1.7.7 1.3 1.5 1.5 2.4"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span><span class=callout-title-inner>Flexibilidade no Aninhamento<br></span></div><div class=callout-content><p>A linguagem <strong>C</strong> permite que você misture tipos diferentes de comandos de repetição em um aninhamento. Você pode, por exemplo, utilizar um <strong>for</strong> como laço externo e um <strong>while</strong> como laço interno, ou qualquer outra combinação que melhor atenda à lógica do seu programa.</p></div></div><h2 id=comando-continue><span class=heading-text>Comando continue</span><span class=heading-arabic>6.8</span></h2><p>O comando <strong>continue</strong> é outro recurso de controle de fluxo utilizado exclusivamente dentro de estruturas de repetição como <strong>for</strong>, <strong>while</strong> e <strong>do-while</strong>. Enquanto o comando <code>break</code> interrompe e encerra o laço definitivamente, o <strong>continue</strong> interrompe apenas a iteração atual, saltando imediatamente para o próximo ciclo de execução da repetição.</p><p>Quando o programa encontra um <strong>continue</strong>, todos os comandos que estiverem abaixo dele, dentro do corpo do laço, são ignorados naquela volta específica. Em um laço <strong>for</strong>, o fluxo salta para a etapa de incremento; em laços <strong>while</strong> ou <strong>do-while</strong>, o programa retorna direto para o teste da condição.</p><p>O exemplo a seguir demonstra o uso do <strong>continue</strong> para imprimir apenas números ímpares entre <strong>a</strong> e <strong>b</strong>:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>#include &lt;stdio.h>
-#include &lt;stdlib.h>
+</code></pre>
+</div></div>
+
+<div class="callout callout-tip">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .5 2.2 1.5 3.1.7.7 1.3 1.5 1.5 2.4"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span>
+    <span class="callout-title-inner">Flexibilidade no Aninhamento<br /></span>
+  </div>
+  <div class="callout-content">
+<p>A linguagem <strong>C</strong> permite que você misture tipos diferentes de comandos de repetição em um aninhamento. Você pode, por exemplo, utilizar um <strong>for</strong> como laço externo e um <strong>while</strong> como laço interno, ou qualquer outra combinação que melhor atenda à lógica do seu programa.</p>
+  </div>
+</div>
+<h2 id="comando-continue"><span class="heading-text">Comando continue</span><span class="heading-arabic">6.8</span></h2>
+<p>O comando <strong>continue</strong> é outro recurso de controle de fluxo utilizado exclusivamente dentro de estruturas de repetição como <strong>for</strong>, <strong>while</strong> e <strong>do-while</strong>. Enquanto o comando <code>break</code> interrompe e encerra o laço definitivamente, o <strong>continue</strong> interrompe apenas a iteração atual, saltando imediatamente para o próximo ciclo de execução da repetição.</p>
+<p>Quando o programa encontra um <strong>continue</strong>, todos os comandos que estiverem abaixo dele, dentro do corpo do laço, são ignorados naquela volta específica. Em um laço <strong>for</strong>, o fluxo salta para a etapa de incremento; em laços <strong>while</strong> ou <strong>do-while</strong>, o programa retorna direto para o teste da condição.</p>
+<p>O exemplo a seguir demonstra o uso do <strong>continue</strong> para imprimir apenas números ímpares entre <strong>a</strong> e <strong>b</strong>:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
 
 int main(){
     int a, b;
-    printf("Digite o valor de a: ");
-    scanf("%d", &a);
-    printf("Digite o valor de b: ");
-    scanf("%d", &b);
+    printf(&quot;Digite o valor de a: &quot;);
+    scanf(&quot;%d&quot;, &amp;a);
+    printf(&quot;Digite o valor de b: &quot;);
+    scanf(&quot;%d&quot;, &amp;b);
 
     while (a &lt;= b){
         a = a + 1;
         if(a % 2 == 0)
             continue; // Pula a impressão se o número for par
-        printf("%d \n", a);
+        printf(&quot;%d \n&quot;, a);
     }
 
-    system("pause");
+    system(&quot;pause&quot;);
     return 0;
 }
-</code></pre><p>Abaixo, você pode visualizar a lógica de execução deste comando através do fluxograma:</p><div class=no-break><div class=centered><svg class="svg-graph graphviz-img" viewbox="0.00 0.00 320.00 279.00" data-sketch=true width=350 xmlns=http://www.w3.org/2000/svg><g transform="scale(1 1) rotate(0) translate(4 274.5)" class=graph id=graph0><title>Flowchart</title><polygon points="-4,4 -4,-274.5 315.72,-274.5 315.72,4 -4,4" fill=white stroke=none /><g class=node id=node1><title>WhileCond</title><polygon points="90.59,-270.5 5.36,-252.5 90.59,-234.5 175.81,-252.5 90.59,-270.5" fill=#fff9c4 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=90.59 xml:space=preserve y=-248.22>while (a &lt;= b) {</text></g><g class=node id=node2><title>Soma</title><path d="M110.96,-192.5C110.96,-192.5 70.21,-192.5 70.21,-192.5 64.21,-192.5 58.21,-186.5 58.21,-180.5 58.21,-180.5 58.21,-168.5 58.21,-168.5 58.21,-162.5 64.21,-156.5 70.21,-156.5 70.21,-156.5 110.96,-156.5 110.96,-156.5 116.96,-156.5 122.96,-162.5 122.96,-168.5 122.96,-168.5 122.96,-180.5 122.96,-180.5 122.96,-186.5 116.96,-192.5 110.96,-192.5" fill=#f9f9f9 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=90.59 xml:space=preserve y=-170.22>a = a + 1;</text></g><g class=edge id=edge1><title>WhileCond->Soma</title><path d="M90.59,-234.25C90.59,-225.47 90.59,-214.56 90.59,-204.53" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="94.09,-204.76 90.59,-194.76 87.09,-204.76 94.09,-204.76" fill=#333333 stroke=#333333 stroke-width=1.2 /><text font-family=Arial font-size=10.00 text-anchor=middle x=99.59 xml:space=preserve y=-210>SIM</text></g><g class=node id=node6><title>Continua</title><path d="M121.46,-36.5C121.46,-36.5 41.71,-36.5 41.71,-36.5 35.71,-36.5 29.71,-30.5 29.71,-24.5 29.71,-24.5 29.71,-12 29.71,-12 29.71,-6 35.71,0 41.71,0 41.71,0 121.46,0 121.46,0 127.46,0 133.46,-6 133.46,-12 133.46,-12 133.46,-24.5 133.46,-24.5 133.46,-30.5 127.46,-36.5 121.46,-36.5" fill=#f9f9f9 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=81.59 xml:space=preserve y=-21.1>Continuação do</text><text font-family=Arial font-size=12.00 text-anchor=middle x=81.59 xml:space=preserve y=-6.85>programa</text></g><g class=edge id=edge2><title>WhileCond->Continua:w</title><path d="M76.36,-237.52C65.44,-226.18 50.58,-209.36 40.59,-192.5 21.65,-160.55 17.37,-151.02 10.59,-114.5 3.45,-76.05 -11.37,-29 17.26,-19.84" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="17.49,-23.34 26.91,-18.5 16.53,-16.41 17.49,-23.34" fill=#333333 stroke=#333333 stroke-width=1.2 /><text font-family=Arial font-size=10.00 text-anchor=middle x=40.1 xml:space=preserve y=-132>NÃO while</text></g><g class=node id=node3><title>IfBreak</title><polygon points="90.59,-114.5 28.3,-96.5 90.59,-78.5 152.87,-96.5 90.59,-114.5" fill=#fff9c4 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=90.59 xml:space=preserve y=-92.22>if (a == 5){</text></g><g class=edge id=edge3><title>Soma->IfBreak</title><path d="M90.59,-156.25C90.59,-147.47 90.59,-136.56 90.59,-126.53" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="94.09,-126.76 90.59,-116.76 87.09,-126.76 94.09,-126.76" fill=#333333 stroke=#333333 stroke-width=1.2 /></g><g class=node id=node4><title>BreakNode</title><path d="M266.59,-114.5C266.59,-114.5 236.59,-114.5 236.59,-114.5 230.59,-114.5 224.59,-108.5 224.59,-102.5 224.59,-102.5 224.59,-90.5 224.59,-90.5 224.59,-84.5 230.59,-78.5 236.59,-78.5 236.59,-78.5 266.59,-78.5 266.59,-78.5 272.59,-78.5 278.59,-84.5 278.59,-90.5 278.59,-90.5 278.59,-102.5 278.59,-102.5 278.59,-108.5 272.59,-114.5 266.59,-114.5" fill=#ffebee stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=251.59 xml:space=preserve y=-92.22>break;</text></g><g class=edge id=edge4><title>IfBreak->BreakNode</title><path d="M154.22,-96.5C173.97,-96.5 195.15,-96.5 212.69,-96.5" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="212.66,-100 222.66,-96.5 212.66,-93 212.66,-100" fill=#333333 stroke=#333333 stroke-width=1.2 /><text font-family=Arial font-size=10.00 text-anchor=middle x=188.73 xml:space=preserve y=-102>SIM</text></g><g class=node id=node5><title>Print</title><path d="M293.71,-36.25C293.71,-36.25 209.46,-36.25 209.46,-36.25 203.46,-36.25 197.46,-30.25 197.46,-24.25 197.46,-24.25 197.46,-12.25 197.46,-12.25 197.46,-6.25 203.46,-0.25 209.46,-0.25 209.46,-0.25 293.71,-0.25 293.71,-0.25 299.71,-0.25 305.71,-6.25 305.71,-12.25 305.71,-12.25 305.71,-24.25 305.71,-24.25 305.71,-30.25 299.71,-36.25 293.71,-36.25" fill=#f9f9f9 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=251.59 xml:space=preserve y=-13.97>printf("%d \n",a); }</text></g><g class=edge id=edge5><title>IfBreak->Print</title><path d="M113.31,-84.74C136.78,-73.62 174.09,-55.95 204.05,-41.76" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="205.53,-44.93 213.07,-37.49 202.53,-38.61 205.53,-44.93" fill=#333333 stroke=#333333 stroke-width=1.2 /><text font-family=Arial font-size=10.00 text-anchor=middle x=195.72 xml:space=preserve y=-54>NÃO if</text></g><g class=edge id=edge6><title>BreakNode:s->Continua</title><path d="M251.59,-78.5C251.59,-56.25 173.46,-71.21 152.59,-63.5 139.31,-58.6 125.85,-51.01 114.27,-43.5" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="116.39,-40.7 106.14,-38 112.47,-46.5 116.39,-40.7" fill=#333333 stroke=#333333 stroke-width=1.2 /></g><g class=edge id=edge7><title>Print:e->WhileCond:e</title><path d="M306.71,-18.25C313.12,-18.25 333.86,-240.76 190.48,-252.05" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="190.61,-248.55 180.75,-252.43 190.88,-255.54 190.61,-248.55" fill=#333333 stroke=#333333 stroke-width=1.2 /><text font-family=Arial font-size=10.00 text-anchor=middle x=306.51 xml:space=preserve y=-132></text></g></g></svg></div></div><div class="callout callout-important"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span><span class=callout-title-inner>Estratégia de Uso<br></span></div><div class=callout-content><p>Assim como ocorre com o <code>break</code>, o comando <strong>continue</strong> deve ser utilizado dentro de uma estrutura condicional (<code>if</code> ou <code>else</code>). Caso contrário, o programa saltaria todas as instruções abaixo dele em todas as iterações, impedindo a execução lógica do corpo do laço. No caso de laços <strong>while</strong>, você deve ter cuidado redobrado: se o incremento da variável de controle estiver posicionado após o <strong>continue</strong>, você criará acidentalmente um <strong>laço infinito</strong>, pois a variável nunca será atualizada.</p></div></div><h2 id=comando-continue><span class=heading-text>Comando continue</span><span class=heading-arabic>6.9</span></h2><p>O comando <strong>continue</strong> guarda semelhanças com o comando <code>break</code>, pois ambos ignoram o restante das instruções dentro de um laço. Entretanto, a diferença funcional é determinante: enquanto o <code>break</code> encerra o comando de repetição definitivamente, o <strong>continue</strong> interrompe apenas a iteração atual e salta para a próxima repetição do laço, caso ela exista.</p><p>Devido a essa característica, o <strong>continue</strong> é de uso exclusivo dentro de laços de repetição, ao contrário do <code>break</code>, que também pode ser aplicado no comando <code>switch</code>. Quando executado, o programa ignora os comandos restantes daquela volta específica e retorna imediatamente para testar a condição do laço (no caso do <code>while</code> e <code>do-while</code>) ou para a cláusula de incremento (no caso do <code>for</code>).</p><p>O exemplo abaixo ilustra um programa que imprime valores entre <strong>a</strong> e <strong>b</strong>, mas pula especificamente a impressão do número 5:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>#include &lt;stdio.h>
-#include &lt;stdlib.h>
+</code></pre>
+<p>Abaixo, você pode visualizar a lógica de execução deste comando através do fluxograma:</p>
+<div class="error">Graphviz error: failed to execute PosixPath('dot'), make sure the Graphviz executables are on your systems' PATH</div>
+
+<div class="callout callout-important">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">Estratégia de Uso<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Assim como ocorre com o <code>break</code>, o comando <strong>continue</strong> deve ser utilizado dentro de uma estrutura condicional (<code>if</code> ou <code>else</code>). Caso contrário, o programa saltaria todas as instruções abaixo dele em todas as iterações, impedindo a execução lógica do corpo do laço. No caso de laços <strong>while</strong>, você deve ter cuidado redobrado: se o incremento da variável de controle estiver posicionado após o <strong>continue</strong>, você criará acidentalmente um <strong>laço infinito</strong>, pois a variável nunca será atualizada.</p>
+  </div>
+</div>
+<h2 id="comando-continue"><span class="heading-text">Comando continue</span><span class="heading-arabic">6.9</span></h2>
+<p>O comando <strong>continue</strong> guarda semelhanças com o comando <code>break</code>, pois ambos ignoram o restante das instruções dentro de um laço. Entretanto, a diferença funcional é determinante: enquanto o <code>break</code> encerra o comando de repetição definitivamente, o <strong>continue</strong> interrompe apenas a iteração atual e salta para a próxima repetição do laço, caso ela exista.</p>
+<p>Devido a essa característica, o <strong>continue</strong> é de uso exclusivo dentro de laços de repetição, ao contrário do <code>break</code>, que também pode ser aplicado no comando <code>switch</code>. Quando executado, o programa ignora os comandos restantes daquela volta específica e retorna imediatamente para testar a condição do laço (no caso do <code>while</code> e <code>do-while</code>) ou para a cláusula de incremento (no caso do <code>for</code>).</p>
+<p>O exemplo abaixo ilustra um programa que imprime valores entre <strong>a</strong> e <strong>b</strong>, mas pula especificamente a impressão do número 5:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
 
 int main(){
     int a, b;
-    printf("Digite o valor de a: ");
-    scanf("%d", &a);
-    printf("Digite o valor de b: ");
-    scanf("%d", &b);
+    printf(&quot;Digite o valor de a: &quot;);
+    scanf(&quot;%d&quot;, &amp;a);
+    printf(&quot;Digite o valor de b: &quot;);
+    scanf(&quot;%d&quot;, &amp;b);
 
     while (a &lt;= b){
         a = a + 1;
         if(a == 5)
             continue; // Interrompe a iteração atual e volta ao teste do while
-        printf("%d \n", a);
+        printf(&quot;%d \n&quot;, a);
     }
 
-    system("pause");
+    system(&quot;pause&quot;);
     return 0;
 }
-</code></pre><h3 id=regras-de-uso-e-riscos-de-lógica><span class=heading-text>Regras de Uso e Riscos de Lógica</span><span class=heading-arabic>6.9.1</span></h3><p>Para utilizar o <strong>continue</strong> de forma didática e segura, você deve seguir estas orientações:</p><ul><li><strong>Uso com Condicionais</strong>: O comando deve estar sempre abrigado por um <code>if</code> ou <code>else</code> dentro da repetição. Isso garante que apenas iterações específicas, que atingirem um determinado resultado, sejam ignoradas.</li><li><strong>Risco de Laço Infinito</strong>: Se você posicionar o <strong>continue</strong> fora de uma estrutura condicional, o programa ignorará sistematicamente todas as execuções do laço. Além disso, em estruturas como o <code>while</code>, se o incremento da variável de controle estiver posicionado após o <strong>continue</strong>, você criará um <strong>laço infinito</strong>, pois o programa nunca chegará à linha que atualiza o valor da condição de parada.</li></ul><p>Abaixo, veja a representação visual do fluxo de execução do comando:</p><div class=no-break><div class=centered><svg class="svg-graph graphviz-img" viewbox="0.00 0.00 343.00 303.00" data-sketch=true width=350 xmlns=http://www.w3.org/2000/svg><g transform="scale(1 1) rotate(0) translate(4 298.5)" class=graph id=graph0><title>Flowchart</title><polygon points="-4,4 -4,-298.5 339.09,-298.5 339.09,4 -4,4" fill=white stroke=none /><g class=node id=node1><title>WhileCond</title><polygon points="101.38,-294.5 16.15,-276.5 101.37,-258.5 186.6,-276.5 101.38,-294.5" fill=#fff9c4 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=101.38 xml:space=preserve y=-272.23>while (a &lt;= b) {</text></g><g class=node id=node2><title>Soma</title><path d="M52.75,-204.25C52.75,-204.25 12,-204.25 12,-204.25 6,-204.25 0,-198.25 0,-192.25 0,-192.25 0,-180.25 0,-180.25 0,-174.25 6,-168.25 12,-168.25 12,-168.25 52.75,-168.25 52.75,-168.25 58.75,-168.25 64.75,-174.25 64.75,-180.25 64.75,-180.25 64.75,-192.25 64.75,-192.25 64.75,-198.25 58.75,-204.25 52.75,-204.25" fill=#f9f9f9 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=32.38 xml:space=preserve y=-181.97>a = a + 1;</text></g><g class=edge id=edge1><title>WhileCond->Soma</title><path d="M78.77,-262.96C70.9,-257.74 62.51,-251.12 56.38,-243.5 49.79,-235.33 44.72,-225.08 40.96,-215.58" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="44.3,-214.51 37.64,-206.27 37.7,-216.86 44.3,-214.51" fill=#333333 stroke=#333333 stroke-width=1.2 /><text font-family=Arial font-size=10.00 text-anchor=middle x=65.38 xml:space=preserve y=-228>SIM</text></g><g class=node id=node6><title>Continua</title><path d="M192.25,-204.5C192.25,-204.5 112.5,-204.5 112.5,-204.5 106.5,-204.5 100.5,-198.5 100.5,-192.5 100.5,-192.5 100.5,-180 100.5,-180 100.5,-174 106.5,-168 112.5,-168 112.5,-168 192.25,-168 192.25,-168 198.25,-168 204.25,-174 204.25,-180 204.25,-180 204.25,-192.5 204.25,-192.5 204.25,-198.5 198.25,-204.5 192.25,-204.5" fill=#f9f9f9 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=152.38 xml:space=preserve y=-189.1>Continuação do</text><text font-family=Arial font-size=12.00 text-anchor=middle x=152.38 xml:space=preserve y=-174.85>programa</text></g><g class=edge id=edge2><title>WhileCond->Continua:w</title><path d="M94.72,-259.54C86.49,-238.08 75.11,-201.29 88.52,-189.79" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="89.33,-193.21 97.77,-186.81 87.18,-186.54 89.33,-193.21" fill=#333333 stroke=#333333 stroke-width=1.2 /><text font-family=Arial font-size=10.00 text-anchor=middle x=99.73 xml:space=preserve y=-234>NÃO</text><text font-family=Arial font-size=10.00 text-anchor=middle x=99.73 xml:space=preserve y=-222>while</text></g><g class=node id=node3><title>IfCont</title><polygon points="70.38,-126 8.76,-108 70.37,-90 131.99,-108 70.38,-126" fill=#fff9c4 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=70.38 xml:space=preserve y=-103.72>if (a == 5):</text></g><g class=edge id=edge3><title>Soma->IfCont</title><path d="M41,-167.95C45.92,-158.06 52.19,-145.48 57.68,-134.48" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="60.68,-136.31 62,-125.8 54.41,-133.18 60.68,-136.31" fill=#333333 stroke=#333333 stroke-width=1.2 /></g><g class=node id=node4><title>ContNode</title><path d="M255.75,-126C255.75,-126 215,-126 215,-126 209,-126 203,-120 203,-114 203,-114 203,-102 203,-102 203,-96 209,-90 215,-90 215,-90 255.75,-90 255.75,-90 261.75,-90 267.75,-96 267.75,-102 267.75,-102 267.75,-114 267.75,-114 267.75,-120 261.75,-126 255.75,-126" fill=#e8f5e9 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=235.38 xml:space=preserve y=-103.72>continue;</text></g><g class=edge id=edge4><title>IfCont->ContNode</title><path d="M133.7,-108C152.89,-108 173.56,-108 191.21,-108" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="191.08,-111.5 201.08,-108 191.08,-104.5 191.08,-111.5" fill=#333333 stroke=#333333 stroke-width=1.2 /><text font-family=Arial font-size=10.00 text-anchor=middle x=167.49 xml:space=preserve y=-113.5>SIM</text></g><g class=node id=node5><title>Print</title><path d="M260.5,-36C260.5,-36 176.25,-36 176.25,-36 170.25,-36 164.25,-30 164.25,-24 164.25,-24 164.25,-12 164.25,-12 164.25,-6 170.25,0 176.25,0 176.25,0 260.5,0 260.5,0 266.5,0 272.5,-6 272.5,-12 272.5,-12 272.5,-24 272.5,-24 272.5,-30 266.5,-36 260.5,-36" fill=#f9f9f9 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=218.38 xml:space=preserve y=-13.72>printf("%d \n",a); }</text></g><g class=edge id=edge5><title>IfCont->Print</title><path d="M90.03,-95.31C112.65,-81.86 150.37,-59.44 179.08,-42.37" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="180.83,-45.39 187.64,-37.27 177.26,-39.38 180.83,-45.39" fill=#333333 stroke=#333333 stroke-width=1.2 /><text font-family=Arial font-size=10.00 text-anchor=middle x=172.86 xml:space=preserve y=-65.5>NÃO</text><text font-family=Arial font-size=10.00 text-anchor=middle x=172.86 xml:space=preserve y=-53.5>if</text></g><g class=edge id=edge6><title>ContNode:e->WhileCond:e</title><path d="M268.75,-108C306.63,-108 243.51,-249.39 200.85,-273.13" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="200.02,-269.73 191.46,-275.97 202.05,-276.43 200.02,-269.73" fill=#333333 stroke=#333333 stroke-width=1.2 /><text font-family=Arial font-size=10.00 text-anchor=middle x=271.2 xml:space=preserve y=-182.75></text></g><g class=edge id=edge7><title>Print:e->WhileCond:e</title><path d="M273.5,-18C373.77,-18 335.87,-171.22 266.38,-243.5 243.58,-267.21 230.1,-274.82 201.48,-276.24" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="201.46,-272.74 191.54,-276.46 201.61,-279.74 201.46,-272.74" fill=#333333 stroke=#333333 stroke-width=1.2 /><text font-family=Arial font-size=10.00 text-anchor=middle x=326.57 xml:space=preserve y=-143.5></text></g></g></svg></div></div><h2 id=questões><span class=heading-text>Questões</span><span class=heading-arabic>6.10</span></h2><p><strong>1.</strong> Escreva um programa em C que utilize um laço <code>for</code> para imprimir todos os números inteiros de 1 a 20 na tela.</p><ul><li><strong>Entrada:</strong> Nenhuma.</li><li><strong>Saída Esperada:</strong> 1 2 3 ... 20 (um por linha ou separados por espaço).</li></ul><p><strong>2.</strong> Crie um programa que utilize o laço <code>while</code> para exibir uma contagem regressiva de 10 até 0. Ao final, imprima a mensagem "FIM!".</p><ul><li><strong>Entrada:</strong> Nenhuma.</li><li><strong>Saída Esperada:</strong> 10, 9, 8, ... 0, FIM!</li></ul><p><strong>3.</strong> Peça ao usuário para digitar um número inteiro. Utilize um laço (pode ser <code>for</code> ou <code>while</code>) para imprimir a tabuada desse número de 1 a 10.</p><ul><li><strong>Entrada:</strong> Um número (ex: 5).</li><li><strong>Saída Esperada:</strong><ul><li>5 x 1 = 5</li><li>5 x 2 = 10</li><li>...</li><li>5 x 10 = 50</li></ul></li></ul><p><strong>4.</strong> Escreva um programa que leia 5 números inteiros fornecidos pelo usuário. Utilize um laço para ler esses números e, a cada leitura, some-o a uma variável acumuladora. Ao final, imprima a soma total e a média dos valores.</p><ul><li><strong>Entrada:</strong> 5 números inteiros (ex: 10, 20, 10, 20, 40).</li><li><strong>Saída Esperada:</strong> Soma: 100, Média: 20.0.</li></ul><p><strong>5.</strong> Utilize a estrutura <code>do-while</code> para criar um programa que peça ao usuário para digitar uma nota entre 0.0 e 10.0. Se o usuário digitar um valor inválido (fora desse intervalo), o programa deve exibir "Nota inválida" e pedir o valor novamente. O programa só deve parar quando uma nota válida for inserida.</p><ul><li><strong>Entrada:</strong> Repetidas tentativas de números (ex: -1, 15, 7).</li><li><strong>Saída:</strong> Apenas quando digitar 7: "Nota valida: 7.0".</li></ul><p><strong>6.</strong> Crie um programa que receba dois números inteiros, <code>A</code> e <code>B</code> (considere que A &lt; B). Utilize um laço <code>for</code> para percorrer o intervalo de A até B e imprimir apenas os números pares.</p><ul><li><strong>Dica:</strong> Use o operador <code>%</code> (resto) para verificar se é par.</li><li><strong>Entrada:</strong> Dois inteiros (ex: 2 e 10).</li><li><strong>Saída Esperada:</strong> 2 4 6 8 10.</li></ul><p><strong>7.</strong> Escreva um programa que calcule o fatorial de um número inteiro não negativo fornecido pelo usuário. Lembre-se que o fatorial de N ($N!$) é a multiplicação:</p><p>$$N \times (N-1) \times (N-2) \times ... \times 1$$</p><p>Exemplo: $5! = 5 \times 4 \times 3 \times 2 \times 1 = 120$).</p><ul><li><strong>Entrada:</strong> Um número inteiro positivo (ex: 5).</li><li><strong>Saída Esperada:</strong> Fatorial: 120.</li></ul><p><strong>8.</strong> Utilize <strong>laços aninhados</strong> (um laço dentro de outro) para desenhar um quadrado de asteriscos na tela. O usuário deve informar o tamanho do lado do quadrado.</p><ul><li><strong>Entrada:</strong> Um inteiro <code>N</code> (ex: 4).</li><li><strong>Saída Esperada:</strong></li></ul><pre class="line-numbers language-txt" data-lang=TXT><code class=language-txt>****
+</code></pre>
+<h3 id="regras-de-uso-e-riscos-de-lógica"><span class="heading-text">Regras de Uso e Riscos de Lógica</span><span class="heading-arabic">6.9.1</span></h3>
+<p>Para utilizar o <strong>continue</strong> de forma didática e segura, você deve seguir estas orientações:</p>
+<ul>
+<li><strong>Uso com Condicionais</strong>: O comando deve estar sempre abrigado por um <code>if</code> ou <code>else</code> dentro da repetição. Isso garante que apenas iterações específicas, que atingirem um determinado resultado, sejam ignoradas.</li>
+<li><strong>Risco de Laço Infinito</strong>: Se você posicionar o <strong>continue</strong> fora de uma estrutura condicional, o programa ignorará sistematicamente todas as execuções do laço. Além disso, em estruturas como o <code>while</code>, se o incremento da variável de controle estiver posicionado após o <strong>continue</strong>, você criará um <strong>laço infinito</strong>, pois o programa nunca chegará à linha que atualiza o valor da condição de parada.</li>
+</ul>
+<p>Abaixo, veja a representação visual do fluxo de execução do comando:</p>
+<div class="error">Graphviz error: failed to execute PosixPath('dot'), make sure the Graphviz executables are on your systems' PATH</div>
+
+<h2 id="questões"><span class="heading-text">Questões</span><span class="heading-arabic">6.10</span></h2>
+<p><strong>1.</strong> Escreva um programa em C que utilize um laço <code>for</code> para imprimir todos os números inteiros de 1 a 20 na tela.</p>
+<ul>
+<li><strong>Entrada:</strong> Nenhuma.</li>
+<li><strong>Saída Esperada:</strong> 1 2 3 ... 20 (um por linha ou separados por espaço).</li>
+</ul>
+<p><strong>2.</strong> Crie um programa que utilize o laço <code>while</code> para exibir uma contagem regressiva de 10 até 0. Ao final, imprima a mensagem &quot;FIM!&quot;.</p>
+<ul>
+<li><strong>Entrada:</strong> Nenhuma.</li>
+<li><strong>Saída Esperada:</strong> 10, 9, 8, ... 0, FIM!</li>
+</ul>
+<p><strong>3.</strong> Peça ao usuário para digitar um número inteiro. Utilize um laço (pode ser <code>for</code> ou <code>while</code>) para imprimir a tabuada desse número de 1 a 10.</p>
+<ul>
+<li><strong>Entrada:</strong> Um número (ex: 5).</li>
+<li><strong>Saída Esperada:</strong><ul>
+<li>5 x 1 = 5</li>
+<li>5 x 2 = 10</li>
+<li>...</li>
+<li>5 x 10 = 50</li>
+</ul>
+</li>
+</ul>
+<p><strong>4.</strong> Escreva um programa que leia 5 números inteiros fornecidos pelo usuário. Utilize um laço para ler esses números e, a cada leitura, some-o a uma variável acumuladora. Ao final, imprima a soma total e a média dos valores.</p>
+<ul>
+<li><strong>Entrada:</strong> 5 números inteiros (ex: 10, 20, 10, 20, 40).</li>
+<li><strong>Saída Esperada:</strong> Soma: 100, Média: 20.0.</li>
+</ul>
+<p><strong>5.</strong> Utilize a estrutura <code>do-while</code> para criar um programa que peça ao usuário para digitar uma nota entre 0.0 e 10.0. Se o usuário digitar um valor inválido (fora desse intervalo), o programa deve exibir &quot;Nota inválida&quot; e pedir o valor novamente. O programa só deve parar quando uma nota válida for inserida.</p>
+<ul>
+<li><strong>Entrada:</strong> Repetidas tentativas de números (ex: -1, 15, 7).</li>
+<li><strong>Saída:</strong> Apenas quando digitar 7: &quot;Nota valida: 7.0&quot;.</li>
+</ul>
+<p><strong>6.</strong> Crie um programa que receba dois números inteiros, <code>A</code> e <code>B</code> (considere que A &lt; B). Utilize um laço <code>for</code> para percorrer o intervalo de A até B e imprimir apenas os números pares.</p>
+<ul>
+<li><strong>Dica:</strong> Use o operador <code>%</code> (resto) para verificar se é par.</li>
+<li><strong>Entrada:</strong> Dois inteiros (ex: 2 e 10).</li>
+<li><strong>Saída Esperada:</strong> 2 4 6 8 10.</li>
+</ul>
+<p><strong>7.</strong> Escreva um programa que calcule o fatorial de um número inteiro não negativo fornecido pelo usuário. Lembre-se que o fatorial de N ($N!$) é a multiplicação:</p>
+<p>$$N \times (N-1) \times (N-2) \times ... \times 1$$</p>
+<p>Exemplo: $5! = 5 \times 4 \times 3 \times 2 \times 1 = 120$).</p>
+<ul>
+<li><strong>Entrada:</strong> Um número inteiro positivo (ex: 5).</li>
+<li><strong>Saída Esperada:</strong> Fatorial: 120.</li>
+</ul>
+<p><strong>8.</strong> Utilize <strong>laços aninhados</strong> (um laço dentro de outro) para desenhar um quadrado de asteriscos na tela. O usuário deve informar o tamanho do lado do quadrado.</p>
+<ul>
+<li><strong>Entrada:</strong> Um inteiro <code>N</code> (ex: 4).</li>
+<li><strong>Saída Esperada:</strong></li>
+</ul>
+<pre class="line-numbers language-txt" data-lang="TXT"><code class="language-txt">****
 ****
 ****
 ****
-</code></pre><p><strong>9.</strong> Escreva um programa que leia um número inteiro <code>N</code> e imprima as <code>N</code> primeiras linhas do Triângulo de Floyd. O triângulo é formado por números sequenciais dispostos em linhas crescentes.</p><ul><li><strong>Entrada:</strong> Um inteiro (ex: 4).</li><li><strong>Saída Esperada:</strong></li></ul><pre class="line-numbers language-txt" data-lang=TXT><code class=language-txt>1
+</code></pre>
+<p><strong>9.</strong> Escreva um programa que leia um número inteiro <code>N</code> e imprima as <code>N</code> primeiras linhas do Triângulo de Floyd. O triângulo é formado por números sequenciais dispostos em linhas crescentes.</p>
+<ul>
+<li><strong>Entrada:</strong> Um inteiro (ex: 4).</li>
+<li><strong>Saída Esperada:</strong></li>
+</ul>
+<pre class="line-numbers language-txt" data-lang="TXT"><code class="language-txt">1
 2 3
 4 5 6
 7 8 9 10
-</code></pre><p><strong>10.</strong> Crie um programa que peça um número inteiro positivo maior que 1 ao usuário e determine se ele é um número <strong>PRIMO</strong> (divisível apenas por 1 e por ele mesmo). Para isso, você precisará usar um laço para testar a divisibilidade do número por todos os antecessores até chegar na metade do valor dele.</p><ul><li><strong>Entrada:</strong> Um número inteiro (ex: 7).</li><li><strong>Saída Esperada:</strong> "Eh primo".</li><li><strong>Entrada Alternativa:</strong> 9.</li><li><strong>Saída Esperada:</strong> "Nao eh primo".</li></ul><p><strong>11.</strong> A sequência de Fibonacci começa com 0 e 1, e os próximos números são sempre a soma dos dois anteriores (0, 1, 1, 2, 3, 5, 8, 13...). Escreva um programa que leia um inteiro <code>N</code> e imprima os <code>N</code> primeiros termos dessa sequência.</p><ul><li><strong>Entrada:</strong> Um inteiro N (ex: 6).</li><li><strong>Saída Esperada:</strong> 0 1 1 2 3 5.</li></ul><h2 id=próximos-passos><span class=heading-text>Próximos passos</span><span class=heading-arabic>6.11</span></h2><p>No próximo capítulo, <a href=7-arrays.html>Arrays (Vetores e Matrizes)</a>, aprenderemos a armazenar múltiplos valores de um mesmo tipo em uma única variável composta. Veremos como declarar vetores (<em>arrays</em>) além de como acessar seus elementos através de índices.</p></div></article><footer class=footer><p>© 2025 · <a href=#>Gabriel Soares Baptista</a></p></footer></main></div><script>const toggle=document.querySelector(`.mobile-menu-toggle`),sidebar=document.querySelector(`.sidebar`),overlay=document.querySelector(`.mobile-menu-overlay`);function openMenu(){sidebar.classList.add(`open`),overlay.classList.add(`open`),toggle.classList.add(`open`),toggle.innerHTML=`<i data-lucide="x"></i>`,CourseForgeUI.initIcons(),document.body.style.overflow=`hidden`}function closeMenu(){sidebar.classList.remove(`open`),overlay.classList.remove(`open`),toggle.classList.remove(`open`),toggle.innerHTML=`<i data-lucide="menu"></i>`,CourseForgeUI.initIcons(),document.body.style.overflow=``}toggle.addEventListener(`click`,()=>{sidebar.classList.contains(`open`)?closeMenu():openMenu()}),overlay.addEventListener(`click`,closeMenu);</script><script data-no-bundle src=/aulas-faesa/js/vendor/katex/dist/katex.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/katex/dist/contrib/auto-render.min.js></script><script>document.addEventListener(`DOMContentLoaded`,function(){renderMathInElement(document.body,{output:`html`,delimiters:[{left:`$$`,right:`$$`,display:!0},{left:`$`,right:`$`,display:!1},{left:`\\(`,right:`\\)`,display:!1},{left:`\\[`,right:`\\]`,display:!0}],throwOnError:!1,strict:!1})});</script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/prism.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-c.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-cpp.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-python.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-clike.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-perl.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-java.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-mermaid.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-php.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js></script><script>document.addEventListener(`DOMContentLoaded`,function(){mermaid.initialize({startOnLoad:!0,theme:`default`,securityLevel:`loose`,fontFamily:`Inter, system-ui, sans-serif`,themeVariables:{fontSize:`16px`,edgeLabelFontSize:`16px`,multiplicityFontSize:`18px`}})});</script><script>document.addEventListener(`DOMContentLoaded`,function(){let isSubcourse=!1,courseName=`Tópicos de Programação II (TEP II)`;CourseForgeNav.applyDynamicBreadcrumbs(`.breadcrumb`,!1),CourseForgeNav.initScrollSpy(),CourseForgeUI.initCopyButtons(),CourseForgeUI.initExamples()});function handleBackNavigation(){let isSubcourse=!1,dynamic=CourseForgeNav.getBackLink(`contents.html`,`Voltar`,!1);window.location.href=dynamic.url}</script></body></html>
+</code></pre>
+<p><strong>10.</strong> Crie um programa que peça um número inteiro positivo maior que 1 ao usuário e determine se ele é um número <strong>PRIMO</strong> (divisível apenas por 1 e por ele mesmo). Para isso, você precisará usar um laço para testar a divisibilidade do número por todos os antecessores até chegar na metade do valor dele.</p>
+<ul>
+<li><strong>Entrada:</strong> Um número inteiro (ex: 7).</li>
+<li><strong>Saída Esperada:</strong> &quot;Eh primo&quot;.</li>
+<li><strong>Entrada Alternativa:</strong> 9.</li>
+<li><strong>Saída Esperada:</strong> &quot;Nao eh primo&quot;.</li>
+</ul>
+<p><strong>11.</strong> A sequência de Fibonacci começa com 0 e 1, e os próximos números são sempre a soma dos dois anteriores (0, 1, 1, 2, 3, 5, 8, 13...). Escreva um programa que leia um inteiro <code>N</code> e imprima os <code>N</code> primeiros termos dessa sequência.</p>
+<ul>
+<li><strong>Entrada:</strong> Um inteiro N (ex: 6).</li>
+<li><strong>Saída Esperada:</strong> 0 1 1 2 3 5.</li>
+</ul>
+<h2 id="próximos-passos"><span class="heading-text">Próximos passos</span><span class="heading-arabic">6.11</span></h2>
+<p>No próximo capítulo, <a href="7-arrays.html">Arrays (Vetores e Matrizes)</a>, aprenderemos a armazenar múltiplos valores de um mesmo tipo em uma única variável composta. Veremos como declarar vetores (<em>arrays</em>) além de como acessar seus elementos através de índices.</p>
+
+                </div>
+            </article>
+            <footer class="footer">
+                <p>© 2025 · <a href="#">Gabriel Soares Baptista</a></p>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        const toggle = document.querySelector('.mobile-menu-toggle');
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.querySelector('.mobile-menu-overlay');
+
+        function openMenu() {
+            sidebar.classList.add('open');
+            overlay.classList.add('open');
+            toggle.classList.add('open');
+            toggle.innerHTML = '<i data-lucide="x"></i>';
+            CourseForgeUI.initIcons();
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMenu() {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('open');
+            toggle.classList.remove('open');
+            toggle.innerHTML = '<i data-lucide="menu"></i>';
+            CourseForgeUI.initIcons();
+            document.body.style.overflow = '';
+        }
+
+        toggle.addEventListener('click', () => {
+            if (sidebar.classList.contains('open')) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        overlay.addEventListener('click', closeMenu);
+    </script>
+
+    
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            renderMathInElement(document.body, {
+                output: 'html',
+                delimiters: [
+                    { left: "$$", right: "$$", display: true },
+                    { left: "$", right: "$", display: false },
+                    { left: "\\(", right: "\\)", display: false },
+                    { left: "\\[", right: "\\]", display: true }
+                ],
+                throwOnError: false,
+                strict: false
+            });
+        });
+    </script>
+    
+    
+    <script src="/aulas-faesa/js/vendor/prism/prism.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-c.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-cpp.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-python.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-clike.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-perl.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-java.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-mermaid.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-php.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js" data-no-bundle></script>
+    
+    
+    
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            mermaid.initialize({
+                startOnLoad: true,
+                theme: 'default',
+                securityLevel: 'loose',
+                fontFamily: 'Inter, system-ui, sans-serif',
+                themeVariables: {
+                    fontSize: '16px',
+                    edgeLabelFontSize: '16px',
+                    multiplicityFontSize: '18px'
+                }
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const isSubcourse = false;
+        const courseName = "T\u00f3picos de Programa\u00e7\u00e3o II (TEP II)";
+        CourseForgeNav.applyDynamicBreadcrumbs('.breadcrumb', isSubcourse);
+        CourseForgeNav.initScrollSpy();
+        CourseForgeUI.initCopyButtons();
+        CourseForgeUI.initExamples();
+        });
+
+        function handleBackNavigation() {
+            const isSubcourse = false;
+        const dynamic = CourseForgeNav.getBackLink('contents.html', 'Voltar', isSubcourse);
+        window.location.href = dynamic.url;
+        }
+    </script>
+</body>
+
+</html>

@@ -1,2 +1,828 @@
-<!doctype html><html lang=pt-BR><meta charset=UTF-8><meta content="width=device-width,initial-scale=1.0" name=viewport><title>Toposia - Sistemas Digitais e Microprocessados</title><link media="(prefers-color-scheme: light)" href=/aulas-faesa/img/dark-favicon.svg rel=icon><link media="(prefers-color-scheme: dark)" href=/aulas-faesa/img/light-favicon.svg rel=icon><link data-no-bundle href=/aulas-faesa/css/vendor/fonts.css rel=stylesheet><link data-no-bundle href=/aulas-faesa/js/vendor/katex/dist/katex.min.css rel=stylesheet><link href=/aulas-faesa/css/bundle.min.css rel=stylesheet><link data-no-bundle href=/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css rel=stylesheet><script src=/aulas-faesa/js/bundle.min.js></script></head><body><script>// Restore sidebar state instantly (before first paint) to avoid transition flash
-(function(){localStorage.getItem(`cf_sidebar_hidden`)===`true`&&document.body.classList.add(`sidebar-hidden`,`no-transition`),requestAnimationFrame(function(){requestAnimationFrame(function(){document.body.classList.remove(`no-transition`)})})})();</script><div class=page-wrapper><nav class=sidebar><div class=sidebar-content><header class=sidebar-title-section><a class=course-title-link href=contents.html> <h1 class=sidebar-course-title>Sistemas Digitais e Microprocessados</h1> </a><div class=sidebar-ornament>❧</div></header><section class=sidebar-toc-section><h2 class=toc-header>Tabela de Conteúdos</h2><ol class=toc-list><li class="toc-item level-2"><a href=#introdução>13.1. Introdução</a></li><li class="toc-item level-2"><a href=#revisão-rápida-de-álgebra-booleana>13.2. Revisão Rápida de Álgebra Booleana</a></li><li class="toc-item level-2"><a href=#multiplicação-binária-por-produtos-parciais>13.3. Multiplicação Binária por Produtos Parciais</a></li><li class="toc-item level-2"><a href=#como-nasce-um-multiplicador-simples>13.4. Como Nasce um Multiplicador Simples</a></li><li class="toc-item level-3"><a href=#produtos-parciais-do-multiplicador-2-x-2>13.4.1. Produtos Parciais do Multiplicador 2 x 2</a></li><li class="toc-item level-3"><a href=#derivação-das-saídas>13.4.2. Derivação das Saídas</a></li><li class="toc-item level-3"><a href=#bloco-funcional-do-multiplicador-2-x-2>13.4.3. Bloco Funcional do Multiplicador 2 x 2</a></li><li class="toc-item level-3"><a href=#como-a-ideia-escala-para-mais-bits>13.4.4. Como a Ideia Escala para Mais Bits</a></li><li class="toc-item level-2"><a href=#divisão-binária-por-comparação-e-subtração>13.5. Divisão Binária por Comparação e Subtração</a></li><li class="toc-item level-2"><a href=#como-nasce-um-divisor-simples>13.6. Como Nasce um Divisor Simples</a></li><li class="toc-item level-3"><a href=#circuito-funcional-de-um-estágio-do-divisor>13.6.1. Circuito Funcional de Um Estágio do Divisor</a></li><li class="toc-item level-3"><a href=#encadeando-estágios-para-formar-o-divisor>13.6.2. Encadeando Estágios para Formar o Divisor</a></li><li class="toc-item level-3"><a href=#uma-implementação-didática-pequena>13.6.3. Uma Implementação Didática Pequena</a></li><li class="toc-item level-2"><a href=#comparando-multiplicador-e-divisor>13.7. Comparando Multiplicador e Divisor</a></li><li class="toc-item level-2"><a href=#questões>13.8. Questões</a></li><li class="toc-item level-2"><a href=#próximos-passos>13.9. Próximos passos</a></li></ol></section><nav class=sidebar-nav-section><a class="sidebar-nav-link prev" href=12-digital-arithmetic-i.html><i class=nav-icon data-lucide=chevron-left></i> Aritmética Digital - I</a><a class="sidebar-nav-link back" href=javascript:void(0) onclick=handleBackNavigation()><i class=nav-icon data-lucide=arrow-left></i> Voltar</a></nav></div></nav><button aria-label=Menu class=mobile-menu-toggle><i data-lucide=menu></i></button><button aria-label="Alternar Barra Lateral" class=sidebar-toggle onclick=CourseForgeNav.toggleSidebar()><i class=toggle-icon data-lucide=chevron-left id=sidebar-toggle-icon></i></button><div class=mobile-menu-overlay></div><main class=main-content><article class=article><header class=article-header><span class=chapter-number>13</span><h1 class=article-title><span class="title-ornament left">❧</span> <span class=title-text>Aritmética Digital - II</span> <span class="title-ornament right">❧</span></h1><p class=article-date>02/04/2026</p><nav aria-label=Breadcrumb class=breadcrumb><a class=breadcrumb-link href=contents.html>Sistemas Digitais e Microprocessados</a><span class=breadcrumb-separator><i class=breadcrumb-icon data-lucide=chevron-right></i></span><a class=breadcrumb-link href=contents.html#part-IV>IV - Lógica Combinacional - II</a><span class=breadcrumb-separator><i class=breadcrumb-icon data-lucide=chevron-right></i></span><span class=breadcrumb-current>Aritmética Digital - II</span></nav></header><div class=article-body><h2 id=introdução><span class=heading-text>Introdução</span><span class=heading-arabic>13.1</span></h2><p>Na aula de hoje vamos avançar de soma e subtração para duas operações maiores, multiplicação e divisão. Isso importa porque esses circuitos parecem mais complexos à primeira vista, mas na prática nascem da combinação organizada de blocos que você já conhece, como portas lógicas, somadores, subtratores, comparadores e deslocamentos.</p><p>Na aula anterior, cada coluna resolvia uma soma ou subtração local e repassava carry ou borrow para a próxima posição. Agora a ideia fica mais rica. Na multiplicação, várias colunas são geradas ao mesmo tempo na forma de produtos parciais. Na divisão, cada etapa precisa decidir se ainda é possível subtrair o divisor e, a partir disso, construir o quociente.</p><div class="callout callout-abstract"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span><span class=callout-title-inner>Ideia central<br></span></div><div class=callout-content><p>Um multiplicador digital simples pode ser entendido como uma rede de portas AND que gera produtos parciais e de somadores que combinam essas linhas. Um divisor digital simples pode ser entendido como uma sequência de etapas que comparam, subtraem e decidem os bits do quociente a partir do resto parcial.</p></div></div><h2 id=revisão-rápida-de-álgebra-booleana><span class=heading-text>Revisão Rápida de Álgebra Booleana</span><span class=heading-arabic>13.2</span></h2><p>Antes de formalizar os novos circuitos, vale recuperar algumas identidades muito simples de álgebra booleana. O objetivo aqui não é repetir a aula de simplificação, mas lembrar exatamente as propriedades que ajudam a enxergar por que um bit pode copiar, zerar, selecionar ou combinar sinais dentro de um circuito aritmético.</p><div class="callout callout-question"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><circle cx=12 cy=12 r=10 /><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span><span class=callout-title-inner>Reflita<br></span></div><div class=callout-content><p>Se um bit de controle vale $0$ em uma porta AND, o que acontece com o sinal que está do outro lado? E se esse mesmo bit vale $1$?</p></div></div><div class=example><div class=example-title>Revisão - Questão 1</div><p>Por que as identidades $A \cdot 0 = 0$ e $A \cdot 1 = A$ são tão úteis para entender multiplicação digital?</p><hr><p>Essas duas igualdades dizem como um bit pode apagar ou deixar passar um sinal.</p><p>Se uma entrada de uma AND vale $0$, a saída obrigatoriamente vale $0$.</p><p>$$ A \cdot 0 = 0 $$</p><p>Se uma entrada de uma AND vale $1$, a saída simplesmente copia a outra entrada.</p><p>$$ A \cdot 1 = A $$</p><p>Agora interprete isso em linguagem de hardware. Suponha que $A$ seja um bit do multiplicando e que o outro sinal seja um bit do multiplicador.</p><ul><li>se o bit do multiplicador for $0$, aquele produto parcial desaparece</li><li>se o bit do multiplicador for $1$, aquele produto parcial copia o bit de $A$</li></ul><p>É exatamente por isso que a geração de produtos parciais em um multiplicador é feita com portas AND.</p></div><div class=example><div class=example-title>Revisão - Questão 2</div><p>Como a distributiva ajuda a ler a combinação de sinais em circuitos aritméticos?</p><hr><p>A distributiva em álgebra booleana é:</p><p>$$ A(B + C) = AB + AC $$</p><p>Ela mostra que um mesmo sinal pode influenciar dois caminhos diferentes ao mesmo tempo.</p><p>Se quisermos o processo inverso, também podemos fatorar:</p><p>$$ AB + AC = A(B + C) $$</p><p>Essas duas leituras aparecem com frequência quando reorganizamos a lógica de controle ou quando queremos enxergar um padrão comum em vários termos da expressão.</p><p>Por exemplo, se um mesmo bit $A$ participa de dois produtos possíveis, como $AB$ e $AC$, a fatoração deixa claro que $A$ está selecionando uma entre duas condições agrupadas.</p></div><div class=example><div class=example-title>Revisão - Questão 3</div><p>O que as igualdades $A + 0 = A$ e $A + A = A$ lembram sobre a combinação de resultados?</p><hr><p>A primeira igualdade diz que somar logicamente com $0$ não altera a informação.</p><p>$$ A + 0 = A $$</p><p>A segunda diz que repetir o mesmo termo em uma OR não cria um novo comportamento.</p><p>$$ A + A = A $$</p><p>Essas identidades ajudam quando reorganizamos expressões e percebemos que algumas partes não acrescentam informação nova. Em circuitos maiores, isso evita duplicação desnecessária de portas e ajuda a ler a lógica de forma mais limpa.</p></div><p>Essas continhas parecem pequenas, mas elas voltam imediatamente na aula de hoje. Na multiplicação, um bit do multiplicador ora zera uma linha parcial, ora copia o operando. Na divisão, comparações e decisões de controle também se apoiam em combinações lógicas simples. A ideia continua a mesma da aula anterior. Primeiro entendemos o comportamento. Depois transformamos isso em bloco funcional.</p><h2 id=multiplicação-binária-por-produtos-parciais><span class=heading-text>Multiplicação Binária por Produtos Parciais</span><span class=heading-arabic>13.3</span></h2><p>Quando você multiplica números decimais no papel, costuma gerar linhas parciais e depois somá-las. Em binário a lógica é a mesma, mas fica ainda mais clara porque cada dígito só pode ser $0$ ou $1$. Isso faz com que cada linha parcial seja extremamente simples de interpretar.</p><p>Se um bit do multiplicador vale $0$, ele não contribui com nada. Se vale $1$, ele copia o multiplicando naquela posição de deslocamento. Portanto, a multiplicação binária pode ser lida como soma de cópias deslocadas do operando.</p><div class="callout callout-question"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><circle cx=12 cy=12 r=10 /><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span><span class=callout-title-inner>Reflita<br></span></div><div class=callout-content><p>Se cada bit do multiplicador só pode valer $0$ ou $1$, quantas possibilidades reais existem para cada linha parcial da multiplicação?</p></div></div><div class=example><div class=example-title>Multiplicação - Questão 1</div><p>Como ler a conta $101_2 \times 11_2$ sem tratar a multiplicação como uma operação misteriosa?</p><hr><p>Vamos escrever a conta como soma de produtos parciais.</p><p>$$ \begin{array}{r} \phantom{+}101 \\ \times\ 011 \\ \hline \phantom{+}101 \\ +1010 \\ \hline \phantom{+}1111 \end{array} $$</p><p>Agora leia o que aconteceu linha por linha.</p><ul><li>o bit menos significativo do multiplicador vale $1$, então ele copia $101$</li><li>o bit seguinte também vale $1$, então ele copia novamente $101$, mas deslocado uma posição para a esquerda</li><li>a soma dessas duas linhas gera $1111_2$</li></ul><p>Em decimal, isso confirma a conta.</p><p>$$ 5 \times 3 = 15 \qquad \Rightarrow \qquad 1111_2 = 15_{10} $$</p><p>O ponto importante não é apenas o resultado. O mais importante é a estrutura. A multiplicação apareceu como soma de linhas simples, e não como um bloco mágico que resolve tudo de uma vez.</p></div><p>Essa leitura permite escrever a regra geral. Se o multiplicando for $A$ e o multiplicador for $B$, cada bit $B_j$ do multiplicador gera uma linha parcial. Essa linha é composta pelos produtos:</p><p>$$ p_{ij} = A_i \cdot B_j $$</p><p>Aqui, $A_i$ é um bit do multiplicando e $B_j$ é um bit do multiplicador. Repare no efeito direto da AND:</p><ul><li>se $B_j = 0$, então $p_{ij} = 0$</li><li>se $B_j = 1$, então $p_{ij} = A_i$</li></ul><p>Portanto, cada bit do multiplicador funciona como um seletor que decide se uma certa cópia do multiplicando entra ou não na soma final.</p><div class=example><div class=example-title>Multiplicação - Questão 2</div><p>Por que a porta AND representa exatamente a geração de um produto parcial?</p><hr><p>Considere um único bit $A_i$ do multiplicando e um único bit $B_j$ do multiplicador. O produto parcial elementar será:</p><p>$$ p_{ij} = A_i \cdot B_j $$</p><p>Veja a tabela-verdade.</p><p>$$ \begin{array}{c|c||c} A_i & B_j & p_{ij} \\ \hline 0 & 0 & 0 \\ 0 & 1 & 0 \\ 1 & 0 & 0 \\ 1 & 1 & 1 \end{array} $$</p><p>Essa é exatamente a tabela de uma AND. Isso significa que o produto parcial de dois bits em multiplicação binária não exige nenhuma nova porta especial. Ele é a própria operação AND.</p><p>O que torna um multiplicador maior não é a complexidade do produto de dois bits isolados. É a necessidade de gerar muitos desses produtos e depois somá-los nas colunas corretas.</p></div><p>Agora já podemos responder de forma precisa como nasce um multiplicador simples. Primeiro, portas AND geram os produtos parciais bit a bit. Depois, somadores organizam essas contribuições por coluna, exatamente como fizemos na aula anterior ao tratar carry entre posições vizinhas.</p><h2 id=como-nasce-um-multiplicador-simples><span class=heading-text>Como Nasce um Multiplicador Simples</span><span class=heading-arabic>13.4</span></h2><p>Vamos escolher uma implementação pequena o suficiente para ser totalmente legível e grande o suficiente para realmente merecer o nome de multiplicador. O caso mais didático é o multiplicador de $2 \times 2$ bits.</p><p>Sejam:</p><p>$$ A = A_1A_0 \qquad \text{e} \qquad B = B_1B_0 $$</p><p>O produto terá até 4 bits:</p><p>$$ P = P_3P_2P_1P_0 $$</p><h3 id=produtos-parciais-do-multiplicador-2-x-2><span class=heading-text>Produtos Parciais do Multiplicador 2 x 2</span><span class=heading-arabic>13.4.1</span></h3><p>Os quatro produtos parciais elementares são:</p><p>$$ \begin{aligned} p_{00} &= A_0B_0 \\ p_{10} &= A_1B_0 \\ p_{01} &= A_0B_1 \\ p_{11} &= A_1B_1 \end{aligned} $$</p><p>Cada um deles pode ser implementado com uma porta AND.</p><div class=no-break><div class=centered><svg viewbox="0 0 109.872 45.36" class=svg-graph version=1.1 width=180 xmlns=http://www.w3.org/2000/svg xmlns:dc=http://purl.org/dc/elements/1.1/ xmlns:ns2=http://creativecommons.org/ns# xmlns:rdf=http://www.w3.org/1999/02/22-rdf-syntax-ns#><metadata><rdf:rdf><ns2:work><dc:type rdf:resource=http://purl.org/dc/dcmitype/StillImage /><dc:date>2026-04-02T16:49:14.659839</dc:date><dc:format>image/svg+xml</dc:format><dc:creator><ns2:agent><dc:title>Matplotlib v3.10.8, https://matplotlib.org/</dc:title></ns2:agent></dc:creator></ns2:work></rdf:rdf></metadata><defs><style type=text/css>*{stroke-linejoin:round;stroke-linecap:butt}</style></defs><g id=figure_1><g id=patch_1><path d="M 0 45.36 L 109.872 45.36 L 109.872 0 L 0 0 L 0 45.36 z" style=fill:none /></g><g id=axes_1><g id=line2d_1><path d="M 56.796 40.68 L 57.949264 40.643017 L 59.097789 40.53222 L 60.236855 40.348065 L 61.361783 40.091308 L 62.467948 39.763003 L 63.550806 39.364502 L 64.605907 38.89744 L 65.628916 38.363737 L 66.615628 37.765586 L 67.56199 37.105445 L 68.464111 36.386027 L 69.318286 35.610288 L 70.121004 34.781416 L 70.868967 33.902816 L 71.559101 32.9781 L 72.18857 32.011066 L 72.754788 31.005689 L 73.255427 29.9661 L 73.688432 28.896571 L 74.052021 27.801497 L 74.344702 26.685377 L 74.565272 25.552798 L 74.712824 24.408414 L 74.786752 23.256928 L 74.786752 22.103072 L 74.712824 20.951586 L 74.565272 19.807202 L 74.344702 18.674623 L 74.052021 17.558503 L 73.688432 16.463429 L 73.255427 15.3939 L 72.754788 14.354311 L 72.18857 13.348934 L 71.559101 12.3819 L 70.868967 11.457184 L 70.121004 10.578584 L 69.318286 9.749712 L 68.464111 8.973973 L 67.56199 8.254555 L 66.615628 7.594414 L 65.628916 6.996263 L 64.605907 6.46256 L 63.550806 5.995498 L 62.467948 5.596997 L 61.361783 5.268692 L 60.236855 5.011935 L 59.097789 4.82778 L 57.949264 4.716983 L 56.796 4.68 L 56.796 4.68 L 33.396 4.68 L 33.396 22.68 L 33.396 40.68 L 56.796 40.68" clip-path=url(#pf9f9d956c2) style=fill:none;stroke:#000;stroke-width:2px;stroke-linecap:round /></g><g id=line2d_2><path d="M 20.796 31.68 L 33.396 31.68" clip-path=url(#pf9f9d956c2) style=fill:none;stroke:#000;stroke-width:2px;stroke-linecap:round /></g><g id=line2d_3><path d="M 20.796 13.68 L 33.396 13.68" clip-path=url(#pf9f9d956c2) style=fill:none;stroke:#000;stroke-width:2px;stroke-linecap:round /></g><g id=line2d_4><path d="M 74.796 22.68 L 87.396 22.68" clip-path=url(#pf9f9d956c2) style=fill:none;stroke:#000;stroke-width:2px;stroke-linecap:round /></g><g id=text_1><text style="text-anchor:start;font-family:DejaVu Sans,Bitstream Vera Sans,Computer Modern Sans Serif,Lucida Grande,Verdana,Geneva,Lucid,Arial,Helvetica,Avant Garde,sans-serif;font-size:14px" transform="rotate(-0 90.996 26.543125)" x=90.996 y=26.543125>pij</text></g><g id=text_2><text style="text-anchor:end;font-family:DejaVu Sans,Bitstream Vera Sans,Computer Modern Sans Serif,Lucida Grande,Verdana,Geneva,Lucid,Arial,Helvetica,Avant Garde,sans-serif;font-size:14px" transform="rotate(-0 17.196 17.543125)" x=17.196 y=17.543125>Ai</text></g><g id=text_3><text style="text-anchor:end;font-family:DejaVu Sans,Bitstream Vera Sans,Computer Modern Sans Serif,Lucida Grande,Verdana,Geneva,Lucid,Arial,Helvetica,Avant Garde,sans-serif;font-size:14px" transform="rotate(-0 17.196 35.543125)" x=17.196 y=35.543125>Bj</text></g></g></g><defs><clippath id=pf9f9d956c2><rect height=45.36 width=109.872 x=0 y=0 /></clippath></defs></svg></div></div><p>Esse desenho representa apenas a célula mais básica do multiplicador. O circuito completo aparece quando colocamos esses produtos nas colunas corretas do resultado.</p><div class=example><div class=example-title>Multiplicador 2 x 2 - Questão 1</div><p>Como os quatro produtos parciais são distribuídos nas colunas do resultado?</p><hr><p>Escrevendo a multiplicação por linhas parciais, temos:</p><p>$$ \begin{array}{r} \phantom{+}A_1A_0 \\ \times\ B_1B_0 \\ \hline \phantom{+}A_1A_0B_0 \\ +A_1A_0B_1\,0 \\ \hline P_3P_2P_1P_0 \end{array} $$</p><p>Se lermos por coluna, obtemos:</p><ul><li>coluna 0: apenas $A_0B_0$</li><li>coluna 1: os termos $A_1B_0$ e $A_0B_1$</li><li>coluna 2: o termo $A_1B_1$ e o carry vindo da coluna anterior</li><li>coluna 3: apenas o carry final</li></ul><p>Essa leitura é crucial porque ela mostra exatamente onde o Meio Somador entra. A coluna intermediária precisa somar dois produtos parciais, e essa soma pode gerar carry para a coluna seguinte.</p></div><h3 id=derivação-das-saídas><span class=heading-text>Derivação das Saídas</span><span class=heading-arabic>13.4.2</span></h3><p>Agora podemos escrever cada saída do produto final.</p><p>A primeira coluna é imediata:</p><p>$$ P_0 = A_0B_0 $$</p><p>Na segunda coluna somamos $A_1B_0$ e $A_0B_1$. Isso é exatamente o problema de um Meio Somador.</p><p>$$ \begin{aligned} P_1 &= (A_1B_0) \oplus (A_0B_1) \\ C_1 &= (A_1B_0)(A_0B_1) \end{aligned} $$</p><p>Na terceira coluna somamos o termo $A_1B_1$ com o carry $C_1$.</p><p>$$ \begin{aligned} P_2 &= (A_1B_1) \oplus C_1 \\ P_3 &= (A_1B_1) \cdot C_1 \end{aligned} $$</p><p>Observe a lógica do circuito inteiro. Ele não está fazendo nada além de repetir o princípio da aula 12.</p><ul><li>portas AND geram resultados locais</li><li>uma coluna soma os termos que caem nela</li><li>o carry dessa coluna alimenta a seguinte</li></ul><div class=col2><div><p><strong>Leitura algébrica final</strong></p><p>$$ \begin{aligned} P_0 &= A_0B_0 \\ P_1 &= (A_1B_0) \oplus (A_0B_1) \\ P_2 &= (A_1B_1) \oplus C_1 \\ P_3 &= (A_1B_1)C_1 \end{aligned} $$</p><p>com</p><p>$$ C_1 = (A_1B_0)(A_0B_1) $$</p></div><div><p><strong>Leitura conceitual</strong></p><ol><li>O bit menos significativo sai diretamente do primeiro produto parcial.</li><li>A coluna do meio soma dois produtos e pode gerar carry.</li><li>A coluna seguinte soma o produto parcial mais significativo com esse carry.</li><li>O bit final aparece apenas se ainda houver carry sobrando.</li></ol></div></div><h3 id=bloco-funcional-do-multiplicador-2-x-2><span class=heading-text>Bloco Funcional do Multiplicador 2 x 2</span><span class=heading-arabic>13.4.3</span></h3><div class=no-break><div class=centered><svg class="svg-graph graphviz-img" viewbox="0.00 0.00 600.00 99.00" width=420 xmlns=http://www.w3.org/2000/svg><g transform="scale(1 1) rotate(0) translate(4 94.56)" class=graph id=graph0><title>Mult2x2</title><polygon points="-4,4 -4,-94.56 596.25,-94.56 596.25,4 -4,4" fill=white stroke=none /><g class=node id=node1><title>A</title><text font-family=Helvetica,sans-Serif font-size=14.00 text-anchor=middle x=18.38 xml:space=preserve y=-38.14>A1 A0</text></g><g class=node id=node3><title>ANDS</title><path d="M189.5,-46.31C189.5,-46.31 85.75,-46.31 85.75,-46.31 79.75,-46.31 73.75,-40.31 73.75,-34.31 73.75,-34.31 73.75,-18.81 73.75,-18.81 73.75,-12.81 79.75,-6.81 85.75,-6.81 85.75,-6.81 189.5,-6.81 189.5,-6.81 195.5,-6.81 201.5,-12.81 201.5,-18.81 201.5,-18.81 201.5,-34.31 201.5,-34.31 201.5,-40.31 195.5,-46.31 189.5,-46.31" fill=none stroke=black /><text font-family=Helvetica,sans-Serif font-size=14.00 text-anchor=middle x=137.62 xml:space=preserve y=-29.01>4 portas AND</text><text font-family=Helvetica,sans-Serif font-size=14.00 text-anchor=middle x=137.62 xml:space=preserve y=-13.26>(produtos parciais)</text></g><g class=edge id=edge1><title>A->ANDS</title><path d="M36.17,-41.12C43.44,-40.07 52.5,-38.76 62.18,-37.35" fill=none stroke=black /><polygon points="62.42,-40.86 71.82,-35.96 61.42,-33.93 62.42,-40.86" fill=black stroke=black /></g><g class=node id=node2><title>B</title><text font-family=Helvetica,sans-Serif font-size=14.00 text-anchor=middle x=18.38 xml:space=preserve y=-4.14>B1 B0</text></g><g class=edge id=edge2><title>B->ANDS</title><path d="M36.68,-12.07C43.82,-13.1 52.63,-14.38 62.03,-15.74" fill=none stroke=black /><polygon points="61.37,-19.19 71.77,-17.16 62.38,-12.26 61.37,-19.19" fill=black stroke=black /></g><g class=node id=node4><title>HA1</title><path d="M305.5,-90.56C305.5,-90.56 250.5,-90.56 250.5,-90.56 244.5,-90.56 238.5,-84.56 238.5,-78.56 238.5,-78.56 238.5,-66.56 238.5,-66.56 238.5,-60.56 244.5,-54.56 250.5,-54.56 250.5,-54.56 305.5,-54.56 305.5,-54.56 311.5,-54.56 317.5,-60.56 317.5,-66.56 317.5,-66.56 317.5,-78.56 317.5,-78.56 317.5,-84.56 311.5,-90.56 305.5,-90.56" fill=none stroke=black /><text font-family=Helvetica,sans-Serif font-size=14.00 text-anchor=middle x=278 xml:space=preserve y=-67.14>Half Adder</text></g><g class=edge id=edge3><title>ANDS->HA1</title><path d="M199.32,-46.74C208.71,-49.86 218.32,-53.05 227.44,-56.08" fill=none stroke=black /><polygon points="226.23,-59.37 236.82,-59.2 228.44,-52.73 226.23,-59.37" fill=black stroke=black /></g><g class=node id=node5><title>HA2</title><path d="M434.75,-49.56C434.75,-49.56 379.75,-49.56 379.75,-49.56 373.75,-49.56 367.75,-43.56 367.75,-37.56 367.75,-37.56 367.75,-25.56 367.75,-25.56 367.75,-19.56 373.75,-13.56 379.75,-13.56 379.75,-13.56 434.75,-13.56 434.75,-13.56 440.75,-13.56 446.75,-19.56 446.75,-25.56 446.75,-25.56 446.75,-37.56 446.75,-37.56 446.75,-43.56 440.75,-49.56 434.75,-49.56" fill=none stroke=black /><text font-family=Helvetica,sans-Serif font-size=14.00 text-anchor=middle x=407.25 xml:space=preserve y=-26.14>Half Adder</text></g><g class=edge id=edge4><title>ANDS->HA2</title><path d="M201.71,-27.74C248.85,-28.62 312.42,-29.81 356.11,-30.62" fill=none stroke=black /><polygon points="356.02,-34.12 366.09,-30.81 356.15,-27.12 356.02,-34.12" fill=black stroke=black /></g><g class=node id=node6><title>P</title><text font-family=Helvetica,sans-Serif font-size=14.00 text-anchor=middle x=553.62 xml:space=preserve y=-26.14>P3 P2 P1 P0</text></g><g class=edge id=edge6><title>ANDS->P</title><path d="M201.96,-14.81C264.39,-4.93 362.41,6.02 446.75,-4.56 470.94,-7.6 497.52,-14.39 517.99,-20.4" fill=none stroke=black /><polygon points="516.95,-23.74 527.54,-23.28 518.98,-17.04 516.95,-23.74" fill=black stroke=black /><text font-family=Times,serif font-size=14.00 text-anchor=middle x=342.62 xml:space=preserve y=-4.17>P0</text></g><g class=edge id=edge5><title>HA1->HA2</title><path d="M317.87,-60.04C330.2,-56.06 344.01,-51.61 356.97,-47.44" fill=none stroke=black /><polygon points="357.73,-50.87 366.18,-44.47 355.59,-44.21 357.73,-50.87" fill=black stroke=black /></g><g class=edge id=edge7><title>HA1->P</title><path d="M317.77,-72.45C361.8,-71.53 435.53,-67.6 497,-52.56 506.31,-50.28 516.18,-46.9 524.98,-43.51" fill=none stroke=black /><polygon points="526.06,-46.84 534.03,-39.86 523.44,-40.35 526.06,-46.84" fill=black stroke=black /><text font-family=Times,serif font-size=14.00 text-anchor=middle x=407.25 xml:space=preserve y=-73.42>P1</text></g><g class=edge id=edge8><title>HA2->P</title><path d="M446.94,-31.56C464.43,-31.56 485.28,-31.56 503.83,-31.56" fill=none stroke=black /><polygon points="503.81,-35.06 513.81,-31.56 503.81,-28.06 503.81,-35.06" fill=black stroke=black /><text font-family=Times,serif font-size=14.00 text-anchor=middle x=480.88 xml:space=preserve y=-34.76>P2,P3</text></g></g></svg></div></div><p>Esse diagrama não desenha cada fio interno, mas mostra o arranjo essencial do circuito. Primeiro, as ANDs produzem os termos elementares. Depois, os somadores combinam as colunas que têm mais de um termo. Assim nasce um multiplicador combinacional pequeno.</p><div class=example><div class=example-title>Multiplicador 2 x 2 - Questão 2</div><p>Como o circuito responde ao exemplo $10_2 \times 11_2$?</p><hr><p>Temos:</p><p>$$ A_1A_0 = 10 \qquad \text{e} \qquad B_1B_0 = 11 $$</p><p>Logo:</p><p>$$ \begin{aligned} p_{00} &= A_0B_0 = 0 \cdot 1 = 0 \\ p_{10} &= A_1B_0 = 1 \cdot 1 = 1 \\ p_{01} &= A_0B_1 = 0 \cdot 1 = 0 \\ p_{11} &= A_1B_1 = 1 \cdot 1 = 1 \end{aligned} $$</p><p>Agora calculamos as saídas:</p><p>$$ \begin{aligned} P_0 &= p_{00} = 0 \\ P_1 &= p_{10} \oplus p_{01} = 1 \oplus 0 = 1 \\ C_1 &= p_{10}p_{01} = 1 \cdot 0 = 0 \\ P_2 &= p_{11} \oplus C_1 = 1 \oplus 0 = 1 \\ P_3 &= p_{11}C_1 = 1 \cdot 0 = 0 \end{aligned} $$</p><p>Portanto:</p><p>$$ P = 0110_2 $$</p><p>Em decimal, isso corresponde a $2 \times 3 = 6$, então o circuito está coerente com a conta aritmética.</p></div><h3 id=como-a-ideia-escala-para-mais-bits><span class=heading-text>Como a Ideia Escala para Mais Bits</span><span class=heading-arabic>13.4.4</span></h3><p>O multiplicador de $2 \times 2$ bits não é um caso isolado. Ele é apenas a primeira versão completa da técnica. Se aumentarmos o número de bits, o padrão continua o mesmo.</p><ul><li>mais bits no multiplicando e no multiplicador geram mais produtos parciais</li><li>mais colunas passam a ter vários termos ao mesmo tempo</li><li>essas colunas precisam de mais somadores para combinar os resultados</li></ul><p>Por exemplo, em um multiplicador de $3 \times 2$ bits, ainda usamos portas AND para gerar todos os produtos elementares. A diferença é que algumas colunas já podem exigir mais de uma soma encadeada. Isso mostra por que a multiplicação cresce rapidamente em complexidade quando o número de bits aumenta.</p><div class="callout callout-note"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span><span class=callout-title-inner>O que este bloco está ensinando<br></span></div><div class=callout-content><p>Um multiplicador combinacional simples nada mais é do que uma rede de geração de produtos parciais seguida por uma rede de soma por colunas. A novidade não está em uma porta nova, mas na forma como ANDs e somadores são organizados.</p></div></div><h2 id=divisão-binária-por-comparação-e-subtração><span class=heading-text>Divisão Binária por Comparação e Subtração</span><span class=heading-arabic>13.5</span></h2><p>Na multiplicação, cada bit do multiplicador decide se uma linha parcial entra ou não na conta. Na divisão, a pergunta é outra. Em cada etapa precisamos decidir se o divisor ainda cabe dentro do valor parcial atual. Se couber, subtraímos e escrevemos um bit $1$ no quociente. Se não couber, mantemos o valor parcial e escrevemos um bit $0$.</p><p>Essa é a diferença conceitual mais importante entre as duas operações. A multiplicação é uma composição de cópias e somas. A divisão é uma sequência de testes, subtrações e atualizações de resto parcial.</p><div class="callout callout-question"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><circle cx=12 cy=12 r=10 /><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span><span class=callout-title-inner>Reflita<br></span></div><div class=callout-content><p>Em uma divisão binária, o que exatamente faz um bit do quociente valer $1$ em uma certa etapa?</p></div></div><div class=example><div class=example-title>Divisão - Questão 1</div><p>Como ler a conta $110_2 \div 10_2$ passo a passo?</p><hr><p>Em decimal, essa conta é $6 \div 2$, então esperamos quociente $3$, isto é, $11_2$.</p><p>Vamos escrever a divisão como uma sequência de decisões.</p><p>Primeiro, observamos os bits mais significativos do dividendo e formamos um valor parcial grande o suficiente para comparar com o divisor $10_2$.</p><ol><li>O primeiro parcial relevante é $11_2$.</li><li>Como $11_2 \ge 10_2$, podemos subtrair.</li><li>O bit correspondente do quociente vale $1$.</li></ol><p>Fazendo a subtração:</p><p>$$ 11_2 - 10_2 = 01_2 $$</p><p>Agora descemos o próximo bit do dividendo, que é $0$, formando o novo parcial:</p><p>$$ 10_2 $$</p><p>Mais uma vez:</p><ul><li>como $10_2 \ge 10_2$, podemos subtrair</li><li>o próximo bit do quociente também vale $1$</li></ul><p>Então:</p><p>$$ 10_2 - 10_2 = 00_2 $$</p><p>Logo, o resultado final é:</p><p>$$ 110_2 \div 10_2 = 11_2 $$</p><p>com resto igual a $0$.</p><p>O que importa aqui é a mecânica. Em cada etapa houve uma comparação, uma decisão sobre o bit do quociente e uma possível subtração.</p></div><p>Essa leitura sugere um bloco funcional natural para a divisão. Cada estágio precisa receber um valor parcial, comparar esse valor com o divisor, gerar um bit do quociente e produzir o novo resto parcial que seguirá para a etapa seguinte.</p><h2 id=como-nasce-um-divisor-simples><span class=heading-text>Como Nasce um Divisor Simples</span><span class=heading-arabic>13.6</span></h2><p>Diferentemente do multiplicador, um divisor didático simples fica mais claro quando pensamos em estágios funcionais. Em vez de abrir toda a lógica booleana interna de cada comparação e de cada subtração, vale mais a pena enxergar a arquitetura da etapa.</p><p>Um estágio de divisão precisa fazer três coisas:</p><ol><li>comparar o resto parcial com o divisor</li><li>decidir se a subtração pode ocorrer</li><li>gerar o próximo resto parcial e o bit correspondente do quociente</li></ol><p>Se chamarmos o resto parcial de entrada de $R_{in}$ e o divisor de $D$, o comportamento da etapa pode ser resumido assim:</p><p>$$ \text{se } R_{in} \ge D, \text{ então } q = 1 \text{ e } R_{out} = R_{in} - D $$</p><p>$$ \text{se } R_{in} &lt; D, \text{ então } q = 0 \text{ e } R_{out} = R_{in} $$</p><p>Essa regra é simples, mas já descreve um divisor funcional.</p><div class=example><div class=example-title>Divisor Simples - Questão 1</div><p>Que bloco funcional implementa exatamente essa decisão?</p><hr><p>Precisamos de três partes:</p><ul><li>um <strong>comparador</strong>, que verifica se $R_{in} \ge D$</li><li>um <strong>subtrator</strong>, que calcula $R_{in} - D$</li><li>uma lógica de seleção, que decide se a saída será o valor subtraído ou o próprio $R_{in}$</li></ul><p>Se a comparação der verdadeiro, o bit do quociente dessa etapa vale $1$ e o novo resto parcial é a saída do subtrator.</p><p>Se a comparação der falso, o bit do quociente vale $0$ e o resto parcial segue inalterado.</p><p>Em outras palavras, o comparador não é um acessório externo. Ele é a peça que diz se a subtração faz sentido naquela etapa.</p></div><h3 id=circuito-funcional-de-um-estágio-do-divisor><span class=heading-text>Circuito Funcional de Um Estágio do Divisor</span><span class=heading-arabic>13.6.1</span></h3><div class=no-break><div class=centered><svg class="svg-graph graphviz-img" viewbox="0.00 0.00 525.00 120.00" width=500 xmlns=http://www.w3.org/2000/svg><g transform="scale(1 1) rotate(0) translate(4 115.56)" class=graph id=graph0><title>DivStage</title><polygon points="-4,4 -4,-115.56 521.25,-115.56 521.25,4 -4,4" fill=white stroke=none /><g class=node id=node1><title>Rin</title><text font-family=Helvetica,sans-Serif font-size=14.00 text-anchor=middle x=51.38 xml:space=preserve y=-72.33>Resto parcial Rin</text></g><g class=node id=node3><title>CMP</title><path d="M218.5,-39.5C218.5,-39.5 150.75,-39.5 150.75,-39.5 144.75,-39.5 138.75,-33.5 138.75,-27.5 138.75,-27.5 138.75,-12 138.75,-12 138.75,-6 144.75,0 150.75,0 150.75,0 218.5,0 218.5,0 224.5,0 230.5,-6 230.5,-12 230.5,-12 230.5,-27.5 230.5,-27.5 230.5,-33.5 224.5,-39.5 218.5,-39.5" fill=none stroke=black /><text font-family=Helvetica,sans-Serif font-size=14.00 text-anchor=middle x=184.62 xml:space=preserve y=-22.2>Comparador</text><text font-family=Helvetica,sans-Serif font-size=14.00 text-anchor=middle x=184.62 xml:space=preserve y=-6.45>Rin >= D ?</text></g><g class=edge id=edge1><title>Rin->CMP</title><path d="M70.08,-69.93C84.98,-63.34 107.14,-53.55 127.93,-44.36" fill=none stroke=black /><polygon points="129.2,-47.63 136.93,-40.38 126.37,-41.23 129.2,-47.63" fill=black stroke=black /></g><g class=node id=node4><title>SUB</title><path d="M208.38,-97.5C208.38,-97.5 160.88,-97.5 160.88,-97.5 154.88,-97.5 148.88,-91.5 148.88,-85.5 148.88,-85.5 148.88,-70 148.88,-70 148.88,-64 154.88,-58 160.88,-58 160.88,-58 208.38,-58 208.38,-58 214.38,-58 220.38,-64 220.38,-70 220.38,-70 220.38,-85.5 220.38,-85.5 220.38,-91.5 214.38,-97.5 208.38,-97.5" fill=none stroke=black /><text font-family=Helvetica,sans-Serif font-size=14.00 text-anchor=middle x=184.62 xml:space=preserve y=-80.2>Subtrator</text><text font-family=Helvetica,sans-Serif font-size=14.00 text-anchor=middle x=184.62 xml:space=preserve y=-64.45>Rin - D</text></g><g class=edge id=edge3><title>Rin->SUB</title><path d="M102.74,-77.75C114.12,-77.75 126.14,-77.75 137.34,-77.75" fill=none stroke=black /><polygon points="137.13,-81.25 147.13,-77.75 137.13,-74.25 137.13,-81.25" fill=black stroke=black /></g><g class=node id=node5><title>SEL</title><path d="M371.75,-95.75C371.75,-95.75 278.5,-95.75 278.5,-95.75 272.5,-95.75 266.5,-89.75 266.5,-83.75 266.5,-83.75 266.5,-71.75 266.5,-71.75 266.5,-65.75 272.5,-59.75 278.5,-59.75 278.5,-59.75 371.75,-59.75 371.75,-59.75 377.75,-59.75 383.75,-65.75 383.75,-71.75 383.75,-71.75 383.75,-83.75 383.75,-83.75 383.75,-89.75 377.75,-95.75 371.75,-95.75" fill=none stroke=black /><text font-family=Helvetica,sans-Serif font-size=14.00 text-anchor=middle x=325.12 xml:space=preserve y=-72.33>Seleção do resto</text></g><g class=edge id=edge7><title>Rin->SEL</title><path d="M70.14,-85.61C87.31,-92.75 114.24,-102.75 138.75,-106.75 178.99,-113.33 190.18,-112.85 230.5,-106.75 241.24,-105.12 252.44,-102.51 263.21,-99.49" fill=none stroke=black /><polygon points="264.19,-102.85 272.79,-96.66 262.21,-96.14 264.19,-102.85" fill=black stroke=black /></g><g class=node id=node2><title>D</title><text font-family=Helvetica,sans-Serif font-size=14.00 text-anchor=middle x=51.38 xml:space=preserve y=-26.32>Divisor D</text></g><g class=edge id=edge2><title>D->CMP</title><path d="M78.62,-29.35C92.48,-28.08 110.05,-26.48 126.84,-24.94" fill=none stroke=black /><polygon points="127.14,-28.43 136.78,-24.03 126.5,-21.46 127.14,-28.43" fill=black stroke=black /></g><g class=edge id=edge4><title>D->SUB</title><path d="M74.64,-39.55C91.89,-45.6 116.38,-54.18 137.77,-61.68" fill=none stroke=black /><polygon points="136.6,-64.98 147.2,-64.98 138.92,-58.37 136.6,-64.98" fill=black stroke=black /></g><g class=edge id=edge6><title>CMP->SEL</title><path d="M230.98,-38.74C243.3,-43.9 256.78,-49.55 269.56,-54.9" fill=none stroke=black /><polygon points="268.12,-58.09 278.69,-58.72 270.82,-51.63 268.12,-58.09" fill=black stroke=black /></g><g class=node id=node6><title>q</title><text font-family=Helvetica,sans-Serif font-size=14.00 text-anchor=middle x=325.12 xml:space=preserve y=-14.32>Bit do quociente q</text></g><g class=edge id=edge5><title>CMP->q</title><path d="M230.98,-19.75C240.27,-19.75 250.23,-19.75 260.04,-19.75" fill=none stroke=black /><polygon points="259.94,-23.25 269.94,-19.75 259.94,-16.25 259.94,-23.25" fill=black stroke=black /></g><g class=edge id=edge8><title>SUB->SEL</title><path d="M220.57,-77.75C231.02,-77.75 242.86,-77.75 254.7,-77.75" fill=none stroke=black /><polygon points="254.5,-81.25 264.5,-77.75 254.5,-74.25 254.5,-81.25" fill=black stroke=black /></g><g class=node id=node7><title>Rout</title><text font-family=Helvetica,sans-Serif font-size=14.00 text-anchor=middle x=468.5 xml:space=preserve y=-72.33>Novo resto Rout</text></g><g class=edge id=edge9><title>SEL->Rout</title><path d="M384.04,-77.75C392.12,-77.75 400.44,-77.75 408.54,-77.75" fill=none stroke=black /><polygon points="408.3,-81.25 418.3,-77.75 408.3,-74.25 408.3,-81.25" fill=black stroke=black /></g></g></svg></div></div><p>Esse diagrama já é suficiente para mostrar a implementação simples da etapa. O comparador toma a decisão. O subtrator prepara a alternativa caso a subtração seja permitida. O seletor escolhe qual resultado deve seguir adiante.</p><h3 id=encadeando-estágios-para-formar-o-divisor><span class=heading-text>Encadeando Estágios para Formar o Divisor</span><span class=heading-arabic>13.6.2</span></h3><p>Assim como vários Somadores Completos eram encadeados para formar um somador maior, vários estágios de divisão podem ser encadeados para construir o quociente bit a bit.</p><div class=no-break><div class=centered><svg class="svg-graph graphviz-img" viewbox="0.00 0.00 268.00 44.00" width=760 xmlns=http://www.w3.org/2000/svg><g transform="scale(1 1) rotate(0) translate(4 40)" class=graph id=graph0><title>DividerChain</title><polygon points="-4,4 -4,-40 263.5,-40 263.5,4 -4,4" fill=white stroke=none /><g class=node id=node1><title>s0</title><path d="M50.5,-36C50.5,-36 12,-36 12,-36 6,-36 0,-30 0,-24 0,-24 0,-12 0,-12 0,-6 6,0 12,0 12,0 50.5,0 50.5,0 56.5,0 62.5,-6 62.5,-12 62.5,-12 62.5,-24 62.5,-24 62.5,-30 56.5,-36 50.5,-36" fill=none stroke=black /><text font-family=Helvetica,sans-Serif font-size=14.00 text-anchor=middle x=31.25 xml:space=preserve y=-12.57>Etapa 0</text></g><g class=node id=node2><title>s1</title><path d="M149,-36C149,-36 110.5,-36 110.5,-36 104.5,-36 98.5,-30 98.5,-24 98.5,-24 98.5,-12 98.5,-12 98.5,-6 104.5,0 110.5,0 110.5,0 149,0 149,0 155,0 161,-6 161,-12 161,-12 161,-24 161,-24 161,-30 155,-36 149,-36" fill=none stroke=black /><text font-family=Helvetica,sans-Serif font-size=14.00 text-anchor=middle x=129.75 xml:space=preserve y=-12.57>Etapa 1</text></g><g class=edge id=edge1><title>s0->s1</title><path d="M62.78,-18C70.35,-18 78.6,-18 86.61,-18" fill=none stroke=black /><polygon points="86.57,-21.5 96.57,-18 86.57,-14.5 86.57,-21.5" fill=black stroke=black /></g><g class=node id=node3><title>s2</title><path d="M247.5,-36C247.5,-36 209,-36 209,-36 203,-36 197,-30 197,-24 197,-24 197,-12 197,-12 197,-6 203,0 209,0 209,0 247.5,0 247.5,0 253.5,0 259.5,-6 259.5,-12 259.5,-12 259.5,-24 259.5,-24 259.5,-30 253.5,-36 247.5,-36" fill=none stroke=black /><text font-family=Helvetica,sans-Serif font-size=14.00 text-anchor=middle x=228.25 xml:space=preserve y=-12.57>Etapa 2</text></g><g class=edge id=edge2><title>s1->s2</title><path d="M161.28,-18C168.85,-18 177.1,-18 185.11,-18" fill=none stroke=black /><polygon points="185.07,-21.5 195.07,-18 185.07,-14.5 185.07,-21.5" fill=black stroke=black /></g></g></svg></div></div><p>Cada etapa recebe um resto parcial, decide um bit do quociente e entrega um novo resto para a próxima. O quociente completo aparece como a sequência dos bits produzidos por essas etapas.</p><p>Esse arranjo é didático porque deixa clara a ideia central sem exigir ainda uma arquitetura sequencial completa com registradores, clock e unidade de controle. O foco aqui é a lógica da operação, não o refinamento microarquitetural.</p><div class=example><div class=example-title>Divisor Simples - Questão 2</div><p>Como uma etapa decide entre escrever $0$ ou $1$ no quociente?</p><hr><p>Suponha que o divisor seja $D = 11_2$ e que um certo resto parcial de entrada seja $R_{in} = 10_2$.</p><p>Como:</p><p>$$ 10_2 &lt; 11_2 $$</p><p>não podemos subtrair. Portanto:</p><p>$$ q = 0 \qquad \text{e} \qquad R_{out} = R_{in} = 10_2 $$</p><p>Agora suponha que em outra etapa tenhamos:</p><p>$$ R_{in} = 11_2 \qquad \text{e} \qquad D = 10_2 $$</p><p>Como:</p><p>$$ 11_2 \ge 10_2 $$</p><p>podemos subtrair. Então:</p><p>$$ q = 1 \qquad \text{e} \qquad R_{out} = 11_2 - 10_2 = 01_2 $$</p><p>Esse contraste resume a decisão inteira da etapa. O bit do quociente vale $1$ exatamente quando o resto parcial é suficiente para suportar a subtração do divisor.</p></div><h3 id=uma-implementação-didática-pequena><span class=heading-text>Uma Implementação Didática Pequena</span><span class=heading-arabic>13.6.3</span></h3><p>Para manter a aula proporcional à anterior, vamos fixar uma leitura simples de implementação. Em vez de abrir um divisor completo bit a bit com todas as expressões booleanas internas, vamos tratá-lo como uma cascata de blocos conhecidos.</p><p>Cada estágio pode ser lido assim:</p><ul><li>entrada de resto parcial</li><li>comparador com o divisor</li><li>subtrator candidato</li><li>seleção entre manter o resto ou usar a subtração</li><li>geração de um bit do quociente</li></ul><p>Essa abordagem é importante por dois motivos.</p><p>Primeiro, ela já é uma implementação concreta. O circuito não está apenas sendo descrito em palavras. Ele está organizado em blocos funcionais reais.</p><p>Segundo, ela preserva a continuidade didática com a aula 12. Lá vimos como subtratores podiam ser encadeados. Aqui vemos que a divisão reutiliza a subtração, mas agora subordinada a uma decisão de comparação em cada etapa.</p><div class="callout callout-note"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span><span class=callout-title-inner>O que este bloco está ensinando<br></span></div><div class=callout-content><p>Um divisor simples pode ser implementado como uma cascata de estágios de comparação e subtração. A novidade não é uma porta lógica exótica, mas a regra de decisão que define quando a subtração realmente acontece.</p></div></div><h2 id=comparando-multiplicador-e-divisor><span class=heading-text>Comparando Multiplicador e Divisor</span><span class=heading-arabic>13.7</span></h2><p>Agora vale consolidar a diferença entre as duas arquiteturas, porque isso evita uma confusão comum. Tanto multiplicação quanto divisão reutilizam blocos menores, mas não organizam esses blocos da mesma forma.</p><div class=col2><div><p><strong>Multiplicador</strong></p><ul><li>gera produtos parciais com AND</li><li>organiza esses termos por colunas</li><li>soma as colunas com somadores</li><li>o deslocamento define onde cada linha parcial entra</li></ul></div><div><p><strong>Divisor</strong></p><ul><li>forma um resto parcial em cada etapa</li><li>compara esse valor com o divisor</li><li>decide se pode subtrair</li><li>o bit do quociente nasce dessa decisão</li></ul></div></div><p>No multiplicador, a pergunta central é “quais linhas parciais devem existir e em que colunas devem ser somadas?”. No divisor, a pergunta central é “o divisor cabe neste resto parcial ou não?”. Esse contraste ajuda a entender por que um circuito cresce por produtos e carries, enquanto o outro cresce por decisões condicionais sobre o resto.</p><h2 id=questões><span class=heading-text>Questões</span><span class=heading-arabic>13.8</span></h2><div class=questions><p><strong>1.</strong> Explique, com suas palavras, por que as identidades $A \cdot 0 = 0$ e $A \cdot 1 = A$ são fundamentais para entender produtos parciais em multiplicação binária.</p><p><strong>2.</strong> Mostre como a distributiva $A(B + C) = AB + AC$ ajuda a reorganizar expressões lógicas em circuitos aritméticos.</p><p><strong>3.</strong> Reescreva a multiplicação $101_2 \times 11_2$ como soma de linhas parciais e explique o papel do deslocamento.</p><p><strong>4.</strong> Construa a tabela-verdade do produto parcial elementar $p_{ij} = A_i \cdot B_j$ e diga por que ele é implementado por uma AND.</p><p><strong>5.</strong> Em um multiplicador de $2 \times 2$ bits, identifique os quatro produtos parciais e diga em quais colunas eles aparecem.</p><p><strong>6.</strong> Derive as expressões de $P_0$, $P_1$, $P_2$ e $P_3$ para o multiplicador de $2 \times 2$ bits estudado na aula.</p><p><strong>7.</strong> Explique por que a coluna intermediária de um multiplicador de $2 \times 2$ bits pode ser tratada como um problema de Meio Somador.</p><p><strong>8.</strong> Mostre como o circuito do multiplicador responde à entrada $A = 11_2$ e $B = 10_2$.</p><p><strong>9.</strong> Explique, com suas palavras, por que a divisão binária precisa de comparação antes da subtração.</p><p><strong>10.</strong> Reproduza o passo a passo de $110_2 \div 10_2$ indicando, em cada etapa, o resto parcial, a decisão do bit do quociente e o novo resto.</p><p><strong>11.</strong> Descreva o papel de cada bloco funcional em um estágio do divisor simples, indicando a função do comparador, do subtrator e do seletor.</p><p><strong>12.</strong> Em uma etapa de divisão, suponha $R_{in} = 10_2$ e $D = 11_2$. Determine o bit do quociente da etapa e o valor de $R_{out}$.</p><p><strong>13.</strong> Em uma etapa de divisão, suponha $R_{in} = 11_2$ e $D = 10_2$. Determine o bit do quociente da etapa e o valor de $R_{out}$.</p><p><strong>14.</strong> Compare, em termos funcionais, o modo como um multiplicador e um divisor reutilizam os blocos estudados na aula 12.</p></div><div class=example><div class=example-title>Gabarito</div><p><strong>1.</strong> Porque elas mostram que um bit do multiplicador pode anular ou copiar um bit do multiplicando. Se o bit de controle vale $0$, o produto parcial zera. Se vale $1$, ele reproduz o valor do operando.</p><p><strong>2.</strong> Ela mostra que um mesmo sinal pode ser distribuído sobre duas possibilidades, como em $AB + AC$. Isso ajuda a reorganizar a expressão, destacar fator comum e enxergar estruturas repetidas no circuito.</p><p><strong>3.</strong> A conta é:</p><p>$$ \begin{array}{r} \phantom{+}101 \\ \times\ 011 \\ \hline \phantom{+}101 \\ +1010 \\ \hline \phantom{+}1111 \end{array} $$</p><p>O deslocamento aparece porque cada bit mais significativo do multiplicador representa uma potência de 2 maior, então sua linha parcial entra uma casa à esquerda.</p><p><strong>4.</strong> A tabela-verdade é:</p><p>$$ \begin{array}{c|c||c} A_i & B_j & p_{ij} \\ \hline 0 & 0 & 0 \\ 0 & 1 & 0 \\ 1 & 0 & 0 \\ 1 & 1 & 1 \end{array} $$</p><p>Como a saída só vale $1$ quando ambas as entradas valem $1$, o produto parcial é uma AND.</p><p><strong>5.</strong> Os produtos parciais são $A_0B_0$, $A_1B_0$, $A_0B_1$ e $A_1B_1$. O termo $A_0B_0$ cai na coluna $P_0$. Os termos $A_1B_0$ e $A_0B_1$ caem na coluna $P_1$. O termo $A_1B_1$ cai na coluna seguinte, junto com o carry gerado antes.</p><p><strong>6.</strong> As expressões são:</p><p>$$ \begin{aligned} P_0 &= A_0B_0 \\ P_1 &= (A_1B_0) \oplus (A_0B_1) \\ C_1 &= (A_1B_0)(A_0B_1) \\ P_2 &= (A_1B_1) \oplus C_1 \\ P_3 &= (A_1B_1)C_1 \end{aligned} $$</p><p><strong>7.</strong> Porque nessa coluna existem exatamente dois termos a serem somados, $A_1B_0$ e $A_0B_1$. Isso é precisamente o caso resolvido por um Meio Somador, que produz soma local e carry.</p><p><strong>8.</strong> Para $A = 11_2$ e $B = 10_2$, temos $p_{00}=0$, $p_{10}=0$, $p_{01}=1$ e $p_{11}=1$. Assim, $P_0=0$, $P_1=1$, $C_1=0$, $P_2=1$ e $P_3=0$. Logo, o produto é $0110_2$.</p><p><strong>9.</strong> Porque a subtração só faz sentido quando o resto parcial é pelo menos tão grande quanto o divisor. Sem essa verificação, o circuito não saberia se deve escrever $1$ ou $0$ naquele bit do quociente.</p><p><strong>10.</strong> Primeiro, $11_2 \ge 10_2$, então o primeiro bit do quociente vale $1$ e o novo resto é $01_2$. Depois descemos o próximo bit e formamos $10_2$. Como $10_2 \ge 10_2$, o próximo bit do quociente vale $1$ e o novo resto é $00_2$. O quociente final é $11_2$.</p><p><strong>11.</strong> O comparador verifica se o resto parcial suporta a subtração. O subtrator calcula o valor candidato $R_{in} - D$. O seletor decide se a saída será esse valor subtraído ou o próprio resto parcial, conforme o resultado da comparação.</p><p><strong>12.</strong> Como $10_2 &lt; 11_2$, não há subtração. Portanto, $q = 0$ e $R_{out} = 10_2$.</p><p><strong>13.</strong> Como $11_2 \ge 10_2$, a subtração é permitida. Portanto, $q = 1$ e $R_{out} = 01_2$.</p><p><strong>14.</strong> O multiplicador reutiliza principalmente portas AND e somadores para gerar e combinar produtos parciais. O divisor reutiliza comparador e subtrator em etapas que decidem o bit do quociente e atualizam o resto parcial.</p></div><h2 id=próximos-passos><span class=heading-text>Próximos passos</span><span class=heading-arabic>13.9</span></h2><p>Agora que soma, subtração, multiplicação e divisão já apareceram como composições de blocos menores, o próximo passo natural é estudar como representar números negativos e como detectar resultados inválidos em aritmética binária. A continuação mais natural deste percurso é avançar para complemento de dois, números com sinal e overflow.</p></div></article><footer class=footer><p>© 2025 · <a href=#>Gabriel Soares Baptista</a></p></footer></main></div><script>const toggle=document.querySelector(`.mobile-menu-toggle`),sidebar=document.querySelector(`.sidebar`),overlay=document.querySelector(`.mobile-menu-overlay`);function openMenu(){sidebar.classList.add(`open`),overlay.classList.add(`open`),toggle.classList.add(`open`),toggle.innerHTML=`<i data-lucide="x"></i>`,CourseForgeUI.initIcons(),document.body.style.overflow=`hidden`}function closeMenu(){sidebar.classList.remove(`open`),overlay.classList.remove(`open`),toggle.classList.remove(`open`),toggle.innerHTML=`<i data-lucide="menu"></i>`,CourseForgeUI.initIcons(),document.body.style.overflow=``}toggle.addEventListener(`click`,()=>{sidebar.classList.contains(`open`)?closeMenu():openMenu()}),overlay.addEventListener(`click`,closeMenu);</script><script data-no-bundle src=/aulas-faesa/js/vendor/katex/dist/katex.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/katex/dist/contrib/auto-render.min.js></script><script>document.addEventListener(`DOMContentLoaded`,function(){renderMathInElement(document.body,{output:`html`,delimiters:[{left:`$$`,right:`$$`,display:!0},{left:`$`,right:`$`,display:!1},{left:`\\(`,right:`\\)`,display:!1},{left:`\\[`,right:`\\]`,display:!0}],throwOnError:!1,strict:!1})});</script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/prism.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-c.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-cpp.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-python.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-clike.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-perl.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-java.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-mermaid.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-php.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js></script><script>document.addEventListener(`DOMContentLoaded`,function(){mermaid.initialize({startOnLoad:!0,theme:`default`,securityLevel:`loose`,fontFamily:`Inter, system-ui, sans-serif`,themeVariables:{fontSize:`16px`,edgeLabelFontSize:`16px`,multiplicityFontSize:`18px`}})});</script><script>document.addEventListener(`DOMContentLoaded`,function(){let isSubcourse=!1,courseName=`Sistemas Digitais e Microprocessados`;CourseForgeNav.applyDynamicBreadcrumbs(`.breadcrumb`,!1),CourseForgeNav.initScrollSpy(),CourseForgeUI.initCopyButtons(),CourseForgeUI.initExamples()});function handleBackNavigation(){let isSubcourse=!1,dynamic=CourseForgeNav.getBackLink(`contents.html`,`Voltar`,!1);window.location.href=dynamic.url}</script></body></html>
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toposia - Sistemas Digitais e Microprocessados</title>
+    <link rel="icon" href="/aulas-faesa/img/dark-favicon.svg" media="(prefers-color-scheme: light)">
+    <link rel="icon" href="/aulas-faesa/img/light-favicon.svg" media="(prefers-color-scheme: dark)">
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/fonts.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/bundle.min.css">
+    
+    
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css" data-no-bundle>
+    <script src="/aulas-faesa/js/bundle.min.js"></script>
+</head>
+
+<body>
+    <script>
+        // Restore sidebar state instantly (before first paint) to avoid transition flash
+        (function() {
+            if (localStorage.getItem('cf_sidebar_hidden') === 'true') {
+                document.body.classList.add('sidebar-hidden', 'no-transition');
+            }
+            requestAnimationFrame(function() {
+                requestAnimationFrame(function() {
+                    document.body.classList.remove('no-transition');
+                });
+            });
+        })();
+    </script>
+    <div class="page-wrapper">
+        <nav class="sidebar">
+            <div class="sidebar-content">
+                <header class="sidebar-title-section">
+                    <a href="contents.html" class="course-title-link">
+                        <h1 class="sidebar-course-title">Sistemas Digitais e Microprocessados</h1>
+                    </a>
+                    <div class="sidebar-ornament">❧</div>
+                </header>
+
+                
+                <section class="sidebar-toc-section">
+                    <h2 class="toc-header">Tabela de Conteúdos</h2>
+                    <ol class="toc-list">
+                        
+                        <li class="toc-item level-2">
+                            <a href="#introdução">13.1. Introdução</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#revisão-rápida-de-álgebra-booleana">13.2. Revisão Rápida de Álgebra Booleana</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#multiplicação-binária-por-produtos-parciais">13.3. Multiplicação Binária por Produtos Parciais</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#como-nasce-um-multiplicador-simples">13.4. Como Nasce um Multiplicador Simples</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#produtos-parciais-do-multiplicador-2-x-2">13.4.1. Produtos Parciais do Multiplicador 2 x 2</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#derivação-das-saídas">13.4.2. Derivação das Saídas</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#bloco-funcional-do-multiplicador-2-x-2">13.4.3. Bloco Funcional do Multiplicador 2 x 2</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#como-a-ideia-escala-para-mais-bits">13.4.4. Como a Ideia Escala para Mais Bits</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#divisão-binária-por-comparação-e-subtração">13.5. Divisão Binária por Comparação e Subtração</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#como-nasce-um-divisor-simples">13.6. Como Nasce um Divisor Simples</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#circuito-funcional-de-um-estágio-do-divisor">13.6.1. Circuito Funcional de Um Estágio do Divisor</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#encadeando-estágios-para-formar-o-divisor">13.6.2. Encadeando Estágios para Formar o Divisor</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#uma-implementação-didática-pequena">13.6.3. Uma Implementação Didática Pequena</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#comparando-multiplicador-e-divisor">13.7. Comparando Multiplicador e Divisor</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#questões">13.8. Questões</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#próximos-passos">13.9. Próximos passos</a>
+                        </li>
+                        
+                    </ol>
+                </section>
+                
+
+                <nav class="sidebar-nav-section">
+                    
+                    <a href="12-digital-arithmetic-i.html" class="sidebar-nav-link prev"><i data-lucide="chevron-left" class="nav-icon"></i> Aritmética Digital - I</a>
+                    
+                    
+                    <a href="javascript:void(0)" onclick="handleBackNavigation()"
+                        class="sidebar-nav-link back"><i data-lucide="arrow-left" class="nav-icon"></i> Voltar</a>
+                </nav>
+
+            </div>
+        </nav>
+
+        <button class="mobile-menu-toggle" aria-label="Menu">
+            <i data-lucide="menu"></i>
+        </button>
+
+        <button class="sidebar-toggle" onclick="CourseForgeNav.toggleSidebar()" aria-label="Alternar Barra Lateral">
+            <i data-lucide="chevron-left" class="toggle-icon" id="sidebar-toggle-icon"></i>
+        </button>
+
+        <div class="mobile-menu-overlay"></div>
+
+        <main class="main-content">
+            <article class="article">
+                <header class="article-header">
+                    <span class="chapter-number">13</span>
+                    <h1 class="article-title">
+                        <span class="title-ornament left">❧</span>
+                        <span class="title-text">Aritmética Digital - II</span>
+                        <span class="title-ornament right">❧</span>
+                    </h1>
+                    
+                    <p class="article-date">02/04/2026</p>
+                    
+                    
+                    <nav class="breadcrumb" aria-label="Breadcrumb">
+                        
+                        
+                        
+                        <a href="contents.html" class="breadcrumb-link">Sistemas Digitais e Microprocessados</a>
+                        
+                        <span class="breadcrumb-separator"><i data-lucide="chevron-right" class="breadcrumb-icon"></i></span>
+                        
+                        
+                        
+                        
+                        <a href="contents.html#part-IV" class="breadcrumb-link">IV - Lógica Combinacional - II</a>
+                        
+                        <span class="breadcrumb-separator"><i data-lucide="chevron-right" class="breadcrumb-icon"></i></span>
+                        
+                        
+                        
+                        <span class="breadcrumb-current">Aritmética Digital - II</span>
+                        
+                        
+                    </nav>
+                    
+                </header>
+                <div class="article-body">
+                    <h2 id="introdução"><span class="heading-text">Introdução</span><span class="heading-arabic">13.1</span></h2>
+<p>Na aula de hoje vamos avançar de soma e subtração para duas operações maiores, multiplicação e divisão. Isso importa porque esses circuitos parecem mais complexos à primeira vista, mas na prática nascem da combinação organizada de blocos que você já conhece, como portas lógicas, somadores, subtratores, comparadores e deslocamentos.</p>
+<p>Na aula anterior, cada coluna resolvia uma soma ou subtração local e repassava carry ou borrow para a próxima posição. Agora a ideia fica mais rica. Na multiplicação, várias colunas são geradas ao mesmo tempo na forma de produtos parciais. Na divisão, cada etapa precisa decidir se ainda é possível subtrair o divisor e, a partir disso, construir o quociente.</p>
+<div class="callout callout-abstract">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
+    <span class="callout-title-inner">Ideia central<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Um multiplicador digital simples pode ser entendido como uma rede de portas AND que gera produtos parciais e de somadores que combinam essas linhas. Um divisor digital simples pode ser entendido como uma sequência de etapas que comparam, subtraem e decidem os bits do quociente a partir do resto parcial.</p>
+  </div>
+</div>
+<h2 id="revisão-rápida-de-álgebra-booleana"><span class="heading-text">Revisão Rápida de Álgebra Booleana</span><span class="heading-arabic">13.2</span></h2>
+<p>Antes de formalizar os novos circuitos, vale recuperar algumas identidades muito simples de álgebra booleana. O objetivo aqui não é repetir a aula de simplificação, mas lembrar exatamente as propriedades que ajudam a enxergar por que um bit pode copiar, zerar, selecionar ou combinar sinais dentro de um circuito aritmético.</p>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Se um bit de controle vale $0$ em uma porta AND, o que acontece com o sinal que está do outro lado? E se esse mesmo bit vale $1$?</p>
+  </div>
+</div>
+<div class="example">
+  <div class="example-title">Revisão - Questão 1</div>
+  <p>Por que as identidades $A \cdot 0 = 0$ e $A \cdot 1 = A$ são tão úteis para entender multiplicação digital?</p>
+<hr />
+<p>Essas duas igualdades dizem como um bit pode apagar ou deixar passar um sinal.</p>
+<p>Se uma entrada de uma AND vale $0$, a saída obrigatoriamente vale $0$.</p>
+<p>$$
+A \cdot 0 = 0
+$$</p>
+<p>Se uma entrada de uma AND vale $1$, a saída simplesmente copia a outra entrada.</p>
+<p>$$
+A \cdot 1 = A
+$$</p>
+<p>Agora interprete isso em linguagem de hardware. Suponha que $A$ seja um bit do multiplicando e que o outro sinal seja um bit do multiplicador.</p>
+<ul>
+<li>se o bit do multiplicador for $0$, aquele produto parcial desaparece</li>
+<li>se o bit do multiplicador for $1$, aquele produto parcial copia o bit de $A$</li>
+</ul>
+<p>É exatamente por isso que a geração de produtos parciais em um multiplicador é feita com portas AND.</p>
+</div>
+<div class="example">
+  <div class="example-title">Revisão - Questão 2</div>
+  <p>Como a distributiva ajuda a ler a combinação de sinais em circuitos aritméticos?</p>
+<hr />
+<p>A distributiva em álgebra booleana é:</p>
+<p>$$
+A(B + C) = AB + AC
+$$</p>
+<p>Ela mostra que um mesmo sinal pode influenciar dois caminhos diferentes ao mesmo tempo.</p>
+<p>Se quisermos o processo inverso, também podemos fatorar:</p>
+<p>$$
+AB + AC = A(B + C)
+$$</p>
+<p>Essas duas leituras aparecem com frequência quando reorganizamos a lógica de controle ou quando queremos enxergar um padrão comum em vários termos da expressão.</p>
+<p>Por exemplo, se um mesmo bit $A$ participa de dois produtos possíveis, como $AB$ e $AC$, a fatoração deixa claro que $A$ está selecionando uma entre duas condições agrupadas.</p>
+</div>
+<div class="example">
+  <div class="example-title">Revisão - Questão 3</div>
+  <p>O que as igualdades $A + 0 = A$ e $A + A = A$ lembram sobre a combinação de resultados?</p>
+<hr />
+<p>A primeira igualdade diz que somar logicamente com $0$ não altera a informação.</p>
+<p>$$
+A + 0 = A
+$$</p>
+<p>A segunda diz que repetir o mesmo termo em uma OR não cria um novo comportamento.</p>
+<p>$$
+A + A = A
+$$</p>
+<p>Essas identidades ajudam quando reorganizamos expressões e percebemos que algumas partes não acrescentam informação nova. Em circuitos maiores, isso evita duplicação desnecessária de portas e ajuda a ler a lógica de forma mais limpa.</p>
+</div>
+<p>Essas continhas parecem pequenas, mas elas voltam imediatamente na aula de hoje. Na multiplicação, um bit do multiplicador ora zera uma linha parcial, ora copia o operando. Na divisão, comparações e decisões de controle também se apoiam em combinações lógicas simples. A ideia continua a mesma da aula anterior. Primeiro entendemos o comportamento. Depois transformamos isso em bloco funcional.</p>
+<h2 id="multiplicação-binária-por-produtos-parciais"><span class="heading-text">Multiplicação Binária por Produtos Parciais</span><span class="heading-arabic">13.3</span></h2>
+<p>Quando você multiplica números decimais no papel, costuma gerar linhas parciais e depois somá-las. Em binário a lógica é a mesma, mas fica ainda mais clara porque cada dígito só pode ser $0$ ou $1$. Isso faz com que cada linha parcial seja extremamente simples de interpretar.</p>
+<p>Se um bit do multiplicador vale $0$, ele não contribui com nada. Se vale $1$, ele copia o multiplicando naquela posição de deslocamento. Portanto, a multiplicação binária pode ser lida como soma de cópias deslocadas do operando.</p>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Se cada bit do multiplicador só pode valer $0$ ou $1$, quantas possibilidades reais existem para cada linha parcial da multiplicação?</p>
+  </div>
+</div>
+<div class="example">
+  <div class="example-title">Multiplicação - Questão 1</div>
+  <p>Como ler a conta $101_2 \times 11_2$ sem tratar a multiplicação como uma operação misteriosa?</p>
+<hr />
+<p>Vamos escrever a conta como soma de produtos parciais.</p>
+<p>$$
+\begin{array}{r}
+\phantom{+}101 \\
+\times\ 011 \\
+\hline
+\phantom{+}101 \\
++1010 \\
+\hline
+\phantom{+}1111
+\end{array}
+$$</p>
+<p>Agora leia o que aconteceu linha por linha.</p>
+<ul>
+<li>o bit menos significativo do multiplicador vale $1$, então ele copia $101$</li>
+<li>o bit seguinte também vale $1$, então ele copia novamente $101$, mas deslocado uma posição para a esquerda</li>
+<li>a soma dessas duas linhas gera $1111_2$</li>
+</ul>
+<p>Em decimal, isso confirma a conta.</p>
+<p>$$
+5 \times 3 = 15
+\qquad \Rightarrow \qquad
+1111_2 = 15_{10}
+$$</p>
+<p>O ponto importante não é apenas o resultado. O mais importante é a estrutura. A multiplicação apareceu como soma de linhas simples, e não como um bloco mágico que resolve tudo de uma vez.</p>
+</div>
+<p>Essa leitura permite escrever a regra geral. Se o multiplicando for $A$ e o multiplicador for $B$, cada bit $B_j$ do multiplicador gera uma linha parcial. Essa linha é composta pelos produtos:</p>
+<p>$$
+p_{ij} = A_i \cdot B_j
+$$</p>
+<p>Aqui, $A_i$ é um bit do multiplicando e $B_j$ é um bit do multiplicador. Repare no efeito direto da AND:</p>
+<ul>
+<li>se $B_j = 0$, então $p_{ij} = 0$</li>
+<li>se $B_j = 1$, então $p_{ij} = A_i$</li>
+</ul>
+<p>Portanto, cada bit do multiplicador funciona como um seletor que decide se uma certa cópia do multiplicando entra ou não na soma final.</p>
+<div class="example">
+  <div class="example-title">Multiplicação - Questão 2</div>
+  <p>Por que a porta AND representa exatamente a geração de um produto parcial?</p>
+<hr />
+<p>Considere um único bit $A_i$ do multiplicando e um único bit $B_j$ do multiplicador. O produto parcial elementar será:</p>
+<p>$$
+p_{ij} = A_i \cdot B_j
+$$</p>
+<p>Veja a tabela-verdade.</p>
+<p>$$
+\begin{array}{c|c||c}
+A_i & B_j & p_{ij} \\
+\hline
+0 & 0 & 0 \\
+0 & 1 & 0 \\
+1 & 0 & 0 \\
+1 & 1 & 1
+\end{array}
+$$</p>
+<p>Essa é exatamente a tabela de uma AND. Isso significa que o produto parcial de dois bits em multiplicação binária não exige nenhuma nova porta especial. Ele é a própria operação AND.</p>
+<p>O que torna um multiplicador maior não é a complexidade do produto de dois bits isolados. É a necessidade de gerar muitos desses produtos e depois somá-los nas colunas corretas.</p>
+</div>
+<p>Agora já podemos responder de forma precisa como nasce um multiplicador simples. Primeiro, portas AND geram os produtos parciais bit a bit. Depois, somadores organizam essas contribuições por coluna, exatamente como fizemos na aula anterior ao tratar carry entre posições vizinhas.</p>
+<h2 id="como-nasce-um-multiplicador-simples"><span class="heading-text">Como Nasce um Multiplicador Simples</span><span class="heading-arabic">13.4</span></h2>
+<p>Vamos escolher uma implementação pequena o suficiente para ser totalmente legível e grande o suficiente para realmente merecer o nome de multiplicador. O caso mais didático é o multiplicador de $2 \times 2$ bits.</p>
+<p>Sejam:</p>
+<p>$$
+A = A_1A_0
+\qquad \text{e} \qquad
+B = B_1B_0
+$$</p>
+<p>O produto terá até 4 bits:</p>
+<p>$$
+P = P_3P_2P_1P_0
+$$</p>
+<h3 id="produtos-parciais-do-multiplicador-2-x-2"><span class="heading-text">Produtos Parciais do Multiplicador 2 x 2</span><span class="heading-arabic">13.4.1</span></h3>
+<p>Os quatro produtos parciais elementares são:</p>
+<p>$$
+\begin{aligned}
+p_{00} &= A_0B_0 \\
+p_{10} &= A_1B_0 \\
+p_{01} &= A_0B_1 \\
+p_{11} &= A_1B_1
+\end{aligned}
+$$</p>
+<p>Cada um deles pode ser implementado com uma porta AND.</p>
+<div class="no-break"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:ns2="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" width="180" viewBox="0 0 109.872 45.36" version="1.1" class="svg-graph"> <metadata>  <rdf:RDF>   <ns2:Work>    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage" />    <dc:date>2026-04-06T17:52:19.316231</dc:date>    <dc:format>image/svg+xml</dc:format>    <dc:creator>     <ns2:Agent>      <dc:title>Matplotlib v3.10.8, https://matplotlib.org/</dc:title>     </ns2:Agent>    </dc:creator>   </ns2:Work>  </rdf:RDF> </metadata> <defs>  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style> </defs> <g id="figure_1">  <g id="patch_1">   <path d="M 0 45.36  L 109.872 45.36  L 109.872 0  L 0 0  L 0 45.36  z " style="fill: none" />  </g>  <g id="axes_1">   <g id="line2d_1">    <path d="M 56.796 40.68  L 57.949264 40.643017  L 59.097789 40.53222  L 60.236855 40.348065  L 61.361783 40.091308  L 62.467948 39.763003  L 63.550806 39.364502  L 64.605907 38.89744  L 65.628916 38.363737  L 66.615628 37.765586  L 67.56199 37.105445  L 68.464111 36.386027  L 69.318286 35.610288  L 70.121004 34.781416  L 70.868967 33.902816  L 71.559101 32.9781  L 72.18857 32.011066  L 72.754788 31.005689  L 73.255427 29.9661  L 73.688432 28.896571  L 74.052021 27.801497  L 74.344702 26.685377  L 74.565272 25.552798  L 74.712824 24.408414  L 74.786752 23.256928  L 74.786752 22.103072  L 74.712824 20.951586  L 74.565272 19.807202  L 74.344702 18.674623  L 74.052021 17.558503  L 73.688432 16.463429  L 73.255427 15.3939  L 72.754788 14.354311  L 72.18857 13.348934  L 71.559101 12.3819  L 70.868967 11.457184  L 70.121004 10.578584  L 69.318286 9.749712  L 68.464111 8.973973  L 67.56199 8.254555  L 66.615628 7.594414  L 65.628916 6.996263  L 64.605907 6.46256  L 63.550806 5.995498  L 62.467948 5.596997  L 61.361783 5.268692  L 60.236855 5.011935  L 59.097789 4.82778  L 57.949264 4.716983  L 56.796 4.68  L 56.796 4.68  L 33.396 4.68  L 33.396 22.68  L 33.396 40.68  L 56.796 40.68  " clip-path="url(#pdf28be8599)" style="fill: none; stroke: #333333; stroke-width: 2; stroke-linecap: round" />   </g>   <g id="line2d_2">    <path d="M 20.796 31.68  L 33.396 31.68  " clip-path="url(#pdf28be8599)" style="fill: none; stroke: #333333; stroke-width: 2; stroke-linecap: round" />   </g>   <g id="line2d_3">    <path d="M 20.796 13.68  L 33.396 13.68  " clip-path="url(#pdf28be8599)" style="fill: none; stroke: #333333; stroke-width: 2; stroke-linecap: round" />   </g>   <g id="line2d_4">    <path d="M 74.796 22.68  L 87.396 22.68  " clip-path="url(#pdf28be8599)" style="fill: none; stroke: #333333; stroke-width: 2; stroke-linecap: round" />   </g>   <g id="text_1">    <text style="font-size: 14px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #333333" x="90.996" y="26.543125" transform="rotate(-0 90.996 26.543125)">pij</text>   </g>   <g id="text_2">    <text style="font-size: 14px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end; fill: #333333" x="17.196" y="17.543125" transform="rotate(-0 17.196 17.543125)">Ai</text>   </g>   <g id="text_3">    <text style="font-size: 14px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end; fill: #333333" x="17.196" y="35.543125" transform="rotate(-0 17.196 35.543125)">Bj</text>   </g>  </g> </g> <defs>  <clipPath id="pdf28be8599">   <rect x="0" y="0" width="109.872" height="45.36" />  </clipPath> </defs></svg></div></div>
+
+<p>Esse desenho representa apenas a célula mais básica do multiplicador. O circuito completo aparece quando colocamos esses produtos nas colunas corretas do resultado.</p>
+<div class="example">
+  <div class="example-title">Multiplicador 2 x 2 - Questão 1</div>
+  <p>Como os quatro produtos parciais são distribuídos nas colunas do resultado?</p>
+<hr />
+<p>Escrevendo a multiplicação por linhas parciais, temos:</p>
+<p>$$
+\begin{array}{r}
+\phantom{+}A_1A_0 \\
+\times\ B_1B_0 \\
+\hline
+\phantom{+}A_1A_0B_0 \\
++A_1A_0B_1\,0 \\
+\hline
+P_3P_2P_1P_0
+\end{array}
+$$</p>
+<p>Se lermos por coluna, obtemos:</p>
+<ul>
+<li>coluna 0: apenas $A_0B_0$</li>
+<li>coluna 1: os termos $A_1B_0$ e $A_0B_1$</li>
+<li>coluna 2: o termo $A_1B_1$ e o carry vindo da coluna anterior</li>
+<li>coluna 3: apenas o carry final</li>
+</ul>
+<p>Essa leitura é crucial porque ela mostra exatamente onde o Meio Somador entra. A coluna intermediária precisa somar dois produtos parciais, e essa soma pode gerar carry para a coluna seguinte.</p>
+</div>
+<h3 id="derivação-das-saídas"><span class="heading-text">Derivação das Saídas</span><span class="heading-arabic">13.4.2</span></h3>
+<p>Agora podemos escrever cada saída do produto final.</p>
+<p>A primeira coluna é imediata:</p>
+<p>$$
+P_0 = A_0B_0
+$$</p>
+<p>Na segunda coluna somamos $A_1B_0$ e $A_0B_1$. Isso é exatamente o problema de um Meio Somador.</p>
+<p>$$
+\begin{aligned}
+P_1 &= (A_1B_0) \oplus (A_0B_1) \\
+C_1 &= (A_1B_0)(A_0B_1)
+\end{aligned}
+$$</p>
+<p>Na terceira coluna somamos o termo $A_1B_1$ com o carry $C_1$.</p>
+<p>$$
+\begin{aligned}
+P_2 &= (A_1B_1) \oplus C_1 \\
+P_3 &= (A_1B_1) \cdot C_1
+\end{aligned}
+$$</p>
+<p>Observe a lógica do circuito inteiro. Ele não está fazendo nada além de repetir o princípio da aula 12.</p>
+<ul>
+<li>portas AND geram resultados locais</li>
+<li>uma coluna soma os termos que caem nela</li>
+<li>o carry dessa coluna alimenta a seguinte</li>
+</ul>
+<div class="col2"><div>
+
+<p><strong>Leitura algébrica final</strong></p>
+<p>$$
+\begin{aligned}
+P_0 &= A_0B_0 \\
+P_1 &= (A_1B_0) \oplus (A_0B_1) \\
+P_2 &= (A_1B_1) \oplus C_1 \\
+P_3 &= (A_1B_1)C_1
+\end{aligned}
+$$</p>
+<p>com</p>
+<p>$$
+C_1 = (A_1B_0)(A_0B_1)
+$$</p>
+</div><div>
+
+<p><strong>Leitura conceitual</strong></p>
+<ol>
+<li>O bit menos significativo sai diretamente do primeiro produto parcial.</li>
+<li>A coluna do meio soma dois produtos e pode gerar carry.</li>
+<li>A coluna seguinte soma o produto parcial mais significativo com esse carry.</li>
+<li>O bit final aparece apenas se ainda houver carry sobrando.</li>
+</ol>
+</div></div>
+
+<h3 id="bloco-funcional-do-multiplicador-2-x-2"><span class="heading-text">Bloco Funcional do Multiplicador 2 x 2</span><span class="heading-arabic">13.4.3</span></h3>
+<div class="error">Graphviz error: failed to execute PosixPath('dot'), make sure the Graphviz executables are on your systems' PATH</div>
+
+<p>Esse diagrama não desenha cada fio interno, mas mostra o arranjo essencial do circuito. Primeiro, as ANDs produzem os termos elementares. Depois, os somadores combinam as colunas que têm mais de um termo. Assim nasce um multiplicador combinacional pequeno.</p>
+<div class="example">
+  <div class="example-title">Multiplicador 2 x 2 - Questão 2</div>
+  <p>Como o circuito responde ao exemplo $10_2 \times 11_2$?</p>
+<hr />
+<p>Temos:</p>
+<p>$$
+A_1A_0 = 10
+\qquad \text{e} \qquad
+B_1B_0 = 11
+$$</p>
+<p>Logo:</p>
+<p>$$
+\begin{aligned}
+p_{00} &= A_0B_0 = 0 \cdot 1 = 0 \\
+p_{10} &= A_1B_0 = 1 \cdot 1 = 1 \\
+p_{01} &= A_0B_1 = 0 \cdot 1 = 0 \\
+p_{11} &= A_1B_1 = 1 \cdot 1 = 1
+\end{aligned}
+$$</p>
+<p>Agora calculamos as saídas:</p>
+<p>$$
+\begin{aligned}
+P_0 &= p_{00} = 0 \\
+P_1 &= p_{10} \oplus p_{01} = 1 \oplus 0 = 1 \\
+C_1 &= p_{10}p_{01} = 1 \cdot 0 = 0 \\
+P_2 &= p_{11} \oplus C_1 = 1 \oplus 0 = 1 \\
+P_3 &= p_{11}C_1 = 1 \cdot 0 = 0
+\end{aligned}
+$$</p>
+<p>Portanto:</p>
+<p>$$
+P = 0110_2
+$$</p>
+<p>Em decimal, isso corresponde a $2 \times 3 = 6$, então o circuito está coerente com a conta aritmética.</p>
+</div>
+<h3 id="como-a-ideia-escala-para-mais-bits"><span class="heading-text">Como a Ideia Escala para Mais Bits</span><span class="heading-arabic">13.4.4</span></h3>
+<p>O multiplicador de $2 \times 2$ bits não é um caso isolado. Ele é apenas a primeira versão completa da técnica. Se aumentarmos o número de bits, o padrão continua o mesmo.</p>
+<ul>
+<li>mais bits no multiplicando e no multiplicador geram mais produtos parciais</li>
+<li>mais colunas passam a ter vários termos ao mesmo tempo</li>
+<li>essas colunas precisam de mais somadores para combinar os resultados</li>
+</ul>
+<p>Por exemplo, em um multiplicador de $3 \times 2$ bits, ainda usamos portas AND para gerar todos os produtos elementares. A diferença é que algumas colunas já podem exigir mais de uma soma encadeada. Isso mostra por que a multiplicação cresce rapidamente em complexidade quando o número de bits aumenta.</p>
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">O que este bloco está ensinando<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Um multiplicador combinacional simples nada mais é do que uma rede de geração de produtos parciais seguida por uma rede de soma por colunas. A novidade não está em uma porta nova, mas na forma como ANDs e somadores são organizados.</p>
+  </div>
+</div>
+<h2 id="divisão-binária-por-comparação-e-subtração"><span class="heading-text">Divisão Binária por Comparação e Subtração</span><span class="heading-arabic">13.5</span></h2>
+<p>Na multiplicação, cada bit do multiplicador decide se uma linha parcial entra ou não na conta. Na divisão, a pergunta é outra. Em cada etapa precisamos decidir se o divisor ainda cabe dentro do valor parcial atual. Se couber, subtraímos e escrevemos um bit $1$ no quociente. Se não couber, mantemos o valor parcial e escrevemos um bit $0$.</p>
+<p>Essa é a diferença conceitual mais importante entre as duas operações. A multiplicação é uma composição de cópias e somas. A divisão é uma sequência de testes, subtrações e atualizações de resto parcial.</p>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Em uma divisão binária, o que exatamente faz um bit do quociente valer $1$ em uma certa etapa?</p>
+  </div>
+</div>
+<div class="example">
+  <div class="example-title">Divisão - Questão 1</div>
+  <p>Como ler a conta $110_2 \div 10_2$ passo a passo?</p>
+<hr />
+<p>Em decimal, essa conta é $6 \div 2$, então esperamos quociente $3$, isto é, $11_2$.</p>
+<p>Vamos escrever a divisão como uma sequência de decisões.</p>
+<p>Primeiro, observamos os bits mais significativos do dividendo e formamos um valor parcial grande o suficiente para comparar com o divisor $10_2$.</p>
+<ol>
+<li>O primeiro parcial relevante é $11_2$.</li>
+<li>Como $11_2 \ge 10_2$, podemos subtrair.</li>
+<li>O bit correspondente do quociente vale $1$.</li>
+</ol>
+<p>Fazendo a subtração:</p>
+<p>$$
+11_2 - 10_2 = 01_2
+$$</p>
+<p>Agora descemos o próximo bit do dividendo, que é $0$, formando o novo parcial:</p>
+<p>$$
+10_2
+$$</p>
+<p>Mais uma vez:</p>
+<ul>
+<li>como $10_2 \ge 10_2$, podemos subtrair</li>
+<li>o próximo bit do quociente também vale $1$</li>
+</ul>
+<p>Então:</p>
+<p>$$
+10_2 - 10_2 = 00_2
+$$</p>
+<p>Logo, o resultado final é:</p>
+<p>$$
+110_2 \div 10_2 = 11_2
+$$</p>
+<p>com resto igual a $0$.</p>
+<p>O que importa aqui é a mecânica. Em cada etapa houve uma comparação, uma decisão sobre o bit do quociente e uma possível subtração.</p>
+</div>
+<p>Essa leitura sugere um bloco funcional natural para a divisão. Cada estágio precisa receber um valor parcial, comparar esse valor com o divisor, gerar um bit do quociente e produzir o novo resto parcial que seguirá para a etapa seguinte.</p>
+<h2 id="como-nasce-um-divisor-simples"><span class="heading-text">Como Nasce um Divisor Simples</span><span class="heading-arabic">13.6</span></h2>
+<p>Diferentemente do multiplicador, um divisor didático simples fica mais claro quando pensamos em estágios funcionais. Em vez de abrir toda a lógica booleana interna de cada comparação e de cada subtração, vale mais a pena enxergar a arquitetura da etapa.</p>
+<p>Um estágio de divisão precisa fazer três coisas:</p>
+<ol>
+<li>comparar o resto parcial com o divisor</li>
+<li>decidir se a subtração pode ocorrer</li>
+<li>gerar o próximo resto parcial e o bit correspondente do quociente</li>
+</ol>
+<p>Se chamarmos o resto parcial de entrada de $R_{in}$ e o divisor de $D$, o comportamento da etapa pode ser resumido assim:</p>
+<p>$$
+\text{se } R_{in} \ge D, \text{ então } q = 1 \text{ e } R_{out} = R_{in} - D
+$$</p>
+<p>$$
+\text{se } R_{in} < D, \text{ então } q = 0 \text{ e } R_{out} = R_{in}
+$$</p>
+<p>Essa regra é simples, mas já descreve um divisor funcional.</p>
+<div class="example">
+  <div class="example-title">Divisor Simples - Questão 1</div>
+  <p>Que bloco funcional implementa exatamente essa decisão?</p>
+<hr />
+<p>Precisamos de três partes:</p>
+<ul>
+<li>um <strong>comparador</strong>, que verifica se $R_{in} \ge D$</li>
+<li>um <strong>subtrator</strong>, que calcula $R_{in} - D$</li>
+<li>uma lógica de seleção, que decide se a saída será o valor subtraído ou o próprio $R_{in}$</li>
+</ul>
+<p>Se a comparação der verdadeiro, o bit do quociente dessa etapa vale $1$ e o novo resto parcial é a saída do subtrator.</p>
+<p>Se a comparação der falso, o bit do quociente vale $0$ e o resto parcial segue inalterado.</p>
+<p>Em outras palavras, o comparador não é um acessório externo. Ele é a peça que diz se a subtração faz sentido naquela etapa.</p>
+</div>
+<h3 id="circuito-funcional-de-um-estágio-do-divisor"><span class="heading-text">Circuito Funcional de Um Estágio do Divisor</span><span class="heading-arabic">13.6.1</span></h3>
+<div class="error">Graphviz error: failed to execute PosixPath('dot'), make sure the Graphviz executables are on your systems' PATH</div>
+
+<p>Esse diagrama já é suficiente para mostrar a implementação simples da etapa. O comparador toma a decisão. O subtrator prepara a alternativa caso a subtração seja permitida. O seletor escolhe qual resultado deve seguir adiante.</p>
+<h3 id="encadeando-estágios-para-formar-o-divisor"><span class="heading-text">Encadeando Estágios para Formar o Divisor</span><span class="heading-arabic">13.6.2</span></h3>
+<p>Assim como vários Somadores Completos eram encadeados para formar um somador maior, vários estágios de divisão podem ser encadeados para construir o quociente bit a bit.</p>
+<div class="error">Graphviz error: failed to execute PosixPath('dot'), make sure the Graphviz executables are on your systems' PATH</div>
+
+<p>Cada etapa recebe um resto parcial, decide um bit do quociente e entrega um novo resto para a próxima. O quociente completo aparece como a sequência dos bits produzidos por essas etapas.</p>
+<p>Esse arranjo é didático porque deixa clara a ideia central sem exigir ainda uma arquitetura sequencial completa com registradores, clock e unidade de controle. O foco aqui é a lógica da operação, não o refinamento microarquitetural.</p>
+<div class="example">
+  <div class="example-title">Divisor Simples - Questão 2</div>
+  <p>Como uma etapa decide entre escrever $0$ ou $1$ no quociente?</p>
+<hr />
+<p>Suponha que o divisor seja $D = 11_2$ e que um certo resto parcial de entrada seja $R_{in} = 10_2$.</p>
+<p>Como:</p>
+<p>$$
+10_2 < 11_2
+$$</p>
+<p>não podemos subtrair. Portanto:</p>
+<p>$$
+q = 0
+\qquad \text{e} \qquad
+R_{out} = R_{in} = 10_2
+$$</p>
+<p>Agora suponha que em outra etapa tenhamos:</p>
+<p>$$
+R_{in} = 11_2
+\qquad \text{e} \qquad
+D = 10_2
+$$</p>
+<p>Como:</p>
+<p>$$
+11_2 \ge 10_2
+$$</p>
+<p>podemos subtrair. Então:</p>
+<p>$$
+q = 1
+\qquad \text{e} \qquad
+R_{out} = 11_2 - 10_2 = 01_2
+$$</p>
+<p>Esse contraste resume a decisão inteira da etapa. O bit do quociente vale $1$ exatamente quando o resto parcial é suficiente para suportar a subtração do divisor.</p>
+</div>
+<h3 id="uma-implementação-didática-pequena"><span class="heading-text">Uma Implementação Didática Pequena</span><span class="heading-arabic">13.6.3</span></h3>
+<p>Para manter a aula proporcional à anterior, vamos fixar uma leitura simples de implementação. Em vez de abrir um divisor completo bit a bit com todas as expressões booleanas internas, vamos tratá-lo como uma cascata de blocos conhecidos.</p>
+<p>Cada estágio pode ser lido assim:</p>
+<ul>
+<li>entrada de resto parcial</li>
+<li>comparador com o divisor</li>
+<li>subtrator candidato</li>
+<li>seleção entre manter o resto ou usar a subtração</li>
+<li>geração de um bit do quociente</li>
+</ul>
+<p>Essa abordagem é importante por dois motivos.</p>
+<p>Primeiro, ela já é uma implementação concreta. O circuito não está apenas sendo descrito em palavras. Ele está organizado em blocos funcionais reais.</p>
+<p>Segundo, ela preserva a continuidade didática com a aula 12. Lá vimos como subtratores podiam ser encadeados. Aqui vemos que a divisão reutiliza a subtração, mas agora subordinada a uma decisão de comparação em cada etapa.</p>
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">O que este bloco está ensinando<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Um divisor simples pode ser implementado como uma cascata de estágios de comparação e subtração. A novidade não é uma porta lógica exótica, mas a regra de decisão que define quando a subtração realmente acontece.</p>
+  </div>
+</div>
+<h2 id="comparando-multiplicador-e-divisor"><span class="heading-text">Comparando Multiplicador e Divisor</span><span class="heading-arabic">13.7</span></h2>
+<p>Agora vale consolidar a diferença entre as duas arquiteturas, porque isso evita uma confusão comum. Tanto multiplicação quanto divisão reutilizam blocos menores, mas não organizam esses blocos da mesma forma.</p>
+<div class="col2"><div>
+
+<p><strong>Multiplicador</strong></p>
+<ul>
+<li>gera produtos parciais com AND</li>
+<li>organiza esses termos por colunas</li>
+<li>soma as colunas com somadores</li>
+<li>o deslocamento define onde cada linha parcial entra</li>
+</ul>
+</div><div>
+
+<p><strong>Divisor</strong></p>
+<ul>
+<li>forma um resto parcial em cada etapa</li>
+<li>compara esse valor com o divisor</li>
+<li>decide se pode subtrair</li>
+<li>o bit do quociente nasce dessa decisão</li>
+</ul>
+</div></div>
+
+<p>No multiplicador, a pergunta central é “quais linhas parciais devem existir e em que colunas devem ser somadas?”. No divisor, a pergunta central é “o divisor cabe neste resto parcial ou não?”. Esse contraste ajuda a entender por que um circuito cresce por produtos e carries, enquanto o outro cresce por decisões condicionais sobre o resto.</p>
+<h2 id="questões"><span class="heading-text">Questões</span><span class="heading-arabic">13.8</span></h2>
+<div class="questions">
+  <p><strong>1.</strong> Explique, com suas palavras, por que as identidades $A \cdot 0 = 0$ e $A \cdot 1 = A$ são fundamentais para entender produtos parciais em multiplicação binária.</p>
+<p><strong>2.</strong> Mostre como a distributiva $A(B + C) = AB + AC$ ajuda a reorganizar expressões lógicas em circuitos aritméticos.</p>
+<p><strong>3.</strong> Reescreva a multiplicação $101_2 \times 11_2$ como soma de linhas parciais e explique o papel do deslocamento.</p>
+<p><strong>4.</strong> Construa a tabela-verdade do produto parcial elementar $p_{ij} = A_i \cdot B_j$ e diga por que ele é implementado por uma AND.</p>
+<p><strong>5.</strong> Em um multiplicador de $2 \times 2$ bits, identifique os quatro produtos parciais e diga em quais colunas eles aparecem.</p>
+<p><strong>6.</strong> Derive as expressões de $P_0$, $P_1$, $P_2$ e $P_3$ para o multiplicador de $2 \times 2$ bits estudado na aula.</p>
+<p><strong>7.</strong> Explique por que a coluna intermediária de um multiplicador de $2 \times 2$ bits pode ser tratada como um problema de Meio Somador.</p>
+<p><strong>8.</strong> Mostre como o circuito do multiplicador responde à entrada $A = 11_2$ e $B = 10_2$.</p>
+<p><strong>9.</strong> Explique, com suas palavras, por que a divisão binária precisa de comparação antes da subtração.</p>
+<p><strong>10.</strong> Reproduza o passo a passo de $110_2 \div 10_2$ indicando, em cada etapa, o resto parcial, a decisão do bit do quociente e o novo resto.</p>
+<p><strong>11.</strong> Descreva o papel de cada bloco funcional em um estágio do divisor simples, indicando a função do comparador, do subtrator e do seletor.</p>
+<p><strong>12.</strong> Em uma etapa de divisão, suponha $R_{in} = 10_2$ e $D = 11_2$. Determine o bit do quociente da etapa e o valor de $R_{out}$.</p>
+<p><strong>13.</strong> Em uma etapa de divisão, suponha $R_{in} = 11_2$ e $D = 10_2$. Determine o bit do quociente da etapa e o valor de $R_{out}$.</p>
+<p><strong>14.</strong> Compare, em termos funcionais, o modo como um multiplicador e um divisor reutilizam os blocos estudados na aula 12.</p>
+</div>
+<div class="example">
+  <div class="example-title">Gabarito</div>
+  <p><strong>1.</strong> Porque elas mostram que um bit do multiplicador pode anular ou copiar um bit do multiplicando. Se o bit de controle vale $0$, o produto parcial zera. Se vale $1$, ele reproduz o valor do operando.</p>
+<p><strong>2.</strong> Ela mostra que um mesmo sinal pode ser distribuído sobre duas possibilidades, como em $AB + AC$. Isso ajuda a reorganizar a expressão, destacar fator comum e enxergar estruturas repetidas no circuito.</p>
+<p><strong>3.</strong> A conta é:</p>
+<p>$$
+\begin{array}{r}
+\phantom{+}101 \\
+\times\ 011 \\
+\hline
+\phantom{+}101 \\
++1010 \\
+\hline
+\phantom{+}1111
+\end{array}
+$$</p>
+<p>O deslocamento aparece porque cada bit mais significativo do multiplicador representa uma potência de 2 maior, então sua linha parcial entra uma casa à esquerda.</p>
+<p><strong>4.</strong> A tabela-verdade é:</p>
+<p>$$
+\begin{array}{c|c||c}
+A_i & B_j & p_{ij} \\
+\hline
+0 & 0 & 0 \\
+0 & 1 & 0 \\
+1 & 0 & 0 \\
+1 & 1 & 1
+\end{array}
+$$</p>
+<p>Como a saída só vale $1$ quando ambas as entradas valem $1$, o produto parcial é uma AND.</p>
+<p><strong>5.</strong> Os produtos parciais são $A_0B_0$, $A_1B_0$, $A_0B_1$ e $A_1B_1$. O termo $A_0B_0$ cai na coluna $P_0$. Os termos $A_1B_0$ e $A_0B_1$ caem na coluna $P_1$. O termo $A_1B_1$ cai na coluna seguinte, junto com o carry gerado antes.</p>
+<p><strong>6.</strong> As expressões são:</p>
+<p>$$
+\begin{aligned}
+P_0 &= A_0B_0 \\
+P_1 &= (A_1B_0) \oplus (A_0B_1) \\
+C_1 &= (A_1B_0)(A_0B_1) \\
+P_2 &= (A_1B_1) \oplus C_1 \\
+P_3 &= (A_1B_1)C_1
+\end{aligned}
+$$</p>
+<p><strong>7.</strong> Porque nessa coluna existem exatamente dois termos a serem somados, $A_1B_0$ e $A_0B_1$. Isso é precisamente o caso resolvido por um Meio Somador, que produz soma local e carry.</p>
+<p><strong>8.</strong> Para $A = 11_2$ e $B = 10_2$, temos $p_{00}=0$, $p_{10}=0$, $p_{01}=1$ e $p_{11}=1$. Assim, $P_0=0$, $P_1=1$, $C_1=0$, $P_2=1$ e $P_3=0$. Logo, o produto é $0110_2$.</p>
+<p><strong>9.</strong> Porque a subtração só faz sentido quando o resto parcial é pelo menos tão grande quanto o divisor. Sem essa verificação, o circuito não saberia se deve escrever $1$ ou $0$ naquele bit do quociente.</p>
+<p><strong>10.</strong> Primeiro, $11_2 \ge 10_2$, então o primeiro bit do quociente vale $1$ e o novo resto é $01_2$. Depois descemos o próximo bit e formamos $10_2$. Como $10_2 \ge 10_2$, o próximo bit do quociente vale $1$ e o novo resto é $00_2$. O quociente final é $11_2$.</p>
+<p><strong>11.</strong> O comparador verifica se o resto parcial suporta a subtração. O subtrator calcula o valor candidato $R_{in} - D$. O seletor decide se a saída será esse valor subtraído ou o próprio resto parcial, conforme o resultado da comparação.</p>
+<p><strong>12.</strong> Como $10_2 < 11_2$, não há subtração. Portanto, $q = 0$ e $R_{out} = 10_2$.</p>
+<p><strong>13.</strong> Como $11_2 \ge 10_2$, a subtração é permitida. Portanto, $q = 1$ e $R_{out} = 01_2$.</p>
+<p><strong>14.</strong> O multiplicador reutiliza principalmente portas AND e somadores para gerar e combinar produtos parciais. O divisor reutiliza comparador e subtrator em etapas que decidem o bit do quociente e atualizam o resto parcial.</p>
+</div>
+<h2 id="próximos-passos"><span class="heading-text">Próximos passos</span><span class="heading-arabic">13.9</span></h2>
+<p>Agora que soma, subtração, multiplicação e divisão já apareceram como composições de blocos menores, o próximo passo natural é estudar como representar números negativos e como detectar resultados inválidos em aritmética binária. A continuação mais natural deste percurso é avançar para complemento de dois, números com sinal e overflow.</p>
+
+                </div>
+            </article>
+            <footer class="footer">
+                <p>© 2025 · <a href="#">Gabriel Soares Baptista</a></p>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        const toggle = document.querySelector('.mobile-menu-toggle');
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.querySelector('.mobile-menu-overlay');
+
+        function openMenu() {
+            sidebar.classList.add('open');
+            overlay.classList.add('open');
+            toggle.classList.add('open');
+            toggle.innerHTML = '<i data-lucide="x"></i>';
+            CourseForgeUI.initIcons();
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMenu() {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('open');
+            toggle.classList.remove('open');
+            toggle.innerHTML = '<i data-lucide="menu"></i>';
+            CourseForgeUI.initIcons();
+            document.body.style.overflow = '';
+        }
+
+        toggle.addEventListener('click', () => {
+            if (sidebar.classList.contains('open')) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        overlay.addEventListener('click', closeMenu);
+    </script>
+
+    
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            renderMathInElement(document.body, {
+                output: 'html',
+                delimiters: [
+                    { left: "$$", right: "$$", display: true },
+                    { left: "$", right: "$", display: false },
+                    { left: "\\(", right: "\\)", display: false },
+                    { left: "\\[", right: "\\]", display: true }
+                ],
+                throwOnError: false,
+                strict: false
+            });
+        });
+    </script>
+    
+    
+    <script src="/aulas-faesa/js/vendor/prism/prism.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-c.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-cpp.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-python.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-clike.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-perl.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-java.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-mermaid.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-php.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js" data-no-bundle></script>
+    
+    
+    
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            mermaid.initialize({
+                startOnLoad: true,
+                theme: 'default',
+                securityLevel: 'loose',
+                fontFamily: 'Inter, system-ui, sans-serif',
+                themeVariables: {
+                    fontSize: '16px',
+                    edgeLabelFontSize: '16px',
+                    multiplicityFontSize: '18px'
+                }
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const isSubcourse = false;
+        const courseName = "Sistemas Digitais e Microprocessados";
+        CourseForgeNav.applyDynamicBreadcrumbs('.breadcrumb', isSubcourse);
+        CourseForgeNav.initScrollSpy();
+        CourseForgeUI.initCopyButtons();
+        CourseForgeUI.initExamples();
+        });
+
+        function handleBackNavigation() {
+            const isSubcourse = false;
+        const dynamic = CourseForgeNav.getBackLink('contents.html', 'Voltar', isSubcourse);
+        window.location.href = dynamic.url;
+        }
+    </script>
+</body>
+
+</html>

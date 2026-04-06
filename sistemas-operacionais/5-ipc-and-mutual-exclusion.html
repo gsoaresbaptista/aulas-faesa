@@ -1,7 +1,239 @@
-<!doctype html><html lang=pt-BR><meta charset=UTF-8><meta content="width=device-width,initial-scale=1.0" name=viewport><title>Toposia - Sistemas Operacionais</title><link media="(prefers-color-scheme: light)" href=/aulas-faesa/img/dark-favicon.svg rel=icon><link media="(prefers-color-scheme: dark)" href=/aulas-faesa/img/light-favicon.svg rel=icon><link data-no-bundle href=/aulas-faesa/css/vendor/fonts.css rel=stylesheet><link data-no-bundle href=/aulas-faesa/js/vendor/katex/dist/katex.min.css rel=stylesheet><link href=/aulas-faesa/css/bundle.min.css rel=stylesheet><link data-no-bundle href=/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css rel=stylesheet><script src=/aulas-faesa/js/bundle.min.js></script></head><body><script>// Restore sidebar state instantly (before first paint) to avoid transition flash
-(function(){localStorage.getItem(`cf_sidebar_hidden`)===`true`&&document.body.classList.add(`sidebar-hidden`,`no-transition`),requestAnimationFrame(function(){requestAnimationFrame(function(){document.body.classList.remove(`no-transition`)})})})();</script><div class=page-wrapper><nav class=sidebar><div class=sidebar-content><header class=sidebar-title-section><a class=course-title-link href=contents.html> <h1 class=sidebar-course-title>Sistemas Operacionais</h1> </a><div class=sidebar-ornament>❧</div></header><section class=sidebar-toc-section><h2 class=toc-header>Tabela de Conteúdos</h2><ol class=toc-list><li class="toc-item level-2"><a href=#introdução>5.1. Introdução</a></li><li class="toc-item level-3"><a href=#implementação-de-threads-revisão>5.1.1. Implementação de Threads (Revisão)</a></li><li class="toc-item level-3"><a href=#comunicação-entre-processos-ipc>5.1.2. Comunicação entre Processos (IPC)</a></li><li class="toc-item level-4"><a href=#exemplo-1-comunicação-via-pipe-em-c>5.1.2.1. Exemplo 1: Comunicação via Pipe em C</a></li><li class="toc-item level-3"><a href=#condições-de-corrida-race-conditions>5.1.3. Condições de Corrida (Race Conditions)</a></li><li class="toc-item level-4"><a href=#exemplo-2-o-bug-da-condição-de-corrida>5.1.3.1. Exemplo 2: O Bug da Condição de Corrida</a></li><li class="toc-item level-3"><a href=#regiões-críticas-e-exclusão-mútua>5.1.4. Regiões Críticas e Exclusão Mútua</a></li><li class="toc-item level-3"><a href=#exclusão-mútua-com-espera-ocupada-busy-waiting>5.1.5. Exclusão Mútua com Espera Ocupada (Busy Waiting)</a></li><li class="toc-item level-4"><a href=#exemplo-3-solução-de-peterson-completa>5.1.5.1. Exemplo 3: Solução de Peterson Completa</a></li><li class="toc-item level-3"><a href=#sono-e-acordar-sleep-and-wakeup>5.1.6. Sono e Acordar (Sleep and Wakeup)</a></li><li class="toc-item level-4"><a href=#o-que-vai-errado-a-janela-de-vulnerabilidade>5.1.6.1. O Que Vai Errado: A Janela de Vulnerabilidade</a></li><li class="toc-item level-3"><a href=#semáforos-e-mutexes>5.1.7. Semáforos e Mutexes</a></li><li class="toc-item level-4"><a href=#semáforos-de-dijkstra>5.1.7.1. Semáforos de Dijkstra</a></li><li class="toc-item level-4"><a href=#mutexes-mutual-exclusion>5.1.7.2. Mutexes (Mutual Exclusion)</a></li><li class="toc-item level-4"><a href=#exemplo-4-mutex-para-exclusão-mútua>5.1.7.3. Exemplo 4: Mutex para Exclusão Mútua</a></li><li class="toc-item level-4"><a href=#sincronização-real-o-problema-do-produtor-consumidor>5.1.7.4. Sincronização Real: O Problema do Produtor-Consumidor</a></li><li class="toc-item level-4"><a href=#exemplo-5-sincronização-produtor-consumidor>5.1.7.5. Exemplo 5: Sincronização Produtor-Consumidor</a></li><li class="toc-item level-3"><a href=#problemas-clássicos-de-ipc>5.1.8. Problemas Clássicos de IPC</a></li><li class="toc-item level-4"><a href=#exemplo-6-solução-hierárquica-para-os-filósofos>5.1.8.1. Exemplo 6: Solução Hierárquica para os Filósofos</a></li><li class="toc-item level-3"><a href=#monitores-e-abstrações-de-alto-nível>5.1.9. Monitores e Abstrações de Alto Nível</a></li><li class="toc-item level-4"><a href=#variáveis-de-condição-wait-e-signal>5.1.9.1. Variáveis de Condição: wait() e signal()</a></li><li class="toc-item level-2"><a href=#questões>5.2. Questões</a></li><li class="toc-item level-2"><a href=#próximos-passos>5.3. Próximos passos</a></li></ol></section><nav class=sidebar-nav-section><a class="sidebar-nav-link prev" href=4-processes-and-threads.html><i class=nav-icon data-lucide=chevron-left></i> Processos e Threads</a><a class="sidebar-nav-link back" href=javascript:void(0) onclick=handleBackNavigation()><i class=nav-icon data-lucide=arrow-left></i> Voltar</a></nav></div></nav><button aria-label=Menu class=mobile-menu-toggle><i data-lucide=menu></i></button><button aria-label="Alternar Barra Lateral" class=sidebar-toggle onclick=CourseForgeNav.toggleSidebar()><i class=toggle-icon data-lucide=chevron-left id=sidebar-toggle-icon></i></button><div class=mobile-menu-overlay></div><main class=main-content><article class=article><header class=article-header><span class=chapter-number>5</span><h1 class=article-title><span class="title-ornament left">❧</span> <span class=title-text>IPC e Sincronização</span> <span class="title-ornament right">❧</span></h1><p class=article-date>26/03/2026</p><nav aria-label=Breadcrumb class=breadcrumb><a class=breadcrumb-link href=contents.html>Sistemas Operacionais</a><span class=breadcrumb-separator><i class=breadcrumb-icon data-lucide=chevron-right></i></span><a class=breadcrumb-link href=contents.html#part-II>II - Processos e Threads</a><span class=breadcrumb-separator><i class=breadcrumb-icon data-lucide=chevron-right></i></span><span class=breadcrumb-current>IPC e Sincronização</span></nav></header><div class=article-body><h2 id=introdução><span class=heading-text>Introdução</span><span class=heading-arabic>5.1</span></h2><p>Gerenciar a execução concorrente é um dos maiores desafios no projeto de sistemas operacionais modernos. Nas aulas anteriores, estudamos processos e threads como fluxos independentes de execução, operando em seus próprios espaços de endereçamento ou compartilhando recursos de forma simples. No entanto, para que um sistema computacional realize tarefas complexas e integradas, esses fluxos precisam de mecanismos robustos para colaborar e trocar informações.</p><p>Um navegador web que se comunica com um plugin de vídeo, ou um servidor que divide uma carga massiva de requisições entre vários núcleos de processamento, são exemplos de sistemas que dependem da <strong>Comunicação entre Processos (IPC)</strong>. Sem uma sincronização precisa, a execução de múltiplos processos resultaria em dados corrompidos, sistemas travados e erros imprevisíveis que mudariam a cada execução. Nesta aula, exploraremos as camadas de hardware e software que garantem que essa coreografia de dados seja segura e eficiente.</p><h3 id=implementação-de-threads-revisão><span class=heading-text>Implementação de Threads (Revisão)</span><span class=heading-arabic>5.1.1</span></h3><p>A posição onde o sistema operacional decide gerenciar as threads (se no espaço do usuário ou diretamente no núcleo) determina de maneira fundamental a latência e a capacidade de resposta das aplicações. Quando optamos por <strong>threads no espaço do usuário</strong>, o núcleo do sistema permanece alheio à existência de múltiplos fluxos de execução dentro do processo. Uma biblioteca de tempo de execução (<em>runtime library</em>) gerencia uma tabela interna de threads, realizando o chaveamento de forma extremamente rápida, sem a necessidade de transições de privilégio pesadas (Traps). Contudo, essa eficiência vem com um custo alto: se uma única thread realizar uma chamada de sistema bloqueante, como uma leitura de disco, o núcleo suspende o processo inteiro, paralisando todas as outras threads que poderiam continuar trabalhando.</p><p>Em contrapartida, as <strong>threads no espaço do núcleo</strong> são reconhecidas e gerenciadas diretamente pelo escalonador do sistema operacional. Isso permite que, caso uma thread bloqueie por falta de dados ou uma falta de página (<em>page fault</em>), o núcleo possa escalonar outra thread do mesmo processo para ocupar a CPU. Embora esse modelo seja muito mais robusto e aproveite melhor o paralelismo real em máquinas multiprocessadores, cada operação de criação ou sincronização exige uma chamada de sistema completa, o que consome mais ciclos de processamento do que o modelo de usuário.</p><p>Existem ainda abordagens sofisticadas que tentam unir o melhor dos dois mundos, como as <strong>Ativações pelo Escalonador</strong> e o mecanismo de <strong>Upcalls</strong>. Nesse cenário, o núcleo fornece ao processo processadores virtuais e toma a iniciativa de notificar a biblioteca de threads do usuário sobre eventos relevantes. Se uma thread bloqueia no núcleo, o sistema faz uma chamada "de baixo para cima" (o upcall), permitindo que a aplicação decida localmente como redistribuir seu trabalho. Essa técnica, embora complexa, resolve o problema do bloqueio total no espaço do usuário sem perder a agilidade do escalonador local.</p><div class="callout callout-question"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><circle cx=12 cy=12 r=10 /><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span><span class=callout-title-inner>Reflita<br></span></div><div class=callout-content><p>Se um servidor web usa threads no <em>espaço do usuário</em> e uma delas bloqueia esperando uma resposta do banco de dados, o que acontece com as outras threads? Por que isso seria catastrófico em produção? O que o modelo de <em>threads no núcleo</em> faria diferente neste cenário?</p></div></div><h3 id=comunicação-entre-processos-ipc><span class=heading-text>Comunicação entre Processos (IPC)</span><span class=heading-arabic>5.1.2</span></h3><p>A Comunicação entre Processos (IPC) não se resume apenas à simples transferência de bytes. Um sistema de IPC bem projetado deve resolver simultaneamente três problemas centrais: a transferência de dados entre espaços de endereçamento (que podem ser isolados fisicamente), a sincronização das atividades entre os processos e a manutenção da ordem correta de execução. Sem esses pilares, seria impossível para o Processo B saber se os dados produzidos pelo Processo A já estão prontos para consumo, ou se a leitura de um buffer compartilhado resultará em informações consistentes.</p><p>Os mecanismos físicos para realizar essa comunicação variam de acordo com a velocidade e o nível de isolamento desejado. A <strong>Memória Compartilhada</strong> é a forma mais rápida de IPC, pois permite que dois processos mapeiem a mesma região de RAM física em seus próprios endereços lógicos, eliminando a necessidade do núcleo copiar dados entre buffers. Outra abordagem clássica é o uso de <strong>Pipes (Canalizações)</strong>, que funcionam como fluxos unidirecionais de dados. Os pipes são a base da filosofia UNIX, conectando ferramentas simples.</p><div class="callout callout-question"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><circle cx=12 cy=12 r=10 /><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span><span class=callout-title-inner>Reflita<br></span></div><div class=callout-content><p>Antes de ver o código: como você imagina que dois processos independentes (com memórias separadas!) poderiam se comunicar? Quais seriam os problemas de sincronização que surgiriam naturalmente?</p></div></div><p>O exemplo abaixo mostra como um pai e um filho podem se comunicar de forma síncrona: o filho esperará automaticamente no <code>read()</code> até que o pai envie os dados.</p><h4 id=exemplo-1-comunicação-via-pipe-em-c><span class=heading-text>Exemplo 1: Comunicação via Pipe em C</span><span class=heading-arabic>5.1.2.1</span></h4><pre class="line-numbers language-c" data-lang=C><code class=language-c>#include &lt;stdio.h>
-#include &lt;unistd.h>
-#include &lt;string.h>
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toposia - Sistemas Operacionais</title>
+    <link rel="icon" href="/aulas-faesa/img/dark-favicon.svg" media="(prefers-color-scheme: light)">
+    <link rel="icon" href="/aulas-faesa/img/light-favicon.svg" media="(prefers-color-scheme: dark)">
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/fonts.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/bundle.min.css">
+    
+    
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css" data-no-bundle>
+    <script src="/aulas-faesa/js/bundle.min.js"></script>
+</head>
+
+<body>
+    <script>
+        // Restore sidebar state instantly (before first paint) to avoid transition flash
+        (function() {
+            if (localStorage.getItem('cf_sidebar_hidden') === 'true') {
+                document.body.classList.add('sidebar-hidden', 'no-transition');
+            }
+            requestAnimationFrame(function() {
+                requestAnimationFrame(function() {
+                    document.body.classList.remove('no-transition');
+                });
+            });
+        })();
+    </script>
+    <div class="page-wrapper">
+        <nav class="sidebar">
+            <div class="sidebar-content">
+                <header class="sidebar-title-section">
+                    <a href="contents.html" class="course-title-link">
+                        <h1 class="sidebar-course-title">Sistemas Operacionais</h1>
+                    </a>
+                    <div class="sidebar-ornament">❧</div>
+                </header>
+
+                
+                <section class="sidebar-toc-section">
+                    <h2 class="toc-header">Tabela de Conteúdos</h2>
+                    <ol class="toc-list">
+                        
+                        <li class="toc-item level-2">
+                            <a href="#introdução">5.1. Introdução</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#implementação-de-threads-revisão">5.1.1. Implementação de Threads (Revisão)</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#comunicação-entre-processos-ipc">5.1.2. Comunicação entre Processos (IPC)</a>
+                        </li>
+                        
+                        <li class="toc-item level-4">
+                            <a href="#exemplo-1-comunicação-via-pipe-em-c">5.1.2.1. Exemplo 1: Comunicação via Pipe em C</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#condições-de-corrida-race-conditions">5.1.3. Condições de Corrida (Race Conditions)</a>
+                        </li>
+                        
+                        <li class="toc-item level-4">
+                            <a href="#exemplo-2-o-bug-da-condição-de-corrida">5.1.3.1. Exemplo 2: O Bug da Condição de Corrida</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#regiões-críticas-e-exclusão-mútua">5.1.4. Regiões Críticas e Exclusão Mútua</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#exclusão-mútua-com-espera-ocupada-busy-waiting">5.1.5. Exclusão Mútua com Espera Ocupada (Busy Waiting)</a>
+                        </li>
+                        
+                        <li class="toc-item level-4">
+                            <a href="#exemplo-3-solução-de-peterson-completa">5.1.5.1. Exemplo 3: Solução de Peterson Completa</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#sono-e-acordar-sleep-and-wakeup">5.1.6. Sono e Acordar (Sleep and Wakeup)</a>
+                        </li>
+                        
+                        <li class="toc-item level-4">
+                            <a href="#o-que-vai-errado-a-janela-de-vulnerabilidade">5.1.6.1. O Que Vai Errado: A Janela de Vulnerabilidade</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#semáforos-e-mutexes">5.1.7. Semáforos e Mutexes</a>
+                        </li>
+                        
+                        <li class="toc-item level-4">
+                            <a href="#semáforos-de-dijkstra">5.1.7.1. Semáforos de Dijkstra</a>
+                        </li>
+                        
+                        <li class="toc-item level-4">
+                            <a href="#mutexes-mutual-exclusion">5.1.7.2. Mutexes (Mutual Exclusion)</a>
+                        </li>
+                        
+                        <li class="toc-item level-4">
+                            <a href="#exemplo-4-mutex-para-exclusão-mútua">5.1.7.3. Exemplo 4: Mutex para Exclusão Mútua</a>
+                        </li>
+                        
+                        <li class="toc-item level-4">
+                            <a href="#sincronização-real-o-problema-do-produtor-consumidor">5.1.7.4. Sincronização Real: O Problema do Produtor-Consumidor</a>
+                        </li>
+                        
+                        <li class="toc-item level-4">
+                            <a href="#exemplo-5-sincronização-produtor-consumidor">5.1.7.5. Exemplo 5: Sincronização Produtor-Consumidor</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#problemas-clássicos-de-ipc">5.1.8. Problemas Clássicos de IPC</a>
+                        </li>
+                        
+                        <li class="toc-item level-4">
+                            <a href="#exemplo-6-solução-hierárquica-para-os-filósofos">5.1.8.1. Exemplo 6: Solução Hierárquica para os Filósofos</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#monitores-e-abstrações-de-alto-nível">5.1.9. Monitores e Abstrações de Alto Nível</a>
+                        </li>
+                        
+                        <li class="toc-item level-4">
+                            <a href="#variáveis-de-condição-wait-e-signal">5.1.9.1. Variáveis de Condição: wait() e signal()</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#questões">5.2. Questões</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#próximos-passos">5.3. Próximos passos</a>
+                        </li>
+                        
+                    </ol>
+                </section>
+                
+
+                <nav class="sidebar-nav-section">
+                    
+                    <a href="4-processes-and-threads.html" class="sidebar-nav-link prev"><i data-lucide="chevron-left" class="nav-icon"></i> Processos e Threads</a>
+                    
+                    
+                    <a href="6-scheduling.html" class="sidebar-nav-link next">Escalonamento <i data-lucide="chevron-right" class="nav-icon"></i></a>
+                    
+                    <a href="javascript:void(0)" onclick="handleBackNavigation()"
+                        class="sidebar-nav-link back"><i data-lucide="arrow-left" class="nav-icon"></i> Voltar</a>
+                </nav>
+
+            </div>
+        </nav>
+
+        <button class="mobile-menu-toggle" aria-label="Menu">
+            <i data-lucide="menu"></i>
+        </button>
+
+        <button class="sidebar-toggle" onclick="CourseForgeNav.toggleSidebar()" aria-label="Alternar Barra Lateral">
+            <i data-lucide="chevron-left" class="toggle-icon" id="sidebar-toggle-icon"></i>
+        </button>
+
+        <div class="mobile-menu-overlay"></div>
+
+        <main class="main-content">
+            <article class="article">
+                <header class="article-header">
+                    <span class="chapter-number">5</span>
+                    <h1 class="article-title">
+                        <span class="title-ornament left">❧</span>
+                        <span class="title-text">IPC e Sincronização</span>
+                        <span class="title-ornament right">❧</span>
+                    </h1>
+                    
+                    <p class="article-date">26/03/2026</p>
+                    
+                    
+                    <nav class="breadcrumb" aria-label="Breadcrumb">
+                        
+                        
+                        
+                        <a href="contents.html" class="breadcrumb-link">Sistemas Operacionais</a>
+                        
+                        <span class="breadcrumb-separator"><i data-lucide="chevron-right" class="breadcrumb-icon"></i></span>
+                        
+                        
+                        
+                        
+                        <a href="contents.html#part-II" class="breadcrumb-link">II - Processos e Threads</a>
+                        
+                        <span class="breadcrumb-separator"><i data-lucide="chevron-right" class="breadcrumb-icon"></i></span>
+                        
+                        
+                        
+                        <span class="breadcrumb-current">IPC e Sincronização</span>
+                        
+                        
+                    </nav>
+                    
+                </header>
+                <div class="article-body">
+                    <h2 id="introdução"><span class="heading-text">Introdução</span><span class="heading-arabic">5.1</span></h2>
+<p>Gerenciar a execução concorrente é um dos maiores desafios no projeto de sistemas operacionais modernos. Nas aulas anteriores, estudamos processos e threads como fluxos independentes de execução, operando em seus próprios espaços de endereçamento ou compartilhando recursos de forma simples. No entanto, para que um sistema computacional realize tarefas complexas e integradas, esses fluxos precisam de mecanismos robustos para colaborar e trocar informações.</p>
+<p>Um navegador web que se comunica com um plugin de vídeo, ou um servidor que divide uma carga massiva de requisições entre vários núcleos de processamento, são exemplos de sistemas que dependem da <strong>Comunicação entre Processos (IPC)</strong>. Sem uma sincronização precisa, a execução de múltiplos processos resultaria em dados corrompidos, sistemas travados e erros imprevisíveis que mudariam a cada execução. Nesta aula, exploraremos as camadas de hardware e software que garantem que essa coreografia de dados seja segura e eficiente.</p>
+<h3 id="implementação-de-threads-revisão"><span class="heading-text">Implementação de Threads (Revisão)</span><span class="heading-arabic">5.1.1</span></h3>
+<p>A posição onde o sistema operacional decide gerenciar as threads (se no espaço do usuário ou diretamente no núcleo) determina de maneira fundamental a latência e a capacidade de resposta das aplicações. Quando optamos por <strong>threads no espaço do usuário</strong>, o núcleo do sistema permanece alheio à existência de múltiplos fluxos de execução dentro do processo. Uma biblioteca de tempo de execução (<em>runtime library</em>) gerencia uma tabela interna de threads, realizando o chaveamento de forma extremamente rápida, sem a necessidade de transições de privilégio pesadas (Traps). Contudo, essa eficiência vem com um custo alto: se uma única thread realizar uma chamada de sistema bloqueante, como uma leitura de disco, o núcleo suspende o processo inteiro, paralisando todas as outras threads que poderiam continuar trabalhando.</p>
+<p>Em contrapartida, as <strong>threads no espaço do núcleo</strong> são reconhecidas e gerenciadas diretamente pelo escalonador do sistema operacional. Isso permite que, caso uma thread bloqueie por falta de dados ou uma falta de página (<em>page fault</em>), o núcleo possa escalonar outra thread do mesmo processo para ocupar a CPU. Embora esse modelo seja muito mais robusto e aproveite melhor o paralelismo real em máquinas multiprocessadores, cada operação de criação ou sincronização exige uma chamada de sistema completa, o que consome mais ciclos de processamento do que o modelo de usuário.</p>
+<p>Existem ainda abordagens sofisticadas que tentam unir o melhor dos dois mundos, como as <strong>Ativações pelo Escalonador</strong> e o mecanismo de <strong>Upcalls</strong>. Nesse cenário, o núcleo fornece ao processo processadores virtuais e toma a iniciativa de notificar a biblioteca de threads do usuário sobre eventos relevantes. Se uma thread bloqueia no núcleo, o sistema faz uma chamada &quot;de baixo para cima&quot; (o upcall), permitindo que a aplicação decida localmente como redistribuir seu trabalho. Essa técnica, embora complexa, resolve o problema do bloqueio total no espaço do usuário sem perder a agilidade do escalonador local.</p>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Se um servidor web usa threads no <em>espaço do usuário</em> e uma delas bloqueia esperando uma resposta do banco de dados, o que acontece com as outras threads? Por que isso seria catastrófico em produção? O que o modelo de <em>threads no núcleo</em> faria diferente neste cenário?</p>
+  </div>
+</div>
+<h3 id="comunicação-entre-processos-ipc"><span class="heading-text">Comunicação entre Processos (IPC)</span><span class="heading-arabic">5.1.2</span></h3>
+<p>A Comunicação entre Processos (IPC) não se resume apenas à simples transferência de bytes. Um sistema de IPC bem projetado deve resolver simultaneamente três problemas centrais: a transferência de dados entre espaços de endereçamento (que podem ser isolados fisicamente), a sincronização das atividades entre os processos e a manutenção da ordem correta de execução. Sem esses pilares, seria impossível para o Processo B saber se os dados produzidos pelo Processo A já estão prontos para consumo, ou se a leitura de um buffer compartilhado resultará em informações consistentes.</p>
+<p>Os mecanismos físicos para realizar essa comunicação variam de acordo com a velocidade e o nível de isolamento desejado. A <strong>Memória Compartilhada</strong> é a forma mais rápida de IPC, pois permite que dois processos mapeiem a mesma região de RAM física em seus próprios endereços lógicos, eliminando a necessidade do núcleo copiar dados entre buffers. Outra abordagem clássica é o uso de <strong>Pipes (Canalizações)</strong>, que funcionam como fluxos unidirecionais de dados. Os pipes são a base da filosofia UNIX, conectando ferramentas simples.</p>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Antes de ver o código: como você imagina que dois processos independentes (com memórias separadas!) poderiam se comunicar? Quais seriam os problemas de sincronização que surgiriam naturalmente?</p>
+  </div>
+</div>
+<p>O exemplo abaixo mostra como um pai e um filho podem se comunicar de forma síncrona: o filho esperará automaticamente no <code>read()</code> até que o pai envie os dados.</p>
+<h4 id="exemplo-1-comunicação-via-pipe-em-c"><span class="heading-text">Exemplo 1: Comunicação via Pipe em C</span><span class="heading-arabic">5.1.2.1</span></h4>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;string.h&gt;
 
 int main() {
     int fd[2]; // fd[0]: leitura, fd[1]: escrita
@@ -10,22 +242,39 @@ int main() {
     if (pipe(fd) == -1) return 1;
     pid = fork();
 
-    if (pid > 0) { // Processo PAI
+    if (pid &gt; 0) { // Processo PAI
         close(fd[0]);
-        char msg[] = "Olá do processo Pai!";
+        char msg[] = &quot;Olá do processo Pai!&quot;;
         write(fd[1], msg, strlen(msg) + 1);
         close(fd[1]);
     } else { // Processo FILHO
         close(fd[1]);
         char buffer[100];
         read(fd[0], buffer, sizeof(buffer));
-        printf("Filho recebeu via pipe: %s\n", buffer);
+        printf(&quot;Filho recebeu via pipe: %s\n&quot;, buffer);
         close(fd[0]);
     }
     return 0;
 }
-</code></pre><div class="callout callout-question"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><circle cx=12 cy=12 r=10 /><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span><span class=callout-title-inner>Reflita<br></span></div><div class=callout-content><p>No código do pipe, o filho chama <code>read()</code> que pode bloquear. O que aconteceria se o pai <strong>nunca escrevesse</strong> nada no pipe? O que o <code>close(fd[0])</code> no processo pai e o <code>close(fd[1])</code> no processo filho significam, e por que são necessários? O que aconteceria se fossemos omiti-los?</p></div></div><h3 id=condições-de-corrida-race-conditions><span class=heading-text>Condições de Corrida (Race Conditions)</span><span class=heading-arabic>5.1.3</span></h3><p>Uma condição de corrida surge no momento em que dois ou mais processos competem pelo acesso a um recurso compartilhado, e o resultado final depende da ordem exata em que o escalonador alterna a CPU. O grande perigo é que elas são falhas intermitentes: um programa pode funcionar perfeitamente durante centenas de testes e falhar subitamente em produção.</p><p>Para ilustrar este conceito, Tanenbaum utiliza a analogia do <strong>Spooler de Impressão</strong>. Imagine um diretório para arquivos de impressão com uma variável <code>in</code> apontando para o próximo slot livre. Se o Processo A ler <code>in</code> (descobrindo o slot 7) e for interrompido antes de gravar seu arquivo, o Processo B pode ser escalonado, ler o mesmo valor (7), gravar seu arquivo e atualizar <code>in</code> para 8. Quando o Processo A retomar, ele acreditará que o slot 7 ainda é dele, sobrescreverá o arquivo de B e também moverá o ponteiro para 8. O arquivo de B será perdido para sempre.</p><img src=static/fig_2_21_spooler.png width=65%><p>A falha ocorre porque operações como <code>contador++</code> não são <strong>atômicas</strong>. Elas envolvem carregar o valor na CPU, incrementar e salvar. Se a CPU for chaveada no meio desse ciclo, a atualização será perdida. Observe o código abaixo, onde duas threads tentam chegar a 2 milhões, mas falham sistematicamente.</p><h4 id=exemplo-2-o-bug-da-condição-de-corrida><span class=heading-text>Exemplo 2: O Bug da Condição de Corrida</span><span class=heading-arabic>5.1.3.1</span></h4><pre class="line-numbers language-c" data-lang=C><code class=language-c>#include &lt;stdio.h>
-#include &lt;pthread.h>
+</code></pre>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>No código do pipe, o filho chama <code>read()</code> que pode bloquear. O que aconteceria se o pai <strong>nunca escrevesse</strong> nada no pipe? O que o <code>close(fd[0])</code> no processo pai e o <code>close(fd[1])</code> no processo filho significam, e por que são necessários? O que aconteceria se fossemos omiti-los?</p>
+  </div>
+</div>
+<h3 id="condições-de-corrida-race-conditions"><span class="heading-text">Condições de Corrida (Race Conditions)</span><span class="heading-arabic">5.1.3</span></h3>
+<p>Uma condição de corrida surge no momento em que dois ou mais processos competem pelo acesso a um recurso compartilhado, e o resultado final depende da ordem exata em que o escalonador alterna a CPU. O grande perigo é que elas são falhas intermitentes: um programa pode funcionar perfeitamente durante centenas de testes e falhar subitamente em produção.</p>
+<p>Para ilustrar este conceito, Tanenbaum utiliza a analogia do <strong>Spooler de Impressão</strong>. Imagine um diretório para arquivos de impressão com uma variável <code>in</code> apontando para o próximo slot livre. Se o Processo A ler <code>in</code> (descobrindo o slot 7) e for interrompido antes de gravar seu arquivo, o Processo B pode ser escalonado, ler o mesmo valor (7), gravar seu arquivo e atualizar <code>in</code> para 8. Quando o Processo A retomar, ele acreditará que o slot 7 ainda é dele, sobrescreverá o arquivo de B e também moverá o ponteiro para 8. O arquivo de B será perdido para sempre.</p>
+<img src="static/fig_2_21_spooler.png" width="65%">
+
+<p>A falha ocorre porque operações como <code>contador++</code> não são <strong>atômicas</strong>. Elas envolvem carregar o valor na CPU, incrementar e salvar. Se a CPU for chaveada no meio desse ciclo, a atualização será perdida. Observe o código abaixo, onde duas threads tentam chegar a 2 milhões, mas falham sistematicamente.</p>
+<h4 id="exemplo-2-o-bug-da-condição-de-corrida"><span class="heading-text">Exemplo 2: O Bug da Condição de Corrida</span><span class="heading-arabic">5.1.3.1</span></h4>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;pthread.h&gt;
 
 long contador = 0;
 
@@ -38,16 +287,44 @@ void* incrementar(void* arg) {
 
 int main() {
     pthread_t t1, t2;
-    pthread_create(&t1, NULL, incrementar, NULL);
-    pthread_create(&t2, NULL, incrementar, NULL);
+    pthread_create(&amp;t1, NULL, incrementar, NULL);
+    pthread_create(&amp;t2, NULL, incrementar, NULL);
     pthread_join(t1, NULL);
     pthread_join(t2, NULL);
 
-    printf("Resultado após corrida: %ld (Esperado: 2000000)\n", contador);
+    printf(&quot;Resultado após corrida: %ld (Esperado: 2000000)\n&quot;, contador);
     return 0;
 }
-</code></pre><div class="callout callout-question"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><circle cx=12 cy=12 r=10 /><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span><span class=callout-title-inner>Reflita<br></span></div><div class=callout-content><p>Execute mentalmente (ou compile) o Exemplo 2. O resultado será sempre o mesmo? Por que <code>contador++</code>, que parece uma única instrução, não é atômica? Em que ponto exato o escalonador poderia interromper a thread e causar a inconsistência? Desenhe a linha do tempo.</p></div></div><h3 id=regiões-críticas-e-exclusão-mútua><span class=heading-text>Regiões Críticas e Exclusão Mútua</span><span class=heading-arabic>5.1.4</span></h3><p>Para curar o problema das condições de corrida, isolamos o código que acessa recursos compartilhados em <strong>Regiões Críticas (CR)</strong>. O objetivo é implementar a <strong>Exclusão Mútua</strong>: garantir que se um processo está dentro de sua CR, todos os outros sejam impedidos de entrar.</p><img src=static/fig_2_22_critical_regions.png width=90%><p>Qualquer solução de sincronização ideal deve obedecer a quatro condições: primeiro, a <strong>Exclusão Mútua Rígida</strong> (nunca dois processos na CR ao mesmo tempo). Segundo, a <strong>Independência de Hardware</strong>, funcionando sem supor o número de CPUs ou sua velocidade. Terceiro, o <strong>Não-Bloqueio Externo</strong>, onde um processo fora da CR não impede outros de entrarem nela. Por fim, a <strong>Espera Limitada</strong>, garantindo que nenhum processo espere eternamente (ausência de <em>starvation</em>).</p><div class="callout callout-question"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><circle cx=12 cy=12 r=10 /><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span><span class=callout-title-inner>Reflita<br></span></div><div class=callout-content><p>A solução mais simples que alguém poderia imaginar é: "processo A seta <code>lock = 1</code> e quando termina faz <code>lock = 0</code>". Essa solução atende às 4 condições listadas? Qual delas ela viola? (Dica: pense em duas threads lendo <code>lock == 0</code> quase ao mesmo tempo.)</p></div></div><h3 id=exclusão-mútua-com-espera-ocupada-busy-waiting><span class=heading-text>Exclusão Mútua com Espera Ocupada (Busy Waiting)</span><span class=heading-arabic>5.1.5</span></h3><p>As abordagens iniciais utilizavam a <strong>Espera Ocupada</strong>, onde o processo fica em um laço de repetição testando o valor de uma variável. Isso desperdiça CPU e pode causar a <strong>Inversão de Prioridade</strong>, onde uma thread importante fica presa esperando outra lenta liberar o processador.</p><p>Alguns métodos históricos incluem <strong>Desabilitar Interrupções</strong> (perigoso para o usuário) e a <strong>Alternância Estrita</strong> (que viola a condição 3 de progresso). No entanto, a <strong>Solução de Peterson</strong> (1981) provou ser possível via software puro para dois processos, combinando o conceito de "vez" com o "desejo de entrada". Em sistemas multiprocessadores modernos, o hardware provê suporte nativo via instruções como <strong>TSL (Test and Set Lock)</strong>, que bloqueia o barramento de memória para garantir atomicidade.</p><h4 id=exemplo-3-solução-de-peterson-completa><span class=heading-text>Exemplo 3: Solução de Peterson Completa</span><span class=heading-arabic>5.1.5.1</span></h4><pre class="line-numbers language-c" data-lang=C><code class=language-c>#include &lt;stdio.h>
-#include &lt;pthread.h>
+</code></pre>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Execute mentalmente (ou compile) o Exemplo 2. O resultado será sempre o mesmo? Por que <code>contador++</code>, que parece uma única instrução, não é atômica? Em que ponto exato o escalonador poderia interromper a thread e causar a inconsistência? Desenhe a linha do tempo.</p>
+  </div>
+</div>
+<h3 id="regiões-críticas-e-exclusão-mútua"><span class="heading-text">Regiões Críticas e Exclusão Mútua</span><span class="heading-arabic">5.1.4</span></h3>
+<p>Para curar o problema das condições de corrida, isolamos o código que acessa recursos compartilhados em <strong>Regiões Críticas (CR)</strong>. O objetivo é implementar a <strong>Exclusão Mútua</strong>: garantir que se um processo está dentro de sua CR, todos os outros sejam impedidos de entrar.</p>
+<img src="static/fig_2_22_critical_regions.png" width="90%">
+
+<p>Qualquer solução de sincronização ideal deve obedecer a quatro condições: primeiro, a <strong>Exclusão Mútua Rígida</strong> (nunca dois processos na CR ao mesmo tempo). Segundo, a <strong>Independência de Hardware</strong>, funcionando sem supor o número de CPUs ou sua velocidade. Terceiro, o <strong>Não-Bloqueio Externo</strong>, onde um processo fora da CR não impede outros de entrarem nela. Por fim, a <strong>Espera Limitada</strong>, garantindo que nenhum processo espere eternamente (ausência de <em>starvation</em>).</p>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>A solução mais simples que alguém poderia imaginar é: &quot;processo A seta <code>lock = 1</code> e quando termina faz <code>lock = 0</code>&quot;. Essa solução atende às 4 condições listadas? Qual delas ela viola? (Dica: pense em duas threads lendo <code>lock == 0</code> quase ao mesmo tempo.)</p>
+  </div>
+</div>
+<h3 id="exclusão-mútua-com-espera-ocupada-busy-waiting"><span class="heading-text">Exclusão Mútua com Espera Ocupada (Busy Waiting)</span><span class="heading-arabic">5.1.5</span></h3>
+<p>As abordagens iniciais utilizavam a <strong>Espera Ocupada</strong>, onde o processo fica em um laço de repetição testando o valor de uma variável. Isso desperdiça CPU e pode causar a <strong>Inversão de Prioridade</strong>, onde uma thread importante fica presa esperando outra lenta liberar o processador.</p>
+<p>Alguns métodos históricos incluem <strong>Desabilitar Interrupções</strong> (perigoso para o usuário) e a <strong>Alternância Estrita</strong> (que viola a condição 3 de progresso). No entanto, a <strong>Solução de Peterson</strong> (1981) provou ser possível via software puro para dois processos, combinando o conceito de &quot;vez&quot; com o &quot;desejo de entrada&quot;. Em sistemas multiprocessadores modernos, o hardware provê suporte nativo via instruções como <strong>TSL (Test and Set Lock)</strong>, que bloqueia o barramento de memória para garantir atomicidade.</p>
+<h4 id="exemplo-3-solução-de-peterson-completa"><span class="heading-text">Exemplo 3: Solução de Peterson Completa</span><span class="heading-arabic">5.1.5.1</span></h4>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;pthread.h&gt;
 
 int vez;
 int interesse[2] = {0, 0};
@@ -57,7 +334,7 @@ void enter_region(int process) {
     int outro = 1 - process;
     interesse[process] = 1;
     vez = outro;
-    while (interesse[outro] && vez == outro);
+    while (interesse[outro] &amp;&amp; vez == outro);
 }
 
 void leave_region(int process) {
@@ -77,43 +354,119 @@ void* worker(void* arg) {
 int main() {
     pthread_t t1, t2;
     int id0 = 0, id1 = 1;
-    pthread_create(&t1, NULL, worker, &id0);
-    pthread_create(&t2, NULL, worker, &id1);
+    pthread_create(&amp;t1, NULL, worker, &amp;id0);
+    pthread_create(&amp;t2, NULL, worker, &amp;id1);
     pthread_join(t1, NULL);
     pthread_join(t2, NULL);
-    printf("Resultado com Peterson: %ld\n", contador);
+    printf(&quot;Resultado com Peterson: %ld\n&quot;, contador);
     return 0;
 }
-</code></pre><div class="callout callout-question"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><circle cx=12 cy=12 r=10 /><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span><span class=callout-title-inner>Reflita<br></span></div><div class=callout-content><p>O coração da solução de Peterson está no <code>while (vez == process && interesse[outro] == 1)</code>. Trace o que acontece quando <em>ambos</em> os processos executam <code>enter_region</code> ao mesmo tempo: quais variáveis cada um escreve? Por que a última atribuição de <code>vez</code> é sempre a que "perde" a disputá e cede a vez ao outro? Isso garante qual das 4 condições?</p></div></div><p>Em nível didático, a solução de Peterson mostra que a exclusão mútua pode ser obtida apenas com software para dois processos. No entanto, essa ideia clássica não funciona de forma confiável em compiladores e arquiteturas modernas. O motivo é que o algoritmo assume que leituras e escritas em memória compartilhada serão observadas exatamente na ordem em que aparecem no código. Hoje essa suposição não vale mais de forma geral.</p><p>Compiladores modernos podem reorganizar instruções, manter valores em registradores e eliminar leituras repetidas quando entendem que isso preserva a semântica do programa segundo o modelo de memória da linguagem. Além disso, o próprio processador pode executar operações fora de ordem e tornar uma escrita visível para um núcleo em momento diferente do observado por outro. Assim, um processo pode testar <code>interesse[outro]</code> ou <code>vez</code> e enxergar um valor antigo, mesmo depois de o outro processo já ter feito a atualização correspondente.</p><p>Na prática, às vezes vemos uma melhora significativa no comportamento por conta de otimizações do compilador, do cache, da ordem de escalonamento e de características específicas da máquina. Mesmo assim, isso não é garantia de correção. O programa pode aparentar funcionar em muitos testes e ainda falhar em outra compilação, em outro processador ou em outra execução. Portanto, sem operações atômicas e barreiras de memória apropriadas, não podemos garantir exclusão mútua de forma correta e portável nos sistemas atuais.</p><h3 id=sono-e-acordar-sleep-and-wakeup><span class=heading-text>Sono e Acordar (Sleep and Wakeup)</span><span class=heading-arabic>5.1.6</span></h3><p>Embora a Solução de Peterson e a instrução TSL garantam a exclusão mútua, elas sofrem de um defeito grave: o <strong>desperdício de CPU</strong>. Enquanto um processo espera para entrar em sua região crítica, ele consome ciclos de processamento repetindo um laço <code>while</code>. Além disso, a espera ocupada pode causar o fenômeno da <strong>Inversão de Prioridade</strong>: se um processo de alta prioridade fica pronto enquanto um de baixa prioridade está na região crítica, o processo de alta prioridade pode entrar em um loop infinito de espera, nunca cedendo a CPU para que o processo de baixa prioridade possa terminar e liberar o recurso.</p><p>Para resolver isso, utilizamos as primitivas <code>sleep()</code> (que bloqueia o processo, retirando-o da fila de prontos) e <code>wakeup()</code> (que o traz de volta). O exemplo clássico para ilustrar essas primitivas é o <strong>Problema do Produtor-Consumidor</strong> (também conhecido como o problema do buffer limitado). Aqui, o produtor tenta colocar itens em um buffer de tamanho fixo e o consumidor tenta retirá-los. Se o buffer estiver cheio, o produtor deve dormir; se estiver vazio, o consumidor deve dormir.</p><h4 id=o-que-vai-errado-a-janela-de-vulnerabilidade><span class=heading-text>O Que Vai Errado: A Janela de Vulnerabilidade</span><span class=heading-arabic>5.1.6.1</span></h4><p>O problema reside na falta de atomicidade entre o teste de uma condição e a chamada de bloqueio. Imagine um cenário onde o buffer está vazio (<code>count == 0</code>):</p><ol><li>O consumidor executa <code>if (count == 0)</code>, confirma que é verdade, mas <strong>antes</strong> de conseguir dormir, é interrompido pelo escalonador.</li><li>O produtor entra, produz um item, incrementa <code>count</code> para 1 e, percebendo que o buffer agora tem conteúdo, tenta acordar o consumidor (<code>wakeup</code>).</li><li>Como o consumidor tecnicamente ainda não dormiu (ele foi interrompido logo antes), o sinal de <code>wakeup</code> é <strong>perdido</strong>.</li><li>O consumidor retoma a execução exatamente onde parou e finalmente dorme.</li><li>Eventualmente, o produtor encherá o buffer e também dormirá. Os dois ficarão dormindo para sempre: um <strong>Deadlock</strong>.</li></ol><div class="callout callout-question"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><circle cx=12 cy=12 r=10 /><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span><span class=callout-title-inner>Reflita<br></span></div><div class=callout-content><p>O que o sistema operacional precisaria "lembrar" para que esse sinal de <code>wakeup</code> não fosse ignorado? Essa falha seria fácil de detectar em testes comuns ou ela depende de uma coincidência temporal muito específica?</p></div></div><h3 id=semáforos-e-mutexes><span class=heading-text>Semáforos e Mutexes</span><span class=heading-arabic>5.1.7</span></h3><h4 id=semáforos-de-dijkstra><span class=heading-text>Semáforos de Dijkstra</span><span class=heading-arabic>5.1.7.1</span></h4><p>Dijkstra introduziu os semáforos em 1965 como uma solução definitiva para o problema dos sinais perdidos. Um semáforo é uma variável inteira especial que armazena o número de "sinais de acordar" acumulados para uso futuro. Diferente do <code>wakeup</code> simples, que é ignorado se o processo não estiver dormindo, o sinal em um semáforo (operação <code>UP</code>) incrementa o contador. Se um processo tentar dormir (operação <code>DOWN</code>) logo em seguida, ele encontrará o contador positivo e continuará sem bloquear. O sinal foi "salvo".</p><p>As operações fundamentais devem ser <strong>atômicas</strong> (indivisíveis):</p><ol><li><strong>DOWN (ou P):</strong> Verifica se o valor é > 0. Se for, decrementa e continua. Se for 0, o processo dorme <strong>sem completar o decremento</strong> até ser acordado.</li><li><strong>UP (ou V):</strong> Incrementa o valor. Se houver processos dormindo esperando, um deles acorda e completa seu <code>DOWN</code>.</li></ol><div class="callout callout-important"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span><span class=callout-title-inner>A "Memória" dos Semáforos<br></span></div><div class=callout-content><p>Diferente do <code>wakeup</code> simples, o <code>UP</code> em um semáforo incrementa o contador. Se um processo tentar um <code>DOWN</code> logo em seguida, ele encontrará o contador positivo e não precisará dormir. O sinal foi "salvo".</p></div></div><div class="callout callout-question"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><circle cx=12 cy=12 r=10 /><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span><span class=callout-title-inner>Reflita<br></span></div><div class=callout-content><p>Por que é absolutamente crucial que as operações <code>DOWN</code> e <code>UP</code> sejam atômicas? O que aconteceria se dois processos tentassem decrementar um semáforo que está em <code>1</code> exatamente ao mesmo tempo e a CPU trocasse de contexto no meio da verificação?</p></div></div><h4 id=mutexes-mutual-exclusion><span class=heading-text>Mutexes (Mutual Exclusion)</span><span class=heading-arabic>5.1.7.2</span></h4><p>O <strong>Mutex</strong> é um semáforo simplificado com apenas dois estados: trancado ou destrancado. É ideal para proteger estruturas de dados. Diferente do semáforo, o Mutex tem um "Dono". Abaixo, vemos como o Mutex resolve de forma limpa a condição de corrida que vimos anteriormente.</p><h4 id=exemplo-4-mutex-para-exclusão-mútua><span class=heading-text>Exemplo 4: Mutex para Exclusão Mútua</span><span class=heading-arabic>5.1.7.3</span></h4><pre class="line-numbers language-c" data-lang=C><code class=language-c>#include &lt;stdio.h>
-#include &lt;pthread.h>
+</code></pre>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>O coração da solução de Peterson está no <code>while (vez == process &amp;&amp; interesse[outro] == 1)</code>. Trace o que acontece quando <em>ambos</em> os processos executam <code>enter_region</code> ao mesmo tempo: quais variáveis cada um escreve? Por que a última atribuição de <code>vez</code> é sempre a que &quot;perde&quot; a disputá e cede a vez ao outro? Isso garante qual das 4 condições?</p>
+  </div>
+</div>
+<p>Em nível didático, a solução de Peterson mostra que a exclusão mútua pode ser obtida apenas com software para dois processos. No entanto, essa ideia clássica não funciona de forma confiável em compiladores e arquiteturas modernas. O motivo é que o algoritmo assume que leituras e escritas em memória compartilhada serão observadas exatamente na ordem em que aparecem no código. Hoje essa suposição não vale mais de forma geral.</p>
+<p>Compiladores modernos podem reorganizar instruções, manter valores em registradores e eliminar leituras repetidas quando entendem que isso preserva a semântica do programa segundo o modelo de memória da linguagem. Além disso, o próprio processador pode executar operações fora de ordem e tornar uma escrita visível para um núcleo em momento diferente do observado por outro. Assim, um processo pode testar <code>interesse[outro]</code> ou <code>vez</code> e enxergar um valor antigo, mesmo depois de o outro processo já ter feito a atualização correspondente.</p>
+<p>Na prática, às vezes vemos uma melhora significativa no comportamento por conta de otimizações do compilador, do cache, da ordem de escalonamento e de características específicas da máquina. Mesmo assim, isso não é garantia de correção. O programa pode aparentar funcionar em muitos testes e ainda falhar em outra compilação, em outro processador ou em outra execução. Portanto, sem operações atômicas e barreiras de memória apropriadas, não podemos garantir exclusão mútua de forma correta e portável nos sistemas atuais.</p>
+<h3 id="sono-e-acordar-sleep-and-wakeup"><span class="heading-text">Sono e Acordar (Sleep and Wakeup)</span><span class="heading-arabic">5.1.6</span></h3>
+<p>Embora a Solução de Peterson e a instrução TSL garantam a exclusão mútua, elas sofrem de um defeito grave: o <strong>desperdício de CPU</strong>. Enquanto um processo espera para entrar em sua região crítica, ele consome ciclos de processamento repetindo um laço <code>while</code>. Além disso, a espera ocupada pode causar o fenômeno da <strong>Inversão de Prioridade</strong>: se um processo de alta prioridade fica pronto enquanto um de baixa prioridade está na região crítica, o processo de alta prioridade pode entrar em um loop infinito de espera, nunca cedendo a CPU para que o processo de baixa prioridade possa terminar e liberar o recurso.</p>
+<p>Para resolver isso, utilizamos as primitivas <code>sleep()</code> (que bloqueia o processo, retirando-o da fila de prontos) e <code>wakeup()</code> (que o traz de volta). O exemplo clássico para ilustrar essas primitivas é o <strong>Problema do Produtor-Consumidor</strong> (também conhecido como o problema do buffer limitado). Aqui, o produtor tenta colocar itens em um buffer de tamanho fixo e o consumidor tenta retirá-los. Se o buffer estiver cheio, o produtor deve dormir; se estiver vazio, o consumidor deve dormir.</p>
+<h4 id="o-que-vai-errado-a-janela-de-vulnerabilidade"><span class="heading-text">O Que Vai Errado: A Janela de Vulnerabilidade</span><span class="heading-arabic">5.1.6.1</span></h4>
+<p>O problema reside na falta de atomicidade entre o teste de uma condição e a chamada de bloqueio. Imagine um cenário onde o buffer está vazio (<code>count == 0</code>):</p>
+<ol>
+<li>O consumidor executa <code>if (count == 0)</code>, confirma que é verdade, mas <strong>antes</strong> de conseguir dormir, é interrompido pelo escalonador.</li>
+<li>O produtor entra, produz um item, incrementa <code>count</code> para 1 e, percebendo que o buffer agora tem conteúdo, tenta acordar o consumidor (<code>wakeup</code>).</li>
+<li>Como o consumidor tecnicamente ainda não dormiu (ele foi interrompido logo antes), o sinal de <code>wakeup</code> é <strong>perdido</strong>.</li>
+<li>O consumidor retoma a execução exatamente onde parou e finalmente dorme.</li>
+<li>Eventualmente, o produtor encherá o buffer e também dormirá. Os dois ficarão dormindo para sempre: um <strong>Deadlock</strong>.</li>
+</ol>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>O que o sistema operacional precisaria &quot;lembrar&quot; para que esse sinal de <code>wakeup</code> não fosse ignorado? Essa falha seria fácil de detectar em testes comuns ou ela depende de uma coincidência temporal muito específica?</p>
+  </div>
+</div>
+<h3 id="semáforos-e-mutexes"><span class="heading-text">Semáforos e Mutexes</span><span class="heading-arabic">5.1.7</span></h3>
+<h4 id="semáforos-de-dijkstra"><span class="heading-text">Semáforos de Dijkstra</span><span class="heading-arabic">5.1.7.1</span></h4>
+<p>Dijkstra introduziu os semáforos em 1965 como uma solução definitiva para o problema dos sinais perdidos. Um semáforo é uma variável inteira especial que armazena o número de &quot;sinais de acordar&quot; acumulados para uso futuro. Diferente do <code>wakeup</code> simples, que é ignorado se o processo não estiver dormindo, o sinal em um semáforo (operação <code>UP</code>) incrementa o contador. Se um processo tentar dormir (operação <code>DOWN</code>) logo em seguida, ele encontrará o contador positivo e continuará sem bloquear. O sinal foi &quot;salvo&quot;.</p>
+<p>As operações fundamentais devem ser <strong>atômicas</strong> (indivisíveis):</p>
+<ol>
+<li><strong>DOWN (ou P):</strong> Verifica se o valor é &gt; 0. Se for, decrementa e continua. Se for 0, o processo dorme <strong>sem completar o decremento</strong> até ser acordado.</li>
+<li><strong>UP (ou V):</strong> Incrementa o valor. Se houver processos dormindo esperando, um deles acorda e completa seu <code>DOWN</code>.</li>
+</ol>
+<div class="callout callout-important">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">A &quot;Memória&quot; dos Semáforos<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Diferente do <code>wakeup</code> simples, o <code>UP</code> em um semáforo incrementa o contador. Se um processo tentar um <code>DOWN</code> logo em seguida, ele encontrará o contador positivo e não precisará dormir. O sinal foi &quot;salvo&quot;.</p>
+  </div>
+</div>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Por que é absolutamente crucial que as operações <code>DOWN</code> e <code>UP</code> sejam atômicas? O que aconteceria se dois processos tentassem decrementar um semáforo que está em <code>1</code> exatamente ao mesmo tempo e a CPU trocasse de contexto no meio da verificação?</p>
+  </div>
+</div>
+<h4 id="mutexes-mutual-exclusion"><span class="heading-text">Mutexes (Mutual Exclusion)</span><span class="heading-arabic">5.1.7.2</span></h4>
+<p>O <strong>Mutex</strong> é um semáforo simplificado com apenas dois estados: trancado ou destrancado. É ideal para proteger estruturas de dados. Diferente do semáforo, o Mutex tem um &quot;Dono&quot;. Abaixo, vemos como o Mutex resolve de forma limpa a condição de corrida que vimos anteriormente.</p>
+<h4 id="exemplo-4-mutex-para-exclusão-mútua"><span class="heading-text">Exemplo 4: Mutex para Exclusão Mútua</span><span class="heading-arabic">5.1.7.3</span></h4>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;pthread.h&gt;
 
 long contador = 0;
 pthread_mutex_t trava;
 
 void* incrementar(void* arg) {
     for (int i = 0; i &lt; 1000000; i++) {
-        pthread_mutex_lock(&trava);
+        pthread_mutex_lock(&amp;trava);
         contador++; // Região Crítica Protegida
-        pthread_mutex_unlock(&trava);
+        pthread_mutex_unlock(&amp;trava);
     }
     return NULL;
 }
 
 int main() {
     pthread_t t1, t2;
-    pthread_mutex_init(&trava, NULL);
-    pthread_create(&t1, NULL, incrementar, NULL);
-    pthread_create(&t2, NULL, incrementar, NULL);
+    pthread_mutex_init(&amp;trava, NULL);
+    pthread_create(&amp;t1, NULL, incrementar, NULL);
+    pthread_create(&amp;t2, NULL, incrementar, NULL);
     pthread_join(t1, NULL);
     pthread_join(t2, NULL);
-    pthread_mutex_destroy(&trava);
-    printf("Resultado com Mutex: %ld\n", contador);
+    pthread_mutex_destroy(&amp;trava);
+    printf(&quot;Resultado com Mutex: %ld\n&quot;, contador);
     return 0;
 }
-</code></pre><div class="callout callout-question"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><circle cx=12 cy=12 r=10 /><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span><span class=callout-title-inner>Reflita<br></span></div><div class=callout-content><p>Compare o Exemplo 2 (com bug) e o Exemplo 4 (com mutex). A única diferença são as chamadas <code>lock</code>/<code>unlock</code>. Por que isso resolve o problema? Se você remover apenas o <code>pthread_mutex_unlock</code> (esqueceu de liberar), o que aconteceria? Já viu esse bug em algum software real?</p></div></div><h4 id=sincronização-real-o-problema-do-produtor-consumidor><span class=heading-text>Sincronização Real: O Problema do Produtor-Consumidor</span><span class=heading-arabic>5.1.7.4</span></h4><p>Abaixo, vemos a implementação real em C utilizando Semáforos para controle de fluxo (vagas e itens) e Mutex para proteção da região crítica (o acesso ao buffer). Esta arquitetura resolve a janela de vulnerabilidade pois as operações nos semáforos garantem que nenhum sinal de sincronização seja perdido.</p><h4 id=exemplo-5-sincronização-produtor-consumidor><span class=heading-text>Exemplo 5: Sincronização Produtor-Consumidor</span><span class=heading-arabic>5.1.7.5</span></h4><pre class="line-numbers language-c" data-lang=C><code class=language-c>#include &lt;stdio.h>
-#include &lt;pthread.h>
-#include &lt;semaphore.h>
-#include &lt;unistd.h>
+</code></pre>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Compare o Exemplo 2 (com bug) e o Exemplo 4 (com mutex). A única diferença são as chamadas <code>lock</code>/<code>unlock</code>. Por que isso resolve o problema? Se você remover apenas o <code>pthread_mutex_unlock</code> (esqueceu de liberar), o que aconteceria? Já viu esse bug em algum software real?</p>
+  </div>
+</div>
+<h4 id="sincronização-real-o-problema-do-produtor-consumidor"><span class="heading-text">Sincronização Real: O Problema do Produtor-Consumidor</span><span class="heading-arabic">5.1.7.4</span></h4>
+<p>Abaixo, vemos a implementação real em C utilizando Semáforos para controle de fluxo (vagas e itens) e Mutex para proteção da região crítica (o acesso ao buffer). Esta arquitetura resolve a janela de vulnerabilidade pois as operações nos semáforos garantem que nenhum sinal de sincronização seja perdido.</p>
+<h4 id="exemplo-5-sincronização-produtor-consumidor"><span class="heading-text">Exemplo 5: Sincronização Produtor-Consumidor</span><span class="heading-arabic">5.1.7.5</span></h4>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;pthread.h&gt;
+#include &lt;semaphore.h&gt;
+#include &lt;unistd.h&gt;
 
 #define BUFFER_SIZE 5
 int buffer[BUFFER_SIZE];
@@ -123,12 +476,12 @@ pthread_mutex_t mutex;
 
 void* producer(void* arg) {
     for (int i = 0; i &lt; 10; i++) {
-        sem_wait(&empty); // Espera vaga (DOWN)
-        pthread_mutex_lock(&mutex);
+        sem_wait(&amp;empty); // Espera vaga (DOWN)
+        pthread_mutex_lock(&amp;mutex);
         buffer[count++] = i;
-        printf("Produtor: Inseriu item %d na posicao %d\n", i, count-1);
-        pthread_mutex_unlock(&mutex);
-        sem_post(&full); // Avisa que tem novo item (UP)
+        printf(&quot;Produtor: Inseriu item %d na posicao %d\n&quot;, i, count-1);
+        pthread_mutex_unlock(&amp;mutex);
+        sem_post(&amp;full); // Avisa que tem novo item (UP)
         sleep(1);
     }
     return NULL;
@@ -136,12 +489,12 @@ void* producer(void* arg) {
 
 void* consumer(void* arg) {
     for (int i = 0; i &lt; 10; i++) {
-        sem_wait(&full); // Espera item (DOWN)
-        pthread_mutex_lock(&mutex);
+        sem_wait(&amp;full); // Espera item (DOWN)
+        pthread_mutex_lock(&amp;mutex);
         int item = buffer[--count];
-        printf("Consumidor: Removeu item %d da posicao %d\n", item, count);
-        pthread_mutex_unlock(&mutex);
-        sem_post(&empty); // Libera vaga (UP)
+        printf(&quot;Consumidor: Removeu item %d da posicao %d\n&quot;, item, count);
+        pthread_mutex_unlock(&amp;mutex);
+        sem_post(&amp;empty); // Libera vaga (UP)
         sleep(2);
     }
     return NULL;
@@ -149,19 +502,43 @@ void* consumer(void* arg) {
 
 int main() {
     pthread_t p, c;
-    sem_init(&empty, 0, BUFFER_SIZE); // Inicializa com N vagas
-    sem_init(&full, 0, 0);           // Inicializa com 0 itens
-    pthread_mutex_init(&mutex, NULL);
-    pthread_create(&p, NULL, producer, NULL);
-    pthread_create(&c, NULL, consumer, NULL);
+    sem_init(&amp;empty, 0, BUFFER_SIZE); // Inicializa com N vagas
+    sem_init(&amp;full, 0, 0);           // Inicializa com 0 itens
+    pthread_mutex_init(&amp;mutex, NULL);
+    pthread_create(&amp;p, NULL, producer, NULL);
+    pthread_create(&amp;c, NULL, consumer, NULL);
     pthread_join(p, NULL);
     pthread_join(c, NULL);
     return 0;
 }
-</code></pre><div class="callout callout-question"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><circle cx=12 cy=12 r=10 /><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span><span class=callout-title-inner>Reflita<br></span></div><div class=callout-content><p>Se já existe um <code>mutex</code> protegendo o buffer, por que ainda precisamos dos semáforos <code>empty</code> e <code>full</code>? E, no sentido contrário, se os semáforos já controlam vagas e itens disponíveis, por que eles não substituem sozinhos o <code>mutex</code> na proteção da região crítica?</p></div></div><h3 id=problemas-clássicos-de-ipc><span class=heading-text>Problemas Clássicos de IPC</span><span class=heading-arabic>5.1.8</span></h3><p>Cinco filósofos sentam-se à mesa com cinco garfos. Cada filósofo precisa de dois garfos para comer. Se todos pegarem o garfo da esquerda ao mesmo tempo, teremos um <strong>Deadlock</strong>. A solução exige quebrar a circularidade da espera. Uma técnica é a <strong>Hierarquia de Recursos</strong>, onde um filósofo sempre tenta pegar o garfo de menor índice primeiro.</p><img style="border:1px solid #333" src=static/fig_dining_philosophers.png width=90%><div class="callout callout-question"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><circle cx=12 cy=12 r=10 /><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span><span class=callout-title-inner>Reflita<br></span></div><div class=callout-content><p>Antes de ver o código: imagine 5 filósofos pegando o garfo da <strong>esquerda</strong> simultaneamente. Desenhe o estado. Por que todos ficam travados? O que precisaria mudar para que <em>pelo menos um</em> filósofo consiga comer? Por que a solução de hierarquia de recursos funciona?</p></div></div><h4 id=exemplo-6-solução-hierárquica-para-os-filósofos><span class=heading-text>Exemplo 6: Solução Hierárquica para os Filósofos</span><span class=heading-arabic>5.1.8.1</span></h4><pre class="line-numbers language-c" data-lang=C><code class=language-c>#include &lt;stdio.h>
-#include &lt;pthread.h>
-#include &lt;semaphore.h>
-#include &lt;unistd.h>
+</code></pre>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Se já existe um <code>mutex</code> protegendo o buffer, por que ainda precisamos dos semáforos <code>empty</code> e <code>full</code>? E, no sentido contrário, se os semáforos já controlam vagas e itens disponíveis, por que eles não substituem sozinhos o <code>mutex</code> na proteção da região crítica?</p>
+  </div>
+</div>
+<h3 id="problemas-clássicos-de-ipc"><span class="heading-text">Problemas Clássicos de IPC</span><span class="heading-arabic">5.1.8</span></h3>
+<p>Cinco filósofos sentam-se à mesa com cinco garfos. Cada filósofo precisa de dois garfos para comer. Se todos pegarem o garfo da esquerda ao mesmo tempo, teremos um <strong>Deadlock</strong>. A solução exige quebrar a circularidade da espera. Uma técnica é a <strong>Hierarquia de Recursos</strong>, onde um filósofo sempre tenta pegar o garfo de menor índice primeiro.</p>
+<img src="static/fig_dining_philosophers.png" width="90%" style="border: 1px solid #333">
+
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Antes de ver o código: imagine 5 filósofos pegando o garfo da <strong>esquerda</strong> simultaneamente. Desenhe o estado. Por que todos ficam travados? O que precisaria mudar para que <em>pelo menos um</em> filósofo consiga comer? Por que a solução de hierarquia de recursos funciona?</p>
+  </div>
+</div>
+<h4 id="exemplo-6-solução-hierárquica-para-os-filósofos"><span class="heading-text">Exemplo 6: Solução Hierárquica para os Filósofos</span><span class="heading-arabic">5.1.8.1</span></h4>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;pthread.h&gt;
+#include &lt;semaphore.h&gt;
+#include &lt;unistd.h&gt;
 
 #define N 5
 #define LEFT (i + N - 1) % N
@@ -173,29 +550,29 @@ sem_t mutex;
 sem_t s[N];
 
 void test(int i) {
-    if (state[i] == HUNGRY && state[LEFT] != EATING && state[RIGHT] != EATING) {
+    if (state[i] == HUNGRY &amp;&amp; state[LEFT] != EATING &amp;&amp; state[RIGHT] != EATING) {
         state[i] = EATING;
-        printf("Filosofo %d pegou os garfos e esta COMENDO\n", i);
-        sem_post(&s[i]);
+        printf(&quot;Filosofo %d pegou os garfos e esta COMENDO\n&quot;, i);
+        sem_post(&amp;s[i]);
     }
 }
 
 void take_forks(int i) {
-    sem_wait(&mutex);
+    sem_wait(&amp;mutex);
     state[i] = HUNGRY;
-    printf("Filosofo %d esta faminto (HUNGRY)\n", i);
+    printf(&quot;Filosofo %d esta faminto (HUNGRY)\n&quot;, i);
     test(i);
-    sem_wait(&mutex);
-    sem_wait(&s[i]);
+    sem_wait(&amp;mutex);
+    sem_wait(&amp;s[i]);
 }
 
 void put_forks(int i) {
-    sem_wait(&mutex);
+    sem_wait(&amp;mutex);
     state[i] = THINKING;
-    printf("Filosofo %d devolveu os garfos e voltou a PENSAR\n", i);
+    printf(&quot;Filosofo %d devolveu os garfos e voltou a PENSAR\n&quot;, i);
     test(LEFT);
     test(RIGHT);
-    sem_post(&mutex);
+    sem_post(&amp;mutex);
 }
 
 pthread_mutex_t garfos[N];
@@ -203,23 +580,23 @@ pthread_mutex_t garfos[N];
 void* filosofo(void* num) {
     int i = *(int*)num;
     while(1) {
-        printf("Filosofo %d esta PENSANDO...\n", i);
+        printf(&quot;Filosofo %d esta PENSANDO...\n&quot;, i);
         sleep(1);
         
         // Tenta pegar garfos (Solucao hierarquica para evitar Deadlock)
         if (i % 2 == 0) {
-            pthread_mutex_lock(&garfos[LEFT]);
-            pthread_mutex_lock(&garfos[RIGHT]);
+            pthread_mutex_lock(&amp;garfos[LEFT]);
+            pthread_mutex_lock(&amp;garfos[RIGHT]);
         } else {
-            pthread_mutex_lock(&garfos[RIGHT]);
-            pthread_mutex_lock(&garfos[LEFT]);
+            pthread_mutex_lock(&amp;garfos[RIGHT]);
+            pthread_mutex_lock(&amp;garfos[LEFT]);
         }
         
-        printf("Filosofo %d esta COMENDO\n", i);
+        printf(&quot;Filosofo %d esta COMENDO\n&quot;, i);
         sleep(1);
         
-        pthread_mutex_unlock(&garfos[LEFT]);
-        pthread_mutex_unlock(&garfos[RIGHT]);
+        pthread_mutex_unlock(&amp;garfos[LEFT]);
+        pthread_mutex_unlock(&amp;garfos[RIGHT]);
     }
 }
 
@@ -228,16 +605,208 @@ int main() {
     int ids[N];
 
     for (int i = 0; i &lt; N; i++) {
-        pthread_mutex_init(&garfos[i], NULL);
+        pthread_mutex_init(&amp;garfos[i], NULL);
         ids[i] = i;
     }
 
     for (int i = 0; i &lt; N; i++)
-        pthread_create(&thread_id[i], NULL, filosofo, &ids[i]);
+        pthread_create(&amp;thread_id[i], NULL, filosofo, &amp;ids[i]);
 
     for (int i = 0; i &lt; N; i++)
         pthread_join(thread_id[i], NULL);
 
     return 0;
 }
-</code></pre><h3 id=monitores-e-abstrações-de-alto-nível><span class=heading-text>Monitores e Abstrações de Alto Nível</span><span class=heading-arabic>5.1.9</span></h3><p>Gerenciar semáforos manualmente é propenso a erros: um <code>UP</code> ou <code>DOWN</code> esquecido pode travar o sistema inteiro. Para evitar isso, surgiram os <strong>Monitores</strong>, uma abstraction de alto nível onde o compilador gerencia a exclusão mútua.</p><p>Um monitor é uma coleção de procedimentos, variáveis e estruturas de dados. A regra de ouro é: <strong>apenas um processo pode estar ativo dentro do monitor por vez</strong>. Se um processo chama um procedimento do monitor e já houver outro lá dentro, o novo processo será bloqueado automaticamente.</p><h4 id=variáveis-de-condição-wait-e-signal><span class=heading-text>Variáveis de Condição: wait() e signal()</span><span class=heading-arabic>5.1.9.1</span></h4><p>Para permitir que processos bloqueiem dentro do monitor quando uma condição não é atendida (ex: buffer vazio), usamos <strong>Variáveis de Condição</strong>. Elas possuem duas operações:</p><ul><li><strong>WAIT:</strong> O processo que a chama é bloqueado e <strong>libera temporariamente</strong> sua exclusão mútua do monitor, permitindo que outro processo entre.</li><li><strong>SIGNAL (ou notify):</strong> Acorda um processo que estava esperando naquela variável.</li></ul><div class="callout callout-tip"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .5 2.2 1.5 3.1.7.7 1.3 1.5 1.5 2.4"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span><span class=callout-title-inner>Monitor vs. Semáforo<br></span></div><div class=callout-content><p>A principal diferença é que o <code>SIGNAL</code> em um monitor <strong>não tem memória</strong>. Se você der um signal e ninguém estiver esperando, o sinal desaparece. Em semáforos, o sinal (UP) sempre incrementa o contador. Por isso, em monitores, o <code>wait</code> deve estar sempre dentro de um loop <code>while</code> que retesta a condição ao acordar.</p></div></div><h2 id=questões><span class=heading-text>Questões</span><span class=heading-arabic>5.2</span></h2><p><strong>1.</strong> A implementação de threads pode ser projetada para ocorrer no espaço do usuário ou diretamente no núcleo do sistema operacional. Com base nas diferenças arquiteturais entre essas abordagens, assinale a alternativa correta:</p><ul><li>A) As threads gerenciadas no espaço do núcleo são extremamente rápidas de chavear, pois não exigem transições de privilégio pesadas (Traps).</li><li>B) O uso de "Ativações pelo Escalonador" agrava o problema de bloqueio total no espaço do usuário, pois o núcleo perde completamente a capacidade de comunicação com a biblioteca de threads.</li><li>C) No modelo de espaço do usuário, se uma única thread realizar uma chamada de sistema bloqueante (como leitura de disco), o processo inteiro é suspenso pelo núcleo, paralisando todas as outras threads.</li><li>D) O núcleo do sistema operacional reconhece nativamente os múltiplos fluxos de execução quando as threads operam exclusivamente no espaço do usuário.</li></ul><p><strong>2.</strong> Para evitar o problema das Condições de Corrida (<em>Race Conditions</em>), isolamos o código que acessa recursos compartilhados em Regiões Críticas (CR). Qualquer solução ideal de sincronização deve obedecer a quatro condições fundamentais. Relacione a Coluna A (Condição) com a Coluna B (Descrição correspondente):</p><table><thead><tr><th style=text-align:left>Coluna A</th><th style=text-align:left>Coluna B</th></tr></thead><tbody><tr><td style=text-align:left>(1) Exclusão Mútua Rígida</td><td style=text-align:left>( ) Garante que nenhum processo precise esperar eternamente para obter o recurso (ausência de <em>starvation</em>).</td></tr><tr><td style=text-align:left>(2) Independência de Hardware</td><td style=text-align:left>( ) Estabelece que nunca dois processos podem estar em sua Região Crítica simultaneamente.</td></tr><tr><td style=text-align:left>(3) Não-Bloqueio Externo</td><td style=text-align:left>( ) A solução deve operar perfeitamente sem criar suposições sobre o número de CPUs disponíveis ou suas velocidades.</td></tr><tr><td style=text-align:left>(4) Espera Limitada</td><td style=text-align:left>( ) Determina que um processo que esteja operando fora de sua Região Crítica não pode impedir que outros processos entrem nas suas.</td></tr></tbody></table><p><strong>3.</strong> A Comunicação entre Processos (IPC) através de <em>Pipes</em> estabelece fluxos unidirecionais de dados. Analisando o código em C apresentado no Exemplo 1 para comunicação entre processos pai e filho, responda detalhadamente:</p><ul><li>a) Sabendo que a chamada <code>read()</code> pode ser bloqueante, descreva o que ocorreria com o fluxo de execução do processo filho caso o processo pai jamais escrevesse dados no <em>pipe</em>.</li><li>b) Explique a importância e o impacto lógico de se utilizar <code>close(fd[0])</code> no código do processo pai e <code>close(fd[1])</code> no processo filho logo após a criação do <em>pipe</em> via <code>fork()</code>.</li></ul><p><strong>4.</strong> O problema do Produtor-Consumidor ilustra falhas de sincronização conhecidas como <em>Janela de Vulnerabilidade</em> ao utilizar primitivas como <code>sleep()</code> e <code>wakeup()</code>. Assinale a alternativa que descreve a causa principal dessa vulnerabilidade:</p><ul><li>A) O Produtor envia um sinal de <code>wakeup</code> excessivamente rápido, esgotando o buffer de memória antes que o Consumidor possa processá-lo.</li><li>B) A falta de atomicidade entre o teste da variável <code>count</code> e a execução da função <code>sleep()</code> permite que o escalonador interrompa o Consumidor, resultando na perda irreversível do sinal de <code>wakeup</code> emitido pelo Produtor.</li><li>C) A primitiva <code>sleep()</code> consome altos ciclos de CPU durante a "Espera Ocupada", causando o fenômeno de Inversão de Prioridade.</li><li>D) O escalonador força o Produtor a dormir sempre que o buffer está vazio, impedindo a inserção de novos itens.</li></ul><p><strong>5.</strong> Sobre os Semáforos introduzidos por Dijkstra e os Monitores como abstrações de alto nível para controle de concorrência, analise as afirmativas abaixo e julgue-as como Verdadeiras (V) ou Falsas (F):</p><ul><li>( ) A principal vantagem de um Semáforo é que suas operações UP e DOWN não necessitam ser atômicas, facilitando a implementação em hardware simples.</li><li>( ) O Mutex diferencia-se de um semáforo genérico por ser uma versão simplificada com apenas dois estados (trancado/destrancado) e possuir a noção de um "Dono".</li><li>( ) Em um Monitor, apenas um processo pode estar ativo dentro de sua estrutura por vez; processos adicionais que tentem entrar são bloqueados automaticamente pelo compilador.</li><li>( ) O comando <code>SIGNAL</code> em um Monitor possui uma "memória" idêntica à operação <code>UP</code> do Semáforo: se um sinal é emitido e não há ninguém esperando, ele incrementa um contador oculto para uso futuro.</li></ul><p><strong>6.</strong> Problemas clássicos de IPC exigem arquiteturas cuidadosas para prevenir falhas sistêmicas como Deadlocks e Starvation. Com base nas abordagens para os problemas dos Filósofos Comensais e dos Leitores-Escritores, responda:</p><ul><li>a) Qual estado exato conduz os cinco filósofos a um impasse (<em>Deadlock</em>) na analogia clássica?</li><li>b) Como a implementação algorítmica da "Hierarquia de Recursos" rompe a circularidade de espera no problema dos Filósofos?</li><li>c) No problema dos Leitores-Escritores, caso o sistema permita continuamente a entrada de novos leitores enquanto houver pelo menos um lendo a base de dados, qual consequência direta o Escritor enfrentará e qual o nome desse fenômeno?</li></ul><h2 id=próximos-passos><span class=heading-text>Próximos passos</span><span class=heading-arabic>5.3</span></h2><p>Na próxima aula, entraremos na inteligência estratégica do sistema: o <a href=6-scheduling.html>6 - escalonamento</a>. Descobriremos como o S.O. decide quem ganha o privilégio de usar a CPU e quais algoritmos garantem justiça e fluidez.</p></div></article><footer class=footer><p>© 2025 · <a href=#>Gabriel Soares Baptista</a></p></footer></main></div><script>const toggle=document.querySelector(`.mobile-menu-toggle`),sidebar=document.querySelector(`.sidebar`),overlay=document.querySelector(`.mobile-menu-overlay`);function openMenu(){sidebar.classList.add(`open`),overlay.classList.add(`open`),toggle.classList.add(`open`),toggle.innerHTML=`<i data-lucide="x"></i>`,CourseForgeUI.initIcons(),document.body.style.overflow=`hidden`}function closeMenu(){sidebar.classList.remove(`open`),overlay.classList.remove(`open`),toggle.classList.remove(`open`),toggle.innerHTML=`<i data-lucide="menu"></i>`,CourseForgeUI.initIcons(),document.body.style.overflow=``}toggle.addEventListener(`click`,()=>{sidebar.classList.contains(`open`)?closeMenu():openMenu()}),overlay.addEventListener(`click`,closeMenu);</script><script data-no-bundle src=/aulas-faesa/js/vendor/katex/dist/katex.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/katex/dist/contrib/auto-render.min.js></script><script>document.addEventListener(`DOMContentLoaded`,function(){renderMathInElement(document.body,{output:`html`,delimiters:[{left:`$$`,right:`$$`,display:!0},{left:`$`,right:`$`,display:!1},{left:`\\(`,right:`\\)`,display:!1},{left:`\\[`,right:`\\]`,display:!0}],throwOnError:!1,strict:!1})});</script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/prism.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-c.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-cpp.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-python.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-clike.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-perl.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-java.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-mermaid.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-php.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js></script><script>document.addEventListener(`DOMContentLoaded`,function(){mermaid.initialize({startOnLoad:!0,theme:`default`,securityLevel:`loose`,fontFamily:`Inter, system-ui, sans-serif`,themeVariables:{fontSize:`16px`,edgeLabelFontSize:`16px`,multiplicityFontSize:`18px`}})});</script><script>document.addEventListener(`DOMContentLoaded`,function(){let isSubcourse=!1,courseName=`Sistemas Operacionais`;CourseForgeNav.applyDynamicBreadcrumbs(`.breadcrumb`,!1),CourseForgeNav.initScrollSpy(),CourseForgeUI.initCopyButtons(),CourseForgeUI.initExamples()});function handleBackNavigation(){let isSubcourse=!1,dynamic=CourseForgeNav.getBackLink(`contents.html`,`Voltar`,!1);window.location.href=dynamic.url}</script></body></html>
+</code></pre>
+<h3 id="monitores-e-abstrações-de-alto-nível"><span class="heading-text">Monitores e Abstrações de Alto Nível</span><span class="heading-arabic">5.1.9</span></h3>
+<p>Gerenciar semáforos manualmente é propenso a erros: um <code>UP</code> ou <code>DOWN</code> esquecido pode travar o sistema inteiro. Para evitar isso, surgiram os <strong>Monitores</strong>, uma abstraction de alto nível onde o compilador gerencia a exclusão mútua.</p>
+<p>Um monitor é uma coleção de procedimentos, variáveis e estruturas de dados. A regra de ouro é: <strong>apenas um processo pode estar ativo dentro do monitor por vez</strong>. Se um processo chama um procedimento do monitor e já houver outro lá dentro, o novo processo será bloqueado automaticamente.</p>
+<h4 id="variáveis-de-condição-wait-e-signal"><span class="heading-text">Variáveis de Condição: wait() e signal()</span><span class="heading-arabic">5.1.9.1</span></h4>
+<p>Para permitir que processos bloqueiem dentro do monitor quando uma condição não é atendida (ex: buffer vazio), usamos <strong>Variáveis de Condição</strong>. Elas possuem duas operações:</p>
+<ul>
+<li><strong>WAIT:</strong> O processo que a chama é bloqueado e <strong>libera temporariamente</strong> sua exclusão mútua do monitor, permitindo que outro processo entre.</li>
+<li><strong>SIGNAL (ou notify):</strong> Acorda um processo que estava esperando naquela variável.</li>
+</ul>
+<div class="callout callout-tip">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .5 2.2 1.5 3.1.7.7 1.3 1.5 1.5 2.4"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span>
+    <span class="callout-title-inner">Monitor vs. Semáforo<br /></span>
+  </div>
+  <div class="callout-content">
+<p>A principal diferença é que o <code>SIGNAL</code> em um monitor <strong>não tem memória</strong>. Se você der um signal e ninguém estiver esperando, o sinal desaparece. Em semáforos, o sinal (UP) sempre incrementa o contador. Por isso, em monitores, o <code>wait</code> deve estar sempre dentro de um loop <code>while</code> que retesta a condição ao acordar.</p>
+  </div>
+</div>
+<h2 id="questões"><span class="heading-text">Questões</span><span class="heading-arabic">5.2</span></h2>
+<p><strong>1.</strong> A implementação de threads pode ser projetada para ocorrer no espaço do usuário ou diretamente no núcleo do sistema operacional. Com base nas diferenças arquiteturais entre essas abordagens, assinale a alternativa correta:</p>
+<ul>
+<li>A) As threads gerenciadas no espaço do núcleo são extremamente rápidas de chavear, pois não exigem transições de privilégio pesadas (Traps).</li>
+<li>B) O uso de &quot;Ativações pelo Escalonador&quot; agrava o problema de bloqueio total no espaço do usuário, pois o núcleo perde completamente a capacidade de comunicação com a biblioteca de threads.</li>
+<li>C) No modelo de espaço do usuário, se uma única thread realizar uma chamada de sistema bloqueante (como leitura de disco), o processo inteiro é suspenso pelo núcleo, paralisando todas as outras threads.</li>
+<li>D) O núcleo do sistema operacional reconhece nativamente os múltiplos fluxos de execução quando as threads operam exclusivamente no espaço do usuário.</li>
+</ul>
+<p><strong>2.</strong> Para evitar o problema das Condições de Corrida (<em>Race Conditions</em>), isolamos o código que acessa recursos compartilhados em Regiões Críticas (CR). Qualquer solução ideal de sincronização deve obedecer a quatro condições fundamentais. Relacione a Coluna A (Condição) com a Coluna B (Descrição correspondente):</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Coluna A</th>
+  <th style="text-align:left">Coluna B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">(1) Exclusão Mútua Rígida</td>
+  <td style="text-align:left">( ) Garante que nenhum processo precise esperar eternamente para obter o recurso (ausência de <em>starvation</em>).</td>
+</tr>
+<tr>
+  <td style="text-align:left">(2) Independência de Hardware</td>
+  <td style="text-align:left">( ) Estabelece que nunca dois processos podem estar em sua Região Crítica simultaneamente.</td>
+</tr>
+<tr>
+  <td style="text-align:left">(3) Não-Bloqueio Externo</td>
+  <td style="text-align:left">( ) A solução deve operar perfeitamente sem criar suposições sobre o número de CPUs disponíveis ou suas velocidades.</td>
+</tr>
+<tr>
+  <td style="text-align:left">(4) Espera Limitada</td>
+  <td style="text-align:left">( ) Determina que um processo que esteja operando fora de sua Região Crítica não pode impedir que outros processos entrem nas suas.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>3.</strong> A Comunicação entre Processos (IPC) através de <em>Pipes</em> estabelece fluxos unidirecionais de dados. Analisando o código em C apresentado no Exemplo 1 para comunicação entre processos pai e filho, responda detalhadamente:</p>
+<ul>
+<li>a) Sabendo que a chamada <code>read()</code> pode ser bloqueante, descreva o que ocorreria com o fluxo de execução do processo filho caso o processo pai jamais escrevesse dados no <em>pipe</em>.</li>
+<li>b) Explique a importância e o impacto lógico de se utilizar <code>close(fd[0])</code> no código do processo pai e <code>close(fd[1])</code> no processo filho logo após a criação do <em>pipe</em> via <code>fork()</code>.</li>
+</ul>
+<p><strong>4.</strong> O problema do Produtor-Consumidor ilustra falhas de sincronização conhecidas como <em>Janela de Vulnerabilidade</em> ao utilizar primitivas como <code>sleep()</code> e <code>wakeup()</code>. Assinale a alternativa que descreve a causa principal dessa vulnerabilidade:</p>
+<ul>
+<li>A) O Produtor envia um sinal de <code>wakeup</code> excessivamente rápido, esgotando o buffer de memória antes que o Consumidor possa processá-lo.</li>
+<li>B) A falta de atomicidade entre o teste da variável <code>count</code> e a execução da função <code>sleep()</code> permite que o escalonador interrompa o Consumidor, resultando na perda irreversível do sinal de <code>wakeup</code> emitido pelo Produtor.</li>
+<li>C) A primitiva <code>sleep()</code> consome altos ciclos de CPU durante a &quot;Espera Ocupada&quot;, causando o fenômeno de Inversão de Prioridade.</li>
+<li>D) O escalonador força o Produtor a dormir sempre que o buffer está vazio, impedindo a inserção de novos itens.</li>
+</ul>
+<p><strong>5.</strong> Sobre os Semáforos introduzidos por Dijkstra e os Monitores como abstrações de alto nível para controle de concorrência, analise as afirmativas abaixo e julgue-as como Verdadeiras (V) ou Falsas (F):</p>
+<ul>
+<li>( ) A principal vantagem de um Semáforo é que suas operações UP e DOWN não necessitam ser atômicas, facilitando a implementação em hardware simples.</li>
+<li>( ) O Mutex diferencia-se de um semáforo genérico por ser uma versão simplificada com apenas dois estados (trancado/destrancado) e possuir a noção de um &quot;Dono&quot;.</li>
+<li>( ) Em um Monitor, apenas um processo pode estar ativo dentro de sua estrutura por vez; processos adicionais que tentem entrar são bloqueados automaticamente pelo compilador.</li>
+<li>( ) O comando <code>SIGNAL</code> em um Monitor possui uma &quot;memória&quot; idêntica à operação <code>UP</code> do Semáforo: se um sinal é emitido e não há ninguém esperando, ele incrementa um contador oculto para uso futuro.</li>
+</ul>
+<p><strong>6.</strong> Problemas clássicos de IPC exigem arquiteturas cuidadosas para prevenir falhas sistêmicas como Deadlocks e Starvation. Com base nas abordagens para os problemas dos Filósofos Comensais e dos Leitores-Escritores, responda:</p>
+<ul>
+<li>a) Qual estado exato conduz os cinco filósofos a um impasse (<em>Deadlock</em>) na analogia clássica?</li>
+<li>b) Como a implementação algorítmica da &quot;Hierarquia de Recursos&quot; rompe a circularidade de espera no problema dos Filósofos?</li>
+<li>c) No problema dos Leitores-Escritores, caso o sistema permita continuamente a entrada de novos leitores enquanto houver pelo menos um lendo a base de dados, qual consequência direta o Escritor enfrentará e qual o nome desse fenômeno?</li>
+</ul>
+<h2 id="próximos-passos"><span class="heading-text">Próximos passos</span><span class="heading-arabic">5.3</span></h2>
+<p>Na próxima aula, entraremos na inteligência estratégica do sistema: o <a href="6-scheduling.html">6 - escalonamento</a>. Descobriremos como o S.O. decide quem ganha o privilégio de usar a CPU e quais algoritmos garantem justiça e fluidez.</p>
+
+                </div>
+            </article>
+            <footer class="footer">
+                <p>© 2025 · <a href="#">Gabriel Soares Baptista</a></p>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        const toggle = document.querySelector('.mobile-menu-toggle');
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.querySelector('.mobile-menu-overlay');
+
+        function openMenu() {
+            sidebar.classList.add('open');
+            overlay.classList.add('open');
+            toggle.classList.add('open');
+            toggle.innerHTML = '<i data-lucide="x"></i>';
+            CourseForgeUI.initIcons();
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMenu() {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('open');
+            toggle.classList.remove('open');
+            toggle.innerHTML = '<i data-lucide="menu"></i>';
+            CourseForgeUI.initIcons();
+            document.body.style.overflow = '';
+        }
+
+        toggle.addEventListener('click', () => {
+            if (sidebar.classList.contains('open')) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        overlay.addEventListener('click', closeMenu);
+    </script>
+
+    
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            renderMathInElement(document.body, {
+                output: 'html',
+                delimiters: [
+                    { left: "$$", right: "$$", display: true },
+                    { left: "$", right: "$", display: false },
+                    { left: "\\(", right: "\\)", display: false },
+                    { left: "\\[", right: "\\]", display: true }
+                ],
+                throwOnError: false,
+                strict: false
+            });
+        });
+    </script>
+    
+    
+    <script src="/aulas-faesa/js/vendor/prism/prism.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-c.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-cpp.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-python.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-clike.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-perl.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-java.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-mermaid.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-php.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js" data-no-bundle></script>
+    
+    
+    
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            mermaid.initialize({
+                startOnLoad: true,
+                theme: 'default',
+                securityLevel: 'loose',
+                fontFamily: 'Inter, system-ui, sans-serif',
+                themeVariables: {
+                    fontSize: '16px',
+                    edgeLabelFontSize: '16px',
+                    multiplicityFontSize: '18px'
+                }
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const isSubcourse = false;
+        const courseName = "Sistemas Operacionais";
+        CourseForgeNav.applyDynamicBreadcrumbs('.breadcrumb', isSubcourse);
+        CourseForgeNav.initScrollSpy();
+        CourseForgeUI.initCopyButtons();
+        CourseForgeUI.initExamples();
+        });
+
+        function handleBackNavigation() {
+            const isSubcourse = false;
+        const dynamic = CourseForgeNav.getBackLink('contents.html', 'Voltar', isSubcourse);
+        window.location.href = dynamic.url;
+        }
+    </script>
+</body>
+
+</html>

@@ -1,24 +1,93 @@
-<!doctype html><html lang=en><meta charset=utf-8><meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" name=viewport><title>Processos e Threads</title><link media="(prefers-color-scheme: light)" href=/aulas-faesa/img/dark-favicon.svg rel=icon><link media="(prefers-color-scheme: dark)" href=/aulas-faesa/img/light-favicon.svg rel=icon><link data-no-bundle href=/aulas-faesa/css/vendor/reveal/reset.min.css rel=stylesheet><link data-no-bundle href=/aulas-faesa/css/vendor/reveal/reveal.min.css rel=stylesheet><link data-no-bundle href=/aulas-faesa/css/vendor/reveal/theme/white.min.css rel=stylesheet><link data-no-bundle href=/aulas-faesa/css/prism-one-light.css rel=stylesheet><link data-no-bundle href=/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css rel=stylesheet><link data-no-bundle href=/aulas-faesa/css/vendor/fonts.css rel=stylesheet></head><body><div class=reveal><div class=slides><section><h1>Sistemas Operacionais</h1><h2>Processos e Threads</h2><p>Professor: Gabriel Soares Baptista</p></section><section><h1>Introdução aos Processos</h1><ul><li>O conceito mais central em sistemas operacionais é o <strong>processo</strong>.</li><li>Trata-se de uma abstração de um programa em execução.</li></ul><blockquote><p><strong>Pseudoparalelismo:</strong> A CPU alterna entre processos em milissegundos, criando a ilusão de simultaneidade em uma única CPU física.</p></blockquote><ul><li>Em sistemas com múltiplas CPUs, ocorre o <strong>Verdadeiro Paralelismo</strong>, onde instruções são executadas literalmente ao mesmo tempo em unidades físicas distintas.</li></ul></section><section><h1>Programa vs. Processo</h1><ul><li><p><strong>Programa:</strong> Uma entidade passiva, como um arquivo em disco contendo instruções (analogia: a receita do bolo).</p></li><li><p><strong>Processo:</strong> Uma entidade ativa, com contador de programa, registradores e variáveis (analogia: a atividade de preparar o bolo).</p></li><li><p>Instâncias diferentes do mesmo programa são <strong>processos distintos</strong>.</p></li></ul><div class="callout callout-note"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span><span class=callout-title-inner>Analogia do Cientista e o Bolo<br></span></div><div class=callout-content><p>O cientista (CPU) segue a receita (Programa) usando ingredientes (Dados) para realizar o processo (Atividade).</p></div></div></section><section><h1>Criação de Processos no UNIX</h1><ul><li>No ambiente UNIX (Linux, MacOS), a criação baseia-se na chamada de sistema <strong><code>fork()</code></strong>.</li><li>O <code>fork()</code> cria um clone exato do processo pai.</li><li>Após o clone, o processo filho costuma usar <code>execve</code> para carregar um novo programa.</li></ul></section><section><h1>O Funcionamento do fork()</h1><p>Analise o retorno da função <code>fork()</code> para diferenciar pai e filho:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>#include &lt;stdio.h>
-#include &lt;unistd.h>
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <title>Processos e Threads</title>
+    <link rel="icon" href="/aulas-faesa/img/dark-favicon.svg" media="(prefers-color-scheme: light)">
+    <link rel="icon" href="/aulas-faesa/img/light-favicon.svg" media="(prefers-color-scheme: dark)">
+
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/reset.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/reveal.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/theme/white.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/aulas-faesa/css/prism-one-light.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/fonts.css" data-no-bundle>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+            <section><h1>Sistemas Operacionais</h1>
+<h2>Processos e Threads</h2>
+<p>Professor: Gabriel Soares Baptista</p>
+</section>
+<section><h1>Introdução aos Processos</h1>
+<ul>
+<li>O conceito mais central em sistemas operacionais é o <strong>processo</strong>.</li>
+<li>Trata-se de uma abstração de um programa em execução.</li>
+</ul>
+<blockquote><p><strong>Pseudoparalelismo:</strong> A CPU alterna entre processos em milissegundos, criando a ilusão de simultaneidade em uma única CPU física.</p>
+</blockquote>
+<ul>
+<li>Em sistemas com múltiplas CPUs, ocorre o <strong>Verdadeiro Paralelismo</strong>, onde instruções são executadas literalmente ao mesmo tempo em unidades físicas distintas.</li>
+</ul>
+</section>
+<section><h1>Programa vs. Processo</h1>
+<ul>
+<li><p><strong>Programa:</strong> Uma entidade passiva, como um arquivo em disco contendo instruções (analogia: a receita do bolo).</p>
+</li>
+<li><p><strong>Processo:</strong> Uma entidade ativa, com contador de programa, registradores e variáveis (analogia: a atividade de preparar o bolo).</p>
+</li>
+<li><p>Instâncias diferentes do mesmo programa são <strong>processos distintos</strong>.</p>
+</li>
+</ul>
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">Analogia do Cientista e o Bolo<br /></span>
+  </div>
+  <div class="callout-content">
+<p>O cientista (CPU) segue a receita (Programa) usando ingredientes (Dados) para realizar o processo (Atividade).</p>
+  </div>
+</div>
+</section>
+<section><h1>Criação de Processos no UNIX</h1>
+<ul>
+<li>No ambiente UNIX (Linux, MacOS), a criação baseia-se na chamada de sistema <strong><code>fork()</code></strong>.</li>
+<li>O <code>fork()</code> cria um clone exato do processo pai.</li>
+<li>Após o clone, o processo filho costuma usar <code>execve</code> para carregar um novo programa.</li>
+</ul>
+</section>
+<section><h1>O Funcionamento do fork()</h1>
+<p>Analise o retorno da função <code>fork()</code> para diferenciar pai e filho:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;unistd.h&gt;
 
 int main() {
     pid_t pid;
     pid = fork(); // Clona o processo
 
     if (pid &lt; 0) {
-        printf("Erro na criação!\n");
+        printf(&quot;Erro na criação!\n&quot;);
     } else if (pid == 0) {
         // Retorno 0 indica que estamos no FILHO
-        printf("Eu sou o FILHO! Meu PID é %d\n", getpid());
+        printf(&quot;Eu sou o FILHO! Meu PID é %d\n&quot;, getpid());
     } else {
-        // Retorno > 0 indica que estamos no PAI (pid é o ID do filho)
-        printf("Eu sou o PAI! Criei o filho com PID %d\n", pid);
+        // Retorno &gt; 0 indica que estamos no PAI (pid é o ID do filho)
+        printf(&quot;Eu sou o PAI! Criei o filho com PID %d\n&quot;, pid);
     }
     return 0;
 }
-</code></pre></section><section><h1>Questões - Processos</h1><p><strong>O que este código irá imprimir no final?</strong></p><pre class="line-numbers language-c" data-lang=C><code class=language-c>#include &lt;stdio.h>
-#include &lt;unistd.h>
-#include &lt;sys/wait.h>
+</code></pre>
+</section>
+<section><h1>Questões - Processos</h1>
+<p><strong>O que este código irá imprimir no final?</strong></p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;sys/wait.h&gt;
 
 int main() {
     int x = 100;
@@ -28,29 +97,42 @@ int main() {
     cid = fork();
 
     if (cid &lt; 0) {
-        perror("fork failed");
+        perror(&quot;fork failed&quot;);
         return 1;
     }
 
     if (cid == 0) {
         // FILHO
         x = x + 50;
-        printf("Filho: x = %d (Meu PID: %d)\n", x, getpid());
+        printf(&quot;Filho: x = %d (Meu PID: %d)\n&quot;, x, getpid());
         _exit(0); // Boa prática: terminar o filho explicitamente
     } else {
         // PAI
         // cid aqui é o PID do filho que acabou de ser criado
-        // 0 como terceiro argumento significa "bloqueie até o filho terminar"
-        waitpid(cid, &status, 0); 
+        // 0 como terceiro argumento significa &quot;bloqueie até o filho terminar&quot;
+        waitpid(cid, &amp;status, 0); 
         
-        printf("Pai: x = %d (Esperou pelo filho %d)\n", x, cid);
+        printf(&quot;Pai: x = %d (Esperou pelo filho %d)\n&quot;, x, cid);
     }
 
     return 0;
 }
-</code></pre><div class="callout callout-question"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><circle cx=12 cy=12 r=10 /><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span><span class=callout-title-inner>Pergunta<br></span></div><div class=callout-content><p>O valor de <code>x</code> alterado no filho será visto pelo pai?</p></div></div></section><section><h1>Questões - Processos</h1><p><strong>O que este código irá imprimir no final?</strong></p><pre class="line-numbers language-c" data-lang=C><code class=language-c>#include &lt;stdio.h>
-#include &lt;unistd.h>
-#include &lt;sys/wait.h>
+</code></pre>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Pergunta<br /></span>
+  </div>
+  <div class="callout-content">
+<p>O valor de <code>x</code> alterado no filho será visto pelo pai?</p>
+  </div>
+</div>
+</section>
+<section><h1>Questões - Processos</h1>
+<p><strong>O que este código irá imprimir no final?</strong></p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;sys/wait.h&gt;
 
 int main() {
     int x = 100;
@@ -60,30 +142,59 @@ int main() {
     cid = fork();
 
     if (cid &lt; 0) {
-        perror("fork failed");
+        perror(&quot;fork failed&quot;);
         return 1;
     }
 
     if (cid == 0) {
         // FILHO
         x = x + 50;
-        printf("Filho: x = %d (Meu PID: %d)\n", x, getpid());
+        printf(&quot;Filho: x = %d (Meu PID: %d)\n&quot;, x, getpid());
         _exit(0); // Boa prática: terminar o filho explicitamente
     } else {
         // PAI
         // cid aqui é o PID do filho que acabou de ser criado
-        // 0 como terceiro argumento significa "bloqueie até o filho terminar"
-        waitpid(cid, &status, 0); 
+        // 0 como terceiro argumento significa &quot;bloqueie até o filho terminar&quot;
+        waitpid(cid, &amp;status, 0); 
         
-        printf("Pai: x = %d (Esperou pelo filho %d)\n", x, cid);
+        printf(&quot;Pai: x = %d (Esperou pelo filho %d)\n&quot;, x, cid);
     }
 
     return 0;
 }
-</code></pre><div class="callout callout-question"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><circle cx=12 cy=12 r=10 /><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span><span class=callout-title-inner>Pergunta<br></span></div><div class=callout-content><p>O valor de <code>x</code> alterado no filho será visto pelo pai?</p><p><strong>Resposta:</strong> Não. Filho: 150, Pai: 100. No UNIX, pai e filho possuem <strong>espaços de endereçamento distintos</strong>.</p></div></div></section><section><h1>Hierarquias de Processos</h1><ul><li><strong>No UNIX:</strong> Existe uma árvore global rígida enraizada no processo <code>init</code>. O pai e seus descendentes formam um "grupo de processos".</li><li><strong>No Windows:</strong> A hierarquia é tênue. Todos os processos são iguais; o pai recebe um <em>handle</em> para controlar o filho, mas esse identificador pode ser transferido.</li></ul></section><section><h1>Término de Processos</h1><p>Um processo encerra por quatro motivos fundamentais:</p><ol><li><strong>Saída Normal (Voluntária):</strong> Conclusão da tarefa (ex: <code>exit</code> no UNIX).</li><li><strong>Saída por Erro (Voluntária):</strong> O processo detecta um problema e encerra (ex: arquivo não encontrado).</li><li><strong>Erro Fatal (Involuntária):</strong> Bugs graves (divisão por zero, acesso à memória inexistente).</li><li><strong>Morto por outro (Involuntária):</strong> Uso de chamadas como <code>kill</code> (UNIX) ou <code>TerminateProcess</code> (Windows).</li></ol></section><section><h1>Processo - Estado Zumbi</h1><p>Se o filho termina e o pai não lê seu estado, o filho torna-se um "Zumbi".</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>#include &lt;stdio.h>
-#include &lt;stdlib.h>
-#include &lt;unistd.h>
-#include &lt;sys/wait.h>
+</code></pre>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Pergunta<br /></span>
+  </div>
+  <div class="callout-content">
+<p>O valor de <code>x</code> alterado no filho será visto pelo pai?</p>
+<p><strong>Resposta:</strong> Não. Filho: 150, Pai: 100. No UNIX, pai e filho possuem <strong>espaços de endereçamento distintos</strong>.</p>
+  </div>
+</div>
+</section>
+<section><h1>Hierarquias de Processos</h1>
+<ul>
+<li><strong>No UNIX:</strong> Existe uma árvore global rígida enraizada no processo <code>init</code>. O pai e seus descendentes formam um &quot;grupo de processos&quot;.</li>
+<li><strong>No Windows:</strong> A hierarquia é tênue. Todos os processos são iguais; o pai recebe um <em>handle</em> para controlar o filho, mas esse identificador pode ser transferido.</li>
+</ul>
+</section>
+<section><h1>Término de Processos</h1>
+<p>Um processo encerra por quatro motivos fundamentais:</p>
+<ol>
+<li><strong>Saída Normal (Voluntária):</strong> Conclusão da tarefa (ex: <code>exit</code> no UNIX).</li>
+<li><strong>Saída por Erro (Voluntária):</strong> O processo detecta um problema e encerra (ex: arquivo não encontrado).</li>
+<li><strong>Erro Fatal (Involuntária):</strong> Bugs graves (divisão por zero, acesso à memória inexistente).</li>
+<li><strong>Morto por outro (Involuntária):</strong> Uso de chamadas como <code>kill</code> (UNIX) ou <code>TerminateProcess</code> (Windows).</li>
+</ol>
+</section>
+<section><h1>Processo - Estado Zumbi</h1>
+<p>Se o filho termina e o pai não lê seu estado, o filho torna-se um &quot;Zumbi&quot;.</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;sys/wait.h&gt;
 
 int main() {
     pid_t cid = fork();
@@ -92,16 +203,16 @@ int main() {
 
     if (cid == 0) {
         // FILHO: Morre rápido
-        printf("[Filho] PID %d: Tchau, virei um zumbi...\n", getpid());
+        printf(&quot;[Filho] PID %d: Tchau, virei um zumbi...\n&quot;, getpid());
         exit(0); 
     } else {
         // PAI: Fica vivo por 20 segundos sem dar wait()
-        printf("[Pai] PID %d: Criei o filho %d, mas não vou ler o estado dele agora.\n", getpid(), cid);
-        printf("[Pai]: Verifique o terminal agora com: ps aux | grep 'Z'\n");
+        printf(&quot;[Pai] PID %d: Criei o filho %d, mas não vou ler o estado dele agora.\n&quot;, getpid(), cid);
+        printf(&quot;[Pai]: Verifique o terminal agora com: ps aux | grep 'Z'\n&quot;);
         
         sleep(20); // Janela de tempo para você rodar o comando no terminal
         
-        printf("[Pai]: Acordei! Agora vou dar wait() e limpar o zumbi.\n");
+        printf(&quot;[Pai]: Acordei! Agora vou dar wait() e limpar o zumbi.\n&quot;);
         wait(NULL); 
         
         sleep(5); // Tempo para você ver que o zumbi sumiu
@@ -109,47 +220,189 @@ int main() {
 
     return 0;
 }
-</code></pre><div class="callout callout-tip"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .5 2.2 1.5 3.1.7.7 1.3 1.5 1.5 2.4"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span><span class=callout-title-inner>Solução<br></span></div><div class=callout-content><p>O pai deve usar a chamada <strong><code>wait()</code></strong> para recolher os restos mortais do processo filho e liberá-lo da tabela de processos.</p></div></div></section><section><h1>Estados de Processos</h1><p>Um processo pode estar em um de três estados:</p><ol><li><strong>Em Execução:</strong> Utilizando a CPU no momento.</li><li><strong>Pronto:</strong> Disposto a rodar, mas parado temporariamente para dar lugar a outro.</li><li><strong>Bloqueado:</strong> Incapaz de rodar até que um evento externo (como E/S) ocorra.</li></ol><br><img style="margin:0 auto;display:block" src=../static/fig2_2_diagrama_estados.png width=40%></section><section><h1>Transições de Estado</h1><p>As transições são geridas pelo <strong>escalonador</strong>:</p><ul><li><strong>Bloqueio (1):</strong> O processo aguarda dados (ex: leitura de disco).</li><li><strong>Preempção (2):</strong> O escalonador decide que o processo já usou CPU demais.</li><li><strong>Seleção (3):</strong> O escalonador escolhe o próximo processo da fila "Pronto".</li><li><strong>Desbloqueio (4):</strong> O evento externo ocorre (os dados chegaram).</li></ul></section><section><h1>A Tabela de Processos (PCB)</h1><p>Para gerenciar processos, o SO utiliza o <strong>Bloco de Controle de Processos (PCB)</strong>.</p><table><thead><tr><th>Gerenciamento de Processos</th><th>Gerenciamento de Memória</th><th>Gerenciamento de Arquivos</th></tr></thead><tbody><tr><td>Contador de programa (PC)</td><td>Ponteiro para código</td><td>Diretório raiz</td></tr><tr><td>Registradores</td><td>Ponteiro para dados</td><td>Descritores de arquivos</td></tr><tr><td>Estado do processo</td><td>Limites de memória</td><td>IDs de usuário (UID)</td></tr></tbody></table><img style="margin:0 auto;display:block" src=../static/fig_2_4_campos_tabela_processos.png width=80%></section><section><h1>Modelando a Multiprogramação</h1><p>A utilização da CPU aumenta com o número de processos na memória ($n$).<br> Fórmula de utilização:</p><p>$$\text{Utilização} = 1 - p^n$$</p><p><em>onde $p$ é a fração de tempo que um processo passa esperando por E/S.</em></p><img style="margin:0 auto;display:block" src=../static/fig2_6_utilizacao_cpu.png width=50%></section><section><h1>Loop com Processos</h1><p><strong>Quantas vezes a palavra "Olá" será impressa?</strong></p><pre class="line-numbers language-c" data-lang=C><code class=language-c>#include &lt;stdio.h>
-#include &lt;unistd.h>
+</code></pre>
+<div class="callout callout-tip">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .5 2.2 1.5 3.1.7.7 1.3 1.5 1.5 2.4"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span>
+    <span class="callout-title-inner">Solução<br /></span>
+  </div>
+  <div class="callout-content">
+<p>O pai deve usar a chamada <strong><code>wait()</code></strong> para recolher os restos mortais do processo filho e liberá-lo da tabela de processos.</p>
+  </div>
+</div>
+</section>
+<section><h1>Estados de Processos</h1>
+<p>Um processo pode estar em um de três estados:</p>
+<ol>
+<li><strong>Em Execução:</strong> Utilizando a CPU no momento.</li>
+<li><strong>Pronto:</strong> Disposto a rodar, mas parado temporariamente para dar lugar a outro.</li>
+<li><strong>Bloqueado:</strong> Incapaz de rodar até que um evento externo (como E/S) ocorra.</li>
+</ol>
+<br>
+
+<img src="../static/fig2_2_diagrama_estados.png" width="40%" style="display: block; margin: 0 auto;">
+
+</section>
+<section><h1>Transições de Estado</h1>
+<p>As transições são geridas pelo <strong>escalonador</strong>:</p>
+<ul>
+<li><strong>Bloqueio (1):</strong> O processo aguarda dados (ex: leitura de disco).</li>
+<li><strong>Preempção (2):</strong> O escalonador decide que o processo já usou CPU demais.</li>
+<li><strong>Seleção (3):</strong> O escalonador escolhe o próximo processo da fila &quot;Pronto&quot;.</li>
+<li><strong>Desbloqueio (4):</strong> O evento externo ocorre (os dados chegaram).</li>
+</ul>
+</section>
+<section><h1>A Tabela de Processos (PCB)</h1>
+<p>Para gerenciar processos, o SO utiliza o <strong>Bloco de Controle de Processos (PCB)</strong>.</p>
+<table>
+<thead>
+<tr>
+  <th>Gerenciamento de Processos</th>
+  <th>Gerenciamento de Memória</th>
+  <th>Gerenciamento de Arquivos</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Contador de programa (PC)</td>
+  <td>Ponteiro para código</td>
+  <td>Diretório raiz</td>
+</tr>
+<tr>
+  <td>Registradores</td>
+  <td>Ponteiro para dados</td>
+  <td>Descritores de arquivos</td>
+</tr>
+<tr>
+  <td>Estado do processo</td>
+  <td>Limites de memória</td>
+  <td>IDs de usuário (UID)</td>
+</tr>
+</tbody>
+</table>
+<img src="../static/fig_2_4_campos_tabela_processos.png" width="80%" style="display: block; margin: 0 auto;">
+
+</section>
+<section><h1>Modelando a Multiprogramação</h1>
+<p>A utilização da CPU aumenta com o número de processos na memória ($n$).<br />
+Fórmula de utilização:</p>
+<p>$$\text{Utilização} = 1 - p^n$$</p>
+<p><em>onde $p$ é a fração de tempo que um processo passa esperando por E/S.</em></p>
+<img src="../static/fig2_6_utilizacao_cpu.png" width="50%" style="display: block; margin: 0 auto;">
+
+</section>
+<section><h1>Loop com Processos</h1>
+<p><strong>Quantas vezes a palavra &quot;Olá&quot; será impressa?</strong></p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;unistd.h&gt;
 
 int main() {
     for (int i = 0; i &lt; 3; i++) {
         fork();
     }
 
-    printf("Olá! PID=%d PPID=%d\n", getpid(), getppid());
+    printf(&quot;Olá! PID=%d PPID=%d\n&quot;, getpid(), getppid());
     sleep(20);
 }
-</code></pre><div class="callout callout-question"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><circle cx=12 cy=12 r=10 /><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span><span class=callout-title-inner>Quantos processos irão nascer?</span></div><div class=callout-content></div></div></section><section><h1>Loop com Processos</h1><p><strong>Quantas vezes a palavra "Olá" será impressa?</strong></p><pre class="line-numbers language-c" data-lang=C><code class=language-c>#include &lt;stdio.h>
-#include &lt;unistd.h>
+</code></pre>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Quantos processos irão nascer?</span>
+  </div>
+  <div class="callout-content">
+
+  </div>
+</div>
+</section>
+<section><h1>Loop com Processos</h1>
+<p><strong>Quantas vezes a palavra &quot;Olá&quot; será impressa?</strong></p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;unistd.h&gt;
 
 int main() {
     for (int i = 0; i &lt; 3; i++) {
         fork();
     }
 
-    printf("Olá! PID=%d PPID=%d\n", getpid(), getppid());
+    printf(&quot;Olá! PID=%d PPID=%d\n&quot;, getpid(), getppid());
     sleep(20);
 }
-</code></pre><div class="callout callout-question"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><circle cx=12 cy=12 r=10 /><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span><span class=callout-title-inner>Quantos processos irão nascer?<br></span></div><div class=callout-content><p>Cada <code>fork()</code> dobra o número de processos existentes.<br> <strong>Resposta:</strong> 8 vezes ($2^3$). O loop cria uma árvore de processos onde cada novo processo continua a execução do loop de onde o pai parou.</p></div></div></section><section><h1>Introdução às Threads</h1><ul><li>Threads são "miniprocessos" que operam dentro do mesmo processo.</li><li><strong>Diferença Crucial:</strong> Enquanto processos são isolados, threads <strong>compartilham</strong> o mesmo espaço de endereçamento e variáveis globais.</li><li>Criar uma thread pode ser de 10 a 100 vezes mais rápido que criar um processo.</li></ul></section><section><h1>Modelo Clássico de Thread</h1><p>O que é compartilhado entre threads de um mesmo processo?</p><table><thead><tr><th>Itens Compartilhados</th><th>Itens Privados (Individuais)</th></tr></thead><tbody><tr><td>Espaço de endereçamento</td><td>Contador de programa (PC)</td></tr><tr><td>Variáveis Globais</td><td>Registradores</td></tr><tr><td>Arquivos abertos</td><td><strong>Pilha (Stack)</strong></td></tr><tr><td>Alarmes e Sinais</td><td>Estado da Thread</td></tr></tbody></table><img style="margin:0 auto;display:block" src=../static/fig_2_13_pilhas_threads.png width=50%></section><section><h1>Criando Threads em C</h1><p>Para usar threads no Linux, utilizamos a biblioteca <code>pthread</code>:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>#include &lt;pthread.h>
-#include &lt;stdio.h>
+</code></pre>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Quantos processos irão nascer?<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Cada <code>fork()</code> dobra o número de processos existentes.<br />
+<strong>Resposta:</strong> 8 vezes ($2^3$). O loop cria uma árvore de processos onde cada novo processo continua a execução do loop de onde o pai parou.</p>
+  </div>
+</div>
+</section>
+<section><h1>Introdução às Threads</h1>
+<ul>
+<li>Threads são &quot;miniprocessos&quot; que operam dentro do mesmo processo.</li>
+<li><strong>Diferença Crucial:</strong> Enquanto processos são isolados, threads <strong>compartilham</strong> o mesmo espaço de endereçamento e variáveis globais.</li>
+<li>Criar uma thread pode ser de 10 a 100 vezes mais rápido que criar um processo.</li>
+</ul>
+</section>
+<section><h1>Modelo Clássico de Thread</h1>
+<p>O que é compartilhado entre threads de um mesmo processo?</p>
+<table>
+<thead>
+<tr>
+  <th>Itens Compartilhados</th>
+  <th>Itens Privados (Individuais)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Espaço de endereçamento</td>
+  <td>Contador de programa (PC)</td>
+</tr>
+<tr>
+  <td>Variáveis Globais</td>
+  <td>Registradores</td>
+</tr>
+<tr>
+  <td>Arquivos abertos</td>
+  <td><strong>Pilha (Stack)</strong></td>
+</tr>
+<tr>
+  <td>Alarmes e Sinais</td>
+  <td>Estado da Thread</td>
+</tr>
+</tbody>
+</table>
+<img src="../static/fig_2_13_pilhas_threads.png" width="50%" style="display: block; margin: 0 auto;">
+
+</section>
+<section><h1>Criando Threads em C</h1>
+<p>Para usar threads no Linux, utilizamos a biblioteca <code>pthread</code>:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">#include &lt;pthread.h&gt;
+#include &lt;stdio.h&gt;
 
 void* minha_tarefa(void* arg) {
-    printf("Olá da Thread! ID: %ld\n", pthread_self());
+    printf(&quot;Olá da Thread! ID: %ld\n&quot;, pthread_self());
     return NULL;
 }
 
 int main() {
     pthread_t tid;
     // Cria a thread
-    pthread_create(&tid, NULL, minha_tarefa, NULL);
+    pthread_create(&amp;tid, NULL, minha_tarefa, NULL);
     // Aguarda a thread terminar (similar ao wait)
     pthread_join(tid, NULL);
-    printf("Thread principal finalizada.\n");
+    printf(&quot;Thread principal finalizada.\n&quot;);
     return 0;
 }
-</code></pre></section><section><h1>Threads - Memória</h1><p><strong>Qual será o valor final do saldo?</strong></p><pre class="line-numbers language-c" data-lang=C><code class=language-c>#include &lt;pthread.h>
-#include &lt;stdio.h>
+</code></pre>
+</section>
+<section><h1>Threads - Memória</h1>
+<p><strong>Qual será o valor final do saldo?</strong></p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">#include &lt;pthread.h&gt;
+#include &lt;stdio.h&gt;
 
 int saldo = 100;
 
@@ -160,12 +413,25 @@ void* deposito(void* arg) {
 
 int main() {
     pthread_t t1;
-    pthread_create(&t1, NULL, deposito, NULL);
+    pthread_create(&amp;t1, NULL, deposito, NULL);
     pthread_join(t1, NULL);
-    printf("Saldo Final: %d\n", saldo);
+    printf(&quot;Saldo Final: %d\n&quot;, saldo);
 }
-</code></pre><div class="callout callout-success"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></span><span class=callout-title-inner>Qual o saldo final?</span></div><div class=callout-content></div></div></section><section><h1>Threads - Memória</h1><p><strong>Qual será o valor final do saldo?</strong></p><pre class="line-numbers language-c" data-lang=C><code class=language-c>#include &lt;pthread.h>
-#include &lt;stdio.h>
+</code></pre>
+<div class="callout callout-success">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></span>
+    <span class="callout-title-inner">Qual o saldo final?</span>
+  </div>
+  <div class="callout-content">
+
+  </div>
+</div>
+</section>
+<section><h1>Threads - Memória</h1>
+<p><strong>Qual será o valor final do saldo?</strong></p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">#include &lt;pthread.h&gt;
+#include &lt;stdio.h&gt;
 
 int saldo = 100;
 
@@ -176,12 +442,25 @@ void* deposito(void* arg) {
 
 int main() {
     pthread_t t1;
-    pthread_create(&t1, NULL, deposito, NULL);
+    pthread_create(&amp;t1, NULL, deposito, NULL);
     pthread_join(t1, NULL);
-    printf("Saldo Final: %d\n", saldo);
+    printf(&quot;Saldo Final: %d\n&quot;, saldo);
 }
-</code></pre><div class="callout callout-success"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></span><span class=callout-title-inner>Qual o saldo final?<br></span></div><div class=callout-content><p>Saldo Final: 150. Diferente de processos, as threads <strong>enxergam as mesmas variáveis</strong>.</p></div></div></section><section><h1>Condição de Corrida</h1><p><strong>Se rodarmos 2 threads, cada uma somando 100 mil vezes, o total será 200.000?</strong></p><pre class="line-numbers language-c" data-lang=C><code class=language-c>#include &lt;stdio.h>
-#include &lt;pthread.h>
+</code></pre>
+<div class="callout callout-success">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></span>
+    <span class="callout-title-inner">Qual o saldo final?<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Saldo Final: 150. Diferente de processos, as threads <strong>enxergam as mesmas variáveis</strong>.</p>
+  </div>
+</div>
+</section>
+<section><h1>Condição de Corrida</h1>
+<p><strong>Se rodarmos 2 threads, cada uma somando 100 mil vezes, o total será 200.000?</strong></p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;pthread.h&gt;
 
 long contador = 0;
 
@@ -197,21 +476,34 @@ int main() {
     pthread_t t1, t2;
 
     // Criamos duas threads que vão atacar a mesma variável global
-    pthread_create(&t1, NULL, incremento, NULL);
-    pthread_create(&t2, NULL, incremento, NULL);
+    pthread_create(&amp;t1, NULL, incremento, NULL);
+    pthread_create(&amp;t2, NULL, incremento, NULL);
 
     // Esperamos ambas terminarem
     pthread_join(t1, NULL);
     pthread_join(t2, NULL);
 
     // O esperado seria 2.000.000, mas o resultado será menor e aleatório
-    printf("Resultado esperado: 2000000\n");
-    printf("Resultado real:     %ld\n", contador);
+    printf(&quot;Resultado esperado: 2000000\n&quot;);
+    printf(&quot;Resultado real:     %ld\n&quot;, contador);
 
     return 0;
 }
-</code></pre><div class="callout callout-question"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><circle cx=12 cy=12 r=10 /><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span><span class=callout-title-inner>Qual será o valor final de contador?</span></div><div class=callout-content></div></div></section><section><h1>Condição de Corrida</h1><p><strong>Se rodarmos 2 threads, cada uma somando 100 mil vezes, o total será 200.000?</strong></p><pre class="line-numbers language-c" data-lang=C><code class=language-c>#include &lt;stdio.h>
-#include &lt;pthread.h>
+</code></pre>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Qual será o valor final de contador?</span>
+  </div>
+  <div class="callout-content">
+
+  </div>
+</div>
+</section>
+<section><h1>Condição de Corrida</h1>
+<p><strong>Se rodarmos 2 threads, cada uma somando 100 mil vezes, o total será 200.000?</strong></p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;pthread.h&gt;
 
 long contador = 0;
 
@@ -227,20 +519,70 @@ int main() {
     pthread_t t1, t2;
 
     // Criamos duas threads que vão atacar a mesma variável global
-    pthread_create(&t1, NULL, incremento, NULL);
-    pthread_create(&t2, NULL, incremento, NULL);
+    pthread_create(&amp;t1, NULL, incremento, NULL);
+    pthread_create(&amp;t2, NULL, incremento, NULL);
 
     // Esperamos ambas terminarem
     pthread_join(t1, NULL);
     pthread_join(t2, NULL);
 
     // O esperado seria 2.000.000, mas o resultado será menor e aleatório
-    printf("Resultado esperado: 2000000\n");
-    printf("Resultado real:     %ld\n", contador);
+    printf(&quot;Resultado esperado: 2000000\n&quot;);
+    printf(&quot;Resultado real:     %ld\n&quot;, contador);
 
     return 0;
 }
-</code></pre><div class="callout callout-failure"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><circle cx=12 cy=12 r=10 /><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg></span><span class=callout-title-inner>Qual será o valor final de contador?<br></span></div><div class=callout-content><p>O resultado será imprevisível (ex: 142.384).<br> <strong>Por quê?</strong> Como compartilham a mesma variável, uma thread pode ler o valor original antes que a outra termine de atualizar. Isso é uma <strong>Condição de Corrida</strong>.</p></div></div></section><section><h1>Implementação: Usuário vs. Núcleo</h1><ul><li><strong>Espaço do Usuário:</strong> O SO não sabe que as threads existem. A troca de threads é rápida (sem interrupção do núcleo), mas se uma thread bloqueia em E/S, o processo <strong>inteiro</strong> para.</li><li><strong>Espaço do Núcleo:</strong> O SO gerencia as threads. Se uma thread bloqueia, o núcleo pode escolher outra thread do mesmo processo para rodar. A criação é mais lenta devido às chamadas de sistema.</li></ul><div style=margin-top:20px;display:flex><img style="margin:0 auto;display:inline-block" src=../static/fig_2_16a_threads_usuario.png width=40%><img style="margin:0 auto;display:inline-block" src=../static/fig_2_16b_threads_nucleo.png width=33%></div></section><section><h1>Ativações pelo Escalonador</h1><ul><li>Tenta unir o melhor dos dois mundos: performance do usuário e robustez do núcleo.</li><li>Utiliza o mecanismo de <strong>Upcall</strong>: O núcleo notifica a biblioteca do usuário quando uma thread bloqueia ou é liberada.</li><li><strong>Nota Técnica:</strong> Isso viola a regra de camadas, pois o nível inferior (núcleo) chama o nível superior (usuário).</li></ul></section><section><h1>Threads Pop-up</h1><ul><li>Úteis em sistemas distribuídos.</li><li>Em vez de uma thread ficar "dormindo" esperando mensagens, a própria chegada da mensagem faz o sistema "disparar" (pop-up) uma nova thread limpa para processá-la.</li><li><strong>Vantagem:</strong> Não há histórico (registradores ou pilhas) para restaurar, tornando o início do processamento muito rápido.</li></ul><img style="margin:0 auto;display:block" src=../static/fig_2_18_threads_popup.png width=80%></section><section><h1>Desafio 5: Variáveis Globais Privadas (TLS)</h1><p>Como ter uma variável que é <strong>global</strong> para as funções da thread, mas <strong>privada</strong> para as outras threads?</p><div class="callout callout-important"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span><span class=callout-title-inner>Thread-Local Storage (TLS)<br></span></div><div class=callout-content><p>Útil para evitar conflitos em variáveis como <code>errno</code> (erros de sistema).</p></div></div><pre class="line-numbers language-c" data-lang=C><code class=language-c>#include &lt;pthread.h>
+</code></pre>
+<div class="callout callout-failure">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg></span>
+    <span class="callout-title-inner">Qual será o valor final de contador?<br /></span>
+  </div>
+  <div class="callout-content">
+<p>O resultado será imprevisível (ex: 142.384).<br />
+<strong>Por quê?</strong> Como compartilham a mesma variável, uma thread pode ler o valor original antes que a outra termine de atualizar. Isso é uma <strong>Condição de Corrida</strong>.</p>
+  </div>
+</div>
+</section>
+<section><h1>Implementação: Usuário vs. Núcleo</h1>
+<ul>
+<li><strong>Espaço do Usuário:</strong> O SO não sabe que as threads existem. A troca de threads é rápida (sem interrupção do núcleo), mas se uma thread bloqueia em E/S, o processo <strong>inteiro</strong> para.</li>
+<li><strong>Espaço do Núcleo:</strong> O SO gerencia as threads. Se uma thread bloqueia, o núcleo pode escolher outra thread do mesmo processo para rodar. A criação é mais lenta devido às chamadas de sistema.</li>
+</ul>
+<div style="display: flex; margin-top: 20px;">
+<img src="../static/fig_2_16a_threads_usuario.png" width="40%" style="display: inline-block; margin: 0 auto">
+<img src="../static/fig_2_16b_threads_nucleo.png" width="33%" style="display: inline-block; margin: 0 auto">
+</div>
+
+</section>
+<section><h1>Ativações pelo Escalonador</h1>
+<ul>
+<li>Tenta unir o melhor dos dois mundos: performance do usuário e robustez do núcleo.</li>
+<li>Utiliza o mecanismo de <strong>Upcall</strong>: O núcleo notifica a biblioteca do usuário quando uma thread bloqueia ou é liberada.</li>
+<li><strong>Nota Técnica:</strong> Isso viola a regra de camadas, pois o nível inferior (núcleo) chama o nível superior (usuário).</li>
+</ul>
+</section>
+<section><h1>Threads Pop-up</h1>
+<ul>
+<li>Úteis em sistemas distribuídos.</li>
+<li>Em vez de uma thread ficar &quot;dormindo&quot; esperando mensagens, a própria chegada da mensagem faz o sistema &quot;disparar&quot; (pop-up) uma nova thread limpa para processá-la.</li>
+<li><strong>Vantagem:</strong> Não há histórico (registradores ou pilhas) para restaurar, tornando o início do processamento muito rápido.</li>
+</ul>
+<img src="../static/fig_2_18_threads_popup.png" width="80%" style="display: block; margin: 0 auto;">
+
+</section>
+<section><h1>Desafio 5: Variáveis Globais Privadas (TLS)</h1>
+<p>Como ter uma variável que é <strong>global</strong> para as funções da thread, mas <strong>privada</strong> para as outras threads?</p>
+<div class="callout callout-important">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">Thread-Local Storage (TLS)<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Útil para evitar conflitos em variáveis como <code>errno</code> (erros de sistema).</p>
+  </div>
+</div>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">#include &lt;pthread.h&gt;
 
 // __thread garante que cada thread tenha sua PRÓPRIA cópia
 __thread int erro_local;
@@ -249,4 +591,481 @@ void* tarefa(void* arg) {
     erro_local = 5; // Não altera o erro_local das outras threads
     return NULL;
 }
-</code></pre></section><section><h1>Reentrância e Bibliotecas</h1><ul><li>Muitas bibliotecas antigas não são <strong>reentrantes</strong> (não seguras para threads).</li><li><strong>Exemplo:</strong> Se a thread A chama <code>malloc</code> e é interrompida no meio da atualização da lista de memória, e a thread B chama <code>malloc</code> logo em seguida, o sistema pode entrar em colapso.</li><li>Solução: Usar versões <em>thread-safe</em> das bibliotecas ou travas (<em>locks</em>).</li></ul></section><section><h1>Próximos Passos</h1><p>Na próxima aula, abordaremos <strong>Comunicação entre Processos (IPC)</strong>.</p><ul><li>Como evitar as condições de corrida que vimos hoje?</li><li>Estudaremos: <strong>Semáforos</strong>, <strong>Exclusão Mútua (Mutexes)</strong> e <strong>Monitores</strong>.</li><li>Aprenderemos a sincronizar o acesso ao "Saldo" e ao "Contador" para garantir resultados consistentes.</li></ul></section></div></div><script data-no-bundle src=/aulas-faesa/js/vendor/reveal/reveal.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/reveal/plugin/notes/notes.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/reveal/plugin/markdown/markdown.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/reveal/plugin/math/math.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/reveal/plugin/zoom/zoom.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/prism.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-c.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-python.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-clike.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-perl.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-java.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-php.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/plugins/toolbar/prism-toolbar.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/plugins/show-language/prism-show-language.min.js></script><script data-no-bundle src=/aulas-faesa/js/prism-slang.js></script><script data-no-bundle src=/aulas-faesa/js/mermaid.min.js></script><script>document.addEventListener(`DOMContentLoaded`,function(){mermaid.initialize({startOnLoad:!1,theme:`default`,securityLevel:`loose`,fontFamily:`Inter, system-ui, sans-serif`})});</script><script>Reveal.initialize({hash:!0,slideNumber:`c/t`,center:!1,controls:!1,plugins:[RevealMarkdown,RevealNotes,RevealMath.KaTeX,RevealZoom],katex:{local:`/aulas-faesa/js/vendor/katex`,output:`html`,throwOnError:!1,strict:!1},width:960,height:800,margin:.15,maxScale:2}),Reveal.on(`slideready`,event=>{Prism.highlightAll();try{let mermaids=event.currentSlide.querySelectorAll(`.mermaid`);mermaids.length>0&&mermaid.init(void 0,mermaids)}catch(err){console.warn(`Mermaid init failed`,err)}}),Reveal.on(`slidechanged`,event=>{Prism.highlightAll();try{let mermaids=event.currentSlide.querySelectorAll(`.mermaid`);mermaids.length>0&&mermaid.init(void 0,mermaids)}catch(err){console.warn(`Mermaid init failed`,err)}});</script><script data-no-bundle src=/aulas-faesa/js/rough.min.js></script><script data-no-bundle src=/aulas-faesa/js/apply_sketch.js></script><style>.reveal{font-size:20px;text-align:left!important}.reveal code:not(pre code){background-color:var(--code-bg)!important;color:#3b82f6!important;border:1px dashed var(--border)!important;white-space:pre-wrap!important;word-break:break-word!important;border-radius:4px!important;padding:.1em .3em!important;font-family:JetBrains Mono,Fira Code,Consolas,monospace!important;font-size:.85em!important}.reveal h1{align-items:center;font-size:2.2em;display:flex;text-align:left!important;width:100%!important;text-shadow:none!important;justify-content:flex-start!important;margin-bottom:10px!important;margin-left:0!important}.reveal div.code-toolbar{position:relative;width:90%!important;margin:1em auto!important}.reveal pre[class*=language-]{width:100%!important;margin:0!important;padding:1em!important;font-size:.8em!important}.reveal pre[class*=language-]>code{display:block!important;position:relative!important}.reveal .line-numbers-rows{border-right:1px solid #ccc!important;width:3.2em!important;padding-top:0!important;position:absolute!important;top:0!important;left:-3.8em!important}.reveal .line-numbers-rows>span:before{color:#999!important;text-align:right!important;padding-right:.5em!important;display:block!important}.reveal pre[class*=language-].line-numbers,.reveal pre[class*=language-]:has(.line-numbers-rows){padding-left:3.8em!important}.reveal div.toolbar{z-index:10;opacity:1!important;padding-right:.1em!important;position:absolute!important;top:.2em!important;right:.5em!important}.reveal div.toolbar-item span{color:#999!important;text-transform:uppercase!important;box-shadow:none!important;background:0 0!important;border:none!important;padding:0!important;font-family:Inter,sans-serif!important;font-size:.7em!important;font-weight:600!important}.reveal h2{font-size:1.6em;text-align:left!important;margin-top:30px!important;margin-bottom:20px!important}.reveal h3{font-size:1.3em;text-align:left!important;margin-top:20px!important;margin-bottom:15px!important}.reveal p{line-height:1.5;text-align:left!important;margin-top:20px!important;margin-left:0!important}.reveal ul,.reveal ol,.reveal li{line-height:1.5;text-align:left!important;margin-left:0!important}.reveal ul,.reveal ol{padding-left:1.2em!important;display:block!important}.reveal .slides section{box-sizing:border-box;text-align:left!important;padding:40px!important}.reveal .slides{text-align:left!important}.reveal .slides section:not(.stack):has(>h1:only-child),.reveal .slides section:not(.stack):has(>h1:first-child+h2:last-child),.reveal .slides section:not(.stack):has(>h1:first-child+h2+p:last-child){text-align:center!important;flex-direction:column!important;justify-content:center!important;align-items:center!important;height:100%!important;display:flex!important;top:0!important}.reveal .slides section:not(.stack):has(>h1:only-child) h1,.reveal .slides section:not(.stack):has(>h1:first-child+h2:last-child) h1,.reveal .slides section:not(.stack):has(>h1:first-child+h2:last-child) h2,.reveal .slides section:not(.stack):has(>h1:first-child+h2+p:last-child) h1,.reveal .slides section:not(.stack):has(>h1:first-child+h2+p:last-child) h2,.reveal .slides section:not(.stack):has(>h1:first-child+h2+p:last-child) p{text-align:center!important;justify-content:center!important;width:100%!important;min-height:auto!important;margin:0!important}.reveal .slides section:not(.stack):has(>h1:first-child+h2:last-child) h1,.reveal .slides section:not(.stack):has(>h1:first-child+h2+p:last-child) h1{margin-bottom:.5em!important}.reveal .slides section:not(.stack):has(>h1:first-child+h2+p:last-child) h2{margin-bottom:.3em!important}.reveal .slides section:not(.stack):has(>h1:first-child+h2+p:last-child) p{color:#666;font-size:.9em}.reveal .slides section:has(.full-screen-image){padding:0!important}.reveal:has(section.present .full-screen-image){background-image:url(../../slide_end_background.png)!important;background-position:50%!important;background-size:cover!important}.reveal:has(section.present .full-screen-image) .slides,.reveal:has(section.present .full-screen-image) .slides section.present{background:0 0!important}.full-screen-image{justify-content:center;align-items:center;width:100vw;height:100vh;display:flex;margin:0!important}.reveal .svg-graph{max-width:100%;height:auto;margin-top:1em!important;margin-bottom:1em!important;overflow:visible!important}.reveal .mermaid-switcher{display:none!important}.centered{justify-content:center!important;align-items:center!important;width:100%!important;margin:1em 0!important;display:flex!important}.no-break{width:100%;display:block}.reveal blockquote{background:#ffaa4933;padding:5px;font-style:italic;display:block;position:relative;box-shadow:0 0 2px #0003;margin:var(--r-block-margin)auto!important;text-align:left!important}.col1{width:90%;margin:0 auto}.col2{justify-content:space-around;align-items:flex-start;width:90%;margin:0 auto;display:flex}:root{--callout-note:#448aff;--callout-abstract:#00b0ff;--callout-info:#00b8d4;--callout-todo:#00bfa5;--callout-tip:#00c853;--callout-success:#64dd17;--callout-question:#ffab00;--callout-warning:#ff9100;--callout-failure:#ff5252;--callout-danger:#ff1744;--callout-bug:#f50057;--callout-example:#7c4dff;--callout-quote:#9e9e9e;--code-bg:#f8f8f8;--border:#ddd}.reveal .callout{border:1px solid var(--border);border-left:6px solid var(--callout-note);border-radius:4px;font-size:.8em;overflow:hidden;text-align:left!important;width:75%!important;max-width:100%!important;margin:1rem auto!important}.reveal .callout-title{color:var(--callout-note);background:#0000000d;align-items:center;gap:.5rem;padding:.5rem 1rem;font-weight:600;display:flex}.reveal .callout-icon{align-items:center;display:flex}.reveal .callout-icon svg{width:1.2em;height:1.2em}.reveal .callout-content{padding:.5rem 1rem}.reveal .callout-content p{margin-top:.5rem!important}.reveal .callout-content p:first-child{margin-top:0!important}.reveal h1{text-transform:none!important}.reveal .callout-abstract{border-left-color:var(--callout-abstract)}.reveal .callout-abstract .callout-title{color:var(--callout-abstract)}.reveal .callout-info{border-left-color:var(--callout-info)}.reveal .callout-info .callout-title{color:var(--callout-info)}.reveal .callout-todo{border-left-color:var(--callout-todo)}.reveal .callout-todo .callout-title{color:var(--callout-todo)}.reveal .callout-tip{border-left-color:var(--callout-tip)}.reveal .callout-tip .callout-title{color:var(--callout-tip)}.reveal .callout-success{border-left-color:var(--callout-success)}.reveal .callout-success .callout-title{color:var(--callout-success)}.reveal .callout-question{border-left-color:var(--callout-question)}.reveal .callout-question .callout-title{color:var(--callout-question)}.reveal .callout-warning{border-left-color:var(--callout-warning)}.reveal .callout-warning .callout-title{color:var(--callout-warning)}.reveal .callout-failure{border-left-color:var(--callout-failure)}.reveal .callout-failure .callout-title{color:var(--callout-failure)}.reveal .callout-danger{border-left-color:var(--callout-danger)}.reveal .callout-danger .callout-title{color:var(--callout-danger)}.reveal .callout-bug{border-left-color:var(--callout-bug)}.reveal .callout-bug .callout-title{color:var(--callout-bug)}.reveal .callout-example{border-left-color:var(--callout-example)}.reveal .callout-example .callout-title{color:var(--callout-example)}.reveal .callout-quote{border-left-color:var(--callout-quote)}.reveal .callout-quote .callout-title{color:var(--callout-quote)}.red-note{color:var(--callout-failure)}.reveal .slide-number{border-radius:4px;color:#000000b1!important;background:#0000001a!important;padding:5px 10px!important;font-size:.8em!important}@media print{.reveal .slides section{visibility:visible!important;opacity:1!important;page-break-after:always!important;width:100%!important;height:100%!important;display:block!important;position:relative!important;top:0!important;left:0!important;overflow:hidden!important}.reveal .slides{width:100%!important;height:100%!important;top:0!important;left:0!important;transform:none!important}.reveal{overflow:visible!important}}</style></body></html>
+</code></pre>
+</section>
+<section><h1>Reentrância e Bibliotecas</h1>
+<ul>
+<li>Muitas bibliotecas antigas não são <strong>reentrantes</strong> (não seguras para threads).</li>
+<li><strong>Exemplo:</strong> Se a thread A chama <code>malloc</code> e é interrompida no meio da atualização da lista de memória, e a thread B chama <code>malloc</code> logo em seguida, o sistema pode entrar em colapso.</li>
+<li>Solução: Usar versões <em>thread-safe</em> das bibliotecas ou travas (<em>locks</em>).</li>
+</ul>
+</section>
+<section><h1>Próximos Passos</h1>
+<p>Na próxima aula, abordaremos <strong>Comunicação entre Processos (IPC)</strong>.</p>
+<ul>
+<li>Como evitar as condições de corrida que vimos hoje?</li>
+<li>Estudaremos: <strong>Semáforos</strong>, <strong>Exclusão Mútua (Mutexes)</strong> e <strong>Monitores</strong>.</li>
+<li>Aprenderemos a sincronizar o acesso ao &quot;Saldo&quot; e ao &quot;Contador&quot; para garantir resultados consistentes.</li>
+</ul>
+</section>
+        </div>
+    </div>
+
+    <script src="/aulas-faesa/js/vendor/reveal/reveal.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/notes/notes.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/markdown/markdown.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/math/math.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/zoom/zoom.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/prism.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-c.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-python.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-clike.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-perl.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-java.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-php.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/toolbar/prism-toolbar.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/show-language/prism-show-language.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/prism-slang.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/mermaid.min.js" data-no-bundle></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            mermaid.initialize({
+                startOnLoad: false,
+                theme: 'default',
+                securityLevel: 'loose',
+                fontFamily: 'Inter, system-ui, sans-serif',
+            });
+        });
+    </script>
+    <script>
+        Reveal.initialize({
+            hash: true,
+            slideNumber: 'c/t',
+            center: false,
+            controls: false,
+            plugins: [RevealMarkdown, RevealNotes, RevealMath.KaTeX, RevealZoom],
+            katex: {
+                local: '/aulas-faesa/js/vendor/katex',
+                output: 'html',
+                throwOnError: false,
+                strict: false,
+            },
+            width: 960,
+            height: 800,
+            margin: 0.15,
+            maxScale: 2.0,
+        });
+
+        // Ensure Prism highlights code on slide changes
+        Reveal.on('slideready', event => {
+            Prism.highlightAll();
+            try {
+                let mermaids = event.currentSlide.querySelectorAll('.mermaid');
+                if (mermaids.length > 0) {
+                    mermaid.init(undefined, mermaids);
+                }
+            } catch (err) { console.warn("Mermaid init failed", err); }
+        });
+        Reveal.on('slidechanged', event => {
+            Prism.highlightAll();
+            try {
+                let mermaids = event.currentSlide.querySelectorAll('.mermaid');
+                if (mermaids.length > 0) {
+                    mermaid.init(undefined, mermaids);
+                }
+            } catch (err) { console.warn("Mermaid init failed", err); }
+        });
+    </script>
+    <script src="/aulas-faesa/js/rough.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/apply_sketch.js" data-no-bundle></script>
+    <style>
+        /* Modern base styles */
+        .reveal {
+            font-size: 20px;
+            text-align: left !important;
+        }
+
+        .reveal code:not(pre code) {
+            font-family: 'JetBrains Mono', 'Fira Code', Consolas, monospace !important;
+            background-color: var(--code-bg) !important;
+            padding: 0.1em 0.3em !important;
+            border-radius: 4px !important;
+            font-size: 0.85em !important;
+            color: #3b82f6 !important;
+            border: 1px dashed var(--border) !important;
+            white-space: pre-wrap !important;
+            word-break: break-word !important;
+        }
+
+        .reveal h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px !important;
+            margin-left: 0 !important;
+            /* min-height: 2.3em; */
+            display: flex;
+            align-items: center;
+            justify-content: flex-start !important;
+            text-align: left !important;
+            width: 100% !important;
+            text-shadow: none !important;
+        }
+
+        /* Prism overrides for Reveal.js */
+        .reveal div.code-toolbar {
+            position: relative;
+            width: 90% !important;
+            margin: 1em auto !important;
+        }
+
+        .reveal pre[class*="language-"] {
+            margin: 0 !important;
+            padding: 1em !important;
+            width: 100% !important;
+            font-size: 0.8em !important;
+        }
+
+        .reveal pre[class*="language-"] > code {
+            position: relative !important;
+            display: block !important;
+        }
+
+        .reveal .line-numbers-rows {
+            position: absolute !important;
+            top: 0 !important;
+            left: -3.8em !important;
+            width: 3.2em !important;
+            padding-top: 0 !important;
+            border-right: 1px solid #ccc !important;
+        }
+
+        .reveal .line-numbers-rows > span:before {
+            padding-right: 0.5em !important;
+            color: #999 !important;
+            display: block !important;
+            text-align: right !important;
+        }
+
+        .reveal pre[class*="language-"].line-numbers,
+        .reveal pre[class*="language-"]:has(.line-numbers-rows) {
+            padding-left: 3.8em !important;
+        }
+
+        /* Language label styling */
+        .reveal div.toolbar {
+            position: absolute !important;
+            top: 0.2em !important;
+            right: 0.5em !important;
+            opacity: 1 !important;
+            padding-right: 0.1em !important;
+            z-index: 10;
+        }
+
+        .reveal div.toolbar-item span {
+            font-family: 'Inter', sans-serif !important;
+            font-size: 0.7em !important;
+            font-weight: 600 !important;
+            color: #999 !important;
+            text-transform: uppercase !important;
+            background: none !important;
+            box-shadow: none !important;
+            border: none !important;
+            padding: 0 !important;
+        }
+
+        .reveal h2 {
+            font-size: 1.6em;
+            margin-top: 30px !important;
+            margin-bottom: 20px !important;
+            text-align: left !important;
+        }
+
+        .reveal h3 {
+            font-size: 1.3em;
+            margin-top: 20px !important;
+            margin-bottom: 15px !important;
+            text-align: left !important;
+        }
+
+        .reveal p {
+            line-height: 1.5;
+            margin-top: 20px !important;
+            margin-left: 0 !important;
+            text-align: left !important;
+        }
+
+        .reveal ul,
+        .reveal ol,
+        .reveal li {
+            line-height: 1.5;
+            text-align: left !important;
+            margin-left: 0 !important;
+        }
+        
+        .reveal ul, .reveal ol {
+            display: block !important;
+            padding-left: 1.2em !important;
+        }
+
+        /* Slide padding and layout */
+        .reveal .slides section {
+            padding: 40px !important;
+            box-sizing: border-box;
+            text-align: left !important;
+        }
+
+        .reveal .slides {
+            text-align: left !important;
+        }
+
+        /* Centering for Title slides (h1 ONLY, h1 + h2 ONLY, or h1 + h2 + p ONLY) */
+        .reveal .slides section:not(.stack):has(> h1:only-child),
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child),
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) {
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: center !important;
+            align-items: center !important;
+            text-align: center !important;
+            height: 100% !important;
+            top: 0 !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:only-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child) h2,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h2,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) p {
+            justify-content: center !important;
+            text-align: center !important;
+            margin: 0 !important;
+            min-height: auto !important;
+            width: 100% !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h1 {
+            margin-bottom: 0.5em !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h2 {
+            margin-bottom: 0.3em !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) p {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        /* Full screen slide fix */
+        .reveal .slides section:has(.full-screen-image) {
+            padding: 0 !important;
+        }
+
+        /* Full screen slide fix - Garantindo que o fundo do Reveal fique visível e a imagem carregada */
+        .reveal:has(section.present .full-screen-image) {
+            background-image: url('../../slide_end_background.png') !important;
+            background-size: cover !important;
+            background-position: center !important;
+        }
+
+        /* Torna o slide e o container de slides transparentes para mostrar o fundo da .reveal */
+        .reveal:has(section.present .full-screen-image) .slides,
+        .reveal:has(section.present .full-screen-image) .slides section.present {
+            background: transparent !important;
+        }
+
+        .full-screen-image {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 !important;
+            /* Se houver texto, ele centraliza aqui */
+        }
+
+        /* Spacing for diagrams */
+        .reveal .svg-graph {
+            margin-top: 1em !important;
+            margin-bottom: 1em !important;
+            overflow: visible !important; /* Prevent labels from being cut off */
+            max-width: 100%;
+            height: auto;
+        }
+
+        .reveal .mermaid-switcher {
+            display: none !important;
+        }
+
+        .centered {
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            width: 100% !important;
+            margin: 1em 0 !important;
+        }
+
+        .no-break {
+            display: block;
+            width: 100%;
+        }
+
+        .reveal blockquote {
+            display: block;
+            position: relative;
+            margin: var(--r-block-margin) auto !important;
+            padding: 5px;
+            font-style: italic;
+            background: rgba(255, 170, 73, 0.2);
+            box-shadow: 0 0 2px rgba(0,0,0,.2);
+            text-align: left !important;
+        }
+
+        .col1 {
+            width: 90%;
+            margin: 0 auto;
+        }
+
+        .col2 {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start;
+            width: 90%;
+            margin: 0 auto;
+            align-items: flex-start;
+        }
+
+        /* Callout Styles */
+        :root {
+            --callout-note: #448aff;
+            --callout-abstract: #00b0ff;
+            --callout-info: #00b8d4;
+            --callout-todo: #00bfa5;
+            --callout-tip: #00c853;
+            --callout-success: #64dd17;
+            --callout-question: #ffab00;
+            --callout-warning: #ff9100;
+            --callout-failure: #ff5252;
+            --callout-danger: #ff1744;
+            --callout-bug: #f50057;
+            --callout-example: #7c4dff;
+            --callout-quote: #9e9e9e;
+            --code-bg: #f8f8f8;
+            --border: #ddd;
+        }
+
+        .reveal .callout {
+            margin: 1rem auto !important;
+            border: 1px solid var(--border);
+            border-left: 6px solid var(--callout-note);
+            border-radius: 4px;
+            overflow: hidden;
+            text-align: left !important;
+            font-size: 0.8em;
+            width: 75% !important;
+            max-width: 100% !important;
+        }
+
+        .reveal .callout-title {
+            padding: 0.5rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            color: var(--callout-note);
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .reveal .callout-icon {
+            display: flex;
+            align-items: center;
+        }
+
+        .reveal .callout-icon svg {
+            width: 1.2em;
+            height: 1.2em;
+        }
+
+        .reveal .callout-content {
+            padding: 0.5rem 1rem;
+        }
+
+        .reveal .callout-content p {
+            margin-top: 0.5rem !important;
+        }
+
+        .reveal .callout-content p:first-child {
+            margin-top: 0 !important;
+        }
+
+        .reveal h1 { text-transform: none !important; }
+
+        .reveal .callout-abstract { border-left-color: var(--callout-abstract); }
+        .reveal .callout-abstract .callout-title { color: var(--callout-abstract); }
+        .reveal .callout-info { border-left-color: var(--callout-info); }
+        .reveal .callout-info .callout-title { color: var(--callout-info); }
+        .reveal .callout-todo { border-left-color: var(--callout-todo); }
+        .reveal .callout-todo .callout-title { color: var(--callout-todo); }
+        .reveal .callout-tip { border-left-color: var(--callout-tip); }
+        .reveal .callout-tip .callout-title { color: var(--callout-tip); }
+        .reveal .callout-success { border-left-color: var(--callout-success); }
+        .reveal .callout-success .callout-title { color: var(--callout-success); }
+        .reveal .callout-question { border-left-color: var(--callout-question); }
+        .reveal .callout-question .callout-title { color: var(--callout-question) ; }
+        .reveal .callout-warning { border-left-color: var(--callout-warning); }
+        .reveal .callout-warning .callout-title { color: var(--callout-warning); }
+        .reveal .callout-failure { border-left-color: var(--callout-failure); }
+        .reveal .callout-failure .callout-title { color: var(--callout-failure); }
+        .reveal .callout-danger { border-left-color: var(--callout-danger); }
+        .reveal .callout-danger .callout-title { color: var(--callout-danger); }
+        .reveal .callout-bug { border-left-color: var(--callout-bug); }
+        .reveal .callout-bug .callout-title { color: var(--callout-bug); }
+        .reveal .callout-example { border-left-color: var(--callout-example); }
+        .reveal .callout-example .callout-title { color: var(--callout-example); }
+        .reveal .callout-quote { border-left-color: var(--callout-quote); }
+        .reveal .callout-quote .callout-title { color: var(--callout-quote); }
+        .red-note { color: var(--callout-failure); }
+
+        .reveal .slide-number {
+            font-size: 0.8em !important;
+            padding: 5px 10px !important;
+            background: rgba(0,0,0,0.1) !important;
+            border-radius: 4px;
+            color: #000000b1 !important;
+        }
+
+        /* Print styles */
+        @media print {
+            .reveal .slides section {
+                display: block !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                position: relative !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+                page-break-after: always !important;
+                overflow: hidden !important;
+            }
+
+            .reveal .slides {
+                transform: none !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+            }
+            
+            .reveal {
+                overflow: visible !important;
+            }
+        }
+    </style>
+</body>
+
+</html>

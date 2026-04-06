@@ -1,60 +1,488 @@
-<!doctype html><html lang=pt-BR><meta charset=UTF-8><meta content="width=device-width,initial-scale=1.0" name=viewport><title>Toposia - Tópicos de Programação II (TEP II)</title><link media="(prefers-color-scheme: light)" href=/aulas-faesa/img/dark-favicon.svg rel=icon><link media="(prefers-color-scheme: dark)" href=/aulas-faesa/img/light-favicon.svg rel=icon><link data-no-bundle href=/aulas-faesa/css/vendor/fonts.css rel=stylesheet><link data-no-bundle href=/aulas-faesa/js/vendor/katex/dist/katex.min.css rel=stylesheet><link href=/aulas-faesa/css/bundle.min.css rel=stylesheet><link data-no-bundle href=/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css rel=stylesheet><script src=/aulas-faesa/js/bundle.min.js></script></head><body><script>// Restore sidebar state instantly (before first paint) to avoid transition flash
-(function(){localStorage.getItem(`cf_sidebar_hidden`)===`true`&&document.body.classList.add(`sidebar-hidden`,`no-transition`),requestAnimationFrame(function(){requestAnimationFrame(function(){document.body.classList.remove(`no-transition`)})})})();</script><div class=page-wrapper><nav class=sidebar><div class=sidebar-content><header class=sidebar-title-section><a class=course-title-link href=contents.html> <h1 class=sidebar-course-title>Tópicos de Programação II (TEP II)</h1> </a><div class=sidebar-ornament>❧</div></header><section class=sidebar-toc-section><h2 class=toc-header>Tabela de Conteúdos</h2><ol class=toc-list><li class="toc-item level-2"><a href=#bibliotecas-e-modularização-em-c>10.1. Bibliotecas e Modularização em C</a></li><li class="toc-item level-2"><a href=#por-que-modularizar-um-programa>10.2. Por que modularizar um programa</a></li><li class="toc-item level-2"><a href=#o-que-é-uma-biblioteca-em-c>10.3. O que é uma biblioteca em C</a></li><li class="toc-item level-3"><a href=#biblioteca-padrão-e-biblioteca-própria>10.3.1. Biblioteca padrão e biblioteca própria</a></li><li class="toc-item level-2"><a href=#bibliotecas-padrão-importantes>10.4. Bibliotecas padrão importantes</a></li><li class="toc-item level-3"><a href=#biblioteca-codeltstdiohgtcode>10.6. Criando sua própria biblioteca</a></li><li class="toc-item level-3"><a href=#arquivo-de-cabeçalho-codehcode>10.6.4. Expandindo o módulo</a></li><li class="toc-item level-2"><a href=#header-guards>10.7. Header guards</a></li><li class="toc-item level-2"><a href=#compilando-com-o-gcc>10.8. Compilando com o GCC</a></li><li class="toc-item level-3"><a href=#compilando-vários-arquivos>10.8.1. Compilando vários arquivos</a></li><li class="toc-item level-3"><a href=#compilando-programas-que-usam-codemathhcode>10.9. Exemplo completo de biblioteca própria</a></li><li class="toc-item level-2"><a href=#questões>10.10. Questões</a></li><li class="toc-item level-2"><a href=#próximos-passos>10.11. Próximos passos</a></li></ol></section><nav class=sidebar-nav-section><a class="sidebar-nav-link prev" href=9-functions.html><i class=nav-icon data-lucide=chevron-left></i> Funções</a><a class="sidebar-nav-link back" href=javascript:void(0) onclick=handleBackNavigation()><i class=nav-icon data-lucide=arrow-left></i> Voltar</a></nav></div></nav><button aria-label=Menu class=mobile-menu-toggle><i data-lucide=menu></i></button><button aria-label="Alternar Barra Lateral" class=sidebar-toggle onclick=CourseForgeNav.toggleSidebar()><i class=toggle-icon data-lucide=chevron-left id=sidebar-toggle-icon></i></button><div class=mobile-menu-overlay></div><main class=main-content><article class=article><header class=article-header><span class=chapter-number>10</span><h1 class=article-title><span class="title-ornament left">❧</span> <span class=title-text>Bibliotecas e Modularização em C</span> <span class="title-ornament right">❧</span></h1><p class=article-date>31/03/2026</p><nav aria-label=Breadcrumb class=breadcrumb><a class=breadcrumb-link href=contents.html>Tópicos de Programação II</a><span class=breadcrumb-separator><i class=breadcrumb-icon data-lucide=chevron-right></i></span><a class=breadcrumb-link href=contents.html#part-III>III - Modularização e Gerenciamento de Memória</a><span class=breadcrumb-separator><i class=breadcrumb-icon data-lucide=chevron-right></i></span><span class=breadcrumb-current>Bibliotecas e Modularização em C</span></nav></header><div class=article-body><h2 id=bibliotecas-e-modularização-em-c><span class=heading-text>Bibliotecas e Modularização em C</span><span class=heading-arabic>10.1</span></h2><p>Até este ponto, a maior parte dos programas foi escrita em um único arquivo <code>.c</code>. Essa abordagem funciona bem em exercícios pequenos, mas começa a se tornar ruim quando o código cresce, quando precisamos reaproveitar funções em outros projetos ou quando queremos organizar melhor as responsabilidades do sistema.</p><p>Na linguagem <strong>C</strong>, essa organização aparece de forma muito clara no uso de <strong>bibliotecas</strong>. Algumas bibliotecas já vêm prontas, como <code>stdio.h</code>, <code>string.h</code> e <code>math.h</code>. Outras podem ser criadas pelo próprio programador para agrupar funções relacionadas em um mesmo módulo.</p><p>Este capítulo tem como objetivo explicar não apenas como usar bibliotecas prontas, mas também como construir as suas próprias. Além disso, vamos diferenciar três ideias que costumam ser confundidas: incluir um cabeçalho com <code>#include</code>, declarar funções em um arquivo <code>.h</code> e implementar essas funções em um arquivo <code>.c</code>, e finalmente compilar tudo corretamente com o <strong>GCC</strong>.</p><div class="callout callout-info"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><circle cx=12 cy=12 r=10 /><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></span><span class=callout-title-inner>Objetivos</span></div><div class=callout-content><ul><li>Compreender o que é uma biblioteca na linguagem <strong>C</strong>.</li><li>Diferenciar bibliotecas padrão de bibliotecas próprias.</li><li>Entender a função da diretiva <code>#include</code>.</li><li>Reconhecer a diferença entre arquivos <code>.h</code> e <code>.c</code>.</li><li>Utilizar corretamente <em>header guards</em>.</li><li>Compilar programas com múltiplos arquivos usando o <strong>GCC</strong>.</li><li>Compreender o uso das opções <code>-lm</code> e <code>-I</code> no processo de compilação.</li></ul></div></div><h2 id=por-que-modularizar-um-programa><span class=heading-text>Por que modularizar um programa</span><span class=heading-arabic>10.2</span></h2><p>Quando um programa é pequeno, colocar tudo dentro de <code>main.c</code> parece suficiente. O problema é que, com o tempo, essa escolha gera várias dificuldades:</p><ul><li>O arquivo fica grande demais e difícil de manter.</li><li>O reaproveitamento de código passa a depender de copiar e colar funções.</li><li>Pequenas alterações ficam espalhadas por várias partes do programa.</li><li>Torna-se mais difícil separar o que cada parte do sistema faz.</li></ul><p>Uma forma clássica de resolver isso é dividir o programa em <strong>módulos</strong>. Cada módulo fica responsável por uma tarefa específica, como cálculos matemáticos, manipulação de texto, validação de dados ou operações com vetores.</p><div class="callout callout-tip"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .5 2.2 1.5 3.1.7.7 1.3 1.5 1.5 2.4"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span><span class=callout-title-inner>Vantagem da Modularização<br></span></div><div class=callout-content><p>Ao dividir um programa em módulos, você deixa o código mais organizado, facilita a manutenção e aumenta muito a chance de reutilizar funções em outros projetos.</p></div></div><h2 id=o-que-é-uma-biblioteca-em-c><span class=heading-text>O que é uma biblioteca em C</span><span class=heading-arabic>10.3</span></h2><p>Uma <strong>biblioteca</strong> é um conjunto de recursos prontos para uso, como funções, tipos, constantes e macros, que podem ser aproveitados em diferentes programas.</p><p>Quando dizemos que um programa está usando uma biblioteca, isso pode significar duas situações:</p><ul><li>Ele está usando uma biblioteca padrão da linguagem, como <code>stdio.h</code>.</li><li>Ele está usando uma biblioteca criada pelo próprio desenvolvedor.</li></ul><p>Em ambos os casos, a ideia é a mesma: evitar reescrever código que já pode ser organizado e reutilizado.</p><h3 id=biblioteca-padrão-e-biblioteca-própria><span class=heading-text>Biblioteca padrão e biblioteca própria</span><span class=heading-arabic>10.3.1</span></h3><p>As <strong>bibliotecas padrão</strong> são fornecidas pelo ecossistema da linguagem e normalmente já estão disponíveis com o compilador. Já as <strong>bibliotecas próprias</strong> são criadas dentro do projeto para reunir funções específicas do sistema que estamos desenvolvendo.</p><p>Por exemplo:</p><ul><li><code>stdio.h</code> é usada para entrada e saída.</li><li><code>string.h</code> é usada para manipulação de textos.</li><li><code>math.h</code> é usada para cálculos matemáticos.</li><li><code>calc.h</code> pode ser criada por você para reunir funções como <code>soma</code>, <code>media</code> e <code>maximo</code>.</li></ul><h2 id=bibliotecas-padrão-importantes><span class=heading-text>Bibliotecas padrão importantes</span><span class=heading-arabic>10.4</span></h2><p>Ao estudar bibliotecas em <strong>C</strong>, vale conhecer pelo menos algumas das bibliotecas padrão mais importantes e as funções mais comuns que elas oferecem.</p><h3 id=biblioteca-codeltstdiohgtcode><span class=heading-text>Biblioteca <code>&lt;stdio.h></code></span><span class=heading-arabic>10.4.1</span></h3><p>A biblioteca <code>&lt;stdio.h></code> reúne funções ligadas à <strong>entrada e saída padrão</strong>, como leitura do teclado e impressão na tela.</p><p>Algumas funções importantes:</p><ul><li><code>printf()</code>: imprime valores formatados na tela.</li></ul><p>Exemplo de uso:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>printf("Idade: %d\n", idade);
-</code></pre><ul><li><code>scanf()</code>: lê valores digitados pelo usuário.</li></ul><p>Exemplo de uso:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>int idade;
-scanf("%d", &idade);
-</code></pre><ul><li><code>fgets()</code>: lê uma linha de texto com limite de tamanho.</li></ul><p>Exemplo de uso:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>char nome[30];
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toposia - Tópicos de Programação II (TEP II)</title>
+    <link rel="icon" href="/aulas-faesa/img/dark-favicon.svg" media="(prefers-color-scheme: light)">
+    <link rel="icon" href="/aulas-faesa/img/light-favicon.svg" media="(prefers-color-scheme: dark)">
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/fonts.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/bundle.min.css">
+    
+    
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css" data-no-bundle>
+    <script src="/aulas-faesa/js/bundle.min.js"></script>
+</head>
+
+<body>
+    <script>
+        // Restore sidebar state instantly (before first paint) to avoid transition flash
+        (function() {
+            if (localStorage.getItem('cf_sidebar_hidden') === 'true') {
+                document.body.classList.add('sidebar-hidden', 'no-transition');
+            }
+            requestAnimationFrame(function() {
+                requestAnimationFrame(function() {
+                    document.body.classList.remove('no-transition');
+                });
+            });
+        })();
+    </script>
+    <div class="page-wrapper">
+        <nav class="sidebar">
+            <div class="sidebar-content">
+                <header class="sidebar-title-section">
+                    <a href="contents.html" class="course-title-link">
+                        <h1 class="sidebar-course-title">Tópicos de Programação II (TEP II)</h1>
+                    </a>
+                    <div class="sidebar-ornament">❧</div>
+                </header>
+
+                
+                <section class="sidebar-toc-section">
+                    <h2 class="toc-header">Tabela de Conteúdos</h2>
+                    <ol class="toc-list">
+                        
+                        <li class="toc-item level-2">
+                            <a href="#bibliotecas-e-modularização-em-c">10.1. Bibliotecas e Modularização em C</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#por-que-modularizar-um-programa">10.2. Por que modularizar um programa</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#o-que-é-uma-biblioteca-em-c">10.3. O que é uma biblioteca em C</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#biblioteca-padrão-e-biblioteca-própria">10.3.1. Biblioteca padrão e biblioteca própria</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#bibliotecas-padrão-importantes">10.4. Bibliotecas padrão importantes</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#biblioteca-codeltstdiohgtcode">10.6. Criando sua própria biblioteca</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#arquivo-de-cabeçalho-codehcode">10.6.4. Expandindo o módulo</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#header-guards">10.7. Header guards</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#compilando-com-o-gcc">10.8. Compilando com o GCC</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#compilando-vários-arquivos">10.8.1. Compilando vários arquivos</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#compilando-programas-que-usam-codemathhcode">10.9. Exemplo completo de biblioteca própria</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#questões">10.10. Questões</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#próximos-passos">10.11. Próximos passos</a>
+                        </li>
+                        
+                    </ol>
+                </section>
+                
+
+                <nav class="sidebar-nav-section">
+                    
+                    <a href="9-functions.html" class="sidebar-nav-link prev"><i data-lucide="chevron-left" class="nav-icon"></i> Funções</a>
+                    
+                    
+                    <a href="javascript:void(0)" onclick="handleBackNavigation()"
+                        class="sidebar-nav-link back"><i data-lucide="arrow-left" class="nav-icon"></i> Voltar</a>
+                </nav>
+
+            </div>
+        </nav>
+
+        <button class="mobile-menu-toggle" aria-label="Menu">
+            <i data-lucide="menu"></i>
+        </button>
+
+        <button class="sidebar-toggle" onclick="CourseForgeNav.toggleSidebar()" aria-label="Alternar Barra Lateral">
+            <i data-lucide="chevron-left" class="toggle-icon" id="sidebar-toggle-icon"></i>
+        </button>
+
+        <div class="mobile-menu-overlay"></div>
+
+        <main class="main-content">
+            <article class="article">
+                <header class="article-header">
+                    <span class="chapter-number">10</span>
+                    <h1 class="article-title">
+                        <span class="title-ornament left">❧</span>
+                        <span class="title-text">Bibliotecas e Modularização em C</span>
+                        <span class="title-ornament right">❧</span>
+                    </h1>
+                    
+                    <p class="article-date">31/03/2026</p>
+                    
+                    
+                    <nav class="breadcrumb" aria-label="Breadcrumb">
+                        
+                        
+                        
+                        <a href="contents.html" class="breadcrumb-link">Tópicos de Programação II</a>
+                        
+                        <span class="breadcrumb-separator"><i data-lucide="chevron-right" class="breadcrumb-icon"></i></span>
+                        
+                        
+                        
+                        
+                        <a href="contents.html#part-III" class="breadcrumb-link">III - Modularização e Gerenciamento de Memória</a>
+                        
+                        <span class="breadcrumb-separator"><i data-lucide="chevron-right" class="breadcrumb-icon"></i></span>
+                        
+                        
+                        
+                        <span class="breadcrumb-current">Bibliotecas e Modularização em C</span>
+                        
+                        
+                    </nav>
+                    
+                </header>
+                <div class="article-body">
+                    <h2 id="bibliotecas-e-modularização-em-c"><span class="heading-text">Bibliotecas e Modularização em C</span><span class="heading-arabic">10.1</span></h2>
+<p>Até este ponto, a maior parte dos programas foi escrita em um único arquivo <code>.c</code>. Essa abordagem funciona bem em exercícios pequenos, mas começa a se tornar ruim quando o código cresce, quando precisamos reaproveitar funções em outros projetos ou quando queremos organizar melhor as responsabilidades do sistema.</p>
+<p>Na linguagem <strong>C</strong>, essa organização aparece de forma muito clara no uso de <strong>bibliotecas</strong>. Algumas bibliotecas já vêm prontas, como <code>stdio.h</code>, <code>string.h</code> e <code>math.h</code>. Outras podem ser criadas pelo próprio programador para agrupar funções relacionadas em um mesmo módulo.</p>
+<p>Este capítulo tem como objetivo explicar não apenas como usar bibliotecas prontas, mas também como construir as suas próprias. Além disso, vamos diferenciar três ideias que costumam ser confundidas: incluir um cabeçalho com <code>#include</code>, declarar funções em um arquivo <code>.h</code> e implementar essas funções em um arquivo <code>.c</code>, e finalmente compilar tudo corretamente com o <strong>GCC</strong>.</p>
+<div class="callout callout-info">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></span>
+    <span class="callout-title-inner">Objetivos</span>
+  </div>
+  <div class="callout-content">
+<ul>
+<li>Compreender o que é uma biblioteca na linguagem <strong>C</strong>.</li>
+<li>Diferenciar bibliotecas padrão de bibliotecas próprias.</li>
+<li>Entender a função da diretiva <code>#include</code>.</li>
+<li>Reconhecer a diferença entre arquivos <code>.h</code> e <code>.c</code>.</li>
+<li>Utilizar corretamente <em>header guards</em>.</li>
+<li>Compilar programas com múltiplos arquivos usando o <strong>GCC</strong>.</li>
+<li>Compreender o uso das opções <code>-lm</code> e <code>-I</code> no processo de compilação.</li>
+</ul>
+  </div>
+</div>
+<h2 id="por-que-modularizar-um-programa"><span class="heading-text">Por que modularizar um programa</span><span class="heading-arabic">10.2</span></h2>
+<p>Quando um programa é pequeno, colocar tudo dentro de <code>main.c</code> parece suficiente. O problema é que, com o tempo, essa escolha gera várias dificuldades:</p>
+<ul>
+<li>O arquivo fica grande demais e difícil de manter.</li>
+<li>O reaproveitamento de código passa a depender de copiar e colar funções.</li>
+<li>Pequenas alterações ficam espalhadas por várias partes do programa.</li>
+<li>Torna-se mais difícil separar o que cada parte do sistema faz.</li>
+</ul>
+<p>Uma forma clássica de resolver isso é dividir o programa em <strong>módulos</strong>. Cada módulo fica responsável por uma tarefa específica, como cálculos matemáticos, manipulação de texto, validação de dados ou operações com vetores.</p>
+<div class="callout callout-tip">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .5 2.2 1.5 3.1.7.7 1.3 1.5 1.5 2.4"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span>
+    <span class="callout-title-inner">Vantagem da Modularização<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Ao dividir um programa em módulos, você deixa o código mais organizado, facilita a manutenção e aumenta muito a chance de reutilizar funções em outros projetos.</p>
+  </div>
+</div>
+<h2 id="o-que-é-uma-biblioteca-em-c"><span class="heading-text">O que é uma biblioteca em C</span><span class="heading-arabic">10.3</span></h2>
+<p>Uma <strong>biblioteca</strong> é um conjunto de recursos prontos para uso, como funções, tipos, constantes e macros, que podem ser aproveitados em diferentes programas.</p>
+<p>Quando dizemos que um programa está usando uma biblioteca, isso pode significar duas situações:</p>
+<ul>
+<li>Ele está usando uma biblioteca padrão da linguagem, como <code>stdio.h</code>.</li>
+<li>Ele está usando uma biblioteca criada pelo próprio desenvolvedor.</li>
+</ul>
+<p>Em ambos os casos, a ideia é a mesma: evitar reescrever código que já pode ser organizado e reutilizado.</p>
+<h3 id="biblioteca-padrão-e-biblioteca-própria"><span class="heading-text">Biblioteca padrão e biblioteca própria</span><span class="heading-arabic">10.3.1</span></h3>
+<p>As <strong>bibliotecas padrão</strong> são fornecidas pelo ecossistema da linguagem e normalmente já estão disponíveis com o compilador. Já as <strong>bibliotecas próprias</strong> são criadas dentro do projeto para reunir funções específicas do sistema que estamos desenvolvendo.</p>
+<p>Por exemplo:</p>
+<ul>
+<li><code>stdio.h</code> é usada para entrada e saída.</li>
+<li><code>string.h</code> é usada para manipulação de textos.</li>
+<li><code>math.h</code> é usada para cálculos matemáticos.</li>
+<li><code>calc.h</code> pode ser criada por você para reunir funções como <code>soma</code>, <code>media</code> e <code>maximo</code>.</li>
+</ul>
+<h2 id="bibliotecas-padrão-importantes"><span class="heading-text">Bibliotecas padrão importantes</span><span class="heading-arabic">10.4</span></h2>
+<p>Ao estudar bibliotecas em <strong>C</strong>, vale conhecer pelo menos algumas das bibliotecas padrão mais importantes e as funções mais comuns que elas oferecem.</p>
+<h3 id="biblioteca-codeltstdiohgtcode"><span class="heading-text">Biblioteca <code>&lt;stdio.h&gt;</code></span><span class="heading-arabic">10.4.1</span></h3>
+<p>A biblioteca <code>&lt;stdio.h&gt;</code> reúne funções ligadas à <strong>entrada e saída padrão</strong>, como leitura do teclado e impressão na tela.</p>
+<p>Algumas funções importantes:</p>
+<ul>
+<li><code>printf()</code>: imprime valores formatados na tela.</li>
+</ul>
+<p>Exemplo de uso:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">printf(&quot;Idade: %d\n&quot;, idade);
+</code></pre>
+<ul>
+<li><code>scanf()</code>: lê valores digitados pelo usuário.</li>
+</ul>
+<p>Exemplo de uso:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">int idade;
+scanf(&quot;%d&quot;, &amp;idade);
+</code></pre>
+<ul>
+<li><code>fgets()</code>: lê uma linha de texto com limite de tamanho.</li>
+</ul>
+<p>Exemplo de uso:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">char nome[30];
 fgets(nome, 30, stdin);
-</code></pre><p>A função <code>fgets()</code> lê até atingir o limite informado, encontrar uma quebra de linha <code>\n</code> ou chegar ao fim da entrada. Diferentemente de <code>scanf("%s", ...)</code>, ela aceita espaços no texto digitado. Por isso, costuma ser a melhor escolha quando queremos ler nomes completos, frases ou linhas inteiras.</p><ul><li><code>puts()</code>: imprime uma string e salta para a próxima linha.</li></ul><p>Exemplo de uso:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>puts("Mensagem escrita com puts()");
-</code></pre><p>Se <code>scanf()</code> for usado antes de <code>fgets()</code>, pode ser necessário consumir a quebra de linha deixada no teclado. Uma forma simples de fazer isso em exemplos introdutórios é usar <code>getchar()</code> antes do <code>fgets()</code>. A função <code>getchar()</code> lê um único caractere da entrada, então ela pode ser usada nesse caso para consumir o <code>\n</code> que ficou pendente no teclado.</p><h3 id=biblioteca-codeltstringhgtcode><span class=heading-text>Biblioteca <code>&lt;string.h></code></span><span class=heading-arabic>10.4.2</span></h3><p>A biblioteca <code>&lt;string.h></code> oferece funções específicas para manipulação de <strong>strings</strong>.</p><p>Algumas funções importantes:</p><ul><li><code>strlen()</code>: calcula quantos caracteres existem na string.</li></ul><p>Exemplo de uso:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>char texto[] = "Programacao";
-printf("Tamanho: %zu\n", strlen(texto));
-</code></pre><ul><li><code>strcpy()</code>: copia o conteúdo de uma string para outra.</li></ul><p>Exemplo de uso:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>char origem[] = "Casa";
+</code></pre>
+<p>A função <code>fgets()</code> lê até atingir o limite informado, encontrar uma quebra de linha <code>\n</code> ou chegar ao fim da entrada. Diferentemente de <code>scanf(&quot;%s&quot;, ...)</code>, ela aceita espaços no texto digitado. Por isso, costuma ser a melhor escolha quando queremos ler nomes completos, frases ou linhas inteiras.</p>
+<ul>
+<li><code>puts()</code>: imprime uma string e salta para a próxima linha.</li>
+</ul>
+<p>Exemplo de uso:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">puts(&quot;Mensagem escrita com puts()&quot;);
+</code></pre>
+<p>Se <code>scanf()</code> for usado antes de <code>fgets()</code>, pode ser necessário consumir a quebra de linha deixada no teclado. Uma forma simples de fazer isso em exemplos introdutórios é usar <code>getchar()</code> antes do <code>fgets()</code>. A função <code>getchar()</code> lê um único caractere da entrada, então ela pode ser usada nesse caso para consumir o <code>\n</code> que ficou pendente no teclado.</p>
+<h3 id="biblioteca-codeltstringhgtcode"><span class="heading-text">Biblioteca <code>&lt;string.h&gt;</code></span><span class="heading-arabic">10.4.2</span></h3>
+<p>A biblioteca <code>&lt;string.h&gt;</code> oferece funções específicas para manipulação de <strong>strings</strong>.</p>
+<p>Algumas funções importantes:</p>
+<ul>
+<li><code>strlen()</code>: calcula quantos caracteres existem na string.</li>
+</ul>
+<p>Exemplo de uso:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">char texto[] = &quot;Programacao&quot;;
+printf(&quot;Tamanho: %zu\n&quot;, strlen(texto));
+</code></pre>
+<ul>
+<li><code>strcpy()</code>: copia o conteúdo de uma string para outra.</li>
+</ul>
+<p>Exemplo de uso:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">char origem[] = &quot;Casa&quot;;
 char destino[20];
 strcpy(destino, origem);
-</code></pre><ul><li><code>strcat()</code>: adiciona uma string ao final de outra.</li></ul><p>Exemplo de uso:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>char texto[20] = "Linguagem ";
-strcat(texto, "C");
-</code></pre><ul><li><code>strcmp()</code>: compara duas strings e retorna <code>0</code> se elas forem iguais, um valor menor que <code>0</code> se a primeira vier antes da segunda na ordem lexicografica, e um valor maior que <code>0</code> se a primeira vier depois da segunda.</li></ul><p>Exemplo de uso:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>if(strcmp("abc", "abc") == 0)
-    printf("Strings iguais\n");
-</code></pre><ul><li><code>strchr()</code>: procura a primeira ocorrência de um caractere em uma string.</li></ul><p>Exemplo de uso:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>char palavra[] = "Computador";
+</code></pre>
+<ul>
+<li><code>strcat()</code>: adiciona uma string ao final de outra.</li>
+</ul>
+<p>Exemplo de uso:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">char texto[20] = &quot;Linguagem &quot;;
+strcat(texto, &quot;C&quot;);
+</code></pre>
+<ul>
+<li><code>strcmp()</code>: compara duas strings e retorna <code>0</code> se elas forem iguais, um valor menor que <code>0</code> se a primeira vier antes da segunda na ordem lexicografica, e um valor maior que <code>0</code> se a primeira vier depois da segunda.</li>
+</ul>
+<p>Exemplo de uso:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">if(strcmp(&quot;abc&quot;, &quot;abc&quot;) == 0)
+    printf(&quot;Strings iguais\n&quot;);
+</code></pre>
+<ul>
+<li><code>strchr()</code>: procura a primeira ocorrência de um caractere em uma string.</li>
+</ul>
+<p>Exemplo de uso:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">char palavra[] = &quot;Computador&quot;;
 char *posicao = strchr(palavra, 'p');
 if(posicao != NULL)
-    printf("Caractere encontrado: %c\n", *posicao);
-</code></pre><div class="callout callout-warning"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span><span class=callout-title-inner>Segurança de Memória<br></span></div><div class=callout-content><p>Funções como <code>strcpy()</code> e <code>strcat()</code> exigem cuidado com o tamanho do array de destino. Se não houver espaço suficiente, o programa pode sobrescrever memória indevidamente.</p></div></div><h3 id=biblioteca-codeltmathhgtcode><span class=heading-text>Biblioteca <code>&lt;math.h></code></span><span class=heading-arabic>10.4.3</span></h3><p>A biblioteca <code>&lt;math.h></code> contém funções matemáticas prontas.</p><p>Algumas funções importantes:</p><ul><li><code>sqrt()</code>: calcula a raiz quadrada de um número.</li></ul><p>Exemplo de uso:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>printf("%.1f\n", sqrt(25.0));
-</code></pre><ul><li><code>pow()</code>: calcula uma potência.</li></ul><p>Exemplo de uso:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>printf("%.1f\n", pow(2, 3));
-</code></pre><ul><li><code>sin()</code>: calcula o seno de um ângulo em radianos.</li></ul><p>Exemplo de uso:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>printf("%.1f\n", sin(0));
-</code></pre><ul><li><code>cos()</code>: calcula o cosseno de um ângulo em radianos.</li></ul><p>Exemplo de uso:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>printf("%.1f\n", cos(0));
-</code></pre><ul><li><code>fabs()</code>: retorna o valor absoluto de um número real.</li></ul><p>Exemplo de uso:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>printf("%.1f\n", fabs(-4.5));
-</code></pre><p>Além das funções, ela também é muito usada quando queremos trabalhar com constantes matemáticas importantes, como o valor de pi e o número de Euler. Em muitos compiladores, aparecem macros como <code>M_PI</code> e <code>M_E</code>, mas isso não é garantido em todos os ambientes. Uma forma mais portátil de obter esses valores é:</p><ul><li><code>acos(-1.0)</code> para obter pi;</li><li><code>exp(1.0)</code> para obter o número de Euler.</li></ul><p>Assim, em vez de depender de constantes que podem não existir em todos os compiladores, podemos gerar esses valores com funções que fazem parte da própria biblioteca matemática.</p><p>Exemplo de uso:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>double pi = acos(-1.0);
-printf("PI = %.6f\n", pi);
-</code></pre><pre class="line-numbers language-c" data-lang=C><code class=language-c>double euler = exp(1.0);
-printf("Euler = %.6f\n", euler);
-</code></pre><div class="callout callout-important"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span><span class=callout-title-inner>Compilação com <code>math.h</code><br></span></div><div class=callout-content><p>Em muitos sistemas Linux e Unix, usar <code>#include &lt;math.h></code> não basta. Também é necessário passar a opção <code>-lm</code> no <strong>GCC</strong> para ligar a biblioteca matemática.</p></div></div><h3 id=biblioteca-codeltstdlibhgtcode><span class=heading-text>Biblioteca <code>&lt;stdlib.h></code></span><span class=heading-arabic>10.4.4</span></h3><p>A biblioteca <code>&lt;stdlib.h></code> oferece funções utilitárias para várias tarefas gerais do programa.</p><p>Algumas funções importantes:</p><ul><li><code>atoi()</code>: converte uma string numerica para inteiro.</li></ul><p>Exemplo de uso:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>char numero[] = "123";
+    printf(&quot;Caractere encontrado: %c\n&quot;, *posicao);
+</code></pre>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Segurança de Memória<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Funções como <code>strcpy()</code> e <code>strcat()</code> exigem cuidado com o tamanho do array de destino. Se não houver espaço suficiente, o programa pode sobrescrever memória indevidamente.</p>
+  </div>
+</div>
+<h3 id="biblioteca-codeltmathhgtcode"><span class="heading-text">Biblioteca <code>&lt;math.h&gt;</code></span><span class="heading-arabic">10.4.3</span></h3>
+<p>A biblioteca <code>&lt;math.h&gt;</code> contém funções matemáticas prontas.</p>
+<p>Algumas funções importantes:</p>
+<ul>
+<li><code>sqrt()</code>: calcula a raiz quadrada de um número.</li>
+</ul>
+<p>Exemplo de uso:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">printf(&quot;%.1f\n&quot;, sqrt(25.0));
+</code></pre>
+<ul>
+<li><code>pow()</code>: calcula uma potência.</li>
+</ul>
+<p>Exemplo de uso:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">printf(&quot;%.1f\n&quot;, pow(2, 3));
+</code></pre>
+<ul>
+<li><code>sin()</code>: calcula o seno de um ângulo em radianos.</li>
+</ul>
+<p>Exemplo de uso:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">printf(&quot;%.1f\n&quot;, sin(0));
+</code></pre>
+<ul>
+<li><code>cos()</code>: calcula o cosseno de um ângulo em radianos.</li>
+</ul>
+<p>Exemplo de uso:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">printf(&quot;%.1f\n&quot;, cos(0));
+</code></pre>
+<ul>
+<li><code>fabs()</code>: retorna o valor absoluto de um número real.</li>
+</ul>
+<p>Exemplo de uso:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">printf(&quot;%.1f\n&quot;, fabs(-4.5));
+</code></pre>
+<p>Além das funções, ela também é muito usada quando queremos trabalhar com constantes matemáticas importantes, como o valor de pi e o número de Euler. Em muitos compiladores, aparecem macros como <code>M_PI</code> e <code>M_E</code>, mas isso não é garantido em todos os ambientes. Uma forma mais portátil de obter esses valores é:</p>
+<ul>
+<li><code>acos(-1.0)</code> para obter pi;</li>
+<li><code>exp(1.0)</code> para obter o número de Euler.</li>
+</ul>
+<p>Assim, em vez de depender de constantes que podem não existir em todos os compiladores, podemos gerar esses valores com funções que fazem parte da própria biblioteca matemática.</p>
+<p>Exemplo de uso:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">double pi = acos(-1.0);
+printf(&quot;PI = %.6f\n&quot;, pi);
+</code></pre>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">double euler = exp(1.0);
+printf(&quot;Euler = %.6f\n&quot;, euler);
+</code></pre>
+<div class="callout callout-important">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">Compilação com <code>math.h</code><br /></span>
+  </div>
+  <div class="callout-content">
+<p>Em muitos sistemas Linux e Unix, usar <code>#include &lt;math.h&gt;</code> não basta. Também é necessário passar a opção <code>-lm</code> no <strong>GCC</strong> para ligar a biblioteca matemática.</p>
+  </div>
+</div>
+<h3 id="biblioteca-codeltstdlibhgtcode"><span class="heading-text">Biblioteca <code>&lt;stdlib.h&gt;</code></span><span class="heading-arabic">10.4.4</span></h3>
+<p>A biblioteca <code>&lt;stdlib.h&gt;</code> oferece funções utilitárias para várias tarefas gerais do programa.</p>
+<p>Algumas funções importantes:</p>
+<ul>
+<li><code>atoi()</code>: converte uma string numerica para inteiro.</li>
+</ul>
+<p>Exemplo de uso:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">char numero[] = &quot;123&quot;;
 int valor = atoi(numero);
-printf("%d\n", valor);
-</code></pre><ul><li><code>rand()</code>: gera um numero pseudoaleatorio inteiro entre <code>0</code> e <code>RAND_MAX</code>.</li></ul><p>Exemplo de uso:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>printf("%d\n", rand() % 100);
-</code></pre><p>Como <code>rand()</code> gera valores entre <code>0</code> e <code>RAND_MAX</code>, normalmente usamos o operador <code>%</code> para limitar o resultado a um intervalo menor. Por exemplo, <code>rand() % 100</code> gera valores entre <code>0</code> e <code>99</code>.</p><p>Se quisermos gerar numeros entre um minimo <code>min</code> e um maximo <code>max</code>, um truque comum e usar:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>min + rand() % (max - min + 1)
-</code></pre><p>Por exemplo, para gerar um valor entre <code>5</code> e <code>10</code>:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>int valor = 5 + rand() % (10 - 5 + 1);
-</code></pre><p>Nesse caso, os valores possiveis sao <code>5</code>, <code>6</code>, <code>7</code>, <code>8</code>, <code>9</code> e <code>10</code>.</p><ul><li><code>srand()</code>: inicializa a semente do gerador pseudoaleatorio.</li></ul><p>Exemplo de uso:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>srand(time(NULL));
-</code></pre><p>A função <code>rand()</code> gera valores pseudoaleatorios, isto e, numeros que parecem aleatorios, mas sao produzidos por uma sequencia interna. Se voce nao usar <code>srand()</code> antes, o programa tende a repetir a mesma sequencia a cada execucao. Por isso, normalmente usamos <code>srand(time(NULL))</code> antes da primeira chamada de <code>rand()</code>.</p><h3 id=biblioteca-codeltctypehgtcode><span class=heading-text>Biblioteca <code>&lt;ctype.h></code></span><span class=heading-arabic>10.4.5</span></h3><p>A biblioteca <code>&lt;ctype.h></code> trabalha com testes e transformações em caracteres individuais.</p><p>Algumas funções importantes:</p><ul><li><code>toupper()</code>: converte um caractere para maiusculo.</li></ul><p>Exemplo de uso:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>printf("%c\n", toupper('a'));
-</code></pre><ul><li><code>tolower()</code>: converte um caractere para minusculo.</li></ul><p>Exemplo de uso:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>printf("%c\n", tolower('Z'));
-</code></pre><ul><li><code>isdigit()</code>: verifica se o caractere e um digito.</li></ul><p>Exemplo de uso:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>printf("%d\n", isdigit('7'));
-</code></pre><ul><li><code>isalpha()</code>: verifica se o caractere e uma letra.</li></ul><p>Exemplo de uso:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>printf("%d\n", isalpha('A'));
-</code></pre><ul><li><code>isspace()</code>: verifica se o caractere e um espaco em branco.</li></ul><p>Exemplo de uso:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>printf("%d\n", isspace(' '));
-</code></pre><h3 id=biblioteca-codelttimehgtcode><span class=heading-text>Biblioteca <code>&lt;time.h></code></span><span class=heading-arabic>10.4.6</span></h3><p>A biblioteca <code>&lt;time.h></code> fornece funções relacionadas a tempo e data.</p><p>Algumas funções importantes:</p><ul><li><code>time()</code>: obtém o horario atual do sistema.</li></ul><p>Exemplo de uso:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>time_t agora = time(NULL);
-printf("%ld\n", (long)agora);
-</code></pre><p>O valor retornado por <code>time()</code> representa, em geral, a quantidade de segundos passados desde <code>01/01/1970 00:00:00</code>, referencia conhecida como <em>Unix Epoch</em>.</p><ul><li><code>localtime()</code>: converte um valor de tempo para uma estrutura com data e hora local.</li></ul><p>Exemplo de uso:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>time_t agora = time(NULL);
-struct tm *info = localtime(&agora);
-printf("%02d/%02d/%04d\n",
-       info->tm_mday,
-       info->tm_mon + 1,
-       info->tm_year + 1900);
-</code></pre><h2 id=a-diretiva-codeincludecode><span class=heading-text>A diretiva <code>#include</code></span><span class=heading-arabic>10.5</span></h2><p>Para usar uma biblioteca em <strong>C</strong>, utilizamos a diretiva <code>#include</code>. Essa diretiva é tratada antes da compilação, em uma etapa chamada <strong>pré-processamento</strong>.</p><p>Quando o pré-processador encontra uma linha como esta:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>#include "calc.h"
-</code></pre><p>ele substitui essa linha pelo conteúdo do arquivo indicado. Em outras palavras, o <code>#include</code> funciona como uma inserção textual do cabeçalho naquele ponto do código.</p><p>Se tivermos:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>// main.c
-#include "calc.h"
-</code></pre><p>e dentro de <code>calc.h</code> existir:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>int soma(int a, int b);
+printf(&quot;%d\n&quot;, valor);
+</code></pre>
+<ul>
+<li><code>rand()</code>: gera um numero pseudoaleatorio inteiro entre <code>0</code> e <code>RAND_MAX</code>.</li>
+</ul>
+<p>Exemplo de uso:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">printf(&quot;%d\n&quot;, rand() % 100);
+</code></pre>
+<p>Como <code>rand()</code> gera valores entre <code>0</code> e <code>RAND_MAX</code>, normalmente usamos o operador <code>%</code> para limitar o resultado a um intervalo menor. Por exemplo, <code>rand() % 100</code> gera valores entre <code>0</code> e <code>99</code>.</p>
+<p>Se quisermos gerar numeros entre um minimo <code>min</code> e um maximo <code>max</code>, um truque comum e usar:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">min + rand() % (max - min + 1)
+</code></pre>
+<p>Por exemplo, para gerar um valor entre <code>5</code> e <code>10</code>:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">int valor = 5 + rand() % (10 - 5 + 1);
+</code></pre>
+<p>Nesse caso, os valores possiveis sao <code>5</code>, <code>6</code>, <code>7</code>, <code>8</code>, <code>9</code> e <code>10</code>.</p>
+<ul>
+<li><code>srand()</code>: inicializa a semente do gerador pseudoaleatorio.</li>
+</ul>
+<p>Exemplo de uso:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">srand(time(NULL));
+</code></pre>
+<p>A função <code>rand()</code> gera valores pseudoaleatorios, isto e, numeros que parecem aleatorios, mas sao produzidos por uma sequencia interna. Se voce nao usar <code>srand()</code> antes, o programa tende a repetir a mesma sequencia a cada execucao. Por isso, normalmente usamos <code>srand(time(NULL))</code> antes da primeira chamada de <code>rand()</code>.</p>
+<h3 id="biblioteca-codeltctypehgtcode"><span class="heading-text">Biblioteca <code>&lt;ctype.h&gt;</code></span><span class="heading-arabic">10.4.5</span></h3>
+<p>A biblioteca <code>&lt;ctype.h&gt;</code> trabalha com testes e transformações em caracteres individuais.</p>
+<p>Algumas funções importantes:</p>
+<ul>
+<li><code>toupper()</code>: converte um caractere para maiusculo.</li>
+</ul>
+<p>Exemplo de uso:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">printf(&quot;%c\n&quot;, toupper('a'));
+</code></pre>
+<ul>
+<li><code>tolower()</code>: converte um caractere para minusculo.</li>
+</ul>
+<p>Exemplo de uso:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">printf(&quot;%c\n&quot;, tolower('Z'));
+</code></pre>
+<ul>
+<li><code>isdigit()</code>: verifica se o caractere e um digito.</li>
+</ul>
+<p>Exemplo de uso:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">printf(&quot;%d\n&quot;, isdigit('7'));
+</code></pre>
+<ul>
+<li><code>isalpha()</code>: verifica se o caractere e uma letra.</li>
+</ul>
+<p>Exemplo de uso:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">printf(&quot;%d\n&quot;, isalpha('A'));
+</code></pre>
+<ul>
+<li><code>isspace()</code>: verifica se o caractere e um espaco em branco.</li>
+</ul>
+<p>Exemplo de uso:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">printf(&quot;%d\n&quot;, isspace(' '));
+</code></pre>
+<h3 id="biblioteca-codelttimehgtcode"><span class="heading-text">Biblioteca <code>&lt;time.h&gt;</code></span><span class="heading-arabic">10.4.6</span></h3>
+<p>A biblioteca <code>&lt;time.h&gt;</code> fornece funções relacionadas a tempo e data.</p>
+<p>Algumas funções importantes:</p>
+<ul>
+<li><code>time()</code>: obtém o horario atual do sistema.</li>
+</ul>
+<p>Exemplo de uso:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">time_t agora = time(NULL);
+printf(&quot;%ld\n&quot;, (long)agora);
+</code></pre>
+<p>O valor retornado por <code>time()</code> representa, em geral, a quantidade de segundos passados desde <code>01/01/1970 00:00:00</code>, referencia conhecida como <em>Unix Epoch</em>.</p>
+<ul>
+<li><code>localtime()</code>: converte um valor de tempo para uma estrutura com data e hora local.</li>
+</ul>
+<p>Exemplo de uso:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">time_t agora = time(NULL);
+struct tm *info = localtime(&amp;agora);
+printf(&quot;%02d/%02d/%04d\n&quot;,
+       info-&gt;tm_mday,
+       info-&gt;tm_mon + 1,
+       info-&gt;tm_year + 1900);
+</code></pre>
+<h2 id="a-diretiva-codeincludecode"><span class="heading-text">A diretiva <code>#include</code></span><span class="heading-arabic">10.5</span></h2>
+<p>Para usar uma biblioteca em <strong>C</strong>, utilizamos a diretiva <code>#include</code>. Essa diretiva é tratada antes da compilação, em uma etapa chamada <strong>pré-processamento</strong>.</p>
+<p>Quando o pré-processador encontra uma linha como esta:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">#include &quot;calc.h&quot;
+</code></pre>
+<p>ele substitui essa linha pelo conteúdo do arquivo indicado. Em outras palavras, o <code>#include</code> funciona como uma inserção textual do cabeçalho naquele ponto do código.</p>
+<p>Se tivermos:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">// main.c
+#include &quot;calc.h&quot;
+</code></pre>
+<p>e dentro de <code>calc.h</code> existir:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">int soma(int a, int b);
 float media(int a, int b);
-</code></pre><p>o pré-processador age como se <code>main.c</code> passasse a enxergar essas declarações diretamente no próprio arquivo.</p><p>Isso significa que o <code>#include</code> não compila o programa sozinho e não produz o executável. Ele apenas torna declarações visíveis ao arquivo que está sendo compilado.</p><div class="callout callout-warning"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span><span class=callout-title-inner>Diferença Crucial<br></span></div><div class=callout-content><p>Incluir um arquivo com <code>#include</code> não é a mesma coisa que compilar esse arquivo. O <code>#include</code> apenas insere texto. A compilação e a ligação continuam sendo etapas separadas.</p></div></div><h3 id=diferença-entre-codelt-gtcode-e-codequot-quotcode><span class=heading-text>Diferença entre <code>&lt; ></code> e <code>" "</code></span><span class=heading-arabic>10.5.1</span></h3><p>Existem duas formas comuns de usar <code>#include</code>:</p><ul><li><code>#include &lt;stdio.h></code>: normalmente usado para bibliotecas padrão. O compilador procura o arquivo nos diretórios padrão do sistema.</li><li><code>#include "calc.h"</code>: normalmente usado para bibliotecas do próprio projeto. O compilador procura primeiro no diretório local e em outros diretórios informados ao compilador.</li></ul><pre class="line-numbers language-c" data-lang=C><code class=language-c>#include &lt;stdio.h>
-#include "calc.h"
-</code></pre><h2 id=criando-sua-própria-biblioteca><span class=heading-text>Criando sua própria biblioteca</span><span class=heading-arabic>10.6</span></h2><p>Em projetos próprios, o padrão mais comum é dividir o módulo em dois arquivos:</p><ul><li>um arquivo <code>.h</code>, com a <strong>interface</strong>;</li><li>um arquivo <code>.c</code>, com a <strong>implementação</strong>.</li></ul><h3 id=arquivo-de-cabeçalho-codehcode><span class=heading-text>Arquivo de cabeçalho <code>.h</code></span><span class=heading-arabic>10.6.1</span></h3><p>O arquivo <code>.h</code> informa ao restante do programa quais funções, tipos ou constantes aquele módulo oferece. Exemplo:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>#ifndef CALC_H
+</code></pre>
+<p>o pré-processador age como se <code>main.c</code> passasse a enxergar essas declarações diretamente no próprio arquivo.</p>
+<p>Isso significa que o <code>#include</code> não compila o programa sozinho e não produz o executável. Ele apenas torna declarações visíveis ao arquivo que está sendo compilado.</p>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Diferença Crucial<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Incluir um arquivo com <code>#include</code> não é a mesma coisa que compilar esse arquivo. O <code>#include</code> apenas insere texto. A compilação e a ligação continuam sendo etapas separadas.</p>
+  </div>
+</div>
+<h3 id="diferença-entre-codelt-gtcode-e-codequot-quotcode"><span class="heading-text">Diferença entre <code>&lt; &gt;</code> e <code>&quot; &quot;</code></span><span class="heading-arabic">10.5.1</span></h3>
+<p>Existem duas formas comuns de usar <code>#include</code>:</p>
+<ul>
+<li><code>#include &lt;stdio.h&gt;</code>: normalmente usado para bibliotecas padrão. O compilador procura o arquivo nos diretórios padrão do sistema.</li>
+<li><code>#include &quot;calc.h&quot;</code>: normalmente usado para bibliotecas do próprio projeto. O compilador procura primeiro no diretório local e em outros diretórios informados ao compilador.</li>
+</ul>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">#include &lt;stdio.h&gt;
+#include &quot;calc.h&quot;
+</code></pre>
+<h2 id="criando-sua-própria-biblioteca"><span class="heading-text">Criando sua própria biblioteca</span><span class="heading-arabic">10.6</span></h2>
+<p>Em projetos próprios, o padrão mais comum é dividir o módulo em dois arquivos:</p>
+<ul>
+<li>um arquivo <code>.h</code>, com a <strong>interface</strong>;</li>
+<li>um arquivo <code>.c</code>, com a <strong>implementação</strong>.</li>
+</ul>
+<h3 id="arquivo-de-cabeçalho-codehcode"><span class="heading-text">Arquivo de cabeçalho <code>.h</code></span><span class="heading-arabic">10.6.1</span></h3>
+<p>O arquivo <code>.h</code> informa ao restante do programa quais funções, tipos ou constantes aquele módulo oferece. Exemplo:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">#ifndef CALC_H
 #define CALC_H
 
 int soma(int a, int b);
@@ -62,7 +490,12 @@ float media(int a, int b);
 int maximo(int a, int b);
 
 #endif
-</code></pre><p>Nesse exemplo, o cabeçalho informa que o módulo oferece três funções: <code>soma</code>, <code>media</code> e <code>maximo</code>.</p><p>Repare que o <code>.h</code> não contém o corpo das funções. Ele apenas anuncia o que existe, para que outros arquivos possam usar essas funções corretamente.</p><h3 id=arquivo-de-implementação-codeccode><span class=heading-text>Arquivo de implementação <code>.c</code></span><span class=heading-arabic>10.6.2</span></h3><p>O arquivo <code>.c</code> contém o corpo real das funções.</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>#include "calc.h"
+</code></pre>
+<p>Nesse exemplo, o cabeçalho informa que o módulo oferece três funções: <code>soma</code>, <code>media</code> e <code>maximo</code>.</p>
+<p>Repare que o <code>.h</code> não contém o corpo das funções. Ele apenas anuncia o que existe, para que outros arquivos possam usar essas funções corretamente.</p>
+<h3 id="arquivo-de-implementação-codeccode"><span class="heading-text">Arquivo de implementação <code>.c</code></span><span class="heading-arabic">10.6.2</span></h3>
+<p>O arquivo <code>.c</code> contém o corpo real das funções.</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">#include &quot;calc.h&quot;
 
 int soma(int a, int b){
     return a + b;
@@ -73,44 +506,142 @@ float media(int a, int b){
 }
 
 int maximo(int a, int b){
-    if(a > b)
+    if(a &gt; b)
         return a;
     return b;
 }
-</code></pre><div class="callout callout-important"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span><span class=callout-title-inner>Verificação de Consistência<br></span></div><div class=callout-content><p>É uma boa prática que o próprio arquivo <code>.c</code> inclua o seu cabeçalho correspondente. Assim, o compilador verifica se a implementação está coerente com os protótipos declarados.</p></div></div><p>Nesse caso, <code>calc.c</code> inclui <code>calc.h</code> justamente para garantir que as funções implementadas em <code>calc.c</code> sejam as mesmas que foram anunciadas ao restante do programa.</p><h3 id=uso-do-módulo-no-codemaincode><span class=heading-text>Uso do módulo no <code>main</code></span><span class=heading-arabic>10.6.3</span></h3><p>Depois de criar o módulo, o programa principal pode usar as funções declaradas no cabeçalho.</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>#include &lt;stdio.h>
-#include "calc.h"
+</code></pre>
+<div class="callout callout-important">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">Verificação de Consistência<br /></span>
+  </div>
+  <div class="callout-content">
+<p>É uma boa prática que o próprio arquivo <code>.c</code> inclua o seu cabeçalho correspondente. Assim, o compilador verifica se a implementação está coerente com os protótipos declarados.</p>
+  </div>
+</div>
+<p>Nesse caso, <code>calc.c</code> inclui <code>calc.h</code> justamente para garantir que as funções implementadas em <code>calc.c</code> sejam as mesmas que foram anunciadas ao restante do programa.</p>
+<h3 id="uso-do-módulo-no-codemaincode"><span class="heading-text">Uso do módulo no <code>main</code></span><span class="heading-arabic">10.6.3</span></h3>
+<p>Depois de criar o módulo, o programa principal pode usar as funções declaradas no cabeçalho.</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">#include &lt;stdio.h&gt;
+#include &quot;calc.h&quot;
 
 int main(){
-    printf("Soma: %d\n", soma(4, 7));
-    printf("Media: %.2f\n", media(4, 7));
-    printf("Maximo: %d\n", maximo(4, 7));
+    printf(&quot;Soma: %d\n&quot;, soma(4, 7));
+    printf(&quot;Media: %.2f\n&quot;, media(4, 7));
+    printf(&quot;Maximo: %d\n&quot;, maximo(4, 7));
     return 0;
 }
-</code></pre><p>Nesse ponto, o fluxo completo do módulo fica assim:</p><ul><li><code>calc.h</code> anuncia as funções disponíveis.</li><li><code>calc.c</code> implementa essas funções.</li><li><code>main.c</code> usa essas funções.</li><li>o comando do <strong>GCC</strong> junta tudo no executável final.</li></ul><h3 id=expandindo-o-módulo><span class=heading-text>Expandindo o módulo</span><span class=heading-arabic>10.6.4</span></h3><p>Uma das vantagens da modularização é que a biblioteca pode crescer sem desorganizar o programa principal. Se quisermos adicionar uma nova função, basta atualizar o cabeçalho e a implementação do módulo.</p><p>Por exemplo, para acrescentar a função <code>minimo</code>, poderíamos fazer:</p><p>No arquivo <code>calc.h</code>:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>int minimo(int a, int b);
-</code></pre><p>No arquivo <code>calc.c</code>:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>int minimo(int a, int b){
+</code></pre>
+<p>Nesse ponto, o fluxo completo do módulo fica assim:</p>
+<ul>
+<li><code>calc.h</code> anuncia as funções disponíveis.</li>
+<li><code>calc.c</code> implementa essas funções.</li>
+<li><code>main.c</code> usa essas funções.</li>
+<li>o comando do <strong>GCC</strong> junta tudo no executável final.</li>
+</ul>
+<h3 id="expandindo-o-módulo"><span class="heading-text">Expandindo o módulo</span><span class="heading-arabic">10.6.4</span></h3>
+<p>Uma das vantagens da modularização é que a biblioteca pode crescer sem desorganizar o programa principal. Se quisermos adicionar uma nova função, basta atualizar o cabeçalho e a implementação do módulo.</p>
+<p>Por exemplo, para acrescentar a função <code>minimo</code>, poderíamos fazer:</p>
+<p>No arquivo <code>calc.h</code>:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">int minimo(int a, int b);
+</code></pre>
+<p>No arquivo <code>calc.c</code>:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">int minimo(int a, int b){
     if(a &lt; b)
         return a;
     return b;
 }
-</code></pre><p>Depois disso, <code>main.c</code> já pode usar a nova função normalmente, desde que o projeto continue sendo compilado com todos os arquivos necessários.</p><h2 id=header-guards><span class=heading-text>Header guards</span><span class=heading-arabic>10.7</span></h2><p>Como o <code>#include</code> faz inserção textual, o mesmo cabeçalho pode acabar sendo incluído mais de uma vez durante a compilação. Para evitar esse problema, usamos os chamados <strong>header guards</strong>.</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>#ifndef CALC_H
+</code></pre>
+<p>Depois disso, <code>main.c</code> já pode usar a nova função normalmente, desde que o projeto continue sendo compilado com todos os arquivos necessários.</p>
+<h2 id="header-guards"><span class="heading-text">Header guards</span><span class="heading-arabic">10.7</span></h2>
+<p>Como o <code>#include</code> faz inserção textual, o mesmo cabeçalho pode acabar sendo incluído mais de uma vez durante a compilação. Para evitar esse problema, usamos os chamados <strong>header guards</strong>.</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">#ifndef CALC_H
 #define CALC_H
 
 int soma(int a, int b);
 
 #endif
-</code></pre><p>O funcionamento é simples:</p><ul><li><code>#ifndef CALC_H</code> verifica se esse identificador ainda não foi definido.</li><li><code>#define CALC_H</code> marca que o arquivo já foi incluído.</li><li><code>#endif</code> encerra a proteção.</li></ul><div class="callout callout-warning"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span><span class=callout-title-inner>Inclusão Múltipla<br></span></div><div class=callout-content><p>Sem <em>header guards</em>, o mesmo cabeçalho pode ser processado mais de uma vez na mesma compilação, gerando erros de redefinição ou conflitos entre declarações.</p></div></div><h2 id=compilando-com-o-gcc><span class=heading-text>Compilando com o GCC</span><span class=heading-arabic>10.8</span></h2><p>Depois de escrever os arquivos do projeto, precisamos compilá-los corretamente. É nesse ponto que muitos alunos confundem <code>#include</code> com o comando de compilação.</p><h3 id=compilando-vários-arquivos><span class=heading-text>Compilando vários arquivos</span><span class=heading-arabic>10.8.1</span></h3><p>Se o projeto tiver os arquivos <code>main.c</code>, <code>calc.c</code> e <code>calc.h</code>, um comando correto é:</p><pre class="line-numbers language-bash" data-lang=BASH><code class=language-bash>gcc main.c calc.c -o programa
-</code></pre><p>Nesse comando:</p><ul><li><code>main.c</code> contém a função <code>main</code>.</li><li><code>calc.c</code> contém as implementações.</li><li><code>-o programa</code> define o nome do executável final.</li></ul><p>Se você compilar apenas <code>main.c</code>, o compilador pode conhecer os protótipos através de <code>calc.h</code>, mas o linker não encontrará as implementações que estão em <code>calc.c</code>.</p><div class="callout callout-warning"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span><span class=callout-title-inner>Erro de Ligação<br></span></div><div class=callout-content><p>Quando a função foi declarada corretamente, mas a implementação não entrou na compilação, o erro mais comum é <code>undefined reference</code>.</p></div></div><h3 id=compilando-programas-que-usam-codemathhcode><span class=heading-text>Compilando programas que usam <code>math.h</code></span><span class=heading-arabic>10.8.2</span></h3><p>Em muitos sistemas, a biblioteca matemática precisa ser ligada explicitamente com a opção <code>-lm</code>.</p><pre class="line-numbers language-bash" data-lang=BASH><code class=language-bash>gcc programa.c -o programa -lm
-</code></pre><p>Se o projeto tiver mais de um arquivo:</p><pre class="line-numbers language-bash" data-lang=BASH><code class=language-bash>gcc main.c calc.c -o programa -lm
-</code></pre><p>Nesse caso, <code>-lm</code> significa que o programa deve ser ligado contra a biblioteca matemática padrão.</p><h3 id=informando-diretórios-extras-de-cabeçalho-com-code-icode><span class=heading-text>Informando diretórios extras de cabeçalho com <code>-I</code></span><span class=heading-arabic>10.8.3</span></h3><p>A opção <code>-I</code> do <strong>GCC</strong> serve para informar ao compilador diretórios adicionais onde ele deve procurar arquivos de cabeçalho <code>.h</code>.</p><p>Isso é útil quando os cabeçalhos não estão na mesma pasta do <code>main.c</code>.</p><p>Considere esta organização:</p><pre class="line-numbers language-text" data-lang=TEXT><code class=language-text>projeto/
+</code></pre>
+<p>O funcionamento é simples:</p>
+<ul>
+<li><code>#ifndef CALC_H</code> verifica se esse identificador ainda não foi definido.</li>
+<li><code>#define CALC_H</code> marca que o arquivo já foi incluído.</li>
+<li><code>#endif</code> encerra a proteção.</li>
+</ul>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Inclusão Múltipla<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Sem <em>header guards</em>, o mesmo cabeçalho pode ser processado mais de uma vez na mesma compilação, gerando erros de redefinição ou conflitos entre declarações.</p>
+  </div>
+</div>
+<h2 id="compilando-com-o-gcc"><span class="heading-text">Compilando com o GCC</span><span class="heading-arabic">10.8</span></h2>
+<p>Depois de escrever os arquivos do projeto, precisamos compilá-los corretamente. É nesse ponto que muitos alunos confundem <code>#include</code> com o comando de compilação.</p>
+<h3 id="compilando-vários-arquivos"><span class="heading-text">Compilando vários arquivos</span><span class="heading-arabic">10.8.1</span></h3>
+<p>Se o projeto tiver os arquivos <code>main.c</code>, <code>calc.c</code> e <code>calc.h</code>, um comando correto é:</p>
+<pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">gcc main.c calc.c -o programa
+</code></pre>
+<p>Nesse comando:</p>
+<ul>
+<li><code>main.c</code> contém a função <code>main</code>.</li>
+<li><code>calc.c</code> contém as implementações.</li>
+<li><code>-o programa</code> define o nome do executável final.</li>
+</ul>
+<p>Se você compilar apenas <code>main.c</code>, o compilador pode conhecer os protótipos através de <code>calc.h</code>, mas o linker não encontrará as implementações que estão em <code>calc.c</code>.</p>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Erro de Ligação<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Quando a função foi declarada corretamente, mas a implementação não entrou na compilação, o erro mais comum é <code>undefined reference</code>.</p>
+  </div>
+</div>
+<h3 id="compilando-programas-que-usam-codemathhcode"><span class="heading-text">Compilando programas que usam <code>math.h</code></span><span class="heading-arabic">10.8.2</span></h3>
+<p>Em muitos sistemas, a biblioteca matemática precisa ser ligada explicitamente com a opção <code>-lm</code>.</p>
+<pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">gcc programa.c -o programa -lm
+</code></pre>
+<p>Se o projeto tiver mais de um arquivo:</p>
+<pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">gcc main.c calc.c -o programa -lm
+</code></pre>
+<p>Nesse caso, <code>-lm</code> significa que o programa deve ser ligado contra a biblioteca matemática padrão.</p>
+<h3 id="informando-diretórios-extras-de-cabeçalho-com-code-icode"><span class="heading-text">Informando diretórios extras de cabeçalho com <code>-I</code></span><span class="heading-arabic">10.8.3</span></h3>
+<p>A opção <code>-I</code> do <strong>GCC</strong> serve para informar ao compilador diretórios adicionais onde ele deve procurar arquivos de cabeçalho <code>.h</code>.</p>
+<p>Isso é útil quando os cabeçalhos não estão na mesma pasta do <code>main.c</code>.</p>
+<p>Considere esta organização:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">projeto/
 |-- main.c
 |-- src/
 |   `-- calc.c
 `-- include/
     `-- calc.h
-</code></pre><p>Nesse caso, um comando possível é:</p><pre class="line-numbers language-bash" data-lang=BASH><code class=language-bash>gcc main.c src/calc.c -Iinclude -o programa
-</code></pre><p>Com isso, o compilador passa a procurar cabeçalhos também dentro da pasta <code>include</code>. Assim, em <code>main.c</code>, podemos escrever:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>#include "calc.h"
-</code></pre><p>sem precisar escrever o caminho completo do arquivo.</p><p>Também é possível usar mais de uma opção <code>-I</code>, se o projeto tiver mais de um diretório de cabeçalhos.</p><pre class="line-numbers language-bash" data-lang=BASH><code class=language-bash>gcc main.c src/calc.c -Iinclude -Ilibs/include -o programa
-</code></pre><div class="callout callout-tip"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .5 2.2 1.5 3.1.7.7 1.3 1.5 1.5 2.4"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span><span class=callout-title-inner>Organização de Projeto<br></span></div><div class=callout-content><p>Em projetos maiores, é muito comum separar os arquivos <code>.h</code> em uma pasta <code>include/</code> e os arquivos <code>.c</code> em uma pasta <code>src/</code>. A opção <code>-I</code> ajuda justamente a manter essa organização.</p></div></div><h2 id=exemplo-completo-de-biblioteca-própria><span class=heading-text>Exemplo completo de biblioteca própria</span><span class=heading-arabic>10.9</span></h2><p>O exemplo abaixo mostra a estrutura de um módulo simples de texto.</p><p>Arquivo <code>texto_util.h</code>:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>#ifndef TEXTO_UTIL_H
+</code></pre>
+<p>Nesse caso, um comando possível é:</p>
+<pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">gcc main.c src/calc.c -Iinclude -o programa
+</code></pre>
+<p>Com isso, o compilador passa a procurar cabeçalhos também dentro da pasta <code>include</code>. Assim, em <code>main.c</code>, podemos escrever:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">#include &quot;calc.h&quot;
+</code></pre>
+<p>sem precisar escrever o caminho completo do arquivo.</p>
+<p>Também é possível usar mais de uma opção <code>-I</code>, se o projeto tiver mais de um diretório de cabeçalhos.</p>
+<pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">gcc main.c src/calc.c -Iinclude -Ilibs/include -o programa
+</code></pre>
+<div class="callout callout-tip">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .5 2.2 1.5 3.1.7.7 1.3 1.5 1.5 2.4"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span>
+    <span class="callout-title-inner">Organização de Projeto<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Em projetos maiores, é muito comum separar os arquivos <code>.h</code> em uma pasta <code>include/</code> e os arquivos <code>.c</code> em uma pasta <code>src/</code>. A opção <code>-I</code> ajuda justamente a manter essa organização.</p>
+  </div>
+</div>
+<h2 id="exemplo-completo-de-biblioteca-própria"><span class="heading-text">Exemplo completo de biblioteca própria</span><span class="heading-arabic">10.9</span></h2>
+<p>O exemplo abaixo mostra a estrutura de um módulo simples de texto.</p>
+<p>Arquivo <code>texto_util.h</code>:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">#ifndef TEXTO_UTIL_H
 #define TEXTO_UTIL_H
 
 int contar_vogais(char str[]);
@@ -118,9 +649,11 @@ void inverter_string(char str[]);
 int eh_palindromo(char str[]);
 
 #endif
-</code></pre><p>Arquivo <code>texto_util.c</code>:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>#include "texto_util.h"
-#include &lt;ctype.h>
-#include &lt;string.h>
+</code></pre>
+<p>Arquivo <code>texto_util.c</code>:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">#include &quot;texto_util.h&quot;
+#include &lt;ctype.h&gt;
+#include &lt;string.h&gt;
 
 int contar_vogais(char str[]){
     int cont = 0;
@@ -159,32 +692,229 @@ int eh_palindromo(char str[]){
 
     return 1;
 }
-</code></pre><p>Arquivo <code>main.c</code>:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>#include &lt;stdio.h>
-#include "texto_util.h"
+</code></pre>
+<p>Arquivo <code>main.c</code>:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">#include &lt;stdio.h&gt;
+#include &quot;texto_util.h&quot;
 
 int main(){
-    char palavra1[] = "arara";
-    char palavra2[] = "computador";
+    char palavra1[] = &quot;arara&quot;;
+    char palavra2[] = &quot;computador&quot;;
 
-    printf("Vogais em %s: %d\n", palavra2, contar_vogais(palavra2));
-    printf("%s eh palindromo? %d\n", palavra1, eh_palindromo(palavra1));
+    printf(&quot;Vogais em %s: %d\n&quot;, palavra2, contar_vogais(palavra2));
+    printf(&quot;%s eh palindromo? %d\n&quot;, palavra1, eh_palindromo(palavra1));
 
     inverter_string(palavra2);
-    printf("Invertida: %s\n", palavra2);
+    printf(&quot;Invertida: %s\n&quot;, palavra2);
 
     return 0;
 }
-</code></pre><p>Compilação:</p><pre class="line-numbers language-bash" data-lang=BASH><code class=language-bash>gcc main.c texto_util.c -o programa
-</code></pre><h2 id=questões><span class=heading-text>Questões</span><span class=heading-arabic>10.10</span></h2><p><strong>1.</strong> Escreva um programa que utilize a biblioteca <code>&lt;stdio.h></code> para ler o nome de um usuário e imprimir uma mensagem de boas-vindas.</p><ul><li><strong>Entrada:</strong> Maria.</li><li><strong>Saída Esperada:</strong> Ola, Maria.</li></ul><p><strong>2.</strong> Crie um programa que utilize a biblioteca <code>&lt;string.h></code> para ler uma palavra e imprimir seu tamanho usando <code>strlen()</code>.</p><ul><li><strong>Entrada:</strong> Computador.</li><li><strong>Saída Esperada:</strong> Tamanho: 10.</li></ul><p><strong>3.</strong> Desenvolva um programa que utilize <code>&lt;math.h></code> para calcular a raiz quadrada de um número digitado pelo usuário. Escreva também o comando do <strong>GCC</strong> necessário para compilar o programa corretamente.</p><ul><li><strong>Entrada:</strong> 49.</li><li><strong>Saída Esperada:</strong> Raiz: 7.0.</li></ul><p><strong>4.</strong> Escreva um arquivo <code>calc.h</code> contendo os protótipos das funções <code>soma</code>, <code>media</code> e <code>maximo</code>.</p><ul><li><strong>Entrada:</strong> Nenhuma.</li><li><strong>Saída Esperada:</strong> Arquivo de cabeçalho criado corretamente.</li></ul><p><strong>5.</strong> Implemente o arquivo <code>calc.c</code> com as funções declaradas na questão anterior.</p><ul><li><strong>Entrada:</strong> Nenhuma.</li><li><strong>Saída Esperada:</strong> Arquivo de implementação criado corretamente.</li></ul><p><strong>6.</strong> Crie um <code>main.c</code> que utilize as funções <code>soma</code>, <code>media</code> e <code>maximo</code> da sua própria biblioteca e mostre os resultados na tela.</p><ul><li><strong>Entrada:</strong> 10 e 6.</li><li><strong>Saída Esperada:</strong> Soma: 16, Media: 8.0, Maximo: 10.</li></ul><p><strong>7.</strong> Escreva o comando do <strong>GCC</strong> para compilar corretamente um projeto composto por <code>main.c</code>, <code>calc.c</code> e <code>calc.h</code>.</p><ul><li><strong>Entrada:</strong> Nenhuma.</li><li><strong>Saída Esperada:</strong> <code>gcc main.c calc.c -o programa</code>.</li></ul><p><strong>8.</strong> Considere a estrutura abaixo:</p><pre class="line-numbers language-text" data-lang=TEXT><code class=language-text>projeto/
+</code></pre>
+<p>Compilação:</p>
+<pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">gcc main.c texto_util.c -o programa
+</code></pre>
+<h2 id="questões"><span class="heading-text">Questões</span><span class="heading-arabic">10.10</span></h2>
+<p><strong>1.</strong> Escreva um programa que utilize a biblioteca <code>&lt;stdio.h&gt;</code> para ler o nome de um usuário e imprimir uma mensagem de boas-vindas.</p>
+<ul>
+<li><strong>Entrada:</strong> Maria.</li>
+<li><strong>Saída Esperada:</strong> Ola, Maria.</li>
+</ul>
+<p><strong>2.</strong> Crie um programa que utilize a biblioteca <code>&lt;string.h&gt;</code> para ler uma palavra e imprimir seu tamanho usando <code>strlen()</code>.</p>
+<ul>
+<li><strong>Entrada:</strong> Computador.</li>
+<li><strong>Saída Esperada:</strong> Tamanho: 10.</li>
+</ul>
+<p><strong>3.</strong> Desenvolva um programa que utilize <code>&lt;math.h&gt;</code> para calcular a raiz quadrada de um número digitado pelo usuário. Escreva também o comando do <strong>GCC</strong> necessário para compilar o programa corretamente.</p>
+<ul>
+<li><strong>Entrada:</strong> 49.</li>
+<li><strong>Saída Esperada:</strong> Raiz: 7.0.</li>
+</ul>
+<p><strong>4.</strong> Escreva um arquivo <code>calc.h</code> contendo os protótipos das funções <code>soma</code>, <code>media</code> e <code>maximo</code>.</p>
+<ul>
+<li><strong>Entrada:</strong> Nenhuma.</li>
+<li><strong>Saída Esperada:</strong> Arquivo de cabeçalho criado corretamente.</li>
+</ul>
+<p><strong>5.</strong> Implemente o arquivo <code>calc.c</code> com as funções declaradas na questão anterior.</p>
+<ul>
+<li><strong>Entrada:</strong> Nenhuma.</li>
+<li><strong>Saída Esperada:</strong> Arquivo de implementação criado corretamente.</li>
+</ul>
+<p><strong>6.</strong> Crie um <code>main.c</code> que utilize as funções <code>soma</code>, <code>media</code> e <code>maximo</code> da sua própria biblioteca e mostre os resultados na tela.</p>
+<ul>
+<li><strong>Entrada:</strong> 10 e 6.</li>
+<li><strong>Saída Esperada:</strong> Soma: 16, Media: 8.0, Maximo: 10.</li>
+</ul>
+<p><strong>7.</strong> Escreva o comando do <strong>GCC</strong> para compilar corretamente um projeto composto por <code>main.c</code>, <code>calc.c</code> e <code>calc.h</code>.</p>
+<ul>
+<li><strong>Entrada:</strong> Nenhuma.</li>
+<li><strong>Saída Esperada:</strong> <code>gcc main.c calc.c -o programa</code>.</li>
+</ul>
+<p><strong>8.</strong> Considere a estrutura abaixo:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">projeto/
 |-- main.c
 |-- src/
 |   `-- calc.c
 `-- include/
     `-- calc.h
-</code></pre><p>Escreva o comando do <strong>GCC</strong> para compilar esse projeto usando a opção <code>-I</code>.</p><ul><li><strong>Entrada:</strong> Nenhuma.</li><li><strong>Saída Esperada:</strong> <code>gcc main.c src/calc.c -Iinclude -o programa</code>.</li></ul><p><strong>9.</strong> Desenvolva uma biblioteca própria de vetores contendo pelo menos três funções, como <code>soma_vetor</code>, <code>maior_vetor</code> e <code>media_vetor</code>. Depois, crie um <code>main</code> que utilize essas funções.<br> Use a seguinte sugestao de arquivos:</p><ul><li><code>vetor_util.h</code></li><li><code>vetor_util.c</code></li><li><code>main.c</code></li></ul><p>Protótipos sugeridos:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>int soma_vetor(int v[], int n);
+</code></pre>
+<p>Escreva o comando do <strong>GCC</strong> para compilar esse projeto usando a opção <code>-I</code>.</p>
+<ul>
+<li><strong>Entrada:</strong> Nenhuma.</li>
+<li><strong>Saída Esperada:</strong> <code>gcc main.c src/calc.c -Iinclude -o programa</code>.</li>
+</ul>
+<p><strong>9.</strong> Desenvolva uma biblioteca própria de vetores contendo pelo menos três funções, como <code>soma_vetor</code>, <code>maior_vetor</code> e <code>media_vetor</code>. Depois, crie um <code>main</code> que utilize essas funções.<br />
+Use a seguinte sugestao de arquivos:</p>
+<ul>
+<li><code>vetor_util.h</code></li>
+<li><code>vetor_util.c</code></li>
+<li><code>main.c</code></li>
+</ul>
+<p>Protótipos sugeridos:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">int soma_vetor(int v[], int n);
 int maior_vetor(int v[], int n);
 float media_vetor(int v[], int n);
-</code></pre><p>No <code>main</code>, teste com o vetor <code>int v[5] = {1, 2, 3, 4, 5};</code> e escreva tambem o comando do <strong>GCC</strong> para compilar o projeto.</p><ul><li><strong>Entrada:</strong> Vetor <code>{1, 2, 3, 4, 5}</code>.</li><li><strong>Saída Esperada:</strong> Valores calculados corretamente.</li></ul><p><strong>10.</strong> Crie uma biblioteca de strings contendo três funções: <code>contar_vogais</code>, <code>inverter_string</code> e <code>eh_palindromo</code>. Em seguida, escreva um programa principal que teste as três funções.<br> Use a seguinte sugestao de arquivos:</p><ul><li><code>texto_util.h</code></li><li><code>texto_util.c</code></li><li><code>main.c</code></li></ul><p>Protótipos sugeridos:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>int contar_vogais(char str[]);
+</code></pre>
+<p>No <code>main</code>, teste com o vetor <code>int v[5] = {1, 2, 3, 4, 5};</code> e escreva tambem o comando do <strong>GCC</strong> para compilar o projeto.</p>
+<ul>
+<li><strong>Entrada:</strong> Vetor <code>{1, 2, 3, 4, 5}</code>.</li>
+<li><strong>Saída Esperada:</strong> Valores calculados corretamente.</li>
+</ul>
+<p><strong>10.</strong> Crie uma biblioteca de strings contendo três funções: <code>contar_vogais</code>, <code>inverter_string</code> e <code>eh_palindromo</code>. Em seguida, escreva um programa principal que teste as três funções.<br />
+Use a seguinte sugestao de arquivos:</p>
+<ul>
+<li><code>texto_util.h</code></li>
+<li><code>texto_util.c</code></li>
+<li><code>main.c</code></li>
+</ul>
+<p>Protótipos sugeridos:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">int contar_vogais(char str[]);
 void inverter_string(char str[]);
 int eh_palindromo(char str[]);
-</code></pre><p>No <code>main</code>, teste com as strings <code>"arara"</code> e <code>"computador"</code> e escreva tambem o comando do <strong>GCC</strong> para compilar o projeto.</p><ul><li><strong>Entrada:</strong> <code>arara</code> e <code>computador</code>.</li><li><strong>Saída Esperada:</strong> Número de vogais, verificação de palíndromo e string invertida.</li></ul><p><strong>11.</strong> Explique com suas palavras a diferença entre:</p><ul><li>incluir um arquivo com <code>#include</code>;</li><li>declarar uma função em um <code>.h</code>;</li><li>implementar uma função em um <code>.c</code>;</li><li>compilar um programa com o <strong>GCC</strong>.</li></ul><p><strong>12.</strong> Explique por que um programa pode compilar parcialmente ao incluir o cabeçalho correto, mas ainda assim falhar na etapa final com a mensagem <code>undefined reference</code>.</p><h2 id=próximos-passos><span class=heading-text>Próximos passos</span><span class=heading-arabic>10.11</span></h2><p>Agora que entendemos como organizar o código em múltiplos arquivos e como criar módulos reutilizáveis, o próximo passo natural é estudar como programas em <strong>C</strong> podem reservar espaço em memória durante a execução. No próximo capítulo, [[11 - alocação dinâmica.md]], veremos como funciona a alocação dinâmica.</p></div></article><footer class=footer><p>© 2025 · <a href=#>Gabriel Soares Baptista</a></p></footer></main></div><script>const toggle=document.querySelector(`.mobile-menu-toggle`),sidebar=document.querySelector(`.sidebar`),overlay=document.querySelector(`.mobile-menu-overlay`);function openMenu(){sidebar.classList.add(`open`),overlay.classList.add(`open`),toggle.classList.add(`open`),toggle.innerHTML=`<i data-lucide="x"></i>`,CourseForgeUI.initIcons(),document.body.style.overflow=`hidden`}function closeMenu(){sidebar.classList.remove(`open`),overlay.classList.remove(`open`),toggle.classList.remove(`open`),toggle.innerHTML=`<i data-lucide="menu"></i>`,CourseForgeUI.initIcons(),document.body.style.overflow=``}toggle.addEventListener(`click`,()=>{sidebar.classList.contains(`open`)?closeMenu():openMenu()}),overlay.addEventListener(`click`,closeMenu);</script><script data-no-bundle src=/aulas-faesa/js/vendor/katex/dist/katex.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/katex/dist/contrib/auto-render.min.js></script><script>document.addEventListener(`DOMContentLoaded`,function(){renderMathInElement(document.body,{output:`html`,delimiters:[{left:`$$`,right:`$$`,display:!0},{left:`$`,right:`$`,display:!1},{left:`\\(`,right:`\\)`,display:!1},{left:`\\[`,right:`\\]`,display:!0}],throwOnError:!1,strict:!1})});</script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/prism.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-c.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-cpp.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-python.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-clike.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-perl.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-java.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-mermaid.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-php.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js></script><script>document.addEventListener(`DOMContentLoaded`,function(){mermaid.initialize({startOnLoad:!0,theme:`default`,securityLevel:`loose`,fontFamily:`Inter, system-ui, sans-serif`,themeVariables:{fontSize:`16px`,edgeLabelFontSize:`16px`,multiplicityFontSize:`18px`}})});</script><script>document.addEventListener(`DOMContentLoaded`,function(){let isSubcourse=!1,courseName=`Tópicos de Programação II (TEP II)`;CourseForgeNav.applyDynamicBreadcrumbs(`.breadcrumb`,!1),CourseForgeNav.initScrollSpy(),CourseForgeUI.initCopyButtons(),CourseForgeUI.initExamples()});function handleBackNavigation(){let isSubcourse=!1,dynamic=CourseForgeNav.getBackLink(`contents.html`,`Voltar`,!1);window.location.href=dynamic.url}</script></body></html>
+</code></pre>
+<p>No <code>main</code>, teste com as strings <code>&quot;arara&quot;</code> e <code>&quot;computador&quot;</code> e escreva tambem o comando do <strong>GCC</strong> para compilar o projeto.</p>
+<ul>
+<li><strong>Entrada:</strong> <code>arara</code> e <code>computador</code>.</li>
+<li><strong>Saída Esperada:</strong> Número de vogais, verificação de palíndromo e string invertida.</li>
+</ul>
+<p><strong>11.</strong> Explique com suas palavras a diferença entre:</p>
+<ul>
+<li>incluir um arquivo com <code>#include</code>;</li>
+<li>declarar uma função em um <code>.h</code>;</li>
+<li>implementar uma função em um <code>.c</code>;</li>
+<li>compilar um programa com o <strong>GCC</strong>.</li>
+</ul>
+<p><strong>12.</strong> Explique por que um programa pode compilar parcialmente ao incluir o cabeçalho correto, mas ainda assim falhar na etapa final com a mensagem <code>undefined reference</code>.</p>
+<h2 id="próximos-passos"><span class="heading-text">Próximos passos</span><span class="heading-arabic">10.11</span></h2>
+<p>Agora que entendemos como organizar o código em múltiplos arquivos e como criar módulos reutilizáveis, o próximo passo natural é estudar como programas em <strong>C</strong> podem reservar espaço em memória durante a execução. No próximo capítulo, [[11 - alocação dinâmica.md]], veremos como funciona a alocação dinâmica.</p>
+
+                </div>
+            </article>
+            <footer class="footer">
+                <p>© 2025 · <a href="#">Gabriel Soares Baptista</a></p>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        const toggle = document.querySelector('.mobile-menu-toggle');
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.querySelector('.mobile-menu-overlay');
+
+        function openMenu() {
+            sidebar.classList.add('open');
+            overlay.classList.add('open');
+            toggle.classList.add('open');
+            toggle.innerHTML = '<i data-lucide="x"></i>';
+            CourseForgeUI.initIcons();
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMenu() {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('open');
+            toggle.classList.remove('open');
+            toggle.innerHTML = '<i data-lucide="menu"></i>';
+            CourseForgeUI.initIcons();
+            document.body.style.overflow = '';
+        }
+
+        toggle.addEventListener('click', () => {
+            if (sidebar.classList.contains('open')) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        overlay.addEventListener('click', closeMenu);
+    </script>
+
+    
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            renderMathInElement(document.body, {
+                output: 'html',
+                delimiters: [
+                    { left: "$$", right: "$$", display: true },
+                    { left: "$", right: "$", display: false },
+                    { left: "\\(", right: "\\)", display: false },
+                    { left: "\\[", right: "\\]", display: true }
+                ],
+                throwOnError: false,
+                strict: false
+            });
+        });
+    </script>
+    
+    
+    <script src="/aulas-faesa/js/vendor/prism/prism.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-c.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-cpp.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-python.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-clike.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-perl.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-java.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-mermaid.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-php.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js" data-no-bundle></script>
+    
+    
+    
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            mermaid.initialize({
+                startOnLoad: true,
+                theme: 'default',
+                securityLevel: 'loose',
+                fontFamily: 'Inter, system-ui, sans-serif',
+                themeVariables: {
+                    fontSize: '16px',
+                    edgeLabelFontSize: '16px',
+                    multiplicityFontSize: '18px'
+                }
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const isSubcourse = false;
+        const courseName = "T\u00f3picos de Programa\u00e7\u00e3o II (TEP II)";
+        CourseForgeNav.applyDynamicBreadcrumbs('.breadcrumb', isSubcourse);
+        CourseForgeNav.initScrollSpy();
+        CourseForgeUI.initCopyButtons();
+        CourseForgeUI.initExamples();
+        });
+
+        function handleBackNavigation() {
+            const isSubcourse = false;
+        const dynamic = CourseForgeNav.getBackLink('contents.html', 'Voltar', isSubcourse);
+        window.location.href = dynamic.url;
+        }
+    </script>
+</body>
+
+</html>

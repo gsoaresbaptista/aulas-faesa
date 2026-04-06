@@ -1,54 +1,702 @@
-<!doctype html><html lang=en><meta charset=utf-8><meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" name=viewport><title>Funções</title><link media="(prefers-color-scheme: light)" href=/aulas-faesa/img/dark-favicon.svg rel=icon><link media="(prefers-color-scheme: dark)" href=/aulas-faesa/img/light-favicon.svg rel=icon><link data-no-bundle href=/aulas-faesa/css/vendor/reveal/reset.min.css rel=stylesheet><link data-no-bundle href=/aulas-faesa/css/vendor/reveal/reveal.min.css rel=stylesheet><link data-no-bundle href=/aulas-faesa/css/vendor/reveal/theme/white.min.css rel=stylesheet><link data-no-bundle href=/aulas-faesa/css/prism-one-light.css rel=stylesheet><link data-no-bundle href=/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css rel=stylesheet><link data-no-bundle href=/aulas-faesa/css/vendor/fonts.css rel=stylesheet></head><body><div class=reveal><div class=slides><section><h1>Programação de Computadores</h1><h2>Funções</h2><p>Professor: Gabriel Soares Baptista</p></section><section><h1>Conceito de Funções</h1><ul><li>Uma <strong>função</strong> é um bloco de código, composto por declarações e comandos, que pode ser nomeado e invocado de dentro de um programa.</li><li>Trata-se de uma sequência de instruções que recebe um nome identificador.</li><li>Pode ser chamada em qualquer parte do sistema, quantas vezes forem necessárias, durante a sua execução.</li><li>A linguagem <strong>C</strong> possui funções implementadas em bibliotecas padrão, como <code>scanf()</code> e <code>printf()</code>.</li><li>O programador não precisa conhecer o código interno para utilizá-las; basta compreender seu nome, finalidade e forma de chamada.</li></ul></section><section><h1>Modularização</h1><ul><li>O uso de funções é a base da programação procedural e modular.</li></ul><div class="callout callout-tip"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .5 2.2 1.5 3.1.7.7 1.3 1.5 1.5 2.4"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span><span class=callout-title-inner>Vantagem do Desenvolvimento<br></span></div><div class=callout-content><p>Permite que você decomponha problemas complexos em módulos menores, mais simples de resolver, testar e manter.</p></div></div></section><section><h1>Parâmetros da Função</h1><ul><li>Diferentemente da declaração de variáveis comuns, na lista de parâmetros de uma função você deve obrigatoriamente especificar o tipo de <strong>cada variável individualmente</strong>.</li></ul><p><strong>Declaração CORRETA de parâmetros:</strong></p><pre class="line-numbers language-c" data-lang=C><code class=language-c>int soma(int x, int y){
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <title>Funções</title>
+    <link rel="icon" href="/aulas-faesa/img/dark-favicon.svg" media="(prefers-color-scheme: light)">
+    <link rel="icon" href="/aulas-faesa/img/light-favicon.svg" media="(prefers-color-scheme: dark)">
+
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/reset.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/reveal.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/theme/white.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/aulas-faesa/css/prism-one-light.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/fonts.css" data-no-bundle>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+            <section><h1>Programação de Computadores</h1>
+<h2>Funções</h2>
+<p>Professor: Gabriel Soares Baptista</p>
+</section>
+<section><h1>Conceito de Funções</h1>
+<ul>
+<li>Uma <strong>função</strong> é um bloco de código, composto por declarações e comandos, que pode ser nomeado e invocado de dentro de um programa.</li>
+<li>Trata-se de uma sequência de instruções que recebe um nome identificador.</li>
+<li>Pode ser chamada em qualquer parte do sistema, quantas vezes forem necessárias, durante a sua execução.</li>
+<li>A linguagem <strong>C</strong> possui funções implementadas em bibliotecas padrão, como <code>scanf()</code> e <code>printf()</code>.</li>
+<li>O programador não precisa conhecer o código interno para utilizá-las; basta compreender seu nome, finalidade e forma de chamada.</li>
+</ul>
+</section>
+<section><h1>Modularização</h1>
+<ul>
+<li>O uso de funções é a base da programação procedural e modular.</li>
+</ul>
+<div class="callout callout-tip">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .5 2.2 1.5 3.1.7.7 1.3 1.5 1.5 2.4"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span>
+    <span class="callout-title-inner">Vantagem do Desenvolvimento<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Permite que você decomponha problemas complexos em módulos menores, mais simples de resolver, testar e manter.</p>
+  </div>
+</div>
+</section>
+<section><h1>Parâmetros da Função</h1>
+<ul>
+<li>Diferentemente da declaração de variáveis comuns, na lista de parâmetros de uma função você deve obrigatoriamente especificar o tipo de <strong>cada variável individualmente</strong>.</li>
+</ul>
+<p><strong>Declaração CORRETA de parâmetros:</strong></p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">int soma(int x, int y){
     return x + y;
 }
-</code></pre><p><strong>Declaração ERRADA de parâmetros:</strong></p><pre class="line-numbers language-c" data-lang=C><code class=language-c>int soma(int x, y){ // O compilador não saberá o tipo de 'y'
+</code></pre>
+<p><strong>Declaração ERRADA de parâmetros:</strong></p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">int soma(int x, y){ // O compilador não saberá o tipo de 'y'
     return x + y;
 }
-</code></pre></section><section><h1>Funções sem lista de parâmetros</h1><p>Existem duas abordagens técnicas na linguagem <strong>C</strong> para funções que não necessitam de dados de entrada:</p><ul><li><strong>Lista vazia:</strong> <code>void imprime()</code>. O compilador não especifica parâmetros, permitindo que a função seja chamada com argumentos, embora ela não consiga acessá-los.</li><li><strong>Uso do void:</strong> <code>void imprime(void)</code>. Esta é a forma mais rigorosa; o programa acusará um erro caso você tente passar qualquer valor para a função.</li></ul></section><section><h1>Comportamento: Vazio vs. Void</h1><p><strong>Exemplo Sem void (Compila ignorando argumentos):</strong></p><pre class="line-numbers language-c" data-lang=C><code class=language-c>void imprime(){
-    printf("Teste de funcao\n");
+</code></pre>
+</section>
+<section><h1>Funções sem lista de parâmetros</h1>
+<p>Existem duas abordagens técnicas na linguagem <strong>C</strong> para funções que não necessitam de dados de entrada:</p>
+<ul>
+<li><strong>Lista vazia:</strong> <code>void imprime()</code>. O compilador não especifica parâmetros, permitindo que a função seja chamada com argumentos, embora ela não consiga acessá-los.</li>
+<li><strong>Uso do void:</strong> <code>void imprime(void)</code>. Esta é a forma mais rigorosa; o programa acusará um erro caso você tente passar qualquer valor para a função.</li>
+</ul>
+</section>
+<section><h1>Comportamento: Vazio vs. Void</h1>
+<p><strong>Exemplo Sem void (Compila ignorando argumentos):</strong></p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">void imprime(){
+    printf(&quot;Teste de funcao\n&quot;);
 }
 // imprime(5); ou imprime(5, 'a'); irão compilar
-</code></pre><p><strong>Exemplo Com void (Gera erro de compilação se houver argumentos):</strong></p><pre class="line-numbers language-c" data-lang=C><code class=language-c>void imprime(void){
-    printf("Teste de funcao\n");
+</code></pre>
+<p><strong>Exemplo Com void (Gera erro de compilação se houver argumentos):</strong></p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">void imprime(void){
+    printf(&quot;Teste de funcao\n&quot;);
 }
 // imprime(5); gerará ERRO de compilação
-</code></pre></section><section><h1>Escopo de Parâmetros</h1><ul><li>Todo parâmetro de uma função é considerado uma <strong>variável local</strong>.</li><li>Isso significa que sua validade e acesso estão restritos exclusivamente ao interior da função na qual foi declarado.</li></ul></section><section><h1>Estrutura: Corpo da Função</h1><ul><li>O corpo de uma função é o local onde a tarefa pretendida é efetivamente definida e executada.</li><li>É composto por uma sequência de <strong>declarações</strong> (variáveis, constantes, arrays).</li><li>Contém uma sequência de <strong>comandos</strong> (condicionais, repetições, chamadas de outras funções).</li><li>O objetivo é que cada função realize uma <strong>tarefa específica e bem definida</strong>.</li></ul></section><section><h1>Retorno da Função</h1><ul><li>O retorno é o mecanismo pelo qual uma função devolve o resultado de seu processamento para quem a invocou.</li><li>O <code>tipo_retornado</code> pode ser qualquer tipo válido em <strong>C</strong> (tipos básicos, <code>void</code>, ponteiros ou <code>struct</code>).</li><li>Quando uma função deve apenas executar uma ação sem devolver valor, utiliza-se o tipo <strong><code>void</code></strong>.</li></ul></section><section><h1>O comando <code>return</code></h1><ul><li>Se a função não for <code>void</code>, ela deve utilizar o comando <code>return</code> seguido de uma expressão compatível.</li></ul><div class="callout callout-warning"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span><span class=callout-title-inner>Encerramento Imediato<br></span></div><div class=callout-content><p>Assim que o programa atinge um comando <code>return</code>, a função é <strong>encerrada instantaneamente</strong>, ignorando qualquer código que venha abaixo.</p></div></div><ul><li>Embora seja possível usar vários <code>return</code> (em condicionais), recomenda-se usar apenas um para manter a clareza.</li></ul></section><section><h1>Fluxo de Retorno (Exemplo)</h1><p><strong>Vários comandos return:</strong></p><pre class="line-numbers language-c" data-lang=C><code class=language-c>int maior(int x, int y){
-    if(x > y) return x;
+</code></pre>
+</section>
+<section><h1>Escopo de Parâmetros</h1>
+<ul>
+<li>Todo parâmetro de uma função é considerado uma <strong>variável local</strong>.</li>
+<li>Isso significa que sua validade e acesso estão restritos exclusivamente ao interior da função na qual foi declarado.</li>
+</ul>
+</section>
+<section><h1>Estrutura: Corpo da Função</h1>
+<ul>
+<li>O corpo de uma função é o local onde a tarefa pretendida é efetivamente definida e executada.</li>
+<li>É composto por uma sequência de <strong>declarações</strong> (variáveis, constantes, arrays).</li>
+<li>Contém uma sequência de <strong>comandos</strong> (condicionais, repetições, chamadas de outras funções).</li>
+<li>O objetivo é que cada função realize uma <strong>tarefa específica e bem definida</strong>.</li>
+</ul>
+</section>
+<section><h1>Retorno da Função</h1>
+<ul>
+<li>O retorno é o mecanismo pelo qual uma função devolve o resultado de seu processamento para quem a invocou.</li>
+<li>O <code>tipo_retornado</code> pode ser qualquer tipo válido em <strong>C</strong> (tipos básicos, <code>void</code>, ponteiros ou <code>struct</code>).</li>
+<li>Quando uma função deve apenas executar uma ação sem devolver valor, utiliza-se o tipo <strong><code>void</code></strong>.</li>
+</ul>
+</section>
+<section><h1>O comando <code>return</code></h1>
+<ul>
+<li>Se a função não for <code>void</code>, ela deve utilizar o comando <code>return</code> seguido de uma expressão compatível.</li>
+</ul>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Encerramento Imediato<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Assim que o programa atinge um comando <code>return</code>, a função é <strong>encerrada instantaneamente</strong>, ignorando qualquer código que venha abaixo.</p>
+  </div>
+</div>
+<ul>
+<li>Embora seja possível usar vários <code>return</code> (em condicionais), recomenda-se usar apenas um para manter a clareza.</li>
+</ul>
+</section>
+<section><h1>Fluxo de Retorno (Exemplo)</h1>
+<p><strong>Vários comandos return:</strong></p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">int maior(int x, int y){
+    if(x &gt; y) return x;
     else return y;
-    printf("Jamais serei lido"); // Inalcançável
+    printf(&quot;Jamais serei lido&quot;); // Inalcançável
 }
-</code></pre><p><strong>Único return (Recomendado):</strong></p><pre class="line-numbers language-c" data-lang=C><code class=language-c>int maior(int x, int y){
+</code></pre>
+<p><strong>Único return (Recomendado):</strong></p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">int maior(int x, int y){
     int z;
-    if(x > y) z = x;
+    if(x &gt; y) z = x;
     else z = y;
     return z;
 }
-</code></pre></section><section><h1>Limitações: Retorno de Arrays</h1><ul><li>A linguagem <strong>C</strong> não permite que uma função retorne um <strong>array</strong> diretamente.</li><li>Isso ocorre porque não há suporte para atribuição direta entre arrays.</li><li><strong>Solução:</strong> Inserir o array dentro de uma <code>struct</code>, já que estruturas permitem atribuição e cópia de conteúdo.</li></ul></section><section><h1>Questões de fixação - 1 / 3</h1><p><strong>1.</strong> Escreva um programa que contenha uma função chamada <code>imprimir_linha</code>. Essa função não deve receber argumentos e não deve retornar valor (<code>void</code>), apenas imprimir uma linha de 20 hífens ("--------------------") na tela. No <code>main</code>, chame essa função três vezes.</p><p><strong>2.</strong> Crie uma função chamada <code>dobro</code> que receba um número inteiro como parâmetro e retorne o dobro desse número. No <code>main</code>, peça um número ao usuário, chame a função e imprima o resultado retornado.</p><p><strong>3.</strong> Desenvolva uma função chamada <code>verificar_sinal</code> que receba um número inteiro. A função deve retornar:</p><ul><li><code>1</code> se o número for positivo.</li><li><code>-1</code> se o número for negativo.</li><li><code>0</code> se o número for zero.</li></ul><p>No <code>main</code>, leia o número, chame a função e imprima a mensagem de texto correspondente ao código retornado.</p></section><section><h1>Generalidade e I/O em Funções</h1><ul><li>Uma boa prática de programação é manter as funções "genéricas".</li><li>Deve-se evitar operações de entrada (<code>scanf</code>) e saída (<code>printf</code>) dentro de funções de processamento.</li><li>A função que a chamou (geralmente a <code>main</code>) deve cuidar da interação com o usuário.</li><li>Use I/O dentro de funções apenas quando esse for o <strong>objetivo primordial</strong>, como em um menu de opções.</li></ul></section><section><h1>Exemplo: Fatorial (Lógica vs. Interface)</h1><p><strong>Fatorial na main() (I/O e cálculo misturados):</strong></p><pre class="line-numbers language-c" data-lang=C><code class=language-c>int main(){
+</code></pre>
+</section>
+<section><h1>Limitações: Retorno de Arrays</h1>
+<ul>
+<li>A linguagem <strong>C</strong> não permite que uma função retorne um <strong>array</strong> diretamente.</li>
+<li>Isso ocorre porque não há suporte para atribuição direta entre arrays.</li>
+<li><strong>Solução:</strong> Inserir o array dentro de uma <code>struct</code>, já que estruturas permitem atribuição e cópia de conteúdo.</li>
+</ul>
+</section>
+<section><h1>Questões de fixação - 1 / 3</h1>
+<p><strong>1.</strong> Escreva um programa que contenha uma função chamada <code>imprimir_linha</code>. Essa função não deve receber argumentos e não deve retornar valor (<code>void</code>), apenas imprimir uma linha de 20 hífens (&quot;--------------------&quot;) na tela. No <code>main</code>, chame essa função três vezes.</p>
+<p><strong>2.</strong> Crie uma função chamada <code>dobro</code> que receba um número inteiro como parâmetro e retorne o dobro desse número. No <code>main</code>, peça um número ao usuário, chame a função e imprima o resultado retornado.</p>
+<p><strong>3.</strong> Desenvolva uma função chamada <code>verificar_sinal</code> que receba um número inteiro. A função deve retornar:</p>
+<ul>
+<li><code>1</code> se o número for positivo.</li>
+<li><code>-1</code> se o número for negativo.</li>
+<li><code>0</code> se o número for zero.</li>
+</ul>
+<p>No <code>main</code>, leia o número, chame a função e imprima a mensagem de texto correspondente ao código retornado.</p>
+</section>
+<section><h1>Generalidade e I/O em Funções</h1>
+<ul>
+<li>Uma boa prática de programação é manter as funções &quot;genéricas&quot;.</li>
+<li>Deve-se evitar operações de entrada (<code>scanf</code>) e saída (<code>printf</code>) dentro de funções de processamento.</li>
+<li>A função que a chamou (geralmente a <code>main</code>) deve cuidar da interação com o usuário.</li>
+<li>Use I/O dentro de funções apenas quando esse for o <strong>objetivo primordial</strong>, como em um menu de opções.</li>
+</ul>
+</section>
+<section><h1>Exemplo: Fatorial (Lógica vs. Interface)</h1>
+<p><strong>Fatorial na main() (I/O e cálculo misturados):</strong></p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">int main(){
     int x, i, f = 1;
-    scanf("%d", &x);
+    scanf(&quot;%d&quot;, &amp;x);
     for (i = 1; i &lt;= x; i++) f = f * i;
-    printf("Fatorial: %d", f);
+    printf(&quot;Fatorial: %d&quot;, f);
     return 0;
 }
-</code></pre><p><strong>Fatorial em função PRÓPRIA (Interface na main, cálculo na função):</strong></p><pre class="line-numbers language-c" data-lang=C><code class=language-c>int fatorial(int n){
+</code></pre>
+<p><strong>Fatorial em função PRÓPRIA (Interface na main, cálculo na função):</strong></p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">int fatorial(int n){
     int i, f = 1;
     for (i = 1; i &lt;= n; i++) f = f * i;
     return f; // Retorna apenas o resultado
 }
-</code></pre></section><section><h1>Questões de fixação - 2 / 3</h1><p><strong>4.</strong> Escreva uma função chamada <code>celsius_para_fahrenheit</code> que receba uma temperatura em graus Celsius (float) e retorne a temperatura convertida para Fahrenheit. A fórmula é $F = C \times 1.8 + 32$.</p><p><strong>5.</strong> Crie uma função chamada <code>maior_valor</code> que receba dois números inteiros como parâmetros e retorne o maior entre eles. Se forem iguais, retorne qualquer um deles. Teste a função no <code>main</code> com valores digitados pelo usuário.</p><p><strong>6.</strong> Desenvolva uma função chamada <code>eh_par</code> que receba um número inteiro e retorne <code>1</code> (verdadeiro) se o número for par e <code>0</code> (falso) se for ímpar. Utilize essa função dentro de um laço no <code>main</code> para verificar 5 números digitados pelo usuário.</p><p><strong>8.</strong> Crie uma função chamada <code>potencia</code> que receba a base ($x$) e o expoente ($y$) como inteiros. A função deve calcular e retornar $x^y$ sem utilizar a biblioteca <code>math.h</code>, ou seja, usando um laço de repetição para multiplicar a base.</p></section><section><h1>Passagem por Valor vs. Referência</h1><ul><li><strong>Passagem por Valor:</strong> Uma cópia da variável é enviada; alterações dentro da função não afetam o original.</li><li><strong>Passagem por Referência:</strong> Envia-se o endereço de memória, permitindo que a função modifique a variável original fora de seu escopo.</li></ul></section><section><h1>Exemplo: Função Troca</h1><p><strong>Passagem por valor (Não altera x e y na main):</strong></p><pre class="line-numbers language-c" data-lang=C><code class=language-c>void Troca(int a, int b){
+</code></pre>
+</section>
+<section><h1>Questões de fixação - 2 / 3</h1>
+<p><strong>4.</strong> Escreva uma função chamada <code>celsius_para_fahrenheit</code> que receba uma temperatura em graus Celsius (float) e retorne a temperatura convertida para Fahrenheit. A fórmula é $F = C \times 1.8 + 32$.</p>
+<p><strong>5.</strong> Crie uma função chamada <code>maior_valor</code> que receba dois números inteiros como parâmetros e retorne o maior entre eles. Se forem iguais, retorne qualquer um deles. Teste a função no <code>main</code> com valores digitados pelo usuário.</p>
+<p><strong>6.</strong> Desenvolva uma função chamada <code>eh_par</code> que receba um número inteiro e retorne <code>1</code> (verdadeiro) se o número for par e <code>0</code> (falso) se for ímpar. Utilize essa função dentro de um laço no <code>main</code> para verificar 5 números digitados pelo usuário.</p>
+<p><strong>8.</strong> Crie uma função chamada <code>potencia</code> que receba a base ($x$) e o expoente ($y$) como inteiros. A função deve calcular e retornar $x^y$ sem utilizar a biblioteca <code>math.h</code>, ou seja, usando um laço de repetição para multiplicar a base.</p>
+</section>
+<section><h1>Passagem por Valor vs. Referência</h1>
+<ul>
+<li><strong>Passagem por Valor:</strong> Uma cópia da variável é enviada; alterações dentro da função não afetam o original.</li>
+<li><strong>Passagem por Referência:</strong> Envia-se o endereço de memória, permitindo que a função modifique a variável original fora de seu escopo.</li>
+</ul>
+</section>
+<section><h1>Exemplo: Função Troca</h1>
+<p><strong>Passagem por valor (Não altera x e y na main):</strong></p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">void Troca(int a, int b){
     int temp = a; a = b; b = temp;
 }
-</code></pre><p><strong>Passagem por referência (Altera x e y na main):</strong></p><pre class="line-numbers language-c" data-lang=C><code class=language-c>void Troca(int *a, int *b){
+</code></pre>
+<p><strong>Passagem por referência (Altera x e y na main):</strong></p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">void Troca(int *a, int *b){
     int temp = *a;
     *a = *b;
     *b = temp;
 }
-// Chamada: Troca(&x, &y);
-</code></pre></section><section><h1>Passagem de Arrays</h1><ul><li><strong>Arrays são sempre passados por referência</strong> para evitar a cópia custosa de grandes volumes de dados.</li><li>A função recebe o endereço do primeiro elemento do array.</li><li>É necessário passar um segundo parâmetro indicando o tamanho do array.</li><li>Na chamada, usa-se apenas o <strong>nome do array</strong> (sem colchetes ou <code>&</code>).</li></ul></section><section><h1>Arrays Multidimensionais (Matrizes)</h1><ul><li>Para matrizes, você deve obrigatoriamente especificar o tamanho de todas as dimensões, <strong>exceto a primeira</strong>.</li><li>Isso permite que o compilador calcule o "salto" de memória entre as linhas.</li></ul><pre class="line-numbers language-c" data-lang=C><code class=language-c>// É necessário informar o número de colunas [2]
+// Chamada: Troca(&amp;x, &amp;y);
+</code></pre>
+</section>
+<section><h1>Passagem de Arrays</h1>
+<ul>
+<li><strong>Arrays são sempre passados por referência</strong> para evitar a cópia custosa de grandes volumes de dados.</li>
+<li>A função recebe o endereço do primeiro elemento do array.</li>
+<li>É necessário passar um segundo parâmetro indicando o tamanho do array.</li>
+<li>Na chamada, usa-se apenas o <strong>nome do array</strong> (sem colchetes ou <code>&amp;</code>).</li>
+</ul>
+</section>
+<section><h1>Arrays Multidimensionais (Matrizes)</h1>
+<ul>
+<li>Para matrizes, você deve obrigatoriamente especificar o tamanho de todas as dimensões, <strong>exceto a primeira</strong>.</li>
+<li>Isso permite que o compilador calcule o &quot;salto&quot; de memória entre as linhas.</li>
+</ul>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">// É necessário informar o número de colunas [2]
 void imprime_matriz(int m[][2], int n){
     int i, j;
     for (i = 0; i &lt; n; i++)
         for (j = 0; j &lt; 2; j++)
-            printf("%d \n", m[i][j]);
+            printf(&quot;%d \n&quot;, m[i][j]);
 }
-</code></pre></section><section><h1>Questões de fixação - 3 / 3</h1><p><strong>7.</strong> Escreva uma função chamada <code>media_vetor</code>. Essa função deve receber dois parâmetros: um vetor de inteiros e um inteiro representando o tamanho desse vetor. A função deve calcular e retornar a média aritmética dos elementos.</p><p><strong>9.</strong> Crie uma "Calculadora Modular". O programa deve ter funções separadas para: <code>somar</code>, <code>subtrair</code>, <code>multiplicar</code> e <code>dividir</code>. No <code>main</code>, crie um menu (usando <code>switch</code> ou <code>if</code>) onde o usuário escolhe a operação e insere dois números. O programa deve chamar a função correspondente e exibir o resultado.</p><p><strong>10.</strong> Crie uma função <code>eh_primo</code> que receba um inteiro e retorne 1 se for primo e 0 caso contrário. No <code>main</code>, utilize essa função para imprimir todos os números primos existentes entre 1 e 100.</p></section><section><h1>Próximos passos</h1><p><strong>Avaliação do primeiro conceito (C1)!</strong></p></section></div></div><script data-no-bundle src=/aulas-faesa/js/vendor/reveal/reveal.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/reveal/plugin/notes/notes.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/reveal/plugin/markdown/markdown.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/reveal/plugin/math/math.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/reveal/plugin/zoom/zoom.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/prism.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-c.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-python.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-clike.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-perl.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-java.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-php.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/plugins/toolbar/prism-toolbar.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/plugins/show-language/prism-show-language.min.js></script><script data-no-bundle src=/aulas-faesa/js/prism-slang.js></script><script data-no-bundle src=/aulas-faesa/js/mermaid.min.js></script><script>document.addEventListener(`DOMContentLoaded`,function(){mermaid.initialize({startOnLoad:!1,theme:`default`,securityLevel:`loose`,fontFamily:`Inter, system-ui, sans-serif`})});</script><script>Reveal.initialize({hash:!0,slideNumber:`c/t`,center:!1,controls:!1,plugins:[RevealMarkdown,RevealNotes,RevealMath.KaTeX,RevealZoom],katex:{local:`/aulas-faesa/js/vendor/katex`,output:`html`,throwOnError:!1,strict:!1},width:960,height:800,margin:.15,maxScale:2}),Reveal.on(`slideready`,event=>{Prism.highlightAll();try{let mermaids=event.currentSlide.querySelectorAll(`.mermaid`);mermaids.length>0&&mermaid.init(void 0,mermaids)}catch(err){console.warn(`Mermaid init failed`,err)}}),Reveal.on(`slidechanged`,event=>{Prism.highlightAll();try{let mermaids=event.currentSlide.querySelectorAll(`.mermaid`);mermaids.length>0&&mermaid.init(void 0,mermaids)}catch(err){console.warn(`Mermaid init failed`,err)}});</script><script data-no-bundle src=/aulas-faesa/js/rough.min.js></script><script data-no-bundle src=/aulas-faesa/js/apply_sketch.js></script><style>.reveal{font-size:20px;text-align:left!important}.reveal code:not(pre code){background-color:var(--code-bg)!important;color:#3b82f6!important;border:1px dashed var(--border)!important;white-space:pre-wrap!important;word-break:break-word!important;border-radius:4px!important;padding:.1em .3em!important;font-family:JetBrains Mono,Fira Code,Consolas,monospace!important;font-size:.85em!important}.reveal h1{align-items:center;font-size:2.2em;display:flex;text-align:left!important;width:100%!important;text-shadow:none!important;justify-content:flex-start!important;margin-bottom:10px!important;margin-left:0!important}.reveal div.code-toolbar{position:relative;width:90%!important;margin:1em auto!important}.reveal pre[class*=language-]{width:100%!important;margin:0!important;padding:1em!important;font-size:.8em!important}.reveal pre[class*=language-]>code{display:block!important;position:relative!important}.reveal .line-numbers-rows{border-right:1px solid #ccc!important;width:3.2em!important;padding-top:0!important;position:absolute!important;top:0!important;left:-3.8em!important}.reveal .line-numbers-rows>span:before{color:#999!important;text-align:right!important;padding-right:.5em!important;display:block!important}.reveal pre[class*=language-].line-numbers,.reveal pre[class*=language-]:has(.line-numbers-rows){padding-left:3.8em!important}.reveal div.toolbar{z-index:10;opacity:1!important;padding-right:.1em!important;position:absolute!important;top:.2em!important;right:.5em!important}.reveal div.toolbar-item span{color:#999!important;text-transform:uppercase!important;box-shadow:none!important;background:0 0!important;border:none!important;padding:0!important;font-family:Inter,sans-serif!important;font-size:.7em!important;font-weight:600!important}.reveal h2{font-size:1.6em;text-align:left!important;margin-top:30px!important;margin-bottom:20px!important}.reveal h3{font-size:1.3em;text-align:left!important;margin-top:20px!important;margin-bottom:15px!important}.reveal p{line-height:1.5;text-align:left!important;margin-top:20px!important;margin-left:0!important}.reveal ul,.reveal ol,.reveal li{line-height:1.5;text-align:left!important;margin-left:0!important}.reveal ul,.reveal ol{padding-left:1.2em!important;display:block!important}.reveal .slides section{box-sizing:border-box;text-align:left!important;padding:40px!important}.reveal .slides{text-align:left!important}.reveal .slides section:not(.stack):has(>h1:only-child),.reveal .slides section:not(.stack):has(>h1:first-child+h2:last-child),.reveal .slides section:not(.stack):has(>h1:first-child+h2+p:last-child){text-align:center!important;flex-direction:column!important;justify-content:center!important;align-items:center!important;height:100%!important;display:flex!important;top:0!important}.reveal .slides section:not(.stack):has(>h1:only-child) h1,.reveal .slides section:not(.stack):has(>h1:first-child+h2:last-child) h1,.reveal .slides section:not(.stack):has(>h1:first-child+h2:last-child) h2,.reveal .slides section:not(.stack):has(>h1:first-child+h2+p:last-child) h1,.reveal .slides section:not(.stack):has(>h1:first-child+h2+p:last-child) h2,.reveal .slides section:not(.stack):has(>h1:first-child+h2+p:last-child) p{text-align:center!important;justify-content:center!important;width:100%!important;min-height:auto!important;margin:0!important}.reveal .slides section:not(.stack):has(>h1:first-child+h2:last-child) h1,.reveal .slides section:not(.stack):has(>h1:first-child+h2+p:last-child) h1{margin-bottom:.5em!important}.reveal .slides section:not(.stack):has(>h1:first-child+h2+p:last-child) h2{margin-bottom:.3em!important}.reveal .slides section:not(.stack):has(>h1:first-child+h2+p:last-child) p{color:#666;font-size:.9em}.reveal .slides section:has(.full-screen-image){padding:0!important}.reveal:has(section.present .full-screen-image){background-image:url(../../slide_end_background.png)!important;background-position:50%!important;background-size:cover!important}.reveal:has(section.present .full-screen-image) .slides,.reveal:has(section.present .full-screen-image) .slides section.present{background:0 0!important}.full-screen-image{justify-content:center;align-items:center;width:100vw;height:100vh;display:flex;margin:0!important}.reveal .svg-graph{max-width:100%;height:auto;margin-top:1em!important;margin-bottom:1em!important;overflow:visible!important}.reveal .mermaid-switcher{display:none!important}.centered{justify-content:center!important;align-items:center!important;width:100%!important;margin:1em 0!important;display:flex!important}.no-break{width:100%;display:block}.reveal blockquote{background:#ffaa4933;padding:5px;font-style:italic;display:block;position:relative;box-shadow:0 0 2px #0003;margin:var(--r-block-margin)auto!important;text-align:left!important}.col1{width:90%;margin:0 auto}.col2{justify-content:space-around;align-items:flex-start;width:90%;margin:0 auto;display:flex}:root{--callout-note:#448aff;--callout-abstract:#00b0ff;--callout-info:#00b8d4;--callout-todo:#00bfa5;--callout-tip:#00c853;--callout-success:#64dd17;--callout-question:#ffab00;--callout-warning:#ff9100;--callout-failure:#ff5252;--callout-danger:#ff1744;--callout-bug:#f50057;--callout-example:#7c4dff;--callout-quote:#9e9e9e;--code-bg:#f8f8f8;--border:#ddd}.reveal .callout{border:1px solid var(--border);border-left:6px solid var(--callout-note);border-radius:4px;font-size:.8em;overflow:hidden;text-align:left!important;width:75%!important;max-width:100%!important;margin:1rem auto!important}.reveal .callout-title{color:var(--callout-note);background:#0000000d;align-items:center;gap:.5rem;padding:.5rem 1rem;font-weight:600;display:flex}.reveal .callout-icon{align-items:center;display:flex}.reveal .callout-icon svg{width:1.2em;height:1.2em}.reveal .callout-content{padding:.5rem 1rem}.reveal .callout-content p{margin-top:.5rem!important}.reveal .callout-content p:first-child{margin-top:0!important}.reveal h1{text-transform:none!important}.reveal .callout-abstract{border-left-color:var(--callout-abstract)}.reveal .callout-abstract .callout-title{color:var(--callout-abstract)}.reveal .callout-info{border-left-color:var(--callout-info)}.reveal .callout-info .callout-title{color:var(--callout-info)}.reveal .callout-todo{border-left-color:var(--callout-todo)}.reveal .callout-todo .callout-title{color:var(--callout-todo)}.reveal .callout-tip{border-left-color:var(--callout-tip)}.reveal .callout-tip .callout-title{color:var(--callout-tip)}.reveal .callout-success{border-left-color:var(--callout-success)}.reveal .callout-success .callout-title{color:var(--callout-success)}.reveal .callout-question{border-left-color:var(--callout-question)}.reveal .callout-question .callout-title{color:var(--callout-question)}.reveal .callout-warning{border-left-color:var(--callout-warning)}.reveal .callout-warning .callout-title{color:var(--callout-warning)}.reveal .callout-failure{border-left-color:var(--callout-failure)}.reveal .callout-failure .callout-title{color:var(--callout-failure)}.reveal .callout-danger{border-left-color:var(--callout-danger)}.reveal .callout-danger .callout-title{color:var(--callout-danger)}.reveal .callout-bug{border-left-color:var(--callout-bug)}.reveal .callout-bug .callout-title{color:var(--callout-bug)}.reveal .callout-example{border-left-color:var(--callout-example)}.reveal .callout-example .callout-title{color:var(--callout-example)}.reveal .callout-quote{border-left-color:var(--callout-quote)}.reveal .callout-quote .callout-title{color:var(--callout-quote)}.red-note{color:var(--callout-failure)}.reveal .slide-number{border-radius:4px;color:#000000b1!important;background:#0000001a!important;padding:5px 10px!important;font-size:.8em!important}@media print{.reveal .slides section{visibility:visible!important;opacity:1!important;page-break-after:always!important;width:100%!important;height:100%!important;display:block!important;position:relative!important;top:0!important;left:0!important;overflow:hidden!important}.reveal .slides{width:100%!important;height:100%!important;top:0!important;left:0!important;transform:none!important}.reveal{overflow:visible!important}}</style></body></html>
+</code></pre>
+</section>
+<section><h1>Questões de fixação - 3 / 3</h1>
+<p><strong>7.</strong> Escreva uma função chamada <code>media_vetor</code>. Essa função deve receber dois parâmetros: um vetor de inteiros e um inteiro representando o tamanho desse vetor. A função deve calcular e retornar a média aritmética dos elementos.</p>
+<p><strong>9.</strong> Crie uma &quot;Calculadora Modular&quot;. O programa deve ter funções separadas para: <code>somar</code>, <code>subtrair</code>, <code>multiplicar</code> e <code>dividir</code>. No <code>main</code>, crie um menu (usando <code>switch</code> ou <code>if</code>) onde o usuário escolhe a operação e insere dois números. O programa deve chamar a função correspondente e exibir o resultado.</p>
+<p><strong>10.</strong> Crie uma função <code>eh_primo</code> que receba um inteiro e retorne 1 se for primo e 0 caso contrário. No <code>main</code>, utilize essa função para imprimir todos os números primos existentes entre 1 e 100.</p>
+</section>
+<section><h1>Próximos passos</h1>
+<p><strong>Avaliação do primeiro conceito (C1)!</strong></p>
+</section>
+        </div>
+    </div>
+
+    <script src="/aulas-faesa/js/vendor/reveal/reveal.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/notes/notes.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/markdown/markdown.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/math/math.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/zoom/zoom.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/prism.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-c.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-python.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-clike.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-perl.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-java.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-php.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/toolbar/prism-toolbar.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/show-language/prism-show-language.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/prism-slang.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/mermaid.min.js" data-no-bundle></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            mermaid.initialize({
+                startOnLoad: false,
+                theme: 'default',
+                securityLevel: 'loose',
+                fontFamily: 'Inter, system-ui, sans-serif',
+            });
+        });
+    </script>
+    <script>
+        Reveal.initialize({
+            hash: true,
+            slideNumber: 'c/t',
+            center: false,
+            controls: false,
+            plugins: [RevealMarkdown, RevealNotes, RevealMath.KaTeX, RevealZoom],
+            katex: {
+                local: '/aulas-faesa/js/vendor/katex',
+                output: 'html',
+                throwOnError: false,
+                strict: false,
+            },
+            width: 960,
+            height: 800,
+            margin: 0.15,
+            maxScale: 2.0,
+        });
+
+        // Ensure Prism highlights code on slide changes
+        Reveal.on('slideready', event => {
+            Prism.highlightAll();
+            try {
+                let mermaids = event.currentSlide.querySelectorAll('.mermaid');
+                if (mermaids.length > 0) {
+                    mermaid.init(undefined, mermaids);
+                }
+            } catch (err) { console.warn("Mermaid init failed", err); }
+        });
+        Reveal.on('slidechanged', event => {
+            Prism.highlightAll();
+            try {
+                let mermaids = event.currentSlide.querySelectorAll('.mermaid');
+                if (mermaids.length > 0) {
+                    mermaid.init(undefined, mermaids);
+                }
+            } catch (err) { console.warn("Mermaid init failed", err); }
+        });
+    </script>
+    <script src="/aulas-faesa/js/rough.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/apply_sketch.js" data-no-bundle></script>
+    <style>
+        /* Modern base styles */
+        .reveal {
+            font-size: 20px;
+            text-align: left !important;
+        }
+
+        .reveal code:not(pre code) {
+            font-family: 'JetBrains Mono', 'Fira Code', Consolas, monospace !important;
+            background-color: var(--code-bg) !important;
+            padding: 0.1em 0.3em !important;
+            border-radius: 4px !important;
+            font-size: 0.85em !important;
+            color: #3b82f6 !important;
+            border: 1px dashed var(--border) !important;
+            white-space: pre-wrap !important;
+            word-break: break-word !important;
+        }
+
+        .reveal h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px !important;
+            margin-left: 0 !important;
+            /* min-height: 2.3em; */
+            display: flex;
+            align-items: center;
+            justify-content: flex-start !important;
+            text-align: left !important;
+            width: 100% !important;
+            text-shadow: none !important;
+        }
+
+        /* Prism overrides for Reveal.js */
+        .reveal div.code-toolbar {
+            position: relative;
+            width: 90% !important;
+            margin: 1em auto !important;
+        }
+
+        .reveal pre[class*="language-"] {
+            margin: 0 !important;
+            padding: 1em !important;
+            width: 100% !important;
+            font-size: 0.8em !important;
+        }
+
+        .reveal pre[class*="language-"] > code {
+            position: relative !important;
+            display: block !important;
+        }
+
+        .reveal .line-numbers-rows {
+            position: absolute !important;
+            top: 0 !important;
+            left: -3.8em !important;
+            width: 3.2em !important;
+            padding-top: 0 !important;
+            border-right: 1px solid #ccc !important;
+        }
+
+        .reveal .line-numbers-rows > span:before {
+            padding-right: 0.5em !important;
+            color: #999 !important;
+            display: block !important;
+            text-align: right !important;
+        }
+
+        .reveal pre[class*="language-"].line-numbers,
+        .reveal pre[class*="language-"]:has(.line-numbers-rows) {
+            padding-left: 3.8em !important;
+        }
+
+        /* Language label styling */
+        .reveal div.toolbar {
+            position: absolute !important;
+            top: 0.2em !important;
+            right: 0.5em !important;
+            opacity: 1 !important;
+            padding-right: 0.1em !important;
+            z-index: 10;
+        }
+
+        .reveal div.toolbar-item span {
+            font-family: 'Inter', sans-serif !important;
+            font-size: 0.7em !important;
+            font-weight: 600 !important;
+            color: #999 !important;
+            text-transform: uppercase !important;
+            background: none !important;
+            box-shadow: none !important;
+            border: none !important;
+            padding: 0 !important;
+        }
+
+        .reveal h2 {
+            font-size: 1.6em;
+            margin-top: 30px !important;
+            margin-bottom: 20px !important;
+            text-align: left !important;
+        }
+
+        .reveal h3 {
+            font-size: 1.3em;
+            margin-top: 20px !important;
+            margin-bottom: 15px !important;
+            text-align: left !important;
+        }
+
+        .reveal p {
+            line-height: 1.5;
+            margin-top: 20px !important;
+            margin-left: 0 !important;
+            text-align: left !important;
+        }
+
+        .reveal ul,
+        .reveal ol,
+        .reveal li {
+            line-height: 1.5;
+            text-align: left !important;
+            margin-left: 0 !important;
+        }
+        
+        .reveal ul, .reveal ol {
+            display: block !important;
+            padding-left: 1.2em !important;
+        }
+
+        /* Slide padding and layout */
+        .reveal .slides section {
+            padding: 40px !important;
+            box-sizing: border-box;
+            text-align: left !important;
+        }
+
+        .reveal .slides {
+            text-align: left !important;
+        }
+
+        /* Centering for Title slides (h1 ONLY, h1 + h2 ONLY, or h1 + h2 + p ONLY) */
+        .reveal .slides section:not(.stack):has(> h1:only-child),
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child),
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) {
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: center !important;
+            align-items: center !important;
+            text-align: center !important;
+            height: 100% !important;
+            top: 0 !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:only-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child) h2,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h2,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) p {
+            justify-content: center !important;
+            text-align: center !important;
+            margin: 0 !important;
+            min-height: auto !important;
+            width: 100% !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h1 {
+            margin-bottom: 0.5em !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h2 {
+            margin-bottom: 0.3em !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) p {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        /* Full screen slide fix */
+        .reveal .slides section:has(.full-screen-image) {
+            padding: 0 !important;
+        }
+
+        /* Full screen slide fix - Garantindo que o fundo do Reveal fique visível e a imagem carregada */
+        .reveal:has(section.present .full-screen-image) {
+            background-image: url('../../slide_end_background.png') !important;
+            background-size: cover !important;
+            background-position: center !important;
+        }
+
+        /* Torna o slide e o container de slides transparentes para mostrar o fundo da .reveal */
+        .reveal:has(section.present .full-screen-image) .slides,
+        .reveal:has(section.present .full-screen-image) .slides section.present {
+            background: transparent !important;
+        }
+
+        .full-screen-image {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 !important;
+            /* Se houver texto, ele centraliza aqui */
+        }
+
+        /* Spacing for diagrams */
+        .reveal .svg-graph {
+            margin-top: 1em !important;
+            margin-bottom: 1em !important;
+            overflow: visible !important; /* Prevent labels from being cut off */
+            max-width: 100%;
+            height: auto;
+        }
+
+        .reveal .mermaid-switcher {
+            display: none !important;
+        }
+
+        .centered {
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            width: 100% !important;
+            margin: 1em 0 !important;
+        }
+
+        .no-break {
+            display: block;
+            width: 100%;
+        }
+
+        .reveal blockquote {
+            display: block;
+            position: relative;
+            margin: var(--r-block-margin) auto !important;
+            padding: 5px;
+            font-style: italic;
+            background: rgba(255, 170, 73, 0.2);
+            box-shadow: 0 0 2px rgba(0,0,0,.2);
+            text-align: left !important;
+        }
+
+        .col1 {
+            width: 90%;
+            margin: 0 auto;
+        }
+
+        .col2 {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start;
+            width: 90%;
+            margin: 0 auto;
+            align-items: flex-start;
+        }
+
+        /* Callout Styles */
+        :root {
+            --callout-note: #448aff;
+            --callout-abstract: #00b0ff;
+            --callout-info: #00b8d4;
+            --callout-todo: #00bfa5;
+            --callout-tip: #00c853;
+            --callout-success: #64dd17;
+            --callout-question: #ffab00;
+            --callout-warning: #ff9100;
+            --callout-failure: #ff5252;
+            --callout-danger: #ff1744;
+            --callout-bug: #f50057;
+            --callout-example: #7c4dff;
+            --callout-quote: #9e9e9e;
+            --code-bg: #f8f8f8;
+            --border: #ddd;
+        }
+
+        .reveal .callout {
+            margin: 1rem auto !important;
+            border: 1px solid var(--border);
+            border-left: 6px solid var(--callout-note);
+            border-radius: 4px;
+            overflow: hidden;
+            text-align: left !important;
+            font-size: 0.8em;
+            width: 75% !important;
+            max-width: 100% !important;
+        }
+
+        .reveal .callout-title {
+            padding: 0.5rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            color: var(--callout-note);
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .reveal .callout-icon {
+            display: flex;
+            align-items: center;
+        }
+
+        .reveal .callout-icon svg {
+            width: 1.2em;
+            height: 1.2em;
+        }
+
+        .reveal .callout-content {
+            padding: 0.5rem 1rem;
+        }
+
+        .reveal .callout-content p {
+            margin-top: 0.5rem !important;
+        }
+
+        .reveal .callout-content p:first-child {
+            margin-top: 0 !important;
+        }
+
+        .reveal h1 { text-transform: none !important; }
+
+        .reveal .callout-abstract { border-left-color: var(--callout-abstract); }
+        .reveal .callout-abstract .callout-title { color: var(--callout-abstract); }
+        .reveal .callout-info { border-left-color: var(--callout-info); }
+        .reveal .callout-info .callout-title { color: var(--callout-info); }
+        .reveal .callout-todo { border-left-color: var(--callout-todo); }
+        .reveal .callout-todo .callout-title { color: var(--callout-todo); }
+        .reveal .callout-tip { border-left-color: var(--callout-tip); }
+        .reveal .callout-tip .callout-title { color: var(--callout-tip); }
+        .reveal .callout-success { border-left-color: var(--callout-success); }
+        .reveal .callout-success .callout-title { color: var(--callout-success); }
+        .reveal .callout-question { border-left-color: var(--callout-question); }
+        .reveal .callout-question .callout-title { color: var(--callout-question) ; }
+        .reveal .callout-warning { border-left-color: var(--callout-warning); }
+        .reveal .callout-warning .callout-title { color: var(--callout-warning); }
+        .reveal .callout-failure { border-left-color: var(--callout-failure); }
+        .reveal .callout-failure .callout-title { color: var(--callout-failure); }
+        .reveal .callout-danger { border-left-color: var(--callout-danger); }
+        .reveal .callout-danger .callout-title { color: var(--callout-danger); }
+        .reveal .callout-bug { border-left-color: var(--callout-bug); }
+        .reveal .callout-bug .callout-title { color: var(--callout-bug); }
+        .reveal .callout-example { border-left-color: var(--callout-example); }
+        .reveal .callout-example .callout-title { color: var(--callout-example); }
+        .reveal .callout-quote { border-left-color: var(--callout-quote); }
+        .reveal .callout-quote .callout-title { color: var(--callout-quote); }
+        .red-note { color: var(--callout-failure); }
+
+        .reveal .slide-number {
+            font-size: 0.8em !important;
+            padding: 5px 10px !important;
+            background: rgba(0,0,0,0.1) !important;
+            border-radius: 4px;
+            color: #000000b1 !important;
+        }
+
+        /* Print styles */
+        @media print {
+            .reveal .slides section {
+                display: block !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                position: relative !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+                page-break-after: always !important;
+                overflow: hidden !important;
+            }
+
+            .reveal .slides {
+                transform: none !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+            }
+            
+            .reveal {
+                overflow: visible !important;
+            }
+        }
+    </style>
+</body>
+
+</html>

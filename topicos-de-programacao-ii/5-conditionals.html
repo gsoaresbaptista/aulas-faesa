@@ -1,59 +1,388 @@
-<!doctype html><html lang=pt-BR><meta charset=UTF-8><meta content="width=device-width,initial-scale=1.0" name=viewport><title>Toposia - Tópicos de Programação II (TEP II)</title><link media="(prefers-color-scheme: light)" href=/aulas-faesa/img/dark-favicon.svg rel=icon><link media="(prefers-color-scheme: dark)" href=/aulas-faesa/img/light-favicon.svg rel=icon><link data-no-bundle href=/aulas-faesa/css/vendor/fonts.css rel=stylesheet><link data-no-bundle href=/aulas-faesa/js/vendor/katex/dist/katex.min.css rel=stylesheet><link href=/aulas-faesa/css/bundle.min.css rel=stylesheet><link data-no-bundle href=/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css rel=stylesheet><script src=/aulas-faesa/js/bundle.min.js></script></head><body><script>// Restore sidebar state instantly (before first paint) to avoid transition flash
-(function(){localStorage.getItem(`cf_sidebar_hidden`)===`true`&&document.body.classList.add(`sidebar-hidden`,`no-transition`),requestAnimationFrame(function(){requestAnimationFrame(function(){document.body.classList.remove(`no-transition`)})})})();</script><div class=page-wrapper><nav class=sidebar><div class=sidebar-content><header class=sidebar-title-section><a class=course-title-link href=contents.html> <h1 class=sidebar-course-title>Tópicos de Programação II (TEP II)</h1> </a><div class=sidebar-ornament>❧</div></header><section class=sidebar-toc-section><h2 class=toc-header>Tabela de Conteúdos</h2><ol class=toc-list><li class="toc-item level-2"><a href=#definindo-uma-condição>5.1. Definindo uma Condição</a></li><li class="toc-item level-2"><a href=#comando-if>5.2. Comando IF</a></li><li class="toc-item level-3"><a href=#uso-das-chaves>5.2.1. Uso das Chaves { }</a></li><li class="toc-item level-3"><a href=#comando-else>5.2.2. Comando ELSE</a></li><li class="toc-item level-3"><a href=#independência-de-blocos-e-uso-de-chaves>5.2.3. Independência de Blocos e Uso de Chaves</a></li><li class="toc-item level-2"><a href=#aninhamento-de-if>5.3. Aninhamento de IF</a></li><li class="toc-item level-2"><a href=#operador-ternário>5.4. Operador Ternário (?)</a></li><li class="toc-item level-3"><a href=#aplicações-práticas>5.4.1. Aplicações Práticas</a></li><li class="toc-item level-2"><a href=#comando-switch>5.5. Comando SWITCH</a></li><li class="toc-item level-3"><a href=#uso-do-comando-break-no-switch>5.5.1. Uso do comando BREAK no switch</a></li><li class="toc-item level-3"><a href=#uso-das-chaves-no-case>5.5.2. Uso das Chaves { } no case</a></li><li class="toc-item level-2"><a href=#questões>5.6. Questões</a></li><li class="toc-item level-2"><a href=#próximos-passos>5.7. Próximos passos</a></li></ol></section><nav class=sidebar-nav-section><a class="sidebar-nav-link prev" href=4-operations-with-variables.html><i class=nav-icon data-lucide=chevron-left></i> Operações com Variáveis</a><a class="sidebar-nav-link next" href=6-repetitions.html>Repetições <i class=nav-icon data-lucide=chevron-right></i></a><a class="sidebar-nav-link back" href=javascript:void(0) onclick=handleBackNavigation()><i class=nav-icon data-lucide=arrow-left></i> Voltar</a></nav></div></nav><button aria-label=Menu class=mobile-menu-toggle><i data-lucide=menu></i></button><button aria-label="Alternar Barra Lateral" class=sidebar-toggle onclick=CourseForgeNav.toggleSidebar()><i class=toggle-icon data-lucide=chevron-left id=sidebar-toggle-icon></i></button><div class=mobile-menu-overlay></div><main class=main-content><article class=article><header class=article-header><span class=chapter-number>5</span><h1 class=article-title><span class="title-ornament left">❧</span> <span class=title-text>Condicionais</span> <span class="title-ornament right">❧</span></h1><p class=article-date>10/02/2026</p><nav aria-label=Breadcrumb class=breadcrumb><a class=breadcrumb-link href=contents.html>Tópicos de Programação II</a><span class=breadcrumb-separator><i class=breadcrumb-icon data-lucide=chevron-right></i></span><a class=breadcrumb-link href=contents.html#part-II>II - Linguagem C</a><span class=breadcrumb-separator><i class=breadcrumb-icon data-lucide=chevron-right></i></span><span class=breadcrumb-current>Condicionais</span></nav></header><div class=article-body><p>Até este ponto, os programas que você desenvolveu seguem uma estrutura estritamente sequencial, na qual cada instrução é executada logo após a anterior, do início ao fim, sem que nenhum comando seja ignorado. Entretanto, na programação do mundo real, frequentemente você encontrará situações em que um bloco de comandos deve ser executado apenas se uma determinada condição for atendida. Para lidar com esses cenários, utilizamos as <strong>estruturas de seleção</strong> ou <strong>comandos de controle condicional</strong>, que permitem ao software "tomar decisões" e selecionar qual caminho seguir.</p><p>Esse conceito é análogo ao funcionamento de um fluxograma, no qual o símbolo de um losango representa um ponto de decisão. Dependendo da análise de uma condição do tipo verdadeiro ou falso, o fluxo do programa pode divergir para caminhos distintos, conforme ilustrado na imagem abaixo:</p><div class=no-break><div class=centered><svg class="svg-graph graphviz-img" viewbox="0.00 0.00 114.00 141.00" data-sketch=true width=200 xmlns=http://www.w3.org/2000/svg><g transform="scale(1 1) rotate(0) translate(4 136.7)" class=graph id=graph0><title>figura41</title><polygon points="-4,4 -4,-136.7 110.32,-136.7 110.32,4 -4,4" fill=white stroke=none /><g class=node id=node1><title>start</title><ellipse cx=53.16 cy=-130.9 fill=#333333 rx=1.8 ry=1.8 stroke=#333333 /></g><g class=node id=node2><title>cond</title><polygon points="53.16,-92.1 0,-74.1 53.16,-56.1 106.32,-74.1 53.16,-92.1" fill=#b7d8ec stroke=#333333 /><text fill=#333333 font-family=Arial font-size=14.00 text-anchor=middle x=53.16 xml:space=preserve y=-68.67>A > B?</text></g><g class=edge id=edge1><title>start->cond</title><path d="M53.16,-128.95C53.16,-125.74 53.16,-114.9 53.16,-103.78" fill=none stroke=#333333 /><polygon points="56.66,-103.91 53.16,-93.91 49.66,-103.92 56.66,-103.91" fill=#333333 stroke=#333333 /></g><g class=node id=node3><title>sim</title><ellipse cx=30.16 cy=-1.8 fill=#333333 rx=1.8 ry=1.8 stroke=#333333 /></g><g class=edge id=edge2><title>cond->sim</title><path d="M42.4,-59.25C38.25,-53.12 33.95,-45.6 31.66,-38.1 29.41,-30.74 29.01,-22.11 29.18,-15.23" fill=none stroke=#333333 /><polygon points="32.66,-15.67 29.9,-5.44 25.68,-15.16 32.66,-15.67" fill=#333333 stroke=#333333 /><text fill=#333333 font-family=Times,serif font-size=14.00 text-anchor=middle x=42.91 xml:space=preserve y=-24.8>Sim</text></g><g class=node id=node4><title>nao</title><ellipse cx=76.16 cy=-1.8 fill=#333333 rx=1.8 ry=1.8 stroke=#333333 /></g><g class=edge id=edge3><title>cond->nao</title><path d="M58.27,-57.5C62.54,-44.45 68.53,-26.13 72.38,-14.36" fill=none stroke=#333333 /><polygon points="75.63,-15.69 75.41,-5.1 68.97,-13.51 75.63,-15.69" fill=#333333 stroke=#333333 /><text fill=#333333 font-family=Times,serif font-size=14.00 text-anchor=middle x=81.24 xml:space=preserve y=-24.8>Não</text></g></g></svg></div></div><p>Este capítulo foi projetado para que você compreenda o funcionamento de cada uma das estruturas de seleção disponíveis na linguagem <strong>C</strong>. Ao final da leitura, você será capaz de:</p><ul><li>Definir condições lógicas de forma precisa.</li><li>Utilizar o comando <strong>if</strong> para execuções condicionais simples.</li><li>Aplicar o comando <strong>else</strong> para tratar caminhos alternativos.</li><li>Criar estruturas de <strong>aninhamento condicional</strong> para problemas complexos.</li><li>Fazer uso do <strong>operador ternário</strong> para simplificações de código.</li><li>Utilizar o comando <strong>switch</strong> para seleções múltiplas.</li><li>Compreender a importância do comando <strong>break</strong> no controle do fluxo.</li></ul><div class="callout callout-info"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><circle cx=12 cy=12 r=10 /><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></span><span class=callout-title-inner>Nota<br></span></div><div class=callout-content><p>As estruturas condicionais são os pilares que conferem inteligência ao código, permitindo que o programa reaja de forma diferente a diferentes entradas de dados do usuário ou estados do sistema.</p></div></div><h2 id=definindo-uma-condição><span class=heading-text>Definindo uma Condição</span><span class=heading-arabic>5.1</span></h2><p>Uma <strong>condição</strong> é qualquer expressão relacional que utilize operadores de comparação como <code>></code>, <code>&lt;</code>, <code>>=</code>, <code>&lt;=</code>, <code>==</code> ou <code>!=</code> e que resulte em uma resposta do tipo <strong>verdadeiro</strong> ou <strong>falso</strong>. Para ilustrar, considere a condição $x > 0$:</p><ul><li>Se o valor de $x$ for <strong>positivo</strong>, a condição será considerada <strong>verdadeira</strong>.</li><li>Se o valor de $x$ for igual a <strong>zero</strong> ou <strong>negativo</strong>, a condição será considerada <strong>falsa</strong>.</li></ul><p>Ampliando esse conceito, uma <strong>expressão condicional</strong> é qualquer construção que resulte em um valor lógico, podendo ser elaborada através da combinação de diferentes tipos de operadores:</p><ul><li><strong>Matemáticos</strong>: <code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>, <code>%</code>.</li><li><strong>Relacionais</strong>: <code>></code>, <code>&lt;</code>, <code>>=</code>, <code>&lt;=</code>, <code>==</code>, <code>!=</code>.</li><li><strong>Lógicos</strong>: <code>&&</code>, <code>||</code>.</li></ul><p>O uso conjunto desses operadores permite que você crie lógicas mais sofisticadas para o seu programa. Por exemplo, para verificar se a divisão de $x$ por 2 é maior do que o valor de $y$ subtraído de 3, utiliza-se a expressão: $x / 2 > y - 3$.</p><p>Abaixo, você pode observar outros exemplos de como estruturar essas expressões:</p><table><thead><tr><th style=text-align:left>Objetivo da condição</th><th style=text-align:left>Expressão em C</th></tr></thead><tbody><tr><td style=text-align:left>$x$ é maior ou igual a $y$?</td><td style=text-align:left><code>x >= y</code></td></tr><tr><td style=text-align:left>$x$ é maior do que $y + 2$?</td><td style=text-align:left><code>x > y + 2</code></td></tr><tr><td style=text-align:left>$x - 5$ é diferente de $y + 3$?</td><td style=text-align:left><code>x - 5 != y + 3</code></td></tr><tr><td style=text-align:left>$x$ é maior do que $y$ <strong>e</strong> menor do que $z$?</td><td style=text-align:left><code>(x > y) && (x &lt; z)</code></td></tr></tbody></table><p>Ao avaliar uma condição, o compilador busca um valor de retorno para fundamentar uma decisão. É fundamental que você compreenda que, em linguagem <strong>C</strong>, uma expressão condicional não precisa seguir o formato convencional de comparação; uma variável isolada pode atuar como uma condição ao retornar seu próprio valor.</p><p>Para entender esse comportamento, lembre-se de que o computador opera internamente com o sistema binário:</p><ul><li>Se uma condição é <strong>falsa</strong>, o computador atribui a ela o valor <strong>zero</strong>.</li><li>Se uma condição é <strong>verdadeira</strong>, o computador atribui a ela qualquer valor <strong>diferente de zero</strong>.</li></ul><p>Portanto, o valor de uma variável inteira pode ser interpretado diretamente como o resultado de uma lógica condicional: se a variável for igual a <strong>zero</strong>, a condição é tratada como <strong>falsa</strong>; se for <strong>diferente de zero</strong>, será tratada como <strong>verdadeira</strong>.</p><p>Confira algumas equivalências que o compilador utiliza durante essa avaliação:</p><ul><li><strong>Para verificar se uma variável é verdadeira (diferente de zero)</strong>:<br> A expressão <code>(num != 0)</code> é equivalente a utilizar apenas <code>(num)</code>, pois a variável sozinha retorna um valor que o computador interpreta como verdadeiro se não for nulo.</li><li><strong>Para verificar se uma variável é falsa (igual a zero)</strong>:<br> A expressão <code>(num == 0)</code> é equivalente a utilizar a negação <code>(!num)</code>, pois se a variável for zero, sua negação retornará um valor considerado verdadeiro pelo sistema.</li></ul><h2 id=comando-if><span class=heading-text>Comando IF</span><span class=heading-arabic>5.2</span></h2><p>Na linguagem <strong>C</strong>, você utilizará o comando <strong>if</strong> sempre que precisar escolher entre dois caminhos dentro do seu programa ou quando desejar que a execução de certas instruções dependa do resultado de um teste lógico.</p><p>A estrutura geral do comando <strong>if</strong> é a seguinte:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>if(condição) {
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toposia - Tópicos de Programação II (TEP II)</title>
+    <link rel="icon" href="/aulas-faesa/img/dark-favicon.svg" media="(prefers-color-scheme: light)">
+    <link rel="icon" href="/aulas-faesa/img/light-favicon.svg" media="(prefers-color-scheme: dark)">
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/fonts.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/bundle.min.css">
+    
+    
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css" data-no-bundle>
+    <script src="/aulas-faesa/js/bundle.min.js"></script>
+</head>
+
+<body>
+    <script>
+        // Restore sidebar state instantly (before first paint) to avoid transition flash
+        (function() {
+            if (localStorage.getItem('cf_sidebar_hidden') === 'true') {
+                document.body.classList.add('sidebar-hidden', 'no-transition');
+            }
+            requestAnimationFrame(function() {
+                requestAnimationFrame(function() {
+                    document.body.classList.remove('no-transition');
+                });
+            });
+        })();
+    </script>
+    <div class="page-wrapper">
+        <nav class="sidebar">
+            <div class="sidebar-content">
+                <header class="sidebar-title-section">
+                    <a href="contents.html" class="course-title-link">
+                        <h1 class="sidebar-course-title">Tópicos de Programação II (TEP II)</h1>
+                    </a>
+                    <div class="sidebar-ornament">❧</div>
+                </header>
+
+                
+                <section class="sidebar-toc-section">
+                    <h2 class="toc-header">Tabela de Conteúdos</h2>
+                    <ol class="toc-list">
+                        
+                        <li class="toc-item level-2">
+                            <a href="#definindo-uma-condição">5.1. Definindo uma Condição</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#comando-if">5.2. Comando IF</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#uso-das-chaves">5.2.1. Uso das Chaves { }</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#comando-else">5.2.2. Comando ELSE</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#independência-de-blocos-e-uso-de-chaves">5.2.3. Independência de Blocos e Uso de Chaves</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#aninhamento-de-if">5.3. Aninhamento de IF</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#operador-ternário">5.4. Operador Ternário (?)</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#aplicações-práticas">5.4.1. Aplicações Práticas</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#comando-switch">5.5. Comando SWITCH</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#uso-do-comando-break-no-switch">5.5.1. Uso do comando BREAK no switch</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#uso-das-chaves-no-case">5.5.2. Uso das Chaves { } no case</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#questões">5.6. Questões</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#próximos-passos">5.7. Próximos passos</a>
+                        </li>
+                        
+                    </ol>
+                </section>
+                
+
+                <nav class="sidebar-nav-section">
+                    
+                    <a href="4-operations-with-variables.html" class="sidebar-nav-link prev"><i data-lucide="chevron-left" class="nav-icon"></i> Operações com Variáveis</a>
+                    
+                    
+                    <a href="6-repetitions.html" class="sidebar-nav-link next">Repetições <i data-lucide="chevron-right" class="nav-icon"></i></a>
+                    
+                    <a href="javascript:void(0)" onclick="handleBackNavigation()"
+                        class="sidebar-nav-link back"><i data-lucide="arrow-left" class="nav-icon"></i> Voltar</a>
+                </nav>
+
+            </div>
+        </nav>
+
+        <button class="mobile-menu-toggle" aria-label="Menu">
+            <i data-lucide="menu"></i>
+        </button>
+
+        <button class="sidebar-toggle" onclick="CourseForgeNav.toggleSidebar()" aria-label="Alternar Barra Lateral">
+            <i data-lucide="chevron-left" class="toggle-icon" id="sidebar-toggle-icon"></i>
+        </button>
+
+        <div class="mobile-menu-overlay"></div>
+
+        <main class="main-content">
+            <article class="article">
+                <header class="article-header">
+                    <span class="chapter-number">5</span>
+                    <h1 class="article-title">
+                        <span class="title-ornament left">❧</span>
+                        <span class="title-text">Condicionais</span>
+                        <span class="title-ornament right">❧</span>
+                    </h1>
+                    
+                    <p class="article-date">10/02/2026</p>
+                    
+                    
+                    <nav class="breadcrumb" aria-label="Breadcrumb">
+                        
+                        
+                        
+                        <a href="contents.html" class="breadcrumb-link">Tópicos de Programação II</a>
+                        
+                        <span class="breadcrumb-separator"><i data-lucide="chevron-right" class="breadcrumb-icon"></i></span>
+                        
+                        
+                        
+                        
+                        <a href="contents.html#part-II" class="breadcrumb-link">II - Linguagem C</a>
+                        
+                        <span class="breadcrumb-separator"><i data-lucide="chevron-right" class="breadcrumb-icon"></i></span>
+                        
+                        
+                        
+                        <span class="breadcrumb-current">Condicionais</span>
+                        
+                        
+                    </nav>
+                    
+                </header>
+                <div class="article-body">
+                    <p>Até este ponto, os programas que você desenvolveu seguem uma estrutura estritamente sequencial, na qual cada instrução é executada logo após a anterior, do início ao fim, sem que nenhum comando seja ignorado. Entretanto, na programação do mundo real, frequentemente você encontrará situações em que um bloco de comandos deve ser executado apenas se uma determinada condição for atendida. Para lidar com esses cenários, utilizamos as <strong>estruturas de seleção</strong> ou <strong>comandos de controle condicional</strong>, que permitem ao software &quot;tomar decisões&quot; e selecionar qual caminho seguir.</p>
+<p>Esse conceito é análogo ao funcionamento de um fluxograma, no qual o símbolo de um losango representa um ponto de decisão. Dependendo da análise de uma condição do tipo verdadeiro ou falso, o fluxo do programa pode divergir para caminhos distintos, conforme ilustrado na imagem abaixo:</p>
+<div class="error">Graphviz error: failed to execute PosixPath('dot'), make sure the Graphviz executables are on your systems' PATH</div>
+
+<p>Este capítulo foi projetado para que você compreenda o funcionamento de cada uma das estruturas de seleção disponíveis na linguagem <strong>C</strong>. Ao final da leitura, você será capaz de:</p>
+<ul>
+<li>Definir condições lógicas de forma precisa.</li>
+<li>Utilizar o comando <strong>if</strong> para execuções condicionais simples.</li>
+<li>Aplicar o comando <strong>else</strong> para tratar caminhos alternativos.</li>
+<li>Criar estruturas de <strong>aninhamento condicional</strong> para problemas complexos.</li>
+<li>Fazer uso do <strong>operador ternário</strong> para simplificações de código.</li>
+<li>Utilizar o comando <strong>switch</strong> para seleções múltiplas.</li>
+<li>Compreender a importância do comando <strong>break</strong> no controle do fluxo.</li>
+</ul>
+<div class="callout callout-info">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></span>
+    <span class="callout-title-inner">Nota<br /></span>
+  </div>
+  <div class="callout-content">
+<p>As estruturas condicionais são os pilares que conferem inteligência ao código, permitindo que o programa reaja de forma diferente a diferentes entradas de dados do usuário ou estados do sistema.</p>
+  </div>
+</div>
+<h2 id="definindo-uma-condição"><span class="heading-text">Definindo uma Condição</span><span class="heading-arabic">5.1</span></h2>
+<p>Uma <strong>condição</strong> é qualquer expressão relacional que utilize operadores de comparação como <code>&gt;</code>, <code>&lt;</code>, <code>&gt;=</code>, <code>&lt;=</code>, <code>==</code> ou <code>!=</code> e que resulte em uma resposta do tipo <strong>verdadeiro</strong> ou <strong>falso</strong>. Para ilustrar, considere a condição $x > 0$:</p>
+<ul>
+<li>Se o valor de $x$ for <strong>positivo</strong>, a condição será considerada <strong>verdadeira</strong>.</li>
+<li>Se o valor de $x$ for igual a <strong>zero</strong> ou <strong>negativo</strong>, a condição será considerada <strong>falsa</strong>.</li>
+</ul>
+<p>Ampliando esse conceito, uma <strong>expressão condicional</strong> é qualquer construção que resulte em um valor lógico, podendo ser elaborada através da combinação de diferentes tipos de operadores:</p>
+<ul>
+<li><strong>Matemáticos</strong>: <code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>, <code>%</code>.</li>
+<li><strong>Relacionais</strong>: <code>&gt;</code>, <code>&lt;</code>, <code>&gt;=</code>, <code>&lt;=</code>, <code>==</code>, <code>!=</code>.</li>
+<li><strong>Lógicos</strong>: <code>&amp;&amp;</code>, <code>||</code>.</li>
+</ul>
+<p>O uso conjunto desses operadores permite que você crie lógicas mais sofisticadas para o seu programa. Por exemplo, para verificar se a divisão de $x$ por 2 é maior do que o valor de $y$ subtraído de 3, utiliza-se a expressão: $x / 2 > y - 3$.</p>
+<p>Abaixo, você pode observar outros exemplos de como estruturar essas expressões:</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Objetivo da condição</th>
+  <th style="text-align:left">Expressão em C</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">$x$ é maior ou igual a $y$?</td>
+  <td style="text-align:left"><code>x &gt;= y</code></td>
+</tr>
+<tr>
+  <td style="text-align:left">$x$ é maior do que $y + 2$?</td>
+  <td style="text-align:left"><code>x &gt; y + 2</code></td>
+</tr>
+<tr>
+  <td style="text-align:left">$x - 5$ é diferente de $y + 3$?</td>
+  <td style="text-align:left"><code>x - 5 != y + 3</code></td>
+</tr>
+<tr>
+  <td style="text-align:left">$x$ é maior do que $y$ <strong>e</strong> menor do que $z$?</td>
+  <td style="text-align:left"><code>(x &gt; y) &amp;&amp; (x &lt; z)</code></td>
+</tr>
+</tbody>
+</table>
+<p>Ao avaliar uma condição, o compilador busca um valor de retorno para fundamentar uma decisão. É fundamental que você compreenda que, em linguagem <strong>C</strong>, uma expressão condicional não precisa seguir o formato convencional de comparação; uma variável isolada pode atuar como uma condição ao retornar seu próprio valor.</p>
+<p>Para entender esse comportamento, lembre-se de que o computador opera internamente com o sistema binário:</p>
+<ul>
+<li>Se uma condição é <strong>falsa</strong>, o computador atribui a ela o valor <strong>zero</strong>.</li>
+<li>Se uma condição é <strong>verdadeira</strong>, o computador atribui a ela qualquer valor <strong>diferente de zero</strong>.</li>
+</ul>
+<p>Portanto, o valor de uma variável inteira pode ser interpretado diretamente como o resultado de uma lógica condicional: se a variável for igual a <strong>zero</strong>, a condição é tratada como <strong>falsa</strong>; se for <strong>diferente de zero</strong>, será tratada como <strong>verdadeira</strong>.</p>
+<p>Confira algumas equivalências que o compilador utiliza durante essa avaliação:</p>
+<ul>
+<li><strong>Para verificar se uma variável é verdadeira (diferente de zero)</strong>:<br />
+A expressão <code>(num != 0)</code> é equivalente a utilizar apenas <code>(num)</code>, pois a variável sozinha retorna um valor que o computador interpreta como verdadeiro se não for nulo.</li>
+<li><strong>Para verificar se uma variável é falsa (igual a zero)</strong>:<br />
+A expressão <code>(num == 0)</code> é equivalente a utilizar a negação <code>(!num)</code>, pois se a variável for zero, sua negação retornará um valor considerado verdadeiro pelo sistema.</li>
+</ul>
+<h2 id="comando-if"><span class="heading-text">Comando IF</span><span class="heading-arabic">5.2</span></h2>
+<p>Na linguagem <strong>C</strong>, você utilizará o comando <strong>if</strong> sempre que precisar escolher entre dois caminhos dentro do seu programa ou quando desejar que a execução de certas instruções dependa do resultado de um teste lógico.</p>
+<p>A estrutura geral do comando <strong>if</strong> é a seguinte:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">if(condição) {
     sequência de comandos;
 }
-</code></pre><p>Durante a execução, a condição entre parênteses é avaliada pelo sistema:</p><ul><li>Se a condição for <strong>verdadeira</strong>, o bloco de comandos interno será executado integralmente.</li><li>Se a condição for <strong>falsa</strong>, a sequência de comandos dentro do <strong>if</strong> será ignorada, e o programa seguirá seu fluxo a partir da primeira instrução após o fechamento do bloco.</li></ul><p>Observe abaixo um exemplo prático de um programa que solicita um número inteiro e informa ao usuário se ele é maior do que 10:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>#include &lt;stdio.h>
-#include &lt;stdlib.h>
+</code></pre>
+<p>Durante a execução, a condição entre parênteses é avaliada pelo sistema:</p>
+<ul>
+<li>Se a condição for <strong>verdadeira</strong>, o bloco de comandos interno será executado integralmente.</li>
+<li>Se a condição for <strong>falsa</strong>, a sequência de comandos dentro do <strong>if</strong> será ignorada, e o programa seguirá seu fluxo a partir da primeira instrução após o fechamento do bloco.</li>
+</ul>
+<p>Observe abaixo um exemplo prático de um programa que solicita um número inteiro e informa ao usuário se ele é maior do que 10:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
 
 int main(){
     int num;
-    printf("Digite um numero: ");
-    scanf("%d", &num);
+    printf(&quot;Digite um numero: &quot;);
+    scanf(&quot;%d&quot;, &amp;num);
 
-    if(num > 10) {
-        printf("O numero e maior do que 10\n");
+    if(num &gt; 10) {
+        printf(&quot;O numero e maior do que 10\n&quot;);
     }
 
-    system("pause");
+    system(&quot;pause&quot;);
     return 0;
 }
-</code></pre><p>Neste código, a mensagem de confirmação só aparecerá se a condição estipulada for atendida. Caso contrário, nada será exibido. Para visualizar melhor como as instruções são processadas passo a passo, podemos observar a representação em fluxograma na imagem a seguir:</p><div class=no-break><div class=centered><svg class="svg-graph graphviz-img" viewbox="0.00 0.00 432.00 524.00" data-sketch=true width=400 xmlns=http://www.w3.org/2000/svg><g transform="scale(1 1) rotate(0) translate(4 520)" class=graph id=graph0><title>Flowchart</title><polygon points="-4,4 -4,-520 427.5,-520 427.5,4 -4,4" fill=white stroke=none /><g class=node id=node1><title>Início</title><ellipse cx=81.12 cy=-498 fill=#e1f5fe rx=28.3 ry=18 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=81.12 xml:space=preserve y=-493.73>Início</text></g><g class=node id=node3><title>DeclVar</title><path d="M98.12,-449C98.12,-449 64.12,-449 64.12,-449 58.12,-449 52.12,-443 52.12,-437 52.12,-437 52.12,-425 52.12,-425 52.12,-419 58.12,-413 64.12,-413 64.12,-413 98.12,-413 98.12,-413 104.12,-413 110.12,-419 110.12,-425 110.12,-425 110.12,-437 110.12,-437 110.12,-443 104.12,-449 98.12,-449" fill=#f9f9f9 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=81.12 xml:space=preserve y=-426.73>int num;</text></g><g class=edge id=edge1><title>Início->DeclVar</title><path d="M81.12,-479.58C81.12,-473.9 81.12,-467.42 81.12,-461.12" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="84.63,-461.28 81.13,-451.28 77.63,-461.28 84.63,-461.28" fill=#333333 stroke=#333333 stroke-width=1.2 /></g><g class=node id=node2><title>Fim</title><ellipse cx=203.12 cy=-18 fill=#e1f5fe rx=27 ry=18 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=203.12 xml:space=preserve y=-13.72>Fim</text></g><g class=node id=node4><title>PrintIn</title><path d="M150.25,-382C150.25,-382 12,-382 12,-382 6,-382 0,-376 0,-370 0,-370 0,-358 0,-358 0,-352 6,-346 12,-346 12,-346 150.25,-346 150.25,-346 156.25,-346 162.25,-352 162.25,-358 162.25,-358 162.25,-370 162.25,-370 162.25,-376 156.25,-382 150.25,-382" fill=#f9f9f9 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=81.12 xml:space=preserve y=-359.73>printf("Digite um numero: ");</text></g><g class=edge id=edge2><title>DeclVar->PrintIn</title><path d="M81.12,-412.58C81.12,-406.9 81.12,-400.42 81.12,-394.12" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="84.63,-394.28 81.13,-384.28 77.63,-394.28 84.63,-394.28" fill=#333333 stroke=#333333 stroke-width=1.2 /></g><g class=node id=node5><title>Scan</title><path d="M128.5,-315C128.5,-315 33.75,-315 33.75,-315 27.75,-315 21.75,-309 21.75,-303 21.75,-303 21.75,-291 21.75,-291 21.75,-285 27.75,-279 33.75,-279 33.75,-279 128.5,-279 128.5,-279 134.5,-279 140.5,-285 140.5,-291 140.5,-291 140.5,-303 140.5,-303 140.5,-309 134.5,-315 128.5,-315" fill=#f9f9f9 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=81.12 xml:space=preserve y=-292.73>scanf("%d", &num);</text></g><g class=edge id=edge3><title>PrintIn->Scan</title><path d="M81.12,-345.58C81.12,-339.9 81.12,-333.42 81.12,-327.12" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="84.63,-327.28 81.13,-317.28 77.63,-327.28 84.63,-327.28" fill=#333333 stroke=#333333 stroke-width=1.2 /></g><g class=node id=node6><title>Decisão</title><polygon points="81.12,-248 7.37,-230 81.12,-212 154.88,-230 81.12,-248" fill=#fff9c4 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=81.12 xml:space=preserve y=-225.72>if (num > 10)</text></g><g class=edge id=edge4><title>Scan->Decisão</title><path d="M81.12,-278.58C81.12,-272.9 81.12,-266.42 81.12,-260.12" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="84.63,-260.28 81.13,-250.28 77.63,-260.28 84.63,-260.28" fill=#333333 stroke=#333333 stroke-width=1.2 /></g><g class=node id=node7><title>PrintOut</title><path d="M411.5,-248C411.5,-248 238.75,-248 238.75,-248 232.75,-248 226.75,-242 226.75,-236 226.75,-236 226.75,-224 226.75,-224 226.75,-218 232.75,-212 238.75,-212 238.75,-212 411.5,-212 411.5,-212 417.5,-212 423.5,-218 423.5,-224 423.5,-224 423.5,-236 423.5,-236 423.5,-242 417.5,-248 411.5,-248" fill=#f9f9f9 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=325.12 xml:space=preserve y=-225.72>printf("O numero e maior que 10");</text></g><g class=edge id=edge5><title>Decisão->PrintOut</title><path d="M156.99,-230C175.27,-230 195.16,-230 214.66,-230" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="214.58,-233.5 224.58,-230 214.58,-226.5 214.58,-233.5" fill=#333333 stroke=#333333 stroke-width=1.2 /><text font-family=Arial font-size=10.00 text-anchor=middle x=190.82 xml:space=preserve y=-235.5>SIM</text></g><g class=node id=node8><title>Pause</title><path d="M244.12,-170C244.12,-170 162.12,-170 162.12,-170 156.12,-170 150.12,-164 150.12,-158 150.12,-158 150.12,-146 150.12,-146 150.12,-140 156.12,-134 162.12,-134 162.12,-134 244.12,-134 244.12,-134 250.12,-134 256.12,-140 256.12,-146 256.12,-146 256.12,-158 256.12,-158 256.12,-164 250.12,-170 244.12,-170" fill=#f9f9f9 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=203.12 xml:space=preserve y=-147.72>system("pause");</text></g><g class=edge id=edge7><title>Decisão->Pause</title><path d="M101.27,-216.45C118.6,-205.65 144.08,-189.78 165.22,-176.62" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="167.01,-179.62 173.65,-171.36 163.31,-173.68 167.01,-179.62" fill=#333333 stroke=#333333 stroke-width=1.2 /><text font-family=Arial font-size=10.00 text-anchor=middle x=160.3 xml:space=preserve y=-187.5>NÃO</text></g><g class=edge id=edge6><title>PrintOut->Pause</title><path d="M297.14,-211.56C280.47,-201.19 259.11,-187.88 240.96,-176.57" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="242.86,-173.63 232.53,-171.32 239.16,-179.57 242.86,-173.63" fill=#333333 stroke=#333333 stroke-width=1.2 /></g><g class=node id=node9><title>Return</title><path d="M220.88,-103C220.88,-103 185.38,-103 185.38,-103 179.38,-103 173.38,-97 173.38,-91 173.38,-91 173.38,-79 173.38,-79 173.38,-73 179.38,-67 185.38,-67 185.38,-67 220.88,-67 220.88,-67 226.88,-67 232.88,-73 232.88,-79 232.88,-79 232.88,-91 232.88,-91 232.88,-97 226.88,-103 220.88,-103" fill=#f9f9f9 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=203.12 xml:space=preserve y=-80.72>return 0;</text></g><g class=edge id=edge8><title>Pause->Return</title><path d="M203.12,-133.58C203.12,-127.9 203.12,-121.42 203.12,-115.12" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="206.63,-115.28 203.13,-105.28 199.63,-115.28 206.63,-115.28" fill=#333333 stroke=#333333 stroke-width=1.2 /></g><g class=edge id=edge9><title>Return->Fim</title><path d="M203.12,-66.58C203.12,-60.9 203.12,-54.42 203.12,-48.12" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="206.63,-48.28 203.13,-38.28 199.63,-48.28 206.63,-48.28" fill=#333333 stroke=#333333 stroke-width=1.2 /></g></g></svg></div></div><div class="callout callout-warning"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span><span class=callout-title-inner>Atenção ao Ponto e Vírgula<br></span></div><div class=callout-content><p>Diferente da maioria das instruções em <strong>C</strong>, você nunca deve utilizar o ponto e vírgula (<code>;</code>) logo após a condição do comando <strong>if</strong>.</p></div></div><p>Veja este exemplo de erro comum:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>if(num > 10); // ERRADO!
-printf("O numero e maior do que 10\n");
-</code></pre><p>Como o ponto e vírgula serve para finalizar uma instrução, ao colocá-lo após o <code>if</code>, você indica ao compilador que o comando condicional termina ali mesmo, sem executar nada. Isso faz com que o <code>printf</code> seguinte seja tratado como um comando comum, fora do controle do <strong>if</strong>, sendo exibido independentemente do valor de <code>num</code>. O compilador não acusará erro de sintaxe, mas a lógica do seu programa estará comprometida.</p><h3 id=uso-das-chaves><span class=heading-text>Uso das Chaves { }</span><span class=heading-arabic>5.2.1</span></h3><p>Você deve utilizar as chaves (<code>{ }</code>) para delimitar um <strong>bloco de instruções</strong>. Por padrão, comandos de condição ou repetição em <strong>C</strong> afetam apenas a instrução imediatamente seguinte a eles.</p><p>Portanto, se você precisar que o <strong>if</strong> controle duas ou mais linhas de código, é obrigatório envolvê-las em chaves:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>if(condição) {
+</code></pre>
+<p>Neste código, a mensagem de confirmação só aparecerá se a condição estipulada for atendida. Caso contrário, nada será exibido. Para visualizar melhor como as instruções são processadas passo a passo, podemos observar a representação em fluxograma na imagem a seguir:</p>
+<div class="error">Graphviz error: failed to execute PosixPath('dot'), make sure the Graphviz executables are on your systems' PATH</div>
+
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Atenção ao Ponto e Vírgula<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Diferente da maioria das instruções em <strong>C</strong>, você nunca deve utilizar o ponto e vírgula (<code>;</code>) logo após a condição do comando <strong>if</strong>.</p>
+  </div>
+</div>
+<p>Veja este exemplo de erro comum:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">if(num &gt; 10); // ERRADO!
+printf(&quot;O numero e maior do que 10\n&quot;);
+</code></pre>
+<p>Como o ponto e vírgula serve para finalizar uma instrução, ao colocá-lo após o <code>if</code>, você indica ao compilador que o comando condicional termina ali mesmo, sem executar nada. Isso faz com que o <code>printf</code> seguinte seja tratado como um comando comum, fora do controle do <strong>if</strong>, sendo exibido independentemente do valor de <code>num</code>. O compilador não acusará erro de sintaxe, mas a lógica do seu programa estará comprometida.</p>
+<h3 id="uso-das-chaves"><span class="heading-text">Uso das Chaves { }</span><span class="heading-arabic">5.2.1</span></h3>
+<p>Você deve utilizar as chaves (<code>{ }</code>) para delimitar um <strong>bloco de instruções</strong>. Por padrão, comandos de condição ou repetição em <strong>C</strong> afetam apenas a instrução imediatamente seguinte a eles.</p>
+<p>Portanto, se você precisar que o <strong>if</strong> controle duas ou mais linhas de código, é obrigatório envolvê-las em chaves:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">if(condição) {
     comando 1;
     comando 2;
     // ... outros comandos
 }
-</code></pre><div class="callout callout-tip"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .5 2.2 1.5 3.1.7.7 1.3 1.5 1.5 2.4"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span><span class=callout-title-inner>Dica de Estilo<br></span></div><div class=callout-content><p>Se o seu <strong>if</strong> possuir apenas um comando, as chaves tornam-se opcionais. Entretanto, utilizá-las mesmo em comandos únicos é uma boa prática que ajuda a evitar erros futuros caso você decida adicionar mais instruções ao bloco.</p></div></div><pre class="line-numbers language-c" data-lang=C><code class=language-c>if(num > 10)
-    printf("O numero e maior que 10\n");
+</code></pre>
+<div class="callout callout-tip">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .5 2.2 1.5 3.1.7.7 1.3 1.5 1.5 2.4"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span>
+    <span class="callout-title-inner">Dica de Estilo<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Se o seu <strong>if</strong> possuir apenas um comando, as chaves tornam-se opcionais. Entretanto, utilizá-las mesmo em comandos únicos é uma boa prática que ajuda a evitar erros futuros caso você decida adicionar mais instruções ao bloco.</p>
+  </div>
+</div>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">if(num &gt; 10)
+    printf(&quot;O numero e maior que 10\n&quot;);
 
 /* Forma equivalente utilizando chaves */
-if(num > 10) {
-    printf("O numero e maior que 10\n");
+if(num &gt; 10) {
+    printf(&quot;O numero e maior que 10\n&quot;);
 }
-</code></pre><h3 id=comando-else><span class=heading-text>Comando ELSE</span><span class=heading-arabic>5.2.2</span></h3><p>O comando <strong>else</strong> deve ser compreendido como um complemento direto do comando <strong>if</strong>. Ele atua auxiliando o <strong>if</strong> na tarefa de selecionar entre diferentes caminhos a serem seguidos pelo fluxo do programa.</p><p>O uso do <strong>else</strong> é opcional, e sua sequência de instruções só será processada se o valor da condição testada pelo <strong>if</strong> for <strong>FALSA</strong>. Em resumo, enquanto o <strong>if</strong> define o que deve ser feito quando uma condição é verdadeira, o <strong>else</strong> gerencia o que deve ocorrer quando ela é falsa.</p><p>Esta lógica de caminhos alternativos é visualizada claramente em um fluxograma, onde a decisão bifurca o fluxo em dois blocos distintos:</p><div class=no-break><div class=centered><svg class="svg-graph graphviz-img" viewbox="0.00 0.00 114.00 141.00" data-sketch=true width=200 xmlns=http://www.w3.org/2000/svg><g transform="scale(1 1) rotate(0) translate(4 136.7)" class=graph id=graph0><title>figura41</title><polygon points="-4,4 -4,-136.7 110.32,-136.7 110.32,4 -4,4" fill=white stroke=none /><g class=node id=node1><title>start</title><ellipse cx=53.16 cy=-130.9 fill=#333333 rx=1.8 ry=1.8 stroke=#333333 /></g><g class=node id=node2><title>cond</title><polygon points="53.16,-92.1 0,-74.1 53.16,-56.1 106.32,-74.1 53.16,-92.1" fill=#b7d8ec stroke=#333333 /><text fill=#333333 font-family=Arial font-size=14.00 text-anchor=middle x=53.16 xml:space=preserve y=-68.67>A > B?</text></g><g class=edge id=edge1><title>start->cond</title><path d="M53.16,-128.95C53.16,-125.74 53.16,-114.9 53.16,-103.78" fill=none stroke=#333333 /><polygon points="56.66,-103.91 53.16,-93.91 49.66,-103.92 56.66,-103.91" fill=#333333 stroke=#333333 /></g><g class=node id=node3><title>sim</title><ellipse cx=36.16 cy=-1.8 fill=#333333 rx=1.8 ry=1.8 stroke=#333333 /></g><g class=edge id=edge2><title>cond->sim</title><path d="M44.94,-58.58C41.9,-52.46 38.8,-45.13 37.16,-38.1 35.42,-30.61 35.14,-21.98 35.32,-15.13" fill=none stroke=#333333 /><polygon points="38.79,-15.63 35.94,-5.43 31.81,-15.19 38.79,-15.63" fill=#333333 stroke=#333333 /><text fill=#333333 font-family=Times,serif font-size=14.00 text-anchor=middle x=43.16 xml:space=preserve y=-24.8>IF</text></g><g class=node id=node4><title>nao</title><ellipse cx=71.16 cy=-1.8 fill=#333333 rx=1.8 ry=1.8 stroke=#333333 /></g><g class=edge id=edge3><title>cond->nao</title><path d="M57.25,-57.15C60.56,-44.22 65.14,-26.31 68.13,-14.64" fill=none stroke=#333333 /><polygon points="71.48,-15.67 70.57,-5.11 64.7,-13.93 71.48,-15.67" fill=#333333 stroke=#333333 /><text fill=#333333 font-family=Times,serif font-size=14.00 text-anchor=middle x=82.46 xml:space=preserve y=-24.8>ELSE</text></g></g></svg></div></div><ul><li><strong>Com o comando if sozinho</strong>: se a condição for verdadeira, o bloco é executado; se for falsa, o programa apenas segue seu fluxo padrão, ignorando o bloco condicional.</li><li><strong>Com a estrutura if-else</strong>: se a condição for verdadeira, a primeira sequência de comandos (bloco <strong>if</strong>) é executada; se for falsa, a segunda sequência de comandos (bloco <strong>else</strong>) é obrigatoriamente executada.</li></ul><p>Veja abaixo um exemplo de programa que verifica se um número inteiro fornecido pelo usuário é igual ou diferente de 10:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>#include &lt;stdio.h>
-#include &lt;stdlib.h>
+</code></pre>
+<h3 id="comando-else"><span class="heading-text">Comando ELSE</span><span class="heading-arabic">5.2.2</span></h3>
+<p>O comando <strong>else</strong> deve ser compreendido como um complemento direto do comando <strong>if</strong>. Ele atua auxiliando o <strong>if</strong> na tarefa de selecionar entre diferentes caminhos a serem seguidos pelo fluxo do programa.</p>
+<p>O uso do <strong>else</strong> é opcional, e sua sequência de instruções só será processada se o valor da condição testada pelo <strong>if</strong> for <strong>FALSA</strong>. Em resumo, enquanto o <strong>if</strong> define o que deve ser feito quando uma condição é verdadeira, o <strong>else</strong> gerencia o que deve ocorrer quando ela é falsa.</p>
+<p>Esta lógica de caminhos alternativos é visualizada claramente em um fluxograma, onde a decisão bifurca o fluxo em dois blocos distintos:</p>
+<div class="error">Graphviz error: failed to execute PosixPath('dot'), make sure the Graphviz executables are on your systems' PATH</div>
+
+<ul>
+<li><strong>Com o comando if sozinho</strong>: se a condição for verdadeira, o bloco é executado; se for falsa, o programa apenas segue seu fluxo padrão, ignorando o bloco condicional.</li>
+<li><strong>Com a estrutura if-else</strong>: se a condição for verdadeira, a primeira sequência de comandos (bloco <strong>if</strong>) é executada; se for falsa, a segunda sequência de comandos (bloco <strong>else</strong>) é obrigatoriamente executada.</li>
+</ul>
+<p>Veja abaixo um exemplo de programa que verifica se um número inteiro fornecido pelo usuário é igual ou diferente de 10:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
 
 int main(){
     int num;
-    printf("Digite um numero: ");
-    scanf("%d", &num);
+    printf(&quot;Digite um numero: &quot;);
+    scanf(&quot;%d&quot;, &amp;num);
 
     if(num == 10){
-        printf("O numero e igual a 10.\n");
+        printf(&quot;O numero e igual a 10.\n&quot;);
     } else {
-        printf("O numero e diferente de 10.\n");
+        printf(&quot;O numero e diferente de 10.\n&quot;);
     }
 
-    system("pause");
+    system(&quot;pause&quot;);
     return 0;
 }
-</code></pre><p>Para facilitar a compreensão do processo de execução passo a passo deste exemplo, o fluxograma abaixo ilustra como o computador percorre as instruções:</p><div class=no-break><div class=centered><svg class="svg-graph graphviz-img" viewbox="0.00 0.00 452.00 403.00" data-sketch=true width=400 xmlns=http://www.w3.org/2000/svg><g transform="scale(1 1) rotate(0) translate(4 398.75)" class=graph id=graph0><title>Flowchart</title><polygon points="-4,4 -4,-398.75 448.25,-398.75 448.25,4 -4,4" fill=white stroke=none /><text fill=#73a2cf font-family=Arial font-size=14.00 text-anchor=middle x=222.12 xml:space=preserve y=-6.45>FIGURA 4.6</text><g class=node id=node1><title>PrintIn</title><path d="M153.25,-394.75C153.25,-394.75 12,-394.75 12,-394.75 6,-394.75 0,-388.75 0,-382.75 0,-382.75 0,-370.75 0,-370.75 0,-364.75 6,-358.75 12,-358.75 12,-358.75 153.25,-358.75 153.25,-358.75 159.25,-358.75 165.25,-364.75 165.25,-370.75 165.25,-370.75 165.25,-382.75 165.25,-382.75 165.25,-388.75 159.25,-394.75 153.25,-394.75" fill=#f9f9f9 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=82.62 xml:space=preserve y=-372.48>printf ("Digite um numero: ");</text></g><g class=node id=node2><title>Scan</title><path d="M131.5,-321.75C131.5,-321.75 33.75,-321.75 33.75,-321.75 27.75,-321.75 21.75,-315.75 21.75,-309.75 21.75,-309.75 21.75,-297.75 21.75,-297.75 21.75,-291.75 27.75,-285.75 33.75,-285.75 33.75,-285.75 131.5,-285.75 131.5,-285.75 137.5,-285.75 143.5,-291.75 143.5,-297.75 143.5,-297.75 143.5,-309.75 143.5,-309.75 143.5,-315.75 137.5,-321.75 131.5,-321.75" fill=#f9f9f9 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=82.62 xml:space=preserve y=-299.48>scanf ("%d", &num);</text></g><g class=edge id=edge1><title>PrintIn->Scan</title><path d="M82.62,-358.56C82.62,-351.06 82.62,-342.06 82.62,-333.58" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="86.13,-333.6 82.63,-323.6 79.13,-333.6 86.13,-333.6" fill=#333333 stroke=#333333 stroke-width=1.2 /></g><g class=node id=node3><title>Decisao</title><polygon points="82.62,-248.75 2.12,-230.75 82.62,-212.75 163.13,-230.75 82.62,-248.75" fill=#fff9c4 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=82.62 xml:space=preserve y=-226.47>if(num == 10){</text></g><g class=edge id=edge2><title>Scan->Decisao</title><path d="M82.62,-285.56C82.62,-278.06 82.62,-269.06 82.62,-260.58" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="86.13,-260.6 82.63,-250.6 79.13,-260.6 86.13,-260.6" fill=#333333 stroke=#333333 stroke-width=1.2 /></g><g class=node id=node4><title>PrintSim</title><path d="M432.25,-248.75C432.25,-248.75 261,-248.75 261,-248.75 255,-248.75 249,-242.75 249,-236.75 249,-236.75 249,-224.75 249,-224.75 249,-218.75 255,-212.75 261,-212.75 261,-212.75 432.25,-212.75 432.25,-212.75 438.25,-212.75 444.25,-218.75 444.25,-224.75 444.25,-224.75 444.25,-236.75 444.25,-236.75 444.25,-242.75 438.25,-248.75 432.25,-248.75" fill=#f9f9f9 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=346.62 xml:space=preserve y=-226.47>printf ("O numero e igual a 10.\n");</text></g><g class=edge id=edge3><title>Decisao->PrintSim</title><path d="M165.07,-230.75C187.82,-230.75 212.87,-230.75 236.91,-230.75" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="236.8,-234.25 246.8,-230.75 236.8,-227.25 236.8,-234.25" fill=#333333 stroke=#333333 stroke-width=1.2 /><text font-family=Arial font-size=10.00 text-anchor=middle x=206.06 xml:space=preserve y=-236.25>SIM</text></g><g class=node id=node5><title>PrintNao</title><path d="M247.75,-164.75C247.75,-164.75 49.5,-164.75 49.5,-164.75 43.5,-164.75 37.5,-158.75 37.5,-152.75 37.5,-152.75 37.5,-140.75 37.5,-140.75 37.5,-134.75 43.5,-128.75 49.5,-128.75 49.5,-128.75 247.75,-128.75 247.75,-128.75 253.75,-128.75 259.75,-134.75 259.75,-140.75 259.75,-140.75 259.75,-152.75 259.75,-152.75 259.75,-158.75 253.75,-164.75 247.75,-164.75" fill=#f9f9f9 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=148.62 xml:space=preserve y=-142.47>printf ("O numero e diferente de 10.\n");</text></g><g class=edge id=edge4><title>Decisao->PrintNao</title><path d="M94.42,-215.09C103.58,-203.71 116.52,-187.64 127.46,-174.05" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="129.96,-176.53 133.5,-166.54 124.5,-172.14 129.96,-176.53" fill=#333333 stroke=#333333 stroke-width=1.2 /><text font-family=Arial font-size=10.00 text-anchor=middle x=130.45 xml:space=preserve y=-185.25>NÃO</text></g><g class=node id=node6><title>Pause</title><path d="M284.12,-91.75C284.12,-91.75 199.12,-91.75 199.12,-91.75 193.12,-91.75 187.12,-85.75 187.12,-79.75 187.12,-79.75 187.12,-67.75 187.12,-67.75 187.12,-61.75 193.12,-55.75 199.12,-55.75 199.12,-55.75 284.12,-55.75 284.12,-55.75 290.12,-55.75 296.12,-61.75 296.12,-67.75 296.12,-67.75 296.12,-79.75 296.12,-79.75 296.12,-85.75 290.12,-91.75 284.12,-91.75" fill=#f9f9f9 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=241.62 xml:space=preserve y=-69.47>system ("pause");</text></g><g class=edge id=edge5><title>PrintSim->Pause</title><path d="M335.92,-212.37C323.31,-192.06 301.54,-157.57 281.62,-128.75 275.36,-119.68 268.27,-109.96 261.82,-101.29" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="264.78,-99.4 255.98,-93.5 259.18,-103.6 264.78,-99.4" fill=#333333 stroke=#333333 stroke-width=1.2 /></g><g class=edge id=edge6><title>PrintNao->Pause</title><path d="M171.14,-128.56C182.7,-119.73 197,-108.82 209.68,-99.14" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="211.73,-101.98 217.55,-93.13 207.48,-96.41 211.73,-101.98" fill=#333333 stroke=#333333 stroke-width=1.2 /></g></g></svg></div></div><div class="callout callout-warning"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span><span class=callout-title-inner>O ELSE não possui condição própria<br></span></div><div class=callout-content><p>Um erro comum é tentar atribuir uma condição ao <strong>else</strong>. Como ele representa o "caso contrário" exato do <strong>if</strong>, ele não necessita (e não aceita) uma nova expressão lógica.</p></div></div><pre class="line-numbers language-c" data-lang=C><code class=language-c>if(num == 10){
-    printf("O numero e igual a 10.\n");
+</code></pre>
+<p>Para facilitar a compreensão do processo de execução passo a passo deste exemplo, o fluxograma abaixo ilustra como o computador percorre as instruções:</p>
+<div class="error">Graphviz error: failed to execute PosixPath('dot'), make sure the Graphviz executables are on your systems' PATH</div>
+
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">O ELSE não possui condição própria<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Um erro comum é tentar atribuir uma condição ao <strong>else</strong>. Como ele representa o &quot;caso contrário&quot; exato do <strong>if</strong>, ele não necessita (e não aceita) uma nova expressão lógica.</p>
+  </div>
+</div>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">if(num == 10){
+    printf(&quot;O numero e igual a 10.\n&quot;);
 } else(num != 10){ // ERRO! O else não recebe condição.
-    printf("O numero e diferente de 10.\n");
+    printf(&quot;O numero e diferente de 10.\n&quot;);
 }
-</code></pre><p>Assim como ocorre no <strong>if</strong>, você não deve utilizar o ponto e vírgula (<code>;</code>) logo após a palavra <strong>else</strong>. Caso faça isso, o compilador entenderá que o bloco do <strong>else</strong> está vazio, executando o comando seguinte como se ele estivesse fora da estrutura condicional.</p><h3 id=independência-de-blocos-e-uso-de-chaves><span class=heading-text>Independência de Blocos e Uso de Chaves</span><span class=heading-arabic>5.2.3</span></h3><p>As sequências de comandos do <strong>if</strong> e do <strong>else</strong> são independentes entre si. Se o bloco <strong>if</strong> for acionado, o bloco <strong>else</strong> será automaticamente descartado naquela execução, e vice-versa. Por esse motivo, cada um deve possuir seu próprio conjunto de chaves (<code>{ }</code>) para definir seu escopo de atuação.</p><table><thead><tr><th style=text-align:left>Estrutura Correta</th><th style=text-align:left>Estrutura Errada</th></tr></thead><tbody><tr><td style=text-align:left><code>if(condicao) { comandos; }</code></td><td style=text-align:left><code>if(condicao) { comandos;</code></td></tr><tr><td style=text-align:left><code>else { comandos; }</code></td><td style=text-align:left><code>else comandos; }</code></td></tr></tbody></table><p>Assim como no comando <strong>if</strong>, as chaves podem ser omitidas se houver apenas um único comando dentro do bloco <strong>else</strong>.</p><h2 id=aninhamento-de-if><span class=heading-text>Aninhamento de IF</span><span class=heading-arabic>5.3</span></h2><p>Um <strong>if aninhado</strong> ocorre quando você utiliza um comando <strong>if</strong> dentro do bloco de comandos de outro <strong>if</strong> (ou <strong>else</strong>) mais externo. Essencialmente, trata-se de uma estrutura condicional inserida dentro de outra para refinar a tomada de decisão.</p><p>A estrutura geral de um aninhamento segue este padrão:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>if(condição 1) {
+</code></pre>
+<p>Assim como ocorre no <strong>if</strong>, você não deve utilizar o ponto e vírgula (<code>;</code>) logo após a palavra <strong>else</strong>. Caso faça isso, o compilador entenderá que o bloco do <strong>else</strong> está vazio, executando o comando seguinte como se ele estivesse fora da estrutura condicional.</p>
+<h3 id="independência-de-blocos-e-uso-de-chaves"><span class="heading-text">Independência de Blocos e Uso de Chaves</span><span class="heading-arabic">5.2.3</span></h3>
+<p>As sequências de comandos do <strong>if</strong> e do <strong>else</strong> são independentes entre si. Se o bloco <strong>if</strong> for acionado, o bloco <strong>else</strong> será automaticamente descartado naquela execução, e vice-versa. Por esse motivo, cada um deve possuir seu próprio conjunto de chaves (<code>{ }</code>) para definir seu escopo de atuação.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Estrutura Correta</th>
+  <th style="text-align:left">Estrutura Errada</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><code>if(condicao) { comandos; }</code></td>
+  <td style="text-align:left"><code>if(condicao) { comandos;</code></td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>else { comandos; }</code></td>
+  <td style="text-align:left"><code>else comandos; }</code></td>
+</tr>
+</tbody>
+</table>
+<p>Assim como no comando <strong>if</strong>, as chaves podem ser omitidas se houver apenas um único comando dentro do bloco <strong>else</strong>.</p>
+<h2 id="aninhamento-de-if"><span class="heading-text">Aninhamento de IF</span><span class="heading-arabic">5.3</span></h2>
+<p>Um <strong>if aninhado</strong> ocorre quando você utiliza um comando <strong>if</strong> dentro do bloco de comandos de outro <strong>if</strong> (ou <strong>else</strong>) mais externo. Essencialmente, trata-se de uma estrutura condicional inserida dentro de outra para refinar a tomada de decisão.</p>
+<p>A estrutura geral de um aninhamento segue este padrão:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">if(condição 1) {
     sequência de comandos;
     if(condição 2) {
         sequência de comandos;
@@ -63,84 +392,144 @@ int main(){
 } else {
     sequência de comandos;
 }
-</code></pre><p>Nessa estrutura, o programa inicia testando a <strong>condição 1</strong>. Se o resultado for verdadeiro (diferente de zero), o bloco interno associado é executado; caso contrário, o programa desvia para o <strong>else</strong> correspondente, se este existir. Esse processo de verificação se repete para cada novo <strong>if</strong> encontrado pelo fluxo de execução.</p><p>O aninhamento é extremamente útil quando o programa precisa lidar com mais de dois caminhos possíveis. Por exemplo, enquanto um <strong>if</strong> simples pode determinar se um número é maior que outro, ele sozinho não consegue distinguir entre três estados: se o número é maior, menor ou igual.</p><p>Considere o exemplo prático abaixo:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>#include &lt;stdio.h>
-#include &lt;stdlib.h>
+</code></pre>
+<p>Nessa estrutura, o programa inicia testando a <strong>condição 1</strong>. Se o resultado for verdadeiro (diferente de zero), o bloco interno associado é executado; caso contrário, o programa desvia para o <strong>else</strong> correspondente, se este existir. Esse processo de verificação se repete para cada novo <strong>if</strong> encontrado pelo fluxo de execução.</p>
+<p>O aninhamento é extremamente útil quando o programa precisa lidar com mais de dois caminhos possíveis. Por exemplo, enquanto um <strong>if</strong> simples pode determinar se um número é maior que outro, ele sozinho não consegue distinguir entre três estados: se o número é maior, menor ou igual.</p>
+<p>Considere o exemplo prático abaixo:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
 
 int main(){
     int num;
-    printf("Digite um numero: ");
-    scanf("%d", &num);
+    printf(&quot;Digite um numero: &quot;);
+    scanf(&quot;%d&quot;, &amp;num);
 
     if(num == 10){
-        printf("O numero e igual a 10.\n");
+        printf(&quot;O numero e igual a 10.\n&quot;);
     } else {
-        if(num > 10)
-            printf("O numero e maior que 10.\n");
+        if(num &gt; 10)
+            printf(&quot;O numero e maior que 10.\n&quot;);
         else
-            printf("O numero e menor que 10.\n");
+            printf(&quot;O numero e menor que 10.\n&quot;);
     }
 
-    system("pause");
+    system(&quot;pause&quot;);
     return 0;
 }
-</code></pre><p>A visualização desse processo através de um fluxograma torna a lógica de múltiplos caminhos muito mais evidente:</p><div class=no-break><div class=centered><svg class="svg-graph graphviz-img" viewbox="0.00 0.00 563.00 334.00" data-sketch=true width=600 xmlns=http://www.w3.org/2000/svg><g transform="scale(1 1) rotate(0) translate(4 330)" class=graph id=graph0><title>Flowchart</title><polygon points="-4,4 -4,-330 559.38,-330 559.38,4 -4,4" fill=white stroke=none /><g class=node id=node1><title>Scan</title><path d="M218.63,-326C218.63,-326 120.88,-326 120.88,-326 114.88,-326 108.88,-320 108.88,-314 108.88,-314 108.88,-302 108.88,-302 108.88,-296 114.88,-290 120.88,-290 120.88,-290 218.63,-290 218.63,-290 224.63,-290 230.63,-296 230.63,-302 230.63,-302 230.63,-314 230.63,-314 230.63,-320 224.63,-326 218.63,-326" fill=#f9f9f9 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=169.76 xml:space=preserve y=-303.73>scanf ("%d", &num);</text></g><g class=node id=node2><title>Decisao1</title><polygon points="169.76,-259 89.25,-241 169.76,-223 250.26,-241 169.76,-259" fill=#fff9c4 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=169.76 xml:space=preserve y=-236.72>if(num == 10){</text></g><g class=edge id=edge1><title>Scan->Decisao1</title><path d="M169.76,-289.58C169.76,-283.9 169.76,-277.42 169.76,-271.12" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="173.26,-271.28 169.76,-261.28 166.26,-271.28 173.26,-271.28" fill=#333333 stroke=#333333 stroke-width=1.2 /></g><g class=node id=node3><title>PrintIgual</title><path d="M543.38,-259C543.38,-259 372.13,-259 372.13,-259 366.13,-259 360.13,-253 360.13,-247 360.13,-247 360.13,-235 360.13,-235 360.13,-229 366.13,-223 372.13,-223 372.13,-223 543.38,-223 543.38,-223 549.38,-223 555.38,-229 555.38,-235 555.38,-235 555.38,-247 555.38,-247 555.38,-253 549.38,-259 543.38,-259" fill=#f9f9f9 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=457.76 xml:space=preserve y=-236.72>printf ("O numero e igual a 10.\n");</text></g><g class=edge id=edge2><title>Decisao1->PrintIgual</title><path d="M252.29,-241C282.12,-241 316.28,-241 348.07,-241" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="347.85,-244.5 357.85,-241 347.85,-237.5 347.85,-244.5" fill=#333333 stroke=#333333 stroke-width=1.2 /><text font-family=Arial font-size=10.00 text-anchor=middle x=305.2 xml:space=preserve y=-246.5>SIM</text></g><g class=node id=node4><title>Decisao2</title><polygon points="73.76,-181 0,-163 73.76,-145 147.51,-163 73.76,-181" fill=#fff9c4 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=73.76 xml:space=preserve y=-158.72>if (num > 10)</text></g><g class=edge id=edge3><title>Decisao1->Decisao2</title><path d="M152.59,-226.41C137.76,-214.67 116.11,-197.53 99.25,-184.18" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="101.89,-181.81 91.87,-178.34 97.54,-187.29 101.89,-181.81" fill=#333333 stroke=#333333 stroke-width=1.2 /><text font-family=Arial font-size=10.00 text-anchor=middle x=138.38 xml:space=preserve y=-198.5>NÃO</text></g><g class=node id=node7><title>Pause</title><path d="M363.26,-36C363.26,-36 278.26,-36 278.26,-36 272.26,-36 266.26,-30 266.26,-24 266.26,-24 266.26,-12 266.26,-12 266.26,-6 272.26,0 278.26,0 278.26,0 363.26,0 363.26,0 369.26,0 375.26,-6 375.26,-12 375.26,-12 375.26,-24 375.26,-24 375.26,-30 369.26,-36 363.26,-36" fill=#f9f9f9 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=320.76 xml:space=preserve y=-13.72>system ("pause");</text></g><g class=edge id=edge6><title>PrintIgual->Pause</title><path d="M457.36,-222.59C456.28,-202.79 452.5,-169.97 439.76,-145 418.74,-103.83 380.09,-66.69 352.54,-43.58" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="355.02,-41.09 345.07,-37.44 350.58,-46.5 355.02,-41.09" fill=#333333 stroke=#333333 stroke-width=1.2 /></g><g class=node id=node5><title>PrintMaior</title><path d="M410.13,-181C410.13,-181 231.38,-181 231.38,-181 225.38,-181 219.38,-175 219.38,-169 219.38,-169 219.38,-157 219.38,-157 219.38,-151 225.38,-145 231.38,-145 231.38,-145 410.13,-145 410.13,-145 416.13,-145 422.13,-151 422.13,-157 422.13,-157 422.13,-169 422.13,-169 422.13,-175 416.13,-181 410.13,-181" fill=#f9f9f9 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=320.76 xml:space=preserve y=-158.72>printf ("O numero e maior que 10.");</text></g><g class=edge id=edge4><title>Decisao2->PrintMaior</title><path d="M149.54,-163C167.83,-163 187.77,-163 207.37,-163" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="207.36,-166.5 217.36,-163 207.36,-159.5 207.36,-166.5" fill=#333333 stroke=#333333 stroke-width=1.2 /><text font-family=Arial font-size=10.00 text-anchor=middle x=183.45 xml:space=preserve y=-168.5>SIM</text></g><g class=node id=node6><title>PrintMenor</title><path d="M232.01,-103C232.01,-103 49.51,-103 49.51,-103 43.51,-103 37.51,-97 37.51,-91 37.51,-91 37.51,-79 37.51,-79 37.51,-73 43.51,-67 49.51,-67 49.51,-67 232.01,-67 232.01,-67 238.01,-67 244.01,-73 244.01,-79 244.01,-79 244.01,-91 244.01,-91 244.01,-97 238.01,-103 232.01,-103" fill=#f9f9f9 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=140.76 xml:space=preserve y=-80.72>printf ("O numero e menor que 10.");</text></g><g class=edge id=edge5><title>Decisao2->PrintMenor</title><path d="M86.36,-147.7C95.18,-137.7 107.22,-124.04 117.73,-112.12" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="120.2,-114.61 124.19,-104.8 114.95,-109.98 120.2,-114.61" fill=#333333 stroke=#333333 stroke-width=1.2 /><text font-family=Arial font-size=10.00 text-anchor=middle x=122.14 xml:space=preserve y=-120.5>NÃO</text></g><g class=edge id=edge7><title>PrintMaior->Pause</title><path d="M320.76,-144.75C320.76,-120.7 320.76,-76.79 320.76,-47.74" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="324.26,-48.13 320.76,-38.13 317.26,-48.13 324.26,-48.13" fill=#333333 stroke=#333333 stroke-width=1.2 /></g><g class=edge id=edge8><title>PrintMenor->Pause</title><path d="M188.99,-66.58C211.29,-58.53 237.98,-48.89 261.49,-40.4" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="262.46,-43.77 270.68,-37.08 260.08,-37.19 262.46,-43.77" fill=#333333 stroke=#333333 stroke-width=1.2 /></g></g></svg></div></div><div class="callout callout-warning"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span><span class=callout-title-inner>Cuidado com a Associação do ELSE<br></span></div><div class=callout-content><p>Um ponto crítico no aninhamento é identificar a qual <strong>if</strong> um <strong>else</strong> está vinculado. Em <em>C</em>, um <strong>else</strong> é sempre associado ao <strong>if</strong> mais próximo anterior a ele que esteja dentro do mesmo bloco de comandos.</p></div></div><p>Observe este exemplo de ambiguidade visual:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>if(cond1)
+</code></pre>
+<p>A visualização desse processo através de um fluxograma torna a lógica de múltiplos caminhos muito mais evidente:</p>
+<div class="error">Graphviz error: failed to execute PosixPath('dot'), make sure the Graphviz executables are on your systems' PATH</div>
+
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Cuidado com a Associação do ELSE<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Um ponto crítico no aninhamento é identificar a qual <strong>if</strong> um <strong>else</strong> está vinculado. Em <em>C</em>, um <strong>else</strong> é sempre associado ao <strong>if</strong> mais próximo anterior a ele que esteja dentro do mesmo bloco de comandos.</p>
+  </div>
+</div>
+<p>Observe este exemplo de ambiguidade visual:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">if(cond1)
     if(cond2)
         comando_A;
 else
     comando_B;
-</code></pre><p>Embora o <strong>else</strong> pareça alinhado ao primeiro <strong>if</strong>, o compilador o associará ao segundo <strong>if</strong>. Para forçar a associação ao primeiro, você deve isolar o <strong>if</strong> interno com chaves:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>if(cond1) {
+</code></pre>
+<p>Embora o <strong>else</strong> pareça alinhado ao primeiro <strong>if</strong>, o compilador o associará ao segundo <strong>if</strong>. Para forçar a associação ao primeiro, você deve isolar o <strong>if</strong> interno com chaves:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">if(cond1) {
     if(cond2)
         comando_A;
 } else
     comando_B; // Agora associado ao primeiro if
-</code></pre><div class="callout callout-danger"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1=12 x2=12 y1=9 y2=13 /><line x1=12 x2=12 y1=17 y2=17.01 /></svg></span><span class=callout-title-inner>Importante<br></span></div><div class=callout-content><p>Não existe "aninhamento de elses" isolados. Como o <strong>else</strong> representa o caso contrário de um teste, cada um deve obrigatoriamente possuir um <strong>if</strong> correspondente anterior, embora nem todo <strong>if</strong> precise de um <strong>else</strong>. Tentar declarar um <strong>else</strong> sem um <strong>if</strong> prévio resultará em erro de compilação.</p></div></div><h2 id=operador-ternário><span class=heading-text>Operador Ternário (?)</span><span class=heading-arabic>5.4</span></h2><p>O operador <strong>?</strong> é amplamente conhecido como <strong>operador ternário</strong>. Ele funciona como uma simplificação prática da estrutura <strong>if-else</strong>, permitindo realizar testes lógicos em uma única linha de comando, em vez de utilizar blocos de instruções completos.</p><p>A sintaxe geral do operador ternário é:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>expressão condicional ? expressão1 : expressão2;
-</code></pre><p>A lógica de funcionamento é idêntica à do <strong>if-else</strong>: a expressão condicional é avaliada primeiro. Se o resultado for <strong>verdadeiro</strong>, o valor da <strong>expressão1</strong> é retornado; caso seja <strong>falso</strong>, o valor da <strong>expressão2</strong> torna-se o resultado da operação.</p><h3 id=aplicações-práticas><span class=heading-text>Aplicações Práticas</span><span class=heading-arabic>5.4.1</span></h3><p>Embora possa ser utilizado de diversas formas, o operador <strong>?</strong> é tipicamente empregado para <strong>atribuições condicionais</strong>. No exemplo abaixo, você pode comparar como o operador ternário reduz drasticamente a verbosidade do código ao encontrar o maior entre dois números:</p><div style=gap:2%;display:flex><div style=width:49%><pre class="line-numbers language-c" data-lang=C><code class=language-c>
+</code></pre>
+<div class="callout callout-danger">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12" y2="17.01"/></svg></span>
+    <span class="callout-title-inner">Importante<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Não existe &quot;aninhamento de elses&quot; isolados. Como o <strong>else</strong> representa o caso contrário de um teste, cada um deve obrigatoriamente possuir um <strong>if</strong> correspondente anterior, embora nem todo <strong>if</strong> precise de um <strong>else</strong>. Tentar declarar um <strong>else</strong> sem um <strong>if</strong> prévio resultará em erro de compilação.</p>
+  </div>
+</div>
+<h2 id="operador-ternário"><span class="heading-text">Operador Ternário (?)</span><span class="heading-arabic">5.4</span></h2>
+<p>O operador <strong>?</strong> é amplamente conhecido como <strong>operador ternário</strong>. Ele funciona como uma simplificação prática da estrutura <strong>if-else</strong>, permitindo realizar testes lógicos em uma única linha de comando, em vez de utilizar blocos de instruções completos.</p>
+<p>A sintaxe geral do operador ternário é:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">expressão condicional ? expressão1 : expressão2;
+</code></pre>
+<p>A lógica de funcionamento é idêntica à do <strong>if-else</strong>: a expressão condicional é avaliada primeiro. Se o resultado for <strong>verdadeiro</strong>, o valor da <strong>expressão1</strong> é retornado; caso seja <strong>falso</strong>, o valor da <strong>expressão2</strong> torna-se o resultado da operação.</p>
+<h3 id="aplicações-práticas"><span class="heading-text">Aplicações Práticas</span><span class="heading-arabic">5.4.1</span></h3>
+<p>Embora possa ser utilizado de diversas formas, o operador <strong>?</strong> é tipicamente empregado para <strong>atribuições condicionais</strong>. No exemplo abaixo, você pode comparar como o operador ternário reduz drasticamente a verbosidade do código ao encontrar o maior entre dois números:</p>
+<div style="display: flex; gap: 2%"><div style="width: 49%">
+
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">
 // Usando a estrutura if-else tradicional
-#include &lt;stdio.h>
-#include &lt;stdlib.h>
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
 
 int main() {
     int x, y, z;
 
-    printf("Digite x: ");
-    scanf("%d", &x);
-    printf("Digite y: ");
-    scanf("%d", &y);
+    printf(&quot;Digite x: &quot;);
+    scanf(&quot;%d&quot;, &amp;x);
+    printf(&quot;Digite y: &quot;);
+    scanf(&quot;%d&quot;, &amp;y);
 
     // Estrutura tradicional
-    if (x > y) {
+    if (x &gt; y) {
         z = x;
     } else {
         z = y;
     }
 
-    printf("Maior = %d\n", z);
-    system("pause");
+    printf(&quot;Maior = %d\n&quot;, z);
+    system(&quot;pause&quot;);
     return 0;
 }
-</code></pre></div><div style=width:49%><pre class="line-numbers language-c" data-lang=C><code class=language-c>
+</code></pre>
+</div><div style="width: 49%">
+
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">
 // Usando o Operador Ternário
-#include &lt;stdio.h>
-#include &lt;stdlib.h>
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
 
 int main() {
     int x, y, z;
 
-    printf("Digite x: ");
-    scanf("%d", &x);
-    printf("Digite y: ");
-    scanf("%d", &y);
+    printf(&quot;Digite x: &quot;);
+    scanf(&quot;%d&quot;, &amp;x);
+    printf(&quot;Digite y: &quot;);
+    scanf(&quot;%d&quot;, &amp;y);
 
     // Atribuição com operador ternário
-    z = (x > y) ? x : y;
+    z = (x &gt; y) ? x : y;
 
-    printf("Maior = %d\n", z);
-    system("pause");
+    printf(&quot;Maior = %d\n&quot;, z);
+    system(&quot;pause&quot;);
     return 0;
 }
-</code></pre></div></div><p>Você também pode utilizar o operador ternário para criar lógicas compactas, como um <strong>contador circular</strong>. Neste caso, uma variável é incrementada até um limite e reiniciada ao atingir o valor máximo:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>index = (index == 3) ? 0 : ++index;
-</code></pre><div class="callout callout-tip"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .5 2.2 1.5 3.1.7.7 1.3 1.5 1.5 2.4"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span><span class=callout-title-inner>Flexibilidade do Operador<br></span></div><div class=callout-content><p>Apesar de ser mais limitado que o <strong>if-else</strong>, o operador ternário não se restringe apenas a atribuições. Você pode utilizá-lo para executar funções diferentes, como o <code>printf</code>, dependendo de uma condição:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>(num == 10) ? printf("Igual a 10\n") : printf("Diferente de 10\n");
-</code></pre></div></div><p>Embora seja uma ferramenta poderosa para simplificar expressões complicadas, lembre-se de que o uso excessivo pode prejudicar a legibilidade do código em lógicas muito extensas.</p><h2 id=comando-switch><span class=heading-text>Comando SWITCH</span><span class=heading-arabic>5.5</span></h2><p>Além dos comandos <strong>if</strong> e <strong>else</strong>, a linguagem <strong>C</strong> oferece o <strong>switch</strong>, um comando de seleção múltipla. Ele funciona de maneira semelhante ao aninhamento <strong>if-else-if</strong>, mas com aplicações mais específicas e limitadas. Enquanto o <strong>if</strong> permite testar expressões lógicas e relacionais complexas, o <strong>switch</strong> apenas verifica se uma variável (obrigatoriamente do tipo <code>int</code> ou <code>char</code>) é igual a determinados valores constantes. A estrutura geral do comando <strong>switch</strong> é apresentada a seguir:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>switch (variável) {
+</code></pre>
+</div></div>
+
+<p>Você também pode utilizar o operador ternário para criar lógicas compactas, como um <strong>contador circular</strong>. Neste caso, uma variável é incrementada até um limite e reiniciada ao atingir o valor máximo:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">index = (index == 3) ? 0 : ++index;
+</code></pre>
+<div class="callout callout-tip">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .5 2.2 1.5 3.1.7.7 1.3 1.5 1.5 2.4"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span>
+    <span class="callout-title-inner">Flexibilidade do Operador<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Apesar de ser mais limitado que o <strong>if-else</strong>, o operador ternário não se restringe apenas a atribuições. Você pode utilizá-lo para executar funções diferentes, como o <code>printf</code>, dependendo de uma condição:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">(num == 10) ? printf(&quot;Igual a 10\n&quot;) : printf(&quot;Diferente de 10\n&quot;);
+</code></pre></p>
+  </div>
+</div>
+<p>Embora seja uma ferramenta poderosa para simplificar expressões complicadas, lembre-se de que o uso excessivo pode prejudicar a legibilidade do código em lógicas muito extensas.</p>
+<h2 id="comando-switch"><span class="heading-text">Comando SWITCH</span><span class="heading-arabic">5.5</span></h2>
+<p>Além dos comandos <strong>if</strong> e <strong>else</strong>, a linguagem <strong>C</strong> oferece o <strong>switch</strong>, um comando de seleção múltipla. Ele funciona de maneira semelhante ao aninhamento <strong>if-else-if</strong>, mas com aplicações mais específicas e limitadas. Enquanto o <strong>if</strong> permite testar expressões lógicas e relacionais complexas, o <strong>switch</strong> apenas verifica se uma variável (obrigatoriamente do tipo <code>int</code> ou <code>char</code>) é igual a determinados valores constantes. A estrutura geral do comando <strong>switch</strong> é apresentada a seguir:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">switch (variável) {
     case valor1:
         sequência de comandos;
         break;
@@ -154,59 +543,242 @@ int main() {
     default:
         sequência de comandos;
 }
-</code></pre><p>Este comando é ideal para testar uma única variável em relação a diversos valores preestabelecidos. Durante a execução, o valor da variável é comparado sequencialmente com cada <strong>case</strong>; quando uma correspondência é encontrada, o respectivo bloco de comandos é executado. Confira o exemplo de um programa que identifica símbolos de pontuação:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>#include &lt;stdio.h>
-#include &lt;stdlib.h>
+</code></pre>
+<p>Este comando é ideal para testar uma única variável em relação a diversos valores preestabelecidos. Durante a execução, o valor da variável é comparado sequencialmente com cada <strong>case</strong>; quando uma correspondência é encontrada, o respectivo bloco de comandos é executado. Confira o exemplo de um programa que identifica símbolos de pontuação:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
 
 int main(){
     char ch;
-    printf("Digite um simbolo de pontuacao: ");
+    printf(&quot;Digite um simbolo de pontuacao: &quot;);
     ch = getchar();
 
     switch( ch ) {
-        case '.': printf("Ponto.\n"); break;
-        case ',': printf("Virgula.\n"); break;
-        case ':': printf("Dois pontos.\n"); break;
-        case ';': printf("Ponto e virgula.\n"); break;
-        default : printf("Nao eh pontuacao.\n");
+        case '.': printf(&quot;Ponto.\n&quot;); break;
+        case ',': printf(&quot;Virgula.\n&quot;); break;
+        case ':': printf(&quot;Dois pontos.\n&quot;); break;
+        case ';': printf(&quot;Ponto e virgula.\n&quot;); break;
+        default : printf(&quot;Nao eh pontuacao.\n&quot;);
     }
 
-    system("pause");
+    system(&quot;pause&quot;);
     return 0;
 }
-</code></pre><p>O fluxo de execução desse exemplo pode ser visualizado na imagem abaixo:</p><div class=no-break><div class=centered><svg class="svg-graph graphviz-img" viewbox="0.00 0.00 622.00 624.00" data-sketch=true width=600 xmlns=http://www.w3.org/2000/svg><g transform="scale(1 1) rotate(0) translate(4 620)" class=graph id=graph0><title>Flowchart</title><polygon points="-4,4 -4,-620 618.07,-620 618.07,4 -4,4" fill=white stroke=none /><g class=node id=node1><title>Inicio</title><ellipse cx=293.07 cy=-598 fill=#e1f5fe rx=28.3 ry=18 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=293.07 xml:space=preserve y=-593.73>Início</text></g><g class=node id=node3><title>GetChar</title><path d="M326.95,-549C326.95,-549 259.2,-549 259.2,-549 253.2,-549 247.2,-543 247.2,-537 247.2,-537 247.2,-525 247.2,-525 247.2,-519 253.2,-513 259.2,-513 259.2,-513 326.95,-513 326.95,-513 332.95,-513 338.95,-519 338.95,-525 338.95,-525 338.95,-537 338.95,-537 338.95,-543 332.95,-549 326.95,-549" fill=#f9f9f9 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=293.07 xml:space=preserve y=-526.73>ch = getchar();</text></g><g class=edge id=edge1><title>Inicio->GetChar</title><path d="M293.07,-579.58C293.07,-573.9 293.07,-567.42 293.07,-561.12" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="296.57,-561.28 293.07,-551.28 289.57,-561.28 296.57,-561.28" fill=#333333 stroke=#333333 stroke-width=1.2 /></g><g class=node id=node2><title>Fim</title><ellipse cx=422.07 cy=-18 fill=#e1f5fe rx=27 ry=18 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=422.07 xml:space=preserve y=-13.72>Fim</text></g><g class=node id=node4><title>Switch</title><polygon points="331.45,-482 254.7,-482 254.7,-446 331.45,-446 331.45,-482" fill=#f9f9f9 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=293.07 xml:space=preserve y=-459.73>switch(ch) {</text></g><g class=edge id=edge2><title>GetChar->Switch</title><path d="M293.07,-512.58C293.07,-506.9 293.07,-500.42 293.07,-494.12" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="296.57,-494.28 293.07,-484.28 289.57,-494.28 296.57,-494.28" fill=#333333 stroke=#333333 stroke-width=1.2 /></g><g class=node id=node5><title>Igual1</title><path d="M281.96,-410.46C281.96,-410.46 260.11,-401.54 260.11,-401.54 254.55,-399.27 254.55,-394.73 260.11,-392.46 260.11,-392.46 281.96,-383.54 281.96,-383.54 287.52,-381.27 298.63,-381.27 304.18,-383.54 304.18,-383.54 326.04,-392.46 326.04,-392.46 331.59,-394.73 331.59,-399.27 326.04,-401.54 326.04,-401.54 304.18,-410.46 304.18,-410.46 298.63,-412.73 287.52,-412.73 281.96,-410.46" fill=#fff9c4 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=293.07 xml:space=preserve y=-392.73>Igual?</text></g><g class=edge id=edge3><title>Switch->Igual1:n</title><path d="M293.07,-445.67C293.07,-439.97 293.07,-433.38 293.07,-426.77" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="296.57,-426.82 293.07,-416.82 289.57,-426.82 296.57,-426.82" fill=#333333 stroke=#333333 stroke-width=1.2 /></g><g class=node id=node6><title>Igual2</title><path d="M192.96,-332.46C192.96,-332.46 171.11,-323.54 171.11,-323.54 165.55,-321.27 165.55,-316.73 171.11,-314.46 171.11,-314.46 192.96,-305.54 192.96,-305.54 198.52,-303.27 209.63,-303.27 215.18,-305.54 215.18,-305.54 237.04,-314.46 237.04,-314.46 242.59,-316.73 242.59,-321.27 237.04,-323.54 237.04,-323.54 215.18,-332.46 215.18,-332.46 209.63,-334.73 198.52,-334.73 192.96,-332.46" fill=#fff9c4 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=204.07 xml:space=preserve y=-314.73>Igual?</text></g><g class=edge id=edge4><title>Igual1->Igual2</title><path d="M279.56,-384.46C265.44,-372.4 243.07,-353.3 226.34,-339.02" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="228.98,-336.66 219.1,-332.83 224.43,-341.99 228.98,-336.66" fill=#333333 stroke=#333333 stroke-width=1.2 /><text font-family=Arial font-size=10.00 text-anchor=middle x=264.78 xml:space=preserve y=-354.5>NÃO</text></g><g class=node id=node9><title>Case1</title><path d="M602.07,-415C602.07,-415 442.07,-415 442.07,-415 436.07,-415 430.07,-409 430.07,-403 430.07,-403 430.07,-391 430.07,-391 430.07,-385 436.07,-379 442.07,-379 442.07,-379 602.07,-379 602.07,-379 608.07,-379 614.07,-385 614.07,-391 614.07,-391 614.07,-403 614.07,-403 614.07,-409 608.07,-415 602.07,-415" fill=#f9f9f9 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=522.07 xml:space=preserve y=-392.73>case '.': printf("Ponto.\n"); break;</text></g><g class=edge id=edge8><title>Igual1->Case1</title><path d="M338.32,-397C361.34,-397 390.36,-397 418.48,-397" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="418.23,-400.5 428.23,-397 418.23,-393.5 418.23,-400.5" fill=#333333 stroke=#333333 stroke-width=1.2 /><text font-family=Arial font-size=10.00 text-anchor=middle x=383.61 xml:space=preserve y=-402.5>SIM</text></g><g class=node id=node7><title>Igual3</title><path d="M107.96,-254.46C107.96,-254.46 86.11,-245.54 86.11,-245.54 80.55,-243.27 80.55,-238.73 86.11,-236.46 86.11,-236.46 107.96,-227.54 107.96,-227.54 113.52,-225.27 124.63,-225.27 130.18,-227.54 130.18,-227.54 152.04,-236.46 152.04,-236.46 157.59,-238.73 157.59,-243.27 152.04,-245.54 152.04,-245.54 130.18,-254.46 130.18,-254.46 124.63,-256.73 113.52,-256.73 107.96,-254.46" fill=#fff9c4 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=119.07 xml:space=preserve y=-236.72>Igual?</text></g><g class=edge id=edge5><title>Igual2->Igual3</title><path d="M190.79,-306.12C177.44,-294.19 156.64,-275.59 140.87,-261.49" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="143.4,-259.06 133.62,-255 138.74,-264.28 143.4,-259.06" fill=#333333 stroke=#333333 stroke-width=1.2 /><text font-family=Arial font-size=10.00 text-anchor=middle x=177.54 xml:space=preserve y=-276.5>NÃO</text></g><g class=node id=node10><title>Case2</title><path d="M484.07,-337C484.07,-337 318.07,-337 318.07,-337 312.07,-337 306.07,-331 306.07,-325 306.07,-325 306.07,-313 306.07,-313 306.07,-307 312.07,-301 318.07,-301 318.07,-301 484.07,-301 484.07,-301 490.07,-301 496.07,-307 496.07,-313 496.07,-313 496.07,-325 496.07,-325 496.07,-331 490.07,-337 484.07,-337" fill=#f9f9f9 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=401.07 xml:space=preserve y=-314.73>case ',': printf("Virgula.\n"); break;</text></g><g class=edge id=edge9><title>Igual2->Case2</title><path d="M249.27,-319C262.89,-319 278.46,-319 294.31,-319" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="294.06,-322.5 304.06,-319 294.06,-315.5 294.06,-322.5" fill=#333333 stroke=#333333 stroke-width=1.2 /><text font-family=Arial font-size=10.00 text-anchor=middle x=277.11 xml:space=preserve y=-324.5>SIM</text></g><g class=node id=node8><title>Igual4</title><path d="M32.96,-176.46C32.96,-176.46 11.11,-167.54 11.11,-167.54 5.55,-165.27 5.55,-160.73 11.11,-158.46 11.11,-158.46 32.96,-149.54 32.96,-149.54 38.52,-147.27 49.63,-147.27 55.18,-149.54 55.18,-149.54 77.04,-158.46 77.04,-158.46 82.59,-160.73 82.59,-165.27 77.04,-167.54 77.04,-167.54 55.18,-176.46 55.18,-176.46 49.63,-178.73 38.52,-178.73 32.96,-176.46" fill=#fff9c4 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=44.07 xml:space=preserve y=-158.72>Igual?</text></g><g class=edge id=edge6><title>Igual3->Igual4</title><path d="M107.02,-227.79C95.61,-216.22 78.24,-198.62 64.64,-184.84" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="67.13,-182.38 57.62,-177.73 62.15,-187.3 67.13,-182.38" fill=#333333 stroke=#333333 stroke-width=1.2 /><text font-family=Arial font-size=10.00 text-anchor=middle x=96.94 xml:space=preserve y=-198.5>NÃO</text></g><g class=node id=node11><title>Case3</title><path d="M425.2,-259C425.2,-259 232.95,-259 232.95,-259 226.95,-259 220.95,-253 220.95,-247 220.95,-247 220.95,-235 220.95,-235 220.95,-229 226.95,-223 232.95,-223 232.95,-223 425.2,-223 425.2,-223 431.2,-223 437.2,-229 437.2,-235 437.2,-235 437.2,-247 437.2,-247 437.2,-253 431.2,-259 425.2,-259" fill=#f9f9f9 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=329.07 xml:space=preserve y=-236.72>case ':': printf("Dois pontos.\n"); break;</text></g><g class=edge id=edge10><title>Igual3->Case3</title><path d="M164.38,-241C177.77,-241 193.1,-241 208.9,-241" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="208.65,-244.5 218.65,-241 208.65,-237.5 208.65,-244.5" fill=#333333 stroke=#333333 stroke-width=1.2 /><text font-family=Arial font-size=10.00 text-anchor=middle x=192.05 xml:space=preserve y=-246.5>SIM</text></g><g class=node id=node12><title>Case4</title><path d="M366.45,-181C366.45,-181 157.7,-181 157.7,-181 151.7,-181 145.7,-175 145.7,-169 145.7,-169 145.7,-157 145.7,-157 145.7,-151 151.7,-145 157.7,-145 157.7,-145 366.45,-145 366.45,-145 372.45,-145 378.45,-151 378.45,-157 378.45,-157 378.45,-169 378.45,-169 378.45,-175 372.45,-181 366.45,-181" fill=#f9f9f9 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=262.07 xml:space=preserve y=-158.72>case ';': printf("Ponto e virgula.\n"); break;</text></g><g class=edge id=edge11><title>Igual4->Case4</title><path d="M89.24,-163C102.59,-163 117.91,-163 133.79,-163" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="133.62,-166.5 143.62,-163 133.62,-159.5 133.62,-166.5" fill=#333333 stroke=#333333 stroke-width=1.2 /><text font-family=Arial font-size=10.00 text-anchor=middle x=116.92 xml:space=preserve y=-168.5>SIM</text></g><g class=node id=node13><title>Default</title><path d="M244.95,-103C244.95,-103 51.2,-103 51.2,-103 45.2,-103 39.2,-97 39.2,-91 39.2,-91 39.2,-79 39.2,-79 39.2,-73 45.2,-67 51.2,-67 51.2,-67 244.95,-67 244.95,-67 250.95,-67 256.95,-73 256.95,-79 256.95,-79 256.95,-91 256.95,-91 256.95,-97 250.95,-103 244.95,-103" fill=#f9f9f9 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=148.07 xml:space=preserve y=-80.72>default : printf("Nao eh pontuacao.\n");</text></g><g class=edge id=edge7><title>Igual4->Default</title><path d="M59.42,-150.79C73.95,-140.17 96.25,-123.87 114.85,-110.28" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="116.7,-113.26 122.71,-104.53 112.57,-107.61 116.7,-113.26" fill=#333333 stroke=#333333 stroke-width=1.2 /><text font-family=Arial font-size=10.00 text-anchor=middle x=113.18 xml:space=preserve y=-120.5>NÃO</text></g><g class=edge id=edge12><title>Case1->Fim</title><path d="M528.57,-378.77C533.73,-363.54 540.07,-340.61 540.07,-320 540.07,-320 540.07,-320 540.07,-84 540.07,-46.81 494.54,-30.74 460.04,-23.9" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="461.1,-20.54 450.64,-22.24 459.88,-27.43 461.1,-20.54" fill=#333333 stroke=#333333 stroke-width=1.2 /></g><g class=edge id=edge13><title>Case2->Fim</title><path d="M437.33,-300.73C458.5,-287.87 481.07,-268.05 481.07,-242 481.07,-242 481.07,-242 481.07,-84 481.07,-64.62 466.52,-48.46 451.87,-37.1" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="454.03,-34.34 443.86,-31.39 449.97,-40.04 454.03,-34.34" fill=#333333 stroke=#333333 stroke-width=1.2 /></g><g class=edge id=edge14><title>Case3->Fim</title><path d="M354.74,-222.72C368.27,-212.25 383.92,-197.7 393.07,-181 416.22,-138.79 421.46,-81.98 422.34,-48.06" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="425.84,-48.12 422.47,-38.08 418.84,-48.03 425.84,-48.12" fill=#333333 stroke=#333333 stroke-width=1.2 /></g><g class=edge id=edge15><title>Case4->Fim</title><path d="M281.37,-144.75C310.57,-118.65 365.95,-69.16 397.83,-40.67" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="400.06,-43.37 405.18,-34.1 395.39,-38.15 400.06,-43.37" fill=#333333 stroke=#333333 stroke-width=1.2 /></g><g class=edge id=edge16><title>Default->Fim</title><path d="M221.5,-66.58C274.56,-53.99 343.98,-37.53 385.68,-27.63" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="386.23,-31.1 395.16,-25.39 384.62,-24.29 386.23,-31.1" fill=#333333 stroke=#333333 stroke-width=1.2 /></g></g></svg></div></div><div class="callout callout-info"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><circle cx=12 cy=12 r=10 /><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></span><span class=callout-title-inner>O comando DEFAULT<br></span></div><div class=callout-content><p>O uso do <strong>default</strong> é opcional. Ele serve como uma cláusula de escape: sua sequência de comandos só será executada se a variável testada não for igual a nenhum dos valores definidos nos comandos <strong>case</strong>.</p></div></div><p>Embora o exemplo anterior possa ser reproduzido com estruturas <strong>if-else-if</strong>, o <strong>switch</strong> oferece uma solução muito mais elegante e legível para comparar o valor de uma única variável.</p><h3 id=uso-do-comando-break-no-switch><span class=heading-text>Uso do comando BREAK no switch</span><span class=heading-arabic>5.5.1</span></h3><p>A principal diferença entre o <strong>switch</strong> e o aninhamento <strong>if-else-if</strong> reside no uso do comando <strong>break</strong>. Quando o valor de um <strong>case</strong> corresponde à variável, o programa executa os comandos até encontrar um <strong>break</strong>. Se o <strong>break</strong> for omitido, o programa continuará executando todos os comandos dos <strong>cases</strong> seguintes, independentemente de seus valores. Observe o impacto da ausência do <strong>break</strong> no fluxograma a seguir:</p><div class=no-break><div class=centered><svg class="svg-graph graphviz-img" viewbox="0.00 0.00 350.00 624.00" data-sketch=true width=400 xmlns=http://www.w3.org/2000/svg><g transform="scale(1 1) rotate(0) translate(4 620)" class=graph id=graph0><title>Flowchart</title><polygon points="-4,4 -4,-620 346.45,-620 346.45,4 -4,4" fill=white stroke=none /><g class=node id=node1><title>Inicio</title><ellipse cx=61.07 cy=-598 fill=#e1f5fe rx=28.3 ry=18 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=61.07 xml:space=preserve y=-593.73>Início</text></g><g class=node id=node3><title>GetChar</title><path d="M94.95,-549C94.95,-549 27.2,-549 27.2,-549 21.2,-549 15.2,-543 15.2,-537 15.2,-537 15.2,-525 15.2,-525 15.2,-519 21.2,-513 27.2,-513 27.2,-513 94.95,-513 94.95,-513 100.95,-513 106.95,-519 106.95,-525 106.95,-525 106.95,-537 106.95,-537 106.95,-543 100.95,-549 94.95,-549" fill=#f9f9f9 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=61.07 xml:space=preserve y=-526.73>ch = getchar();</text></g><g class=edge id=edge1><title>Inicio->GetChar</title><path d="M61.07,-579.58C61.07,-573.9 61.07,-567.42 61.07,-561.12" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="64.57,-561.28 61.07,-551.28 57.57,-561.28 64.57,-561.28" fill=#333333 stroke=#333333 stroke-width=1.2 /></g><g class=node id=node2><title>Fim</title><ellipse cx=144.07 cy=-18 fill=#e1f5fe rx=27 ry=18 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=144.07 xml:space=preserve y=-13.72>Fim</text></g><g class=node id=node4><title>Switch</title><polygon points="99.45,-482 22.7,-482 22.7,-446 99.45,-446 99.45,-482" fill=#f9f9f9 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=61.07 xml:space=preserve y=-459.73>switch(ch) {</text></g><g class=edge id=edge2><title>GetChar->Switch</title><path d="M61.07,-512.58C61.07,-506.9 61.07,-500.42 61.07,-494.12" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="64.57,-494.28 61.07,-484.28 57.57,-494.28 64.57,-494.28" fill=#333333 stroke=#333333 stroke-width=1.2 /></g><g class=node id=node5><title>Igual1</title><path d="M49.96,-410.46C49.96,-410.46 28.11,-401.54 28.11,-401.54 22.55,-399.27 22.55,-394.73 28.11,-392.46 28.11,-392.46 49.96,-383.54 49.96,-383.54 55.52,-381.27 66.63,-381.27 72.18,-383.54 72.18,-383.54 94.04,-392.46 94.04,-392.46 99.59,-394.73 99.59,-399.27 94.04,-401.54 94.04,-401.54 72.18,-410.46 72.18,-410.46 66.63,-412.73 55.52,-412.73 49.96,-410.46" fill=#fff9c4 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=61.07 xml:space=preserve y=-392.73>Igual?</text></g><g class=edge id=edge3><title>Switch->Igual1</title><path d="M61.07,-445.58C61.07,-439.9 61.07,-433.42 61.07,-427.12" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="64.57,-427.28 61.07,-417.28 57.57,-427.28 64.57,-427.28" fill=#333333 stroke=#333333 stroke-width=1.2 /></g><g class=node id=node6><title>Igual2</title><path d="M47.96,-332.46C47.96,-332.46 26.11,-323.54 26.11,-323.54 20.55,-321.27 20.55,-316.73 26.11,-314.46 26.11,-314.46 47.96,-305.54 47.96,-305.54 53.52,-303.27 64.63,-303.27 70.18,-305.54 70.18,-305.54 92.04,-314.46 92.04,-314.46 97.59,-316.73 97.59,-321.27 92.04,-323.54 92.04,-323.54 70.18,-332.46 70.18,-332.46 64.63,-334.73 53.52,-334.73 47.96,-332.46" fill=#fff9c4 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=59.07 xml:space=preserve y=-314.73>Igual?</text></g><g class=edge id=edge4><title>Igual1->Igual2</title><path d="M60.62,-378.75C60.39,-369.91 60.1,-358.91 59.83,-348.82" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="63.34,-348.9 59.57,-338.99 56.34,-349.08 63.34,-348.9" fill=#333333 stroke=#333333 stroke-width=1.2 /><text font-family=Arial font-size=10.00 text-anchor=middle x=71.07 xml:space=preserve y=-354.5>NÃO</text></g><g class=node id=node9><title>Case1</title><path d="M299.07,-415C299.07,-415 175.07,-415 175.07,-415 169.07,-415 163.07,-409 163.07,-403 163.07,-403 163.07,-391 163.07,-391 163.07,-385 169.07,-379 175.07,-379 175.07,-379 299.07,-379 299.07,-379 305.07,-379 311.07,-385 311.07,-391 311.07,-391 311.07,-403 311.07,-403 311.07,-409 305.07,-415 299.07,-415" fill=#f9f9f9 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=237.07 xml:space=preserve y=-392.73>case '.': printf("Ponto.\n");</text></g><g class=edge id=edge8><title>Igual1->Case1</title><path d="M106.4,-397C120.11,-397 135.66,-397 151.11,-397" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="151.07,-400.5 161.07,-397 151.07,-393.5 151.07,-400.5" fill=#333333 stroke=#333333 stroke-width=1.2 /><text font-family=Arial font-size=10.00 text-anchor=middle x=134.11 xml:space=preserve y=-402.5>SIM</text></g><g class=node id=node7><title>Igual3</title><path d="M38.96,-254.46C38.96,-254.46 17.11,-245.54 17.11,-245.54 11.55,-243.27 11.55,-238.73 17.11,-236.46 17.11,-236.46 38.96,-227.54 38.96,-227.54 44.52,-225.27 55.63,-225.27 61.18,-227.54 61.18,-227.54 83.04,-236.46 83.04,-236.46 88.59,-238.73 88.59,-243.27 83.04,-245.54 83.04,-245.54 61.18,-254.46 61.18,-254.46 55.63,-256.73 44.52,-256.73 38.96,-254.46" fill=#fff9c4 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=50.07 xml:space=preserve y=-236.72>Igual?</text></g><g class=edge id=edge5><title>Igual2->Igual3</title><path d="M57.12,-301.51C56.04,-292.41 54.68,-280.86 53.43,-270.36" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="56.92,-270.04 52.27,-260.52 49.97,-270.87 56.92,-270.04" fill=#333333 stroke=#333333 stroke-width=1.2 /><text font-family=Arial font-size=10.00 text-anchor=middle x=65.99 xml:space=preserve y=-276.5>NÃO</text></g><g class=node id=node10><title>Case2</title><path d="M303.07,-337C303.07,-337 173.07,-337 173.07,-337 167.07,-337 161.07,-331 161.07,-325 161.07,-325 161.07,-313 161.07,-313 161.07,-307 167.07,-301 173.07,-301 173.07,-301 303.07,-301 303.07,-301 309.07,-301 315.07,-307 315.07,-313 315.07,-313 315.07,-325 315.07,-325 315.07,-331 309.07,-337 303.07,-337" fill=#f9f9f9 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=238.07 xml:space=preserve y=-314.73>case ',': printf("Virgula.\n");</text></g><g class=edge id=edge9><title>Igual2->Case2</title><path d="M104.24,-319C118.08,-319 133.8,-319 149.49,-319" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="149.06,-322.5 159.06,-319 149.06,-315.5 149.06,-322.5" fill=#333333 stroke=#333333 stroke-width=1.2 /><text font-family=Arial font-size=10.00 text-anchor=middle x=132.11 xml:space=preserve y=-324.5>SIM</text></g><g class=node id=node8><title>Igual4</title><path d="M32.96,-176.46C32.96,-176.46 11.11,-167.54 11.11,-167.54 5.55,-165.27 5.55,-160.73 11.11,-158.46 11.11,-158.46 32.96,-149.54 32.96,-149.54 38.52,-147.27 49.63,-147.27 55.18,-149.54 55.18,-149.54 77.04,-158.46 77.04,-158.46 82.59,-160.73 82.59,-165.27 77.04,-167.54 77.04,-167.54 55.18,-176.46 55.18,-176.46 49.63,-178.73 38.52,-178.73 32.96,-176.46" fill=#fff9c4 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=44.07 xml:space=preserve y=-158.72>Igual?</text></g><g class=edge id=edge6><title>Igual3->Igual4</title><path d="M48.74,-223.13C48.03,-214.08 47.13,-202.68 46.31,-192.31" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="49.82,-192.32 45.55,-182.63 42.84,-192.87 49.82,-192.32" fill=#333333 stroke=#333333 stroke-width=1.2 /><text font-family=Arial font-size=10.00 text-anchor=middle x=58.31 xml:space=preserve y=-198.5>NÃO</text></g><g class=node id=node11><title>Case3</title><path d="M320.2,-259C320.2,-259 163.95,-259 163.95,-259 157.95,-259 151.95,-253 151.95,-247 151.95,-247 151.95,-235 151.95,-235 151.95,-229 157.95,-223 163.95,-223 163.95,-223 320.2,-223 320.2,-223 326.2,-223 332.2,-229 332.2,-235 332.2,-235 332.2,-247 332.2,-247 332.2,-253 326.2,-259 320.2,-259" fill=#f9f9f9 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=242.07 xml:space=preserve y=-236.72>case ':': printf("Dois pontos.\n");</text></g><g class=edge id=edge10><title>Igual3->Case3</title><path d="M95.09,-241C108.74,-241 124.32,-241 140.12,-241" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="139.82,-244.5 149.82,-241 139.82,-237.5 139.82,-244.5" fill=#333333 stroke=#333333 stroke-width=1.2 /><text font-family=Arial font-size=10.00 text-anchor=middle x=123.05 xml:space=preserve y=-246.5>SIM</text></g><g class=node id=node12><title>Case4</title><path d="M330.45,-181C330.45,-181 157.7,-181 157.7,-181 151.7,-181 145.7,-175 145.7,-169 145.7,-169 145.7,-157 145.7,-157 145.7,-151 151.7,-145 157.7,-145 157.7,-145 330.45,-145 330.45,-145 336.45,-145 342.45,-151 342.45,-157 342.45,-157 342.45,-169 342.45,-169 342.45,-175 336.45,-181 330.45,-181" fill=#f9f9f9 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=244.07 xml:space=preserve y=-158.72>case ';': printf("Ponto e virgula.\n");</text></g><g class=edge id=edge11><title>Igual4->Case4</title><path d="M89.46,-163C102.9,-163 118.25,-163 133.94,-163" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="133.58,-166.5 143.58,-163 133.58,-159.5 133.58,-166.5" fill=#333333 stroke=#333333 stroke-width=1.2 /><text font-family=Arial font-size=10.00 text-anchor=middle x=116.92 xml:space=preserve y=-168.5>SIM</text></g><g class=node id=node13><title>Default</title><path d="M240.95,-103C240.95,-103 47.2,-103 47.2,-103 41.2,-103 35.2,-97 35.2,-91 35.2,-91 35.2,-79 35.2,-79 35.2,-73 41.2,-67 47.2,-67 47.2,-67 240.95,-67 240.95,-67 246.95,-67 252.95,-73 252.95,-79 252.95,-79 252.95,-91 252.95,-91 252.95,-97 246.95,-103 240.95,-103" fill=#f9f9f9 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=144.07 xml:space=preserve y=-80.72>default : printf("Nao eh pontuacao.\n");</text></g><g class=edge id=edge7><title>Igual4->Default</title><path d="M58.83,-150.79C72.8,-140.17 94.24,-123.87 112.13,-110.28" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="113.81,-113.4 119.65,-104.56 109.57,-107.83 113.81,-113.4" fill=#333333 stroke=#333333 stroke-width=1.2 /><text font-family=Arial font-size=10.00 text-anchor=middle x=110.94 xml:space=preserve y=-120.5>NÃO</text></g><g class=edge id=edge12><title>Case1->Case2</title><path d="M237.3,-378.75C237.42,-369.97 237.56,-359.06 237.69,-349.03" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="241.19,-349.3 237.82,-339.26 234.19,-349.21 241.19,-349.3" fill=#333333 stroke=#333333 stroke-width=1.2 /></g><g class=edge id=edge13><title>Case2->Case3</title><path d="M238.98,-300.75C239.44,-291.97 240.02,-281.06 240.55,-271.03" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="244.03,-271.42 241.06,-261.25 237.04,-271.06 244.03,-271.42" fill=#333333 stroke=#333333 stroke-width=1.2 /></g><g class=edge id=edge14><title>Case3->Case4</title><path d="M242.53,-222.75C242.76,-213.97 243.05,-203.06 243.31,-193.03" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="246.8,-193.34 243.57,-183.26 239.81,-193.16 246.8,-193.34" fill=#333333 stroke=#333333 stroke-width=1.2 /></g><g class=edge id=edge15><title>Case4->Default</title><path d="M221.38,-144.75C208.05,-134.62 190.99,-121.65 176.28,-110.48" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="178.55,-107.8 168.47,-104.54 174.31,-113.38 178.55,-107.8" fill=#333333 stroke=#333333 stroke-width=1.2 /></g><g class=edge id=edge16><title>Default->Fim</title><path d="M144.07,-66.58C144.07,-60.9 144.07,-54.42 144.07,-48.12" fill=none stroke=#333333 stroke-width=1.2 /><polygon points="147.57,-48.28 144.07,-38.28 140.57,-48.28 147.57,-48.28" fill=#333333 stroke=#333333 stroke-width=1.2 /></g></g></svg></div></div><p>Embora o <strong>break</strong> seja quase sempre necessário para garantir a execução de apenas um bloco, sua ausência pode ser estratégica em casos como contagens regressivas ou quando múltiplos estados compartilham a mesma saída.</p><h3 id=uso-das-chaves-no-case><span class=heading-text>Uso das Chaves { } no case</span><span class=heading-arabic>5.5.2</span></h3><p>Geralmente, você não precisa utilizar chaves dentro de um <strong>case</strong>. No entanto, se o primeiro comando de um <strong>case</strong> for a <strong>declaração de uma variável</strong>, o uso das chaves torna-se obrigatório.</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>case '+': {
+</code></pre>
+<p>O fluxo de execução desse exemplo pode ser visualizado na imagem abaixo:</p>
+<div class="error">Graphviz error: failed to execute PosixPath('dot'), make sure the Graphviz executables are on your systems' PATH</div>
+
+<div class="callout callout-info">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></span>
+    <span class="callout-title-inner">O comando DEFAULT<br /></span>
+  </div>
+  <div class="callout-content">
+<p>O uso do <strong>default</strong> é opcional. Ele serve como uma cláusula de escape: sua sequência de comandos só será executada se a variável testada não for igual a nenhum dos valores definidos nos comandos <strong>case</strong>.</p>
+  </div>
+</div>
+<p>Embora o exemplo anterior possa ser reproduzido com estruturas <strong>if-else-if</strong>, o <strong>switch</strong> oferece uma solução muito mais elegante e legível para comparar o valor de uma única variável.</p>
+<h3 id="uso-do-comando-break-no-switch"><span class="heading-text">Uso do comando BREAK no switch</span><span class="heading-arabic">5.5.1</span></h3>
+<p>A principal diferença entre o <strong>switch</strong> e o aninhamento <strong>if-else-if</strong> reside no uso do comando <strong>break</strong>. Quando o valor de um <strong>case</strong> corresponde à variável, o programa executa os comandos até encontrar um <strong>break</strong>. Se o <strong>break</strong> for omitido, o programa continuará executando todos os comandos dos <strong>cases</strong> seguintes, independentemente de seus valores. Observe o impacto da ausência do <strong>break</strong> no fluxograma a seguir:</p>
+<div class="error">Graphviz error: failed to execute PosixPath('dot'), make sure the Graphviz executables are on your systems' PATH</div>
+
+<p>Embora o <strong>break</strong> seja quase sempre necessário para garantir a execução de apenas um bloco, sua ausência pode ser estratégica em casos como contagens regressivas ou quando múltiplos estados compartilham a mesma saída.</p>
+<h3 id="uso-das-chaves-no-case"><span class="heading-text">Uso das Chaves { } no case</span><span class="heading-arabic">5.5.2</span></h3>
+<p>Geralmente, você não precisa utilizar chaves dentro de um <strong>case</strong>. No entanto, se o primeiro comando de um <strong>case</strong> for a <strong>declaração de uma variável</strong>, o uso das chaves torna-se obrigatório.</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">case '+': {
     int resultado = a + b; // Declaração exige chaves
-    printf("Soma: %d\n", resultado);
+    printf(&quot;Soma: %d\n&quot;, resultado);
 }
 break;
-</code></pre><p>Isso ocorre porque a linguagem <strong>C</strong> proíbe que um salto condicional (como o que ocorre ao entrar em um <strong>switch</strong>) pule a declaração de uma variável dentro do mesmo escopo. Ao utilizar as chaves, você cria um novo escopo local para aquela variável, permitindo que ela seja "pulada" com segurança se aquele <strong>case</strong> não for o selecionado.</p><h2 id=questões><span class=heading-text>Questões</span><span class=heading-arabic>5.6</span></h2><p><strong>1.</strong> A avaliação de condições em C baseia-se em valores numéricos. Considerando que o computador interpreta <code>0</code> como <strong>falso</strong> e qualquer outro valor como <strong>verdadeiro</strong>, analise o trecho abaixo e determine o que será impresso. Justifique sua resposta explicando como o <code>if</code> avalia a expressão <code>(x = 0)</code>.</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>int main() {
+</code></pre>
+<p>Isso ocorre porque a linguagem <strong>C</strong> proíbe que um salto condicional (como o que ocorre ao entrar em um <strong>switch</strong>) pule a declaração de uma variável dentro do mesmo escopo. Ao utilizar as chaves, você cria um novo escopo local para aquela variável, permitindo que ela seja &quot;pulada&quot; com segurança se aquele <strong>case</strong> não for o selecionado.</p>
+<h2 id="questões"><span class="heading-text">Questões</span><span class="heading-arabic">5.6</span></h2>
+<p><strong>1.</strong> A avaliação de condições em C baseia-se em valores numéricos. Considerando que o computador interpreta <code>0</code> como <strong>falso</strong> e qualquer outro valor como <strong>verdadeiro</strong>, analise o trecho abaixo e determine o que será impresso. Justifique sua resposta explicando como o <code>if</code> avalia a expressão <code>(x = 0)</code>.</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">int main() {
     int x = 10;
     
     // Atenção: operador de atribuição '=' e não de igualdade '=='
     if (x = 2) {
-        printf("Verdadeiro\n");
+        printf(&quot;Verdadeiro\n&quot;);
     } else {
-        printf("Falso\n");
+        printf(&quot;Falso\n&quot;);
     }
     
-    printf("Valor de x: %d", x);
+    printf(&quot;Valor de x: %d&quot;, x);
     return 0;
 }
-</code></pre><p><strong>2.</strong> O comando <code>switch</code> é uma alternativa elegante ao uso de múltiplos <code>if-else</code> encadeados, mas possui limitações. Assinale a alternativa que descreve corretamente uma restrição do <code>switch</code> em C:</p><ul><li>A) Pode avaliar expressões lógicas complexas, como <code>case (x > 10 && x &lt; 20):</code>.</li><li>B) Só aceita variáveis do tipo <code>float</code> ou <code>double</code> como parâmetro de controle.</li><li>C) Exige o uso obrigatório de chaves <code>{ }</code> em cada <code>case</code>, mesmo que não haja declaração de variáveis.</li><li>D) Só pode testar igualdade de valores constantes do tipo <code>int</code> ou <code>char</code>.</li></ul><p><strong>3.</strong> O operador ternário é uma ferramenta poderosa para simplificação de código. Reescreva o trecho de código abaixo utilizando <strong>uma única linha</strong> com o operador ternário:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>// Código Original
-if (nota >= 60) {
-    printf("Aprovado");
+</code></pre>
+<p><strong>2.</strong> O comando <code>switch</code> é uma alternativa elegante ao uso de múltiplos <code>if-else</code> encadeados, mas possui limitações. Assinale a alternativa que descreve corretamente uma restrição do <code>switch</code> em C:</p>
+<ul>
+<li>A) Pode avaliar expressões lógicas complexas, como <code>case (x &gt; 10 &amp;&amp; x &lt; 20):</code>.</li>
+<li>B) Só aceita variáveis do tipo <code>float</code> ou <code>double</code> como parâmetro de controle.</li>
+<li>C) Exige o uso obrigatório de chaves <code>{ }</code> em cada <code>case</code>, mesmo que não haja declaração de variáveis.</li>
+<li>D) Só pode testar igualdade de valores constantes do tipo <code>int</code> ou <code>char</code>.</li>
+</ul>
+<p><strong>3.</strong> O operador ternário é uma ferramenta poderosa para simplificação de código. Reescreva o trecho de código abaixo utilizando <strong>uma única linha</strong> com o operador ternário:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">// Código Original
+if (nota &gt;= 60) {
+    printf(&quot;Aprovado&quot;);
 } else {
-    printf("Reprovado");
+    printf(&quot;Reprovado&quot;);
 }
-</code></pre><p><strong>4.</strong> Escreva um programa que leia um número inteiro fornecido pelo usuário. O programa deve verificar se o número é <strong>par</strong> ou <strong>ímpar</strong> e imprimir uma mensagem correspondente.</p><ul><li><strong>Entrada:</strong> Um número inteiro (ex: 7).</li><li><strong>Saída Esperada:</strong> "O numero 7 eh impar."</li></ul><p><strong>5.</strong> Crie um programa que receba três números inteiros como entrada e imprima o <strong>maior</strong> deles. Utilize estruturas <code>if-else</code> aninhadas para realizar as comparações.</p><ul><li><strong>Entrada:</strong> Três números inteiros (ex: 10, 5, 20).</li><li><strong>Saída Esperada:</strong> "O maior numero eh: 20".</li></ul><p><strong>6.</strong> Desenvolva uma calculadora básica utilizando o comando <code>switch</code>. O programa deve ler dois números reais e um operador aritmético (<code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>).</p><ul><li><strong>Entrada:</strong> Dois números e um caractere (ex: 5.0, 2.0, '/').</li><li><strong>Saída Esperada:</strong> O resultado da operação (ex: "Resultado: 2.50").</li><li><strong>Requisito:</strong> Trate a divisão por zero, exibindo uma mensagem de erro caso o divisor seja 0.</li></ul><p><strong>7.</strong> Escreva um programa que leia um ano (ex: 2024) e determine se ele é bissexto ou não. As regras para um ano ser bissexto são:</p><ol><li>Ser divisível por 4.</li><li><strong>Não</strong> ser divisível por 100, <strong>a menos que</strong> seja também divisível por 400.</li></ol><ul><li><strong>Exemplos:</strong><ul><li>2000 é bissexto (divisível por 400).</li><li>1900 não é bissexto (divisível por 100, mas não por 400).</li><li>2024 é bissexto (divisível por 4 e não por 100).</li></ul></li><li><strong>Entrada:</strong> Um ano (inteiro).</li><li><strong>Saída Esperada:</strong> "Bissexto" ou "Nao Bissexto".</li></ul><p><strong>8.</strong> Analise o comportamento do <code>break</code> no comando <code>switch</code>. Dado o código abaixo, qual será a saída exata se o usuário digitar o valor <code>2</code>? Explique por que a saída ocorre dessa forma.</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>int main() {
+</code></pre>
+<p><strong>4.</strong> Escreva um programa que leia um número inteiro fornecido pelo usuário. O programa deve verificar se o número é <strong>par</strong> ou <strong>ímpar</strong> e imprimir uma mensagem correspondente.</p>
+<ul>
+<li><strong>Entrada:</strong> Um número inteiro (ex: 7).</li>
+<li><strong>Saída Esperada:</strong> &quot;O numero 7 eh impar.&quot;</li>
+</ul>
+<p><strong>5.</strong> Crie um programa que receba três números inteiros como entrada e imprima o <strong>maior</strong> deles. Utilize estruturas <code>if-else</code> aninhadas para realizar as comparações.</p>
+<ul>
+<li><strong>Entrada:</strong> Três números inteiros (ex: 10, 5, 20).</li>
+<li><strong>Saída Esperada:</strong> &quot;O maior numero eh: 20&quot;.</li>
+</ul>
+<p><strong>6.</strong> Desenvolva uma calculadora básica utilizando o comando <code>switch</code>. O programa deve ler dois números reais e um operador aritmético (<code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>).</p>
+<ul>
+<li><strong>Entrada:</strong> Dois números e um caractere (ex: 5.0, 2.0, '/').</li>
+<li><strong>Saída Esperada:</strong> O resultado da operação (ex: &quot;Resultado: 2.50&quot;).</li>
+<li><strong>Requisito:</strong> Trate a divisão por zero, exibindo uma mensagem de erro caso o divisor seja 0.</li>
+</ul>
+<p><strong>7.</strong> Escreva um programa que leia um ano (ex: 2024) e determine se ele é bissexto ou não. As regras para um ano ser bissexto são:</p>
+<ol>
+<li>Ser divisível por 4.</li>
+<li><strong>Não</strong> ser divisível por 100, <strong>a menos que</strong> seja também divisível por 400.</li>
+</ol>
+<ul>
+<li><strong>Exemplos:</strong><ul>
+<li>2000 é bissexto (divisível por 400).</li>
+<li>1900 não é bissexto (divisível por 100, mas não por 400).</li>
+<li>2024 é bissexto (divisível por 4 e não por 100).</li>
+</ul>
+</li>
+<li><strong>Entrada:</strong> Um ano (inteiro).</li>
+<li><strong>Saída Esperada:</strong> &quot;Bissexto&quot; ou &quot;Nao Bissexto&quot;.</li>
+</ul>
+<p><strong>8.</strong> Analise o comportamento do <code>break</code> no comando <code>switch</code>. Dado o código abaixo, qual será a saída exata se o usuário digitar o valor <code>2</code>? Explique por que a saída ocorre dessa forma.</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">int main() {
     int op;
-    scanf("%d", &op);
+    scanf(&quot;%d&quot;, &amp;op);
     
     switch(op) {
-        case 1: printf("A");
-        case 2: printf("B");
-        case 3: printf("C");
-        default: printf("D");
+        case 1: printf(&quot;A&quot;);
+        case 2: printf(&quot;B&quot;);
+        case 3: printf(&quot;C&quot;);
+        default: printf(&quot;D&quot;);
     }
     return 0;
 }
-</code></pre><h2 id=próximos-passos><span class=heading-text>Próximos passos</span><span class=heading-arabic>5.7</span></h2><p>No próximo capítulo, <a href=6-repetitions.html>Estruturas de Repetição</a>, deixaremos de executar o código apenas uma vez. Você aprenderá a criar <em>loops</em> (laços) utilizando os comandos <code>while</code>, <code>do-while</code> e <code>for</code>, permitindo que seu programa repita blocos de instruções quantas vezes forem necessárias para processar grandes volumes de dados ou realizar iterações controladas.</p></div></article><footer class=footer><p>© 2025 · <a href=#>Gabriel Soares Baptista</a></p></footer></main></div><script>const toggle=document.querySelector(`.mobile-menu-toggle`),sidebar=document.querySelector(`.sidebar`),overlay=document.querySelector(`.mobile-menu-overlay`);function openMenu(){sidebar.classList.add(`open`),overlay.classList.add(`open`),toggle.classList.add(`open`),toggle.innerHTML=`<i data-lucide="x"></i>`,CourseForgeUI.initIcons(),document.body.style.overflow=`hidden`}function closeMenu(){sidebar.classList.remove(`open`),overlay.classList.remove(`open`),toggle.classList.remove(`open`),toggle.innerHTML=`<i data-lucide="menu"></i>`,CourseForgeUI.initIcons(),document.body.style.overflow=``}toggle.addEventListener(`click`,()=>{sidebar.classList.contains(`open`)?closeMenu():openMenu()}),overlay.addEventListener(`click`,closeMenu);</script><script data-no-bundle src=/aulas-faesa/js/vendor/katex/dist/katex.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/katex/dist/contrib/auto-render.min.js></script><script>document.addEventListener(`DOMContentLoaded`,function(){renderMathInElement(document.body,{output:`html`,delimiters:[{left:`$$`,right:`$$`,display:!0},{left:`$`,right:`$`,display:!1},{left:`\\(`,right:`\\)`,display:!1},{left:`\\[`,right:`\\]`,display:!0}],throwOnError:!1,strict:!1})});</script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/prism.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-c.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-cpp.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-python.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-clike.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-perl.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-java.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-mermaid.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-php.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js></script><script>document.addEventListener(`DOMContentLoaded`,function(){mermaid.initialize({startOnLoad:!0,theme:`default`,securityLevel:`loose`,fontFamily:`Inter, system-ui, sans-serif`,themeVariables:{fontSize:`16px`,edgeLabelFontSize:`16px`,multiplicityFontSize:`18px`}})});</script><script>document.addEventListener(`DOMContentLoaded`,function(){let isSubcourse=!1,courseName=`Tópicos de Programação II (TEP II)`;CourseForgeNav.applyDynamicBreadcrumbs(`.breadcrumb`,!1),CourseForgeNav.initScrollSpy(),CourseForgeUI.initCopyButtons(),CourseForgeUI.initExamples()});function handleBackNavigation(){let isSubcourse=!1,dynamic=CourseForgeNav.getBackLink(`contents.html`,`Voltar`,!1);window.location.href=dynamic.url}</script></body></html>
+</code></pre>
+<h2 id="próximos-passos"><span class="heading-text">Próximos passos</span><span class="heading-arabic">5.7</span></h2>
+<p>No próximo capítulo, <a href="6-repetitions.html">Estruturas de Repetição</a>, deixaremos de executar o código apenas uma vez. Você aprenderá a criar <em>loops</em> (laços) utilizando os comandos <code>while</code>, <code>do-while</code> e <code>for</code>, permitindo que seu programa repita blocos de instruções quantas vezes forem necessárias para processar grandes volumes de dados ou realizar iterações controladas.</p>
+
+                </div>
+            </article>
+            <footer class="footer">
+                <p>© 2025 · <a href="#">Gabriel Soares Baptista</a></p>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        const toggle = document.querySelector('.mobile-menu-toggle');
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.querySelector('.mobile-menu-overlay');
+
+        function openMenu() {
+            sidebar.classList.add('open');
+            overlay.classList.add('open');
+            toggle.classList.add('open');
+            toggle.innerHTML = '<i data-lucide="x"></i>';
+            CourseForgeUI.initIcons();
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMenu() {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('open');
+            toggle.classList.remove('open');
+            toggle.innerHTML = '<i data-lucide="menu"></i>';
+            CourseForgeUI.initIcons();
+            document.body.style.overflow = '';
+        }
+
+        toggle.addEventListener('click', () => {
+            if (sidebar.classList.contains('open')) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        overlay.addEventListener('click', closeMenu);
+    </script>
+
+    
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            renderMathInElement(document.body, {
+                output: 'html',
+                delimiters: [
+                    { left: "$$", right: "$$", display: true },
+                    { left: "$", right: "$", display: false },
+                    { left: "\\(", right: "\\)", display: false },
+                    { left: "\\[", right: "\\]", display: true }
+                ],
+                throwOnError: false,
+                strict: false
+            });
+        });
+    </script>
+    
+    
+    <script src="/aulas-faesa/js/vendor/prism/prism.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-c.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-cpp.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-python.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-clike.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-perl.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-java.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-mermaid.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-php.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js" data-no-bundle></script>
+    
+    
+    
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            mermaid.initialize({
+                startOnLoad: true,
+                theme: 'default',
+                securityLevel: 'loose',
+                fontFamily: 'Inter, system-ui, sans-serif',
+                themeVariables: {
+                    fontSize: '16px',
+                    edgeLabelFontSize: '16px',
+                    multiplicityFontSize: '18px'
+                }
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const isSubcourse = false;
+        const courseName = "T\u00f3picos de Programa\u00e7\u00e3o II (TEP II)";
+        CourseForgeNav.applyDynamicBreadcrumbs('.breadcrumb', isSubcourse);
+        CourseForgeNav.initScrollSpy();
+        CourseForgeUI.initCopyButtons();
+        CourseForgeUI.initExamples();
+        });
+
+        function handleBackNavigation() {
+            const isSubcourse = false;
+        const dynamic = CourseForgeNav.getBackLink('contents.html', 'Voltar', isSubcourse);
+        window.location.href = dynamic.url;
+        }
+    </script>
+</body>
+
+</html>

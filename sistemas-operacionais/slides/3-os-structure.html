@@ -1,13 +1,1176 @@
-<!doctype html><html lang=en><meta charset=utf-8><meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" name=viewport><title>Conceitos e Estruturas de Sistemas Operacionais</title><link media="(prefers-color-scheme: light)" href=/aulas-faesa/img/dark-favicon.svg rel=icon><link media="(prefers-color-scheme: dark)" href=/aulas-faesa/img/light-favicon.svg rel=icon><link data-no-bundle href=/aulas-faesa/css/vendor/reveal/reset.min.css rel=stylesheet><link data-no-bundle href=/aulas-faesa/css/vendor/reveal/reveal.min.css rel=stylesheet><link data-no-bundle href=/aulas-faesa/css/vendor/reveal/theme/white.min.css rel=stylesheet><link data-no-bundle href=/aulas-faesa/css/prism-one-light.css rel=stylesheet><link data-no-bundle href=/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css rel=stylesheet><link data-no-bundle href=/aulas-faesa/css/vendor/fonts.css rel=stylesheet></head><body><div class=reveal><div class=slides><section><h1>Sistemas Operacionais</h1><h2>Conceitos e Estruturas de Sistemas Operacionais</h2><p>Professor: Gabriel Soares Baptista</p></section><section><h1>Introdução</h1><p>Os sistemas operacionais evoluíram drasticamente ao longo de mais de cinco décadas, resultando em uma linhagem tecnológica vasta e heterogênea. Nem todos os modelos desenvolvidos alcançaram o mainstream, mas cada um contribuiu para o estado da arte atual.</p><p>Esta seção analisa nove variantes fundamentais, desde arquiteturas robustas para mainframes até <em>microkernels</em> para dispositivos vestíveis.</p><p>Isso estabelece uma base conceitual que será revisitada e aprofundada, permitindo uma compreensão clara de como o software de base se adapta a diferentes restrições de hardware e exigências de processamento.</p></section><section><h1>Sistemas operacionais de computadores de grande porte</h1><p>No topo da hierarquia encontram-se os mainframes. Diferenciam-se drasticamente dos PCs pela sua massiva capacidade de Entrada e Saída (E/S), gerenciando milhares de discos e volumes na escala de milhões de gigabytes, essencial para comércio eletrônico de larga escala (B2B).</p><p>Esses sistemas são orientados para processamento simultâneo e oferecem três modalidades:</p><table><thead><tr><th>Modalidade de Serviço</th><th>Características e Aplicações</th></tr></thead><tbody><tr><td><strong>Processamento em Lote (Batch)</strong></td><td>Executa tarefas rotineiras automaticamente, sem usuário interativo (ex: apólices de seguros).</td></tr><tr><td><strong>Processamento de Transações</strong></td><td>Gerencia volume alto de pequenas requisições (ex: compensação de cheques, reservas aéreas).</td></tr><tr><td><strong>Tempo Compartilhado (Timesharing)</strong></td><td>Múltiplos usuários remotos executam tarefas simultaneamente.</td></tr></tbody></table><div class="callout callout-note"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span><span class=callout-title-inner>Evolução e Tendências<br></span></div><div class=callout-content><p>Sistemas operacionais executam todas as funções acima de maneira integrada (ex: OS/390). Observa-se uma transição onde esses sistemas proprietários estão sendo substituídos por variantes UNIX, com destaque para o Linux.</p></div></div></section><section><h1>Sistemas operacionais de computadores pessoais</h1><p>A categoria voltada para computadores pessoais representa a interface mais comum da tecnologia no cotidiano. Atualmente, todos oferecem suporte nativo à multiprogramação, gerenciando dezenas de programas simultaneamente logo na inicialização.</p><p>O objetivo primordial é fornecer suporte robusto e intuitivo para um <strong>único usuário</strong>, facilitando tarefas essenciais como processamento de texto e navegação na internet.</p><div class="callout callout-example"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M12 11V7"/><path d="M9 11l3 3 3-3"/></svg></span><span class=callout-title-inner>Principais Exemplos<br></span></div><div class=callout-content><p>A literatura técnica destaca os seguintes sistemas:</p><ul><li><strong>Base Unix/BSD:</strong> Linux, FreeBSD e OS X (Apple).</li><li><strong>Base Windows:</strong> Windows 7 e Windows 8.</li></ul></div></div></section><section><h1>Sistemas operacionais de tempo real</h1><p>Definem-se pelo tratamento do <strong>tempo como parâmetro-chave</strong>, essenciais onde a precisão temporal dita o sucesso (ex: controle de maquinário industrial).</p><p>A classificação depende da tolerância a falhas temporais:</p><table><thead><tr><th>Categoria</th><th>Definição</th><th>Exemplos</th></tr></thead><tbody><tr><td><strong>Crítico (Hard)</strong></td><td>Garantias absolutas de instante exato. Falha causa danos.</td><td>Indústria, aviônica.</td></tr><tr><td><strong>Não Crítico (Soft)</strong></td><td>Perda ocasional de prazo aceitável; sem danos permanentes.</td><td>Multimídia, smartphones.</td></tr></tbody></table><div class="callout callout-note"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span><span class=callout-title-inner>Arquitetura e Eficiência<br></span></div><div class=callout-content><p>Para garantir prazos nos sistemas críticos, o SO muitas vezes funciona apenas como uma biblioteca conectada diretamente aos programas aplicativos (ex: <strong>eCos</strong>). Sem proteção entre partes, visando maximizar velocidade de resposta.</p></div></div><p>Há sobreposição com sistemas embarcados. A diferença: sistemas de tempo real voltam-se ao uso industrial e geralmente não permitem que o usuário adicione softwares próprios.</p></section><section><h1>Conceitos de sistemas operacionais</h1><p>A compreensão da arquitetura exige o domínio de certas abstrações basilares. Estas estruturas formam o vocabulário essencial para o gerenciamento de recursos em virtualmente todas as plataformas modernas:</p><ul><li><strong>Processos</strong></li><li><strong>Espaços de Endereçamento</strong></li><li><strong>Arquivos</strong></li></ul></section><section><h1>Processos</h1><p>O conceito de processo é a pedra angular, definido essencialmente como um <strong>programa em execução</strong>.</p><p>Todo processo funciona como um contêiner composto por:</p><ul><li><strong>Espaço de endereçamento:</strong> Faixa de memória (programa executável, dados, pilha).</li><li><strong>Recursos:</strong> Registradores, contador de programa, ponteiro de pilha, arquivos abertos, alarmes.</li></ul><p>O sistema operacional alterna periodicamente entre processos ativos. Quando um processo é suspenso, deve ser reiniciado no exato estado em que parou.</p><div class="callout callout-info"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><circle cx=12 cy=12 r=10 /><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></span><span class=callout-title-inner>A Tabela de Processos<br></span></div><div class=callout-content><p>Armazena todas as informações do processo (exceto o espaço de endereçamento). Cada entrada guarda o estado dos registradores, ponteiros e dados críticos. Um processo suspenso consiste em sua <em>imagem do núcleo</em> e sua entrada na tabela.</p></div></div></section><section><h1>Hierarquia de Processos</h1><p>As chamadas de sistema gerenciam o ciclo de vida (ex: o shell cria um processo filho para executar o compilador). Como processos criam processos recursivamente, forma-se uma hierarquia:</p><img style="margin:30px auto" src=../static/fig_1_13_arvore_processos.png width=50%><table><thead><tr><th>Identificador</th><th>Sigla</th><th>Descrição</th></tr></thead><tbody><tr><td><strong>Identificação do Usuário</strong></td><td>UID</td><td>Herdada de quem o iniciou (incluindo filhos).</td></tr><tr><td><strong>Identificação do Grupo</strong></td><td>GID</td><td>Associa usuários a grupos para permissões.</td></tr><tr><td><strong>Superusuário</strong></td><td>Root</td><td>Poderes para sobrepor regras de proteção.</td></tr></tbody></table><p>Processos utilizam <strong>sinais</strong> (análogos às interrupções de hardware) para comunicação assíncrona.</p></section><section><h1>Espaços de endereçamento</h1><p>A memória principal armazena programas em execução. A multiprogramação exige convivência de múltiplos programas e proteção robusta (implementada no hardware, gerida pelo SO).</p><table><thead><tr><th>Conceito</th><th>Definição</th></tr></thead><tbody><tr><td><strong>Memória Principal (Física)</strong></td><td>Hardware real disponível para armazenamento volátil.</td></tr><tr><td><strong>Espaço de Endereçamento</strong></td><td>Conjunto de endereços lógicos que um processo pode utilizar.</td></tr></tbody></table><div class="callout callout-warning"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span><span class=callout-title-inner>O Desafio da Escala<br></span></div><div class=callout-content><p>Arquiteturas de 32/64 bits geram espaços de $2^{32}$ ou $2^{64}$ bytes, excedendo frequentemente a memória física instalada.</p></div></div><div class="callout callout-success"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></span><span class=callout-title-inner>A Solução da Memória Virtual<br></span></div><div class=callout-content><p>O SO mantém parte do espaço na RAM e o resto no disco, fazendo <em>swapping</em>. O espaço de endereçamento é <strong>desacoplado</strong> da memória física, permitindo que o programa utilize mais memória lógica que física.</p></div></div></section><section><h1>Arquivos e Diretórios</h1><p>Uma função primordial do SO é ocultar peculiaridades dos discos, apresentando arquivos independentes do dispositivo manipulados via chamadas (criar, ler, escrever).</p><p>Para agrupamento, utiliza-se o conceito de <strong>diretório</strong>, formando uma hierarquia:</p><img style="margin:0 auto" src=../static/fig1_14_sistema_arquivos_departamento.png width=65%><table><thead><tr><th>Característica</th><th>Hierarquia de Processos</th><th>Hierarquia de Arquivos</th></tr></thead><tbody><tr><td><strong>Profundidade</strong></td><td>Rasa (raramente > 3).</td><td>Profunda (4, 5+ níveis).</td></tr><tr><td><strong>Duração</strong></td><td>Curta (minutos).</td><td>Longa (anos).</td></tr><tr><td><strong>Controle</strong></td><td>Restrito (pai-filho).</td><td>Amplo (grupos/usuários).</td></tr></tbody></table></section><section><h1>Nomes de Caminho e Montagem</h1><p>Todo arquivo possui um <strong>nome de caminho</strong> (path) a partir do diretório-raiz (ex: <code>/Professores/Prof.Brown/Cursos/CS101</code>). Nomes relativos dependem do <strong>diretório de trabalho atual</strong>.</p><div class="callout callout-note"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span><span class=callout-title-inner>Convenção de Caminhos<br></span></div><div class=callout-content><p>O Windows usa barra invertida (<code>\</code>) por razões históricas. O UNIX e o ambiente acadêmico utilizam a barra (<code>/</code>).</p></div></div><p>A <strong>montagem</strong> (<code>mount</code>) integra sistemas de arquivos removíveis (CD-ROMs, USBs) à árvore principal, eliminando dependência de letras de unidade.</p><img src=../static/fig1_15_montagem_sistema_arquivos.png width=100%></section><section><h1>Arquivos Especiais, Pipes e E/S</h1><p>O UNIX trata dispositivos como arquivos (<em>arquivos especiais</em>):</p><ul><li><strong>Bloco:</strong> Acesso direto (ex: discos).</li><li><strong>Caracteres:</strong> Fluxo (ex: impressoras, modems).</li></ul><p><strong>Pipes:</strong> Pseudoarquivos conectando dois processos para comunicação (A escreve, B lê):<br> <img style="margin:0 auto;display:block" src=../static/fig1_16_pipes_processos.png width=40%></p><p><strong>Entrada/Saída:</strong> O subsistema divide-se em software <strong>Independente do Dispositivo</strong> (interface padronizada genérica) e <strong>Específico do Dispositivo</strong> (<em>drivers</em>).</p></section><section><h1>Proteção e o Shell</h1><p>A proteção de arquivos no UNIX usa código de 9 bits para <strong>proprietário</strong>, <strong>grupo</strong> e <strong>outros</strong> (3 bits cada: <em>Read</em>, <em>Write</em>, <em>Execute</em>).</p><div class="callout callout-example"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M12 11V7"/><path d="M9 11l3 3 3-3"/></svg></span><span class=callout-title-inner>Interpretação do código <code>rwxr-x--x</code></span></div><div class=callout-content><ul><li><strong>Proprietário (<code>rwx</code>):</strong> Leitura, escrita e execução.</li><li><strong>Grupo (<code>r-x</code>):</strong> Leitura e execução (sem escrita).</li><li><strong>Outros (<code>--x</code>):</strong> Apenas execução.</li></ul></div></div><h2>O Interpretador de Comandos (Shell)</h2><p>O shell (ex: <code>bash</code>) não é o SO, mas a interface que invoca chamadas de sistema. Após exibir o prompt (<code>$</code>), lê o comando, cria processo filho, executa e aguarda.</p><table><thead><tr><th>Operador</th><th>Função</th><th>Exemplo</th></tr></thead><tbody><tr><td><code>></code></td><td>Saída</td><td><code>date >file</code></td></tr><tr><td><code>&lt;</code></td><td>Entrada</td><td><code>sort &lt;f1 >f2</code></td></tr><tr><td><code>|</code></td><td>Pipe</td><td><code>cat f1 f2 | sort</code></td></tr><tr><td><code>&</code></td><td>Background</td><td><code>command &</code></td></tr></tbody></table></section><section><h1>Questões de fixação - 1 / 3</h1><p><strong>1.</strong> O texto descreve a evolução e a diversidade dos sistemas operacionais. Associe corretamente o tipo de sistema operacional (Coluna A) à sua característica ou exemplo principal (Coluna B).</p><table><thead><tr><th>Coluna A</th><th>Coluna B</th></tr></thead><tbody><tr><td>(1) Mainframe / Grande Porte</td><td>( ) O sistema operacional funciona frequentemente apenas como uma biblioteca ligada à aplicação; foca em prazos rígidos.</td></tr><tr><td>(2) Tempo Real Crítico (Hard)</td><td>( ) Otimizado para processar milhares de transações por segundo e gerenciar volumes massivos de E/S; ex: OS/390.</td></tr><tr><td>(3) Computadores Pessoais</td><td>( ) Sistemas onde a perda ocasional de um prazo é aceitável e não causa danos permanentes; ex: Áudio digital.</td></tr><tr><td>(4) Tempo Real Não Crítico (Soft)</td><td>( ) Focado em fornecer uma interface robusta para um único usuário e suportar multitarefa para aplicações de escritório e web.</td></tr></tbody></table></section><section><h1>Questões de fixação - 1 / 3 (Continuação)</h1><p><strong>5.</strong> A segurança em sistemas UNIX é gerida por bits de permissão. Considere um arquivo com as permissões exibidas como <code>rwxr-x--x</code>.</p><ul><li>a) Converta essa representação simbólica para a notação <strong>octal</strong> utilizada pela chamada <code>chmod</code> (lembrando que r=4, w=2, x=1).</li><li>b) Descreva detalhadamente o que o <strong>Grupo</strong> e os <strong>Outros</strong> usuários podem e não podem fazer com este arquivo.</li></ul><p><strong>7.</strong> O sistema de arquivos UNIX permite a criação de links. Analise o cenário onde o usuário <em>ast</em> executa o comando <code>link("/usr/jim/memo", "/usr/ast/note")</code>.</p><ul><li>a) O conteúdo do arquivo <code>memo</code> é duplicado no disco para criar o arquivo <code>note</code>? Justifique usando o conceito de <strong>i-número</strong>.</li><li>b) Se o usuário <em>jim</em> remover o arquivo original <code>memo</code> usando <code>unlink</code>, o que acontece com o arquivo <code>note</code> de <em>ast</em> e com o conteúdo no disco? Explique o conceito de contador de referências.</li></ul></section><section><h1>Chamadas de Sistema</h1><p>A interface entre programas e o SO ocorre através de chamadas de sistema (API POSIX). Um processo em modo usuário executa uma instrução de armadilha (<strong>TRAP</strong>) para transferir controle ao núcleo.</p><img style="margin:0 auto" src=../static/fig1_17_passos_read.png width=50%><ul><li>1-3. Empilhamento inverso (C) de parâmetros.</li><li>4-5. Chamada de biblioteca, prepara registrador.</li><li><ol start=6><li><strong>TRAP</strong>: Muda modo usuário → núcleo.</li></ol></li><li>7-8. Tabela de despacho e Execução.</li><li>9-11. Retorno e limpeza da pilha.</li></ul></section><section><h1>Chamadas de Sistema</h1><div class="callout callout-note"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span><span class=callout-title-inner>TRAP vs. Chamada de Rotina<br></span></div><div class=callout-content><p>A TRAP muda de modo usuário para núcleo e salta para endereço fixo seguro (vetor de interrupção), diferentemente do <code>CALL</code> normal.</p></div></div></section><section><h1>Gerenciamento de Processos</h1><p>O processo original (pai) cria uma cópia (filho) com <code>fork</code>, duplicando descritores. Variáveis são independentes após a cópia. Retorna <strong>zero</strong> para filho e <strong>PID</strong> para o pai.</p><table><thead><tr><th>Chamada</th><th>Descrição</th></tr></thead><tbody><tr><td><code>pid = fork()</code></td><td>Cria um processo filho idêntico ao pai.</td></tr><tr><td><code>waitpid(...)</code></td><td>Aguarda a conclusão de um processo filho.</td></tr><tr><td><code>execve(...)</code></td><td>Substitui a imagem do núcleo de um processo.</td></tr></tbody></table><div class="callout callout-note"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span><span class=callout-title-inner>Lógica Simplificada do Shell</span></div><div class=callout-content><pre class="line-numbers language-c" data-lang=C><code class=language-c>if (fork() != 0) {
-    waitpid(-1, &status, 0); /* Código do processo pai */
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <title>Conceitos e Estruturas de Sistemas Operacionais</title>
+    <link rel="icon" href="/aulas-faesa/img/dark-favicon.svg" media="(prefers-color-scheme: light)">
+    <link rel="icon" href="/aulas-faesa/img/light-favicon.svg" media="(prefers-color-scheme: dark)">
+
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/reset.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/reveal.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/theme/white.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/aulas-faesa/css/prism-one-light.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/fonts.css" data-no-bundle>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+            <section><h1>Sistemas Operacionais</h1>
+<h2>Conceitos e Estruturas de Sistemas Operacionais</h2>
+<p>Professor: Gabriel Soares Baptista</p>
+</section>
+<section><h1>Introdução</h1>
+<p>Os sistemas operacionais evoluíram drasticamente ao longo de mais de cinco décadas, resultando em uma linhagem tecnológica vasta e heterogênea. Nem todos os modelos desenvolvidos alcançaram o mainstream, mas cada um contribuiu para o estado da arte atual.</p>
+<p>Esta seção analisa nove variantes fundamentais, desde arquiteturas robustas para mainframes até <em>microkernels</em> para dispositivos vestíveis.</p>
+<p>Isso estabelece uma base conceitual que será revisitada e aprofundada, permitindo uma compreensão clara de como o software de base se adapta a diferentes restrições de hardware e exigências de processamento.</p>
+</section>
+<section><h1>Sistemas operacionais de computadores de grande porte</h1>
+<p>No topo da hierarquia encontram-se os mainframes. Diferenciam-se drasticamente dos PCs pela sua massiva capacidade de Entrada e Saída (E/S), gerenciando milhares de discos e volumes na escala de milhões de gigabytes, essencial para comércio eletrônico de larga escala (B2B).</p>
+<p>Esses sistemas são orientados para processamento simultâneo e oferecem três modalidades:</p>
+<table>
+<thead>
+<tr>
+  <th>Modalidade de Serviço</th>
+  <th>Características e Aplicações</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><strong>Processamento em Lote (Batch)</strong></td>
+  <td>Executa tarefas rotineiras automaticamente, sem usuário interativo (ex: apólices de seguros).</td>
+</tr>
+<tr>
+  <td><strong>Processamento de Transações</strong></td>
+  <td>Gerencia volume alto de pequenas requisições (ex: compensação de cheques, reservas aéreas).</td>
+</tr>
+<tr>
+  <td><strong>Tempo Compartilhado (Timesharing)</strong></td>
+  <td>Múltiplos usuários remotos executam tarefas simultaneamente.</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">Evolução e Tendências<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Sistemas operacionais executam todas as funções acima de maneira integrada (ex: OS/390). Observa-se uma transição onde esses sistemas proprietários estão sendo substituídos por variantes UNIX, com destaque para o Linux.</p>
+  </div>
+</div>
+</section>
+<section><h1>Sistemas operacionais de computadores pessoais</h1>
+<p>A categoria voltada para computadores pessoais representa a interface mais comum da tecnologia no cotidiano. Atualmente, todos oferecem suporte nativo à multiprogramação, gerenciando dezenas de programas simultaneamente logo na inicialização.</p>
+<p>O objetivo primordial é fornecer suporte robusto e intuitivo para um <strong>único usuário</strong>, facilitando tarefas essenciais como processamento de texto e navegação na internet.</p>
+<div class="callout callout-example">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M12 11V7"/><path d="M9 11l3 3 3-3"/></svg></span>
+    <span class="callout-title-inner">Principais Exemplos<br /></span>
+  </div>
+  <div class="callout-content">
+<p>A literatura técnica destaca os seguintes sistemas:</p>
+<ul>
+<li><strong>Base Unix/BSD:</strong> Linux, FreeBSD e OS X (Apple).</li>
+<li><strong>Base Windows:</strong> Windows 7 e Windows 8.</li>
+</ul></p>
+  </div>
+</div>
+</section>
+<section><h1>Sistemas operacionais de tempo real</h1>
+<p>Definem-se pelo tratamento do <strong>tempo como parâmetro-chave</strong>, essenciais onde a precisão temporal dita o sucesso (ex: controle de maquinário industrial).</p>
+<p>A classificação depende da tolerância a falhas temporais:</p>
+<table>
+<thead>
+<tr>
+  <th>Categoria</th>
+  <th>Definição</th>
+  <th>Exemplos</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><strong>Crítico (Hard)</strong></td>
+  <td>Garantias absolutas de instante exato. Falha causa danos.</td>
+  <td>Indústria, aviônica.</td>
+</tr>
+<tr>
+  <td><strong>Não Crítico (Soft)</strong></td>
+  <td>Perda ocasional de prazo aceitável; sem danos permanentes.</td>
+  <td>Multimídia, smartphones.</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">Arquitetura e Eficiência<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Para garantir prazos nos sistemas críticos, o SO muitas vezes funciona apenas como uma biblioteca conectada diretamente aos programas aplicativos (ex: <strong>eCos</strong>). Sem proteção entre partes, visando maximizar velocidade de resposta.</p>
+  </div>
+</div>
+<p>Há sobreposição com sistemas embarcados. A diferença: sistemas de tempo real voltam-se ao uso industrial e geralmente não permitem que o usuário adicione softwares próprios.</p>
+</section>
+<section><h1>Conceitos de sistemas operacionais</h1>
+<p>A compreensão da arquitetura exige o domínio de certas abstrações basilares. Estas estruturas formam o vocabulário essencial para o gerenciamento de recursos em virtualmente todas as plataformas modernas:</p>
+<ul>
+<li><strong>Processos</strong></li>
+<li><strong>Espaços de Endereçamento</strong></li>
+<li><strong>Arquivos</strong></li>
+</ul>
+</section>
+<section><h1>Processos</h1>
+<p>O conceito de processo é a pedra angular, definido essencialmente como um <strong>programa em execução</strong>.</p>
+<p>Todo processo funciona como um contêiner composto por:</p>
+<ul>
+<li><strong>Espaço de endereçamento:</strong> Faixa de memória (programa executável, dados, pilha).</li>
+<li><strong>Recursos:</strong> Registradores, contador de programa, ponteiro de pilha, arquivos abertos, alarmes.</li>
+</ul>
+<p>O sistema operacional alterna periodicamente entre processos ativos. Quando um processo é suspenso, deve ser reiniciado no exato estado em que parou.</p>
+<div class="callout callout-info">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></span>
+    <span class="callout-title-inner">A Tabela de Processos<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Armazena todas as informações do processo (exceto o espaço de endereçamento). Cada entrada guarda o estado dos registradores, ponteiros e dados críticos. Um processo suspenso consiste em sua <em>imagem do núcleo</em> e sua entrada na tabela.</p>
+  </div>
+</div>
+</section>
+<section><h1>Hierarquia de Processos</h1>
+<p>As chamadas de sistema gerenciam o ciclo de vida (ex: o shell cria um processo filho para executar o compilador). Como processos criam processos recursivamente, forma-se uma hierarquia:</p>
+<img src="../static/fig_1_13_arvore_processos.png" width="50%" style="margin: 30px auto;">
+
+<table>
+<thead>
+<tr>
+  <th>Identificador</th>
+  <th>Sigla</th>
+  <th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><strong>Identificação do Usuário</strong></td>
+  <td>UID</td>
+  <td>Herdada de quem o iniciou (incluindo filhos).</td>
+</tr>
+<tr>
+  <td><strong>Identificação do Grupo</strong></td>
+  <td>GID</td>
+  <td>Associa usuários a grupos para permissões.</td>
+</tr>
+<tr>
+  <td><strong>Superusuário</strong></td>
+  <td>Root</td>
+  <td>Poderes para sobrepor regras de proteção.</td>
+</tr>
+</tbody>
+</table>
+<p>Processos utilizam <strong>sinais</strong> (análogos às interrupções de hardware) para comunicação assíncrona.</p>
+</section>
+<section><h1>Espaços de endereçamento</h1>
+<p>A memória principal armazena programas em execução. A multiprogramação exige convivência de múltiplos programas e proteção robusta (implementada no hardware, gerida pelo SO).</p>
+<table>
+<thead>
+<tr>
+  <th>Conceito</th>
+  <th>Definição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><strong>Memória Principal (Física)</strong></td>
+  <td>Hardware real disponível para armazenamento volátil.</td>
+</tr>
+<tr>
+  <td><strong>Espaço de Endereçamento</strong></td>
+  <td>Conjunto de endereços lógicos que um processo pode utilizar.</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">O Desafio da Escala<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Arquiteturas de 32/64 bits geram espaços de $2^{32}$ ou $2^{64}$ bytes, excedendo frequentemente a memória física instalada.</p>
+  </div>
+</div>
+<div class="callout callout-success">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></span>
+    <span class="callout-title-inner">A Solução da Memória Virtual<br /></span>
+  </div>
+  <div class="callout-content">
+<p>O SO mantém parte do espaço na RAM e o resto no disco, fazendo <em>swapping</em>. O espaço de endereçamento é <strong>desacoplado</strong> da memória física, permitindo que o programa utilize mais memória lógica que física.</p>
+  </div>
+</div>
+</section>
+<section><h1>Arquivos e Diretórios</h1>
+<p>Uma função primordial do SO é ocultar peculiaridades dos discos, apresentando arquivos independentes do dispositivo manipulados via chamadas (criar, ler, escrever).</p>
+<p>Para agrupamento, utiliza-se o conceito de <strong>diretório</strong>, formando uma hierarquia:</p>
+<img src="../static/fig1_14_sistema_arquivos_departamento.png" width="65%" style="margin: 0 auto;">
+
+<table>
+<thead>
+<tr>
+  <th>Característica</th>
+  <th>Hierarquia de Processos</th>
+  <th>Hierarquia de Arquivos</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><strong>Profundidade</strong></td>
+  <td>Rasa (raramente &gt; 3).</td>
+  <td>Profunda (4, 5+ níveis).</td>
+</tr>
+<tr>
+  <td><strong>Duração</strong></td>
+  <td>Curta (minutos).</td>
+  <td>Longa (anos).</td>
+</tr>
+<tr>
+  <td><strong>Controle</strong></td>
+  <td>Restrito (pai-filho).</td>
+  <td>Amplo (grupos/usuários).</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section><h1>Nomes de Caminho e Montagem</h1>
+<p>Todo arquivo possui um <strong>nome de caminho</strong> (path) a partir do diretório-raiz (ex: <code>/Professores/Prof.Brown/Cursos/CS101</code>). Nomes relativos dependem do <strong>diretório de trabalho atual</strong>.</p>
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">Convenção de Caminhos<br /></span>
+  </div>
+  <div class="callout-content">
+<p>O Windows usa barra invertida (<code>\</code>) por razões históricas. O UNIX e o ambiente acadêmico utilizam a barra (<code>/</code>).</p>
+  </div>
+</div>
+<p>A <strong>montagem</strong> (<code>mount</code>) integra sistemas de arquivos removíveis (CD-ROMs, USBs) à árvore principal, eliminando dependência de letras de unidade.</p>
+<img src="../static/fig1_15_montagem_sistema_arquivos.png" width="100%">
+
+</section>
+<section><h1>Arquivos Especiais, Pipes e E/S</h1>
+<p>O UNIX trata dispositivos como arquivos (<em>arquivos especiais</em>):</p>
+<ul>
+<li><strong>Bloco:</strong> Acesso direto (ex: discos).</li>
+<li><strong>Caracteres:</strong> Fluxo (ex: impressoras, modems).</li>
+</ul>
+<p><strong>Pipes:</strong> Pseudoarquivos conectando dois processos para comunicação (A escreve, B lê):<br />
+<img src="../static/fig1_16_pipes_processos.png" width="40%" style="display: block; margin: 0 auto;"></p>
+<p><strong>Entrada/Saída:</strong> O subsistema divide-se em software <strong>Independente do Dispositivo</strong> (interface padronizada genérica) e <strong>Específico do Dispositivo</strong> (<em>drivers</em>).</p>
+</section>
+<section><h1>Proteção e o Shell</h1>
+<p>A proteção de arquivos no UNIX usa código de 9 bits para <strong>proprietário</strong>, <strong>grupo</strong> e <strong>outros</strong> (3 bits cada: <em>Read</em>, <em>Write</em>, <em>Execute</em>).</p>
+<div class="callout callout-example">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M12 11V7"/><path d="M9 11l3 3 3-3"/></svg></span>
+    <span class="callout-title-inner">Interpretação do código <code>rwxr-x--x</code></span>
+  </div>
+  <div class="callout-content">
+<ul>
+<li><strong>Proprietário (<code>rwx</code>):</strong> Leitura, escrita e execução.</li>
+<li><strong>Grupo (<code>r-x</code>):</strong> Leitura e execução (sem escrita).</li>
+<li><strong>Outros (<code>--x</code>):</strong> Apenas execução.</li>
+</ul>
+  </div>
+</div>
+<h2>O Interpretador de Comandos (Shell)</h2>
+<p>O shell (ex: <code>bash</code>) não é o SO, mas a interface que invoca chamadas de sistema. Após exibir o prompt (<code>$</code>), lê o comando, cria processo filho, executa e aguarda.</p>
+<table>
+<thead>
+<tr>
+  <th>Operador</th>
+  <th>Função</th>
+  <th>Exemplo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>&gt;</code></td>
+  <td>Saída</td>
+  <td><code>date &gt;file</code></td>
+</tr>
+<tr>
+  <td><code>&lt;</code></td>
+  <td>Entrada</td>
+  <td><code>sort &lt;f1 &gt;f2</code></td>
+</tr>
+<tr>
+  <td><code>|</code></td>
+  <td>Pipe</td>
+  <td><code>cat f1 f2 | sort</code></td>
+</tr>
+<tr>
+  <td><code>&amp;</code></td>
+  <td>Background</td>
+  <td><code>command &amp;</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section><h1>Questões de fixação - 1 / 3</h1>
+<p><strong>1.</strong> O texto descreve a evolução e a diversidade dos sistemas operacionais. Associe corretamente o tipo de sistema operacional (Coluna A) à sua característica ou exemplo principal (Coluna B).</p>
+<table>
+<thead>
+<tr>
+  <th>Coluna A</th>
+  <th>Coluna B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>(1) Mainframe / Grande Porte</td>
+  <td>( ) O sistema operacional funciona frequentemente apenas como uma biblioteca ligada à aplicação; foca em prazos rígidos.</td>
+</tr>
+<tr>
+  <td>(2) Tempo Real Crítico (Hard)</td>
+  <td>( ) Otimizado para processar milhares de transações por segundo e gerenciar volumes massivos de E/S; ex: OS/390.</td>
+</tr>
+<tr>
+  <td>(3) Computadores Pessoais</td>
+  <td>( ) Sistemas onde a perda ocasional de um prazo é aceitável e não causa danos permanentes; ex: Áudio digital.</td>
+</tr>
+<tr>
+  <td>(4) Tempo Real Não Crítico (Soft)</td>
+  <td>( ) Focado em fornecer uma interface robusta para um único usuário e suportar multitarefa para aplicações de escritório e web.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section><h1>Questões de fixação - 1 / 3 (Continuação)</h1>
+<p><strong>5.</strong> A segurança em sistemas UNIX é gerida por bits de permissão. Considere um arquivo com as permissões exibidas como <code>rwxr-x--x</code>.</p>
+<ul>
+<li>a) Converta essa representação simbólica para a notação <strong>octal</strong> utilizada pela chamada <code>chmod</code> (lembrando que r=4, w=2, x=1).</li>
+<li>b) Descreva detalhadamente o que o <strong>Grupo</strong> e os <strong>Outros</strong> usuários podem e não podem fazer com este arquivo.</li>
+</ul>
+<p><strong>7.</strong> O sistema de arquivos UNIX permite a criação de links. Analise o cenário onde o usuário <em>ast</em> executa o comando <code>link(&quot;/usr/jim/memo&quot;, &quot;/usr/ast/note&quot;)</code>.</p>
+<ul>
+<li>a) O conteúdo do arquivo <code>memo</code> é duplicado no disco para criar o arquivo <code>note</code>? Justifique usando o conceito de <strong>i-número</strong>.</li>
+<li>b) Se o usuário <em>jim</em> remover o arquivo original <code>memo</code> usando <code>unlink</code>, o que acontece com o arquivo <code>note</code> de <em>ast</em> e com o conteúdo no disco? Explique o conceito de contador de referências.</li>
+</ul>
+</section>
+<section><h1>Chamadas de Sistema</h1>
+<p>A interface entre programas e o SO ocorre através de chamadas de sistema (API POSIX). Um processo em modo usuário executa uma instrução de armadilha (<strong>TRAP</strong>) para transferir controle ao núcleo.</p>
+<img src="../static/fig1_17_passos_read.png" width="50%" style="margin: 0 auto">
+
+<ul>
+<li>1-3. Empilhamento inverso (C) de parâmetros.</li>
+<li>4-5. Chamada de biblioteca, prepara registrador.</li>
+<li><ol start="6">
+<li><strong>TRAP</strong>: Muda modo usuário → núcleo.</li>
+</ol>
+</li>
+<li>7-8. Tabela de despacho e Execução.</li>
+<li>9-11. Retorno e limpeza da pilha.</li>
+</ul>
+</section>
+<section><h1>Chamadas de Sistema</h1>
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">TRAP vs. Chamada de Rotina<br /></span>
+  </div>
+  <div class="callout-content">
+<p>A TRAP muda de modo usuário para núcleo e salta para endereço fixo seguro (vetor de interrupção), diferentemente do <code>CALL</code> normal.</p>
+  </div>
+</div>
+</section>
+<section><h1>Gerenciamento de Processos</h1>
+<p>O processo original (pai) cria uma cópia (filho) com <code>fork</code>, duplicando descritores. Variáveis são independentes após a cópia. Retorna <strong>zero</strong> para filho e <strong>PID</strong> para o pai.</p>
+<table>
+<thead>
+<tr>
+  <th>Chamada</th>
+  <th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>pid = fork()</code></td>
+  <td>Cria um processo filho idêntico ao pai.</td>
+</tr>
+<tr>
+  <td><code>waitpid(...)</code></td>
+  <td>Aguarda a conclusão de um processo filho.</td>
+</tr>
+<tr>
+  <td><code>execve(...)</code></td>
+  <td>Substitui a imagem do núcleo de um processo.</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">Lógica Simplificada do Shell</span>
+  </div>
+  <div class="callout-content">
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">if (fork() != 0) {
+    waitpid(-1, &amp;status, 0); /* Código do processo pai */
 } else {
     execve(command, parameters, 0); /* Código do processo filho */
 }
 
-</code></pre></div></div></section><section><h1>Layout de Memória e Gerenciamento de Arquivos</h1><p><strong>Layout UNIX:</strong> Segmento de Texto (código), Dados (variáveis, cresce para cima, <code>brk</code>/<code>malloc</code>), e Pilha (cresce para baixo).</p><img style="margin:0 auto" src=../static/fig1_20_layout_memoria.png width=40%><p><strong>Arquivos:</strong></p><ul><li><code>open(file, flags)</code>: Retorna descritor de arquivo.</li><li>Flags: <code>O_RDONLY</code>, <code>O_WRONLY</code>, <code>O_RDWR</code>, <code>O_CREAT</code>.</li><li><code>read</code>, <code>write</code>, <code>close</code>.</li><li><code>stat</code>/<code>fstat</code>: Metadados do arquivo.</li></ul></section><section><h1>Layout de Memória e Gerenciamento de Arquivos</h1><div class="callout callout-note"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span><span class=callout-title-inner>Funcionamento do lseek<br></span></div><div class=callout-content><p>O acesso aleatório usa <code>lseek</code> para alterar o ponteiro com base em: 1) Descritor; 2) Offset; 3) Referência (início, atual, fim).</p></div></div></section><section><h1>Gerenciamento de Diretórios</h1><p>Operações básicas: <code>mkdir</code> e <code>rmdir</code>.<br> A chamada <code>link</code> cria um <strong>i-número</strong> referenciado por múltiplos caminhos sem duplicar o arquivo físico.</p><img style="margin:0 auto" src=../static/fig1_21_ligacao_diretorios.png width=85%><div class="callout callout-note"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span><span class=callout-title-inner>Estrutura de Diretório<br></span></div><div class=callout-content><p>O <code>link</code> cria apenas uma nova entrada de diretório apontando para um i-número existente. O arquivo é excluído apenas via <code>unlink</code> quando o contador de referências chegar a zero.</p></div></div><p>A chamada <code>mount</code> agrega dispositivos externos (<code>/dev/sdb0</code>) a um diretório na árvore (ex: <code>/mnt</code>), desconectados por <code>umount</code>.</p></section><section><h1>Chamadas de sistema diversas</h1><table><thead><tr><th>Chamada</th><th>Função Principal</th></tr></thead><tbody><tr><td><strong>chdir</strong></td><td>Altera o diretório de trabalho atual (relativiza caminhos).</td></tr><tr><td><strong>chmod</strong></td><td>Altera a proteção (ex: octal <code>0644</code> = <code>rw-r--r--</code>).</td></tr><tr><td><strong>kill</strong></td><td>Envia sinais a processos (pode forçar encerramento).</td></tr><tr><td><strong>time</strong></td><td>Retorna segundos desde o "Epoch" (1º Janeiro 1970).</td></tr></tbody></table><div class="callout callout-warning"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span><span class=callout-title-inner>O Problema do Ano 2106<br></span></div><div class=callout-content><p>Computadores com 32 bits usando inteiro sem sinal ($2^{32} - 1$) atingirão seu limite em cerca de 136 anos após 1970, ou seja, em 2106. É recomendado migrar para 64 bits para evitar falhas sistêmicas análogas ao Bug do Milênio.</p></div></div></section><section><h1>Questões de fixação - 2 / 3</h1><p><strong>2.</strong> Sobre o mecanismo de <strong>Chamadas de Sistema</strong> e a instrução <strong>TRAP</strong>, analise as afirmações abaixo e assinale a alternativa correta:</p><ul><li>a) A instrução TRAP é idêntica a uma chamada de função comum (<code>CALL</code>), pois apenas desvia o fluxo para um endereço de memória onde reside a função do sistema.</li><li>b) A principal função da TRAP é alternar o estado do processador de modo usuário para modo núcleo (kernel), permitindo a execução de operações privilegiadas de forma segura.</li><li>c) As chamadas de sistema no padrão POSIX são executadas inteiramente em modo usuário para garantir que uma falha no driver não derrube o sistema operacional.</li><li>d) O comando <code>read</code> acessa diretamente o hardware do disco sem passar pelo sistema operacional, utilizando a TRAP apenas para notificar o término da leitura.</li></ul><p><strong>8.</strong> Ordene cronologicamente as etapas que ocorrem durante a execução da chamada de sistema <code>read</code>, conforme descrito na arquitetura monolítica/POSIX:</p><ul><li>(A) A biblioteca coloca o número da chamada de sistema em um registrador.</li><li>(B) O tratador da chamada de sistema executa a operação solicitada (trabalho real).</li><li>(C) O programa do usuário empilha os parâmetros (nbytes, &buffer, fd).</li><li>(D) A instrução TRAP é executada, mudando para modo núcleo.</li><li>(E) O código do núcleo usa uma tabela de despacho para encontrar o tratador correto.</li><li>(F) A biblioteca retorna ao programa do usuário, que limpa a pilha.</li></ul></section><section><h1>Questões de fixação - 2 / 3 (Continuação)</h1><p><strong>4.</strong> O gerenciamento de processos utiliza chamadas específicas como <code>fork</code> e <code>execve</code>. Analise o trecho de código abaixo, que simula um shell simplificado, e responda:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>if (fork() != 0) {
-    waitpid(-1, &status, 0);
+</code></pre>
+  </div>
+</div>
+</section>
+<section><h1>Layout de Memória e Gerenciamento de Arquivos</h1>
+<p><strong>Layout UNIX:</strong> Segmento de Texto (código), Dados (variáveis, cresce para cima, <code>brk</code>/<code>malloc</code>), e Pilha (cresce para baixo).</p>
+<img src="../static/fig1_20_layout_memoria.png" width="40%" style="margin: 0 auto">
+
+<p><strong>Arquivos:</strong></p>
+<ul>
+<li><code>open(file, flags)</code>: Retorna descritor de arquivo.</li>
+<li>Flags: <code>O_RDONLY</code>, <code>O_WRONLY</code>, <code>O_RDWR</code>, <code>O_CREAT</code>.</li>
+<li><code>read</code>, <code>write</code>, <code>close</code>.</li>
+<li><code>stat</code>/<code>fstat</code>: Metadados do arquivo.</li>
+</ul>
+</section>
+<section><h1>Layout de Memória e Gerenciamento de Arquivos</h1>
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">Funcionamento do lseek<br /></span>
+  </div>
+  <div class="callout-content">
+<p>O acesso aleatório usa <code>lseek</code> para alterar o ponteiro com base em: 1) Descritor; 2) Offset; 3) Referência (início, atual, fim).</p>
+  </div>
+</div>
+</section>
+<section><h1>Gerenciamento de Diretórios</h1>
+<p>Operações básicas: <code>mkdir</code> e <code>rmdir</code>.<br />
+A chamada <code>link</code> cria um <strong>i-número</strong> referenciado por múltiplos caminhos sem duplicar o arquivo físico.</p>
+<img src="../static/fig1_21_ligacao_diretorios.png" width="85%" style="margin: 0 auto">
+
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">Estrutura de Diretório<br /></span>
+  </div>
+  <div class="callout-content">
+<p>O <code>link</code> cria apenas uma nova entrada de diretório apontando para um i-número existente. O arquivo é excluído apenas via <code>unlink</code> quando o contador de referências chegar a zero.</p>
+  </div>
+</div>
+<p>A chamada <code>mount</code> agrega dispositivos externos (<code>/dev/sdb0</code>) a um diretório na árvore (ex: <code>/mnt</code>), desconectados por <code>umount</code>.</p>
+</div></div>
+
+</section>
+<section><h1>Chamadas de sistema diversas</h1>
+<table>
+<thead>
+<tr>
+  <th>Chamada</th>
+  <th>Função Principal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><strong>chdir</strong></td>
+  <td>Altera o diretório de trabalho atual (relativiza caminhos).</td>
+</tr>
+<tr>
+  <td><strong>chmod</strong></td>
+  <td>Altera a proteção (ex: octal <code>0644</code> = <code>rw-r--r--</code>).</td>
+</tr>
+<tr>
+  <td><strong>kill</strong></td>
+  <td>Envia sinais a processos (pode forçar encerramento).</td>
+</tr>
+<tr>
+  <td><strong>time</strong></td>
+  <td>Retorna segundos desde o &quot;Epoch&quot; (1º Janeiro 1970).</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">O Problema do Ano 2106<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Computadores com 32 bits usando inteiro sem sinal ($2^{32} - 1$) atingirão seu limite em cerca de 136 anos após 1970, ou seja, em 2106. É recomendado migrar para 64 bits para evitar falhas sistêmicas análogas ao Bug do Milênio.</p>
+  </div>
+</div>
+</section>
+<section><h1>Questões de fixação - 2 / 3</h1>
+<p><strong>2.</strong> Sobre o mecanismo de <strong>Chamadas de Sistema</strong> e a instrução <strong>TRAP</strong>, analise as afirmações abaixo e assinale a alternativa correta:</p>
+<ul>
+<li>a) A instrução TRAP é idêntica a uma chamada de função comum (<code>CALL</code>), pois apenas desvia o fluxo para um endereço de memória onde reside a função do sistema.</li>
+<li>b) A principal função da TRAP é alternar o estado do processador de modo usuário para modo núcleo (kernel), permitindo a execução de operações privilegiadas de forma segura.</li>
+<li>c) As chamadas de sistema no padrão POSIX são executadas inteiramente em modo usuário para garantir que uma falha no driver não derrube o sistema operacional.</li>
+<li>d) O comando <code>read</code> acessa diretamente o hardware do disco sem passar pelo sistema operacional, utilizando a TRAP apenas para notificar o término da leitura.</li>
+</ul>
+<p><strong>8.</strong> Ordene cronologicamente as etapas que ocorrem durante a execução da chamada de sistema <code>read</code>, conforme descrito na arquitetura monolítica/POSIX:</p>
+<ul>
+<li>(A) A biblioteca coloca o número da chamada de sistema em um registrador.</li>
+<li>(B) O tratador da chamada de sistema executa a operação solicitada (trabalho real).</li>
+<li>(C) O programa do usuário empilha os parâmetros (nbytes, &amp;buffer, fd).</li>
+<li>(D) A instrução TRAP é executada, mudando para modo núcleo.</li>
+<li>(E) O código do núcleo usa uma tabela de despacho para encontrar o tratador correto.</li>
+<li>(F) A biblioteca retorna ao programa do usuário, que limpa a pilha.</li>
+</ul>
+</section>
+<section><h1>Questões de fixação - 2 / 3 (Continuação)</h1>
+<p><strong>4.</strong> O gerenciamento de processos utiliza chamadas específicas como <code>fork</code> e <code>execve</code>. Analise o trecho de código abaixo, que simula um shell simplificado, e responda:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">if (fork() != 0) {
+    waitpid(-1, &amp;status, 0);
 } else {
     execve(command, parameters, 0);
 }
 
-</code></pre><ul><li>a) Qual valor a chamada <code>fork()</code> retorna para o processo <strong>pai</strong> e qual valor ela retorna para o processo <strong>filho</strong>?</li><li>b) Qual é a função da chamada <code>waitpid</code> neste contexto e o que aconteceria com o shell (pai) se ela não fosse utilizada?</li><li>c) O que a chamada <code>execve</code> faz com a imagem de memória do processo filho?</li></ul></section><section><h1>Questões de fixação - 2 / 3 (Continuação)</h1><p><strong>3.</strong> Considere um sistema UNIX de 32 bits que utiliza um inteiro <strong>sem sinal</strong> para contar o tempo (chamada de sistema <code>time</code>). O texto menciona o "Problema do Ano 2106".</p><ul><li>a) Explique o que é o "Epoch" e qual a data base utilizada.</li><li>b) Sabendo que o valor máximo de um inteiro sem sinal de 32 bits é $2^{32} - 1$, calcule aproximadamente quantos anos esse contador pode registrar a partir do Epoch.</li><li>c) Por que a migração para arquiteturas de 64 bits é recomendada para solucionar este problema definitivamente?</li></ul></section><section><h1>Estrutura de sistemas operacionais</h1><p>A arquitetura interna revela o espectro de possibilidades de design. Adotamos um paralelo entre POSIX e a Win32 API para demonstrar a equivalência funcional, embora o Windows tenha chamadas mais complexas.</p><img style="margin:0 auto" src=../static/fig1_23_api_win32_vs_unix.png width=75%></section><section><h1>Estrutura de sistemas operacionais</h1><table><thead><tr><th>Funcionalidade</th><th>UNIX</th><th>Win32 API</th></tr></thead><tbody><tr><td><strong>Criação</strong></td><td><code>fork</code></td><td><code>CreateProcess</code></td></tr><tr><td><strong>Espera</strong></td><td><code>waitpid</code></td><td><code>WaitForSingleObject</code></td></tr><tr><td><strong>Execução</strong></td><td><code>execve</code></td><td>(<code>CreateProcess</code>)</td></tr><tr><td><strong>Abrir Arq.</strong></td><td><code>open</code></td><td><code>CreateFile</code></td></tr></tbody></table><p>As abordagens arquiteturais principais são: <strong>Monolíticos, Camadas, Micronúcleos, Cliente-Servidor, Máquinas Virtuais</strong>.</p></section><section><h1>Sistemas monolíticos e de camadas</h1><p><strong>Sistemas Monolíticos:</strong><br> Único grande binário em modo núcleo. Alta eficiência, mas baixa estabilidade (um driver derruba tudo). Uso de extensões dinâmicas (DLLs).<br> Três níveis lógicos: Principal, Serviço, Utilitárias.<br> <img style="margin:0 auto" src=../static/fig1_24_estrutura_monolitica.png width=50%></p><p><strong>Sistemas de Camadas:</strong><br> Hierarquia onde cada nível abstrai hardware (ex: sistema THE).<br> <img style="margin:0 auto" src=../static/fig1_25_camadas_the.png width=60%></p><p><strong>MULTICS:</strong> Usava anéis concêntricos apoiados em hardware para separar privilégios, não apenas como suporte de projeto de software.</p></section><section><h1>Micronúcleos</h1><p>O objetivo é máxima confiabilidade. Monolíticos podem ter milhares de bugs no núcleo. O micronúcleo mantém o mínimo código em modo privilegiado. Drivers e sistemas de arquivos rodam como processos em espaço de usuário. Uma falha de driver isola-se sem derrubar o SO.</p><img style="margin:0 auto" src=../static/fig1_26_estrutura_processo_minix3.png width=60%><p><strong>Exemplo: MINIX 3</strong><br> Núcleo gerencia apenas interrupções, escalonamento e mensagens.</p><div class="callout callout-note"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span><span class=callout-title-inner>O Servidor de Reencarnação<br></span></div><div class=callout-content><p>Monitora drivers e servidores em usuário. Se falharem, são substituídos automaticamente, conferindo "autocura".</p></div></div></section><section><h1>O modelo cliente-servidor</h1><p>Derivado do micronúcleo, divide processos em servidores (prestam serviço) e clientes (consomem). A comunicação dá-se por <strong>troca de mensagens</strong>.</p><img style="margin:0 auto" src=../static/fig1_27_cliente_servidor_rede.png width=75%><table><thead><tr><th>Componente</th><th>Função Principal</th></tr></thead><tbody><tr><td><strong>Cliente</strong></td><td>Envia requisição via mensagem (ex: Navegador).</td></tr><tr><td><strong>Servidor</strong></td><td>Processa requisição e retorna (ex: Servidor Web).</td></tr><tr><td><strong>Rede/Kernel</strong></td><td>Transporta a mensagem com transparência.</td></tr></tbody></table><p>A grande vantagem é a <strong>transparência de localização</strong>: o cliente ignora se o servidor é local ou via rede distribuída.</p></section><section><h1>Máquinas virtuais</h1><p>Historicamente iniciada com CP/CMS e VM/370 (hoje z/VM). O Monitor (<strong>Hipervisor</strong>) separa multiprogramação da abstração; fornece <strong>cópias exatas do hardware físico</strong> (modo núcleo, E/S).</p><img style="margin:20px auto" src=../static/fig1_28_monitor_maquina_virtual.png width=65%><img style="margin:20px auto" src=../static/fig1_29_hipervisores_tipos.png width=65%></section><section><h1>Máquinas virtuais</h1><div class="callout callout-failure"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><circle cx=12 cy=12 r=10 /><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg></span><span class=callout-title-inner>Problema x86<br></span></div><div class=callout-content><p>Pentium clássico ignorava instruções privilegiadas de usuário, forçando interpretação pesada (resolvido depois).</p></div></div><table><thead><tr><th>Tipo</th><th>Característica</th><th>Exemplos</th></tr></thead><tbody><tr><td><strong>Tipo 1</strong></td><td>Roda <em>bare metal</em> no hardware.</td><td>Xen, ESXi, Hyper-V</td></tr><tr><td><strong>Tipo 2</strong></td><td>Roda sobre Sistema Operacional.</td><td>VMware Workstation</td></tr></tbody></table></section><section><h1>JVM</h1><h2>A máquina virtual Java (JVM)</h2><p>Não simula hardware físico. Compila código para <em>bytecode</em> de uma máquina abstrata (JVM), que o interpreta no destino.</p><ul><li><strong>Vantagem:</strong> Extrema portabilidade ("escreva uma vez, rode em qualquer lugar").</li><li><strong>Segurança:</strong> Sandbox evita danos por códigos maliciosos da Web.</li></ul></section><section><h1>Questões de fixação - 3 / 3</h1><p><strong>6.</strong> Sobre as Arquiteturas de Sistemas Operacionais, marque (V) para Verdadeiro ou (F) para Falso:</p><ul><li>( ) <strong>Sistemas Monolíticos:</strong> Todo o sistema operacional roda como um único programa em modo núcleo; uma falha em um driver de áudio pode travar todo o computador.</li><li>( ) <strong>Micronúcleos:</strong> Visam alta confiabilidade movendo a maior parte do código (como drivers e sistemas de arquivos) para o espaço do usuário; ex: MINIX 3.</li><li>( ) <strong>Sistemas de Camadas:</strong> No modelo do sistema THE, a camada de mais alto nível era responsável pelo gerenciamento de memória e paginação.</li><li>( ) <strong>Máquinas Virtuais (Tipo 2):</strong> O hipervisor roda diretamente sobre o hardware ("bare metal"), sem a necessidade de um sistema operacional hospedeiro como Windows ou Linux.</li></ul></section><section><h1>Questões de fixação - 3 / 3 (Continuação)</h1><p><strong>9.</strong> Diferencie <strong>Hipervisores de Tipo 1</strong> e <strong>Hipervisores de Tipo 2</strong> com base em:</p><ul><li>a) Localização da execução (sobre o que eles rodam?).</li><li>b) Exemplos de softwares comerciais citados no texto para cada tipo.</li></ul><p><strong>10.</strong> Explique a filosofia do <strong>Modelo Cliente-Servidor</strong> em sistemas operacionais locais (não em rede) e como ela se relaciona com a arquitetura de Micronúcleos. Cite o benefício de "transparência de localização" mencionado no texto.</p></section><section><h1>Próximos passos</h1><p>Na próxima aula, <strong>Processos e Threads</strong>, aprofundaremos nossa visão sobre a unidade fundamental de execução.</p><p>Deixaremos de ver o processo apenas como uma abstração estática para entender sua dinâmica interna:</p><ul><li>Estados de execução</li><li>Escalonamento</li><li>A distinção crucial entre processos pesados e threads leves.</li></ul><p>Investigaremos como o sistema operacional orquestra a alternância rápida da CPU para criar a ilusão de paralelismo e como evitar condições de corrida em ambientes concorrentes.<br> """</p></section></div></div><script data-no-bundle src=/aulas-faesa/js/vendor/reveal/reveal.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/reveal/plugin/notes/notes.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/reveal/plugin/markdown/markdown.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/reveal/plugin/math/math.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/reveal/plugin/zoom/zoom.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/prism.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-c.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-python.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-clike.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-perl.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-java.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-php.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/plugins/toolbar/prism-toolbar.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/plugins/show-language/prism-show-language.min.js></script><script data-no-bundle src=/aulas-faesa/js/prism-slang.js></script><script data-no-bundle src=/aulas-faesa/js/mermaid.min.js></script><script>document.addEventListener(`DOMContentLoaded`,function(){mermaid.initialize({startOnLoad:!1,theme:`default`,securityLevel:`loose`,fontFamily:`Inter, system-ui, sans-serif`})});</script><script>Reveal.initialize({hash:!0,slideNumber:`c/t`,center:!1,controls:!1,plugins:[RevealMarkdown,RevealNotes,RevealMath.KaTeX,RevealZoom],katex:{local:`/aulas-faesa/js/vendor/katex`,output:`html`,throwOnError:!1,strict:!1},width:960,height:800,margin:.15,maxScale:2}),Reveal.on(`slideready`,event=>{Prism.highlightAll();try{let mermaids=event.currentSlide.querySelectorAll(`.mermaid`);mermaids.length>0&&mermaid.init(void 0,mermaids)}catch(err){console.warn(`Mermaid init failed`,err)}}),Reveal.on(`slidechanged`,event=>{Prism.highlightAll();try{let mermaids=event.currentSlide.querySelectorAll(`.mermaid`);mermaids.length>0&&mermaid.init(void 0,mermaids)}catch(err){console.warn(`Mermaid init failed`,err)}});</script><script data-no-bundle src=/aulas-faesa/js/rough.min.js></script><script data-no-bundle src=/aulas-faesa/js/apply_sketch.js></script><style>.reveal{font-size:20px;text-align:left!important}.reveal code:not(pre code){background-color:var(--code-bg)!important;color:#3b82f6!important;border:1px dashed var(--border)!important;white-space:pre-wrap!important;word-break:break-word!important;border-radius:4px!important;padding:.1em .3em!important;font-family:JetBrains Mono,Fira Code,Consolas,monospace!important;font-size:.85em!important}.reveal h1{align-items:center;font-size:2.2em;display:flex;text-align:left!important;width:100%!important;text-shadow:none!important;justify-content:flex-start!important;margin-bottom:10px!important;margin-left:0!important}.reveal div.code-toolbar{position:relative;width:90%!important;margin:1em auto!important}.reveal pre[class*=language-]{width:100%!important;margin:0!important;padding:1em!important;font-size:.8em!important}.reveal pre[class*=language-]>code{display:block!important;position:relative!important}.reveal .line-numbers-rows{border-right:1px solid #ccc!important;width:3.2em!important;padding-top:0!important;position:absolute!important;top:0!important;left:-3.8em!important}.reveal .line-numbers-rows>span:before{color:#999!important;text-align:right!important;padding-right:.5em!important;display:block!important}.reveal pre[class*=language-].line-numbers,.reveal pre[class*=language-]:has(.line-numbers-rows){padding-left:3.8em!important}.reveal div.toolbar{z-index:10;opacity:1!important;padding-right:.1em!important;position:absolute!important;top:.2em!important;right:.5em!important}.reveal div.toolbar-item span{color:#999!important;text-transform:uppercase!important;box-shadow:none!important;background:0 0!important;border:none!important;padding:0!important;font-family:Inter,sans-serif!important;font-size:.7em!important;font-weight:600!important}.reveal h2{font-size:1.6em;text-align:left!important;margin-top:30px!important;margin-bottom:20px!important}.reveal h3{font-size:1.3em;text-align:left!important;margin-top:20px!important;margin-bottom:15px!important}.reveal p{line-height:1.5;text-align:left!important;margin-top:20px!important;margin-left:0!important}.reveal ul,.reveal ol,.reveal li{line-height:1.5;text-align:left!important;margin-left:0!important}.reveal ul,.reveal ol{padding-left:1.2em!important;display:block!important}.reveal .slides section{box-sizing:border-box;text-align:left!important;padding:40px!important}.reveal .slides{text-align:left!important}.reveal .slides section:not(.stack):has(>h1:only-child),.reveal .slides section:not(.stack):has(>h1:first-child+h2:last-child),.reveal .slides section:not(.stack):has(>h1:first-child+h2+p:last-child){text-align:center!important;flex-direction:column!important;justify-content:center!important;align-items:center!important;height:100%!important;display:flex!important;top:0!important}.reveal .slides section:not(.stack):has(>h1:only-child) h1,.reveal .slides section:not(.stack):has(>h1:first-child+h2:last-child) h1,.reveal .slides section:not(.stack):has(>h1:first-child+h2:last-child) h2,.reveal .slides section:not(.stack):has(>h1:first-child+h2+p:last-child) h1,.reveal .slides section:not(.stack):has(>h1:first-child+h2+p:last-child) h2,.reveal .slides section:not(.stack):has(>h1:first-child+h2+p:last-child) p{text-align:center!important;justify-content:center!important;width:100%!important;min-height:auto!important;margin:0!important}.reveal .slides section:not(.stack):has(>h1:first-child+h2:last-child) h1,.reveal .slides section:not(.stack):has(>h1:first-child+h2+p:last-child) h1{margin-bottom:.5em!important}.reveal .slides section:not(.stack):has(>h1:first-child+h2+p:last-child) h2{margin-bottom:.3em!important}.reveal .slides section:not(.stack):has(>h1:first-child+h2+p:last-child) p{color:#666;font-size:.9em}.reveal .slides section:has(.full-screen-image){padding:0!important}.reveal:has(section.present .full-screen-image){background-image:url(../../slide_end_background.png)!important;background-position:50%!important;background-size:cover!important}.reveal:has(section.present .full-screen-image) .slides,.reveal:has(section.present .full-screen-image) .slides section.present{background:0 0!important}.full-screen-image{justify-content:center;align-items:center;width:100vw;height:100vh;display:flex;margin:0!important}.reveal .svg-graph{max-width:100%;height:auto;margin-top:1em!important;margin-bottom:1em!important;overflow:visible!important}.reveal .mermaid-switcher{display:none!important}.centered{justify-content:center!important;align-items:center!important;width:100%!important;margin:1em 0!important;display:flex!important}.no-break{width:100%;display:block}.reveal blockquote{background:#ffaa4933;padding:5px;font-style:italic;display:block;position:relative;box-shadow:0 0 2px #0003;margin:var(--r-block-margin)auto!important;text-align:left!important}.col1{width:90%;margin:0 auto}.col2{justify-content:space-around;align-items:flex-start;width:90%;margin:0 auto;display:flex}:root{--callout-note:#448aff;--callout-abstract:#00b0ff;--callout-info:#00b8d4;--callout-todo:#00bfa5;--callout-tip:#00c853;--callout-success:#64dd17;--callout-question:#ffab00;--callout-warning:#ff9100;--callout-failure:#ff5252;--callout-danger:#ff1744;--callout-bug:#f50057;--callout-example:#7c4dff;--callout-quote:#9e9e9e;--code-bg:#f8f8f8;--border:#ddd}.reveal .callout{border:1px solid var(--border);border-left:6px solid var(--callout-note);border-radius:4px;font-size:.8em;overflow:hidden;text-align:left!important;width:75%!important;max-width:100%!important;margin:1rem auto!important}.reveal .callout-title{color:var(--callout-note);background:#0000000d;align-items:center;gap:.5rem;padding:.5rem 1rem;font-weight:600;display:flex}.reveal .callout-icon{align-items:center;display:flex}.reveal .callout-icon svg{width:1.2em;height:1.2em}.reveal .callout-content{padding:.5rem 1rem}.reveal .callout-content p{margin-top:.5rem!important}.reveal .callout-content p:first-child{margin-top:0!important}.reveal h1{text-transform:none!important}.reveal .callout-abstract{border-left-color:var(--callout-abstract)}.reveal .callout-abstract .callout-title{color:var(--callout-abstract)}.reveal .callout-info{border-left-color:var(--callout-info)}.reveal .callout-info .callout-title{color:var(--callout-info)}.reveal .callout-todo{border-left-color:var(--callout-todo)}.reveal .callout-todo .callout-title{color:var(--callout-todo)}.reveal .callout-tip{border-left-color:var(--callout-tip)}.reveal .callout-tip .callout-title{color:var(--callout-tip)}.reveal .callout-success{border-left-color:var(--callout-success)}.reveal .callout-success .callout-title{color:var(--callout-success)}.reveal .callout-question{border-left-color:var(--callout-question)}.reveal .callout-question .callout-title{color:var(--callout-question)}.reveal .callout-warning{border-left-color:var(--callout-warning)}.reveal .callout-warning .callout-title{color:var(--callout-warning)}.reveal .callout-failure{border-left-color:var(--callout-failure)}.reveal .callout-failure .callout-title{color:var(--callout-failure)}.reveal .callout-danger{border-left-color:var(--callout-danger)}.reveal .callout-danger .callout-title{color:var(--callout-danger)}.reveal .callout-bug{border-left-color:var(--callout-bug)}.reveal .callout-bug .callout-title{color:var(--callout-bug)}.reveal .callout-example{border-left-color:var(--callout-example)}.reveal .callout-example .callout-title{color:var(--callout-example)}.reveal .callout-quote{border-left-color:var(--callout-quote)}.reveal .callout-quote .callout-title{color:var(--callout-quote)}.red-note{color:var(--callout-failure)}.reveal .slide-number{border-radius:4px;color:#000000b1!important;background:#0000001a!important;padding:5px 10px!important;font-size:.8em!important}@media print{.reveal .slides section{visibility:visible!important;opacity:1!important;page-break-after:always!important;width:100%!important;height:100%!important;display:block!important;position:relative!important;top:0!important;left:0!important;overflow:hidden!important}.reveal .slides{width:100%!important;height:100%!important;top:0!important;left:0!important;transform:none!important}.reveal{overflow:visible!important}}</style></body></html>
+</code></pre>
+<ul>
+<li>a) Qual valor a chamada <code>fork()</code> retorna para o processo <strong>pai</strong> e qual valor ela retorna para o processo <strong>filho</strong>?</li>
+<li>b) Qual é a função da chamada <code>waitpid</code> neste contexto e o que aconteceria com o shell (pai) se ela não fosse utilizada?</li>
+<li>c) O que a chamada <code>execve</code> faz com a imagem de memória do processo filho?</li>
+</ul>
+</section>
+<section><h1>Questões de fixação - 2 / 3 (Continuação)</h1>
+<p><strong>3.</strong> Considere um sistema UNIX de 32 bits que utiliza um inteiro <strong>sem sinal</strong> para contar o tempo (chamada de sistema <code>time</code>). O texto menciona o &quot;Problema do Ano 2106&quot;.</p>
+<ul>
+<li>a) Explique o que é o &quot;Epoch&quot; e qual a data base utilizada.</li>
+<li>b) Sabendo que o valor máximo de um inteiro sem sinal de 32 bits é $2^{32} - 1$, calcule aproximadamente quantos anos esse contador pode registrar a partir do Epoch.</li>
+<li>c) Por que a migração para arquiteturas de 64 bits é recomendada para solucionar este problema definitivamente?</li>
+</ul>
+</section>
+<section><h1>Estrutura de sistemas operacionais</h1>
+<p>A arquitetura interna revela o espectro de possibilidades de design. Adotamos um paralelo entre POSIX e a Win32 API para demonstrar a equivalência funcional, embora o Windows tenha chamadas mais complexas.</p>
+<img src="../static/fig1_23_api_win32_vs_unix.png" width="75%" style="margin: 0 auto;">
+
+</section>
+<section><h1>Estrutura de sistemas operacionais</h1>
+<table>
+<thead>
+<tr>
+  <th>Funcionalidade</th>
+  <th>UNIX</th>
+  <th>Win32 API</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><strong>Criação</strong></td>
+  <td><code>fork</code></td>
+  <td><code>CreateProcess</code></td>
+</tr>
+<tr>
+  <td><strong>Espera</strong></td>
+  <td><code>waitpid</code></td>
+  <td><code>WaitForSingleObject</code></td>
+</tr>
+<tr>
+  <td><strong>Execução</strong></td>
+  <td><code>execve</code></td>
+  <td>(<code>CreateProcess</code>)</td>
+</tr>
+<tr>
+  <td><strong>Abrir Arq.</strong></td>
+  <td><code>open</code></td>
+  <td><code>CreateFile</code></td>
+</tr>
+</tbody>
+</table>
+<p>As abordagens arquiteturais principais são: <strong>Monolíticos, Camadas, Micronúcleos, Cliente-Servidor, Máquinas Virtuais</strong>.</p>
+</section>
+<section><h1>Sistemas monolíticos e de camadas</h1>
+<p><strong>Sistemas Monolíticos:</strong><br />
+Único grande binário em modo núcleo. Alta eficiência, mas baixa estabilidade (um driver derruba tudo). Uso de extensões dinâmicas (DLLs).<br />
+Três níveis lógicos: Principal, Serviço, Utilitárias.<br />
+<img src="../static/fig1_24_estrutura_monolitica.png" width="50%" style="margin: 0 auto;"></p>
+<p><strong>Sistemas de Camadas:</strong><br />
+Hierarquia onde cada nível abstrai hardware (ex: sistema THE).<br />
+<img src="../static/fig1_25_camadas_the.png" width="60%"  style="margin: 0 auto;"></p>
+<p><strong>MULTICS:</strong> Usava anéis concêntricos apoiados em hardware para separar privilégios, não apenas como suporte de projeto de software.</p>
+</section>
+<section><h1>Micronúcleos</h1>
+<p>O objetivo é máxima confiabilidade. Monolíticos podem ter milhares de bugs no núcleo. O micronúcleo mantém o mínimo código em modo privilegiado. Drivers e sistemas de arquivos rodam como processos em espaço de usuário. Uma falha de driver isola-se sem derrubar o SO.</p>
+<img src="../static/fig1_26_estrutura_processo_minix3.png" width="60%" style="margin: 0 auto;">
+
+<p><strong>Exemplo: MINIX 3</strong><br />
+Núcleo gerencia apenas interrupções, escalonamento e mensagens.</p>
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">O Servidor de Reencarnação<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Monitora drivers e servidores em usuário. Se falharem, são substituídos automaticamente, conferindo &quot;autocura&quot;.</p>
+  </div>
+</div>
+</section>
+<section><h1>O modelo cliente-servidor</h1>
+<p>Derivado do micronúcleo, divide processos em servidores (prestam serviço) e clientes (consomem). A comunicação dá-se por <strong>troca de mensagens</strong>.</p>
+<img src="../static/fig1_27_cliente_servidor_rede.png" width="75%"  style="margin: 0 auto;">
+
+<table>
+<thead>
+<tr>
+  <th>Componente</th>
+  <th>Função Principal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><strong>Cliente</strong></td>
+  <td>Envia requisição via mensagem (ex: Navegador).</td>
+</tr>
+<tr>
+  <td><strong>Servidor</strong></td>
+  <td>Processa requisição e retorna (ex: Servidor Web).</td>
+</tr>
+<tr>
+  <td><strong>Rede/Kernel</strong></td>
+  <td>Transporta a mensagem com transparência.</td>
+</tr>
+</tbody>
+</table>
+<p>A grande vantagem é a <strong>transparência de localização</strong>: o cliente ignora se o servidor é local ou via rede distribuída.</p>
+</section>
+<section><h1>Máquinas virtuais</h1>
+<p>Historicamente iniciada com CP/CMS e VM/370 (hoje z/VM). O Monitor (<strong>Hipervisor</strong>) separa multiprogramação da abstração; fornece <strong>cópias exatas do hardware físico</strong> (modo núcleo, E/S).</p>
+<img src="../static/fig1_28_monitor_maquina_virtual.png" width="65%" style="margin: 20px auto;">
+
+<img src="../static/fig1_29_hipervisores_tipos.png" width="65%" style="margin: 20px auto;">
+
+</section>
+<section><h1>Máquinas virtuais</h1>
+<div class="callout callout-failure">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg></span>
+    <span class="callout-title-inner">Problema x86<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Pentium clássico ignorava instruções privilegiadas de usuário, forçando interpretação pesada (resolvido depois).</p>
+  </div>
+</div>
+<table>
+<thead>
+<tr>
+  <th>Tipo</th>
+  <th>Característica</th>
+  <th>Exemplos</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><strong>Tipo 1</strong></td>
+  <td>Roda <em>bare metal</em> no hardware.</td>
+  <td>Xen, ESXi, Hyper-V</td>
+</tr>
+<tr>
+  <td><strong>Tipo 2</strong></td>
+  <td>Roda sobre Sistema Operacional.</td>
+  <td>VMware Workstation</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section><h1>JVM</h1>
+<h2>A máquina virtual Java (JVM)</h2>
+<p>Não simula hardware físico. Compila código para <em>bytecode</em> de uma máquina abstrata (JVM), que o interpreta no destino.</p>
+<ul>
+<li><strong>Vantagem:</strong> Extrema portabilidade (&quot;escreva uma vez, rode em qualquer lugar&quot;).</li>
+<li><strong>Segurança:</strong> Sandbox evita danos por códigos maliciosos da Web.</li>
+</ul>
+</section>
+<section><h1>Questões de fixação - 3 / 3</h1>
+<p><strong>6.</strong> Sobre as Arquiteturas de Sistemas Operacionais, marque (V) para Verdadeiro ou (F) para Falso:</p>
+<ul>
+<li>( ) <strong>Sistemas Monolíticos:</strong> Todo o sistema operacional roda como um único programa em modo núcleo; uma falha em um driver de áudio pode travar todo o computador.</li>
+<li>( ) <strong>Micronúcleos:</strong> Visam alta confiabilidade movendo a maior parte do código (como drivers e sistemas de arquivos) para o espaço do usuário; ex: MINIX 3.</li>
+<li>( ) <strong>Sistemas de Camadas:</strong> No modelo do sistema THE, a camada de mais alto nível era responsável pelo gerenciamento de memória e paginação.</li>
+<li>( ) <strong>Máquinas Virtuais (Tipo 2):</strong> O hipervisor roda diretamente sobre o hardware (&quot;bare metal&quot;), sem a necessidade de um sistema operacional hospedeiro como Windows ou Linux.</li>
+</ul>
+</section>
+<section><h1>Questões de fixação - 3 / 3 (Continuação)</h1>
+<p><strong>9.</strong> Diferencie <strong>Hipervisores de Tipo 1</strong> e <strong>Hipervisores de Tipo 2</strong> com base em:</p>
+<ul>
+<li>a) Localização da execução (sobre o que eles rodam?).</li>
+<li>b) Exemplos de softwares comerciais citados no texto para cada tipo.</li>
+</ul>
+<p><strong>10.</strong> Explique a filosofia do <strong>Modelo Cliente-Servidor</strong> em sistemas operacionais locais (não em rede) e como ela se relaciona com a arquitetura de Micronúcleos. Cite o benefício de &quot;transparência de localização&quot; mencionado no texto.</p>
+</section>
+<section><h1>Próximos passos</h1>
+<p>Na próxima aula, <strong>Processos e Threads</strong>, aprofundaremos nossa visão sobre a unidade fundamental de execução.</p>
+<p>Deixaremos de ver o processo apenas como uma abstração estática para entender sua dinâmica interna:</p>
+<ul>
+<li>Estados de execução</li>
+<li>Escalonamento</li>
+<li>A distinção crucial entre processos pesados e threads leves.</li>
+</ul>
+<p>Investigaremos como o sistema operacional orquestra a alternância rápida da CPU para criar a ilusão de paralelismo e como evitar condições de corrida em ambientes concorrentes.<br />
+&quot;&quot;&quot;</p>
+</section>
+        </div>
+    </div>
+
+    <script src="/aulas-faesa/js/vendor/reveal/reveal.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/notes/notes.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/markdown/markdown.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/math/math.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/zoom/zoom.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/prism.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-c.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-python.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-clike.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-perl.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-java.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-php.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/toolbar/prism-toolbar.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/show-language/prism-show-language.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/prism-slang.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/mermaid.min.js" data-no-bundle></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            mermaid.initialize({
+                startOnLoad: false,
+                theme: 'default',
+                securityLevel: 'loose',
+                fontFamily: 'Inter, system-ui, sans-serif',
+            });
+        });
+    </script>
+    <script>
+        Reveal.initialize({
+            hash: true,
+            slideNumber: 'c/t',
+            center: false,
+            controls: false,
+            plugins: [RevealMarkdown, RevealNotes, RevealMath.KaTeX, RevealZoom],
+            katex: {
+                local: '/aulas-faesa/js/vendor/katex',
+                output: 'html',
+                throwOnError: false,
+                strict: false,
+            },
+            width: 960,
+            height: 800,
+            margin: 0.15,
+            maxScale: 2.0,
+        });
+
+        // Ensure Prism highlights code on slide changes
+        Reveal.on('slideready', event => {
+            Prism.highlightAll();
+            try {
+                let mermaids = event.currentSlide.querySelectorAll('.mermaid');
+                if (mermaids.length > 0) {
+                    mermaid.init(undefined, mermaids);
+                }
+            } catch (err) { console.warn("Mermaid init failed", err); }
+        });
+        Reveal.on('slidechanged', event => {
+            Prism.highlightAll();
+            try {
+                let mermaids = event.currentSlide.querySelectorAll('.mermaid');
+                if (mermaids.length > 0) {
+                    mermaid.init(undefined, mermaids);
+                }
+            } catch (err) { console.warn("Mermaid init failed", err); }
+        });
+    </script>
+    <script src="/aulas-faesa/js/rough.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/apply_sketch.js" data-no-bundle></script>
+    <style>
+        /* Modern base styles */
+        .reveal {
+            font-size: 20px;
+            text-align: left !important;
+        }
+
+        .reveal code:not(pre code) {
+            font-family: 'JetBrains Mono', 'Fira Code', Consolas, monospace !important;
+            background-color: var(--code-bg) !important;
+            padding: 0.1em 0.3em !important;
+            border-radius: 4px !important;
+            font-size: 0.85em !important;
+            color: #3b82f6 !important;
+            border: 1px dashed var(--border) !important;
+            white-space: pre-wrap !important;
+            word-break: break-word !important;
+        }
+
+        .reveal h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px !important;
+            margin-left: 0 !important;
+            /* min-height: 2.3em; */
+            display: flex;
+            align-items: center;
+            justify-content: flex-start !important;
+            text-align: left !important;
+            width: 100% !important;
+            text-shadow: none !important;
+        }
+
+        /* Prism overrides for Reveal.js */
+        .reveal div.code-toolbar {
+            position: relative;
+            width: 90% !important;
+            margin: 1em auto !important;
+        }
+
+        .reveal pre[class*="language-"] {
+            margin: 0 !important;
+            padding: 1em !important;
+            width: 100% !important;
+            font-size: 0.8em !important;
+        }
+
+        .reveal pre[class*="language-"] > code {
+            position: relative !important;
+            display: block !important;
+        }
+
+        .reveal .line-numbers-rows {
+            position: absolute !important;
+            top: 0 !important;
+            left: -3.8em !important;
+            width: 3.2em !important;
+            padding-top: 0 !important;
+            border-right: 1px solid #ccc !important;
+        }
+
+        .reveal .line-numbers-rows > span:before {
+            padding-right: 0.5em !important;
+            color: #999 !important;
+            display: block !important;
+            text-align: right !important;
+        }
+
+        .reveal pre[class*="language-"].line-numbers,
+        .reveal pre[class*="language-"]:has(.line-numbers-rows) {
+            padding-left: 3.8em !important;
+        }
+
+        /* Language label styling */
+        .reveal div.toolbar {
+            position: absolute !important;
+            top: 0.2em !important;
+            right: 0.5em !important;
+            opacity: 1 !important;
+            padding-right: 0.1em !important;
+            z-index: 10;
+        }
+
+        .reveal div.toolbar-item span {
+            font-family: 'Inter', sans-serif !important;
+            font-size: 0.7em !important;
+            font-weight: 600 !important;
+            color: #999 !important;
+            text-transform: uppercase !important;
+            background: none !important;
+            box-shadow: none !important;
+            border: none !important;
+            padding: 0 !important;
+        }
+
+        .reveal h2 {
+            font-size: 1.6em;
+            margin-top: 30px !important;
+            margin-bottom: 20px !important;
+            text-align: left !important;
+        }
+
+        .reveal h3 {
+            font-size: 1.3em;
+            margin-top: 20px !important;
+            margin-bottom: 15px !important;
+            text-align: left !important;
+        }
+
+        .reveal p {
+            line-height: 1.5;
+            margin-top: 20px !important;
+            margin-left: 0 !important;
+            text-align: left !important;
+        }
+
+        .reveal ul,
+        .reveal ol,
+        .reveal li {
+            line-height: 1.5;
+            text-align: left !important;
+            margin-left: 0 !important;
+        }
+        
+        .reveal ul, .reveal ol {
+            display: block !important;
+            padding-left: 1.2em !important;
+        }
+
+        /* Slide padding and layout */
+        .reveal .slides section {
+            padding: 40px !important;
+            box-sizing: border-box;
+            text-align: left !important;
+        }
+
+        .reveal .slides {
+            text-align: left !important;
+        }
+
+        /* Centering for Title slides (h1 ONLY, h1 + h2 ONLY, or h1 + h2 + p ONLY) */
+        .reveal .slides section:not(.stack):has(> h1:only-child),
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child),
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) {
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: center !important;
+            align-items: center !important;
+            text-align: center !important;
+            height: 100% !important;
+            top: 0 !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:only-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child) h2,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h2,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) p {
+            justify-content: center !important;
+            text-align: center !important;
+            margin: 0 !important;
+            min-height: auto !important;
+            width: 100% !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h1 {
+            margin-bottom: 0.5em !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h2 {
+            margin-bottom: 0.3em !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) p {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        /* Full screen slide fix */
+        .reveal .slides section:has(.full-screen-image) {
+            padding: 0 !important;
+        }
+
+        /* Full screen slide fix - Garantindo que o fundo do Reveal fique visível e a imagem carregada */
+        .reveal:has(section.present .full-screen-image) {
+            background-image: url('../../slide_end_background.png') !important;
+            background-size: cover !important;
+            background-position: center !important;
+        }
+
+        /* Torna o slide e o container de slides transparentes para mostrar o fundo da .reveal */
+        .reveal:has(section.present .full-screen-image) .slides,
+        .reveal:has(section.present .full-screen-image) .slides section.present {
+            background: transparent !important;
+        }
+
+        .full-screen-image {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 !important;
+            /* Se houver texto, ele centraliza aqui */
+        }
+
+        /* Spacing for diagrams */
+        .reveal .svg-graph {
+            margin-top: 1em !important;
+            margin-bottom: 1em !important;
+            overflow: visible !important; /* Prevent labels from being cut off */
+            max-width: 100%;
+            height: auto;
+        }
+
+        .reveal .mermaid-switcher {
+            display: none !important;
+        }
+
+        .centered {
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            width: 100% !important;
+            margin: 1em 0 !important;
+        }
+
+        .no-break {
+            display: block;
+            width: 100%;
+        }
+
+        .reveal blockquote {
+            display: block;
+            position: relative;
+            margin: var(--r-block-margin) auto !important;
+            padding: 5px;
+            font-style: italic;
+            background: rgba(255, 170, 73, 0.2);
+            box-shadow: 0 0 2px rgba(0,0,0,.2);
+            text-align: left !important;
+        }
+
+        .col1 {
+            width: 90%;
+            margin: 0 auto;
+        }
+
+        .col2 {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start;
+            width: 90%;
+            margin: 0 auto;
+            align-items: flex-start;
+        }
+
+        /* Callout Styles */
+        :root {
+            --callout-note: #448aff;
+            --callout-abstract: #00b0ff;
+            --callout-info: #00b8d4;
+            --callout-todo: #00bfa5;
+            --callout-tip: #00c853;
+            --callout-success: #64dd17;
+            --callout-question: #ffab00;
+            --callout-warning: #ff9100;
+            --callout-failure: #ff5252;
+            --callout-danger: #ff1744;
+            --callout-bug: #f50057;
+            --callout-example: #7c4dff;
+            --callout-quote: #9e9e9e;
+            --code-bg: #f8f8f8;
+            --border: #ddd;
+        }
+
+        .reveal .callout {
+            margin: 1rem auto !important;
+            border: 1px solid var(--border);
+            border-left: 6px solid var(--callout-note);
+            border-radius: 4px;
+            overflow: hidden;
+            text-align: left !important;
+            font-size: 0.8em;
+            width: 75% !important;
+            max-width: 100% !important;
+        }
+
+        .reveal .callout-title {
+            padding: 0.5rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            color: var(--callout-note);
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .reveal .callout-icon {
+            display: flex;
+            align-items: center;
+        }
+
+        .reveal .callout-icon svg {
+            width: 1.2em;
+            height: 1.2em;
+        }
+
+        .reveal .callout-content {
+            padding: 0.5rem 1rem;
+        }
+
+        .reveal .callout-content p {
+            margin-top: 0.5rem !important;
+        }
+
+        .reveal .callout-content p:first-child {
+            margin-top: 0 !important;
+        }
+
+        .reveal h1 { text-transform: none !important; }
+
+        .reveal .callout-abstract { border-left-color: var(--callout-abstract); }
+        .reveal .callout-abstract .callout-title { color: var(--callout-abstract); }
+        .reveal .callout-info { border-left-color: var(--callout-info); }
+        .reveal .callout-info .callout-title { color: var(--callout-info); }
+        .reveal .callout-todo { border-left-color: var(--callout-todo); }
+        .reveal .callout-todo .callout-title { color: var(--callout-todo); }
+        .reveal .callout-tip { border-left-color: var(--callout-tip); }
+        .reveal .callout-tip .callout-title { color: var(--callout-tip); }
+        .reveal .callout-success { border-left-color: var(--callout-success); }
+        .reveal .callout-success .callout-title { color: var(--callout-success); }
+        .reveal .callout-question { border-left-color: var(--callout-question); }
+        .reveal .callout-question .callout-title { color: var(--callout-question) ; }
+        .reveal .callout-warning { border-left-color: var(--callout-warning); }
+        .reveal .callout-warning .callout-title { color: var(--callout-warning); }
+        .reveal .callout-failure { border-left-color: var(--callout-failure); }
+        .reveal .callout-failure .callout-title { color: var(--callout-failure); }
+        .reveal .callout-danger { border-left-color: var(--callout-danger); }
+        .reveal .callout-danger .callout-title { color: var(--callout-danger); }
+        .reveal .callout-bug { border-left-color: var(--callout-bug); }
+        .reveal .callout-bug .callout-title { color: var(--callout-bug); }
+        .reveal .callout-example { border-left-color: var(--callout-example); }
+        .reveal .callout-example .callout-title { color: var(--callout-example); }
+        .reveal .callout-quote { border-left-color: var(--callout-quote); }
+        .reveal .callout-quote .callout-title { color: var(--callout-quote); }
+        .red-note { color: var(--callout-failure); }
+
+        .reveal .slide-number {
+            font-size: 0.8em !important;
+            padding: 5px 10px !important;
+            background: rgba(0,0,0,0.1) !important;
+            border-radius: 4px;
+            color: #000000b1 !important;
+        }
+
+        /* Print styles */
+        @media print {
+            .reveal .slides section {
+                display: block !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                position: relative !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+                page-break-after: always !important;
+                overflow: hidden !important;
+            }
+
+            .reveal .slides {
+                transform: none !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+            }
+            
+            .reveal {
+                overflow: visible !important;
+            }
+        }
+    </style>
+</body>
+
+</html>

@@ -1,159 +1,485 @@
-<!doctype html><html lang=en><meta charset=utf-8><meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" name=viewport><title>Bibliotecas e Modularização em C</title><link media="(prefers-color-scheme: light)" href=/aulas-faesa/img/dark-favicon.svg rel=icon><link media="(prefers-color-scheme: dark)" href=/aulas-faesa/img/light-favicon.svg rel=icon><link data-no-bundle href=/aulas-faesa/css/vendor/reveal/reset.min.css rel=stylesheet><link data-no-bundle href=/aulas-faesa/css/vendor/reveal/reveal.min.css rel=stylesheet><link data-no-bundle href=/aulas-faesa/css/vendor/reveal/theme/white.min.css rel=stylesheet><link data-no-bundle href=/aulas-faesa/css/prism-one-light.css rel=stylesheet><link data-no-bundle href=/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css rel=stylesheet><link data-no-bundle href=/aulas-faesa/css/vendor/fonts.css rel=stylesheet></head><body><div class=reveal><div class=slides><section><h1>Programação de Computadores</h1><h2>Bibliotecas e Modularização em C</h2><p>Professor: Gabriel Soares Baptista</p></section><section><h2>Objetivos</h2><ul><li>Compreender o que e uma biblioteca em <strong>C</strong>.</li><li>Diferenciar bibliotecas padrao de bibliotecas proprias.</li><li>Entender o papel da diretiva <code>#include</code>.</li><li>Diferenciar arquivos <code>.h</code> e <code>.c</code>.</li><li>Utilizar corretamente <em>header guards</em>.</li><li>Compilar projetos com varios arquivos usando <strong>GCC</strong>.</li><li>Construir uma biblioteca propria simples.</li></ul></section><section><h1>Por que modularizar?</h1><ul><li>Em exercicios pequenos, um unico <code>main.c</code> pode ser suficiente.</li><li>Em programas maiores, isso rapidamente vira um problema.</li><li>Funcoes ficam misturadas, o arquivo cresce demais e o reuso piora.</li><li>Modularizar significa dividir o sistema em partes menores e organizadas.</li></ul><div class="callout callout-tip"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .5 2.2 1.5 3.1.7.7 1.3 1.5 1.5 2.4"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span><span class=callout-title-inner>Vantagem<br></span></div><div class=callout-content><p>Um modulo bem feito pode ser reutilizado em varios programas sem copiar e colar codigo.</p></div></div></section><section><h1>O que e uma biblioteca?</h1><ul><li>Uma <strong>biblioteca</strong> e um conjunto de funcoes, tipos, constantes ou macros prontos para uso.</li><li>Em <strong>C</strong>, podemos usar:<ul><li>bibliotecas padrao, como <code>stdio.h</code>, <code>string.h</code> e <code>math.h</code>;</li><li>bibliotecas proprias, criadas dentro do projeto.</li></ul></li><li>A ideia central e reaproveitar codigo e organizar melhor o programa.</li></ul></section><section><h1>Bibliotecas padrao x proprias</h1><h2>Bibliotecas padrao</h2><ul><li>Ja fazem parte do ecossistema da linguagem.</li><li>Sao usadas para tarefas comuns.</li></ul><p>Exemplo:</p><ul><li><code>stdio.h</code>: entrada e saida.</li><li><code>math.h</code>: calculos matematicos.</li></ul><h2>Bibliotecas proprias</h2><ul><li>Sao criadas pelo programador.</li><li>Organizam funcoes do proprio sistema.</li></ul></section><section><h1>A diretiva <code>#include</code></h1><ul><li><code>#include</code> e tratado pelo <strong>pre-processador</strong>.</li><li>Ele insere o conteudo do cabecalho no ponto onde a diretiva aparece.</li><li>Isso nao compila o programa sozinho.</li><li>O <code>#include</code> apenas torna declaracoes visiveis para o arquivo atual.</li></ul><pre class="line-numbers language-c" data-lang=C><code class=language-c>#include &lt;stdio.h>
-#include "calc.h"
-</code></pre></section><section><h1><code>&lt; ></code> e <code>" "</code></h1><ul><li><p><code>#include &lt;stdio.h></code></p> <ul><li>normalmente usado para bibliotecas padrao;</li><li>o compilador procura nos diretorios padrao.</li></ul></li><li><p><code>#include "calc.h"</code></p> <ul><li>normalmente usado para bibliotecas do projeto;</li><li>o compilador procura primeiro no diretorio local.</li></ul></li></ul></section><section><h1>Bibliotecas padrao importantes</h1><h2><code>&lt;stdio.h></code></h2><ul><li>Biblioteca de entrada e saida padrao.</li><li>Muito usada para ler dados do teclado e imprimir resultados na tela.</li></ul></section><section><h1><code>&lt;stdio.h></code></h1><h2><code>printf()</code></h2><ul><li>Imprime valores formatados na tela.</li></ul><pre class="line-numbers language-c" data-lang=C><code class=language-c>#include &lt;stdio.h>
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <title>Bibliotecas e Modularização em C</title>
+    <link rel="icon" href="/aulas-faesa/img/dark-favicon.svg" media="(prefers-color-scheme: light)">
+    <link rel="icon" href="/aulas-faesa/img/light-favicon.svg" media="(prefers-color-scheme: dark)">
+
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/reset.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/reveal.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/theme/white.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/aulas-faesa/css/prism-one-light.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/fonts.css" data-no-bundle>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+            <section><h1>Programação de Computadores</h1>
+<h2>Bibliotecas e Modularização em C</h2>
+<p>Professor: Gabriel Soares Baptista</p>
+</section>
+<section><h2>Objetivos</h2>
+<ul>
+<li>Compreender o que e uma biblioteca em <strong>C</strong>.</li>
+<li>Diferenciar bibliotecas padrao de bibliotecas proprias.</li>
+<li>Entender o papel da diretiva <code>#include</code>.</li>
+<li>Diferenciar arquivos <code>.h</code> e <code>.c</code>.</li>
+<li>Utilizar corretamente <em>header guards</em>.</li>
+<li>Compilar projetos com varios arquivos usando <strong>GCC</strong>.</li>
+<li>Construir uma biblioteca propria simples.</li>
+</ul>
+</section>
+<section><h1>Por que modularizar?</h1>
+<ul>
+<li>Em exercicios pequenos, um unico <code>main.c</code> pode ser suficiente.</li>
+<li>Em programas maiores, isso rapidamente vira um problema.</li>
+<li>Funcoes ficam misturadas, o arquivo cresce demais e o reuso piora.</li>
+<li>Modularizar significa dividir o sistema em partes menores e organizadas.</li>
+</ul>
+<div class="callout callout-tip">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .5 2.2 1.5 3.1.7.7 1.3 1.5 1.5 2.4"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span>
+    <span class="callout-title-inner">Vantagem<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Um modulo bem feito pode ser reutilizado em varios programas sem copiar e colar codigo.</p>
+  </div>
+</div>
+</section>
+<section><h1>O que e uma biblioteca?</h1>
+<ul>
+<li>Uma <strong>biblioteca</strong> e um conjunto de funcoes, tipos, constantes ou macros prontos para uso.</li>
+<li>Em <strong>C</strong>, podemos usar:<ul>
+<li>bibliotecas padrao, como <code>stdio.h</code>, <code>string.h</code> e <code>math.h</code>;</li>
+<li>bibliotecas proprias, criadas dentro do projeto.</li>
+</ul>
+</li>
+<li>A ideia central e reaproveitar codigo e organizar melhor o programa.</li>
+</ul>
+</section>
+<section><h1>Bibliotecas padrao x proprias</h1>
+<h2>Bibliotecas padrao</h2>
+<ul>
+<li>Ja fazem parte do ecossistema da linguagem.</li>
+<li>Sao usadas para tarefas comuns.</li>
+</ul>
+<p>Exemplo:</p>
+<ul>
+<li><code>stdio.h</code>: entrada e saida.</li>
+<li><code>math.h</code>: calculos matematicos.</li>
+</ul>
+<h2>Bibliotecas proprias</h2>
+<ul>
+<li>Sao criadas pelo programador.</li>
+<li>Organizam funcoes do proprio sistema.</li>
+</ul>
+</section>
+<section><h1>A diretiva <code>#include</code></h1>
+<ul>
+<li><code>#include</code> e tratado pelo <strong>pre-processador</strong>.</li>
+<li>Ele insere o conteudo do cabecalho no ponto onde a diretiva aparece.</li>
+<li>Isso nao compila o programa sozinho.</li>
+<li>O <code>#include</code> apenas torna declaracoes visiveis para o arquivo atual.</li>
+</ul>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">#include &lt;stdio.h&gt;
+#include &quot;calc.h&quot;
+</code></pre>
+</section>
+<section><h1><code>&lt; &gt;</code> e <code>&quot; &quot;</code></h1>
+<ul>
+<li><p><code>#include &lt;stdio.h&gt;</code></p>
+<ul>
+<li>normalmente usado para bibliotecas padrao;</li>
+<li>o compilador procura nos diretorios padrao.</li>
+</ul>
+</li>
+<li><p><code>#include &quot;calc.h&quot;</code></p>
+<ul>
+<li>normalmente usado para bibliotecas do projeto;</li>
+<li>o compilador procura primeiro no diretorio local.</li>
+</ul>
+</li>
+</ul>
+</section>
+<section><h1>Bibliotecas padrao importantes</h1>
+<h2><code>&lt;stdio.h&gt;</code></h2>
+<ul>
+<li>Biblioteca de entrada e saida padrao.</li>
+<li>Muito usada para ler dados do teclado e imprimir resultados na tela.</li>
+</ul>
+</section>
+<section><h1><code>&lt;stdio.h&gt;</code></h1>
+<h2><code>printf()</code></h2>
+<ul>
+<li>Imprime valores formatados na tela.</li>
+</ul>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">#include &lt;stdio.h&gt;
 
 int main(){
-    printf("Ola\n");
+    printf(&quot;Ola\n&quot;);
     return 0;
 }
-</code></pre></section><section><h1><code>&lt;stdio.h></code></h1><h2><code>scanf()</code></h2><ul><li>Le valores digitados pelo usuario.</li></ul><pre class="line-numbers language-c" data-lang=C><code class=language-c>#include &lt;stdio.h>
+</code></pre>
+</section>
+<section><h1><code>&lt;stdio.h&gt;</code></h1>
+<h2><code>scanf()</code></h2>
+<ul>
+<li>Le valores digitados pelo usuario.</li>
+</ul>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">#include &lt;stdio.h&gt;
 
 int main(){
     int x;
-    scanf("%d", &x);
-    printf("Valor lido: %d\n", x);
+    scanf(&quot;%d&quot;, &amp;x);
+    printf(&quot;Valor lido: %d\n&quot;, x);
     return 0;
 }
-</code></pre></section><section><h1><code>&lt;stdio.h></code></h1><h2><code>fgets()</code></h2><ul><li>Le uma linha de texto.</li><li>E melhor que <code>scanf("%s", ...)</code> quando queremos aceitar espacos.</li></ul><pre class="line-numbers language-c" data-lang=C><code class=language-c>#include &lt;stdio.h>
+</code></pre>
+</section>
+<section><h1><code>&lt;stdio.h&gt;</code></h1>
+<h2><code>fgets()</code></h2>
+<ul>
+<li>Le uma linha de texto.</li>
+<li>E melhor que <code>scanf(&quot;%s&quot;, ...)</code> quando queremos aceitar espacos.</li>
+</ul>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">#include &lt;stdio.h&gt;
 
 int main(){
     char nome[30];
     fgets(nome, 30, stdin);
-    printf("Texto lido: %s", nome);
+    printf(&quot;Texto lido: %s&quot;, nome);
     return 0;
 }
-</code></pre></section><section><h1><code>&lt;stdio.h></code></h1><h2><code>puts()</code></h2><ul><li>Imprime uma string e quebra linha automaticamente.</li></ul><pre class="line-numbers language-c" data-lang=C><code class=language-c>#include &lt;stdio.h>
+</code></pre>
+</section>
+<section><h1><code>&lt;stdio.h&gt;</code></h1>
+<h2><code>puts()</code></h2>
+<ul>
+<li>Imprime uma string e quebra linha automaticamente.</li>
+</ul>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">#include &lt;stdio.h&gt;
 
 int main(){
-    puts("Fim");
+    puts(&quot;Fim&quot;);
     return 0;
 }
-</code></pre></section><section><h1>Bibliotecas padrao importantes</h1><h2><code>&lt;string.h></code></h2><ul><li>Biblioteca usada para manipulacao de strings.</li></ul></section><section><h1><code>&lt;string.h></code></h1><h2><code>strlen()</code></h2><ul><li>Mede o tamanho da string.</li></ul><pre class="line-numbers language-c" data-lang=C><code class=language-c>#include &lt;stdio.h>
-#include &lt;string.h>
+</code></pre>
+</section>
+<section><h1>Bibliotecas padrao importantes</h1>
+<h2><code>&lt;string.h&gt;</code></h2>
+<ul>
+<li>Biblioteca usada para manipulacao de strings.</li>
+</ul>
+</section>
+<section><h1><code>&lt;string.h&gt;</code></h1>
+<h2><code>strlen()</code></h2>
+<ul>
+<li>Mede o tamanho da string.</li>
+</ul>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
 
 int main(){
-    printf("%zu\n", strlen("abc"));
+    printf(&quot;%zu\n&quot;, strlen(&quot;abc&quot;));
     return 0;
 }
-</code></pre></section><section><h1><code>&lt;string.h></code></h1><h2><code>strcpy()</code></h2><ul><li>Copia uma string para outra.</li></ul><pre class="line-numbers language-c" data-lang=C><code class=language-c>#include &lt;stdio.h>
-#include &lt;string.h>
+</code></pre>
+</section>
+<section><h1><code>&lt;string.h&gt;</code></h1>
+<h2><code>strcpy()</code></h2>
+<ul>
+<li>Copia uma string para outra.</li>
+</ul>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
 
 int main(){
-    char origem[] = "Casa";
+    char origem[] = &quot;Casa&quot;;
     char destino[20];
     strcpy(destino, origem);
-    printf("%s\n", destino);
+    printf(&quot;%s\n&quot;, destino);
     return 0;
 }
-</code></pre></section><section><h1><code>&lt;string.h></code></h1><h2><code>strcat()</code></h2><ul><li>Concatena uma string ao final de outra.</li></ul><pre class="line-numbers language-c" data-lang=C><code class=language-c>#include &lt;stdio.h>
-#include &lt;string.h>
+</code></pre>
+</section>
+<section><h1><code>&lt;string.h&gt;</code></h1>
+<h2><code>strcat()</code></h2>
+<ul>
+<li>Concatena uma string ao final de outra.</li>
+</ul>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
 
 int main(){
-    char texto[20] = "Linguagem";
-    strcat(texto, " C");
-    printf("%s\n", texto);
+    char texto[20] = &quot;Linguagem&quot;;
+    strcat(texto, &quot; C&quot;);
+    printf(&quot;%s\n&quot;, texto);
     return 0;
 }
-</code></pre></section><section><h1><code>&lt;string.h></code></h1><h2><code>strcmp()</code></h2><ul><li>Compara duas strings.</li><li>Retorna <code>0</code> se forem iguais.</li></ul><pre class="line-numbers language-c" data-lang=C><code class=language-c>#include &lt;stdio.h>
-#include &lt;string.h>
+</code></pre>
+</section>
+<section><h1><code>&lt;string.h&gt;</code></h1>
+<h2><code>strcmp()</code></h2>
+<ul>
+<li>Compara duas strings.</li>
+<li>Retorna <code>0</code> se forem iguais.</li>
+</ul>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
 
 int main(){
-    int resultado = strcmp("abc", "abd");
-    printf("%d\n", resultado);
+    int resultado = strcmp(&quot;abc&quot;, &quot;abd&quot;);
+    printf(&quot;%d\n&quot;, resultado);
     return 0;
 }
-</code></pre></section><section><h1>Bibliotecas padrao importantes</h1><h2><code>&lt;math.h></code></h2><ul><li>Biblioteca usada para operacoes matematicas.</li></ul></section><section><h1><code>&lt;math.h></code></h1><h2><code>sqrt()</code></h2><ul><li>Calcula raiz quadrada.</li></ul><pre class="line-numbers language-c" data-lang=C><code class=language-c>#include &lt;stdio.h>
-#include &lt;math.h>
+</code></pre>
+</section>
+<section><h1>Bibliotecas padrao importantes</h1>
+<h2><code>&lt;math.h&gt;</code></h2>
+<ul>
+<li>Biblioteca usada para operacoes matematicas.</li>
+</ul>
+</section>
+<section><h1><code>&lt;math.h&gt;</code></h1>
+<h2><code>sqrt()</code></h2>
+<ul>
+<li>Calcula raiz quadrada.</li>
+</ul>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;math.h&gt;
 
 int main(){
-    printf("%.1f\n", sqrt(25.0));
+    printf(&quot;%.1f\n&quot;, sqrt(25.0));
     return 0;
 }
-</code></pre></section><section><h1><code>&lt;math.h></code></h1><h2><code>pow()</code></h2><ul><li>Calcula potencia.</li></ul><pre class="line-numbers language-c" data-lang=C><code class=language-c>#include &lt;stdio.h>
-#include &lt;math.h>
+</code></pre>
+</section>
+<section><h1><code>&lt;math.h&gt;</code></h1>
+<h2><code>pow()</code></h2>
+<ul>
+<li>Calcula potencia.</li>
+</ul>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;math.h&gt;
 
 int main(){
-    printf("%.1f\n", pow(2, 3));
+    printf(&quot;%.1f\n&quot;, pow(2, 3));
     return 0;
 }
-</code></pre></section><section><h1><code>&lt;math.h></code></h1><h2><code>fabs()</code></h2><ul><li>Calcula valor absoluto de numeros reais.</li></ul><pre class="line-numbers language-c" data-lang=C><code class=language-c>#include &lt;stdio.h>
-#include &lt;math.h>
+</code></pre>
+</section>
+<section><h1><code>&lt;math.h&gt;</code></h1>
+<h2><code>fabs()</code></h2>
+<ul>
+<li>Calcula valor absoluto de numeros reais.</li>
+</ul>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;math.h&gt;
 
 int main(){
-    printf("%.1f\n", fabs(-4.5));
+    printf(&quot;%.1f\n&quot;, fabs(-4.5));
     return 0;
 }
-</code></pre></section><section><h1><code>&lt;math.h></code></h1><h2>PI</h2><ul><li>Podemos obter pi com <code>acos(-1.0)</code>.</li></ul><pre class="line-numbers language-c" data-lang=C><code class=language-c>#include &lt;stdio.h>
-#include &lt;math.h>
+</code></pre>
+</section>
+<section><h1><code>&lt;math.h&gt;</code></h1>
+<h2>PI</h2>
+<ul>
+<li>Podemos obter pi com <code>acos(-1.0)</code>.</li>
+</ul>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;math.h&gt;
 
 int main(){
     double pi = acos(-1.0);
-    printf("%.6f\n", pi);
+    printf(&quot;%.6f\n&quot;, pi);
     return 0;
 }
-</code></pre></section><section><h1><code>&lt;math.h></code></h1><h2>Euler</h2><ul><li>Podemos obter o numero de Euler com <code>exp(1.0)</code>.</li></ul><pre class="line-numbers language-c" data-lang=C><code class=language-c>#include &lt;stdio.h>
-#include &lt;math.h>
+</code></pre>
+</section>
+<section><h1><code>&lt;math.h&gt;</code></h1>
+<h2>Euler</h2>
+<ul>
+<li>Podemos obter o numero de Euler com <code>exp(1.0)</code>.</li>
+</ul>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;math.h&gt;
 
 int main(){
     double euler = exp(1.0);
-    printf("%.6f\n", euler);
+    printf(&quot;%.6f\n&quot;, euler);
     return 0;
 }
-</code></pre></section><section><h1>Compilacao com <code>math.h</code></h1><p>Em muitos sistemas Linux e Unix, usar <code>#include &lt;math.h></code> nao basta.</p><p>Tambem e necessario ligar a biblioteca matematica com <code>-lm</code>:</p><pre class="line-numbers language-bash" data-lang=BASH><code class=language-bash>gcc programa.c -o programa -lm
-</code></pre><p>Se o projeto tiver mais de um arquivo:</p><pre class="line-numbers language-bash" data-lang=BASH><code class=language-bash>gcc main.c calc.c -o programa -lm
-</code></pre></section><section><h1>Outras bibliotecas uteis</h1><h2><code>&lt;stdlib.h></code></h2><ul><li><code>atoi()</code> converte string para inteiro.</li></ul><pre class="line-numbers language-c" data-lang=C><code class=language-c>#include &lt;stdio.h>
-#include &lt;stdlib.h>
+</code></pre>
+</section>
+<section><h1>Compilacao com <code>math.h</code></h1>
+<p>Em muitos sistemas Linux e Unix, usar <code>#include &lt;math.h&gt;</code> nao basta.</p>
+<p>Tambem e necessario ligar a biblioteca matematica com <code>-lm</code>:</p>
+<pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">gcc programa.c -o programa -lm
+</code></pre>
+<p>Se o projeto tiver mais de um arquivo:</p>
+<pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">gcc main.c calc.c -o programa -lm
+</code></pre>
+</section>
+<section><h1>Outras bibliotecas uteis</h1>
+<h2><code>&lt;stdlib.h&gt;</code></h2>
+<ul>
+<li><code>atoi()</code> converte string para inteiro.</li>
+</ul>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
 
 int main(){
-    printf("%d\n", atoi("123"));
+    printf(&quot;%d\n&quot;, atoi(&quot;123&quot;));
     return 0;
 }
-</code></pre></section><section><h1>Outras bibliotecas uteis</h1><ul><li><code>rand()</code> gera numero pseudoaleatorio.</li></ul><pre class="line-numbers language-c" data-lang=C><code class=language-c>#include &lt;stdio.h>
-#include &lt;stdlib.h>
+</code></pre>
+</section>
+<section><h1>Outras bibliotecas uteis</h1>
+<ul>
+<li><code>rand()</code> gera numero pseudoaleatorio.</li>
+</ul>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
 
 int main(){
-    printf("%d\n", rand() % 100);
+    printf(&quot;%d\n&quot;, rand() % 100);
     return 0;
 }
-</code></pre></section><section><h1>Outras bibliotecas uteis</h1><ul><li><code>srand()</code> inicializa a semente do gerador.</li></ul><pre class="line-numbers language-c" data-lang=C><code class=language-c>#include &lt;stdio.h>
-#include &lt;stdlib.h>
-#include &lt;time.h>
+</code></pre>
+</section>
+<section><h1>Outras bibliotecas uteis</h1>
+<ul>
+<li><code>srand()</code> inicializa a semente do gerador.</li>
+</ul>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;time.h&gt;
 
 int main(){
     srand(time(NULL));
-    printf("%d\n", rand() % 100);
+    printf(&quot;%d\n&quot;, rand() % 100);
     return 0;
 }
-</code></pre></section><section><h2><code>&lt;ctype.h></code></h2><ul><li><code>toupper()</code> maiuscula.</li></ul><pre class="line-numbers language-c" data-lang=C><code class=language-c>#include &lt;stdio.h>
-#include &lt;ctype.h>
+</code></pre>
+</section>
+<section><h2><code>&lt;ctype.h&gt;</code></h2>
+<ul>
+<li><code>toupper()</code> maiuscula.</li>
+</ul>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;ctype.h&gt;
 
 int main(){
-    printf("%c\n", toupper('a'));
+    printf(&quot;%c\n&quot;, toupper('a'));
     return 0;
 }
-</code></pre></section><section><h2><code>&lt;ctype.h></code></h2><ul><li><code>tolower()</code> minuscula.</li></ul><pre class="line-numbers language-c" data-lang=C><code class=language-c>#include &lt;stdio.h>
-#include &lt;ctype.h>
+</code></pre>
+</section>
+<section><h2><code>&lt;ctype.h&gt;</code></h2>
+<ul>
+<li><code>tolower()</code> minuscula.</li>
+</ul>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;ctype.h&gt;
 
 int main(){
-    printf("%c\n", tolower('Z'));
+    printf(&quot;%c\n&quot;, tolower('Z'));
     return 0;
 }
-</code></pre></section><section><h2><code>&lt;ctype.h></code></h2><ul><li><code>isdigit()</code> verifica digito.</li></ul><pre class="line-numbers language-c" data-lang=C><code class=language-c>#include &lt;stdio.h>
-#include &lt;ctype.h>
+</code></pre>
+</section>
+<section><h2><code>&lt;ctype.h&gt;</code></h2>
+<ul>
+<li><code>isdigit()</code> verifica digito.</li>
+</ul>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;ctype.h&gt;
 
 int main(){
-    printf("%d\n", isdigit('7'));
+    printf(&quot;%d\n&quot;, isdigit('7'));
     return 0;
 }
-</code></pre></section><section><h1>Arquivo <code>.h</code> x Arquivo <code>.c</code></h1><h2><code>.h</code></h2><ul><li>Contem a <strong>interface</strong> do modulo.</li><li>Normalmente guarda prototipos de funcoes.</li></ul><h2><code>.c</code></h2><ul><li>Contem a <strong>implementacao</strong>.</li><li>E onde escrevemos o corpo das funcoes.</li></ul></section><section><h1>Header Guards</h1><ul><li>Evitam que o mesmo cabecalho seja incluido varias vezes na mesma compilacao.</li></ul><pre class="line-numbers language-c" data-lang=C><code class=language-c>#ifndef CALC_H
+</code></pre>
+</section>
+<section><h1>Arquivo <code>.h</code> x Arquivo <code>.c</code></h1>
+<h2><code>.h</code></h2>
+<ul>
+<li>Contem a <strong>interface</strong> do modulo.</li>
+<li>Normalmente guarda prototipos de funcoes.</li>
+</ul>
+<h2><code>.c</code></h2>
+<ul>
+<li>Contem a <strong>implementacao</strong>.</li>
+<li>E onde escrevemos o corpo das funcoes.</li>
+</ul>
+</section>
+<section><h1>Header Guards</h1>
+<ul>
+<li>Evitam que o mesmo cabecalho seja incluido varias vezes na mesma compilacao.</li>
+</ul>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">#ifndef CALC_H
 #define CALC_H
 
 int soma(int a, int b);
 
 #endif
-</code></pre></section><section><h1>Compilando varios arquivos</h1><p>Se o projeto tiver:</p><ul><li><code>main.c</code></li><li><code>calc.c</code></li><li><code>calc.h</code></li></ul><p>um comando correto e:</p><pre class="line-numbers language-bash" data-lang=BASH><code class=language-bash>gcc main.c calc.c -o programa
-</code></pre><p>Se o cabecalho estiver em outra pasta, podemos usar <code>-I</code>:</p><pre class="line-numbers language-bash" data-lang=BASH><code class=language-bash>gcc main.c src/calc.c -Iinclude -o programa
-</code></pre></section><section><h1>Erros comuns</h1><ul><li>Esquecer <code>#include "calc.h"</code>.</li><li>Compilar apenas <code>main.c</code>.</li><li>Incluir <code>.c</code> no lugar de <code>.h</code>.</li><li>Esquecer <em>header guards</em>.</li></ul><div class="callout callout-warning"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span><span class=callout-title-inner>Erro tipico<br></span></div><div class=callout-content><p>Se a funcao foi declarada, mas o <code>.c</code> com a implementacao nao entrou na compilacao, e comum aparecer <code>undefined reference</code>.</p></div></div></section><section><h1>Construindo nossa propria biblioteca</h1><p>Vamos criar um modulo chamado <code>calc</code>.</p><p>Objetivo:</p><ul><li><code>soma</code></li><li><code>media</code></li><li><code>maximo</code></li></ul><p>Fluxo da atividade:</p><ol><li>Primeiro, vamos criar apenas o <code>.h</code>.</li><li>Depois, implementaremos o <code>.c</code> funcao por funcao.</li><li>Em cada etapa, veremos um exemplo de uso no <code>main</code>.</li></ol></section><section><h1>Passo 1 - Nosso <code>calc.h</code></h1><pre class="line-numbers language-c" data-lang=C><code class=language-c>#ifndef CALC_H
+</code></pre>
+</section>
+<section><h1>Compilando varios arquivos</h1>
+<p>Se o projeto tiver:</p>
+<ul>
+<li><code>main.c</code></li>
+<li><code>calc.c</code></li>
+<li><code>calc.h</code></li>
+</ul>
+<p>um comando correto e:</p>
+<pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">gcc main.c calc.c -o programa
+</code></pre>
+<p>Se o cabecalho estiver em outra pasta, podemos usar <code>-I</code>:</p>
+<pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">gcc main.c src/calc.c -Iinclude -o programa
+</code></pre>
+</section>
+<section><h1>Erros comuns</h1>
+<ul>
+<li>Esquecer <code>#include &quot;calc.h&quot;</code>.</li>
+<li>Compilar apenas <code>main.c</code>.</li>
+<li>Incluir <code>.c</code> no lugar de <code>.h</code>.</li>
+<li>Esquecer <em>header guards</em>.</li>
+</ul>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Erro tipico<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Se a funcao foi declarada, mas o <code>.c</code> com a implementacao nao entrou na compilacao, e comum aparecer <code>undefined reference</code>.</p>
+  </div>
+</div>
+</section>
+<section><h1>Construindo nossa propria biblioteca</h1>
+<p>Vamos criar um modulo chamado <code>calc</code>.</p>
+<p>Objetivo:</p>
+<ul>
+<li><code>soma</code></li>
+<li><code>media</code></li>
+<li><code>maximo</code></li>
+</ul>
+<p>Fluxo da atividade:</p>
+<ol>
+<li>Primeiro, vamos criar apenas o <code>.h</code>.</li>
+<li>Depois, implementaremos o <code>.c</code> funcao por funcao.</li>
+<li>Em cada etapa, veremos um exemplo de uso no <code>main</code>.</li>
+</ol>
+</section>
+<section><h1>Passo 1 - Nosso <code>calc.h</code></h1>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">#ifndef CALC_H
 #define CALC_H
 
 int soma(int a, int b);
@@ -161,28 +487,73 @@ float media(int a, int b);
 int maximo(int a, int b);
 
 #endif
-</code></pre><ul><li>O <code>.h</code> apenas anuncia as funcoes.</li><li>Ainda nao ha implementacao aqui.</li></ul></section><section><h1>Implementem apenas o arquivo <code>calc.h</code></h1><p>Façam agora:</p><ul><li>criem o arquivo <code>calc.h</code>;</li><li>adicionem os <em>header guards</em>;</li><li>escrevam os tres prototipos.</li></ul><p>Ainda <strong>nao</strong> implementem o <code>.c</code>.</p></section><section><h2>Implementem agora apenas <code>soma</code></h2><p>Façam no <code>calc.c</code>:</p><ul><li><code>#include "calc.h"</code>;</li><li>implementem somente <code>soma</code>.</li></ul><p>Depois, testem chamando <code>soma()</code> no <code>main</code>.</p><p>Exemplo de uso no <code>main</code>:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>#include &lt;stdio.h>
-#include "calc.h"
+</code></pre>
+<ul>
+<li>O <code>.h</code> apenas anuncia as funcoes.</li>
+<li>Ainda nao ha implementacao aqui.</li>
+</ul>
+</section>
+<section><h1>Implementem apenas o arquivo <code>calc.h</code></h1>
+<p>Façam agora:</p>
+<ul>
+<li>criem o arquivo <code>calc.h</code>;</li>
+<li>adicionem os <em>header guards</em>;</li>
+<li>escrevam os tres prototipos.</li>
+</ul>
+<p>Ainda <strong>nao</strong> implementem o <code>.c</code>.</p>
+</section>
+<section><h2>Implementem agora apenas <code>soma</code></h2>
+<p>Façam no <code>calc.c</code>:</p>
+<ul>
+<li><code>#include &quot;calc.h&quot;</code>;</li>
+<li>implementem somente <code>soma</code>.</li>
+</ul>
+<p>Depois, testem chamando <code>soma()</code> no <code>main</code>.</p>
+<p>Exemplo de uso no <code>main</code>:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">#include &lt;stdio.h&gt;
+#include &quot;calc.h&quot;
 
 int main(){
-    printf("Soma: %d\n", soma(4, 7));
+    printf(&quot;Soma: %d\n&quot;, soma(4, 7));
     return 0;
 }
-</code></pre></section><section><h1>Implementem agora apenas <code>media</code></h1><p>Façam no <code>calc.c</code>:</p><ul><li>implementem somente <code>media</code>;</li><li>testem a chamada no <code>main</code>.</li></ul><p>Exemplo de uso no <code>main</code>:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>#include &lt;stdio.h>
-#include "calc.h"
+</code></pre>
+</section>
+<section><h1>Implementem agora apenas <code>media</code></h1>
+<p>Façam no <code>calc.c</code>:</p>
+<ul>
+<li>implementem somente <code>media</code>;</li>
+<li>testem a chamada no <code>main</code>.</li>
+</ul>
+<p>Exemplo de uso no <code>main</code>:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">#include &lt;stdio.h&gt;
+#include &quot;calc.h&quot;
 
 int main(){
-    printf("Media: %.2f\n", media(4, 7));
+    printf(&quot;Media: %.2f\n&quot;, media(4, 7));
     return 0;
 }
-</code></pre></section><section><h1>Implementem agora apenas <code>maximo</code></h1><p>Façam no <code>calc.c</code>:</p><ul><li>implementem somente <code>maximo</code>;</li><li>testem a chamada no <code>main</code>.</li></ul><p>Exemplo de uso no <code>main</code>:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>#include &lt;stdio.h>
-#include "calc.h"
+</code></pre>
+</section>
+<section><h1>Implementem agora apenas <code>maximo</code></h1>
+<p>Façam no <code>calc.c</code>:</p>
+<ul>
+<li>implementem somente <code>maximo</code>;</li>
+<li>testem a chamada no <code>main</code>.</li>
+</ul>
+<p>Exemplo de uso no <code>main</code>:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">#include &lt;stdio.h&gt;
+#include &quot;calc.h&quot;
 
 int main(){
-    printf("Maximo: %d\n", maximo(4, 7));
+    printf(&quot;Maximo: %d\n&quot;, maximo(4, 7));
     return 0;
 }
-</code></pre></section><section><h1>Biblioteca completa</h1><p>Agora o arquivo <code>calc.c</code> fica assim:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>#include "calc.h"
+</code></pre>
+</section>
+<section><h1>Biblioteca completa</h1>
+<p>Agora o arquivo <code>calc.c</code> fica assim:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">#include &quot;calc.h&quot;
 
 int soma(int a, int b){
     return a + b;
@@ -193,19 +564,528 @@ float media(int a, int b){
 }
 
 int maximo(int a, int b){
-    if(a > b)
+    if(a &gt; b)
         return a;
     return b;
 }
-</code></pre></section><section><h1><code>main.c</code> usando tudo</h1><pre class="line-numbers language-c" data-lang=C><code class=language-c>#include &lt;stdio.h>
-#include "calc.h"
+</code></pre>
+</section>
+<section><h1><code>main.c</code> usando tudo</h1>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">#include &lt;stdio.h&gt;
+#include &quot;calc.h&quot;
 
 int main(){
-    printf("Soma: %d\n", soma(4, 7));
-    printf("Media: %.2f\n", media(4, 7));
-    printf("Maximo: %d\n", maximo(4, 7));
+    printf(&quot;Soma: %d\n&quot;, soma(4, 7));
+    printf(&quot;Media: %.2f\n&quot;, media(4, 7));
+    printf(&quot;Maximo: %d\n&quot;, maximo(4, 7));
     return 0;
 }
-</code></pre><p>Compilacao:</p><pre class="line-numbers language-bash" data-lang=BASH><code class=language-bash>gcc main.c calc.c -o programa
-</code></pre></section><section><h1>Expansao do modulo</h1><p>Se quisermos crescer a biblioteca, basta:</p><ol><li>adicionar o prototipo no <code>.h</code>;</li><li>implementar a funcao no <code>.c</code>;</li><li>chamar a funcao no <code>main</code>.</li></ol><p>Exemplo: <code>minimo</code></p><pre class="line-numbers language-c" data-lang=C><code class=language-c>int minimo(int a, int b);
-</code></pre></section><section><h1>Desafio</h1><p>Agora, em duplas ou individualmente, criem <strong>uma nova biblioteca</strong>.</p><p>Opcao 1: <code>vetor_util</code></p><ul><li><code>soma_vetor(int v[], int n)</code></li><li><code>maior_vetor(int v[], int n)</code></li><li><code>media_vetor(int v[], int n)</code></li></ul><p>Opcao 2: <code>texto_util</code></p><ul><li><code>contar_vogais(char str[])</code></li><li><code>inverter_string(char str[])</code></li><li><code>eh_palindromo(char str[])</code></li></ul></section><section><h1>Regras do desafio</h1><ul><li>um arquivo <code>.h</code> com <em>header guards</em>;</li><li>um arquivo <code>.c</code> com as implementacoes;</li><li>um <code>main.c</code> chamando cada funcao pelo menos uma vez;</li></ul><p>Sempre que implementarem uma funcao, testem no <code>main</code> imediatamente.</p><h1>Proximos Passos</h1><ul><li>Bibliotecas ajudam a organizar e reaproveitar codigo.</li><li>O <code>.h</code> anuncia o modulo.</li><li>O <code>.c</code> implementa o modulo.</li><li>O <code>main</code> usa o modulo.</li><li>O <strong>GCC</strong> precisa receber os arquivos corretos na compilacao.</li></ul><p>Na proxima aula veremos como trabalhar com memoria dinamica em <strong>C</strong>.</p></section></div></div><script data-no-bundle src=/aulas-faesa/js/vendor/reveal/reveal.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/reveal/plugin/notes/notes.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/reveal/plugin/markdown/markdown.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/reveal/plugin/math/math.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/reveal/plugin/zoom/zoom.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/prism.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-c.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-python.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-clike.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-perl.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-java.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-php.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/plugins/toolbar/prism-toolbar.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/plugins/show-language/prism-show-language.min.js></script><script data-no-bundle src=/aulas-faesa/js/prism-slang.js></script><script data-no-bundle src=/aulas-faesa/js/mermaid.min.js></script><script>document.addEventListener(`DOMContentLoaded`,function(){mermaid.initialize({startOnLoad:!1,theme:`default`,securityLevel:`loose`,fontFamily:`Inter, system-ui, sans-serif`})});</script><script>Reveal.initialize({hash:!0,slideNumber:`c/t`,center:!1,controls:!1,plugins:[RevealMarkdown,RevealNotes,RevealMath.KaTeX,RevealZoom],katex:{local:`/aulas-faesa/js/vendor/katex`,output:`html`,throwOnError:!1,strict:!1},width:960,height:800,margin:.15,maxScale:2}),Reveal.on(`slideready`,event=>{Prism.highlightAll();try{let mermaids=event.currentSlide.querySelectorAll(`.mermaid`);mermaids.length>0&&mermaid.init(void 0,mermaids)}catch(err){console.warn(`Mermaid init failed`,err)}}),Reveal.on(`slidechanged`,event=>{Prism.highlightAll();try{let mermaids=event.currentSlide.querySelectorAll(`.mermaid`);mermaids.length>0&&mermaid.init(void 0,mermaids)}catch(err){console.warn(`Mermaid init failed`,err)}});</script><script data-no-bundle src=/aulas-faesa/js/rough.min.js></script><script data-no-bundle src=/aulas-faesa/js/apply_sketch.js></script><style>.reveal{font-size:20px;text-align:left!important}.reveal code:not(pre code){background-color:var(--code-bg)!important;color:#3b82f6!important;border:1px dashed var(--border)!important;white-space:pre-wrap!important;word-break:break-word!important;border-radius:4px!important;padding:.1em .3em!important;font-family:JetBrains Mono,Fira Code,Consolas,monospace!important;font-size:.85em!important}.reveal h1{align-items:center;font-size:2.2em;display:flex;text-align:left!important;width:100%!important;text-shadow:none!important;justify-content:flex-start!important;margin-bottom:10px!important;margin-left:0!important}.reveal div.code-toolbar{position:relative;width:90%!important;margin:1em auto!important}.reveal pre[class*=language-]{width:100%!important;margin:0!important;padding:1em!important;font-size:.8em!important}.reveal pre[class*=language-]>code{display:block!important;position:relative!important}.reveal .line-numbers-rows{border-right:1px solid #ccc!important;width:3.2em!important;padding-top:0!important;position:absolute!important;top:0!important;left:-3.8em!important}.reveal .line-numbers-rows>span:before{color:#999!important;text-align:right!important;padding-right:.5em!important;display:block!important}.reveal pre[class*=language-].line-numbers,.reveal pre[class*=language-]:has(.line-numbers-rows){padding-left:3.8em!important}.reveal div.toolbar{z-index:10;opacity:1!important;padding-right:.1em!important;position:absolute!important;top:.2em!important;right:.5em!important}.reveal div.toolbar-item span{color:#999!important;text-transform:uppercase!important;box-shadow:none!important;background:0 0!important;border:none!important;padding:0!important;font-family:Inter,sans-serif!important;font-size:.7em!important;font-weight:600!important}.reveal h2{font-size:1.6em;text-align:left!important;margin-top:30px!important;margin-bottom:20px!important}.reveal h3{font-size:1.3em;text-align:left!important;margin-top:20px!important;margin-bottom:15px!important}.reveal p{line-height:1.5;text-align:left!important;margin-top:20px!important;margin-left:0!important}.reveal ul,.reveal ol,.reveal li{line-height:1.5;text-align:left!important;margin-left:0!important}.reveal ul,.reveal ol{padding-left:1.2em!important;display:block!important}.reveal .slides section{box-sizing:border-box;text-align:left!important;padding:40px!important}.reveal .slides{text-align:left!important}.reveal .slides section:not(.stack):has(>h1:only-child),.reveal .slides section:not(.stack):has(>h1:first-child+h2:last-child),.reveal .slides section:not(.stack):has(>h1:first-child+h2+p:last-child){text-align:center!important;flex-direction:column!important;justify-content:center!important;align-items:center!important;height:100%!important;display:flex!important;top:0!important}.reveal .slides section:not(.stack):has(>h1:only-child) h1,.reveal .slides section:not(.stack):has(>h1:first-child+h2:last-child) h1,.reveal .slides section:not(.stack):has(>h1:first-child+h2:last-child) h2,.reveal .slides section:not(.stack):has(>h1:first-child+h2+p:last-child) h1,.reveal .slides section:not(.stack):has(>h1:first-child+h2+p:last-child) h2,.reveal .slides section:not(.stack):has(>h1:first-child+h2+p:last-child) p{text-align:center!important;justify-content:center!important;width:100%!important;min-height:auto!important;margin:0!important}.reveal .slides section:not(.stack):has(>h1:first-child+h2:last-child) h1,.reveal .slides section:not(.stack):has(>h1:first-child+h2+p:last-child) h1{margin-bottom:.5em!important}.reveal .slides section:not(.stack):has(>h1:first-child+h2+p:last-child) h2{margin-bottom:.3em!important}.reveal .slides section:not(.stack):has(>h1:first-child+h2+p:last-child) p{color:#666;font-size:.9em}.reveal .slides section:has(.full-screen-image){padding:0!important}.reveal:has(section.present .full-screen-image){background-image:url(../../slide_end_background.png)!important;background-position:50%!important;background-size:cover!important}.reveal:has(section.present .full-screen-image) .slides,.reveal:has(section.present .full-screen-image) .slides section.present{background:0 0!important}.full-screen-image{justify-content:center;align-items:center;width:100vw;height:100vh;display:flex;margin:0!important}.reveal .svg-graph{max-width:100%;height:auto;margin-top:1em!important;margin-bottom:1em!important;overflow:visible!important}.reveal .mermaid-switcher{display:none!important}.centered{justify-content:center!important;align-items:center!important;width:100%!important;margin:1em 0!important;display:flex!important}.no-break{width:100%;display:block}.reveal blockquote{background:#ffaa4933;padding:5px;font-style:italic;display:block;position:relative;box-shadow:0 0 2px #0003;margin:var(--r-block-margin)auto!important;text-align:left!important}.col1{width:90%;margin:0 auto}.col2{justify-content:space-around;align-items:flex-start;width:90%;margin:0 auto;display:flex}:root{--callout-note:#448aff;--callout-abstract:#00b0ff;--callout-info:#00b8d4;--callout-todo:#00bfa5;--callout-tip:#00c853;--callout-success:#64dd17;--callout-question:#ffab00;--callout-warning:#ff9100;--callout-failure:#ff5252;--callout-danger:#ff1744;--callout-bug:#f50057;--callout-example:#7c4dff;--callout-quote:#9e9e9e;--code-bg:#f8f8f8;--border:#ddd}.reveal .callout{border:1px solid var(--border);border-left:6px solid var(--callout-note);border-radius:4px;font-size:.8em;overflow:hidden;text-align:left!important;width:75%!important;max-width:100%!important;margin:1rem auto!important}.reveal .callout-title{color:var(--callout-note);background:#0000000d;align-items:center;gap:.5rem;padding:.5rem 1rem;font-weight:600;display:flex}.reveal .callout-icon{align-items:center;display:flex}.reveal .callout-icon svg{width:1.2em;height:1.2em}.reveal .callout-content{padding:.5rem 1rem}.reveal .callout-content p{margin-top:.5rem!important}.reveal .callout-content p:first-child{margin-top:0!important}.reveal h1{text-transform:none!important}.reveal .callout-abstract{border-left-color:var(--callout-abstract)}.reveal .callout-abstract .callout-title{color:var(--callout-abstract)}.reveal .callout-info{border-left-color:var(--callout-info)}.reveal .callout-info .callout-title{color:var(--callout-info)}.reveal .callout-todo{border-left-color:var(--callout-todo)}.reveal .callout-todo .callout-title{color:var(--callout-todo)}.reveal .callout-tip{border-left-color:var(--callout-tip)}.reveal .callout-tip .callout-title{color:var(--callout-tip)}.reveal .callout-success{border-left-color:var(--callout-success)}.reveal .callout-success .callout-title{color:var(--callout-success)}.reveal .callout-question{border-left-color:var(--callout-question)}.reveal .callout-question .callout-title{color:var(--callout-question)}.reveal .callout-warning{border-left-color:var(--callout-warning)}.reveal .callout-warning .callout-title{color:var(--callout-warning)}.reveal .callout-failure{border-left-color:var(--callout-failure)}.reveal .callout-failure .callout-title{color:var(--callout-failure)}.reveal .callout-danger{border-left-color:var(--callout-danger)}.reveal .callout-danger .callout-title{color:var(--callout-danger)}.reveal .callout-bug{border-left-color:var(--callout-bug)}.reveal .callout-bug .callout-title{color:var(--callout-bug)}.reveal .callout-example{border-left-color:var(--callout-example)}.reveal .callout-example .callout-title{color:var(--callout-example)}.reveal .callout-quote{border-left-color:var(--callout-quote)}.reveal .callout-quote .callout-title{color:var(--callout-quote)}.red-note{color:var(--callout-failure)}.reveal .slide-number{border-radius:4px;color:#000000b1!important;background:#0000001a!important;padding:5px 10px!important;font-size:.8em!important}@media print{.reveal .slides section{visibility:visible!important;opacity:1!important;page-break-after:always!important;width:100%!important;height:100%!important;display:block!important;position:relative!important;top:0!important;left:0!important;overflow:hidden!important}.reveal .slides{width:100%!important;height:100%!important;top:0!important;left:0!important;transform:none!important}.reveal{overflow:visible!important}}</style></body></html>
+</code></pre>
+<p>Compilacao:</p>
+<pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">gcc main.c calc.c -o programa
+</code></pre>
+</section>
+<section><h1>Expansao do modulo</h1>
+<p>Se quisermos crescer a biblioteca, basta:</p>
+<ol>
+<li>adicionar o prototipo no <code>.h</code>;</li>
+<li>implementar a funcao no <code>.c</code>;</li>
+<li>chamar a funcao no <code>main</code>.</li>
+</ol>
+<p>Exemplo: <code>minimo</code></p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">int minimo(int a, int b);
+</code></pre>
+</section>
+<section><h1>Desafio</h1>
+<p>Agora, em duplas ou individualmente, criem <strong>uma nova biblioteca</strong>.</p>
+<p>Opcao 1: <code>vetor_util</code></p>
+<ul>
+<li><code>soma_vetor(int v[], int n)</code></li>
+<li><code>maior_vetor(int v[], int n)</code></li>
+<li><code>media_vetor(int v[], int n)</code></li>
+</ul>
+<p>Opcao 2: <code>texto_util</code></p>
+<ul>
+<li><code>contar_vogais(char str[])</code></li>
+<li><code>inverter_string(char str[])</code></li>
+<li><code>eh_palindromo(char str[])</code></li>
+</ul>
+</section>
+<section><h1>Regras do desafio</h1>
+<ul>
+<li>um arquivo <code>.h</code> com <em>header guards</em>;</li>
+<li>um arquivo <code>.c</code> com as implementacoes;</li>
+<li>um <code>main.c</code> chamando cada funcao pelo menos uma vez;</li>
+</ul>
+<p>Sempre que implementarem uma funcao, testem no <code>main</code> imediatamente.</p>
+<h1>Proximos Passos</h1>
+<ul>
+<li>Bibliotecas ajudam a organizar e reaproveitar codigo.</li>
+<li>O <code>.h</code> anuncia o modulo.</li>
+<li>O <code>.c</code> implementa o modulo.</li>
+<li>O <code>main</code> usa o modulo.</li>
+<li>O <strong>GCC</strong> precisa receber os arquivos corretos na compilacao.</li>
+</ul>
+<p>Na proxima aula veremos como trabalhar com memoria dinamica em <strong>C</strong>.</p>
+</section>
+        </div>
+    </div>
+
+    <script src="/aulas-faesa/js/vendor/reveal/reveal.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/notes/notes.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/markdown/markdown.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/math/math.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/zoom/zoom.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/prism.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-c.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-python.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-clike.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-perl.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-java.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-php.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/toolbar/prism-toolbar.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/show-language/prism-show-language.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/prism-slang.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/mermaid.min.js" data-no-bundle></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            mermaid.initialize({
+                startOnLoad: false,
+                theme: 'default',
+                securityLevel: 'loose',
+                fontFamily: 'Inter, system-ui, sans-serif',
+            });
+        });
+    </script>
+    <script>
+        Reveal.initialize({
+            hash: true,
+            slideNumber: 'c/t',
+            center: false,
+            controls: false,
+            plugins: [RevealMarkdown, RevealNotes, RevealMath.KaTeX, RevealZoom],
+            katex: {
+                local: '/aulas-faesa/js/vendor/katex',
+                output: 'html',
+                throwOnError: false,
+                strict: false,
+            },
+            width: 960,
+            height: 800,
+            margin: 0.15,
+            maxScale: 2.0,
+        });
+
+        // Ensure Prism highlights code on slide changes
+        Reveal.on('slideready', event => {
+            Prism.highlightAll();
+            try {
+                let mermaids = event.currentSlide.querySelectorAll('.mermaid');
+                if (mermaids.length > 0) {
+                    mermaid.init(undefined, mermaids);
+                }
+            } catch (err) { console.warn("Mermaid init failed", err); }
+        });
+        Reveal.on('slidechanged', event => {
+            Prism.highlightAll();
+            try {
+                let mermaids = event.currentSlide.querySelectorAll('.mermaid');
+                if (mermaids.length > 0) {
+                    mermaid.init(undefined, mermaids);
+                }
+            } catch (err) { console.warn("Mermaid init failed", err); }
+        });
+    </script>
+    <script src="/aulas-faesa/js/rough.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/apply_sketch.js" data-no-bundle></script>
+    <style>
+        /* Modern base styles */
+        .reveal {
+            font-size: 20px;
+            text-align: left !important;
+        }
+
+        .reveal code:not(pre code) {
+            font-family: 'JetBrains Mono', 'Fira Code', Consolas, monospace !important;
+            background-color: var(--code-bg) !important;
+            padding: 0.1em 0.3em !important;
+            border-radius: 4px !important;
+            font-size: 0.85em !important;
+            color: #3b82f6 !important;
+            border: 1px dashed var(--border) !important;
+            white-space: pre-wrap !important;
+            word-break: break-word !important;
+        }
+
+        .reveal h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px !important;
+            margin-left: 0 !important;
+            /* min-height: 2.3em; */
+            display: flex;
+            align-items: center;
+            justify-content: flex-start !important;
+            text-align: left !important;
+            width: 100% !important;
+            text-shadow: none !important;
+        }
+
+        /* Prism overrides for Reveal.js */
+        .reveal div.code-toolbar {
+            position: relative;
+            width: 90% !important;
+            margin: 1em auto !important;
+        }
+
+        .reveal pre[class*="language-"] {
+            margin: 0 !important;
+            padding: 1em !important;
+            width: 100% !important;
+            font-size: 0.8em !important;
+        }
+
+        .reveal pre[class*="language-"] > code {
+            position: relative !important;
+            display: block !important;
+        }
+
+        .reveal .line-numbers-rows {
+            position: absolute !important;
+            top: 0 !important;
+            left: -3.8em !important;
+            width: 3.2em !important;
+            padding-top: 0 !important;
+            border-right: 1px solid #ccc !important;
+        }
+
+        .reveal .line-numbers-rows > span:before {
+            padding-right: 0.5em !important;
+            color: #999 !important;
+            display: block !important;
+            text-align: right !important;
+        }
+
+        .reveal pre[class*="language-"].line-numbers,
+        .reveal pre[class*="language-"]:has(.line-numbers-rows) {
+            padding-left: 3.8em !important;
+        }
+
+        /* Language label styling */
+        .reveal div.toolbar {
+            position: absolute !important;
+            top: 0.2em !important;
+            right: 0.5em !important;
+            opacity: 1 !important;
+            padding-right: 0.1em !important;
+            z-index: 10;
+        }
+
+        .reveal div.toolbar-item span {
+            font-family: 'Inter', sans-serif !important;
+            font-size: 0.7em !important;
+            font-weight: 600 !important;
+            color: #999 !important;
+            text-transform: uppercase !important;
+            background: none !important;
+            box-shadow: none !important;
+            border: none !important;
+            padding: 0 !important;
+        }
+
+        .reveal h2 {
+            font-size: 1.6em;
+            margin-top: 30px !important;
+            margin-bottom: 20px !important;
+            text-align: left !important;
+        }
+
+        .reveal h3 {
+            font-size: 1.3em;
+            margin-top: 20px !important;
+            margin-bottom: 15px !important;
+            text-align: left !important;
+        }
+
+        .reveal p {
+            line-height: 1.5;
+            margin-top: 20px !important;
+            margin-left: 0 !important;
+            text-align: left !important;
+        }
+
+        .reveal ul,
+        .reveal ol,
+        .reveal li {
+            line-height: 1.5;
+            text-align: left !important;
+            margin-left: 0 !important;
+        }
+        
+        .reveal ul, .reveal ol {
+            display: block !important;
+            padding-left: 1.2em !important;
+        }
+
+        /* Slide padding and layout */
+        .reveal .slides section {
+            padding: 40px !important;
+            box-sizing: border-box;
+            text-align: left !important;
+        }
+
+        .reveal .slides {
+            text-align: left !important;
+        }
+
+        /* Centering for Title slides (h1 ONLY, h1 + h2 ONLY, or h1 + h2 + p ONLY) */
+        .reveal .slides section:not(.stack):has(> h1:only-child),
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child),
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) {
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: center !important;
+            align-items: center !important;
+            text-align: center !important;
+            height: 100% !important;
+            top: 0 !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:only-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child) h2,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h2,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) p {
+            justify-content: center !important;
+            text-align: center !important;
+            margin: 0 !important;
+            min-height: auto !important;
+            width: 100% !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h1 {
+            margin-bottom: 0.5em !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h2 {
+            margin-bottom: 0.3em !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) p {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        /* Full screen slide fix */
+        .reveal .slides section:has(.full-screen-image) {
+            padding: 0 !important;
+        }
+
+        /* Full screen slide fix - Garantindo que o fundo do Reveal fique visível e a imagem carregada */
+        .reveal:has(section.present .full-screen-image) {
+            background-image: url('../../slide_end_background.png') !important;
+            background-size: cover !important;
+            background-position: center !important;
+        }
+
+        /* Torna o slide e o container de slides transparentes para mostrar o fundo da .reveal */
+        .reveal:has(section.present .full-screen-image) .slides,
+        .reveal:has(section.present .full-screen-image) .slides section.present {
+            background: transparent !important;
+        }
+
+        .full-screen-image {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 !important;
+            /* Se houver texto, ele centraliza aqui */
+        }
+
+        /* Spacing for diagrams */
+        .reveal .svg-graph {
+            margin-top: 1em !important;
+            margin-bottom: 1em !important;
+            overflow: visible !important; /* Prevent labels from being cut off */
+            max-width: 100%;
+            height: auto;
+        }
+
+        .reveal .mermaid-switcher {
+            display: none !important;
+        }
+
+        .centered {
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            width: 100% !important;
+            margin: 1em 0 !important;
+        }
+
+        .no-break {
+            display: block;
+            width: 100%;
+        }
+
+        .reveal blockquote {
+            display: block;
+            position: relative;
+            margin: var(--r-block-margin) auto !important;
+            padding: 5px;
+            font-style: italic;
+            background: rgba(255, 170, 73, 0.2);
+            box-shadow: 0 0 2px rgba(0,0,0,.2);
+            text-align: left !important;
+        }
+
+        .col1 {
+            width: 90%;
+            margin: 0 auto;
+        }
+
+        .col2 {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start;
+            width: 90%;
+            margin: 0 auto;
+            align-items: flex-start;
+        }
+
+        /* Callout Styles */
+        :root {
+            --callout-note: #448aff;
+            --callout-abstract: #00b0ff;
+            --callout-info: #00b8d4;
+            --callout-todo: #00bfa5;
+            --callout-tip: #00c853;
+            --callout-success: #64dd17;
+            --callout-question: #ffab00;
+            --callout-warning: #ff9100;
+            --callout-failure: #ff5252;
+            --callout-danger: #ff1744;
+            --callout-bug: #f50057;
+            --callout-example: #7c4dff;
+            --callout-quote: #9e9e9e;
+            --code-bg: #f8f8f8;
+            --border: #ddd;
+        }
+
+        .reveal .callout {
+            margin: 1rem auto !important;
+            border: 1px solid var(--border);
+            border-left: 6px solid var(--callout-note);
+            border-radius: 4px;
+            overflow: hidden;
+            text-align: left !important;
+            font-size: 0.8em;
+            width: 75% !important;
+            max-width: 100% !important;
+        }
+
+        .reveal .callout-title {
+            padding: 0.5rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            color: var(--callout-note);
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .reveal .callout-icon {
+            display: flex;
+            align-items: center;
+        }
+
+        .reveal .callout-icon svg {
+            width: 1.2em;
+            height: 1.2em;
+        }
+
+        .reveal .callout-content {
+            padding: 0.5rem 1rem;
+        }
+
+        .reveal .callout-content p {
+            margin-top: 0.5rem !important;
+        }
+
+        .reveal .callout-content p:first-child {
+            margin-top: 0 !important;
+        }
+
+        .reveal h1 { text-transform: none !important; }
+
+        .reveal .callout-abstract { border-left-color: var(--callout-abstract); }
+        .reveal .callout-abstract .callout-title { color: var(--callout-abstract); }
+        .reveal .callout-info { border-left-color: var(--callout-info); }
+        .reveal .callout-info .callout-title { color: var(--callout-info); }
+        .reveal .callout-todo { border-left-color: var(--callout-todo); }
+        .reveal .callout-todo .callout-title { color: var(--callout-todo); }
+        .reveal .callout-tip { border-left-color: var(--callout-tip); }
+        .reveal .callout-tip .callout-title { color: var(--callout-tip); }
+        .reveal .callout-success { border-left-color: var(--callout-success); }
+        .reveal .callout-success .callout-title { color: var(--callout-success); }
+        .reveal .callout-question { border-left-color: var(--callout-question); }
+        .reveal .callout-question .callout-title { color: var(--callout-question) ; }
+        .reveal .callout-warning { border-left-color: var(--callout-warning); }
+        .reveal .callout-warning .callout-title { color: var(--callout-warning); }
+        .reveal .callout-failure { border-left-color: var(--callout-failure); }
+        .reveal .callout-failure .callout-title { color: var(--callout-failure); }
+        .reveal .callout-danger { border-left-color: var(--callout-danger); }
+        .reveal .callout-danger .callout-title { color: var(--callout-danger); }
+        .reveal .callout-bug { border-left-color: var(--callout-bug); }
+        .reveal .callout-bug .callout-title { color: var(--callout-bug); }
+        .reveal .callout-example { border-left-color: var(--callout-example); }
+        .reveal .callout-example .callout-title { color: var(--callout-example); }
+        .reveal .callout-quote { border-left-color: var(--callout-quote); }
+        .reveal .callout-quote .callout-title { color: var(--callout-quote); }
+        .red-note { color: var(--callout-failure); }
+
+        .reveal .slide-number {
+            font-size: 0.8em !important;
+            padding: 5px 10px !important;
+            background: rgba(0,0,0,0.1) !important;
+            border-radius: 4px;
+            color: #000000b1 !important;
+        }
+
+        /* Print styles */
+        @media print {
+            .reveal .slides section {
+                display: block !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                position: relative !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+                page-break-after: always !important;
+                overflow: hidden !important;
+            }
+
+            .reveal .slides {
+                transform: none !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+            }
+            
+            .reveal {
+                overflow: visible !important;
+            }
+        }
+    </style>
+</body>
+
+</html>

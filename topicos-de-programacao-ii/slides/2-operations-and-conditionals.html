@@ -1,21 +1,318 @@
-<!doctype html><html lang=en><meta charset=utf-8><meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" name=viewport><title>Operações com Variáveis e Condicionais</title><link media="(prefers-color-scheme: light)" href=/aulas-faesa/img/dark-favicon.svg rel=icon><link media="(prefers-color-scheme: dark)" href=/aulas-faesa/img/light-favicon.svg rel=icon><link data-no-bundle href=/aulas-faesa/css/vendor/reveal/reset.min.css rel=stylesheet><link data-no-bundle href=/aulas-faesa/css/vendor/reveal/reveal.min.css rel=stylesheet><link data-no-bundle href=/aulas-faesa/css/vendor/reveal/theme/white.min.css rel=stylesheet><link data-no-bundle href=/aulas-faesa/css/prism-one-light.css rel=stylesheet><link data-no-bundle href=/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css rel=stylesheet><link data-no-bundle href=/aulas-faesa/css/vendor/fonts.css rel=stylesheet></head><body><div class=reveal><div class=slides><section><h1>Lógica de Programação</h1><h2>Operações com Variáveis e Condicionais</h2><p>Professor: Gabriel Soares Baptista</p></section><section><h1>Operações com variáveis</h1><p>Nesta aula, exploraremos as diversas operações que podem ser realizadas com variáveis na linguagem <em>C</em>.</p><div class="callout callout-info"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><circle cx=12 cy=12 r=10 /><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></span><span class=callout-title-inner>Objetivos de Aprendizado</span></div><div class=callout-content><ul><li>Definir o valor contido em uma <strong>variável</strong>.</li><li>Realizar <strong>operações matemáticas</strong> e de <strong>comparação</strong>.</li><li>Realizar <strong>operações lógicas</strong> e em <strong>nível de bits</strong> (<em>bitwise</em>).</li><li>Conhecer as <strong>operações simplificadas</strong>.</li><li>Saber a <strong>ordem de precedência</strong> em que as operações são processadas.</li></ul></div></div></section><section><h1>O operador de atribuição "="</h1><p>Uma das operações mais fundamentais na programação é a atribuição. Sua função é armazenar um determinado valor em uma variável.</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>nome_da_variável = expressão;
-</code></pre><ul><li>Uma <strong>expressão</strong> pode ser:<ul><li>Valores diretos.</li><li>Variáveis ou constantes.</li><li>Chamadas de funções ou cálculos matemáticos.</li><li><strong>Condição:</strong> O resultado final deve ser do mesmo tipo de dado da variável destino.</li></ul></li></ul></section><section><h1>Regra de Direção</h1><p>O fluxo de dados da atribuição ocorre <strong>sempre da direita para a esquerda</strong>. O computador calcula a expressão à direita do "=" e armazena o resultado na variável à esquerda.</p><div class="callout callout-danger"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1=12 x2=12 y1=9 y2=13 /><line x1=12 x2=12 y1=17 y2=17.01 /></svg></span><span class=callout-title-inner>Regra de Direção<br></span></div><div class=callout-content><p>O computador avalia primeiro o que está à direita do sinal de "=" e atribui o resultado à variável da esquerda. Tentar realizar o inverso resultará em erro de compilação.</p></div></div><div class=col-2><div><pre class="line-numbers language-c" data-lang=C><code class=language-c>// Correto: recebe o resultado da soma
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <title>Operações com Variáveis e Condicionais</title>
+    <link rel="icon" href="/aulas-faesa/img/dark-favicon.svg" media="(prefers-color-scheme: light)">
+    <link rel="icon" href="/aulas-faesa/img/light-favicon.svg" media="(prefers-color-scheme: dark)">
+
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/reset.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/reveal.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/theme/white.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/aulas-faesa/css/prism-one-light.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/fonts.css" data-no-bundle>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+            <section><h1>Lógica de Programação</h1>
+<h2>Operações com Variáveis e Condicionais</h2>
+<p>Professor: Gabriel Soares Baptista</p>
+</section>
+<section><h1>Operações com variáveis</h1>
+<p>Nesta aula, exploraremos as diversas operações que podem ser realizadas com variáveis na linguagem <em>C</em>.</p>
+<div class="callout callout-info">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></span>
+    <span class="callout-title-inner">Objetivos de Aprendizado</span>
+  </div>
+  <div class="callout-content">
+<ul>
+<li>Definir o valor contido em uma <strong>variável</strong>.</li>
+<li>Realizar <strong>operações matemáticas</strong> e de <strong>comparação</strong>.</li>
+<li>Realizar <strong>operações lógicas</strong> e em <strong>nível de bits</strong> (<em>bitwise</em>).</li>
+<li>Conhecer as <strong>operações simplificadas</strong>.</li>
+<li>Saber a <strong>ordem de precedência</strong> em que as operações são processadas.</li>
+</ul>
+  </div>
+</div>
+</section>
+<section><h1>O operador de atribuição &quot;=&quot;</h1>
+<p>Uma das operações mais fundamentais na programação é a atribuição. Sua função é armazenar um determinado valor em uma variável.</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">nome_da_variável = expressão;
+</code></pre>
+<ul>
+<li>Uma <strong>expressão</strong> pode ser:<ul>
+<li>Valores diretos.</li>
+<li>Variáveis ou constantes.</li>
+<li>Chamadas de funções ou cálculos matemáticos.</li>
+<li><strong>Condição:</strong> O resultado final deve ser do mesmo tipo de dado da variável destino.</li>
+</ul>
+</li>
+</ul>
+</section>
+<section><h1>Regra de Direção</h1>
+<p>O fluxo de dados da atribuição ocorre <strong>sempre da direita para a esquerda</strong>. O computador calcula a expressão à direita do &quot;=&quot; e armazena o resultado na variável à esquerda.</p>
+<div class="callout callout-danger">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12" y2="17.01"/></svg></span>
+    <span class="callout-title-inner">Regra de Direção<br /></span>
+  </div>
+  <div class="callout-content">
+<p>O computador avalia primeiro o que está à direita do sinal de &quot;=&quot; e atribui o resultado à variável da esquerda. Tentar realizar o inverso resultará em erro de compilação.</p>
+  </div>
+</div>
+<div class="col-2"><div>
+
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">// Correto: recebe o resultado da soma
 x = y + 5;
 
 // Correto: recebe o valor constante
 x = 5;
-</code></pre></div><div><pre class="line-numbers language-c" data-lang=C><code class=language-c>// ERRADO: não se atribui a uma expressão
+</code></pre>
+</div><div>
+
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">// ERRADO: não se atribui a uma expressão
 y + 5 = x; 
 
 // ERRADO: não se atribui a uma constante
 5 = x;
-</code></pre></div></div></section><section><h1>Múltiplas Atribuições e Conversão de Tipos</h1><p>A linguagem <em>C</em> suporta <strong>múltiplas atribuições</strong> em uma única linha, onde o valor é copiado em cadeia (da direita para a esquerda):</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>x = y = z = 5;
-</code></pre><h2>Conversão e Perda de Informação</h2><p>A linguagem permite a atribuição entre tipos básicos distintos, realizando conversão automática.</p><div class="callout callout-warning"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span><span class=callout-title-inner>Atenção à Conversão de Tipos<br></span></div><div class=callout-content><p>Ao atribuir um número real (<em>float</em>) a uma variável inteira (<em>int</em>), apenas a parte inteira será preservada, descartando-se toda a precisão decimal (truncamento).</p></div></div></section><section><h1>Operadores Aritméticos</h1><p>Os operadores atuam sobre valores numéricos, resultando sempre em um novo valor numérico.</p><table><thead><tr><th>Operador</th><th>Significado</th><th>Exemplo</th></tr></thead><tbody><tr><td><strong>+</strong></td><td>Adição de dois valores</td><td><code>z = x + y</code></td></tr><tr><td><strong>-</strong></td><td>Subtração de dois valores</td><td><code>z = x - y</code></td></tr><tr><td><strong>*</strong></td><td>Multiplicação de dois valores</td><td><code>z = x * y</code></td></tr><tr><td><strong>/</strong></td><td>Quociente (divisão) de dois valores</td><td><code>z = x / y</code></td></tr><tr><td><strong>%</strong></td><td>Resto de uma divisão inteira</td><td><code>z = x % y</code></td></tr></tbody></table></section><section><h1>Precedência, Parênteses e Operadores Unários</h1><h2>Precedência</h2><p>As operações de <strong>multiplicação (*)</strong>, <strong>divisão (/)</strong> e <strong>resto (%)</strong> são executadas sempre antes da <strong>adição (+)</strong> e da <strong>subtração (-)</strong>.</p><ul><li>Utilize <strong>parênteses</strong> para forçar a execução prioritária de um cálculo.<ul><li><code>z = x * y + 10;</code> (Multiplica, depois soma)</li><li><code>z = x * (y + 10);</code> (Soma, depois multiplica)</li></ul></li></ul><h2>Operadores Unários</h2><p>Os sinais de <code>+</code> e <code>-</code> podem atuar sobre um único valor para inversão de sinal (ex: <code>x = -y;</code>).</p></section><section><h1>Divisão e o Operador de Resto</h1><ul><li>Se ambos os números na divisão forem inteiros, o compilador retorna <strong>apenas a parte inteira</strong>, descartando casas decimais.</li><li>Para obter um resultado real, ao menos um dos números deve ser tratado como ponto flutuante (ex: <code>5 / 4.0</code>).</li></ul><div class="callout callout-tip"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .5 2.2 1.5 3.1.7.7 1.3 1.5 1.5 2.4"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span><span class=callout-title-inner>Regra do Operador de Resto<br></span></div><div class=callout-content><p>O operador de resto da divisão (%) é exclusivo para tipos de dados inteiros, como <em>int</em> e <em>char</em>. Tentar utilizá-lo com números reais (<em>float</em> ou <em>double</em>) causará um erro.</p></div></div></section><section><h1>Operadores Relacionais</h1><p>Utilizados para verificar a relação de magnitude e a igualdade entre valores. Eles retornam um valor lógico (booleano): <strong>UM (1)</strong> para verdadeiro ou <strong>ZERO (0)</strong> para falso.</p><table><thead><tr><th>Operador</th><th>Significado</th><th>Exemplo</th></tr></thead><tbody><tr><td><strong>></strong></td><td>Maior do que</td><td><code>x > 5</code></td></tr><tr><td><strong>>=</strong></td><td>Maior ou igual a</td><td><code>x >= 10</code></td></tr><tr><td><strong>&lt;</strong></td><td>Menor do que</td><td><code>x &lt; 5</code></td></tr><tr><td><strong>&lt;=</strong></td><td>Menor ou igual a</td><td><code>x &lt;= 10</code></td></tr><tr><td><strong>==</strong></td><td>Igual a</td><td><code>x == 0</code></td></tr><tr><td><strong>!=</strong></td><td>Diferente de</td><td><code>x != 0</code></td></tr></tbody></table></section><section><h1>Erros Comuns de Sintaxe</h1><div class="callout callout-warning"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span><span class=callout-title-inner>Erros Comuns de Sintaxe<br></span></div><div class=callout-content><p>Não existem os operadores "=&lt;", "=>" ou "&lt;>". Os símbolos devem seguir a ordem estrita: <strong>&lt;=</strong> e <strong>>=</strong>. Utiliza-se obrigatoriamente <strong>!=</strong> para representar "diferente de".</p></div></div><h2>O maior erro: Atribuição vs Comparação</h2><p>Não confunda o operador de atribuição <code>=</code> com o operador de teste de igualdade <code>==</code>.</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>// Errado para testar igualdade: atribui o valor 4 a x
+</code></pre>
+</div></div>
+
+</section>
+<section><h1>Múltiplas Atribuições e Conversão de Tipos</h1>
+<p>A linguagem <em>C</em> suporta <strong>múltiplas atribuições</strong> em uma única linha, onde o valor é copiado em cadeia (da direita para a esquerda):</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">x = y = z = 5;
+</code></pre>
+<h2>Conversão e Perda de Informação</h2>
+<p>A linguagem permite a atribuição entre tipos básicos distintos, realizando conversão automática.</p>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Atenção à Conversão de Tipos<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Ao atribuir um número real (<em>float</em>) a uma variável inteira (<em>int</em>), apenas a parte inteira será preservada, descartando-se toda a precisão decimal (truncamento).</p>
+  </div>
+</div>
+</section>
+<section><h1>Operadores Aritméticos</h1>
+<p>Os operadores atuam sobre valores numéricos, resultando sempre em um novo valor numérico.</p>
+<table>
+<thead>
+<tr>
+  <th>Operador</th>
+  <th>Significado</th>
+  <th>Exemplo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><strong>+</strong></td>
+  <td>Adição de dois valores</td>
+  <td><code>z = x + y</code></td>
+</tr>
+<tr>
+  <td><strong>-</strong></td>
+  <td>Subtração de dois valores</td>
+  <td><code>z = x - y</code></td>
+</tr>
+<tr>
+  <td><strong>*</strong></td>
+  <td>Multiplicação de dois valores</td>
+  <td><code>z = x * y</code></td>
+</tr>
+<tr>
+  <td><strong>/</strong></td>
+  <td>Quociente (divisão) de dois valores</td>
+  <td><code>z = x / y</code></td>
+</tr>
+<tr>
+  <td><strong>%</strong></td>
+  <td>Resto de uma divisão inteira</td>
+  <td><code>z = x % y</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section><h1>Precedência, Parênteses e Operadores Unários</h1>
+<h2>Precedência</h2>
+<p>As operações de <strong>multiplicação (*)</strong>, <strong>divisão (/)</strong> e <strong>resto (%)</strong> são executadas sempre antes da <strong>adição (+)</strong> e da <strong>subtração (-)</strong>.</p>
+<ul>
+<li>Utilize <strong>parênteses</strong> para forçar a execução prioritária de um cálculo.<ul>
+<li><code>z = x * y + 10;</code> (Multiplica, depois soma)</li>
+<li><code>z = x * (y + 10);</code> (Soma, depois multiplica)</li>
+</ul>
+</li>
+</ul>
+<h2>Operadores Unários</h2>
+<p>Os sinais de <code>+</code> e <code>-</code> podem atuar sobre um único valor para inversão de sinal (ex: <code>x = -y;</code>).</p>
+</section>
+<section><h1>Divisão e o Operador de Resto</h1>
+<ul>
+<li>Se ambos os números na divisão forem inteiros, o compilador retorna <strong>apenas a parte inteira</strong>, descartando casas decimais.</li>
+<li>Para obter um resultado real, ao menos um dos números deve ser tratado como ponto flutuante (ex: <code>5 / 4.0</code>).</li>
+</ul>
+<div class="callout callout-tip">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .5 2.2 1.5 3.1.7.7 1.3 1.5 1.5 2.4"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span>
+    <span class="callout-title-inner">Regra do Operador de Resto<br /></span>
+  </div>
+  <div class="callout-content">
+<p>O operador de resto da divisão (%) é exclusivo para tipos de dados inteiros, como <em>int</em> e <em>char</em>. Tentar utilizá-lo com números reais (<em>float</em> ou <em>double</em>) causará um erro.</p>
+  </div>
+</div>
+</section>
+<section><h1>Operadores Relacionais</h1>
+<p>Utilizados para verificar a relação de magnitude e a igualdade entre valores. Eles retornam um valor lógico (booleano): <strong>UM (1)</strong> para verdadeiro ou <strong>ZERO (0)</strong> para falso.</p>
+<table>
+<thead>
+<tr>
+  <th>Operador</th>
+  <th>Significado</th>
+  <th>Exemplo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><strong>&gt;</strong></td>
+  <td>Maior do que</td>
+  <td><code>x &gt; 5</code></td>
+</tr>
+<tr>
+  <td><strong>&gt;=</strong></td>
+  <td>Maior ou igual a</td>
+  <td><code>x &gt;= 10</code></td>
+</tr>
+<tr>
+  <td><strong>&lt;</strong></td>
+  <td>Menor do que</td>
+  <td><code>x &lt; 5</code></td>
+</tr>
+<tr>
+  <td><strong>&lt;=</strong></td>
+  <td>Menor ou igual a</td>
+  <td><code>x &lt;= 10</code></td>
+</tr>
+<tr>
+  <td><strong>==</strong></td>
+  <td>Igual a</td>
+  <td><code>x == 0</code></td>
+</tr>
+<tr>
+  <td><strong>!=</strong></td>
+  <td>Diferente de</td>
+  <td><code>x != 0</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section><h1>Erros Comuns de Sintaxe</h1>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Erros Comuns de Sintaxe<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Não existem os operadores &quot;=&lt;&quot;, &quot;=&gt;&quot; ou &quot;&lt;&gt;&quot;. Os símbolos devem seguir a ordem estrita: <strong>&lt;=</strong> e <strong>&gt;=</strong>. Utiliza-se obrigatoriamente <strong>!=</strong> para representar &quot;diferente de&quot;.</p>
+  </div>
+</div>
+<h2>O maior erro: Atribuição vs Comparação</h2>
+<p>Não confunda o operador de atribuição <code>=</code> com o operador de teste de igualdade <code>==</code>.</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">// Errado para testar igualdade: atribui o valor 4 a x
 if(x = 4) 
 
 // Correto: testa se x é igual a 4
 if(x == 4)
-</code></pre></section><section><h1>Operadores Lógicos</h1><p>Permitem combinar múltiplas expressões relacionais em uma única estrutura (ex: $0 &lt; x &lt; 10$). Retornam <strong>1</strong> (verdadeiro) ou <strong>0</strong> (falso).</p><table><thead><tr><th>Operador</th><th>Significado</th><th>Comportamento</th></tr></thead><tbody><tr><td><strong>&&</strong></td><td>Operador <strong>E</strong> (<em>AND</em>)</td><td>Verdadeiro apenas se <strong>todas</strong> as condições forem verdadeiras.</td></tr><tr><td><b>||</b></td><td>Operador <strong>OU</strong> (<em>OR</em>)</td><td>Verdadeiro caso qualquer uma das condições for verdadeira.</td></tr><tr><td><strong>!</strong></td><td>Operador <strong>NEGAÇÃO</strong> (<em>NOT</em>)</td><td>Inverte o estado lógico (verdadeiro vira falso, falso vira verdadeiro).</td></tr></tbody></table></section><section><h1>Tabela-Verdade</h1><p>Resumo das combinações possíveis para os operadores lógicos, onde <strong>a</strong> e <strong>b</strong> representam os resultados de expressões relacionais (0 para falso, 1 para verdadeiro).</p><table><thead><tr><th style=text-align:center><code>a</code></th><th style=text-align:center><code>b</code></th><th style=text-align:center><code>!a</code></th><th style=text-align:center><code>!b</code></th><th style=text-align:center><code>a && b</code></th><th style=text-align:center><code>a || b</code></th></tr></thead><tbody><tr><td style=text-align:center>0</td><td style=text-align:center>0</td><td style=text-align:center>1</td><td style=text-align:center>1</td><td style=text-align:center>0</td><td style=text-align:center>0</td></tr><tr><td style=text-align:center>0</td><td style=text-align:center>1</td><td style=text-align:center>1</td><td style=text-align:center>0</td><td style=text-align:center>0</td><td style=text-align:center>1</td></tr><tr><td style=text-align:center>1</td><td style=text-align:center>0</td><td style=text-align:center>0</td><td style=text-align:center>1</td><td style=text-align:center>0</td><td style=text-align:center>1</td></tr><tr><td style=text-align:center>1</td><td style=text-align:center>1</td><td style=text-align:center>0</td><td style=text-align:center>0</td><td style=text-align:center>1</td><td style=text-align:center>1</td></tr></tbody></table></section><section><h1>Questões de fixação - 1</h1><p><strong>1.</strong> O operador de atribuição (<code>=</code>) é fundamental na linguagem C. Analise o trecho de código abaixo e identifique qual das instruções gera um <strong>erro de compilação</strong>, justificando sua resposta com base na "Regra de Direção" apresentada no texto.</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>int main() {
+</code></pre>
+</section>
+<section><h1>Operadores Lógicos</h1>
+<p>Permitem combinar múltiplas expressões relacionais em uma única estrutura (ex: $0 < x < 10$). Retornam <strong>1</strong> (verdadeiro) ou <strong>0</strong> (falso).</p>
+<table>
+<thead>
+<tr>
+  <th>Operador</th>
+  <th>Significado</th>
+  <th>Comportamento</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><strong>&amp;&amp;</strong></td>
+  <td>Operador <strong>E</strong> (<em>AND</em>)</td>
+  <td>Verdadeiro apenas se <strong>todas</strong> as condições forem verdadeiras.</td>
+</tr>
+<tr>
+  <td><b>||</b></td>
+  <td>Operador <strong>OU</strong> (<em>OR</em>)</td>
+  <td>Verdadeiro caso qualquer uma das condições for verdadeira.</td>
+</tr>
+<tr>
+  <td><strong>!</strong></td>
+  <td>Operador <strong>NEGAÇÃO</strong> (<em>NOT</em>)</td>
+  <td>Inverte o estado lógico (verdadeiro vira falso, falso vira verdadeiro).</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section><h1>Tabela-Verdade</h1>
+<p>Resumo das combinações possíveis para os operadores lógicos, onde <strong>a</strong> e <strong>b</strong> representam os resultados de expressões relacionais (0 para falso, 1 para verdadeiro).</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:center"><code>a</code></th>
+  <th style="text-align:center"><code>b</code></th>
+  <th style="text-align:center"><code>!a</code></th>
+  <th style="text-align:center"><code>!b</code></th>
+  <th style="text-align:center"><code>a &amp;&amp; b</code></th>
+  <th style="text-align:center"><code>a || b</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:center">0</td>
+  <td style="text-align:center">0</td>
+  <td style="text-align:center">1</td>
+  <td style="text-align:center">1</td>
+  <td style="text-align:center">0</td>
+  <td style="text-align:center">0</td>
+</tr>
+<tr>
+  <td style="text-align:center">0</td>
+  <td style="text-align:center">1</td>
+  <td style="text-align:center">1</td>
+  <td style="text-align:center">0</td>
+  <td style="text-align:center">0</td>
+  <td style="text-align:center">1</td>
+</tr>
+<tr>
+  <td style="text-align:center">1</td>
+  <td style="text-align:center">0</td>
+  <td style="text-align:center">0</td>
+  <td style="text-align:center">1</td>
+  <td style="text-align:center">0</td>
+  <td style="text-align:center">1</td>
+</tr>
+<tr>
+  <td style="text-align:center">1</td>
+  <td style="text-align:center">1</td>
+  <td style="text-align:center">0</td>
+  <td style="text-align:center">0</td>
+  <td style="text-align:center">1</td>
+  <td style="text-align:center">1</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section><h1>Questões de fixação - 1</h1>
+<p><strong>1.</strong> O operador de atribuição (<code>=</code>) é fundamental na linguagem C. Analise o trecho de código abaixo e identifique qual das instruções gera um <strong>erro de compilação</strong>, justificando sua resposta com base na &quot;Regra de Direção&quot; apresentada no texto.</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">int main() {
     int a = 10;
     int b = 20;
     int c;
@@ -27,42 +324,323 @@ if(x == 4)
     
     return 0;
 }
-</code></pre></section><section><h1>Questões de fixação - 2</h1><p><strong>2.</strong> A divisão em C pode se comportar de maneira diferente dependendo dos tipos de dados envolvidos. Considere o código a seguir:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>#include &lt;stdio.h>
+</code></pre>
+</section>
+<section><h1>Questões de fixação - 2</h1>
+<p><strong>2.</strong> A divisão em C pode se comportar de maneira diferente dependendo dos tipos de dados envolvidos. Considere o código a seguir:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">#include &lt;stdio.h&gt;
 
 int main() {
     float x, y;
     x = 7 / 2;
     y = (float) 7 / 2;
     
-    printf("x = %f\n", x);
-    printf("y = %f\n", y);
+    printf(&quot;x = %f\n&quot;, x);
+    printf(&quot;y = %f\n&quot;, y);
     return 0;
 }
-</code></pre><p>Sem executar o código, determine qual será a saída exata impressa para <strong>x</strong> e <strong>y</strong>. Explique por que o valor de <strong>x</strong> pode não ser o esperado (3.5), mencionando o conceito de divisão inteira e perda de precisão.</p></section><section><h1>Questões de fixação - 3</h1><p><strong>3.</strong> Analise a expressão abaixo considerando a <strong>tabela de precedência de operadores</strong>:<br> <code>int x = 10 + 5 * 2 &lt; 25 && 4 != 5;</code></p><p>Qual será o valor final armazenado em <code>x</code> (0 ou 1)? Descreva o passo a passo da resolução que o computador faria (ex: qual conta é feita primeiro, qual comparação vem depois, etc.).</p></section><section><h1>Operadores bit a bit (<em>bitwise</em>)</h1><p>O computador representa números em formato binário (0s e 1s). Esses operadores manipulam cada um desses bits individualmente, essenciais para programação em <strong>baixo nível</strong>.</p><div class="callout callout-warning"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span><span class=callout-title-inner>Restrição de Tipos<br></span></div><div class=callout-content><p>Estes operadores só podem ser aplicados aos tipos <strong>char</strong>, <strong>int</strong> e <strong>long</strong>. Não funcionam com tipos de ponto flutuante (<em>float</em> e <em>double</em>).</p></div></div><table><thead><tr><th>Operador</th><th>Significado</th><th>Exemplo</th></tr></thead><tbody><tr><td><strong>~</strong></td><td>Complemento (inversão)</td><td><code>~x</code></td></tr><tr><td><strong>&</strong></td><td>E (<em>AND</em>) bit a bit</td><td><code>x & 167</code></td></tr><tr><td><b>|</b></td><td>OU (<em>OR</em>) bit a bit</td><td><code>x | 167</code></td></tr><tr><td><strong>^</strong></td><td>OU Exclusivo (<em>XOR</em>)</td><td><code>x ^ 167</code></td></tr><tr><td><strong>&lt;&lt;</strong></td><td>Deslocamento à esquerda</td><td><code>x &lt;&lt; 2</code></td></tr><tr><td><strong>>></strong></td><td>Deslocamento à direita</td><td><code>x >> 2</code></td></tr></tbody></table></section><section><h1>Operador de Complemento e Lógicos Bit a Bit</h1><div class=col-2><div><ul><li><strong>Complemento (~):</strong> Inverte todos os bits (0 vira 1, 1 vira 0).</li><li><strong>E (&):</strong> Resulta 1 apenas se os dois bits comparados forem 1.</li><li><strong>OU (|):</strong> Resulta 1 se ao menos um dos dois bits for 1.</li><li><strong>OU Exclusivo (^):</strong> Resulta 1 apenas se os bits forem diferentes.</li></ul></div><div><p><strong>Demonstração E (&):</strong></p><ul><li><code>00101100</code> (44)</li><li><code>10100111</code> (167)</li><li><code>00100100</code> (Resultado: 36)</li></ul><p><strong>Demonstração XOR (^):</strong></p><ul><li><code>00101100</code> (44)</li><li><code>10100111</code> (167)</li><li><code>10001011</code> (Resultado: 139)</li></ul></div></div></section><section><h1>Operadores de Deslocamento (&lt;&lt; e >>)</h1><p>Movem o conjunto de bits para a esquerda ou direita por <strong>N</strong> posições.</p><div class=col-2><div><ul><li><strong>x &lt;&lt; N:</strong> Desloca à esquerda. Multiplica o número por $2^N$.</li><li><strong>x >> N:</strong> Desloca à direita. Realiza divisão inteira por $2^N$.</li></ul></div><div><p><strong>Exemplo (x = 44 ou <code>00101100</code>):</strong></p><ul><li><strong>x &lt;&lt; 2:</strong><br> <code>10110000</code> (176)</li><li><strong>x >> 2:</strong><br> <code>00001011</code> (11)</li></ul></div></div></section><section><h1>Operadores de atribuição simplificada</h1><p>Tornam o código mais conciso ao combinar uma operação com a atribuição do resultado à mesma variável.</p><table><thead><tr><th>Operador</th><th>Significado</th><th>Exemplo</th><th>Equivalente a</th></tr></thead><tbody><tr><td><strong>+=</strong></td><td>Soma e atribui</td><td><code>x += y</code></td><td><code>x = x + y</code></td></tr><tr><td><strong>-=</strong></td><td>Subtrai e atribui</td><td><code>x -= y</code></td><td><code>x = x - y</code></td></tr><tr><td><strong>*=</strong></td><td>Multiplica e atribui</td><td><code>x *= y</code></td><td><code>x = x * y</code></td></tr><tr><td><strong>/=</strong></td><td>Divide e atribui quociente</td><td><code>x /= y</code></td><td><code>x = x / y</code></td></tr><tr><td><strong>%=</strong></td><td>Divide e atribui resto</td><td><code>x %= y</code></td><td><code>x = x % y</code></td></tr></tbody></table><p><em>(Também aplicáveis aos operadores bitwise: <code>&=</code>, <code>|=</code>, <code>^=</code>, <code>&lt;&lt;=</code>, <code>>>=</code>)</em></p></section><section><h1>Precedência na Atribuição Simplificada</h1><div class="callout callout-warning"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span><span class=callout-title-inner>Atenção à Precedência<br></span></div><div class=callout-content><p>Ao usar atribuição simplificada, o compilador avalia <strong>toda a expressão à direita</strong> do operador antes de realizar a operação combinada (como se estivesse entre parênteses).</p></div></div><div class=col-2><div><p><strong>Escrita Convencional:</strong></p><pre class="line-numbers language-c" data-lang=C><code class=language-c>int x = 10, y = 20;
+</code></pre>
+<p>Sem executar o código, determine qual será a saída exata impressa para <strong>x</strong> e <strong>y</strong>. Explique por que o valor de <strong>x</strong> pode não ser o esperado (3.5), mencionando o conceito de divisão inteira e perda de precisão.</p>
+</section>
+<section><h1>Questões de fixação - 3</h1>
+<p><strong>3.</strong> Analise a expressão abaixo considerando a <strong>tabela de precedência de operadores</strong>:<br />
+<code>int x = 10 + 5 * 2 &lt; 25 &amp;&amp; 4 != 5;</code></p>
+<p>Qual será o valor final armazenado em <code>x</code> (0 ou 1)? Descreva o passo a passo da resolução que o computador faria (ex: qual conta é feita primeiro, qual comparação vem depois, etc.).</p>
+</section>
+<section><h1>Operadores bit a bit (<em>bitwise</em>)</h1>
+<p>O computador representa números em formato binário (0s e 1s). Esses operadores manipulam cada um desses bits individualmente, essenciais para programação em <strong>baixo nível</strong>.</p>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Restrição de Tipos<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Estes operadores só podem ser aplicados aos tipos <strong>char</strong>, <strong>int</strong> e <strong>long</strong>. Não funcionam com tipos de ponto flutuante (<em>float</em> e <em>double</em>).</p>
+  </div>
+</div>
+<table>
+<thead>
+<tr>
+  <th>Operador</th>
+  <th>Significado</th>
+  <th>Exemplo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><strong>~</strong></td>
+  <td>Complemento (inversão)</td>
+  <td><code>~x</code></td>
+</tr>
+<tr>
+  <td><strong>&amp;</strong></td>
+  <td>E (<em>AND</em>) bit a bit</td>
+  <td><code>x &amp; 167</code></td>
+</tr>
+<tr>
+  <td><b>|</b></td>
+  <td>OU (<em>OR</em>) bit a bit</td>
+  <td><code>x | 167</code></td>
+</tr>
+<tr>
+  <td><strong>^</strong></td>
+  <td>OU Exclusivo (<em>XOR</em>)</td>
+  <td><code>x ^ 167</code></td>
+</tr>
+<tr>
+  <td><strong>&lt;&lt;</strong></td>
+  <td>Deslocamento à esquerda</td>
+  <td><code>x &lt;&lt; 2</code></td>
+</tr>
+<tr>
+  <td><strong>&gt;&gt;</strong></td>
+  <td>Deslocamento à direita</td>
+  <td><code>x &gt;&gt; 2</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section><h1>Operador de Complemento e Lógicos Bit a Bit</h1>
+<div class="col-2"><div>
+
+<ul>
+<li><strong>Complemento (~):</strong> Inverte todos os bits (0 vira 1, 1 vira 0).</li>
+<li><strong>E (&amp;):</strong> Resulta 1 apenas se os dois bits comparados forem 1.</li>
+<li><strong>OU (|):</strong> Resulta 1 se ao menos um dos dois bits for 1.</li>
+<li><strong>OU Exclusivo (^):</strong> Resulta 1 apenas se os bits forem diferentes.</li>
+</ul>
+</div><div>
+
+<p><strong>Demonstração E (&amp;):</strong></p>
+<ul>
+<li><code>00101100</code> (44)</li>
+<li><code>10100111</code> (167)</li>
+<li><code>00100100</code> (Resultado: 36)</li>
+</ul>
+<p><strong>Demonstração XOR (^):</strong></p>
+<ul>
+<li><code>00101100</code> (44)</li>
+<li><code>10100111</code> (167)</li>
+<li><code>10001011</code> (Resultado: 139)</li>
+</ul>
+</div></div>
+
+</section>
+<section><h1>Operadores de Deslocamento (&lt;&lt; e &gt;&gt;)</h1>
+<p>Movem o conjunto de bits para a esquerda ou direita por <strong>N</strong> posições.</p>
+<div class="col-2"><div>
+
+<ul>
+<li><strong>x &lt;&lt; N:</strong> Desloca à esquerda. Multiplica o número por $2^N$.</li>
+<li><strong>x &gt;&gt; N:</strong> Desloca à direita. Realiza divisão inteira por $2^N$.</li>
+</ul>
+</div><div>
+
+<p><strong>Exemplo (x = 44 ou <code>00101100</code>):</strong></p>
+<ul>
+<li><strong>x &lt;&lt; 2:</strong><br />
+<code>10110000</code> (176)</li>
+<li><strong>x &gt;&gt; 2:</strong><br />
+<code>00001011</code> (11)</li>
+</ul>
+</div></div>
+
+</section>
+<section><h1>Operadores de atribuição simplificada</h1>
+<p>Tornam o código mais conciso ao combinar uma operação com a atribuição do resultado à mesma variável.</p>
+<table>
+<thead>
+<tr>
+  <th>Operador</th>
+  <th>Significado</th>
+  <th>Exemplo</th>
+  <th>Equivalente a</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><strong>+=</strong></td>
+  <td>Soma e atribui</td>
+  <td><code>x += y</code></td>
+  <td><code>x = x + y</code></td>
+</tr>
+<tr>
+  <td><strong>-=</strong></td>
+  <td>Subtrai e atribui</td>
+  <td><code>x -= y</code></td>
+  <td><code>x = x - y</code></td>
+</tr>
+<tr>
+  <td><strong>*=</strong></td>
+  <td>Multiplica e atribui</td>
+  <td><code>x *= y</code></td>
+  <td><code>x = x * y</code></td>
+</tr>
+<tr>
+  <td><strong>/=</strong></td>
+  <td>Divide e atribui quociente</td>
+  <td><code>x /= y</code></td>
+  <td><code>x = x / y</code></td>
+</tr>
+<tr>
+  <td><strong>%=</strong></td>
+  <td>Divide e atribui resto</td>
+  <td><code>x %= y</code></td>
+  <td><code>x = x % y</code></td>
+</tr>
+</tbody>
+</table>
+<p><em>(Também aplicáveis aos operadores bitwise: <code>&amp;=</code>, <code>|=</code>, <code>^=</code>, <code>&lt;&lt;=</code>, <code>&gt;&gt;=</code>)</em></p>
+</section>
+<section><h1>Precedência na Atribuição Simplificada</h1>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Atenção à Precedência<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Ao usar atribuição simplificada, o compilador avalia <strong>toda a expressão à direita</strong> do operador antes de realizar a operação combinada (como se estivesse entre parênteses).</p>
+  </div>
+</div>
+<div class="col-2"><div>
+
+<p><strong>Escrita Convencional:</strong></p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">int x = 10, y = 20;
 
 // x = 10 - 5 + 20 = 25
 x = x - 5 + y; 
-</code></pre></div><div><p><strong>Atribuição Simplificada:</strong></p><pre class="line-numbers language-c" data-lang=C><code class=language-c>int x = 10, y = 20;
+</code></pre>
+</div><div>
+
+<p><strong>Atribuição Simplificada:</strong></p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">int x = 10, y = 20;
 
 // x = 10 - (5 + 20) = -15
 x -= 5 + y; 
-</code></pre></div></div></section><section><h1>Operadores de pré e pós-incremento/decremento</h1><p>Somam ou subtraem exatamente uma unidade de uma variável.</p><ul><li><strong>++x (pré-incremento) / --x (pré-decremento):</strong> Altera a variável <strong>antes</strong> de seu valor ser utilizado na expressão.</li><li><strong>x++ (pós-incremento) / x-- (pós-decremento):</strong> Utiliza o valor atual na expressão e <strong>somente após o uso</strong> altera a variável.</li></ul><div class="callout callout-tip"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .5 2.2 1.5 3.1.7.7 1.3 1.5 1.5 2.4"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span><span class=callout-title-inner>Regra de Ouro<br></span></div><div class=callout-content><p>Pense no posicionamento do operador como uma fila de prioridade: se o sinal vier <strong>antes</strong> da variável, a conta é feita primeiro; se vier <strong>depois</strong>, a conta fica para o final.</p></div></div></section><section><h1>Modeladores de tipos (<em>casts</em>)</h1><p>Permitem a conversão explícita de dados, forçando o resultado de uma expressão a assumir o tipo especificado.</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>(nome_do_tipo) expressão;
-</code></pre><div class=col-2><div><pre class="line-numbers language-c" data-lang=C><code class=language-c>float x, y, f = 65.5;
+</code></pre>
+</div></div>
+
+</section>
+<section><h1>Operadores de pré e pós-incremento/decremento</h1>
+<p>Somam ou subtraem exatamente uma unidade de uma variável.</p>
+<ul>
+<li><strong>++x (pré-incremento) / --x (pré-decremento):</strong> Altera a variável <strong>antes</strong> de seu valor ser utilizado na expressão.</li>
+<li><strong>x++ (pós-incremento) / x-- (pós-decremento):</strong> Utiliza o valor atual na expressão e <strong>somente após o uso</strong> altera a variável.</li>
+</ul>
+<div class="callout callout-tip">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .5 2.2 1.5 3.1.7.7 1.3 1.5 1.5 2.4"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span>
+    <span class="callout-title-inner">Regra de Ouro<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Pense no posicionamento do operador como uma fila de prioridade: se o sinal vier <strong>antes</strong> da variável, a conta é feita primeiro; se vier <strong>depois</strong>, a conta fica para o final.</p>
+  </div>
+</div>
+</section>
+<section><h1>Modeladores de tipos (<em>casts</em>)</h1>
+<p>Permitem a conversão explícita de dados, forçando o resultado de uma expressão a assumir o tipo especificado.</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">(nome_do_tipo) expressão;
+</code></pre>
+<div class="col-2"><div>
+
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">float x, y, f = 65.5;
 
 // x = 6.550000
 x = f / 10.0;
 
 // y = 6.000000 (descarta decimais)
 y = (int) (f / 10.0);
-</code></pre></div><div><div class="callout callout-tip"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .5 2.2 1.5 3.1.7.7 1.3 1.5 1.5 2.4"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span><span class=callout-title-inner>Utilidade do Cast<br></span></div><div class=callout-content><p>Garante que operações entre tipos diferentes resultem no comportamento esperado, evitando ambiguidades e controlando a perda de precisão conscientemente.</p></div></div></div></div></section><section><h1>O operador vírgula (,) e Precedência Geral</h1><p><strong>Papéis do operador vírgula:</strong></p><ol><li><strong>Pontuação:</strong> Separar argumentos ou variáveis (<code>int a, b;</code>).</li><li><strong>Execução sequencial:</strong> Processa uma lista de expressões da esquerda para a direita. O valor final é o da última expressão. <code>x = (y = 2, y + 3);</code> (x recebe 5).</li></ol><h2>Precedência de Operadores</h2><p>A linguagem adota uma hierarquia estrita para decidir a ordem de execução.</p><ul><li><strong>Mais alta:</strong> Parênteses <code>()</code>, Array <code>[]</code>, Estruturas <code>-></code>, Incrementos Pós/Pré.</li><li><strong>Intermediária:</strong> Aritmética <code>* / %</code> depois <code>+ -</code>, Relacionais, Lógicos.</li><li><strong>Mais baixa:</strong> Atribuições <code>=</code>, <code>+=</code>, etc., e por último a vírgula <code>,</code>.</li></ul></section><section><h1>Transição: Definindo uma Condição</h1><p>As operações que vimos geram valores que orientam o fluxo do programa. Uma <strong>condição</strong> é qualquer expressão (matemática, relacional, lógica) que resulte em verdadeiro ou falso.</p><p><strong>Lógica Binária do Compilador:</strong></p><ul><li><strong>Falso:</strong> O computador atribui o valor <strong>zero</strong>.</li><li><strong>Verdadeiro:</strong> O computador atribui qualquer valor <strong>diferente de zero</strong>.</li></ul><p><strong>Equivalências Práticas:</strong></p><ul><li><code>(num != 0)</code> equivale a <code>(num)</code> -> Verdadeiro se não for nulo.</li><li><code>(num == 0)</code> equivale a <code>(!num)</code> -> Falso se for zero.</li></ul></section><section><h1>Comando IF</h1><p>Utilizado para escolher caminhos ou executar instruções baseadas em um teste lógico.<br> Se a condição for <strong>verdadeira</strong>, o bloco é executado. Se <strong>falsa</strong>, é ignorado.</p><div class=col-2><div><div class=no-break><div class=centered><svg class="svg-graph graphviz-img" viewbox="0.00 0.00 323.00 96.00" data-sketch=true width=300 xmlns=http://www.w3.org/2000/svg><g transform="scale(1 1) rotate(0) translate(4 91.6)" class=graph id=graph0><title>Flowchart</title><polygon points="-4,4 -4,-91.6 318.51,-91.6 318.51,4 -4,4" fill=white stroke=none /><g class=node id=node1><title>Decisão</title><path d="M62.1,-84.75C62.1,-84.75 11.66,-72.45 11.66,-72.45 5.83,-71.02 5.83,-68.18 11.66,-66.75 11.66,-66.75 62.1,-54.45 62.1,-54.45 67.93,-53.02 79.59,-53.02 85.41,-54.45 85.41,-54.45 135.86,-66.75 135.86,-66.75 141.68,-68.18 141.68,-71.02 135.86,-72.45 135.86,-72.45 85.41,-84.75 85.41,-84.75 79.59,-86.18 67.93,-86.18 62.1,-84.75" fill=#fff9c4 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=73.76 xml:space=preserve y=-65.32>if (num > 10)</text></g><g class=node id=node2><title>PrintOut</title><path d="M302.51,-87.6C302.51,-87.6 195.01,-87.6 195.01,-87.6 189.01,-87.6 183.01,-81.6 183.01,-75.6 183.01,-75.6 183.01,-63.6 183.01,-63.6 183.01,-57.6 189.01,-51.6 195.01,-51.6 195.01,-51.6 302.51,-51.6 302.51,-51.6 308.51,-51.6 314.51,-57.6 314.51,-63.6 314.51,-63.6 314.51,-75.6 314.51,-75.6 314.51,-81.6 308.51,-87.6 302.51,-87.6" fill=#f9f9f9 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=248.76 xml:space=preserve y=-65.32>printf("Maior que 10");</text></g><g class=edge id=edge1><title>Decisão->PrintOut</title><path d="M149.5,-69.6C156.71,-69.6 164.03,-69.6 171.26,-69.6" fill=none stroke=#333333 /><polygon points="171.01,-73.1 181.01,-69.6 171.01,-66.1 171.01,-73.1" fill=#333333 stroke=#333333 /><text font-family=Arial font-size=10.00 text-anchor=middle x=165.26 xml:space=preserve y=-75.1>SIM</text></g><g class=node id=node3><title>Fim</title><ellipse cx=160.76 cy=-1.8 fill=#f9f9f9 rx=1.8 ry=1.8 stroke=#333333 /></g><g class=edge id=edge2><title>Decisão->Fim</title><path d="M90.95,-55.6C108.72,-42.16 135.87,-21.62 150.53,-10.54" fill=none stroke=#333333 /><polygon points="152.57,-13.38 158.43,-4.56 148.34,-7.8 152.57,-13.38" fill=#333333 stroke=#333333 /><text font-family=Arial font-size=10.00 text-anchor=middle x=145.92 xml:space=preserve y=-24.1>NÃO</text></g><g class=edge id=edge3><title>PrintOut->Fim</title><path d="M225.64,-51.31C207.73,-37.92 183.82,-20.04 170.6,-10.16" fill=none stroke=#333333 /><polygon points="173.05,-7.63 162.95,-4.44 168.86,-13.23 173.05,-7.63" fill=#333333 stroke=#333333 /></g></g></svg></div></div></div><div><pre class="line-numbers language-c" data-lang=C><code class=language-c>if(num > 10) {
-    printf("O numero e maior do que 10\n");
+</code></pre>
+</div><div>
+
+<div class="callout callout-tip">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .5 2.2 1.5 3.1.7.7 1.3 1.5 1.5 2.4"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span>
+    <span class="callout-title-inner">Utilidade do Cast<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Garante que operações entre tipos diferentes resultem no comportamento esperado, evitando ambiguidades e controlando a perda de precisão conscientemente.</p>
+  </div>
+</div>
+</div></div>
+
+</section>
+<section><h1>O operador vírgula (,) e Precedência Geral</h1>
+<p><strong>Papéis do operador vírgula:</strong></p>
+<ol>
+<li><strong>Pontuação:</strong> Separar argumentos ou variáveis (<code>int a, b;</code>).</li>
+<li><strong>Execução sequencial:</strong> Processa uma lista de expressões da esquerda para a direita. O valor final é o da última expressão. <code>x = (y = 2, y + 3);</code> (x recebe 5).</li>
+</ol>
+<h2>Precedência de Operadores</h2>
+<p>A linguagem adota uma hierarquia estrita para decidir a ordem de execução.</p>
+<ul>
+<li><strong>Mais alta:</strong> Parênteses <code>()</code>, Array <code>[]</code>, Estruturas <code>-&gt;</code>, Incrementos Pós/Pré.</li>
+<li><strong>Intermediária:</strong> Aritmética <code>* / %</code> depois <code>+ -</code>, Relacionais, Lógicos.</li>
+<li><strong>Mais baixa:</strong> Atribuições <code>=</code>, <code>+=</code>, etc., e por último a vírgula <code>,</code>.</li>
+</ul>
+</section>
+<section><h1>Transição: Definindo uma Condição</h1>
+<p>As operações que vimos geram valores que orientam o fluxo do programa. Uma <strong>condição</strong> é qualquer expressão (matemática, relacional, lógica) que resulte em verdadeiro ou falso.</p>
+<p><strong>Lógica Binária do Compilador:</strong></p>
+<ul>
+<li><strong>Falso:</strong> O computador atribui o valor <strong>zero</strong>.</li>
+<li><strong>Verdadeiro:</strong> O computador atribui qualquer valor <strong>diferente de zero</strong>.</li>
+</ul>
+<p><strong>Equivalências Práticas:</strong></p>
+<ul>
+<li><code>(num != 0)</code> equivale a <code>(num)</code> -&gt; Verdadeiro se não for nulo.</li>
+<li><code>(num == 0)</code> equivale a <code>(!num)</code> -&gt; Falso se for zero.</li>
+</ul>
+</section>
+<section><h1>Comando IF</h1>
+<p>Utilizado para escolher caminhos ou executar instruções baseadas em um teste lógico.<br />
+Se a condição for <strong>verdadeira</strong>, o bloco é executado. Se <strong>falsa</strong>, é ignorado.</p>
+<div class="col-2"><div>
+
+<div class="error">Graphviz error: failed to execute PosixPath('dot'), make sure the Graphviz executables are on your systems' PATH</div>
+
+</div><div>
+
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">if(num &gt; 10) {
+    printf(&quot;O numero e maior do que 10\n&quot;);
 }
-</code></pre><div class="callout callout-warning"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span><span class=callout-title-inner>Atenção ao Ponto e Vírgula<br></span></div><div class=callout-content><p>Nunca utilize o ponto e vírgula (<code>;</code>) logo após a condição <code>if(condicao);</code>. Isso encerra o comando prematuramente.</p></div></div></div></div></section><section><h1>Comando ELSE</h1><p>Atua como complemento direto do <code>if</code>. Só será processado se a condição do <code>if</code> for <strong>FALSA</strong>. Representa o "caso contrário" exato.</p><div class=col-2><div><div class=no-break><div class=centered><svg class="svg-graph graphviz-img" viewbox="0.00 0.00 289.00 169.00" data-sketch=true width=300 xmlns=http://www.w3.org/2000/svg><g transform="scale(1 1) rotate(0) translate(4 164.6)" class=graph id=graph0><title>Flowchart</title><polygon points="-4,4 -4,-164.6 284.63,-164.6 284.63,4 -4,4" fill=white stroke=none /><g class=node id=node1><title>Decisão</title><path d="M65.44,-157.87C65.44,-157.87 11.69,-145.33 11.69,-145.33 5.84,-143.96 5.84,-141.24 11.69,-139.87 11.69,-139.87 65.44,-127.33 65.44,-127.33 71.29,-125.96 82.97,-125.96 88.82,-127.33 88.82,-127.33 142.57,-139.87 142.57,-139.87 148.42,-141.24 148.42,-143.96 142.57,-145.33 142.57,-145.33 88.82,-157.87 88.82,-157.87 82.97,-159.24 71.29,-159.24 65.44,-157.87" fill=#fff9c4 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=77.13 xml:space=preserve y=-138.32>if(num == 10)</text></g><g class=node id=node2><title>PrintSim</title><path d="M268.63,-160.6C268.63,-160.6 201.63,-160.6 201.63,-160.6 195.63,-160.6 189.63,-154.6 189.63,-148.6 189.63,-148.6 189.63,-136.6 189.63,-136.6 189.63,-130.6 195.63,-124.6 201.63,-124.6 201.63,-124.6 268.63,-124.6 268.63,-124.6 274.63,-124.6 280.63,-130.6 280.63,-136.6 280.63,-136.6 280.63,-148.6 280.63,-148.6 280.63,-154.6 274.63,-160.6 268.63,-160.6" fill=#f9f9f9 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=235.13 xml:space=preserve y=-138.32>printf ("Igual");</text></g><g class=edge id=edge1><title>Decisão->PrintSim</title><path d="M156.13,-142.6C163.53,-142.6 170.94,-142.6 178.08,-142.6" fill=none stroke=#333333 /><polygon points="177.92,-146.1 187.92,-142.6 177.92,-139.1 177.92,-146.1" fill=#333333 stroke=#333333 /><text font-family=Arial font-size=10.00 text-anchor=middle x=171.94 xml:space=preserve y=-148.1>SIM</text></g><g class=node id=node3><title>PrintNao</title><path d="M175.88,-76.6C175.88,-76.6 86.38,-76.6 86.38,-76.6 80.38,-76.6 74.38,-70.6 74.38,-64.6 74.38,-64.6 74.38,-52.6 74.38,-52.6 74.38,-46.6 80.38,-40.6 86.38,-40.6 86.38,-40.6 175.88,-40.6 175.88,-40.6 181.88,-40.6 187.88,-46.6 187.88,-52.6 187.88,-52.6 187.88,-64.6 187.88,-64.6 187.88,-70.6 181.88,-76.6 175.88,-76.6" fill=#f9f9f9 stroke=#333333 /><text font-family=Arial font-size=12.00 text-anchor=middle x=131.13 xml:space=preserve y=-54.32>printf ("Diferente");</text></g><g class=edge id=edge2><title>Decisão->PrintNao</title><path d="M87.03,-126.56C94.48,-115.25 104.88,-99.46 113.71,-86.06" fill=none stroke=#333333 /><polygon points="116.38,-88.36 118.96,-78.08 110.54,-84.51 116.38,-88.36" fill=#333333 stroke=#333333 /><text font-family=Arial font-size=10.00 text-anchor=middle x=118.24 xml:space=preserve y=-97.1>NÃO</text></g><g class=node id=node4><title>Fim</title><ellipse cx=178.13 cy=-1.8 fill=#f9f9f9 rx=1.8 ry=1.8 stroke=#333333 /></g><g class=edge id=edge3><title>PrintSim->Fim</title><path d="M229.22,-124.22C222.18,-103.92 209.76,-69.43 197.13,-40.6 193.13,-31.46 188.03,-21.39 184.12,-13.93" fill=none stroke=#333333 /><polygon points="187.29,-12.45 179.48,-5.29 181.12,-15.76 187.29,-12.45" fill=#333333 stroke=#333333 /></g><g class=edge id=edge4><title>PrintNao->Fim</title><path d="M146,-40.26C153.91,-31.04 163.33,-20.06 169.92,-12.38" fill=none stroke=#333333 /><polygon points="172.48,-14.77 176.33,-4.9 167.16,-10.21 172.48,-14.77" fill=#333333 stroke=#333333 /></g></g></svg></div></div></div><div><pre class="line-numbers language-c" data-lang=C><code class=language-c>if(num == 10){
-    printf("O numero e igual a 10.\n");
+</code></pre>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Atenção ao Ponto e Vírgula<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Nunca utilize o ponto e vírgula (<code>;</code>) logo após a condição <code>if(condicao);</code>. Isso encerra o comando prematuramente.</p>
+  </div>
+</div>
+</div></div>
+
+</section>
+<section><h1>Comando ELSE</h1>
+<p>Atua como complemento direto do <code>if</code>. Só será processado se a condição do <code>if</code> for <strong>FALSA</strong>. Representa o &quot;caso contrário&quot; exato.</p>
+<div class="col-2"><div>
+
+<div class="error">Graphviz error: failed to execute PosixPath('dot'), make sure the Graphviz executables are on your systems' PATH</div>
+
+</div><div>
+
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">if(num == 10){
+    printf(&quot;O numero e igual a 10.\n&quot;);
 } else {
-    printf("O numero e diferente de 10.\n");
+    printf(&quot;O numero e diferente de 10.\n&quot;);
 }
-</code></pre><ul><li><strong>Sem condição:</strong> O <code>else</code> não recebe (e não aceita) uma condição própria.</li><li><strong>Independência:</strong> Os blocos <code>if</code> e <code>else</code> são independentes; apenas um é executado por vez.</li></ul></div></div></section><section><h1>Questões de fixação - 1</h1><p><strong>1.</strong> Sobre os operadores de <strong>pré-incremento</strong> (<code>++x</code>) e <strong>pós-incremento</strong> (<code>x++</code>), analise a saída do seguinte programa e explique o comportamento da variável <code>res</code> em cada caso:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>int main() {
+</code></pre>
+<ul>
+<li><strong>Sem condição:</strong> O <code>else</code> não recebe (e não aceita) uma condição própria.</li>
+<li><strong>Independência:</strong> Os blocos <code>if</code> e <code>else</code> são independentes; apenas um é executado por vez.</li>
+</ul>
+</div></div>
+
+</section>
+<section><h1>Questões de fixação - 1</h1>
+<p><strong>1.</strong> Sobre os operadores de <strong>pré-incremento</strong> (<code>++x</code>) e <strong>pós-incremento</strong> (<code>x++</code>), analise a saída do seguinte programa e explique o comportamento da variável <code>res</code> em cada caso:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">int main() {
     int x = 5, res;
     
     // Caso 1
@@ -77,22 +655,90 @@ y = (int) (f / 10.0);
     
     return 0;
 }
-</code></pre></section><section><h1>Questões de fixação - 2</h1><p><strong>2.</strong> Realize manualmente as operações <strong>bitwise</strong> (bit a bit) abaixo, considerando <code>A = 12</code> (Binário: <code>00001100</code>) e <code>B = 10</code> (Binário: <code>00001010</code>). Apresente o resultado em decimal.</p><ul><li>a) <code>A & B</code> (AND)</li><li>b) <code>A | B</code> (OR)</li><li>c) <code>A ^ B</code> (XOR)</li><li>d) <code>A >> 2</code> (Deslocamento à direita)</li></ul></section><section><h1>Questões de fixação - 3</h1><p><strong>3.</strong> Escreva um programa completo em C que solicite ao usuário dois números inteiros. O programa deve:</p><ol><li>Calcular a divisão do primeiro pelo segundo.</li><li>Utilizar um <strong>modelador de tipo (cast)</strong> para garantir que o resultado da divisão inclua as casas decimais, mesmo que os números digitados sejam inteiros.</li><li>Imprimir o resultado final.</li></ol></section><section><h1>Questões de fixação - 4</h1><p><strong>4.</strong> Utilize os <strong>operadores de atribuição simplificada</strong> para reescrever e programar a seguinte lógica de forma mais concisa. Considere que a variável <code>total</code> inicia com o valor 100.</p><ol><li>Some 50 ao <code>total</code>.</li><li>Divida o <code>total</code> por 2.</li><li>Obtenha o resto da divisão do <code>total</code> por 5.</li><li>Imprima o valor final.</li></ol></section><section><h1>Questões de fixação - 5</h1><p><strong>5.</strong> Escreva um programa que leia um número inteiro fornecido pelo usuário. O programa deve verificar se o número é <strong>par</strong> ou <strong>ímpar</strong> e imprimir uma mensagem correspondente.</p><ul><li><strong>Entrada:</strong> Um número inteiro (ex: 7).</li><li><strong>Saída Esperada:</strong> "O numero 7 eh impar."</li></ul></section><section><h1>Aninhamento de IF</h1><p>Um <strong>if aninhado</strong> é a utilização de um comando <code>if</code> dentro do bloco de outro <code>if</code> (ou <code>else</code>). Permite lidar com múltiplos caminhos e refinar decisões.</p><div class=no-break><div class=centered><svg class="svg-graph graphviz-img" viewbox="0.00 0.00 229.00 209.00" data-sketch=true width=300 xmlns=http://www.w3.org/2000/svg><g transform="scale(1 1) rotate(0) translate(4 205)" class=graph id=graph0><title>Flowchart</title><polygon points="-4,4 -4,-205 224.91,-205 224.91,4 -4,4" fill=white stroke=none /><g class=node id=node1><title>Decisao1</title><path d="M42.41,-197.19C42.41,-197.19 11.38,-186.81 11.38,-186.81 5.69,-184.9 5.69,-181.1 11.38,-179.19 11.38,-179.19 42.41,-168.81 42.41,-168.81 48.1,-166.9 59.48,-166.9 65.17,-168.81 65.17,-168.81 96.2,-179.19 96.2,-179.19 101.89,-181.1 101.89,-184.9 96.2,-186.81 96.2,-186.81 65.17,-197.19 65.17,-197.19 59.48,-199.1 48.1,-199.1 42.41,-197.19" fill=#fff9c4 stroke=#333333 /><text font-family=Arial font-size=10.00 text-anchor=middle x=53.79 xml:space=preserve y=-179.5>num == 10</text></g><g class=node id=node2><title>PrintIgual</title><path d="M208.91,-201C208.91,-201 154.66,-201 154.66,-201 148.66,-201 142.66,-195 142.66,-189 142.66,-189 142.66,-177 142.66,-177 142.66,-171 148.66,-165 154.66,-165 154.66,-165 208.91,-165 208.91,-165 214.91,-165 220.91,-171 220.91,-177 220.91,-177 220.91,-189 220.91,-189 220.91,-195 214.91,-201 208.91,-201" fill=#f9f9f9 stroke=#333333 /><text font-family=Arial font-size=10.00 text-anchor=middle x=181.79 xml:space=preserve y=-179.5>printf ("Igual");</text></g><g class=edge id=edge1><title>Decisao1->PrintIgual</title><path d="M108.82,-183C116.11,-183 123.56,-183 130.78,-183" fill=none stroke=#333333 /><polygon points="130.75,-186.5 140.75,-183 130.75,-179.5 130.75,-186.5" fill=#333333 stroke=#333333 /><text font-family=Arial font-size=9.00 text-anchor=middle x=125.12 xml:space=preserve y=-187.95>SIM</text></g><g class=node id=node3><title>Decisao2</title><path d="M42.53,-114.34C42.53,-114.34 16.36,-104.66 16.36,-104.66 10.73,-102.58 10.73,-98.42 16.36,-96.34 16.36,-96.34 42.53,-86.66 42.53,-86.66 48.16,-84.58 59.42,-84.58 65.04,-86.66 65.04,-86.66 91.22,-96.34 91.22,-96.34 96.85,-98.42 96.85,-102.58 91.22,-104.66 91.22,-104.66 65.04,-114.34 65.04,-114.34 59.42,-116.42 48.16,-116.42 42.53,-114.34" fill=#fff9c4 stroke=#333333 /><text font-family=Arial font-size=10.00 text-anchor=middle x=53.79 xml:space=preserve y=-97>num > 10</text></g><g class=edge id=edge2><title>Decisao1->Decisao2</title><path d="M53.79,-164.53C53.79,-154.51 53.79,-141.68 53.79,-130.21" fill=none stroke=#333333 /><polygon points="57.29,-130.45 53.79,-120.45 50.29,-130.45 57.29,-130.45" fill=#333333 stroke=#333333 /><text font-family=Arial font-size=9.00 text-anchor=middle x=63.54 xml:space=preserve y=-138.45>NÃO</text></g><g class=node id=node4><title>PrintMaior</title><path d="M207.41,-118.5C207.41,-118.5 150.16,-118.5 150.16,-118.5 144.16,-118.5 138.16,-112.5 138.16,-106.5 138.16,-106.5 138.16,-94.5 138.16,-94.5 138.16,-88.5 144.16,-82.5 150.16,-82.5 150.16,-82.5 207.41,-82.5 207.41,-82.5 213.41,-82.5 219.41,-88.5 219.41,-94.5 219.41,-94.5 219.41,-106.5 219.41,-106.5 219.41,-112.5 213.41,-118.5 207.41,-118.5" fill=#f9f9f9 stroke=#333333 /><text font-family=Arial font-size=10.00 text-anchor=middle x=178.79 xml:space=preserve y=-97>printf ("Maior");</text></g><g class=edge id=edge3><title>Decisao2->PrintMaior</title><path d="M103.91,-100.5C111.31,-100.5 118.95,-100.5 126.39,-100.5" fill=none stroke=#333333 /><polygon points="126.35,-104 136.35,-100.5 126.35,-97 126.35,-104" fill=#333333 stroke=#333333 /><text font-family=Arial font-size=9.00 text-anchor=middle x=120.32 xml:space=preserve y=-105.45>SIM</text></g><g class=node id=node5><title>PrintMenor</title><path d="M83.91,-36C83.91,-36 23.66,-36 23.66,-36 17.66,-36 11.66,-30 11.66,-24 11.66,-24 11.66,-12 11.66,-12 11.66,-6 17.66,0 23.66,0 23.66,0 83.91,0 83.91,0 89.91,0 95.91,-6 95.91,-12 95.91,-12 95.91,-24 95.91,-24 95.91,-30 89.91,-36 83.91,-36" fill=#f9f9f9 stroke=#333333 /><text font-family=Arial font-size=10.00 text-anchor=middle x=53.79 xml:space=preserve y=-14.5>printf ("Menor");</text></g><g class=edge id=edge4><title>Decisao2->PrintMenor</title><path d="M53.79,-82.03C53.79,-72.01 53.79,-59.18 53.79,-47.71" fill=none stroke=#333333 /><polygon points="57.29,-47.95 53.79,-37.95 50.29,-47.95 57.29,-47.95" fill=#333333 stroke=#333333 /><text font-family=Arial font-size=9.00 text-anchor=middle x=63.54 xml:space=preserve y=-55.95>NÃO</text></g></g></svg></div></div></section><section><h1>Aninhamento de IF</h1><pre class="line-numbers language-c" data-lang=C><code class=language-c>if(num == 10){
-    printf("Igual a 10.\n");
+</code></pre>
+</section>
+<section><h1>Questões de fixação - 2</h1>
+<p><strong>2.</strong> Realize manualmente as operações <strong>bitwise</strong> (bit a bit) abaixo, considerando <code>A = 12</code> (Binário: <code>00001100</code>) e <code>B = 10</code> (Binário: <code>00001010</code>). Apresente o resultado em decimal.</p>
+<ul>
+<li>a) <code>A &amp; B</code> (AND)</li>
+<li>b) <code>A | B</code> (OR)</li>
+<li>c) <code>A ^ B</code> (XOR)</li>
+<li>d) <code>A &gt;&gt; 2</code> (Deslocamento à direita)</li>
+</ul>
+</section>
+<section><h1>Questões de fixação - 3</h1>
+<p><strong>3.</strong> Escreva um programa completo em C que solicite ao usuário dois números inteiros. O programa deve:</p>
+<ol>
+<li>Calcular a divisão do primeiro pelo segundo.</li>
+<li>Utilizar um <strong>modelador de tipo (cast)</strong> para garantir que o resultado da divisão inclua as casas decimais, mesmo que os números digitados sejam inteiros.</li>
+<li>Imprimir o resultado final.</li>
+</ol>
+</section>
+<section><h1>Questões de fixação - 4</h1>
+<p><strong>4.</strong> Utilize os <strong>operadores de atribuição simplificada</strong> para reescrever e programar a seguinte lógica de forma mais concisa. Considere que a variável <code>total</code> inicia com o valor 100.</p>
+<ol>
+<li>Some 50 ao <code>total</code>.</li>
+<li>Divida o <code>total</code> por 2.</li>
+<li>Obtenha o resto da divisão do <code>total</code> por 5.</li>
+<li>Imprima o valor final.</li>
+</ol>
+</section>
+<section><h1>Questões de fixação - 5</h1>
+<p><strong>5.</strong> Escreva um programa que leia um número inteiro fornecido pelo usuário. O programa deve verificar se o número é <strong>par</strong> ou <strong>ímpar</strong> e imprimir uma mensagem correspondente.</p>
+<ul>
+<li><strong>Entrada:</strong> Um número inteiro (ex: 7).</li>
+<li><strong>Saída Esperada:</strong> &quot;O numero 7 eh impar.&quot;</li>
+</ul>
+</section>
+<section><h1>Aninhamento de IF</h1>
+<p>Um <strong>if aninhado</strong> é a utilização de um comando <code>if</code> dentro do bloco de outro <code>if</code> (ou <code>else</code>). Permite lidar com múltiplos caminhos e refinar decisões.</p>
+<div class="error">Graphviz error: failed to execute PosixPath('dot'), make sure the Graphviz executables are on your systems' PATH</div>
+
+</section>
+<section><h1>Aninhamento de IF</h1>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">if(num == 10){
+    printf(&quot;Igual a 10.\n&quot;);
 } else {
-    if(num > 10)
-        printf("Maior que 10.\n");
+    if(num &gt; 10)
+        printf(&quot;Maior que 10.\n&quot;);
     else
-        printf("Menor que 10.\n");
+        printf(&quot;Menor que 10.\n&quot;);
 }
-</code></pre><div class="callout callout-warning"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span><span class=callout-title-inner>Associação do ELSE<br></span></div><div class=callout-content><p>Um <code>else</code> sempre se associa ao <code>if</code> mais próximo anterior a ele dentro do mesmo escopo. Use chaves <code>{}</code> para forçar associações específicas.</p></div></div></section><section><h1>Operador Ternário (?)</h1><p>Simplificação prática da estrutura <code>if-else</code> em uma única linha. Ideal para atribuições condicionais compactas.</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>expressão condicional ? expressão1 : expressão2;
-</code></pre><div class=col-2><div><p><strong>Estrutura Tradicional (IF/ELSE):</strong></p><pre class="line-numbers language-c" data-lang=C><code class=language-c>if (x > y) {
+</code></pre>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Associação do ELSE<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Um <code>else</code> sempre se associa ao <code>if</code> mais próximo anterior a ele dentro do mesmo escopo. Use chaves <code>{}</code> para forçar associações específicas.</p>
+  </div>
+</div>
+</section>
+<section><h1>Operador Ternário (?)</h1>
+<p>Simplificação prática da estrutura <code>if-else</code> em uma única linha. Ideal para atribuições condicionais compactas.</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">expressão condicional ? expressão1 : expressão2;
+</code></pre>
+<div class="col-2"><div>
+
+<p><strong>Estrutura Tradicional (IF/ELSE):</strong></p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">if (x &gt; y) {
     z = x;
 } else {
     z = y;
 }
-</code></pre></div><div><p><strong>Operador Ternário:</strong></p><pre class="line-numbers language-c" data-lang=C><code class=language-c>z = (x > y) ? x : y;
-</code></pre></div></div></section><section><h1>Comando SWITCH</h1><p>Comando de seleção múltipla. Verifica se uma variável (<code>int</code> ou <code>char</code>) é igual a valores constantes preestabelecidos, sendo mais elegante que múltiplos <code>ifs</code> aninhados.</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>switch (variável) {
+</code></pre>
+</div><div>
+
+<p><strong>Operador Ternário:</strong></p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">z = (x &gt; y) ? x : y;
+</code></pre>
+</div></div>
+
+</section>
+<section><h1>Comando SWITCH</h1>
+<p>Comando de seleção múltipla. Verifica se uma variável (<code>int</code> ou <code>char</code>) é igual a valores constantes preestabelecidos, sendo mais elegante que múltiplos <code>ifs</code> aninhados.</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">switch (variável) {
     case valor1:
         // comandos;
         break;
@@ -102,28 +748,570 @@ y = (int) (f / 10.0);
     default:
         // comandos de escape;
 }
-</code></pre><ul><li><strong>Restrições:</strong> Não testa expressões complexas (ex: <code>x > 10</code>), apenas igualdade exata de valores constantes.</li><li><strong>default:</strong> Cláusula opcional executada se nenhuma correspondência for encontrada.</li><li><strong>Chaves no case:</strong> Obrigatórias apenas se a primeira instrução for a declaração de uma variável.</li></ul></section><section><h1>O comando BREAK no switch</h1><p>O <code>break</code> interrompe a execução e sai do bloco <code>switch</code>. Se for omitido, ocorre o "efeito cascata": o programa continuará executando <strong>todos</strong> os comandos dos cases seguintes, ignorando seus valores.</p><div class=no-break><div class=centered><svg class="svg-graph graphviz-img" viewbox="0.00 0.00 212.00 209.00" data-sketch=true width=300 xmlns=http://www.w3.org/2000/svg><g transform="scale(1 1) rotate(0) translate(4 205)" class=graph id=graph0><title>Flowchart</title><polygon points="-4,4 -4,-205 208.43,-205 208.43,4 -4,4" fill=white stroke=none /><g class=node id=node1><title>Igual1</title><path d="M25.2,-195.63C25.2,-195.63 10.73,-188.37 10.73,-188.37 5.36,-185.69 5.36,-180.31 10.73,-177.63 10.73,-177.63 25.2,-170.37 25.2,-170.37 30.57,-167.69 41.29,-167.69 46.66,-170.37 46.66,-170.37 61.13,-177.63 61.13,-177.63 66.5,-180.31 66.5,-185.69 61.13,-188.37 61.13,-188.37 46.66,-195.63 46.66,-195.63 41.29,-198.31 30.57,-198.31 25.2,-195.63" fill=#fff9c4 stroke=black /><text font-family=Arial font-size=10.00 text-anchor=middle x=35.93 xml:space=preserve y=-179.5>Igual?</text></g><g class=node id=node2><title>Case1</title><path d="M192.06,-201C192.06,-201 119.81,-201 119.81,-201 113.81,-201 107.81,-195 107.81,-189 107.81,-189 107.81,-177 107.81,-177 107.81,-171 113.81,-165 119.81,-165 119.81,-165 192.06,-165 192.06,-165 198.06,-165 204.06,-171 204.06,-177 204.06,-177 204.06,-189 204.06,-189 204.06,-195 198.06,-201 192.06,-201" fill=#f9f9f9 stroke=black /><text font-family=Arial font-size=10.00 text-anchor=middle x=155.93 xml:space=preserve y=-179.5>case 1: printf("A");</text></g><g class=edge id=edge1><title>Igual1->Case1</title><path d="M72.91,-183C80.22,-183 88.07,-183 95.92,-183" fill=none stroke=black /><polygon points="95.84,-186.5 105.84,-183 95.84,-179.5 95.84,-186.5" fill=black stroke=black /><text font-family=Arial font-size=9.00 text-anchor=middle x=89.83 xml:space=preserve y=-187.95>SIM</text></g><g class=node id=node3><title>Case2</title><path d="M192.06,-118.5C192.06,-118.5 119.81,-118.5 119.81,-118.5 113.81,-118.5 107.81,-112.5 107.81,-106.5 107.81,-106.5 107.81,-94.5 107.81,-94.5 107.81,-88.5 113.81,-82.5 119.81,-82.5 119.81,-82.5 192.06,-82.5 192.06,-82.5 198.06,-82.5 204.06,-88.5 204.06,-94.5 204.06,-94.5 204.06,-106.5 204.06,-106.5 204.06,-112.5 198.06,-118.5 192.06,-118.5" fill=#f9f9f9 stroke=black /><text font-family=Arial font-size=10.00 text-anchor=middle x=155.93 xml:space=preserve y=-97>case 2: printf("B");</text></g><g class=edge id=edge2><title>Case1->Case2</title><path d="M155.93,-164.53C155.93,-154.51 155.93,-141.68 155.93,-130.21" fill=none stroke=black /><polygon points="159.43,-130.45 155.93,-120.45 152.43,-130.45 159.43,-130.45" fill=black stroke=black /><text font-family=Arial font-size=9.00 text-anchor=middle x=179.18 xml:space=preserve y=-138.45>Sem break!</text></g><g class=node id=node4><title>Case3</title><path d="M192.43,-36C192.43,-36 119.43,-36 119.43,-36 113.43,-36 107.43,-30 107.43,-24 107.43,-24 107.43,-12 107.43,-12 107.43,-6 113.43,0 119.43,0 119.43,0 192.43,0 192.43,0 198.43,0 204.43,-6 204.43,-12 204.43,-12 204.43,-24 204.43,-24 204.43,-30 198.43,-36 192.43,-36" fill=#f9f9f9 stroke=black /><text font-family=Arial font-size=10.00 text-anchor=middle x=155.93 xml:space=preserve y=-14.5>case 3: printf("C");</text></g><g class=edge id=edge3><title>Case2->Case3</title><path d="M155.93,-82.03C155.93,-72.01 155.93,-59.18 155.93,-47.71" fill=none stroke=black /><polygon points="159.43,-47.95 155.93,-37.95 152.43,-47.95 159.43,-47.95" fill=black stroke=black /><text font-family=Arial font-size=9.00 text-anchor=middle x=179.18 xml:space=preserve y=-55.95>Sem break!</text></g></g></svg></div></div></section><section><h1>O comando BREAK no switch</h1><pre class="line-numbers language-c" data-lang=C><code class=language-c>// Se op = 1, imprimirá "ABC"
+</code></pre>
+<ul>
+<li><strong>Restrições:</strong> Não testa expressões complexas (ex: <code>x &gt; 10</code>), apenas igualdade exata de valores constantes.</li>
+<li><strong>default:</strong> Cláusula opcional executada se nenhuma correspondência for encontrada.</li>
+<li><strong>Chaves no case:</strong> Obrigatórias apenas se a primeira instrução for a declaração de uma variável.</li>
+</ul>
+</section>
+<section><h1>O comando BREAK no switch</h1>
+<p>O <code>break</code> interrompe a execução e sai do bloco <code>switch</code>. Se for omitido, ocorre o &quot;efeito cascata&quot;: o programa continuará executando <strong>todos</strong> os comandos dos cases seguintes, ignorando seus valores.</p>
+<div class="error">Graphviz error: failed to execute PosixPath('dot'), make sure the Graphviz executables are on your systems' PATH</div>
+
+</section>
+<section><h1>O comando BREAK no switch</h1>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">// Se op = 1, imprimirá &quot;ABC&quot;
 switch(op) {
-    case 1: printf("A");
-    case 2: printf("B");
-    case 3: printf("C");
+    case 1: printf(&quot;A&quot;);
+    case 2: printf(&quot;B&quot;);
+    case 3: printf(&quot;C&quot;);
 }
-</code></pre><p>A ausência do <code>break</code> pode ser uma falha lógica grave ou uma técnica intencional (para estados que compartilham a mesma saída).</p></section><section><h1>Questões de fixação - 1</h1><p><strong>1.</strong> Crie um programa que verifique se um número é "Válido". Um número é válido se ele atender a <strong>todas</strong> as seguintes regras simultaneamente (utilize operadores lógicos e relacionais):</p><ul><li>Ser maior que 0.</li><li>Ser menor ou igual a 100.</li><li>Ser um número par.</li></ul><p>O programa deve imprimir <code>1</code> se o número for válido e <code>0</code> caso contrário.</p></section><section><h1>Questões de fixação - 2</h1><p><strong>2.</strong> O comando <code>switch</code> é uma alternativa elegante ao uso de múltiplos <code>if-else</code> encadeados, mas possui limitações. Assinale a alternativa que descreve corretamente uma restrição do <code>switch</code> em C:</p><ul><li>A) Pode avaliar expressões lógicas complexas, como <code>case (x > 10 && x &lt; 20):</code>.</li><li>B) Só aceita variáveis do tipo <code>float</code> ou <code>double</code> como parâmetro de controle.</li><li>C) Exige o uso obrigatório de chaves <code>{ }</code> em cada <code>case</code>, mesmo que não haja declaração de variáveis.</li><li>D) Só pode testar igualdade de valores constantes do tipo <code>int</code> ou <code>char</code>.</li></ul></section><section><h1>Questões de fixação - 3</h1><p><strong>3.</strong> O operador ternário é uma ferramenta poderosa para simplificação de código. Reescreva o trecho de código abaixo utilizando <strong>uma única linha</strong> com o operador ternário:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>// Código Original
-if (nota >= 60) {
-    printf("Aprovado");
+</code></pre>
+<p>A ausência do <code>break</code> pode ser uma falha lógica grave ou uma técnica intencional (para estados que compartilham a mesma saída).</p>
+</section>
+<section><h1>Questões de fixação - 1</h1>
+<p><strong>1.</strong> Crie um programa que verifique se um número é &quot;Válido&quot;. Um número é válido se ele atender a <strong>todas</strong> as seguintes regras simultaneamente (utilize operadores lógicos e relacionais):</p>
+<ul>
+<li>Ser maior que 0.</li>
+<li>Ser menor ou igual a 100.</li>
+<li>Ser um número par.</li>
+</ul>
+<p>O programa deve imprimir <code>1</code> se o número for válido e <code>0</code> caso contrário.</p>
+</section>
+<section><h1>Questões de fixação - 2</h1>
+<p><strong>2.</strong> O comando <code>switch</code> é uma alternativa elegante ao uso de múltiplos <code>if-else</code> encadeados, mas possui limitações. Assinale a alternativa que descreve corretamente uma restrição do <code>switch</code> em C:</p>
+<ul>
+<li>A) Pode avaliar expressões lógicas complexas, como <code>case (x &gt; 10 &amp;&amp; x &lt; 20):</code>.</li>
+<li>B) Só aceita variáveis do tipo <code>float</code> ou <code>double</code> como parâmetro de controle.</li>
+<li>C) Exige o uso obrigatório de chaves <code>{ }</code> em cada <code>case</code>, mesmo que não haja declaração de variáveis.</li>
+<li>D) Só pode testar igualdade de valores constantes do tipo <code>int</code> ou <code>char</code>.</li>
+</ul>
+</section>
+<section><h1>Questões de fixação - 3</h1>
+<p><strong>3.</strong> O operador ternário é uma ferramenta poderosa para simplificação de código. Reescreva o trecho de código abaixo utilizando <strong>uma única linha</strong> com o operador ternário:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">// Código Original
+if (nota &gt;= 60) {
+    printf(&quot;Aprovado&quot;);
 } else {
-    printf("Reprovado");
+    printf(&quot;Reprovado&quot;);
 }
-</code></pre></section><section><h1>Questões de fixação - 4</h1><p><strong>4.</strong> Crie um programa que receba três números inteiros como entrada e imprima o <strong>maior</strong> deles. Utilize estruturas <code>if-else</code> aninhadas para realizar as comparações.</p><ul><li><strong>Entrada:</strong> Três números inteiros (ex: 10, 5, 20).</li><li><strong>Saída Esperada:</strong> "O maior numero eh: 20".</li></ul></section><section><h1>Questões de fixação - 5</h1><p><strong>5.</strong> Desenvolva uma calculadora básica utilizando o comando <code>switch</code>. O programa deve ler dois números reais e um operador aritmético (<code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>).</p><ul><li><strong>Entrada:</strong> Dois números e um caractere (ex: 5.0, 2.0, '/').</li><li><strong>Saída Esperada:</strong> O resultado da operação (ex: "Resultado: 2.50").</li><li><strong>Requisito:</strong> Trate a divisão por zero, exibindo uma mensagem de erro caso o divisor seja 0.</li></ul></section><section><h1>Questões de fixação - 6</h1><p><strong>6.</strong> Escreva um programa que leia um ano (ex: 2024) e determine se ele é bissexto ou não. As regras para um ano ser bissexto são:</p><ol><li>Ser divisível por 4.</li><li><strong>Não</strong> ser divisível por 100, <strong>a menos que</strong> seja também divisível por 400.</li></ol><ul><li><strong>Entrada:</strong> Um ano (inteiro).</li><li><strong>Saída Esperada:</strong> "Bissexto" ou "Nao Bissexto".</li></ul></section><section><h1>Questões de fixação - 7</h1><p><strong>7.</strong> Analise o comportamento do <code>break</code> no comando <code>switch</code>. Dado o código abaixo, qual será a saída exata se o usuário digitar o valor <code>2</code>? Explique por que a saída ocorre dessa forma.</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>int main() {
+</code></pre>
+</section>
+<section><h1>Questões de fixação - 4</h1>
+<p><strong>4.</strong> Crie um programa que receba três números inteiros como entrada e imprima o <strong>maior</strong> deles. Utilize estruturas <code>if-else</code> aninhadas para realizar as comparações.</p>
+<ul>
+<li><strong>Entrada:</strong> Três números inteiros (ex: 10, 5, 20).</li>
+<li><strong>Saída Esperada:</strong> &quot;O maior numero eh: 20&quot;.</li>
+</ul>
+</section>
+<section><h1>Questões de fixação - 5</h1>
+<p><strong>5.</strong> Desenvolva uma calculadora básica utilizando o comando <code>switch</code>. O programa deve ler dois números reais e um operador aritmético (<code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>).</p>
+<ul>
+<li><strong>Entrada:</strong> Dois números e um caractere (ex: 5.0, 2.0, '/').</li>
+<li><strong>Saída Esperada:</strong> O resultado da operação (ex: &quot;Resultado: 2.50&quot;).</li>
+<li><strong>Requisito:</strong> Trate a divisão por zero, exibindo uma mensagem de erro caso o divisor seja 0.</li>
+</ul>
+</section>
+<section><h1>Questões de fixação - 6</h1>
+<p><strong>6.</strong> Escreva um programa que leia um ano (ex: 2024) e determine se ele é bissexto ou não. As regras para um ano ser bissexto são:</p>
+<ol>
+<li>Ser divisível por 4.</li>
+<li><strong>Não</strong> ser divisível por 100, <strong>a menos que</strong> seja também divisível por 400.</li>
+</ol>
+<ul>
+<li><strong>Entrada:</strong> Um ano (inteiro).</li>
+<li><strong>Saída Esperada:</strong> &quot;Bissexto&quot; ou &quot;Nao Bissexto&quot;.</li>
+</ul>
+</section>
+<section><h1>Questões de fixação - 7</h1>
+<p><strong>7.</strong> Analise o comportamento do <code>break</code> no comando <code>switch</code>. Dado o código abaixo, qual será a saída exata se o usuário digitar o valor <code>2</code>? Explique por que a saída ocorre dessa forma.</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">int main() {
     int op;
-    scanf("%d", &op);
+    scanf(&quot;%d&quot;, &amp;op);
     
     switch(op) {
-        case 1: printf("A");
-        case 2: printf("B");
-        case 3: printf("C");
-        default: printf("D");
+        case 1: printf(&quot;A&quot;);
+        case 2: printf(&quot;B&quot;);
+        case 3: printf(&quot;C&quot;);
+        default: printf(&quot;D&quot;);
     }
     return 0;
 }
-</code></pre></section><section><h1>Conclusão e Próximos Passos</h1><h2>Resumo</h2><ul><li>Compreendemos como o C trata as atribuições, precedências e perdas de conversão.</li><li>Dominamos as operações matemáticas, relacionais, lógicas e a manipulação bruta de bits (<em>bitwise</em>).</li><li>Traduzimos lógica booleana em controle de fluxo através de estruturas de seleção (<code>if</code>, <code>else</code>, <code>switch</code>, <code>ternário</code>).</li></ul><h2>Próximo Capítulo: Estruturas de Repetição</h2><ul><li>Vamos além da execução única.</li><li>Criação de <em>loops</em> (laços) utilizando <code>while</code>, <code>do-while</code> e <code>for</code>.</li><li>Como processar grandes volumes de dados através de iterações controladas.</li></ul></section></div></div><script data-no-bundle src=/aulas-faesa/js/vendor/reveal/reveal.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/reveal/plugin/notes/notes.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/reveal/plugin/markdown/markdown.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/reveal/plugin/math/math.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/reveal/plugin/zoom/zoom.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/prism.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-c.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-python.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-clike.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-perl.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-java.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-php.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/plugins/toolbar/prism-toolbar.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/plugins/show-language/prism-show-language.min.js></script><script data-no-bundle src=/aulas-faesa/js/prism-slang.js></script><script data-no-bundle src=/aulas-faesa/js/mermaid.min.js></script><script>document.addEventListener(`DOMContentLoaded`,function(){mermaid.initialize({startOnLoad:!1,theme:`default`,securityLevel:`loose`,fontFamily:`Inter, system-ui, sans-serif`})});</script><script>Reveal.initialize({hash:!0,slideNumber:`c/t`,center:!1,controls:!1,plugins:[RevealMarkdown,RevealNotes,RevealMath.KaTeX,RevealZoom],katex:{local:`/aulas-faesa/js/vendor/katex`,output:`html`,throwOnError:!1,strict:!1},width:960,height:800,margin:.15,maxScale:2}),Reveal.on(`slideready`,event=>{Prism.highlightAll();try{let mermaids=event.currentSlide.querySelectorAll(`.mermaid`);mermaids.length>0&&mermaid.init(void 0,mermaids)}catch(err){console.warn(`Mermaid init failed`,err)}}),Reveal.on(`slidechanged`,event=>{Prism.highlightAll();try{let mermaids=event.currentSlide.querySelectorAll(`.mermaid`);mermaids.length>0&&mermaid.init(void 0,mermaids)}catch(err){console.warn(`Mermaid init failed`,err)}});</script><script data-no-bundle src=/aulas-faesa/js/rough.min.js></script><script data-no-bundle src=/aulas-faesa/js/apply_sketch.js></script><style>.reveal{font-size:20px;text-align:left!important}.reveal code:not(pre code){background-color:var(--code-bg)!important;color:#3b82f6!important;border:1px dashed var(--border)!important;white-space:pre-wrap!important;word-break:break-word!important;border-radius:4px!important;padding:.1em .3em!important;font-family:JetBrains Mono,Fira Code,Consolas,monospace!important;font-size:.85em!important}.reveal h1{align-items:center;font-size:2.2em;display:flex;text-align:left!important;width:100%!important;text-shadow:none!important;justify-content:flex-start!important;margin-bottom:10px!important;margin-left:0!important}.reveal div.code-toolbar{position:relative;width:90%!important;margin:1em auto!important}.reveal pre[class*=language-]{width:100%!important;margin:0!important;padding:1em!important;font-size:.8em!important}.reveal pre[class*=language-]>code{display:block!important;position:relative!important}.reveal .line-numbers-rows{border-right:1px solid #ccc!important;width:3.2em!important;padding-top:0!important;position:absolute!important;top:0!important;left:-3.8em!important}.reveal .line-numbers-rows>span:before{color:#999!important;text-align:right!important;padding-right:.5em!important;display:block!important}.reveal pre[class*=language-].line-numbers,.reveal pre[class*=language-]:has(.line-numbers-rows){padding-left:3.8em!important}.reveal div.toolbar{z-index:10;opacity:1!important;padding-right:.1em!important;position:absolute!important;top:.2em!important;right:.5em!important}.reveal div.toolbar-item span{color:#999!important;text-transform:uppercase!important;box-shadow:none!important;background:0 0!important;border:none!important;padding:0!important;font-family:Inter,sans-serif!important;font-size:.7em!important;font-weight:600!important}.reveal h2{font-size:1.6em;text-align:left!important;margin-top:30px!important;margin-bottom:20px!important}.reveal h3{font-size:1.3em;text-align:left!important;margin-top:20px!important;margin-bottom:15px!important}.reveal p{line-height:1.5;text-align:left!important;margin-top:20px!important;margin-left:0!important}.reveal ul,.reveal ol,.reveal li{line-height:1.5;text-align:left!important;margin-left:0!important}.reveal ul,.reveal ol{padding-left:1.2em!important;display:block!important}.reveal .slides section{box-sizing:border-box;text-align:left!important;padding:40px!important}.reveal .slides{text-align:left!important}.reveal .slides section:not(.stack):has(>h1:only-child),.reveal .slides section:not(.stack):has(>h1:first-child+h2:last-child),.reveal .slides section:not(.stack):has(>h1:first-child+h2+p:last-child){text-align:center!important;flex-direction:column!important;justify-content:center!important;align-items:center!important;height:100%!important;display:flex!important;top:0!important}.reveal .slides section:not(.stack):has(>h1:only-child) h1,.reveal .slides section:not(.stack):has(>h1:first-child+h2:last-child) h1,.reveal .slides section:not(.stack):has(>h1:first-child+h2:last-child) h2,.reveal .slides section:not(.stack):has(>h1:first-child+h2+p:last-child) h1,.reveal .slides section:not(.stack):has(>h1:first-child+h2+p:last-child) h2,.reveal .slides section:not(.stack):has(>h1:first-child+h2+p:last-child) p{text-align:center!important;justify-content:center!important;width:100%!important;min-height:auto!important;margin:0!important}.reveal .slides section:not(.stack):has(>h1:first-child+h2:last-child) h1,.reveal .slides section:not(.stack):has(>h1:first-child+h2+p:last-child) h1{margin-bottom:.5em!important}.reveal .slides section:not(.stack):has(>h1:first-child+h2+p:last-child) h2{margin-bottom:.3em!important}.reveal .slides section:not(.stack):has(>h1:first-child+h2+p:last-child) p{color:#666;font-size:.9em}.reveal .slides section:has(.full-screen-image){padding:0!important}.reveal:has(section.present .full-screen-image){background-image:url(../../slide_end_background.png)!important;background-position:50%!important;background-size:cover!important}.reveal:has(section.present .full-screen-image) .slides,.reveal:has(section.present .full-screen-image) .slides section.present{background:0 0!important}.full-screen-image{justify-content:center;align-items:center;width:100vw;height:100vh;display:flex;margin:0!important}.reveal .svg-graph{max-width:100%;height:auto;margin-top:1em!important;margin-bottom:1em!important;overflow:visible!important}.reveal .mermaid-switcher{display:none!important}.centered{justify-content:center!important;align-items:center!important;width:100%!important;margin:1em 0!important;display:flex!important}.no-break{width:100%;display:block}.reveal blockquote{background:#ffaa4933;padding:5px;font-style:italic;display:block;position:relative;box-shadow:0 0 2px #0003;margin:var(--r-block-margin)auto!important;text-align:left!important}.col1{width:90%;margin:0 auto}.col2{justify-content:space-around;align-items:flex-start;width:90%;margin:0 auto;display:flex}:root{--callout-note:#448aff;--callout-abstract:#00b0ff;--callout-info:#00b8d4;--callout-todo:#00bfa5;--callout-tip:#00c853;--callout-success:#64dd17;--callout-question:#ffab00;--callout-warning:#ff9100;--callout-failure:#ff5252;--callout-danger:#ff1744;--callout-bug:#f50057;--callout-example:#7c4dff;--callout-quote:#9e9e9e;--code-bg:#f8f8f8;--border:#ddd}.reveal .callout{border:1px solid var(--border);border-left:6px solid var(--callout-note);border-radius:4px;font-size:.8em;overflow:hidden;text-align:left!important;width:75%!important;max-width:100%!important;margin:1rem auto!important}.reveal .callout-title{color:var(--callout-note);background:#0000000d;align-items:center;gap:.5rem;padding:.5rem 1rem;font-weight:600;display:flex}.reveal .callout-icon{align-items:center;display:flex}.reveal .callout-icon svg{width:1.2em;height:1.2em}.reveal .callout-content{padding:.5rem 1rem}.reveal .callout-content p{margin-top:.5rem!important}.reveal .callout-content p:first-child{margin-top:0!important}.reveal h1{text-transform:none!important}.reveal .callout-abstract{border-left-color:var(--callout-abstract)}.reveal .callout-abstract .callout-title{color:var(--callout-abstract)}.reveal .callout-info{border-left-color:var(--callout-info)}.reveal .callout-info .callout-title{color:var(--callout-info)}.reveal .callout-todo{border-left-color:var(--callout-todo)}.reveal .callout-todo .callout-title{color:var(--callout-todo)}.reveal .callout-tip{border-left-color:var(--callout-tip)}.reveal .callout-tip .callout-title{color:var(--callout-tip)}.reveal .callout-success{border-left-color:var(--callout-success)}.reveal .callout-success .callout-title{color:var(--callout-success)}.reveal .callout-question{border-left-color:var(--callout-question)}.reveal .callout-question .callout-title{color:var(--callout-question)}.reveal .callout-warning{border-left-color:var(--callout-warning)}.reveal .callout-warning .callout-title{color:var(--callout-warning)}.reveal .callout-failure{border-left-color:var(--callout-failure)}.reveal .callout-failure .callout-title{color:var(--callout-failure)}.reveal .callout-danger{border-left-color:var(--callout-danger)}.reveal .callout-danger .callout-title{color:var(--callout-danger)}.reveal .callout-bug{border-left-color:var(--callout-bug)}.reveal .callout-bug .callout-title{color:var(--callout-bug)}.reveal .callout-example{border-left-color:var(--callout-example)}.reveal .callout-example .callout-title{color:var(--callout-example)}.reveal .callout-quote{border-left-color:var(--callout-quote)}.reveal .callout-quote .callout-title{color:var(--callout-quote)}.red-note{color:var(--callout-failure)}.reveal .slide-number{border-radius:4px;color:#000000b1!important;background:#0000001a!important;padding:5px 10px!important;font-size:.8em!important}@media print{.reveal .slides section{visibility:visible!important;opacity:1!important;page-break-after:always!important;width:100%!important;height:100%!important;display:block!important;position:relative!important;top:0!important;left:0!important;overflow:hidden!important}.reveal .slides{width:100%!important;height:100%!important;top:0!important;left:0!important;transform:none!important}.reveal{overflow:visible!important}}</style></body></html>
+</code></pre>
+</section>
+<section><h1>Conclusão e Próximos Passos</h1>
+<h2>Resumo</h2>
+<ul>
+<li>Compreendemos como o C trata as atribuições, precedências e perdas de conversão.</li>
+<li>Dominamos as operações matemáticas, relacionais, lógicas e a manipulação bruta de bits (<em>bitwise</em>).</li>
+<li>Traduzimos lógica booleana em controle de fluxo através de estruturas de seleção (<code>if</code>, <code>else</code>, <code>switch</code>, <code>ternário</code>).</li>
+</ul>
+<h2>Próximo Capítulo: Estruturas de Repetição</h2>
+<ul>
+<li>Vamos além da execução única.</li>
+<li>Criação de <em>loops</em> (laços) utilizando <code>while</code>, <code>do-while</code> e <code>for</code>.</li>
+<li>Como processar grandes volumes de dados através de iterações controladas.</li>
+</ul>
+</section>
+        </div>
+    </div>
+
+    <script src="/aulas-faesa/js/vendor/reveal/reveal.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/notes/notes.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/markdown/markdown.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/math/math.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/zoom/zoom.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/prism.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-c.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-python.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-clike.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-perl.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-java.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-php.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/toolbar/prism-toolbar.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/show-language/prism-show-language.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/prism-slang.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/mermaid.min.js" data-no-bundle></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            mermaid.initialize({
+                startOnLoad: false,
+                theme: 'default',
+                securityLevel: 'loose',
+                fontFamily: 'Inter, system-ui, sans-serif',
+            });
+        });
+    </script>
+    <script>
+        Reveal.initialize({
+            hash: true,
+            slideNumber: 'c/t',
+            center: false,
+            controls: false,
+            plugins: [RevealMarkdown, RevealNotes, RevealMath.KaTeX, RevealZoom],
+            katex: {
+                local: '/aulas-faesa/js/vendor/katex',
+                output: 'html',
+                throwOnError: false,
+                strict: false,
+            },
+            width: 960,
+            height: 800,
+            margin: 0.15,
+            maxScale: 2.0,
+        });
+
+        // Ensure Prism highlights code on slide changes
+        Reveal.on('slideready', event => {
+            Prism.highlightAll();
+            try {
+                let mermaids = event.currentSlide.querySelectorAll('.mermaid');
+                if (mermaids.length > 0) {
+                    mermaid.init(undefined, mermaids);
+                }
+            } catch (err) { console.warn("Mermaid init failed", err); }
+        });
+        Reveal.on('slidechanged', event => {
+            Prism.highlightAll();
+            try {
+                let mermaids = event.currentSlide.querySelectorAll('.mermaid');
+                if (mermaids.length > 0) {
+                    mermaid.init(undefined, mermaids);
+                }
+            } catch (err) { console.warn("Mermaid init failed", err); }
+        });
+    </script>
+    <script src="/aulas-faesa/js/rough.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/apply_sketch.js" data-no-bundle></script>
+    <style>
+        /* Modern base styles */
+        .reveal {
+            font-size: 20px;
+            text-align: left !important;
+        }
+
+        .reveal code:not(pre code) {
+            font-family: 'JetBrains Mono', 'Fira Code', Consolas, monospace !important;
+            background-color: var(--code-bg) !important;
+            padding: 0.1em 0.3em !important;
+            border-radius: 4px !important;
+            font-size: 0.85em !important;
+            color: #3b82f6 !important;
+            border: 1px dashed var(--border) !important;
+            white-space: pre-wrap !important;
+            word-break: break-word !important;
+        }
+
+        .reveal h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px !important;
+            margin-left: 0 !important;
+            /* min-height: 2.3em; */
+            display: flex;
+            align-items: center;
+            justify-content: flex-start !important;
+            text-align: left !important;
+            width: 100% !important;
+            text-shadow: none !important;
+        }
+
+        /* Prism overrides for Reveal.js */
+        .reveal div.code-toolbar {
+            position: relative;
+            width: 90% !important;
+            margin: 1em auto !important;
+        }
+
+        .reveal pre[class*="language-"] {
+            margin: 0 !important;
+            padding: 1em !important;
+            width: 100% !important;
+            font-size: 0.8em !important;
+        }
+
+        .reveal pre[class*="language-"] > code {
+            position: relative !important;
+            display: block !important;
+        }
+
+        .reveal .line-numbers-rows {
+            position: absolute !important;
+            top: 0 !important;
+            left: -3.8em !important;
+            width: 3.2em !important;
+            padding-top: 0 !important;
+            border-right: 1px solid #ccc !important;
+        }
+
+        .reveal .line-numbers-rows > span:before {
+            padding-right: 0.5em !important;
+            color: #999 !important;
+            display: block !important;
+            text-align: right !important;
+        }
+
+        .reveal pre[class*="language-"].line-numbers,
+        .reveal pre[class*="language-"]:has(.line-numbers-rows) {
+            padding-left: 3.8em !important;
+        }
+
+        /* Language label styling */
+        .reveal div.toolbar {
+            position: absolute !important;
+            top: 0.2em !important;
+            right: 0.5em !important;
+            opacity: 1 !important;
+            padding-right: 0.1em !important;
+            z-index: 10;
+        }
+
+        .reveal div.toolbar-item span {
+            font-family: 'Inter', sans-serif !important;
+            font-size: 0.7em !important;
+            font-weight: 600 !important;
+            color: #999 !important;
+            text-transform: uppercase !important;
+            background: none !important;
+            box-shadow: none !important;
+            border: none !important;
+            padding: 0 !important;
+        }
+
+        .reveal h2 {
+            font-size: 1.6em;
+            margin-top: 30px !important;
+            margin-bottom: 20px !important;
+            text-align: left !important;
+        }
+
+        .reveal h3 {
+            font-size: 1.3em;
+            margin-top: 20px !important;
+            margin-bottom: 15px !important;
+            text-align: left !important;
+        }
+
+        .reveal p {
+            line-height: 1.5;
+            margin-top: 20px !important;
+            margin-left: 0 !important;
+            text-align: left !important;
+        }
+
+        .reveal ul,
+        .reveal ol,
+        .reveal li {
+            line-height: 1.5;
+            text-align: left !important;
+            margin-left: 0 !important;
+        }
+        
+        .reveal ul, .reveal ol {
+            display: block !important;
+            padding-left: 1.2em !important;
+        }
+
+        /* Slide padding and layout */
+        .reveal .slides section {
+            padding: 40px !important;
+            box-sizing: border-box;
+            text-align: left !important;
+        }
+
+        .reveal .slides {
+            text-align: left !important;
+        }
+
+        /* Centering for Title slides (h1 ONLY, h1 + h2 ONLY, or h1 + h2 + p ONLY) */
+        .reveal .slides section:not(.stack):has(> h1:only-child),
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child),
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) {
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: center !important;
+            align-items: center !important;
+            text-align: center !important;
+            height: 100% !important;
+            top: 0 !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:only-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child) h2,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h2,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) p {
+            justify-content: center !important;
+            text-align: center !important;
+            margin: 0 !important;
+            min-height: auto !important;
+            width: 100% !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h1 {
+            margin-bottom: 0.5em !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h2 {
+            margin-bottom: 0.3em !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) p {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        /* Full screen slide fix */
+        .reveal .slides section:has(.full-screen-image) {
+            padding: 0 !important;
+        }
+
+        /* Full screen slide fix - Garantindo que o fundo do Reveal fique visível e a imagem carregada */
+        .reveal:has(section.present .full-screen-image) {
+            background-image: url('../../slide_end_background.png') !important;
+            background-size: cover !important;
+            background-position: center !important;
+        }
+
+        /* Torna o slide e o container de slides transparentes para mostrar o fundo da .reveal */
+        .reveal:has(section.present .full-screen-image) .slides,
+        .reveal:has(section.present .full-screen-image) .slides section.present {
+            background: transparent !important;
+        }
+
+        .full-screen-image {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 !important;
+            /* Se houver texto, ele centraliza aqui */
+        }
+
+        /* Spacing for diagrams */
+        .reveal .svg-graph {
+            margin-top: 1em !important;
+            margin-bottom: 1em !important;
+            overflow: visible !important; /* Prevent labels from being cut off */
+            max-width: 100%;
+            height: auto;
+        }
+
+        .reveal .mermaid-switcher {
+            display: none !important;
+        }
+
+        .centered {
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            width: 100% !important;
+            margin: 1em 0 !important;
+        }
+
+        .no-break {
+            display: block;
+            width: 100%;
+        }
+
+        .reveal blockquote {
+            display: block;
+            position: relative;
+            margin: var(--r-block-margin) auto !important;
+            padding: 5px;
+            font-style: italic;
+            background: rgba(255, 170, 73, 0.2);
+            box-shadow: 0 0 2px rgba(0,0,0,.2);
+            text-align: left !important;
+        }
+
+        .col1 {
+            width: 90%;
+            margin: 0 auto;
+        }
+
+        .col2 {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start;
+            width: 90%;
+            margin: 0 auto;
+            align-items: flex-start;
+        }
+
+        /* Callout Styles */
+        :root {
+            --callout-note: #448aff;
+            --callout-abstract: #00b0ff;
+            --callout-info: #00b8d4;
+            --callout-todo: #00bfa5;
+            --callout-tip: #00c853;
+            --callout-success: #64dd17;
+            --callout-question: #ffab00;
+            --callout-warning: #ff9100;
+            --callout-failure: #ff5252;
+            --callout-danger: #ff1744;
+            --callout-bug: #f50057;
+            --callout-example: #7c4dff;
+            --callout-quote: #9e9e9e;
+            --code-bg: #f8f8f8;
+            --border: #ddd;
+        }
+
+        .reveal .callout {
+            margin: 1rem auto !important;
+            border: 1px solid var(--border);
+            border-left: 6px solid var(--callout-note);
+            border-radius: 4px;
+            overflow: hidden;
+            text-align: left !important;
+            font-size: 0.8em;
+            width: 75% !important;
+            max-width: 100% !important;
+        }
+
+        .reveal .callout-title {
+            padding: 0.5rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            color: var(--callout-note);
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .reveal .callout-icon {
+            display: flex;
+            align-items: center;
+        }
+
+        .reveal .callout-icon svg {
+            width: 1.2em;
+            height: 1.2em;
+        }
+
+        .reveal .callout-content {
+            padding: 0.5rem 1rem;
+        }
+
+        .reveal .callout-content p {
+            margin-top: 0.5rem !important;
+        }
+
+        .reveal .callout-content p:first-child {
+            margin-top: 0 !important;
+        }
+
+        .reveal h1 { text-transform: none !important; }
+
+        .reveal .callout-abstract { border-left-color: var(--callout-abstract); }
+        .reveal .callout-abstract .callout-title { color: var(--callout-abstract); }
+        .reveal .callout-info { border-left-color: var(--callout-info); }
+        .reveal .callout-info .callout-title { color: var(--callout-info); }
+        .reveal .callout-todo { border-left-color: var(--callout-todo); }
+        .reveal .callout-todo .callout-title { color: var(--callout-todo); }
+        .reveal .callout-tip { border-left-color: var(--callout-tip); }
+        .reveal .callout-tip .callout-title { color: var(--callout-tip); }
+        .reveal .callout-success { border-left-color: var(--callout-success); }
+        .reveal .callout-success .callout-title { color: var(--callout-success); }
+        .reveal .callout-question { border-left-color: var(--callout-question); }
+        .reveal .callout-question .callout-title { color: var(--callout-question) ; }
+        .reveal .callout-warning { border-left-color: var(--callout-warning); }
+        .reveal .callout-warning .callout-title { color: var(--callout-warning); }
+        .reveal .callout-failure { border-left-color: var(--callout-failure); }
+        .reveal .callout-failure .callout-title { color: var(--callout-failure); }
+        .reveal .callout-danger { border-left-color: var(--callout-danger); }
+        .reveal .callout-danger .callout-title { color: var(--callout-danger); }
+        .reveal .callout-bug { border-left-color: var(--callout-bug); }
+        .reveal .callout-bug .callout-title { color: var(--callout-bug); }
+        .reveal .callout-example { border-left-color: var(--callout-example); }
+        .reveal .callout-example .callout-title { color: var(--callout-example); }
+        .reveal .callout-quote { border-left-color: var(--callout-quote); }
+        .reveal .callout-quote .callout-title { color: var(--callout-quote); }
+        .red-note { color: var(--callout-failure); }
+
+        .reveal .slide-number {
+            font-size: 0.8em !important;
+            padding: 5px 10px !important;
+            background: rgba(0,0,0,0.1) !important;
+            border-radius: 4px;
+            color: #000000b1 !important;
+        }
+
+        /* Print styles */
+        @media print {
+            .reveal .slides section {
+                display: block !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                position: relative !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+                page-break-after: always !important;
+                overflow: hidden !important;
+            }
+
+            .reveal .slides {
+                transform: none !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+            }
+            
+            .reveal {
+                overflow: visible !important;
+            }
+        }
+    </style>
+</body>
+
+</html>

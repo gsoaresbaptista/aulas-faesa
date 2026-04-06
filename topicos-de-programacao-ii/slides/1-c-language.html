@@ -1,62 +1,1054 @@
-<!doctype html><html lang=en><meta charset=utf-8><meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" name=viewport><title>Introdução à Linguagem C e Variáveis</title><link media="(prefers-color-scheme: light)" href=/aulas-faesa/img/dark-favicon.svg rel=icon><link media="(prefers-color-scheme: dark)" href=/aulas-faesa/img/light-favicon.svg rel=icon><link data-no-bundle href=/aulas-faesa/css/vendor/reveal/reset.min.css rel=stylesheet><link data-no-bundle href=/aulas-faesa/css/vendor/reveal/reveal.min.css rel=stylesheet><link data-no-bundle href=/aulas-faesa/css/vendor/reveal/theme/white.min.css rel=stylesheet><link data-no-bundle href=/aulas-faesa/css/prism-one-light.css rel=stylesheet><link data-no-bundle href=/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css rel=stylesheet><link data-no-bundle href=/aulas-faesa/css/vendor/fonts.css rel=stylesheet></head><body><div class=reveal><div class=slides><section><h1>Introdução à Linguagem C e Variáveis</h1><h2>A linguagem C</h2><p>Professor: Gabriel Soares Baptista</p></section><section><h1>A Linguagem C</h1><h2>Histórico e Características</h2><ul><li><strong>Origem:</strong> Desenvolvida em 1972 por Dennis Ritchie (Bell Labs).</li><li><strong>Padronização:</strong> ANSI (1989).</li><li><strong>Classificação:</strong> Alto nível (abstração próxima à humana).</li><li><strong>Portabilidade:</strong> Raro encontrar arquitetura que não suporte um compilador C.</li><li><strong>Performance:</strong> Gera códigos enxutos e velozes.</li></ul><div class="callout callout-info"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><circle cx=12 cy=12 r=10 /><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></span><span class=callout-title-inner>Características de Baixo Nível<br></span></div><div class=callout-content><p>Embora de alto nível, permite acesso direto à memória e ao microprocessador, unindo abstração e controle de hardware.</p></div></div></section><section><h1>Natureza da Linguagem</h1><ul><li><strong>Procedural:</strong> Decomposição de problemas complexos em módulos menores.</li><li><strong>Acesso de Baixo Nível:</strong> Memória e instruções Assembly (crítico para dependência de tempo).</li><li><strong>Multiplataforma:</strong> Compilação para vasto gama de sistemas com ajustes pontuais.</li></ul></section><section><h1>Influência da Linguagem C</h1><p>Base para C++, Java, C#, PHP, entre outras.</p><div class=no-break><div><svg class="svg-graph graphviz-img" viewbox="0.00 0.00 807.00 499.00" data-sketch=true xmlns=http://www.w3.org/2000/svg><g transform="scale(1 1) rotate(0) translate(4 495)" class=graph id=graph0><title>ProgrammingLanguages</title><polygon points="-4,4 -4,-495 803.12,-495 803.12,4 -4,4" fill=white stroke=none /><g class=node id=node1><title>C</title><path d="M287,-491C287,-491 203,-491 203,-491 197,-491 191,-485 191,-479 191,-479 191,-467 191,-467 191,-461 197,-455 203,-455 203,-455 287,-455 287,-455 293,-455 299,-461 299,-467 299,-467 299,-479 299,-479 299,-485 293,-491 287,-491" fill=#cccccc stroke=black /><text font-family="Arial Bold" fill=#000000 font-size=14.00 text-anchor=middle x=245 xml:space=preserve y=-467.57>C</text></g><g class=node id=node2><title>awk</title><path d="M215,-426C215,-426 131,-426 131,-426 125,-426 119,-420 119,-414 119,-414 119,-402 119,-402 119,-396 125,-390 131,-390 131,-390 215,-390 215,-390 221,-390 227,-396 227,-402 227,-402 227,-414 227,-414 227,-420 221,-426 215,-426" fill=#cccccc stroke=black /><text font-family="Arial Bold" fill=#000000 font-size=14.00 text-anchor=middle x=173 xml:space=preserve y=-402.57>awk</text></g><g class=edge id=edge1><title>C->awk</title><path d="M225.33,-454.78C218.02,-448.4 209.58,-441.01 201.64,-434.06" fill=none stroke=#333333 stroke-width=1.5 /><polygon points="204.19,-431.64 194.36,-427.69 199.58,-436.91 204.19,-431.64" fill=#333333 stroke=#333333 stroke-width=1.5 /></g><g class=node id=node3><title>C (K & R)</title><path d="M385,-426C385,-426 301,-426 301,-426 295,-426 289,-420 289,-414 289,-414 289,-402 289,-402 289,-396 295,-390 301,-390 301,-390 385,-390 385,-390 391,-390 397,-396 397,-402 397,-402 397,-414 397,-414 397,-420 391,-426 385,-426" fill=#cccccc stroke=black /><text font-family="Arial Bold" fill=#000000 font-size=14.00 text-anchor=middle x=343 xml:space=preserve y=-402.57>C (K & R)</text></g><g class=edge id=edge2><title>C->C (K & R)</title><path d="M272.04,-454.62C282.54,-447.87 294.73,-440.03 306.01,-432.78" fill=none stroke=#333333 stroke-width=1.5 /><polygon points="307.62,-435.9 314.14,-427.55 303.84,-430.02 307.62,-435.9" fill=#333333 stroke=#333333 stroke-width=1.5 /></g><g class=node id=node4><title>nawk</title><path d="M163,-361C163,-361 79,-361 79,-361 73,-361 67,-355 67,-349 67,-349 67,-337 67,-337 67,-331 73,-325 79,-325 79,-325 163,-325 163,-325 169,-325 175,-331 175,-337 175,-337 175,-349 175,-349 175,-355 169,-361 163,-361" fill=#cccccc stroke=black /><text font-family="Arial Bold" fill=#000000 font-size=14.00 text-anchor=middle x=121 xml:space=preserve y=-337.57>nawk</text></g><g class=edge id=edge3><title>awk->nawk</title><path d="M158.79,-389.78C153.86,-383.81 148.21,-376.97 142.81,-370.43" fill=none stroke=#333333 stroke-width=1.5 /><polygon points="145.7,-368.43 136.64,-362.95 140.3,-372.89 145.7,-368.43" fill=#333333 stroke=#333333 stroke-width=1.5 /></g><g class=node id=node6><title>ANSIC</title><path d="M346,-361C346,-361 262,-361 262,-361 256,-361 250,-355 250,-349 250,-349 250,-337 250,-337 250,-331 256,-325 262,-325 262,-325 346,-325 346,-325 352,-325 358,-331 358,-337 358,-337 358,-349 358,-349 358,-355 352,-361 346,-361" fill=#cccccc stroke=black /><text font-family="Arial Bold" fill=#000000 font-size=14.00 text-anchor=middle x=304 xml:space=preserve y=-337.57>ANSIC</text></g><g class=edge id=edge5><title>C (K & R)->ANSIC</title><path d="M332.34,-389.78C328.82,-384.09 324.8,-377.61 320.93,-371.34" fill=none stroke=#333333 stroke-width=1.5 /><polygon points="324.08,-369.78 315.84,-363.12 318.13,-373.47 324.08,-369.78" fill=#333333 stroke=#333333 stroke-width=1.5 /></g><g class=node id=node7><title>C with Classes</title><path d="M494,-361C494,-361 406,-361 406,-361 400,-361 394,-355 394,-349 394,-349 394,-337 394,-337 394,-331 400,-325 406,-325 406,-325 494,-325 494,-325 500,-325 506,-331 506,-337 506,-337 506,-349 506,-349 506,-355 500,-361 494,-361" fill=#cccccc stroke=black /><text font-family="Arial Bold" fill=#000000 font-size=14.00 text-anchor=middle x=450 xml:space=preserve y=-337.57>C with Classes</text></g><g class=edge id=edge6><title>C (K & R)->C with Classes</title><path d="M372.52,-389.62C384.22,-382.73 397.84,-374.71 410.37,-367.33" fill=none stroke=#333333 stroke-width=1.5 /><polygon points="411.78,-370.57 418.62,-362.48 408.23,-364.53 411.78,-370.57" fill=#333333 stroke=#333333 stroke-width=1.5 /></g><g class=node id=node8><title>Objective-C</title><path d="M638,-361C638,-361 554,-361 554,-361 548,-361 542,-355 542,-349 542,-349 542,-337 542,-337 542,-331 548,-325 554,-325 554,-325 638,-325 638,-325 644,-325 650,-331 650,-337 650,-337 650,-349 650,-349 650,-355 644,-361 638,-361" fill=#cccccc stroke=black /><text font-family="Arial Bold" fill=#000000 font-size=14.00 text-anchor=middle x=596 xml:space=preserve y=-337.57>Objective-C</text></g><g class=edge id=edge7><title>C (K & R)->Objective-C</title><path d="M397.27,-393.48C436.13,-383.81 488.65,-370.73 529.94,-360.45" fill=none stroke=#333333 stroke-width=1.5 /><polygon points="530.75,-363.85 539.61,-358.04 529.06,-357.06 530.75,-363.85" fill=#333333 stroke=#333333 stroke-width=1.5 /></g><g class=node id=node5><title>Perl</title><path d="M113,-296C113,-296 29,-296 29,-296 23,-296 17,-290 17,-284 17,-284 17,-272 17,-272 17,-266 23,-260 29,-260 29,-260 113,-260 113,-260 119,-260 125,-266 125,-272 125,-272 125,-284 125,-284 125,-290 119,-296 113,-296" fill=#cccccc stroke=black /><text font-family="Arial Bold" fill=#000000 font-size=14.00 text-anchor=middle x=71 xml:space=preserve y=-272.57>Perl</text></g><g class=edge id=edge4><title>nawk->Perl</title><path d="M107.34,-324.78C102.6,-318.81 97.17,-311.97 91.98,-305.43" fill=none stroke=#333333 stroke-width=1.5 /><polygon points="95.02,-303.63 86.06,-297.97 89.53,-307.98 95.02,-303.63" fill=#333333 stroke=#333333 stroke-width=1.5 /></g><g class=node id=node9><title>Perl 5.0</title><path d="M96,-231C96,-231 12,-231 12,-231 6,-231 0,-225 0,-219 0,-219 0,-207 0,-207 0,-201 6,-195 12,-195 12,-195 96,-195 96,-195 102,-195 108,-201 108,-207 108,-207 108,-219 108,-219 108,-225 102,-231 96,-231" fill=#cccccc stroke=black /><text font-family="Arial Bold" fill=#000000 font-size=14.00 text-anchor=middle x=54 xml:space=preserve y=-207.57>Perl 5.0</text></g><g class=edge id=edge8><title>Perl->Perl 5.0</title><path d="M66.35,-259.78C64.93,-254.51 63.32,-248.55 61.75,-242.72" fill=none stroke=#333333 stroke-width=1.5 /><polygon points="65.22,-242.13 59.23,-233.39 58.46,-243.95 65.22,-242.13" fill=#333333 stroke=#333333 stroke-width=1.5 /></g><g class=node id=node12><title>ISO C (C99)</title><path d="M240,-231C240,-231 156,-231 156,-231 150,-231 144,-225 144,-219 144,-219 144,-207 144,-207 144,-201 150,-195 156,-195 156,-195 240,-195 240,-195 246,-195 252,-201 252,-207 252,-207 252,-219 252,-219 252,-225 246,-231 240,-231" fill=#cccccc stroke=black /><text font-family="Arial Bold" fill=#000000 font-size=14.00 text-anchor=middle x=198 xml:space=preserve y=-207.57>ISO C (C99)</text></g><g class=edge id=edge11><title>ANSIC->ISO C (C99)</title><path d="M270.15,-324.68C257.89,-317.15 244.68,-307.42 235,-296 221.83,-280.47 212.48,-259.5 206.47,-242.65" fill=none stroke=#333333 stroke-width=1.5 /><polygon points="209.87,-241.78 203.4,-233.4 203.23,-243.99 209.87,-241.78" fill=#333333 stroke=#333333 stroke-width=1.5 /></g><g class=node id=node13><title>Python</title><path d="M349,-296C349,-296 265,-296 265,-296 259,-296 253,-290 253,-284 253,-284 253,-272 253,-272 253,-266 259,-260 265,-260 265,-260 349,-260 349,-260 355,-260 361,-266 361,-272 361,-272 361,-284 361,-284 361,-290 355,-296 349,-296" fill=#cccccc stroke=black /><text font-family="Arial Bold" fill=#000000 font-size=14.00 text-anchor=middle x=307 xml:space=preserve y=-272.57>Python</text></g><g class=edge id=edge12><title>ANSIC->Python</title><path d="M304.82,-324.78C305.06,-319.65 305.34,-313.86 305.61,-308.18" fill=none stroke=#333333 stroke-width=1.5 /><polygon points="309.09,-308.62 306.07,-298.46 302.1,-308.28 309.09,-308.62" fill=#333333 stroke=#333333 stroke-width=1.5 /></g><g class=node id=node15><title>C++</title><path d="M493,-296C493,-296 409,-296 409,-296 403,-296 397,-290 397,-284 397,-284 397,-272 397,-272 397,-266 403,-260 409,-260 409,-260 493,-260 493,-260 499,-260 505,-266 505,-272 505,-272 505,-284 505,-284 505,-290 499,-296 493,-296" fill=#cccccc stroke=black /><text font-family="Arial Bold" fill=#000000 font-size=14.00 text-anchor=middle x=451 xml:space=preserve y=-272.57>C++</text></g><g class=edge id=edge14><title>C with Classes->C++</title><path d="M450.27,-324.78C450.35,-319.65 450.45,-313.86 450.54,-308.18" fill=none stroke=#333333 stroke-width=1.5 /><polygon points="454.03,-308.52 450.69,-298.46 447.03,-308.41 454.03,-308.52" fill=#333333 stroke=#333333 stroke-width=1.5 /></g><g class=node id=node17><title>Oak</title><path d="M637,-231C637,-231 553,-231 553,-231 547,-231 541,-225 541,-219 541,-219 541,-207 541,-207 541,-201 547,-195 553,-195 553,-195 637,-195 637,-195 643,-195 649,-201 649,-207 649,-207 649,-219 649,-219 649,-225 643,-231 637,-231" fill=#cccccc stroke=black /><text font-family="Arial Bold" fill=#000000 font-size=14.00 text-anchor=middle x=595 xml:space=preserve y=-207.57>Oak</text></g><g class=edge id=edge18><title>Objective-C->Oak</title><path d="M595.87,-324.74C595.7,-303.93 595.43,-268.64 595.23,-243.49" fill=none stroke=#333333 stroke-width=1.5 /><polygon points="598.73,-243.64 595.15,-233.67 591.73,-243.7 598.73,-243.64" fill=#333333 stroke=#333333 stroke-width=1.5 /></g><g class=node id=node18><title>Objective-C 2.1</title><path d="M787.12,-231C787.12,-231 696.88,-231 696.88,-231 690.88,-231 684.88,-225 684.88,-219 684.88,-219 684.88,-207 684.88,-207 684.88,-201 690.88,-195 696.88,-195 696.88,-195 787.12,-195 787.12,-195 793.12,-195 799.12,-201 799.12,-207 799.12,-207 799.12,-219 799.12,-219 799.12,-225 793.12,-231 787.12,-231" fill=#cccccc stroke=black /><text font-family="Arial Bold" fill=#000000 font-size=14.00 text-anchor=middle x=742 xml:space=preserve y=-207.57>Objective-C 2.1</text></g><g class=edge id=edge17><title>Objective-C->Objective-C 2.1</title><path d="M615.69,-324.74C640.73,-302.79 684.15,-264.72 712.98,-239.44" fill=none stroke=#333333 stroke-width=1.5 /><polygon points="715.24,-242.12 720.45,-232.89 710.62,-236.86 715.24,-242.12" fill=#333333 stroke=#333333 stroke-width=1.5 /></g><g class=node id=node10><title>PHP/FI</title><path d="M96,-166C96,-166 12,-166 12,-166 6,-166 0,-160 0,-154 0,-154 0,-142 0,-142 0,-136 6,-130 12,-130 12,-130 96,-130 96,-130 102,-130 108,-136 108,-142 108,-142 108,-154 108,-154 108,-160 102,-166 96,-166" fill=#cccccc stroke=black /><text font-family="Arial Bold" fill=#000000 font-size=14.00 text-anchor=middle x=54 xml:space=preserve y=-142.57>PHP/FI</text></g><g class=edge id=edge9><title>Perl 5.0->PHP/FI</title><path d="M54,-194.78C54,-189.65 54,-183.86 54,-178.18" fill=none stroke=#333333 stroke-width=1.5 /><polygon points="57.5,-178.46 54,-168.46 50.5,-178.46 57.5,-178.46" fill=#333333 stroke=#333333 stroke-width=1.5 /></g><g class=node id=node11><title>PHP</title><path d="M96,-101C96,-101 12,-101 12,-101 6,-101 0,-95 0,-89 0,-89 0,-77 0,-77 0,-71 6,-65 12,-65 12,-65 96,-65 96,-65 102,-65 108,-71 108,-77 108,-77 108,-89 108,-89 108,-95 102,-101 96,-101" fill=#cccccc stroke=black /><text font-family="Arial Bold" fill=#000000 font-size=14.00 text-anchor=middle x=54 xml:space=preserve y=-77.58>PHP</text></g><g class=edge id=edge10><title>PHP/FI->PHP</title><path d="M54,-129.78C54,-124.65 54,-118.86 54,-113.18" fill=none stroke=#333333 stroke-width=1.5 /><polygon points="57.5,-113.46 54,-103.46 50.5,-113.46 57.5,-113.46" fill=#333333 stroke=#333333 stroke-width=1.5 /></g><g class=node id=node14><title>C1X</title><path d="M240,-166C240,-166 156,-166 156,-166 150,-166 144,-160 144,-154 144,-154 144,-142 144,-142 144,-136 150,-130 156,-130 156,-130 240,-130 240,-130 246,-130 252,-136 252,-142 252,-142 252,-154 252,-154 252,-160 246,-166 240,-166" fill=#cccccc stroke=black /><text font-family="Arial Bold" fill=#000000 font-size=14.00 text-anchor=middle x=198 xml:space=preserve y=-142.57>C1X</text></g><g class=edge id=edge13><title>ISO C (C99)->C1X</title><path d="M198,-194.78C198,-189.65 198,-183.86 198,-178.18" fill=none stroke=#333333 stroke-width=1.5 /><polygon points="201.5,-178.46 198,-168.46 194.5,-178.46 201.5,-178.46" fill=#333333 stroke=#333333 stroke-width=1.5 /></g><g class=node id=node16><title>C++ ANSI/ISO</title><path d="M493,-231C493,-231 409,-231 409,-231 403,-231 397,-225 397,-219 397,-219 397,-207 397,-207 397,-201 403,-195 409,-195 409,-195 493,-195 493,-195 499,-195 505,-201 505,-207 505,-207 505,-219 505,-219 505,-225 499,-231 493,-231" fill=#cccccc stroke=black /><text font-family="Arial Bold" fill=#000000 font-size=14.00 text-anchor=middle x=451 xml:space=preserve y=-207.57>C++ ANSI/ISO</text></g><g class=edge id=edge15><title>C++->C++ ANSI/ISO</title><path d="M451,-259.78C451,-254.65 451,-248.86 451,-243.18" fill=none stroke=#333333 stroke-width=1.5 /><polygon points="454.5,-243.46 451,-233.46 447.5,-243.46 454.5,-243.46" fill=#333333 stroke=#333333 stroke-width=1.5 /></g><g class=edge id=edge16><title>C++->Oak</title><path d="M490.73,-259.62C507.26,-252.39 526.64,-243.91 544.19,-236.23" fill=none stroke=#333333 stroke-width=1.5 /><polygon points="545.56,-239.45 553.32,-232.24 542.76,-233.04 545.56,-239.45" fill=#333333 stroke=#333333 stroke-width=1.5 /></g><g class=node id=node19><title>C++11</title><path d="M384,-166C384,-166 300,-166 300,-166 294,-166 288,-160 288,-154 288,-154 288,-142 288,-142 288,-136 294,-130 300,-130 300,-130 384,-130 384,-130 390,-130 396,-136 396,-142 396,-142 396,-154 396,-154 396,-160 390,-166 384,-166" fill=#cccccc stroke=black /><text font-family="Arial Bold" fill=#000000 font-size=14.00 text-anchor=middle x=342 xml:space=preserve y=-142.57>C++11</text></g><g class=edge id=edge19><title>C++ ANSI/ISO->C++11</title><path d="M420.93,-194.62C409.01,-187.73 395.14,-179.71 382.37,-172.33" fill=none stroke=#333333 stroke-width=1.5 /><polygon points="384.35,-169.44 373.94,-167.46 380.85,-175.5 384.35,-169.44" fill=#333333 stroke=#333333 stroke-width=1.5 /></g><g class=node id=node20><title>C#</title><path d="M493,-36C493,-36 409,-36 409,-36 403,-36 397,-30 397,-24 397,-24 397,-12 397,-12 397,-6 403,0 409,0 409,0 493,0 493,0 499,0 505,-6 505,-12 505,-12 505,-24 505,-24 505,-30 499,-36 493,-36" fill=#cccccc stroke=black /><text font-family="Arial Bold" fill=#000000 font-size=14.00 text-anchor=middle x=451 xml:space=preserve y=-12.57>C#</text></g><g class=edge id=edge20><title>C++ ANSI/ISO->C#</title><path d="M451,-194.53C451,-161.38 451,-89 451,-48.3" fill=none stroke=#333333 stroke-width=1.5 /><polygon points="454.5,-48.56 451,-38.56 447.5,-48.56 454.5,-48.56" fill=#333333 stroke=#333333 stroke-width=1.5 /></g><g class=node id=node21><title>JAVA1</title><path d="M637,-166C637,-166 553,-166 553,-166 547,-166 541,-160 541,-154 541,-154 541,-142 541,-142 541,-136 547,-130 553,-130 553,-130 637,-130 637,-130 643,-130 649,-136 649,-142 649,-142 649,-154 649,-154 649,-160 643,-166 637,-166" fill=#cccccc stroke=black /><text font-family="Arial Bold" fill=#000000 font-size=14.00 text-anchor=middle x=595 xml:space=preserve y=-142.57>JAVA1</text></g><g class=edge id=edge21><title>Oak->JAVA1</title><path d="M595,-194.78C595,-189.65 595,-183.86 595,-178.18" fill=none stroke=#333333 stroke-width=1.5 /><polygon points="598.5,-178.46 595,-168.46 591.5,-178.46 598.5,-178.46" fill=#333333 stroke=#333333 stroke-width=1.5 /></g><g class=node id=node22><title>JAVA2</title><path d="M637,-101C637,-101 553,-101 553,-101 547,-101 541,-95 541,-89 541,-89 541,-77 541,-77 541,-71 547,-65 553,-65 553,-65 637,-65 637,-65 643,-65 649,-71 649,-77 649,-77 649,-89 649,-89 649,-95 643,-101 637,-101" fill=#cccccc stroke=black /><text font-family="Arial Bold" fill=#000000 font-size=14.00 text-anchor=middle x=595 xml:space=preserve y=-77.58>JAVA2</text></g><g class=edge id=edge22><title>JAVA1->JAVA2</title><path d="M595,-129.78C595,-124.65 595,-118.86 595,-113.18" fill=none stroke=#333333 stroke-width=1.5 /><polygon points="598.5,-113.46 595,-103.46 591.5,-113.46 598.5,-113.46" fill=#333333 stroke=#333333 stroke-width=1.5 /></g><g class=edge id=edge24><title>JAVA2->C#</title><path d="M555.27,-64.62C538.74,-57.39 519.36,-48.91 501.81,-41.23" fill=none stroke=#333333 stroke-width=1.5 /><polygon points="503.24,-38.04 492.68,-37.24 500.44,-44.45 503.24,-38.04" fill=#333333 stroke=#333333 stroke-width=1.5 /></g><g class=node id=node23><title>JAVA</title><path d="M637,-36C637,-36 553,-36 553,-36 547,-36 541,-30 541,-24 541,-24 541,-12 541,-12 541,-6 547,0 553,0 553,0 637,0 637,0 643,0 649,-6 649,-12 649,-12 649,-24 649,-24 649,-30 643,-36 637,-36" fill=#cccccc stroke=black /><text font-family="Arial Bold" fill=#000000 font-size=14.00 text-anchor=middle x=595 xml:space=preserve y=-12.57>JAVA</text></g><g class=edge id=edge23><title>JAVA2->JAVA</title><path d="M595,-64.78C595,-59.65 595,-53.86 595,-48.18" fill=none stroke=#333333 stroke-width=1.5 /><polygon points="598.5,-48.46 595,-38.46 591.5,-48.46 598.5,-48.46" fill=#333333 stroke=#333333 stroke-width=1.5 /></g><g class=node id=node24><title>ActionScript</title><path d="M781,-36C781,-36 697,-36 697,-36 691,-36 685,-30 685,-24 685,-24 685,-12 685,-12 685,-6 691,0 697,0 697,0 781,0 781,0 787,0 793,-6 793,-12 793,-12 793,-24 793,-24 793,-30 787,-36 781,-36" fill=#cccccc stroke=black /><text font-family="Arial Bold" fill=#000000 font-size=14.00 text-anchor=middle x=739 xml:space=preserve y=-12.57>ActionScript</text></g><g class=edge id=edge25><title>JAVA2->ActionScript</title><path d="M634.73,-64.62C651.26,-57.39 670.64,-48.91 688.19,-41.23" fill=none stroke=#333333 stroke-width=1.5 /><polygon points="689.56,-44.45 697.32,-37.24 686.76,-38.04 689.56,-44.45" fill=#333333 stroke=#333333 stroke-width=1.5 /></g></g></svg></div></div></section><section><h1>Comparativo Sintático</h1><p>A lógica de estruturas de controle (como o <code>for</code>) é herdada por linguagens modernas.</p><div style=flex-direction:row;gap:2%;display:flex><div style=width:48%><pre class="line-numbers language-c" data-lang=C><code class=language-c>\\ c
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <title>Introdução à Linguagem C e Variáveis</title>
+    <link rel="icon" href="/aulas-faesa/img/dark-favicon.svg" media="(prefers-color-scheme: light)">
+    <link rel="icon" href="/aulas-faesa/img/light-favicon.svg" media="(prefers-color-scheme: dark)">
+
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/reset.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/reveal.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/theme/white.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/aulas-faesa/css/prism-one-light.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/fonts.css" data-no-bundle>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+            <section><h1>Introdução à Linguagem C e Variáveis</h1>
+<h2>A linguagem C</h2>
+<p>Professor: Gabriel Soares Baptista</p>
+</section>
+<section><h1>A Linguagem C</h1>
+<h2>Histórico e Características</h2>
+<ul>
+<li><strong>Origem:</strong> Desenvolvida em 1972 por Dennis Ritchie (Bell Labs).</li>
+<li><strong>Padronização:</strong> ANSI (1989).</li>
+<li><strong>Classificação:</strong> Alto nível (abstração próxima à humana).</li>
+<li><strong>Portabilidade:</strong> Raro encontrar arquitetura que não suporte um compilador C.</li>
+<li><strong>Performance:</strong> Gera códigos enxutos e velozes.</li>
+</ul>
+<div class="callout callout-info">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></span>
+    <span class="callout-title-inner">Características de Baixo Nível<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Embora de alto nível, permite acesso direto à memória e ao microprocessador, unindo abstração e controle de hardware.</p>
+  </div>
+</div>
+</section>
+<section><h1>Natureza da Linguagem</h1>
+<ul>
+<li><strong>Procedural:</strong> Decomposição de problemas complexos em módulos menores.</li>
+<li><strong>Acesso de Baixo Nível:</strong> Memória e instruções Assembly (crítico para dependência de tempo).</li>
+<li><strong>Multiplataforma:</strong> Compilação para vasto gama de sistemas com ajustes pontuais.</li>
+</ul>
+</section>
+<section><h1>Influência da Linguagem C</h1>
+<p>Base para C++, Java, C#, PHP, entre outras.</p>
+<div class="error">Graphviz error: failed to execute PosixPath('dot'), make sure the Graphviz executables are on your systems' PATH</div>
+
+</section>
+<section><h1>Comparativo Sintático</h1>
+<p>A lógica de estruturas de controle (como o <code>for</code>) é herdada por linguagens modernas.</p>
+<div style="display: flex; flex-direction: row; gap: 2%;"><div style="width: 48%">
+
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">\\ c
 for (int i = 0; i &lt;= 10; i++)
 {
-    printf("%d\n", i);
+    printf(&quot;%d\n&quot;, i);
 }
-</code></pre></div><div style=width:48%><pre class="line-numbers language-java" data-lang=JAVA><code class=language-java>\\ java
+</code></pre>
+</div><div style="width: 48%">
+
+<pre class="line-numbers language-java" data-lang="JAVA"><code class="language-java">\\ java
 for (int i = 0; i &lt;= 10; i++)
 {
     System.out.println(i);
 }
-</code></pre></div></div><div style=flex-direction:row;gap:2%;display:flex><div style=width:48%><pre class="line-numbers language-perl" data-lang=PERL><code class=language-perl>\\ perl
+</code></pre>
+</div></div><div style="display: flex; flex-direction: row; gap: 2%"><div style="width: 48%">
+
+<pre class="line-numbers language-perl" data-lang="PERL"><code class="language-perl">\\ perl
 for (my $i = 0; $i &lt;= 10; $i++)
 {
-    print "$i\n";
+    print &quot;$i\n&quot;;
 }
-</code></pre></div><div style=width:48%><pre class="line-numbers language-php" data-lang=PHP><code class=language-php>\\ php
+</code></pre>
+</div><div style="width: 48%">
+
+<pre class="line-numbers language-php" data-lang="PHP"><code class="language-php">\\ php
 for ($i = 0; $i &lt;= 10; $i++)
 {
     echo $i . PHP_EOL;
 }
-</code></pre></div></div><div class="callout callout-tip"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .5 2.2 1.5 3.1.7.7 1.3 1.5 1.5 2.4"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span><span class=callout-title-inner>Herança do Design<br></span></div><div class=callout-content><p>A maioria das linguagens modernas utiliza <strong>chaves</strong> <code>{ }</code> para delimitar blocos e <strong>ponto e vírgula</strong> <code>;</code> para encerrar instruções.</p></div></div></section><section><h1>Questões - 1</h1><p><strong>1.</strong> A linguagem C é classificada como uma linguagem de alto nível, mas possui características singulares. Assinale a alternativa correta:</p><ul><li>A) É estritamente de baixo nível, impedindo portabilidade.</li><li>B) É orientada a objetos pura, substituindo o Assembly.</li><li>C) É procedural de alto nível, permitindo acesso direto à memória e hardware.</li><li>D) É interpretada, executada linha a linha sem compilação.</li></ul></section><section><h1>Ambiente de Desenvolvimento (IDE)</h1><p>Utilizaremos o <strong>Code::Blocks</strong>.</p><ul><li>Open source e multiplataforma.</li><li>Suporta múltiplos compiladores (MinGW recomendado).</li></ul><div class="callout callout-tip"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .5 2.2 1.5 3.1.7.7 1.3 1.5 1.5 2.4"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span><span class=callout-title-inner>Instalação<br></span></div><div class=callout-content><p>Prefira versões com "<strong>mingw-setup</strong>" para garantir que as ferramentas de compilação sejam instaladas automaticamente.</p></div></div></section><section><h1>Criando um Novo Projeto - I</h1><ol><li><strong>File</strong> > <strong>New</strong> > <strong>Project...</strong><br> <img src=../static/figura-1-4-menu-de-criacao-de-novo-projeto.png width=90%></li></ol></section><section><h1>Criando um Novo Projeto - II</h1><ol start=2><li>Selecionar <strong>Console application</strong> (modo texto).<br> <img src=../static/figura-1-5-selecao-do-modelo-console-application.png width=80%></li></ol></section><section><h1>Criando um Novo Projeto - III</h1><ol start=3><li>Selecionar linguagem <strong>C</strong>.<br> <img src=../static/figura-1-7-selecao-da-linguagem-c.png width=70%></li></ol></section><section><h1>Criando um Novo Projeto - IV</h1><ol start=3><li>Definir <strong>Título do Projeto</strong> e <strong>Pasta de Destino</strong>.<br> <img src=../static/figura-1-8-definicao-de-titulo-e-diretorio-do-projeto.png width=70%></li></ol></section><section><h1>Estrutura e Compilação</h1><p>O Code::Blocks gera um esqueleto básico (<code>main.c</code>).</p><img style="margin:0 auto;display:block" src=../static/figura-1-10-esqueleto-do-projeto-criado.png width=60%><p><strong>Ferramentas de Build:</strong></p><ul><li><strong>Compile (<code>Ctrl+Shift+F9</code>):</strong> Traduz para arquivo objeto.</li><li><strong>Build (<code>Ctrl+F9</code>):</strong> Compila e Linka (gera executável).</li><li><strong>Build and run (<code>F9</code>):</strong> Gera executável e roda.</li></ul></section><section><h1>Utilizando o Debugger - I</h1><p>Ferramenta para examinar o código em busca de erros lógicos (<em>bugs</em>).</p><ul><li><strong>Breakpoints (Pontos de Parada):</strong> Pausa a execução em linhas específicas.</li><li><strong>Inserção:</strong> Clicar na margem ou <strong>F5</strong>. (Esfera vermelha).</li></ul><img style="margin:0 auto;display:block" src=../static/figura-1-12-inserindo-breakpoints.png width=70%></section><section><h1>Utilizando o Debugger - II</h1><p><strong>Controles de Depuração:</strong></p><ul><li><strong>Start (<code>F8</code>):</strong> Inicia até o primeiro breakpoint.</li><li><strong>Watches:</strong> Janela para monitorar valores de variáveis em tempo real.</li><li><strong>Next line (<code>F7</code>):</strong> Executa linha a linha.</li><li><strong>Step into (<code>Shift+F7</code>):</strong> Entra no código de uma função.</li><li><strong>Step out (<code>Shift+Ctrl+F7</code>):</strong> Sai da função atual.</li></ul></section><section><h1>Utilizando o Debugger - III</h1><img src=../static/figura-1-13-programa-pausado-no-breakpoint.png width=90%></section><section><h1>Utilizando o Debugger - IV</h1><img src=../static/figura-1-14-janela-watches-e-perspectiva-de-debug.png width=90%></section><section><h1>Esqueleto de um Programa em C - I</h1><pre class="line-numbers language-c" data-lang=C><code class=language-c>#include &lt;stdio.h>
-#include &lt;stdlib.h>
+</code></pre>
+</div></div>
+
+<div class="callout callout-tip">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .5 2.2 1.5 3.1.7.7 1.3 1.5 1.5 2.4"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span>
+    <span class="callout-title-inner">Herança do Design<br /></span>
+  </div>
+  <div class="callout-content">
+<p>A maioria das linguagens modernas utiliza <strong>chaves</strong> <code>{ }</code> para delimitar blocos e <strong>ponto e vírgula</strong> <code>;</code> para encerrar instruções.</p>
+  </div>
+</div>
+</section>
+<section><h1>Questões - 1</h1>
+<p><strong>1.</strong> A linguagem C é classificada como uma linguagem de alto nível, mas possui características singulares. Assinale a alternativa correta:</p>
+<ul>
+<li>A) É estritamente de baixo nível, impedindo portabilidade.</li>
+<li>B) É orientada a objetos pura, substituindo o Assembly.</li>
+<li>C) É procedural de alto nível, permitindo acesso direto à memória e hardware.</li>
+<li>D) É interpretada, executada linha a linha sem compilação.</li>
+</ul>
+</section>
+<section><h1>Ambiente de Desenvolvimento (IDE)</h1>
+<p>Utilizaremos o <strong>Code::Blocks</strong>.</p>
+<ul>
+<li>Open source e multiplataforma.</li>
+<li>Suporta múltiplos compiladores (MinGW recomendado).</li>
+</ul>
+<div class="callout callout-tip">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .5 2.2 1.5 3.1.7.7 1.3 1.5 1.5 2.4"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span>
+    <span class="callout-title-inner">Instalação<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Prefira versões com &quot;<strong>mingw-setup</strong>&quot; para garantir que as ferramentas de compilação sejam instaladas automaticamente.</p>
+  </div>
+</div>
+</section>
+<section><h1>Criando um Novo Projeto - I</h1>
+<ol>
+<li><strong>File</strong> &gt; <strong>New</strong> &gt; <strong>Project...</strong><br />
+<img src="../static/figura-1-4-menu-de-criacao-de-novo-projeto.png" width="90%"></li>
+</ol>
+</section>
+<section><h1>Criando um Novo Projeto - II</h1>
+<ol start="2">
+<li>Selecionar <strong>Console application</strong> (modo texto).<br />
+<img src="../static/figura-1-5-selecao-do-modelo-console-application.png" width="80%"></li>
+</ol>
+</section>
+<section><h1>Criando um Novo Projeto - III</h1>
+<ol start="3">
+<li>Selecionar linguagem <strong>C</strong>.<br />
+<img src="../static/figura-1-7-selecao-da-linguagem-c.png" width="70%"></li>
+</ol>
+</section>
+<section><h1>Criando um Novo Projeto - IV</h1>
+<ol start="3">
+<li>Definir <strong>Título do Projeto</strong> e <strong>Pasta de Destino</strong>.<br />
+<img src="../static/figura-1-8-definicao-de-titulo-e-diretorio-do-projeto.png" width="70%"></li>
+</ol>
+</section>
+<section><h1>Estrutura e Compilação</h1>
+<p>O Code::Blocks gera um esqueleto básico (<code>main.c</code>).</p>
+<img src="../static/figura-1-10-esqueleto-do-projeto-criado.png" width="60%" style="display: block; margin: 0 auto;">
+
+<p><strong>Ferramentas de Build:</strong></p>
+<ul>
+<li><strong>Compile (<code>Ctrl+Shift+F9</code>):</strong> Traduz para arquivo objeto.</li>
+<li><strong>Build (<code>Ctrl+F9</code>):</strong> Compila e Linka (gera executável).</li>
+<li><strong>Build and run (<code>F9</code>):</strong> Gera executável e roda.</li>
+</ul>
+</section>
+<section><h1>Utilizando o Debugger - I</h1>
+<p>Ferramenta para examinar o código em busca de erros lógicos (<em>bugs</em>).</p>
+<ul>
+<li><strong>Breakpoints (Pontos de Parada):</strong> Pausa a execução em linhas específicas.</li>
+<li><strong>Inserção:</strong> Clicar na margem ou <strong>F5</strong>. (Esfera vermelha).</li>
+</ul>
+<img src="../static/figura-1-12-inserindo-breakpoints.png" width="70%" style="display: block; margin: 0 auto;">
+
+</section>
+<section><h1>Utilizando o Debugger - II</h1>
+<p><strong>Controles de Depuração:</strong></p>
+<ul>
+<li><strong>Start (<code>F8</code>):</strong> Inicia até o primeiro breakpoint.</li>
+<li><strong>Watches:</strong> Janela para monitorar valores de variáveis em tempo real.</li>
+<li><strong>Next line (<code>F7</code>):</strong> Executa linha a linha.</li>
+<li><strong>Step into (<code>Shift+F7</code>):</strong> Entra no código de uma função.</li>
+<li><strong>Step out (<code>Shift+Ctrl+F7</code>):</strong> Sai da função atual.</li>
+</ul>
+</section>
+<section><h1>Utilizando o Debugger - III</h1>
+<img src="../static/figura-1-13-programa-pausado-no-breakpoint.png" width="90%">
+
+</section>
+<section><h1>Utilizando o Debugger - IV</h1>
+<img src="../static/figura-1-14-janela-watches-e-perspectiva-de-debug.png" width="90%">
+
+</section>
+<section><h1>Esqueleto de um Programa em C - I</h1>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
 
 int main(){
-    printf("Hello World \n");
-    system("pause");
+    printf(&quot;Hello World \n&quot;);
+    system(&quot;pause&quot;);
     return 0;
 }
-</code></pre></section><section><h1>Esqueleto de um Programa em C - II</h1><img style="margin:0 auto;display:block" src=../static/figura-1-17-conceitos-basicos-no-codigo.png width=90%></section><section><h1>Componentes do Esqueleto</h1><ul><li><strong>Bibliotecas (<code>#include</code>):</strong> Importa funções prontas (<code>stdio.h</code> para I/O, <code>stdlib.h</code> para sistema).</li><li><strong><code>main()</code>:</strong> Ponto de início da execução. Obrigatório.</li><li><strong>Blocos <code>{ }</code>:</strong> Delimitam início e fim de instruções.</li><li><strong><code>printf()</code>:</strong> Exibe texto na tela.</li><li><strong><code>system("pause")</code>:</strong> Pausa a execução para visualização (Windows).</li><li><strong><code>return 0;</code>:</strong> Sinaliza ao SO que o programa terminou com sucesso.</li><li><strong>Ponto e vírgula <code>;</code>:</strong> Finaliza instruções.</li></ul></section><section><h1>Indentação</h1><p>Espaçamento (tabulação) para indicar hierarquia visual. Fundamental para legibilidade.</p><div class=col-2><p><strong>Legível (Indentado)</strong></p><pre class="line-numbers language-c" data-lang=C><code class=language-c>int main(){
-    printf("Ola");
+</code></pre>
+</section>
+<section><h1>Esqueleto de um Programa em C - II</h1>
+<img src="../static/figura-1-17-conceitos-basicos-no-codigo.png" width="90%" style="display: block; margin: 0 auto;">
+
+</section>
+<section><h1>Componentes do Esqueleto</h1>
+<ul>
+<li><strong>Bibliotecas (<code>#include</code>):</strong> Importa funções prontas (<code>stdio.h</code> para I/O, <code>stdlib.h</code> para sistema).</li>
+<li><strong><code>main()</code>:</strong> Ponto de início da execução. Obrigatório.</li>
+<li><strong>Blocos <code>{ }</code>:</strong> Delimitam início e fim de instruções.</li>
+<li><strong><code>printf()</code>:</strong> Exibe texto na tela.</li>
+<li><strong><code>system(&quot;pause&quot;)</code>:</strong> Pausa a execução para visualização (Windows).</li>
+<li><strong><code>return 0;</code>:</strong> Sinaliza ao SO que o programa terminou com sucesso.</li>
+<li><strong>Ponto e vírgula <code>;</code>:</strong> Finaliza instruções.</li>
+</ul>
+</section>
+<section><h1>Indentação</h1>
+<p>Espaçamento (tabulação) para indicar hierarquia visual. Fundamental para legibilidade.</p>
+<div class="col-2">
+
+<p><strong>Legível (Indentado)</strong></p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">int main(){
+    printf(&quot;Ola&quot;);
     return 0;
 }
-</code></pre><p><strong>Difícil Leitura (Não Indentado)</strong></p><pre class="line-numbers language-c" data-lang=C><code class=language-c>int main(){printf("Ola"); return 0;}
-</code></pre></div><div class="callout callout-tip"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .5 2.2 1.5 3.1.7.7 1.3 1.5 1.5 2.4"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span><span class=callout-title-inner>Dica de Estilo<br></span></div><div class=callout-content><p>O compilador ignora espaços, mas a indentação previne erros lógicos.</p></div></div></section><section><h1>A Compilação do Programa</h1><p>Processo de tradução de código-fonte para código de máquina.</p><ol><li><strong>Pré-processamento:</strong> Expansão do arquivo, interpretação de diretivas (<code>#</code>), remoção de comentários.</li><li><strong>Verificação Sintática:</strong> Validação das regras da linguagem. Erros interrompem o processo.</li><li><strong>Compilação:</strong> Geração de arquivo <strong>objeto</strong> (instruções de máquina parciais).</li><li><strong>Link-edição:</strong> Unificação dos objetos e bibliotecas em um único arquivo <strong>executável</strong>.</li></ol></section><section><h1>Comentários e Documentação</h1><p>Trechos ignorados pelo compilador, usados para documentação interna.</p><ul><li><strong>Comentário de Linha:</strong> <code>//</code> (até o fim da linha).</li><li><strong>Comentário de Bloco:</strong> <code>/* ... */</code> (múltiplas linhas).</li></ul><pre class="line-numbers language-c" data-lang=C><code class=language-c>/* Bloco de comentario
+</code></pre>
+<p><strong>Difícil Leitura (Não Indentado)</strong></p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">int main(){printf(&quot;Ola&quot;); return 0;}
+</code></pre>
+</div>
+
+<div class="callout callout-tip">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .5 2.2 1.5 3.1.7.7 1.3 1.5 1.5 2.4"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span>
+    <span class="callout-title-inner">Dica de Estilo<br /></span>
+  </div>
+  <div class="callout-content">
+<p>O compilador ignora espaços, mas a indentação previne erros lógicos.</p>
+  </div>
+</div>
+</section>
+<section><h1>A Compilação do Programa</h1>
+<p>Processo de tradução de código-fonte para código de máquina.</p>
+<ol>
+<li><strong>Pré-processamento:</strong> Expansão do arquivo, interpretação de diretivas (<code>#</code>), remoção de comentários.</li>
+<li><strong>Verificação Sintática:</strong> Validação das regras da linguagem. Erros interrompem o processo.</li>
+<li><strong>Compilação:</strong> Geração de arquivo <strong>objeto</strong> (instruções de máquina parciais).</li>
+<li><strong>Link-edição:</strong> Unificação dos objetos e bibliotecas em um único arquivo <strong>executável</strong>.</li>
+</ol>
+</section>
+<section><h1>Comentários e Documentação</h1>
+<p>Trechos ignorados pelo compilador, usados para documentação interna.</p>
+<ul>
+<li><strong>Comentário de Linha:</strong> <code>//</code> (até o fim da linha).</li>
+<li><strong>Comentário de Bloco:</strong> <code>/* ... */</code> (múltiplas linhas).</li>
+</ul>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">/* Bloco de comentario
   Explicacao complexa
 */
 int main() {
-    printf("Oi"); // Comentario de linha
+    printf(&quot;Oi&quot;); // Comentario de linha
 }
-</code></pre><div class="callout callout-tip"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .5 2.2 1.5 3.1.7.7 1.3 1.5 1.5 2.4"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span><span class=callout-title-inner>Dica de Ouro<br></span></div><div class=callout-content><p>Comente o "porquê" da decisão lógica, não apenas o "o que" o comando faz.</p></div></div></section><section><h1>Questões - 2</h1><p><strong>2.</strong> Explique detalhadamente o que ocorre nas etapas de <strong>Pré-processamento</strong> e <strong>Link-edição</strong>.</p><p><strong>3.</strong> No esqueleto abaixo, qual a função da linha <code>return 0;</code> e a quem esse valor é retornado?</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>int main(){ return 0; }
-</code></pre><p><strong>4.</strong> Julgue (V/F):<br><br> ( ) Comentários de bloco iniciam com <code>//</code>.<br><br> ( ) Erros de sintaxe dentro de comentários <code>/* */</code> interrompem a compilação.<br><br> ( ) A indentação não altera o desempenho do executável.</p></section><section><h1>Parte II: Variáveis e Dados</h1><h2>Manipulação de Memória e I/O</h2></section><section><h1>O Conceito de Variável</h1><h2>Definição Computacional</h2><ul><li><strong>Matemática:</strong> Entidade que representa um valor ($x^2$).</li><li><strong>Computação:</strong> Posição de <strong>memória</strong> específica, com endereço físico, para armazenar dados modificáveis.</li></ul><div class="callout callout-info"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><circle cx=12 cy=12 r=10 /><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></span><span class=callout-title-inner>Analogia<br></span></div><div class=callout-content><p>Uma "caixa" com etiqueta (nome) na memória. O tipo define o tamanho da caixa.</p></div></div><table><thead><tr><th style=text-align:left>Endereço</th><th style=text-align:left>Variável</th><th style=text-align:left>Conteúdo</th></tr></thead><tbody><tr><td style=text-align:left>121</td><td style=text-align:left><code>int x</code></td><td style=text-align:left>10</td></tr></tbody></table></section><section><h1>Declaração e Inicialização</h1><p>Sintaxe obrigatória: <code>tipo_da_variável nome_da_variável;</code></p><pre class="line-numbers language-c" data-lang=C><code class=language-c>int x;         // Declaração (reserva espaço)
+</code></pre>
+<div class="callout callout-tip">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .5 2.2 1.5 3.1.7.7 1.3 1.5 1.5 2.4"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span>
+    <span class="callout-title-inner">Dica de Ouro<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Comente o &quot;porquê&quot; da decisão lógica, não apenas o &quot;o que&quot; o comando faz.</p>
+  </div>
+</div>
+</section>
+<section><h1>Questões - 2</h1>
+<p><strong>2.</strong> Explique detalhadamente o que ocorre nas etapas de <strong>Pré-processamento</strong> e <strong>Link-edição</strong>.</p>
+<p><strong>3.</strong> No esqueleto abaixo, qual a função da linha <code>return 0;</code> e a quem esse valor é retornado?</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">int main(){ return 0; }
+</code></pre>
+<p><strong>4.</strong> Julgue (V/F):<br><br />
+( ) Comentários de bloco iniciam com <code>//</code>.<br><br />
+( ) Erros de sintaxe dentro de comentários <code>/* */</code> interrompem a compilação.<br><br />
+( ) A indentação não altera o desempenho do executável.</p>
+</section>
+<section><h1>Parte II: Variáveis e Dados</h1>
+<h2>Manipulação de Memória e I/O</h2>
+</section>
+<section><h1>O Conceito de Variável</h1>
+<h2>Definição Computacional</h2>
+<ul>
+<li><strong>Matemática:</strong> Entidade que representa um valor ($x^2$).</li>
+<li><strong>Computação:</strong> Posição de <strong>memória</strong> específica, com endereço físico, para armazenar dados modificáveis.</li>
+</ul>
+<div class="callout callout-info">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></span>
+    <span class="callout-title-inner">Analogia<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Uma &quot;caixa&quot; com etiqueta (nome) na memória. O tipo define o tamanho da caixa.</p>
+  </div>
+</div>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Endereço</th>
+  <th style="text-align:left">Variável</th>
+  <th style="text-align:left">Conteúdo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">121</td>
+  <td style="text-align:left"><code>int x</code></td>
+  <td style="text-align:left">10</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section><h1>Declaração e Inicialização</h1>
+<p>Sintaxe obrigatória: <code>tipo_da_variável nome_da_variável;</code></p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">int x;         // Declaração (reserva espaço)
 x = 5;         // Atribuição (define valor)
 int a, b, c;   // Múltiplas declarações
-</code></pre><div class="callout callout-warning"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span><span class=callout-title-inner>Lixo de Memória<br></span></div><div class=callout-content><p>A memória nunca está "vazia". Se você usar uma variável sem inicializar, ela conterá bits aleatórios de processos anteriores.</p></div></div></section><section><h1>Regras de Nomenclatura</h1><p>O computador vincula o nome ao endereço de memória.</p><p><strong>Regras Rígidas:</strong></p><ol><li><strong>Caracteres:</strong> Letras, números e underscore (<code>_</code>).</li><li><strong>Início:</strong> Obrigatório letra ou <code>_</code>. <strong>Nunca número</strong>.</li><li><strong>Case-sensitive:</strong> <code>Soma</code> $\neq$ <code>soma</code>.</li><li><strong>Palavras-chave:</strong> Proibido usar reservadas (<code>int</code>, <code>return</code>, <code>if</code>, etc.).</li></ol><div class=col-2><p><strong>Válidos</strong></p><ul><li><code>nota_final</code></li><li><code>_valor</code></li><li><code>x1</code></li></ul><p><strong>Inválidos</strong></p><ul><li><code>1nota</code> (começa com número)</li><li><code>valor-total</code> (hífen proibido)</li><li><code>float</code> (reservada)</li></ul></div></section><section><h1>Questões - 3</h1><p><strong>1.</strong> Qual a definição correta de variável em C?</p><ul><li>A) Abstração sem relação física.</li><li>B) Posição de memória com endereço físico.</li><li>C) Valor constante em disco.</li></ul><p><strong>2.</strong> Identifique os identificadores <strong>INVÁLIDOS</strong>:</p><p>( ) <code>1contador</code><br><br> ( ) <code>valor_total</code><br><br> ( ) <code>return</code><br><br> ( ) <code>nota-final</code></p><p><strong>3.</strong> O que será impresso se tentarmos exibir uma variável declarada mas não inicializada? Explique o conceito de "lixo de memória".</p></section><section><h1>Tipos de Dados Primitivos</h1><p>O tipo define o conjunto de valores e operações permitidas.</p><table><thead><tr><th style=text-align:left>Tipo</th><th style=text-align:left>Bits</th><th style=text-align:left>Intervalo Típico</th></tr></thead><tbody><tr><td style=text-align:left><code>char</code></td><td style=text-align:left>8</td><td style=text-align:left>-128 a 127 (ou caractere ASCII)</td></tr><tr><td style=text-align:left><code>int</code></td><td style=text-align:left>32</td><td style=text-align:left>-2.147.483.648 a 2.147.483.647</td></tr><tr><td style=text-align:left><code>float</code></td><td style=text-align:left>32</td><td style=text-align:left>Precisão Simples ($10^{-38}$ a $10^{+38}$)</td></tr><tr><td style=text-align:left><code>double</code></td><td style=text-align:left>64</td><td style=text-align:left>Precisão Dupla ($10^{-308}$ a $10^{+308}$)</td></tr><tr><td style=text-align:left><code>void</code></td><td style=text-align:left>-</td><td style=text-align:left>Ausência de valor (funções/ponteiros)</td></tr></tbody></table></section><section><h1>Bases Numéricas em C</h1><p>Para tipos inteiros (<code>int</code>, <code>char</code>), a linguagem aceita três bases na inicialização:</p><div class=col-2><ul><li><p><strong>Decimal:</strong> Padrão.</p> <ul><li>Ex: <code>int a = 125;</code></li></ul></li><li><p><strong>Octal:</strong> Precedido por <code>0</code>.</p> <ul><li>Ex: <code>int b = 044;</code> (36 decimal)</li></ul></li><li><p><strong>Hexadecimal:</strong> Precedido por <code>0x</code>.</p> <ul><li>Ex: <code>int c = 0x1FA;</code></li></ul></li></ul></div><pre class="line-numbers language-c" data-lang=C><code class=language-c>printf("%d", 0x10); // Imprime 16
-</code></pre></section><section><h1>Modificadores de Tipo</h1><p>Alteram capacidade e sinal.</p><ul><li><strong><code>unsigned</code>:</strong> Apenas positivos. Dobra a capacidade positiva (ex: <code>unsigned char</code> vai até 255).</li><li><strong><code>signed</code>:</strong> Padrão (positivo e negativo).</li><li><strong><code>short</code>:</strong> Força "inteiro pequeno" (16 bits).</li><li><strong><code>long</code>:</strong> Garante "inteiro grande" (32 bits) ou aumenta precisão (<code>long double</code>).</li></ul><div class="callout callout-example"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M12 11V7"/><path d="M9 11l3 3 3-3"/></svg></span><span class=callout-title-inner>Combinação<br></span></div><div class=callout-content><code>unsigned long int m;</code> (Inteiro grande sem sinal).</div></div></section><section><h1>Saída de Dados: <code>printf()</code></h1><p>Exibe dados formatados na tela. Não exige <code>&</code>.</p><p><strong>Sintaxe:</strong> <code>printf("texto e máscaras", variáveis);</code></p><table><thead><tr><th style=text-align:left>Formato</th><th style=text-align:left>Tipo</th></tr></thead><tbody><tr><td style=text-align:left><code>%d</code> / <code>%i</code></td><td style=text-align:left>Inteiro</td></tr><tr><td style=text-align:left><code>%f</code></td><td style=text-align:left>Real (float/double)</td></tr><tr><td style=text-align:left><code>%c</code></td><td style=text-align:left>Caractere</td></tr><tr><td style=text-align:left><code>%s</code></td><td style=text-align:left>String</td></tr></tbody></table><pre class="line-numbers language-c" data-lang=C><code class=language-c>int x = 10;
+</code></pre>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Lixo de Memória<br /></span>
+  </div>
+  <div class="callout-content">
+<p>A memória nunca está &quot;vazia&quot;. Se você usar uma variável sem inicializar, ela conterá bits aleatórios de processos anteriores.</p>
+  </div>
+</div>
+</section>
+<section><h1>Regras de Nomenclatura</h1>
+<p>O computador vincula o nome ao endereço de memória.</p>
+<p><strong>Regras Rígidas:</strong></p>
+<ol>
+<li><strong>Caracteres:</strong> Letras, números e underscore (<code>_</code>).</li>
+<li><strong>Início:</strong> Obrigatório letra ou <code>_</code>. <strong>Nunca número</strong>.</li>
+<li><strong>Case-sensitive:</strong> <code>Soma</code> $\neq$ <code>soma</code>.</li>
+<li><strong>Palavras-chave:</strong> Proibido usar reservadas (<code>int</code>, <code>return</code>, <code>if</code>, etc.).</li>
+</ol>
+<div class="col-2">
+
+<p><strong>Válidos</strong></p>
+<ul>
+<li><code>nota_final</code></li>
+<li><code>_valor</code></li>
+<li><code>x1</code></li>
+</ul>
+<p><strong>Inválidos</strong></p>
+<ul>
+<li><code>1nota</code> (começa com número)</li>
+<li><code>valor-total</code> (hífen proibido)</li>
+<li><code>float</code> (reservada)</li>
+</ul>
+</div>
+
+</section>
+<section><h1>Questões - 3</h1>
+<p><strong>1.</strong> Qual a definição correta de variável em C?</p>
+<ul>
+<li>A) Abstração sem relação física.</li>
+<li>B) Posição de memória com endereço físico.</li>
+<li>C) Valor constante em disco.</li>
+</ul>
+<p><strong>2.</strong> Identifique os identificadores <strong>INVÁLIDOS</strong>:</p>
+<p>( ) <code>1contador</code><br><br />
+( ) <code>valor_total</code><br><br />
+( ) <code>return</code><br><br />
+( ) <code>nota-final</code></p>
+<p><strong>3.</strong> O que será impresso se tentarmos exibir uma variável declarada mas não inicializada? Explique o conceito de &quot;lixo de memória&quot;.</p>
+</section>
+<section><h1>Tipos de Dados Primitivos</h1>
+<p>O tipo define o conjunto de valores e operações permitidas.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Tipo</th>
+  <th style="text-align:left">Bits</th>
+  <th style="text-align:left">Intervalo Típico</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><code>char</code></td>
+  <td style="text-align:left">8</td>
+  <td style="text-align:left">-128 a 127 (ou caractere ASCII)</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>int</code></td>
+  <td style="text-align:left">32</td>
+  <td style="text-align:left">-2.147.483.648 a 2.147.483.647</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>float</code></td>
+  <td style="text-align:left">32</td>
+  <td style="text-align:left">Precisão Simples ($10^{-38}$ a $10^{+38}$)</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>double</code></td>
+  <td style="text-align:left">64</td>
+  <td style="text-align:left">Precisão Dupla ($10^{-308}$ a $10^{+308}$)</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>void</code></td>
+  <td style="text-align:left">-</td>
+  <td style="text-align:left">Ausência de valor (funções/ponteiros)</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section><h1>Bases Numéricas em C</h1>
+<p>Para tipos inteiros (<code>int</code>, <code>char</code>), a linguagem aceita três bases na inicialização:</p>
+<div class="col-2">
+
+<ul>
+<li><p><strong>Decimal:</strong> Padrão.</p>
+<ul>
+<li>Ex: <code>int a = 125;</code></li>
+</ul>
+</li>
+<li><p><strong>Octal:</strong> Precedido por <code>0</code>.</p>
+<ul>
+<li>Ex: <code>int b = 044;</code> (36 decimal)</li>
+</ul>
+</li>
+<li><p><strong>Hexadecimal:</strong> Precedido por <code>0x</code>.</p>
+<ul>
+<li>Ex: <code>int c = 0x1FA;</code></li>
+</ul>
+</li>
+</ul>
+</div>
+
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">printf(&quot;%d&quot;, 0x10); // Imprime 16
+</code></pre>
+</section>
+<section><h1>Modificadores de Tipo</h1>
+<p>Alteram capacidade e sinal.</p>
+<ul>
+<li><strong><code>unsigned</code>:</strong> Apenas positivos. Dobra a capacidade positiva (ex: <code>unsigned char</code> vai até 255).</li>
+<li><strong><code>signed</code>:</strong> Padrão (positivo e negativo).</li>
+<li><strong><code>short</code>:</strong> Força &quot;inteiro pequeno&quot; (16 bits).</li>
+<li><strong><code>long</code>:</strong> Garante &quot;inteiro grande&quot; (32 bits) ou aumenta precisão (<code>long double</code>).</li>
+</ul>
+<div class="callout callout-example">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M12 11V7"/><path d="M9 11l3 3 3-3"/></svg></span>
+    <span class="callout-title-inner">Combinação<br /></span>
+  </div>
+  <div class="callout-content">
+<code>unsigned long int m;</code> (Inteiro grande sem sinal).</p>
+  </div>
+</div>
+</section>
+<section><h1>Saída de Dados: <code>printf()</code></h1>
+<p>Exibe dados formatados na tela. Não exige <code>&amp;</code>.</p>
+<p><strong>Sintaxe:</strong> <code>printf(&quot;texto e máscaras&quot;, variáveis);</code></p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Formato</th>
+  <th style="text-align:left">Tipo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><code>%d</code> / <code>%i</code></td>
+  <td style="text-align:left">Inteiro</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>%f</code></td>
+  <td style="text-align:left">Real (float/double)</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>%c</code></td>
+  <td style="text-align:left">Caractere</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>%s</code></td>
+  <td style="text-align:left">String</td>
+</tr>
+</tbody>
+</table>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">int x = 10;
 float y = 5.5;
-printf("Total: %d e Media: %f\n", x, y);
-</code></pre></section><section><h1>Entrada de Dados: <code>scanf()</code></h1><p>Captura dados do teclado.</p><p><strong>Sintaxe:</strong> <code>scanf("máscaras", &variáveis);</code></p><div class="callout callout-danger"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1=12 x2=12 y1=9 y2=13 /><line x1=12 x2=12 y1=17 y2=17.01 /></svg></span><span class=callout-title-inner>Regra de Ouro<br></span></div><div class=callout-content><p>Obrigatório usar <strong><code>&</code></strong> (operador de endereço) antes da variável. O <code>scanf</code> precisa saber <strong>onde</strong> gravar o dado na memória.</p></div></div><pre class="line-numbers language-c" data-lang=C><code class=language-c>int idade;
-scanf("%d", &idade); // Lê um inteiro
-</code></pre></section><section><h1>Questões - 4</h1><p><strong>4.</strong> Julgue (V/F):</p><p>( ) <code>unsigned</code> dobra a capacidade positiva do <code>int</code>.<br><br> ( ) <code>char</code> armazena inteiros pequenos e códigos ASCII.<br><br> ( ) O tipo <code>void</code> pode declarar variáveis comuns (<code>void x = 10;</code>).</p><p><strong>5.</strong> Qual o valor decimal de <code>int b = 010;</code>?</p><p><strong>6.</strong> Diferencie <code>printf</code> e <code>scanf</code> quanto ao uso do operador <code>&</code>. O que acontece se esquecer o <code>&</code> no <code>scanf</code>?</p></section><section><h1>Constantes</h1><p>Dados que não mudam durante a execução.</p><h2>1. O comando <code>#define</code></h2><p>Diretiva de pré-processamento. Substituição textual antes da compilação. Sem tipo de memória associado.</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>#define PI 3.1415
-</code></pre><h2>2. O modificador <code>const</code></h2><p>Variável de "apenas leitura". Possui tipo e endereço de memória.</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>const float PI = 3.1415;
-</code></pre></section><section><h1>Sequências de Escape</h1><p>Comandos de controle visual dentro de strings.</p><table><thead><tr><th style=text-align:left>Código</th><th style=text-align:left>Efeito</th></tr></thead><tbody><tr><td style=text-align:left><code>\n</code></td><td style=text-align:left>Nova linha</td></tr><tr><td style=text-align:left><code>\t</code></td><td style=text-align:left>Tabulação</td></tr><tr><td style=text-align:left><code>\"</code></td><td style=text-align:left>Imprime aspas duplas</td></tr><tr><td style=text-align:left><code>\\</code></td><td style=text-align:left>Imprime barra invertida</td></tr></tbody></table><pre class="line-numbers language-c" data-lang=C><code class=language-c>printf("Linha 1\nLinha 2");
-printf("Item:\tPreco:");
-</code></pre></section><section><h1>Questões - 5</h1><p><strong>7.</strong> Corrija o código:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>int main(){
+printf(&quot;Total: %d e Media: %f\n&quot;, x, y);
+</code></pre>
+</section>
+<section><h1>Entrada de Dados: <code>scanf()</code></h1>
+<p>Captura dados do teclado.</p>
+<p><strong>Sintaxe:</strong> <code>scanf(&quot;máscaras&quot;, &amp;variáveis);</code></p>
+<div class="callout callout-danger">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12" y2="17.01"/></svg></span>
+    <span class="callout-title-inner">Regra de Ouro<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Obrigatório usar <strong><code>&amp;</code></strong> (operador de endereço) antes da variável. O <code>scanf</code> precisa saber <strong>onde</strong> gravar o dado na memória.</p>
+  </div>
+</div>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">int idade;
+scanf(&quot;%d&quot;, &amp;idade); // Lê um inteiro
+</code></pre>
+</section>
+<section><h1>Questões - 4</h1>
+<p><strong>4.</strong> Julgue (V/F):</p>
+<p>( ) <code>unsigned</code> dobra a capacidade positiva do <code>int</code>.<br><br />
+( ) <code>char</code> armazena inteiros pequenos e códigos ASCII.<br><br />
+( ) O tipo <code>void</code> pode declarar variáveis comuns (<code>void x = 10;</code>).</p>
+<p><strong>5.</strong> Qual o valor decimal de <code>int b = 010;</code>?</p>
+<p><strong>6.</strong> Diferencie <code>printf</code> e <code>scanf</code> quanto ao uso do operador <code>&amp;</code>. O que acontece se esquecer o <code>&amp;</code> no <code>scanf</code>?</p>
+</section>
+<section><h1>Constantes</h1>
+<p>Dados que não mudam durante a execução.</p>
+<h2>1. O comando <code>#define</code></h2>
+<p>Diretiva de pré-processamento. Substituição textual antes da compilação. Sem tipo de memória associado.</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">#define PI 3.1415
+</code></pre>
+<h2>2. O modificador <code>const</code></h2>
+<p>Variável de &quot;apenas leitura&quot;. Possui tipo e endereço de memória.</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">const float PI = 3.1415;
+</code></pre>
+</section>
+<section><h1>Sequências de Escape</h1>
+<p>Comandos de controle visual dentro de strings.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Código</th>
+  <th style="text-align:left">Efeito</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><code>\n</code></td>
+  <td style="text-align:left">Nova linha</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>\t</code></td>
+  <td style="text-align:left">Tabulação</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>\&quot;</code></td>
+  <td style="text-align:left">Imprime aspas duplas</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>\\</code></td>
+  <td style="text-align:left">Imprime barra invertida</td>
+</tr>
+</tbody>
+</table>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">printf(&quot;Linha 1\nLinha 2&quot;);
+printf(&quot;Item:\tPreco:&quot;);
+</code></pre>
+</section>
+<section><h1>Questões - 5</h1>
+<p><strong>7.</strong> Corrija o código:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">int main(){
     int idade;
     float altura;
-    scanf("%f %d", &idade, &altura); 
-    printf("Idade: %d - Altura: %d", idade, altura);
+    scanf(&quot;%f %d&quot;, &amp;idade, &amp;altura); 
+    printf(&quot;Idade: %d - Altura: %d&quot;, idade, altura);
     return 0;
 }
-</code></pre><p><strong>8.</strong> Qual a saída visual?</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>printf("A\\B\t%d", 100);
-</code></pre><p><strong>9.</strong> Diferencie <code>#define</code> (pré-processador) de <code>const</code> (memória alocada).</p></section><section><h1>Próximos Passos</h1><p>No próximo capítulo:</p><ul><li><p><strong>Operações com Variáveis</strong>:</p> <ul><li>Cálculos matemáticos básicos.</li><li>Operadores de incremento/decremento.</li><li>Operadores relacionais.</li></ul></li><li><p><strong>Controle Condicional</strong>:</p> <ul><li>Estruturas <code>if-else</code> e <code>switch-case</code>.</li><li>Avaliação de expressões lógicas.</li><li>Uso de operadores relacionais e lógicos em condições.</li><li>Aninhamento de condições.</li></ul></li></ul></section></div></div><script data-no-bundle src=/aulas-faesa/js/vendor/reveal/reveal.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/reveal/plugin/notes/notes.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/reveal/plugin/markdown/markdown.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/reveal/plugin/math/math.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/reveal/plugin/zoom/zoom.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/prism.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-c.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-python.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-clike.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-perl.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-java.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-php.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/plugins/toolbar/prism-toolbar.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/plugins/show-language/prism-show-language.min.js></script><script data-no-bundle src=/aulas-faesa/js/prism-slang.js></script><script data-no-bundle src=/aulas-faesa/js/mermaid.min.js></script><script>document.addEventListener(`DOMContentLoaded`,function(){mermaid.initialize({startOnLoad:!1,theme:`default`,securityLevel:`loose`,fontFamily:`Inter, system-ui, sans-serif`})});</script><script>Reveal.initialize({hash:!0,slideNumber:`c/t`,center:!1,controls:!1,plugins:[RevealMarkdown,RevealNotes,RevealMath.KaTeX,RevealZoom],katex:{local:`/aulas-faesa/js/vendor/katex`,output:`html`,throwOnError:!1,strict:!1},width:960,height:800,margin:.15,maxScale:2}),Reveal.on(`slideready`,event=>{Prism.highlightAll();try{let mermaids=event.currentSlide.querySelectorAll(`.mermaid`);mermaids.length>0&&mermaid.init(void 0,mermaids)}catch(err){console.warn(`Mermaid init failed`,err)}}),Reveal.on(`slidechanged`,event=>{Prism.highlightAll();try{let mermaids=event.currentSlide.querySelectorAll(`.mermaid`);mermaids.length>0&&mermaid.init(void 0,mermaids)}catch(err){console.warn(`Mermaid init failed`,err)}});</script><script data-no-bundle src=/aulas-faesa/js/rough.min.js></script><script data-no-bundle src=/aulas-faesa/js/apply_sketch.js></script><style>.reveal{font-size:20px;text-align:left!important}.reveal code:not(pre code){background-color:var(--code-bg)!important;color:#3b82f6!important;border:1px dashed var(--border)!important;white-space:pre-wrap!important;word-break:break-word!important;border-radius:4px!important;padding:.1em .3em!important;font-family:JetBrains Mono,Fira Code,Consolas,monospace!important;font-size:.85em!important}.reveal h1{align-items:center;font-size:2.2em;display:flex;text-align:left!important;width:100%!important;text-shadow:none!important;justify-content:flex-start!important;margin-bottom:10px!important;margin-left:0!important}.reveal div.code-toolbar{position:relative;width:90%!important;margin:1em auto!important}.reveal pre[class*=language-]{width:100%!important;margin:0!important;padding:1em!important;font-size:.8em!important}.reveal pre[class*=language-]>code{display:block!important;position:relative!important}.reveal .line-numbers-rows{border-right:1px solid #ccc!important;width:3.2em!important;padding-top:0!important;position:absolute!important;top:0!important;left:-3.8em!important}.reveal .line-numbers-rows>span:before{color:#999!important;text-align:right!important;padding-right:.5em!important;display:block!important}.reveal pre[class*=language-].line-numbers,.reveal pre[class*=language-]:has(.line-numbers-rows){padding-left:3.8em!important}.reveal div.toolbar{z-index:10;opacity:1!important;padding-right:.1em!important;position:absolute!important;top:.2em!important;right:.5em!important}.reveal div.toolbar-item span{color:#999!important;text-transform:uppercase!important;box-shadow:none!important;background:0 0!important;border:none!important;padding:0!important;font-family:Inter,sans-serif!important;font-size:.7em!important;font-weight:600!important}.reveal h2{font-size:1.6em;text-align:left!important;margin-top:30px!important;margin-bottom:20px!important}.reveal h3{font-size:1.3em;text-align:left!important;margin-top:20px!important;margin-bottom:15px!important}.reveal p{line-height:1.5;text-align:left!important;margin-top:20px!important;margin-left:0!important}.reveal ul,.reveal ol,.reveal li{line-height:1.5;text-align:left!important;margin-left:0!important}.reveal ul,.reveal ol{padding-left:1.2em!important;display:block!important}.reveal .slides section{box-sizing:border-box;text-align:left!important;padding:40px!important}.reveal .slides{text-align:left!important}.reveal .slides section:not(.stack):has(>h1:only-child),.reveal .slides section:not(.stack):has(>h1:first-child+h2:last-child),.reveal .slides section:not(.stack):has(>h1:first-child+h2+p:last-child){text-align:center!important;flex-direction:column!important;justify-content:center!important;align-items:center!important;height:100%!important;display:flex!important;top:0!important}.reveal .slides section:not(.stack):has(>h1:only-child) h1,.reveal .slides section:not(.stack):has(>h1:first-child+h2:last-child) h1,.reveal .slides section:not(.stack):has(>h1:first-child+h2:last-child) h2,.reveal .slides section:not(.stack):has(>h1:first-child+h2+p:last-child) h1,.reveal .slides section:not(.stack):has(>h1:first-child+h2+p:last-child) h2,.reveal .slides section:not(.stack):has(>h1:first-child+h2+p:last-child) p{text-align:center!important;justify-content:center!important;width:100%!important;min-height:auto!important;margin:0!important}.reveal .slides section:not(.stack):has(>h1:first-child+h2:last-child) h1,.reveal .slides section:not(.stack):has(>h1:first-child+h2+p:last-child) h1{margin-bottom:.5em!important}.reveal .slides section:not(.stack):has(>h1:first-child+h2+p:last-child) h2{margin-bottom:.3em!important}.reveal .slides section:not(.stack):has(>h1:first-child+h2+p:last-child) p{color:#666;font-size:.9em}.reveal .slides section:has(.full-screen-image){padding:0!important}.reveal:has(section.present .full-screen-image){background-image:url(../../slide_end_background.png)!important;background-position:50%!important;background-size:cover!important}.reveal:has(section.present .full-screen-image) .slides,.reveal:has(section.present .full-screen-image) .slides section.present{background:0 0!important}.full-screen-image{justify-content:center;align-items:center;width:100vw;height:100vh;display:flex;margin:0!important}.reveal .svg-graph{max-width:100%;height:auto;margin-top:1em!important;margin-bottom:1em!important;overflow:visible!important}.reveal .mermaid-switcher{display:none!important}.centered{justify-content:center!important;align-items:center!important;width:100%!important;margin:1em 0!important;display:flex!important}.no-break{width:100%;display:block}.reveal blockquote{background:#ffaa4933;padding:5px;font-style:italic;display:block;position:relative;box-shadow:0 0 2px #0003;margin:var(--r-block-margin)auto!important;text-align:left!important}.col1{width:90%;margin:0 auto}.col2{justify-content:space-around;align-items:flex-start;width:90%;margin:0 auto;display:flex}:root{--callout-note:#448aff;--callout-abstract:#00b0ff;--callout-info:#00b8d4;--callout-todo:#00bfa5;--callout-tip:#00c853;--callout-success:#64dd17;--callout-question:#ffab00;--callout-warning:#ff9100;--callout-failure:#ff5252;--callout-danger:#ff1744;--callout-bug:#f50057;--callout-example:#7c4dff;--callout-quote:#9e9e9e;--code-bg:#f8f8f8;--border:#ddd}.reveal .callout{border:1px solid var(--border);border-left:6px solid var(--callout-note);border-radius:4px;font-size:.8em;overflow:hidden;text-align:left!important;width:75%!important;max-width:100%!important;margin:1rem auto!important}.reveal .callout-title{color:var(--callout-note);background:#0000000d;align-items:center;gap:.5rem;padding:.5rem 1rem;font-weight:600;display:flex}.reveal .callout-icon{align-items:center;display:flex}.reveal .callout-icon svg{width:1.2em;height:1.2em}.reveal .callout-content{padding:.5rem 1rem}.reveal .callout-content p{margin-top:.5rem!important}.reveal .callout-content p:first-child{margin-top:0!important}.reveal h1{text-transform:none!important}.reveal .callout-abstract{border-left-color:var(--callout-abstract)}.reveal .callout-abstract .callout-title{color:var(--callout-abstract)}.reveal .callout-info{border-left-color:var(--callout-info)}.reveal .callout-info .callout-title{color:var(--callout-info)}.reveal .callout-todo{border-left-color:var(--callout-todo)}.reveal .callout-todo .callout-title{color:var(--callout-todo)}.reveal .callout-tip{border-left-color:var(--callout-tip)}.reveal .callout-tip .callout-title{color:var(--callout-tip)}.reveal .callout-success{border-left-color:var(--callout-success)}.reveal .callout-success .callout-title{color:var(--callout-success)}.reveal .callout-question{border-left-color:var(--callout-question)}.reveal .callout-question .callout-title{color:var(--callout-question)}.reveal .callout-warning{border-left-color:var(--callout-warning)}.reveal .callout-warning .callout-title{color:var(--callout-warning)}.reveal .callout-failure{border-left-color:var(--callout-failure)}.reveal .callout-failure .callout-title{color:var(--callout-failure)}.reveal .callout-danger{border-left-color:var(--callout-danger)}.reveal .callout-danger .callout-title{color:var(--callout-danger)}.reveal .callout-bug{border-left-color:var(--callout-bug)}.reveal .callout-bug .callout-title{color:var(--callout-bug)}.reveal .callout-example{border-left-color:var(--callout-example)}.reveal .callout-example .callout-title{color:var(--callout-example)}.reveal .callout-quote{border-left-color:var(--callout-quote)}.reveal .callout-quote .callout-title{color:var(--callout-quote)}.red-note{color:var(--callout-failure)}.reveal .slide-number{border-radius:4px;color:#000000b1!important;background:#0000001a!important;padding:5px 10px!important;font-size:.8em!important}@media print{.reveal .slides section{visibility:visible!important;opacity:1!important;page-break-after:always!important;width:100%!important;height:100%!important;display:block!important;position:relative!important;top:0!important;left:0!important;overflow:hidden!important}.reveal .slides{width:100%!important;height:100%!important;top:0!important;left:0!important;transform:none!important}.reveal{overflow:visible!important}}</style></body></html>
+</code></pre>
+<p><strong>8.</strong> Qual a saída visual?</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">printf(&quot;A\\B\t%d&quot;, 100);
+</code></pre>
+<p><strong>9.</strong> Diferencie <code>#define</code> (pré-processador) de <code>const</code> (memória alocada).</p>
+</section>
+<section><h1>Próximos Passos</h1>
+<p>No próximo capítulo:</p>
+<ul>
+<li><p><strong>Operações com Variáveis</strong>:</p>
+<ul>
+<li>Cálculos matemáticos básicos.</li>
+<li>Operadores de incremento/decremento.</li>
+<li>Operadores relacionais.</li>
+</ul>
+</li>
+<li><p><strong>Controle Condicional</strong>:</p>
+<ul>
+<li>Estruturas <code>if-else</code> e <code>switch-case</code>.</li>
+<li>Avaliação de expressões lógicas.</li>
+<li>Uso de operadores relacionais e lógicos em condições.</li>
+<li>Aninhamento de condições.</li>
+</ul>
+</li>
+</ul>
+</section>
+        </div>
+    </div>
+
+    <script src="/aulas-faesa/js/vendor/reveal/reveal.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/notes/notes.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/markdown/markdown.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/math/math.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/zoom/zoom.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/prism.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-c.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-python.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-clike.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-perl.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-java.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-php.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/toolbar/prism-toolbar.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/show-language/prism-show-language.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/prism-slang.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/mermaid.min.js" data-no-bundle></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            mermaid.initialize({
+                startOnLoad: false,
+                theme: 'default',
+                securityLevel: 'loose',
+                fontFamily: 'Inter, system-ui, sans-serif',
+            });
+        });
+    </script>
+    <script>
+        Reveal.initialize({
+            hash: true,
+            slideNumber: 'c/t',
+            center: false,
+            controls: false,
+            plugins: [RevealMarkdown, RevealNotes, RevealMath.KaTeX, RevealZoom],
+            katex: {
+                local: '/aulas-faesa/js/vendor/katex',
+                output: 'html',
+                throwOnError: false,
+                strict: false,
+            },
+            width: 960,
+            height: 800,
+            margin: 0.15,
+            maxScale: 2.0,
+        });
+
+        // Ensure Prism highlights code on slide changes
+        Reveal.on('slideready', event => {
+            Prism.highlightAll();
+            try {
+                let mermaids = event.currentSlide.querySelectorAll('.mermaid');
+                if (mermaids.length > 0) {
+                    mermaid.init(undefined, mermaids);
+                }
+            } catch (err) { console.warn("Mermaid init failed", err); }
+        });
+        Reveal.on('slidechanged', event => {
+            Prism.highlightAll();
+            try {
+                let mermaids = event.currentSlide.querySelectorAll('.mermaid');
+                if (mermaids.length > 0) {
+                    mermaid.init(undefined, mermaids);
+                }
+            } catch (err) { console.warn("Mermaid init failed", err); }
+        });
+    </script>
+    <script src="/aulas-faesa/js/rough.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/apply_sketch.js" data-no-bundle></script>
+    <style>
+        /* Modern base styles */
+        .reveal {
+            font-size: 20px;
+            text-align: left !important;
+        }
+
+        .reveal code:not(pre code) {
+            font-family: 'JetBrains Mono', 'Fira Code', Consolas, monospace !important;
+            background-color: var(--code-bg) !important;
+            padding: 0.1em 0.3em !important;
+            border-radius: 4px !important;
+            font-size: 0.85em !important;
+            color: #3b82f6 !important;
+            border: 1px dashed var(--border) !important;
+            white-space: pre-wrap !important;
+            word-break: break-word !important;
+        }
+
+        .reveal h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px !important;
+            margin-left: 0 !important;
+            /* min-height: 2.3em; */
+            display: flex;
+            align-items: center;
+            justify-content: flex-start !important;
+            text-align: left !important;
+            width: 100% !important;
+            text-shadow: none !important;
+        }
+
+        /* Prism overrides for Reveal.js */
+        .reveal div.code-toolbar {
+            position: relative;
+            width: 90% !important;
+            margin: 1em auto !important;
+        }
+
+        .reveal pre[class*="language-"] {
+            margin: 0 !important;
+            padding: 1em !important;
+            width: 100% !important;
+            font-size: 0.8em !important;
+        }
+
+        .reveal pre[class*="language-"] > code {
+            position: relative !important;
+            display: block !important;
+        }
+
+        .reveal .line-numbers-rows {
+            position: absolute !important;
+            top: 0 !important;
+            left: -3.8em !important;
+            width: 3.2em !important;
+            padding-top: 0 !important;
+            border-right: 1px solid #ccc !important;
+        }
+
+        .reveal .line-numbers-rows > span:before {
+            padding-right: 0.5em !important;
+            color: #999 !important;
+            display: block !important;
+            text-align: right !important;
+        }
+
+        .reveal pre[class*="language-"].line-numbers,
+        .reveal pre[class*="language-"]:has(.line-numbers-rows) {
+            padding-left: 3.8em !important;
+        }
+
+        /* Language label styling */
+        .reveal div.toolbar {
+            position: absolute !important;
+            top: 0.2em !important;
+            right: 0.5em !important;
+            opacity: 1 !important;
+            padding-right: 0.1em !important;
+            z-index: 10;
+        }
+
+        .reveal div.toolbar-item span {
+            font-family: 'Inter', sans-serif !important;
+            font-size: 0.7em !important;
+            font-weight: 600 !important;
+            color: #999 !important;
+            text-transform: uppercase !important;
+            background: none !important;
+            box-shadow: none !important;
+            border: none !important;
+            padding: 0 !important;
+        }
+
+        .reveal h2 {
+            font-size: 1.6em;
+            margin-top: 30px !important;
+            margin-bottom: 20px !important;
+            text-align: left !important;
+        }
+
+        .reveal h3 {
+            font-size: 1.3em;
+            margin-top: 20px !important;
+            margin-bottom: 15px !important;
+            text-align: left !important;
+        }
+
+        .reveal p {
+            line-height: 1.5;
+            margin-top: 20px !important;
+            margin-left: 0 !important;
+            text-align: left !important;
+        }
+
+        .reveal ul,
+        .reveal ol,
+        .reveal li {
+            line-height: 1.5;
+            text-align: left !important;
+            margin-left: 0 !important;
+        }
+        
+        .reveal ul, .reveal ol {
+            display: block !important;
+            padding-left: 1.2em !important;
+        }
+
+        /* Slide padding and layout */
+        .reveal .slides section {
+            padding: 40px !important;
+            box-sizing: border-box;
+            text-align: left !important;
+        }
+
+        .reveal .slides {
+            text-align: left !important;
+        }
+
+        /* Centering for Title slides (h1 ONLY, h1 + h2 ONLY, or h1 + h2 + p ONLY) */
+        .reveal .slides section:not(.stack):has(> h1:only-child),
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child),
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) {
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: center !important;
+            align-items: center !important;
+            text-align: center !important;
+            height: 100% !important;
+            top: 0 !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:only-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child) h2,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h2,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) p {
+            justify-content: center !important;
+            text-align: center !important;
+            margin: 0 !important;
+            min-height: auto !important;
+            width: 100% !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h1 {
+            margin-bottom: 0.5em !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h2 {
+            margin-bottom: 0.3em !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) p {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        /* Full screen slide fix */
+        .reveal .slides section:has(.full-screen-image) {
+            padding: 0 !important;
+        }
+
+        /* Full screen slide fix - Garantindo que o fundo do Reveal fique visível e a imagem carregada */
+        .reveal:has(section.present .full-screen-image) {
+            background-image: url('../../slide_end_background.png') !important;
+            background-size: cover !important;
+            background-position: center !important;
+        }
+
+        /* Torna o slide e o container de slides transparentes para mostrar o fundo da .reveal */
+        .reveal:has(section.present .full-screen-image) .slides,
+        .reveal:has(section.present .full-screen-image) .slides section.present {
+            background: transparent !important;
+        }
+
+        .full-screen-image {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 !important;
+            /* Se houver texto, ele centraliza aqui */
+        }
+
+        /* Spacing for diagrams */
+        .reveal .svg-graph {
+            margin-top: 1em !important;
+            margin-bottom: 1em !important;
+            overflow: visible !important; /* Prevent labels from being cut off */
+            max-width: 100%;
+            height: auto;
+        }
+
+        .reveal .mermaid-switcher {
+            display: none !important;
+        }
+
+        .centered {
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            width: 100% !important;
+            margin: 1em 0 !important;
+        }
+
+        .no-break {
+            display: block;
+            width: 100%;
+        }
+
+        .reveal blockquote {
+            display: block;
+            position: relative;
+            margin: var(--r-block-margin) auto !important;
+            padding: 5px;
+            font-style: italic;
+            background: rgba(255, 170, 73, 0.2);
+            box-shadow: 0 0 2px rgba(0,0,0,.2);
+            text-align: left !important;
+        }
+
+        .col1 {
+            width: 90%;
+            margin: 0 auto;
+        }
+
+        .col2 {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start;
+            width: 90%;
+            margin: 0 auto;
+            align-items: flex-start;
+        }
+
+        /* Callout Styles */
+        :root {
+            --callout-note: #448aff;
+            --callout-abstract: #00b0ff;
+            --callout-info: #00b8d4;
+            --callout-todo: #00bfa5;
+            --callout-tip: #00c853;
+            --callout-success: #64dd17;
+            --callout-question: #ffab00;
+            --callout-warning: #ff9100;
+            --callout-failure: #ff5252;
+            --callout-danger: #ff1744;
+            --callout-bug: #f50057;
+            --callout-example: #7c4dff;
+            --callout-quote: #9e9e9e;
+            --code-bg: #f8f8f8;
+            --border: #ddd;
+        }
+
+        .reveal .callout {
+            margin: 1rem auto !important;
+            border: 1px solid var(--border);
+            border-left: 6px solid var(--callout-note);
+            border-radius: 4px;
+            overflow: hidden;
+            text-align: left !important;
+            font-size: 0.8em;
+            width: 75% !important;
+            max-width: 100% !important;
+        }
+
+        .reveal .callout-title {
+            padding: 0.5rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            color: var(--callout-note);
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .reveal .callout-icon {
+            display: flex;
+            align-items: center;
+        }
+
+        .reveal .callout-icon svg {
+            width: 1.2em;
+            height: 1.2em;
+        }
+
+        .reveal .callout-content {
+            padding: 0.5rem 1rem;
+        }
+
+        .reveal .callout-content p {
+            margin-top: 0.5rem !important;
+        }
+
+        .reveal .callout-content p:first-child {
+            margin-top: 0 !important;
+        }
+
+        .reveal h1 { text-transform: none !important; }
+
+        .reveal .callout-abstract { border-left-color: var(--callout-abstract); }
+        .reveal .callout-abstract .callout-title { color: var(--callout-abstract); }
+        .reveal .callout-info { border-left-color: var(--callout-info); }
+        .reveal .callout-info .callout-title { color: var(--callout-info); }
+        .reveal .callout-todo { border-left-color: var(--callout-todo); }
+        .reveal .callout-todo .callout-title { color: var(--callout-todo); }
+        .reveal .callout-tip { border-left-color: var(--callout-tip); }
+        .reveal .callout-tip .callout-title { color: var(--callout-tip); }
+        .reveal .callout-success { border-left-color: var(--callout-success); }
+        .reveal .callout-success .callout-title { color: var(--callout-success); }
+        .reveal .callout-question { border-left-color: var(--callout-question); }
+        .reveal .callout-question .callout-title { color: var(--callout-question) ; }
+        .reveal .callout-warning { border-left-color: var(--callout-warning); }
+        .reveal .callout-warning .callout-title { color: var(--callout-warning); }
+        .reveal .callout-failure { border-left-color: var(--callout-failure); }
+        .reveal .callout-failure .callout-title { color: var(--callout-failure); }
+        .reveal .callout-danger { border-left-color: var(--callout-danger); }
+        .reveal .callout-danger .callout-title { color: var(--callout-danger); }
+        .reveal .callout-bug { border-left-color: var(--callout-bug); }
+        .reveal .callout-bug .callout-title { color: var(--callout-bug); }
+        .reveal .callout-example { border-left-color: var(--callout-example); }
+        .reveal .callout-example .callout-title { color: var(--callout-example); }
+        .reveal .callout-quote { border-left-color: var(--callout-quote); }
+        .reveal .callout-quote .callout-title { color: var(--callout-quote); }
+        .red-note { color: var(--callout-failure); }
+
+        .reveal .slide-number {
+            font-size: 0.8em !important;
+            padding: 5px 10px !important;
+            background: rgba(0,0,0,0.1) !important;
+            border-radius: 4px;
+            color: #000000b1 !important;
+        }
+
+        /* Print styles */
+        @media print {
+            .reveal .slides section {
+                display: block !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                position: relative !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+                page-break-after: always !important;
+                overflow: hidden !important;
+            }
+
+            .reveal .slides {
+                transform: none !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+            }
+            
+            .reveal {
+                overflow: visible !important;
+            }
+        }
+    </style>
+</body>
+
+</html>

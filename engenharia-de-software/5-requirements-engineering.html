@@ -1,92 +1,934 @@
-<!doctype html><html lang=pt-BR><meta charset=UTF-8><meta content="width=device-width,initial-scale=1.0" name=viewport><title>Toposia - Engenharia de Software</title><link media="(prefers-color-scheme: light)" href=/aulas-faesa/img/dark-favicon.svg rel=icon><link media="(prefers-color-scheme: dark)" href=/aulas-faesa/img/light-favicon.svg rel=icon><link data-no-bundle href=/aulas-faesa/css/vendor/fonts.css rel=stylesheet><link data-no-bundle href=/aulas-faesa/js/vendor/katex/dist/katex.min.css rel=stylesheet><link href=/aulas-faesa/css/bundle.min.css rel=stylesheet><link data-no-bundle href=/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css rel=stylesheet><script src=/aulas-faesa/js/bundle.min.js></script></head><body><script>// Restore sidebar state instantly (before first paint) to avoid transition flash
-(function(){localStorage.getItem(`cf_sidebar_hidden`)===`true`&&document.body.classList.add(`sidebar-hidden`,`no-transition`),requestAnimationFrame(function(){requestAnimationFrame(function(){document.body.classList.remove(`no-transition`)})})})();</script><div class=page-wrapper><nav class=sidebar><div class=sidebar-content><header class=sidebar-title-section><a class=course-title-link href=contents.html> <h1 class=sidebar-course-title>Engenharia de Software</h1> </a><div class=sidebar-ornament>❧</div></header><section class=sidebar-toc-section><h2 class=toc-header>Tabela de Conteúdos</h2><ol class=toc-list><li class="toc-item level-2"><a href=#introdução>5.1. Introdução</a></li><li class="toc-item level-2"><a href=#requisitos-de-usuário-e-requisitos-de-sistema>5.2. Requisitos de Usuário e Requisitos de Sistema</a></li><li class="toc-item level-3"><a href=#exemplos-rápidos>5.2.1. Exemplos rápidos</a></li><li class="toc-item level-2"><a href=#requisitos-funcionais-e-não-funcionais>5.3. Requisitos Funcionais e Não Funcionais</a></li><li class="toc-item level-3"><a href=#requisitos-funcionais>5.3.1. Requisitos Funcionais</a></li><li class="toc-item level-3"><a href=#requisitos-não-funcionais>5.3.2. Requisitos Não Funcionais</a></li><li class="toc-item level-3"><a href=#exemplos-por-tipo-de-requisito>5.3.3. Exemplos por tipo de requisito</a></li><li class="toc-item level-3"><a href=#métricas-para-requisitos-não-funcionais>5.3.4. Métricas para Requisitos Não Funcionais</a></li><li class="toc-item level-2"><a href=#o-documento-de-requisitos-de-software>5.4. O Documento de Requisitos de Software</a></li><li class="toc-item level-2"><a href=#processos-de-engenharia-de-requisitos>5.5. Processos de Engenharia de Requisitos</a></li><li class="toc-item level-3"><a href=#estudo-de-viabilidade>5.5.1. Estudo de viabilidade</a></li><li class="toc-item level-3"><a href=#elicitação-e-análise>5.5.2. Elicitação e análise</a></li><li class="toc-item level-3"><a href=#especificação>5.5.3. Especificação</a></li><li class="toc-item level-3"><a href=#validação>5.5.4. Validação</a></li><li class="toc-item level-3"><a href=#gerenciamento-de-requisitos>5.5.5. Gerenciamento de requisitos</a></li><li class="toc-item level-2"><a href=#elicitação-e-análise-de-requisitos>5.6. Elicitação e Análise de Requisitos</a></li><li class="toc-item level-3"><a href=#entrevistas>5.6.1. Entrevistas</a></li><li class="toc-item level-3"><a href=#cenários>5.6.2. Cenários</a></li><li class="toc-item level-3"><a href=#casos-de-uso>5.6.3. Casos de uso</a></li><li class="toc-item level-3"><a href=#etnografia>5.6.4. Etnografia</a></li><li class="toc-item level-2"><a href=#validação-de-requisitos>5.7. Validação de Requisitos</a></li><li class="toc-item level-2"><a href=#gerenciamento-de-requisitos>5.8. Gerenciamento de Requisitos</a></li><li class="toc-item level-2"><a href=#estudo-de-caso-mhc-pms>5.9. Estudo de Caso: MHC-PMS</a></li><li class="toc-item level-2"><a href=#questões>5.10. Questões</a></li><li class="toc-item level-2"><a href=#próximos-passos>5.11. Próximos passos</a></li></ol></section><nav class=sidebar-nav-section><a class="sidebar-nav-link prev" href=4-agile-development.html><i class=nav-icon data-lucide=chevron-left></i> Desenvolvimento Ágil: Scrum e XP</a><a class="sidebar-nav-link back" href=javascript:void(0) onclick=handleBackNavigation()><i class=nav-icon data-lucide=arrow-left></i> Voltar</a></nav></div></nav><button aria-label=Menu class=mobile-menu-toggle><i data-lucide=menu></i></button><button aria-label="Alternar Barra Lateral" class=sidebar-toggle onclick=CourseForgeNav.toggleSidebar()><i class=toggle-icon data-lucide=chevron-left id=sidebar-toggle-icon></i></button><div class=mobile-menu-overlay></div><main class=main-content><article class=article><header class=article-header><span class=chapter-number>5</span><h1 class=article-title><span class="title-ornament left">❧</span> <span class=title-text>Engenharia de Requisitos</span> <span class="title-ornament right">❧</span></h1><p class=article-date>01/04/2026</p><nav aria-label=Breadcrumb class=breadcrumb><a class=breadcrumb-link href=contents.html>Engenharia de Software</a><span class=breadcrumb-separator><i class=breadcrumb-icon data-lucide=chevron-right></i></span><a class=breadcrumb-link href=contents.html#part-II>II - Descrição de Software</a><span class=breadcrumb-separator><i class=breadcrumb-icon data-lucide=chevron-right></i></span><span class=breadcrumb-current>Engenharia de Requisitos</span></nav></header><div class=article-body><h2 id=introdução><span class=heading-text>Introdução</span><span class=heading-arabic>5.1</span></h2><p>A Engenharia de Requisitos ocupa uma posição central no desenvolvimento de software porque define, com clareza progressiva, o que o sistema deve fazer, quais restrições deve respeitar e como essas expectativas serão comunicadas entre clientes, usuários, analistas, arquitetos e desenvolvedores. Em projetos reais, muitos dos problemas que aparecem no código, nos testes e até na implantação têm origem muito antes da implementação: surgem de requisitos ambíguos, incompletos, contraditórios ou mal compreendidos.</p><p>Quando falamos em requisitos, não estamos tratando apenas de uma lista de funcionalidades. Estamos tratando de necessidades de negócio, expectativas dos usuários, regras organizacionais, limitações técnicas, exigências legais e critérios de qualidade que moldam o sistema como um todo. Por isso, a Engenharia de Requisitos não é uma etapa burocrática; ela é o processo de transformar um problema difuso do mundo real em uma descrição de software que possa ser analisada, projetada, implementada, validada e mantida.</p><p>Segundo Sommerville, os requisitos de um sistema são descrições dos serviços que o sistema deve fornecer e das restrições sob as quais ele deve operar. O processo de descobrir, analisar, documentar, validar e gerenciar essas descrições é justamente o que chamamos de Engenharia de Requisitos.</p><p>É importante perceber que o termo "requisito" é usado em níveis diferentes de abstração. Às vezes, ele aparece como uma necessidade de negócio expressa de forma ampla; em outros casos, como uma especificação detalhada de comportamento. Essa distinção precisa ser bem compreendida para evitar confusão entre aquilo que o cliente quer e aquilo que a equipe técnica precisa implementar.</p><div class="callout callout-question"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><circle cx=12 cy=12 r=10 /><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span><span class=callout-title-inner>Reflita<br></span></div><div class=callout-content><p>Quando alguém diz "o sistema precisa ser rápido e seguro", isso já é suficiente para a equipe implementar corretamente o software?</p></div></div><h2 id=requisitos-de-usuário-e-requisitos-de-sistema><span class=heading-text>Requisitos de Usuário e Requisitos de Sistema</span><span class=heading-arabic>5.2</span></h2><p>Uma distinção fundamental apresentada por Sommerville é a separação entre <strong>requisitos de usuário</strong> e <strong>requisitos de sistema</strong>.</p><ol><li><strong>Requisitos de usuário</strong> são descrições em alto nível, normalmente em linguagem natural e com apoio de diagramas simples, escritas para clientes, gestores e usuários finais.</li><li><strong>Requisitos de sistema</strong> são descrições mais detalhadas e técnicas da funcionalidade, das restrições e do comportamento do software, usadas principalmente pela equipe de desenvolvimento.</li></ol><p>Essa distinção existe porque públicos diferentes precisam de níveis diferentes de detalhe. O usuário final quer entender o que o sistema fará em termos de negócio. Já arquitetos, programadores e testadores precisam de precisão suficiente para construir e validar o sistema corretamente.</p><p>O ponto mais importante aqui, e que costuma aparecer bastante em prova, é este: <strong>requisitos de sistema são mais detalhados e mais técnicos que requisitos de usuário, mas ainda não devem definir a tecnologia da solução</strong>. Em outras palavras, requisito de sistema ainda não é escolha de linguagem, framework, banco de dados ou arquitetura de implantação. Ele detalha comportamento, entradas, saídas, restrições e regras do sistema. A decisão de implementar isso com Java, Python, SAP, PostgreSQL ou microsserviços pertence ao projeto e à implementação, não à definição do requisito em si.</p><div class=mermaid-outer-container><div class=mermaid-switcher><div class=switcher-track><button class="switcher-btn active" onclick="CourseForgeUI.switchMermaidView(this, 'diagram')"><i data-lucide=eye></i> Diagrama</button><button onclick="CourseForgeUI.switchMermaidView(this, 'code')" class=switcher-btn><i data-lucide=code></i> Código</button><div class=switcher-slider></div></div></div><div class=mermaid-content><div class=mermaid-display><pre class=mermaid>flowchart TD
-    A[Problema do negocio] --> B[Requisitos de usuario]
-    B --> C[Requisitos de sistema]
-    C --> D[Projeto e implementacao]</pre></div><div class=mermaid-source style=display:none><pre class=language-mermaid><code>flowchart TD
-    A[Problema do negocio] --> B[Requisitos de usuario]
-    B --> C[Requisitos de sistema]
-    C --> D[Projeto e implementacao]</code></pre></div></div></div><p>Considere o exemplo abaixo:</p><p><strong>Requisito de usuário:</strong><br> O sistema deve gerar relatórios mensais com o custo dos medicamentos prescritos por cada clínica.</p><p><strong>Possíveis requisitos de sistema derivados:</strong></p><ol><li>O sistema deve consolidar prescrições por clínica no último dia útil do mês.</li><li>O relatório deve listar medicamento, quantidade prescrita e custo total.</li><li>O acesso ao relatório deve ser restrito a usuários autorizados.</li></ol><p>O requisito de usuário comunica a necessidade geral. Os requisitos de sistema detalham como essa necessidade será tratada pelo software.</p><h3 id=exemplos-rápidos><span class=heading-text>Exemplos rápidos</span><span class=heading-arabic>5.2.1</span></h3><table><thead><tr><th style=text-align:left>Tipo</th><th style=text-align:left>Exemplo</th></tr></thead><tbody><tr><td style=text-align:left><strong>Requisito de usuário</strong></td><td style=text-align:left>O sistema deve permitir ao coordenador visualizar faltas por turma.</td></tr><tr><td style=text-align:left><strong>Requisito de sistema</strong></td><td style=text-align:left>O sistema deve retornar a lista de faltas de uma turma em até 2 segundos após a seleção da turma.</td></tr></tbody></table><div class="callout callout-tip"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .5 2.2 1.5 3.1.7.7 1.3 1.5 1.5 2.4"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span><span class=callout-title-inner><br></span></div><div class=callout-content><p>Regra prática: requisito de usuário fala a linguagem do negócio; requisito de sistema fala a linguagem da implementação e da validação.</p></div></div><div class=example><div class=example-title>Requisito de sistema ou decisão de projeto?</div><p><strong>Caso 1:</strong> O sistema deve permitir que o coordenador filtre faltas por turma, disciplina e período letivo.</p><p>Isso é um <strong>requisito de sistema</strong>, porque detalha uma capacidade que o software deve oferecer.</p><p><strong>Caso 2:</strong> O sistema deve exibir a lista de faltas em até 2 segundos para turmas com até 100 alunos.</p><p>Isso também é um <strong>requisito de sistema</strong>, agora com um detalhamento não funcional mensurável.</p><p><strong>Caso 3:</strong> O sistema deve ser implementado em Java com Spring Boot e PostgreSQL.</p><p>Isso <strong>não é requisito de sistema funcional</strong>. Isso é uma <strong>decisão de projeto</strong> ou uma <strong>restrição tecnológica</strong>.</p><p><strong>Caso 4:</strong> O sistema deve autenticar usuários usando o login institucional da universidade.</p><p>Isso é melhor tratado como um <strong>requisito organizacional</strong>, pois deriva de uma política da instituição.</p></div><div class=example><div class=example-title>Questão de concurso - Requisitos de usuário x requisitos de sistema</div><p>Considere as afirmações a seguir sobre Engenharia de Requisitos:</p><ul><li>A) Requisitos de sistema devem definir linguagem de programação, banco de dados e framework a serem usados.</li><li>B) Requisitos de usuário são escritos para clientes e usuários finais, enquanto requisitos de sistema detalham o comportamento esperado para a equipe técnica.</li><li>C) Requisitos de usuário devem sempre substituir totalmente os requisitos de sistema em projetos grandes.</li></ul><p>Qual alternativa está correta?</p><hr><p><strong>Resposta:</strong> <strong>B</strong>.</p><p><strong>Por que as outras estão erradas?</strong></p><ul><li><strong>A</strong> está errada porque linguagem, framework e banco de dados são, em geral, decisões de projeto ou restrições tecnológicas, não o núcleo do requisito de sistema.</li><li><strong>C</strong> está errada porque projetos grandes normalmente precisam dos dois níveis de descrição: um voltado ao negócio e outro voltado à implementação e validação.</li></ul></div><h2 id=requisitos-funcionais-e-não-funcionais><span class=heading-text>Requisitos Funcionais e Não Funcionais</span><span class=heading-arabic>5.3</span></h2><p>Os requisitos de software são frequentemente classificados em dois grandes grupos: <strong>funcionais</strong> e <strong>não funcionais</strong>.</p><h3 id=requisitos-funcionais><span class=heading-text>Requisitos Funcionais</span><span class=heading-arabic>5.3.1</span></h3><p>Os requisitos funcionais descrevem os serviços que o sistema deve fornecer, como deve reagir a entradas específicas e como deve se comportar em determinadas situações. Em termos simples, eles dizem <strong>o que o sistema faz</strong>.</p><p>Exemplos de requisitos funcionais para um sistema como o MHC-PMS:</p><ol><li>O usuário deve ser capaz de pesquisar a lista de agendamentos de todas as clínicas.</li><li>O sistema deve gerar diariamente a lista de pacientes com consultas marcadas.</li><li>O sistema deve permitir registrar prescrições médicas no prontuário do paciente.</li></ol><p>Outros exemplos rápidos:</p><ol><li>O sistema deve permitir cadastrar disciplinas.</li><li>O sistema deve emitir histórico escolar em PDF.</li><li>O sistema deve permitir ao professor lançar notas por avaliação.</li><li>O sistema deve recalcular automaticamente a média final do aluno após alteração de nota.</li></ol><p>O principal problema com requisitos funcionais mal escritos é a ambiguidade. Se um requisito diz "pesquisar agendamentos", isso significa pesquisar em uma clínica específica, em todas as clínicas, por nome, por data, por médico ou por combinação desses filtros? Se o requisito não for claro, a implementação pode ficar tecnicamente correta e, ainda assim, funcionalmente errada para o cliente.</p><div class=example><div class=example-title>Pegadinha comum: funcional ou não funcional?</div><p><strong>Enunciado:</strong> O sistema deve gerar boletos em PDF.</p><p>Isso é um <strong>requisito funcional</strong>, porque descreve um serviço entregue pelo sistema.</p><p><strong>Enunciado:</strong> O sistema deve gerar cada boleto em menos de 1 segundo.</p><p>Isso é um <strong>requisito não funcional</strong>, porque descreve uma restrição de desempenho sobre o serviço.</p><p><strong>Enunciado:</strong> O sistema deve usar a biblioteca iText para gerar boletos.</p><p>Isso já é <strong>decisão de implementação</strong>, não o requisito funcional em si.</p></div><div class=example><div class=example-title>Questão de concurso - Funcional ou não funcional?</div><p>Analise os itens abaixo:</p><ol><li>O sistema deve permitir que o aluno solicite trancamento de matrícula.</li><li>O sistema deve responder a essa solicitação em até 2 segundos.</li><li>O sistema deve utilizar PostgreSQL como banco de dados.</li></ol><p>Classifique os itens, respectivamente.</p><hr><p><strong>Resposta comentada:</strong></p><ol><li><strong>Requisito funcional</strong>, porque define um serviço do sistema.</li><li><strong>Requisito não funcional</strong>, porque impõe uma restrição de desempenho ao serviço.</li><li><strong>Decisão de projeto</strong> ou <strong>restrição tecnológica</strong>, não um requisito funcional clássico.</li></ol><p>Essa é uma pegadinha muito comum: o examinador mistura comportamento esperado com escolha de implementação.</p></div><h3 id=requisitos-não-funcionais><span class=heading-text>Requisitos Não Funcionais</span><span class=heading-arabic>5.3.2</span></h3><p>Os requisitos não funcionais descrevem restrições ou qualidades do sistema. Em vez de dizerem o que o sistema faz, eles dizem <strong>como o sistema deve se comportar</strong> ou sob quais condições deve operar.</p><p>Eles podem surgir de:</p><ol><li><strong>Requisitos de produto:</strong> desempenho, confiabilidade, segurança, usabilidade.</li><li><strong>Requisitos organizacionais:</strong> padrões, processos, tecnologias adotadas pela organização.</li><li><strong>Requisitos externos:</strong> leis, regulações, normas éticas e de proteção de dados.</li></ol><div class=mermaid-outer-container><div class=mermaid-switcher><div class=switcher-track><button class="switcher-btn active" onclick="CourseForgeUI.switchMermaidView(this, 'diagram')"><i data-lucide=eye></i> Diagrama</button><button onclick="CourseForgeUI.switchMermaidView(this, 'code')" class=switcher-btn><i data-lucide=code></i> Código</button><div class=switcher-slider></div></div></div><div class=mermaid-content><div class=mermaid-display><pre class=mermaid>flowchart TD
-    RNF[Requisitos nao funcionais] --> P[Produto]
-    RNF --> O[Organizacionais]
-    RNF --> E[Externos]
-    P --> P1[Desempenho]
-    P --> P2[Confiabilidade]
-    P --> P3[Usabilidade]
-    O --> O1[Padroes internos]
-    O --> O2[Tecnologias adotadas]
-    E --> E1[Leis]
-    E --> E2[Regulacoes]
-    E --> E3[Etica]</pre></div><div class=mermaid-source style=display:none><pre class=language-mermaid><code>flowchart TD
-    RNF[Requisitos nao funcionais] --> P[Produto]
-    RNF --> O[Organizacionais]
-    RNF --> E[Externos]
-    P --> P1[Desempenho]
-    P --> P2[Confiabilidade]
-    P --> P3[Usabilidade]
-    O --> O1[Padroes internos]
-    O --> O2[Tecnologias adotadas]
-    E --> E1[Leis]
-    E --> E2[Regulacoes]
-    E --> E3[Etica]</code></pre></div></div></div><p>Exemplos:</p><ol><li>O sistema deve estar disponível das 8h30 às 17h30 nos dias úteis.</li><li>O sistema deve responder a consultas em até 2 segundos.</li><li>O acesso aos prontuários deve ser restrito a profissionais autorizados.</li><li>O sistema deve estar em conformidade com a legislação de privacidade de dados.</li></ol><p>Outros exemplos:</p><ol><li>O sistema deve suportar 500 acessos simultâneos sem degradação significativa.</li><li>O sistema deve registrar logs de auditoria por 5 anos.</li><li>O sistema deve estar disponível em pelo menos 99,5% do período letivo.</li><li>O tempo de treinamento para uso das funções principais não deve ultrapassar 4 horas.</li></ol><h3 id=exemplos-por-tipo-de-requisito><span class=heading-text>Exemplos por tipo de requisito</span><span class=heading-arabic>5.3.3</span></h3><table><thead><tr><th style=text-align:left>Classificacao</th><th style=text-align:left>Exemplo</th></tr></thead><tbody><tr><td style=text-align:left><strong>Funcional</strong></td><td style=text-align:left>O sistema deve permitir cadastrar disciplinas.</td></tr><tr><td style=text-align:left><strong>Nao funcional</strong></td><td style=text-align:left>O sistema deve estar disponivel 99,5% do tempo letivo.</td></tr><tr><td style=text-align:left><strong>Produto</strong></td><td style=text-align:left>O sistema deve responder a consultas em ate 2 segundos.</td></tr><tr><td style=text-align:left><strong>Organizacional</strong></td><td style=text-align:left>O sistema deve usar autenticacao institucional da universidade.</td></tr><tr><td style=text-align:left><strong>Externo</strong></td><td style=text-align:left>O sistema deve seguir a LGPD no tratamento de dados pessoais.</td></tr></tbody></table><div class=example><div class=example-title>Mais exemplos de tipos de requisitos</div><p><strong>Requisitos funcionais</strong></p><ol><li>O sistema deve permitir ao aluno solicitar matrícula em disciplina optativa.</li><li>O sistema deve permitir ao coordenador emitir relatório de evasão por semestre.</li></ol><p><strong>Requisitos não funcionais</strong></p><ol><li>O sistema deve responder buscas em até 2 segundos.</li><li>O sistema deve manter disponibilidade mínima de 99,5%.</li></ol><p><strong>Requisitos de produto</strong></p><ol><li>O sistema deve suportar 500 acessos simultâneos.</li><li>O sistema deve armazenar logs de auditoria por 5 anos.</li></ol><p><strong>Requisitos organizacionais</strong></p><ol><li>O sistema deve usar autenticação integrada ao domínio institucional.</li><li>O sistema deve seguir o padrão visual adotado pela universidade.</li></ol><p><strong>Requisitos externos</strong></p><ol><li>O sistema deve cumprir a LGPD.</li><li>O sistema deve respeitar normas do MEC para retenção de documentos acadêmicos.</li></ol></div><div class=example><div class=example-title>Questão de concurso - Produto, organizacional ou externo?</div><p>Uma banca apresenta os seguintes requisitos para um sistema universitário:</p><ol><li>O sistema deve responder consultas em até 3 segundos.</li><li>O sistema deve usar autenticação integrada ao diretório institucional.</li><li>O sistema deve cumprir a LGPD.</li></ol><p>Classifique cada requisito.</p><hr><p><strong>Resposta comentada:</strong></p><ol><li><strong>Requisito de produto</strong>, porque trata de desempenho do sistema.</li><li><strong>Requisito organizacional</strong>, porque deriva de uma política ou infraestrutura interna da organização.</li><li><strong>Requisito externo</strong>, porque deriva de legislação e regulação fora da equipe de desenvolvimento.</li></ol></div><p>Os requisitos não funcionais costumam ser mais críticos do que muitos requisitos funcionais. Um sistema pode até ter todos os recursos esperados, mas, se for lento, inseguro, indisponível ou difícil de usar, será rejeitado pelos usuários.</p><h3 id=métricas-para-requisitos-não-funcionais><span class=heading-text>Métricas para Requisitos Não Funcionais</span><span class=heading-arabic>5.3.4</span></h3><p>Sempre que possível, requisitos não funcionais devem ser definidos de forma mensurável. Isso facilita validação e negociação.</p><table><thead><tr><th style=text-align:left>Propriedade</th><th style=text-align:left>Exemplo de medida</th></tr></thead><tbody><tr><td style=text-align:left>Velocidade</td><td style=text-align:left>transações por segundo, tempo de resposta</td></tr><tr><td style=text-align:left>Tamanho</td><td style=text-align:left>megabytes, uso de memória</td></tr><tr><td style=text-align:left>Facilidade de uso</td><td style=text-align:left>tempo de treinamento, número de erros por hora</td></tr><tr><td style=text-align:left>Confiabilidade</td><td style=text-align:left>tempo médio para falha, taxa de falhas</td></tr><tr><td style=text-align:left>Robustez</td><td style=text-align:left>tempo de reinício, perda de dados após falha</td></tr><tr><td style=text-align:left>Portabilidade</td><td style=text-align:left>número de plataformas suportadas</td></tr></tbody></table><p>Um requisito como "o sistema deve ser fácil de usar" é vago. Já uma formulação como "um usuário treinado deve conseguir executar as funções principais após 4 horas de treinamento" é muito mais verificável.</p><div class="callout callout-warning"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span><span class=callout-title-inner><br></span></div><div class=callout-content><p>Um erro comum é escrever requisitos nao funcionais vagos, como "o sistema deve ser rapido" ou "o sistema deve ser seguro". Sempre que possivel, transforme isso em medida observavel.</p></div></div><h2 id=o-documento-de-requisitos-de-software><span class=heading-text>O Documento de Requisitos de Software</span><span class=heading-arabic>5.4</span></h2><p>O documento de requisitos de software, frequentemente chamado de <strong>SRS</strong> (<em>Software Requirements Specification</em>), é a declaração formal do que deve ser implementado. Ele funciona como ponte entre o problema do negócio e a solução técnica.</p><div class="callout callout-question"><div class=callout-title><span class=callout-icon><svg viewbox="0 0 24 24" fill=none height=16 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=16 xmlns=http://www.w3.org/2000/svg><circle cx=12 cy=12 r=10 /><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span><span class=callout-title-inner>Reflita<br></span></div><div class=callout-content><p>Se o mesmo documento vai ser lido por cliente, desenvolvedor, testador e equipe de manutenção, como ele pode ser claro o suficiente para todos esses públicos ao mesmo tempo?</p></div></div><p>Esse documento pode ser usado por diferentes públicos:</p><ol><li>Clientes e gestores, para verificar se o sistema atende às necessidades organizacionais.</li><li>Engenheiros de software, para orientar projeto e implementação.</li><li>Testadores, para derivar casos de teste.</li><li>Equipes de manutenção, para compreender a intenção original do sistema.</li></ol><p>Uma estrutura típica inclui:</p><ol><li>Introdução e contexto do sistema.</li><li>Glossário de termos.</li><li>Requisitos de usuário.</li><li>Arquitetura geral do sistema.</li><li>Requisitos detalhados de sistema.</li><li>Modelos e diagramas.</li><li>Evolução prevista do sistema.</li><li>Apêndices e índice.</li></ol><div class=mermaid-outer-container><div class=mermaid-switcher><div class=switcher-track><button class="switcher-btn active" onclick="CourseForgeUI.switchMermaidView(this, 'diagram')"><i data-lucide=eye></i> Diagrama</button><button onclick="CourseForgeUI.switchMermaidView(this, 'code')" class=switcher-btn><i data-lucide=code></i> Código</button><div class=switcher-slider></div></div></div><div class=mermaid-content><div class=mermaid-display><pre class=mermaid>flowchart TD
-    A[Documento de requisitos] --> B[Introducao e contexto]
-    A --> C[Glossario]
-    A --> D[Requisitos de usuario]
-    A --> E[Requisitos de sistema]
-    A --> F[Modelos e diagramas]
-    A --> G[Evolucao prevista]
-    A --> H[Apendices]</pre></div><div class=mermaid-source style=display:none><pre class=language-mermaid><code>flowchart TD
-    A[Documento de requisitos] --> B[Introducao e contexto]
-    A --> C[Glossario]
-    A --> D[Requisitos de usuario]
-    A --> E[Requisitos de sistema]
-    A --> F[Modelos e diagramas]
-    A --> G[Evolucao prevista]
-    A --> H[Apendices]</code></pre></div></div></div><p>Em ambientes ágeis, muitas vezes esse documento é mais enxuto. Em sistemas grandes, regulados ou críticos, ele tende a ser mais detalhado e formal.</p><h2 id=processos-de-engenharia-de-requisitos><span class=heading-text>Processos de Engenharia de Requisitos</span><span class=heading-arabic>5.5</span></h2><p>Sommerville organiza a Engenharia de Requisitos em quatro atividades principais:</p><ol><li><strong>Estudo de viabilidade</strong></li><li><strong>Elicitação e análise de requisitos</strong></li><li><strong>Especificação de requisitos</strong></li><li><strong>Validação de requisitos</strong></li></ol><p>Na prática, essas atividades não acontecem linearmente. Elas são iterativas e frequentemente se sobrepõem.</p><div class=mermaid-outer-container><div class=mermaid-switcher><div class=switcher-track><button class="switcher-btn active" onclick="CourseForgeUI.switchMermaidView(this, 'diagram')"><i data-lucide=eye></i> Diagrama</button><button onclick="CourseForgeUI.switchMermaidView(this, 'code')" class=switcher-btn><i data-lucide=code></i> Código</button><div class=switcher-slider></div></div></div><div class=mermaid-content><div class=mermaid-display><pre class=mermaid>flowchart LR
-    A[Estudo de viabilidade] --> B[Elicitacao e analise]
-    B --> C[Especificacao]
-    C --> D[Validacao]
-    D --> B
-    C --> E[Gerenciamento de requisitos]
-    D --> E
-    B --> E</pre></div><div class=mermaid-source style=display:none><pre class=language-mermaid><code>flowchart LR
-    A[Estudo de viabilidade] --> B[Elicitacao e analise]
-    B --> C[Especificacao]
-    C --> D[Validacao]
-    D --> B
-    C --> E[Gerenciamento de requisitos]
-    D --> E
-    B --> E</code></pre></div></div></div><h3 id=estudo-de-viabilidade><span class=heading-text>Estudo de viabilidade</span><span class=heading-arabic>5.5.1</span></h3><p>O estudo de viabilidade é uma análise inicial para verificar se o sistema faz sentido do ponto de vista técnico, operacional e econômico. Algumas perguntas típicas são:</p><ol><li>A tecnologia atual permite construir o sistema?</li><li>O sistema cabe no orçamento e no prazo disponíveis?</li><li>O ganho organizacional justifica o investimento?</li></ol><h3 id=elicitação-e-análise><span class=heading-text>Elicitação e análise</span><span class=heading-arabic>5.5.2</span></h3><p>É o processo de descobrir os requisitos junto aos stakeholders. Aqui, o foco está em entender o domínio da aplicação, os objetivos do sistema, os conflitos entre interessados e as restrições reais do contexto.</p><p>Exemplo: em um sistema acadêmico, o coordenador pode pedir relatórios de evasão, o professor pode pedir diário de classe simplificado e a secretaria pode exigir integração com o sistema institucional. Todos falam do mesmo sistema, mas com prioridades diferentes.</p><p>Outro exemplo: em um sistema hospitalar, o médico pode priorizar rapidez de acesso ao prontuário, enquanto o setor jurídico pode priorizar trilha de auditoria e consentimento do paciente. Ambos estão certos, mas puxam o requisito para direções diferentes.</p><div class=example><div class=example-title>Questão de concurso - Técnicas de elicitação</div><p>Em uma organização, o processo oficial afirma que todo atendimento deve ser registrado ao final da consulta. No entanto, na prática, alguns profissionais registram parte das informações antes do término para ganhar tempo em atendimentos recorrentes.</p><p>Qual técnica tem maior chance de descobrir esse comportamento real?</p><ul><li>A) Entrevista fechada</li><li>B) Caso de uso de alto nível</li><li>C) Etnografia</li><li>D) Especificação formal</li></ul><hr><p><strong>Resposta:</strong> <strong>C) Etnografia</strong>.</p><p>Ela é a mais adequada porque observa o trabalho real no ambiente em que ele ocorre, revelando diferenças entre processo oficial e prática cotidiana.</p></div><h3 id=especificação><span class=heading-text>Especificação</span><span class=heading-arabic>5.5.3</span></h3><p>É o processo de documentar os requisitos em alguma forma estruturada, normalmente em linguagem natural, tabelas, diagramas, cenários e, em alguns casos, notações formais.</p><h3 id=validação><span class=heading-text>Validação</span><span class=heading-arabic>5.5.4</span></h3><p>É a verificação de que os requisitos são consistentes, completos, realistas e verificáveis.</p><h3 id=gerenciamento-de-requisitos><span class=heading-text>Gerenciamento de requisitos</span><span class=heading-arabic>5.5.5</span></h3><p>Como os requisitos mudam ao longo do tempo, é necessário controlar essas mudanças. O gerenciamento de requisitos acompanha solicitações de alteração, impacto, prioridade e rastreabilidade.</p><h2 id=elicitação-e-análise-de-requisitos><span class=heading-text>Elicitação e Análise de Requisitos</span><span class=heading-arabic>5.6</span></h2><p>A elicitação é difícil porque diferentes stakeholders têm visões diferentes do sistema, falam a partir de seus próprios contextos e muitas vezes não sabem exatamente o que querem até verem exemplos concretos.</p><p>Algumas dificuldades típicas são:</p><ol><li>Usuários não conseguem explicitar todas as necessidades.</li><li>Stakeholders possuem interesses conflitantes.</li><li>Requisitos mudam durante a análise.</li><li>Regras do domínio são implícitas e nem sempre verbalizadas.</li></ol><div class=mermaid-outer-container><div class=mermaid-switcher><div class=switcher-track><button class="switcher-btn active" onclick="CourseForgeUI.switchMermaidView(this, 'diagram')"><i data-lucide=eye></i> Diagrama</button><button onclick="CourseForgeUI.switchMermaidView(this, 'code')" class=switcher-btn><i data-lucide=code></i> Código</button><div class=switcher-slider></div></div></div><div class=mermaid-content><div class=mermaid-display><pre class=mermaid>flowchart TD
-    A[Stakeholders] --> B[Entrevistas]
-    A --> C[Cenarios e casos de uso]
-    A --> D[Observacao do trabalho]
-    B --> E[Requisitos iniciais]
-    C --> E
-    D --> E
-    E --> F[Negociacao e refinamento]</pre></div><div class=mermaid-source style=display:none><pre class=language-mermaid><code>flowchart TD
-    A[Stakeholders] --> B[Entrevistas]
-    A --> C[Cenarios e casos de uso]
-    A --> D[Observacao do trabalho]
-    B --> E[Requisitos iniciais]
-    C --> E
-    D --> E
-    E --> F[Negociacao e refinamento]</code></pre></div></div></div><p>Sommerville destaca algumas técnicas importantes para apoiar essa atividade.</p><h3 id=entrevistas><span class=heading-text>Entrevistas</span><span class=heading-arabic>5.6.1</span></h3><p>Entrevistas podem ser:</p><ol><li><strong>Fechadas</strong>, com perguntas pré-definidas.</li><li><strong>Abertas</strong>, com exploração mais livre dos problemas do domínio.</li></ol><p>São úteis para entender objetivos, dores e expectativas, mas têm limitações para capturar conhecimento tácito e regras organizacionais implícitas.</p><p><strong>Exemplo:</strong> perguntar ao coordenador "quais relatórios você precisa emitir no fechamento do semestre?" é eficiente para captar objetivos, mas pode não revelar atalhos informais usados pela secretaria no dia a dia.</p><p><strong>Outro exemplo:</strong> entrevistar um professor pode revelar a necessidade de importar notas por planilha, mas talvez não revele o fluxo completo de validação das notas antes do fechamento do diário.</p><h3 id=cenários><span class=heading-text>Cenários</span><span class=heading-arabic>5.6.2</span></h3><p>Cenários descrevem exemplos concretos de uso do sistema. Eles ajudam os usuários a reagir a situações realistas, o que normalmente é mais fácil do que reagir a descrições abstratas.</p><p>Um cenário bem escrito pode incluir:</p><ol><li>Situação inicial.</li><li>Fluxo normal de eventos.</li><li>Exceções e problemas possíveis.</li><li>Estado final do sistema.</li></ol><p><strong>Exemplo:</strong><br> Aluno solicita matrícula em disciplina optativa. O sistema verifica pré-requisito, vagas disponíveis e conflito de horário. Se houver vaga e o aluno atender aos critérios, a matrícula é registrada. Se não houver vaga, o sistema informa indisponibilidade e orienta a fila de espera.</p><p><strong>Outro exemplo:</strong><br> Paciente chega à clínica sem agendamento. A recepção busca o prontuário, verifica se existe encaixe, registra a chegada e encaminha o caso para triagem. Se o paciente não estiver cadastrado, o sistema abre fluxo de cadastro inicial.</p><h3 id=casos-de-uso><span class=heading-text>Casos de uso</span><span class=heading-arabic>5.6.3</span></h3><p>Casos de uso identificam interações entre atores e o sistema. Eles ajudam a esclarecer objetivos do usuário e a delimitar funcionalidades relevantes. São especialmente úteis quando queremos entender interações externas, mas não substituem por completo outras técnicas de elicitação.</p><p><strong>Exemplos de casos de uso em um sistema acadêmico:</strong></p><ol><li>Realizar matrícula.</li><li>Lançar notas.</li><li>Emitir histórico.</li><li>Consultar frequência.</li></ol><p>Esses casos de uso ajudam a responder a uma pergunta muito cobrada em avaliação: <strong>quem interage com o sistema e com qual objetivo?</strong> O ator não executa passos isolados; ele busca atingir um objetivo completo de negócio.</p><h3 id=etnografia><span class=heading-text>Etnografia</span><span class=heading-arabic>5.6.4</span></h3><p>A etnografia observa o trabalho real dos usuários no ambiente em que o sistema será utilizado. Ela é valiosa porque muitas organizações não funcionam exatamente como seus processos oficiais descrevem. O trabalho cotidiano, os atalhos, as exceções e as cooperações informais entre pessoas podem gerar requisitos críticos que não apareceriam em entrevistas formais.</p><p><strong>Exemplo:</strong> a secretaria pode oficialmente registrar trancamentos de matrícula por um formulário padronizado, mas na prática pode manter uma planilha paralela para acompanhar casos especiais. Se isso não for observado, o sistema poderá ignorar uma necessidade real do setor.</p><p><strong>Outro exemplo:</strong> em uma clínica, o fluxo oficial pode dizer que toda medicação é registrada após a consulta, mas na prática um enfermeiro pode antecipar esse registro em casos recorrentes para ganhar tempo no atendimento.</p><h2 id=validação-de-requisitos><span class=heading-text>Validação de Requisitos</span><span class=heading-arabic>5.7</span></h2><p>A validação de requisitos procura verificar se os requisitos realmente definem o sistema que o cliente quer e se são tecnicamente sólidos o suficiente para orientar o desenvolvimento.</p><p>As verificações principais são:</p><ol><li><strong>Validade:</strong> os requisitos refletem necessidades reais?</li><li><strong>Consistência:</strong> existem contradições entre requisitos?</li><li><strong>Completude:</strong> faltam funções ou restrições importantes?</li><li><strong>Realismo:</strong> os requisitos podem ser implementados com tecnologia, prazo e orçamento disponíveis?</li><li><strong>Verificabilidade:</strong> é possível testar se o requisito foi atendido?</li></ol><div class=mermaid-outer-container><div class=mermaid-switcher><div class=switcher-track><button class="switcher-btn active" onclick="CourseForgeUI.switchMermaidView(this, 'diagram')"><i data-lucide=eye></i> Diagrama</button><button onclick="CourseForgeUI.switchMermaidView(this, 'code')" class=switcher-btn><i data-lucide=code></i> Código</button><div class=switcher-slider></div></div></div><div class=mermaid-content><div class=mermaid-display><pre class=mermaid>flowchart TD
-    A[Validacao de requisitos] --> B[Validade]
-    A --> C[Consistencia]
-    A --> D[Completude]
-    A --> E[Realismo]
-    A --> F[Verificabilidade]</pre></div><div class=mermaid-source style=display:none><pre class=language-mermaid><code>flowchart TD
-    A[Validacao de requisitos] --> B[Validade]
-    A --> C[Consistencia]
-    A --> D[Completude]
-    A --> E[Realismo]
-    A --> F[Verificabilidade]</code></pre></div></div></div><p>Técnicas comuns de validação incluem:</p><ol><li>Revisões de requisitos com equipe multidisciplinar.</li><li>Prototipação.</li><li>Geração de casos de teste a partir dos requisitos.</li></ol><div class=example><div class=example-title>Pegadinha de prova: requisito verificável ou vago?</div><p><strong>Caso 1:</strong> O sistema deve ser rápido.</p><p>Esse requisito é <strong>vago</strong>. Ele não diz em qual operação, em qual contexto e com qual limite mensurável.</p><p><strong>Caso 2:</strong> O sistema deve exibir a situação acadêmica do aluno em até 2 segundos para consultas com até 10 semestres cadastrados.</p><p>Esse requisito é <strong>verificável</strong>, porque define operação, contexto e limite observável.</p><p><strong>Caso 3:</strong> O sistema deve ser seguro.</p><p>Também é vago.</p><p><strong>Caso 4:</strong> O sistema deve bloquear o acesso após 5 tentativas inválidas de login e registrar o evento em log de auditoria.</p><p>Agora temos um requisito muito mais verificável.</p></div><div class=example><div class=example-title>Questão de concurso - Validação de requisitos</div><p>Assinale a alternativa que melhor expressa o objetivo da validação de requisitos.</p><ul><li>A) Garantir que o sistema já esteja implementado e sem defeitos.</li><li>B) Verificar se os requisitos são válidos, consistentes, completos, realistas e verificáveis.</li><li>C) Escolher a linguagem de programação mais adequada ao projeto.</li><li>D) Substituir completamente os testes de sistema.</li></ul><hr><p><strong>Resposta:</strong> <strong>B</strong>.</p><p>Validação de requisitos ocorre antes da implementação completa e busca verificar a qualidade do próprio conjunto de requisitos. Ela não substitui testes de sistema e não tem como foco principal decisões tecnológicas.</p></div><p>Mesmo com validação, nem todos os problemas serão encontrados. Por isso, mudanças de requisitos continuam ocorrendo ao longo do projeto.</p><h2 id=gerenciamento-de-requisitos><span class=heading-text>Gerenciamento de Requisitos</span><span class=heading-arabic>5.8</span></h2><p>Os requisitos de sistemas reais evoluem continuamente. Negócio muda, legislação muda, tecnologia muda, prioridades dos usuários mudam. Por isso, a Engenharia de Requisitos não termina quando o documento é escrito.</p><p>O gerenciamento de requisitos envolve:</p><ol><li>Identificar unicamente cada requisito.</li><li>Controlar solicitações de mudança.</li><li>Avaliar impactos e custos dessas mudanças.</li><li>Manter rastreabilidade entre requisitos, projeto, implementação e testes.</li></ol><div class=mermaid-outer-container><div class=mermaid-switcher><div class=switcher-track><button class="switcher-btn active" onclick="CourseForgeUI.switchMermaidView(this, 'diagram')"><i data-lucide=eye></i> Diagrama</button><button onclick="CourseForgeUI.switchMermaidView(this, 'code')" class=switcher-btn><i data-lucide=code></i> Código</button><div class=switcher-slider></div></div></div><div class=mermaid-content><div class=mermaid-display><pre class=mermaid>flowchart LR
-    A[Problema ou mudanca proposta] --> B[Analise da mudanca]
-    B --> C[Estimativa de impacto e custo]
-    C --> D[Decisao]
-    D --> E[Atualizacao de requisitos]
-    E --> F[Atualizacao de projeto e testes]</pre></div><div class=mermaid-source style=display:none><pre class=language-mermaid><code>flowchart LR
-    A[Problema ou mudanca proposta] --> B[Analise da mudanca]
-    B --> C[Estimativa de impacto e custo]
-    C --> D[Decisao]
-    D --> E[Atualizacao de requisitos]
-    E --> F[Atualizacao de projeto e testes]</code></pre></div></div></div><p>Isso é especialmente importante em sistemas grandes, onde uma pequena alteração em um requisito pode afetar várias partes da arquitetura, da implementação e da validação.</p><p>Um bom exemplo é este: se um requisito aparentemente simples mudar de "o sistema deve autenticar o usuário" para "o sistema deve autenticar via login institucional e segundo fator", isso pode afetar interface, integração externa, regras de negócio, testes e treinamento.</p><div class=example><div class=example-title>Questão de concurso - Gerenciamento de requisitos</div><p>Uma pequena mudança em um requisito pode afetar arquitetura, código, testes, cronograma e custo. O processo responsável por acompanhar essas alterações, avaliar seu impacto e manter rastreabilidade é chamado de:</p><ul><li>A) Prototipação</li><li>B) Validação estrutural</li><li>C) Gerenciamento de requisitos</li><li>D) Refatoração arquitetural</li></ul><hr><p><strong>Resposta:</strong> <strong>C) Gerenciamento de requisitos</strong>.</p><p>Ele existe justamente porque, em sistemas reais, os requisitos evoluem continuamente e precisam ser controlados de forma explícita.</p></div><h2 id=estudo-de-caso-mhc-pms><span class=heading-text>Estudo de Caso: MHC-PMS</span><span class=heading-arabic>5.9</span></h2><p>O MHC-PMS, usado por Sommerville como estudo de caso recorrente, é um bom exemplo de por que a Engenharia de Requisitos é central. Trata-se de um sistema de informação para cuidados com saúde mental, com dois objetivos principais:</p><ol><li>apoiar o tratamento clínico com informações atualizadas sobre pacientes;</li><li>gerar informação gerencial para planejamento e controle do serviço de saúde.</li></ol><p>Nesse sistema, há exemplos claros de requisitos funcionais e não funcionais:</p><p><strong>Funcionais</strong></p><ol><li>registrar pacientes;</li><li>manter histórico clínico;</li><li>acompanhar consultas e tratamentos;</li><li>gerar relatórios administrativos.</li></ol><p><strong>Não funcionais</strong></p><ol><li>privacidade dos dados do paciente;</li><li>disponibilidade do sistema nas clínicas;</li><li>segurança de acesso;</li><li>suporte ao uso local quando não houver conexão segura com a rede.</li></ol><p>Esse tipo de sistema também ilustra um ponto importante: requisitos podem entrar em conflito. Por exemplo, manter uma única cópia dos dados ajuda a privacidade, mas múltiplas cópias locais ajudam a disponibilidade. O trabalho da Engenharia de Requisitos é justamente tornar esses conflitos explícitos para que sejam negociados.</p><h2 id=questões><span class=heading-text>Questões</span><span class=heading-arabic>5.10</span></h2><div class=questions><p><strong>1.</strong> Diferencie requisitos de usuário e requisitos de sistema. Explique por que essa separação é importante em projetos reais.</p><p><strong>2.</strong> Explique a diferença entre requisitos funcionais e não funcionais e dê dois exemplos de cada um para um sistema acadêmico.</p><p><strong>3.</strong> Por que requisitos não funcionais frequentemente são mais críticos do que vários requisitos funcionais individuais?</p><p><strong>4.</strong> Explique por que um documento de requisitos precisa atender públicos diferentes, como clientes, desenvolvedores e testadores.</p><p><strong>5.</strong> Descreva as quatro atividades principais da Engenharia de Requisitos segundo Sommerville.</p><p><strong>6.</strong> Compare entrevistas, cenários, casos de uso e etnografia como técnicas de elicitação. Em que situação cada uma é mais útil?</p><p><strong>7.</strong> Explique por que a validação de requisitos é essencial para reduzir retrabalho no projeto e na implementação.</p><p><strong>8.</strong> O que significa dizer que um requisito deve ser verificável? Dê um exemplo de requisito mal formulado e reescreva-o de forma verificável.</p><p><strong>9.</strong> Por que o gerenciamento de requisitos é indispensável em sistemas de grande porte?</p><p><strong>10.</strong> No contexto do MHC-PMS, explique como privacidade, disponibilidade e segurança podem entrar em conflito.</p></div><div class=example><div class=example-title>Gabarito</div><p><strong>1.</strong> Requisitos de usuário são descrições em alto nível, voltadas a clientes e usuários finais. Requisitos de sistema são descrições mais detalhadas, técnicas e verificáveis, usadas pela equipe de desenvolvimento. A separação é importante porque públicos diferentes precisam de níveis diferentes de abstração.</p><p><strong>2.</strong> Requisitos funcionais descrevem serviços do sistema, como cadastrar disciplinas ou emitir histórico. Requisitos não funcionais descrevem qualidades e restrições, como responder em até 2 segundos ou manter disponibilidade de 99,5%.</p><p><strong>3.</strong> Porque, mesmo com funcionalidades corretas, um sistema lento, inseguro, indisponível ou difícil de usar pode ser rejeitado na prática.</p><p><strong>4.</strong> Porque o documento de requisitos é uma ponte entre negócio e implementação. Clientes verificam aderência ao problema; desenvolvedores implementam; testadores derivam testes; manutenção entende a intenção do sistema.</p><p><strong>5.</strong> Estudo de viabilidade, elicitação e análise, especificação e validação. Em muitos contextos, também se inclui gerenciamento de requisitos como atividade contínua.</p><p><strong>6.</strong> Entrevistas ajudam a captar objetivos e dores. Cenários ajudam a visualizar fluxos concretos de uso. Casos de uso ajudam a modelar interações entre atores e sistema. Etnografia ajuda a descobrir práticas reais de trabalho que não aparecem em documentos ou entrevistas.</p><p><strong>7.</strong> Porque corrige ambiguidades, contradições e lacunas antes do projeto e da implementação, reduzindo retrabalho e custo de correção posterior.</p><p><strong>8.</strong> Um requisito verificável é aquele que pode ser testado objetivamente. Exemplo ruim: "o sistema deve ser rápido". Exemplo melhor: "o sistema deve retornar a consulta de histórico escolar em até 2 segundos".</p><p><strong>9.</strong> Porque os requisitos mudam constantemente e, em sistemas grandes, essas mudanças impactam arquitetura, código, testes, cronograma e custo. Sem gerenciamento, perde-se controle e rastreabilidade.</p><p><strong>10.</strong> Privacidade pode exigir centralização e controle rígido de acesso. Disponibilidade pode exigir cópias locais ou redundância. Segurança pode exigir autenticação e auditoria mais fortes. Essas necessidades podem entrar em conflito e precisam ser negociadas.</p></div><h2 id=próximos-passos><span class=heading-text>Próximos passos</span><span class=heading-arabic>5.11</span></h2><p>Na próxima aula, avançaremos para <a href=6-system-modeling-uml.html>Modelagem de Sistemas com UML</a>, onde veremos como transformar requisitos em modelos visuais de contexto, interação, estrutura e comportamento.</p></div></article><footer class=footer><p>© 2025 · <a href=#>Gabriel Soares Baptista</a></p></footer></main></div><script>const toggle=document.querySelector(`.mobile-menu-toggle`),sidebar=document.querySelector(`.sidebar`),overlay=document.querySelector(`.mobile-menu-overlay`);function openMenu(){sidebar.classList.add(`open`),overlay.classList.add(`open`),toggle.classList.add(`open`),toggle.innerHTML=`<i data-lucide="x"></i>`,CourseForgeUI.initIcons(),document.body.style.overflow=`hidden`}function closeMenu(){sidebar.classList.remove(`open`),overlay.classList.remove(`open`),toggle.classList.remove(`open`),toggle.innerHTML=`<i data-lucide="menu"></i>`,CourseForgeUI.initIcons(),document.body.style.overflow=``}toggle.addEventListener(`click`,()=>{sidebar.classList.contains(`open`)?closeMenu():openMenu()}),overlay.addEventListener(`click`,closeMenu);</script><script data-no-bundle src=/aulas-faesa/js/vendor/katex/dist/katex.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/katex/dist/contrib/auto-render.min.js></script><script>document.addEventListener(`DOMContentLoaded`,function(){renderMathInElement(document.body,{output:`html`,delimiters:[{left:`$$`,right:`$$`,display:!0},{left:`$`,right:`$`,display:!1},{left:`\\(`,right:`\\)`,display:!1},{left:`\\[`,right:`\\]`,display:!0}],throwOnError:!1,strict:!1})});</script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/prism.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-c.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-cpp.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-python.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-clike.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-perl.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-java.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-mermaid.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-php.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js></script><script>document.addEventListener(`DOMContentLoaded`,function(){mermaid.initialize({startOnLoad:!0,theme:`default`,securityLevel:`loose`,fontFamily:`Inter, system-ui, sans-serif`,themeVariables:{fontSize:`16px`,edgeLabelFontSize:`16px`,multiplicityFontSize:`18px`}})});</script><script>document.addEventListener(`DOMContentLoaded`,function(){let isSubcourse=!1,courseName=`Engenharia de Software`;CourseForgeNav.applyDynamicBreadcrumbs(`.breadcrumb`,!1),CourseForgeNav.initScrollSpy(),CourseForgeUI.initCopyButtons(),CourseForgeUI.initExamples()});function handleBackNavigation(){let isSubcourse=!1,dynamic=CourseForgeNav.getBackLink(`contents.html`,`Voltar`,!1);window.location.href=dynamic.url}</script></body></html>
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toposia - Engenharia de Software</title>
+    <link rel="icon" href="/aulas-faesa/img/dark-favicon.svg" media="(prefers-color-scheme: light)">
+    <link rel="icon" href="/aulas-faesa/img/light-favicon.svg" media="(prefers-color-scheme: dark)">
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/fonts.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/bundle.min.css">
+    
+    
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css" data-no-bundle>
+    <script src="/aulas-faesa/js/bundle.min.js"></script>
+</head>
+
+<body>
+    <script>
+        // Restore sidebar state instantly (before first paint) to avoid transition flash
+        (function() {
+            if (localStorage.getItem('cf_sidebar_hidden') === 'true') {
+                document.body.classList.add('sidebar-hidden', 'no-transition');
+            }
+            requestAnimationFrame(function() {
+                requestAnimationFrame(function() {
+                    document.body.classList.remove('no-transition');
+                });
+            });
+        })();
+    </script>
+    <div class="page-wrapper">
+        <nav class="sidebar">
+            <div class="sidebar-content">
+                <header class="sidebar-title-section">
+                    <a href="contents.html" class="course-title-link">
+                        <h1 class="sidebar-course-title">Engenharia de Software</h1>
+                    </a>
+                    <div class="sidebar-ornament">❧</div>
+                </header>
+
+                
+                <section class="sidebar-toc-section">
+                    <h2 class="toc-header">Tabela de Conteúdos</h2>
+                    <ol class="toc-list">
+                        
+                        <li class="toc-item level-2">
+                            <a href="#introdução">5.1. Introdução</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#requisitos-de-usuário-e-requisitos-de-sistema">5.2. Requisitos de Usuário e Requisitos de Sistema</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#exemplos-rápidos">5.2.1. Exemplos rápidos</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#requisitos-funcionais-e-não-funcionais">5.3. Requisitos Funcionais e Não Funcionais</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#requisitos-funcionais">5.3.1. Requisitos Funcionais</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#requisitos-não-funcionais">5.3.2. Requisitos Não Funcionais</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#exemplos-por-tipo-de-requisito">5.3.3. Exemplos por tipo de requisito</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#métricas-para-requisitos-não-funcionais">5.3.4. Métricas para Requisitos Não Funcionais</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#o-documento-de-requisitos-de-software">5.4. O Documento de Requisitos de Software</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#processos-de-engenharia-de-requisitos">5.5. Processos de Engenharia de Requisitos</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#estudo-de-viabilidade">5.5.1. Estudo de viabilidade</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#elicitação-e-análise">5.5.2. Elicitação e análise</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#especificação">5.5.3. Especificação</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#validação">5.5.4. Validação</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#gerenciamento-de-requisitos">5.5.5. Gerenciamento de requisitos</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#elicitação-e-análise-de-requisitos">5.6. Elicitação e Análise de Requisitos</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#entrevistas">5.6.1. Entrevistas</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#cenários">5.6.2. Cenários</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#casos-de-uso">5.6.3. Casos de uso</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#etnografia">5.6.4. Etnografia</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#validação-de-requisitos">5.7. Validação de Requisitos</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#gerenciamento-de-requisitos">5.8. Gerenciamento de Requisitos</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#estudo-de-caso-mhc-pms">5.9. Estudo de Caso: MHC-PMS</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#questões">5.10. Questões</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#próximos-passos">5.11. Próximos passos</a>
+                        </li>
+                        
+                    </ol>
+                </section>
+                
+
+                <nav class="sidebar-nav-section">
+                    
+                    <a href="4-agile-development.html" class="sidebar-nav-link prev"><i data-lucide="chevron-left" class="nav-icon"></i> Desenvolvimento Ágil: Scrum e XP</a>
+                    
+                    
+                    <a href="javascript:void(0)" onclick="handleBackNavigation()"
+                        class="sidebar-nav-link back"><i data-lucide="arrow-left" class="nav-icon"></i> Voltar</a>
+                </nav>
+
+            </div>
+        </nav>
+
+        <button class="mobile-menu-toggle" aria-label="Menu">
+            <i data-lucide="menu"></i>
+        </button>
+
+        <button class="sidebar-toggle" onclick="CourseForgeNav.toggleSidebar()" aria-label="Alternar Barra Lateral">
+            <i data-lucide="chevron-left" class="toggle-icon" id="sidebar-toggle-icon"></i>
+        </button>
+
+        <div class="mobile-menu-overlay"></div>
+
+        <main class="main-content">
+            <article class="article">
+                <header class="article-header">
+                    <span class="chapter-number">5</span>
+                    <h1 class="article-title">
+                        <span class="title-ornament left">❧</span>
+                        <span class="title-text">Engenharia de Requisitos</span>
+                        <span class="title-ornament right">❧</span>
+                    </h1>
+                    
+                    <p class="article-date">01/04/2026</p>
+                    
+                    
+                    <nav class="breadcrumb" aria-label="Breadcrumb">
+                        
+                        
+                        
+                        <a href="contents.html" class="breadcrumb-link">Engenharia de Software</a>
+                        
+                        <span class="breadcrumb-separator"><i data-lucide="chevron-right" class="breadcrumb-icon"></i></span>
+                        
+                        
+                        
+                        
+                        <a href="contents.html#part-II" class="breadcrumb-link">II - Descrição de Software</a>
+                        
+                        <span class="breadcrumb-separator"><i data-lucide="chevron-right" class="breadcrumb-icon"></i></span>
+                        
+                        
+                        
+                        <span class="breadcrumb-current">Engenharia de Requisitos</span>
+                        
+                        
+                    </nav>
+                    
+                </header>
+                <div class="article-body">
+                    <h2 id="introdução"><span class="heading-text">Introdução</span><span class="heading-arabic">5.1</span></h2>
+<p>A Engenharia de Requisitos ocupa uma posição central no desenvolvimento de software porque define, com clareza progressiva, o que o sistema deve fazer, quais restrições deve respeitar e como essas expectativas serão comunicadas entre clientes, usuários, analistas, arquitetos e desenvolvedores. Em projetos reais, muitos dos problemas que aparecem no código, nos testes e até na implantação têm origem muito antes da implementação: surgem de requisitos ambíguos, incompletos, contraditórios ou mal compreendidos.</p>
+<p>Quando falamos em requisitos, não estamos tratando apenas de uma lista de funcionalidades. Estamos tratando de necessidades de negócio, expectativas dos usuários, regras organizacionais, limitações técnicas, exigências legais e critérios de qualidade que moldam o sistema como um todo. Por isso, a Engenharia de Requisitos não é uma etapa burocrática; ela é o processo de transformar um problema difuso do mundo real em uma descrição de software que possa ser analisada, projetada, implementada, validada e mantida.</p>
+<p>Segundo Sommerville, os requisitos de um sistema são descrições dos serviços que o sistema deve fornecer e das restrições sob as quais ele deve operar. O processo de descobrir, analisar, documentar, validar e gerenciar essas descrições é justamente o que chamamos de Engenharia de Requisitos.</p>
+<p>É importante perceber que o termo &quot;requisito&quot; é usado em níveis diferentes de abstração. Às vezes, ele aparece como uma necessidade de negócio expressa de forma ampla; em outros casos, como uma especificação detalhada de comportamento. Essa distinção precisa ser bem compreendida para evitar confusão entre aquilo que o cliente quer e aquilo que a equipe técnica precisa implementar.</p>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Quando alguém diz &quot;o sistema precisa ser rápido e seguro&quot;, isso já é suficiente para a equipe implementar corretamente o software?</p>
+  </div>
+</div>
+<h2 id="requisitos-de-usuário-e-requisitos-de-sistema"><span class="heading-text">Requisitos de Usuário e Requisitos de Sistema</span><span class="heading-arabic">5.2</span></h2>
+<p>Uma distinção fundamental apresentada por Sommerville é a separação entre <strong>requisitos de usuário</strong> e <strong>requisitos de sistema</strong>.</p>
+<ol>
+<li><strong>Requisitos de usuário</strong> são descrições em alto nível, normalmente em linguagem natural e com apoio de diagramas simples, escritas para clientes, gestores e usuários finais.</li>
+<li><strong>Requisitos de sistema</strong> são descrições mais detalhadas e técnicas da funcionalidade, das restrições e do comportamento do software, usadas principalmente pela equipe de desenvolvimento.</li>
+</ol>
+<p>Essa distinção existe porque públicos diferentes precisam de níveis diferentes de detalhe. O usuário final quer entender o que o sistema fará em termos de negócio. Já arquitetos, programadores e testadores precisam de precisão suficiente para construir e validar o sistema corretamente.</p>
+<p>O ponto mais importante aqui, e que costuma aparecer bastante em prova, é este: <strong>requisitos de sistema são mais detalhados e mais técnicos que requisitos de usuário, mas ainda não devem definir a tecnologia da solução</strong>. Em outras palavras, requisito de sistema ainda não é escolha de linguagem, framework, banco de dados ou arquitetura de implantação. Ele detalha comportamento, entradas, saídas, restrições e regras do sistema. A decisão de implementar isso com Java, Python, SAP, PostgreSQL ou microsserviços pertence ao projeto e à implementação, não à definição do requisito em si.</p>
+<div class="mermaid-outer-container">  <div class="mermaid-switcher">    <div class="switcher-track">      <button class="switcher-btn active" onclick="CourseForgeUI.switchMermaidView(this, 'diagram')"><i data-lucide="eye"></i> Diagrama</button>      <button class="switcher-btn" onclick="CourseForgeUI.switchMermaidView(this, 'code')"><i data-lucide="code"></i> Código</button>      <div class="switcher-slider"></div>    </div>  </div>  <div class="mermaid-content">    <div class="mermaid-display">      <pre class="mermaid">flowchart TD
+    A[Problema do negocio] --&gt; B[Requisitos de usuario]
+    B --&gt; C[Requisitos de sistema]
+    C --&gt; D[Projeto e implementacao]</pre>    </div>    <div class="mermaid-source" style="display: none;">      <pre class="language-mermaid"><code>flowchart TD
+    A[Problema do negocio] --&gt; B[Requisitos de usuario]
+    B --&gt; C[Requisitos de sistema]
+    C --&gt; D[Projeto e implementacao]</code></pre>    </div>  </div></div>
+
+<p>Considere o exemplo abaixo:</p>
+<p><strong>Requisito de usuário:</strong><br />
+O sistema deve gerar relatórios mensais com o custo dos medicamentos prescritos por cada clínica.</p>
+<p><strong>Possíveis requisitos de sistema derivados:</strong></p>
+<ol>
+<li>O sistema deve consolidar prescrições por clínica no último dia útil do mês.</li>
+<li>O relatório deve listar medicamento, quantidade prescrita e custo total.</li>
+<li>O acesso ao relatório deve ser restrito a usuários autorizados.</li>
+</ol>
+<p>O requisito de usuário comunica a necessidade geral. Os requisitos de sistema detalham como essa necessidade será tratada pelo software.</p>
+<h3 id="exemplos-rápidos"><span class="heading-text">Exemplos rápidos</span><span class="heading-arabic">5.2.1</span></h3>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Tipo</th>
+  <th style="text-align:left">Exemplo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><strong>Requisito de usuário</strong></td>
+  <td style="text-align:left">O sistema deve permitir ao coordenador visualizar faltas por turma.</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Requisito de sistema</strong></td>
+  <td style="text-align:left">O sistema deve retornar a lista de faltas de uma turma em até 2 segundos após a seleção da turma.</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-tip">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .5 2.2 1.5 3.1.7.7 1.3 1.5 1.5 2.4"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span>
+    <span class="callout-title-inner"><br /></span>
+  </div>
+  <div class="callout-content">
+<p>Regra prática: requisito de usuário fala a linguagem do negócio; requisito de sistema fala a linguagem da implementação e da validação.</p>
+  </div>
+</div>
+<div class="example">
+  <div class="example-title">Requisito de sistema ou decisão de projeto?</div>
+  <p><strong>Caso 1:</strong> O sistema deve permitir que o coordenador filtre faltas por turma, disciplina e período letivo.</p>
+<p>Isso é um <strong>requisito de sistema</strong>, porque detalha uma capacidade que o software deve oferecer.</p>
+<p><strong>Caso 2:</strong> O sistema deve exibir a lista de faltas em até 2 segundos para turmas com até 100 alunos.</p>
+<p>Isso também é um <strong>requisito de sistema</strong>, agora com um detalhamento não funcional mensurável.</p>
+<p><strong>Caso 3:</strong> O sistema deve ser implementado em Java com Spring Boot e PostgreSQL.</p>
+<p>Isso <strong>não é requisito de sistema funcional</strong>. Isso é uma <strong>decisão de projeto</strong> ou uma <strong>restrição tecnológica</strong>.</p>
+<p><strong>Caso 4:</strong> O sistema deve autenticar usuários usando o login institucional da universidade.</p>
+<p>Isso é melhor tratado como um <strong>requisito organizacional</strong>, pois deriva de uma política da instituição.</p>
+</div>
+<div class="example">
+  <div class="example-title">Questão de concurso - Requisitos de usuário x requisitos de sistema</div>
+  <p>Considere as afirmações a seguir sobre Engenharia de Requisitos:</p>
+<ul>
+<li>A) Requisitos de sistema devem definir linguagem de programação, banco de dados e framework a serem usados.</li>
+<li>B) Requisitos de usuário são escritos para clientes e usuários finais, enquanto requisitos de sistema detalham o comportamento esperado para a equipe técnica.</li>
+<li>C) Requisitos de usuário devem sempre substituir totalmente os requisitos de sistema em projetos grandes.</li>
+</ul>
+<p>Qual alternativa está correta?</p>
+<hr />
+<p><strong>Resposta:</strong> <strong>B</strong>.</p>
+<p><strong>Por que as outras estão erradas?</strong></p>
+<ul>
+<li><strong>A</strong> está errada porque linguagem, framework e banco de dados são, em geral, decisões de projeto ou restrições tecnológicas, não o núcleo do requisito de sistema.</li>
+<li><strong>C</strong> está errada porque projetos grandes normalmente precisam dos dois níveis de descrição: um voltado ao negócio e outro voltado à implementação e validação.</li>
+</ul>
+</div>
+<h2 id="requisitos-funcionais-e-não-funcionais"><span class="heading-text">Requisitos Funcionais e Não Funcionais</span><span class="heading-arabic">5.3</span></h2>
+<p>Os requisitos de software são frequentemente classificados em dois grandes grupos: <strong>funcionais</strong> e <strong>não funcionais</strong>.</p>
+<h3 id="requisitos-funcionais"><span class="heading-text">Requisitos Funcionais</span><span class="heading-arabic">5.3.1</span></h3>
+<p>Os requisitos funcionais descrevem os serviços que o sistema deve fornecer, como deve reagir a entradas específicas e como deve se comportar em determinadas situações. Em termos simples, eles dizem <strong>o que o sistema faz</strong>.</p>
+<p>Exemplos de requisitos funcionais para um sistema como o MHC-PMS:</p>
+<ol>
+<li>O usuário deve ser capaz de pesquisar a lista de agendamentos de todas as clínicas.</li>
+<li>O sistema deve gerar diariamente a lista de pacientes com consultas marcadas.</li>
+<li>O sistema deve permitir registrar prescrições médicas no prontuário do paciente.</li>
+</ol>
+<p>Outros exemplos rápidos:</p>
+<ol>
+<li>O sistema deve permitir cadastrar disciplinas.</li>
+<li>O sistema deve emitir histórico escolar em PDF.</li>
+<li>O sistema deve permitir ao professor lançar notas por avaliação.</li>
+<li>O sistema deve recalcular automaticamente a média final do aluno após alteração de nota.</li>
+</ol>
+<p>O principal problema com requisitos funcionais mal escritos é a ambiguidade. Se um requisito diz &quot;pesquisar agendamentos&quot;, isso significa pesquisar em uma clínica específica, em todas as clínicas, por nome, por data, por médico ou por combinação desses filtros? Se o requisito não for claro, a implementação pode ficar tecnicamente correta e, ainda assim, funcionalmente errada para o cliente.</p>
+<div class="example">
+  <div class="example-title">Pegadinha comum: funcional ou não funcional?</div>
+  <p><strong>Enunciado:</strong> O sistema deve gerar boletos em PDF.</p>
+<p>Isso é um <strong>requisito funcional</strong>, porque descreve um serviço entregue pelo sistema.</p>
+<p><strong>Enunciado:</strong> O sistema deve gerar cada boleto em menos de 1 segundo.</p>
+<p>Isso é um <strong>requisito não funcional</strong>, porque descreve uma restrição de desempenho sobre o serviço.</p>
+<p><strong>Enunciado:</strong> O sistema deve usar a biblioteca iText para gerar boletos.</p>
+<p>Isso já é <strong>decisão de implementação</strong>, não o requisito funcional em si.</p>
+</div>
+<div class="example">
+  <div class="example-title">Questão de concurso - Funcional ou não funcional?</div>
+  <p>Analise os itens abaixo:</p>
+<ol>
+<li>O sistema deve permitir que o aluno solicite trancamento de matrícula.</li>
+<li>O sistema deve responder a essa solicitação em até 2 segundos.</li>
+<li>O sistema deve utilizar PostgreSQL como banco de dados.</li>
+</ol>
+<p>Classifique os itens, respectivamente.</p>
+<hr />
+<p><strong>Resposta comentada:</strong></p>
+<ol>
+<li><strong>Requisito funcional</strong>, porque define um serviço do sistema.</li>
+<li><strong>Requisito não funcional</strong>, porque impõe uma restrição de desempenho ao serviço.</li>
+<li><strong>Decisão de projeto</strong> ou <strong>restrição tecnológica</strong>, não um requisito funcional clássico.</li>
+</ol>
+<p>Essa é uma pegadinha muito comum: o examinador mistura comportamento esperado com escolha de implementação.</p>
+</div>
+<h3 id="requisitos-não-funcionais"><span class="heading-text">Requisitos Não Funcionais</span><span class="heading-arabic">5.3.2</span></h3>
+<p>Os requisitos não funcionais descrevem restrições ou qualidades do sistema. Em vez de dizerem o que o sistema faz, eles dizem <strong>como o sistema deve se comportar</strong> ou sob quais condições deve operar.</p>
+<p>Eles podem surgir de:</p>
+<ol>
+<li><strong>Requisitos de produto:</strong> desempenho, confiabilidade, segurança, usabilidade.</li>
+<li><strong>Requisitos organizacionais:</strong> padrões, processos, tecnologias adotadas pela organização.</li>
+<li><strong>Requisitos externos:</strong> leis, regulações, normas éticas e de proteção de dados.</li>
+</ol>
+<div class="mermaid-outer-container">  <div class="mermaid-switcher">    <div class="switcher-track">      <button class="switcher-btn active" onclick="CourseForgeUI.switchMermaidView(this, 'diagram')"><i data-lucide="eye"></i> Diagrama</button>      <button class="switcher-btn" onclick="CourseForgeUI.switchMermaidView(this, 'code')"><i data-lucide="code"></i> Código</button>      <div class="switcher-slider"></div>    </div>  </div>  <div class="mermaid-content">    <div class="mermaid-display">      <pre class="mermaid">flowchart TD
+    RNF[Requisitos nao funcionais] --&gt; P[Produto]
+    RNF --&gt; O[Organizacionais]
+    RNF --&gt; E[Externos]
+    P --&gt; P1[Desempenho]
+    P --&gt; P2[Confiabilidade]
+    P --&gt; P3[Usabilidade]
+    O --&gt; O1[Padroes internos]
+    O --&gt; O2[Tecnologias adotadas]
+    E --&gt; E1[Leis]
+    E --&gt; E2[Regulacoes]
+    E --&gt; E3[Etica]</pre>    </div>    <div class="mermaid-source" style="display: none;">      <pre class="language-mermaid"><code>flowchart TD
+    RNF[Requisitos nao funcionais] --&gt; P[Produto]
+    RNF --&gt; O[Organizacionais]
+    RNF --&gt; E[Externos]
+    P --&gt; P1[Desempenho]
+    P --&gt; P2[Confiabilidade]
+    P --&gt; P3[Usabilidade]
+    O --&gt; O1[Padroes internos]
+    O --&gt; O2[Tecnologias adotadas]
+    E --&gt; E1[Leis]
+    E --&gt; E2[Regulacoes]
+    E --&gt; E3[Etica]</code></pre>    </div>  </div></div>
+
+<p>Exemplos:</p>
+<ol>
+<li>O sistema deve estar disponível das 8h30 às 17h30 nos dias úteis.</li>
+<li>O sistema deve responder a consultas em até 2 segundos.</li>
+<li>O acesso aos prontuários deve ser restrito a profissionais autorizados.</li>
+<li>O sistema deve estar em conformidade com a legislação de privacidade de dados.</li>
+</ol>
+<p>Outros exemplos:</p>
+<ol>
+<li>O sistema deve suportar 500 acessos simultâneos sem degradação significativa.</li>
+<li>O sistema deve registrar logs de auditoria por 5 anos.</li>
+<li>O sistema deve estar disponível em pelo menos 99,5% do período letivo.</li>
+<li>O tempo de treinamento para uso das funções principais não deve ultrapassar 4 horas.</li>
+</ol>
+<h3 id="exemplos-por-tipo-de-requisito"><span class="heading-text">Exemplos por tipo de requisito</span><span class="heading-arabic">5.3.3</span></h3>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Classificacao</th>
+  <th style="text-align:left">Exemplo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><strong>Funcional</strong></td>
+  <td style="text-align:left">O sistema deve permitir cadastrar disciplinas.</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Nao funcional</strong></td>
+  <td style="text-align:left">O sistema deve estar disponivel 99,5% do tempo letivo.</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Produto</strong></td>
+  <td style="text-align:left">O sistema deve responder a consultas em ate 2 segundos.</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Organizacional</strong></td>
+  <td style="text-align:left">O sistema deve usar autenticacao institucional da universidade.</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Externo</strong></td>
+  <td style="text-align:left">O sistema deve seguir a LGPD no tratamento de dados pessoais.</td>
+</tr>
+</tbody>
+</table>
+<div class="example">
+  <div class="example-title">Mais exemplos de tipos de requisitos</div>
+  <p><strong>Requisitos funcionais</strong></p>
+<ol>
+<li>O sistema deve permitir ao aluno solicitar matrícula em disciplina optativa.</li>
+<li>O sistema deve permitir ao coordenador emitir relatório de evasão por semestre.</li>
+</ol>
+<p><strong>Requisitos não funcionais</strong></p>
+<ol>
+<li>O sistema deve responder buscas em até 2 segundos.</li>
+<li>O sistema deve manter disponibilidade mínima de 99,5%.</li>
+</ol>
+<p><strong>Requisitos de produto</strong></p>
+<ol>
+<li>O sistema deve suportar 500 acessos simultâneos.</li>
+<li>O sistema deve armazenar logs de auditoria por 5 anos.</li>
+</ol>
+<p><strong>Requisitos organizacionais</strong></p>
+<ol>
+<li>O sistema deve usar autenticação integrada ao domínio institucional.</li>
+<li>O sistema deve seguir o padrão visual adotado pela universidade.</li>
+</ol>
+<p><strong>Requisitos externos</strong></p>
+<ol>
+<li>O sistema deve cumprir a LGPD.</li>
+<li>O sistema deve respeitar normas do MEC para retenção de documentos acadêmicos.</li>
+</ol>
+</div>
+<div class="example">
+  <div class="example-title">Questão de concurso - Produto, organizacional ou externo?</div>
+  <p>Uma banca apresenta os seguintes requisitos para um sistema universitário:</p>
+<ol>
+<li>O sistema deve responder consultas em até 3 segundos.</li>
+<li>O sistema deve usar autenticação integrada ao diretório institucional.</li>
+<li>O sistema deve cumprir a LGPD.</li>
+</ol>
+<p>Classifique cada requisito.</p>
+<hr />
+<p><strong>Resposta comentada:</strong></p>
+<ol>
+<li><strong>Requisito de produto</strong>, porque trata de desempenho do sistema.</li>
+<li><strong>Requisito organizacional</strong>, porque deriva de uma política ou infraestrutura interna da organização.</li>
+<li><strong>Requisito externo</strong>, porque deriva de legislação e regulação fora da equipe de desenvolvimento.</li>
+</ol>
+</div>
+<p>Os requisitos não funcionais costumam ser mais críticos do que muitos requisitos funcionais. Um sistema pode até ter todos os recursos esperados, mas, se for lento, inseguro, indisponível ou difícil de usar, será rejeitado pelos usuários.</p>
+<h3 id="métricas-para-requisitos-não-funcionais"><span class="heading-text">Métricas para Requisitos Não Funcionais</span><span class="heading-arabic">5.3.4</span></h3>
+<p>Sempre que possível, requisitos não funcionais devem ser definidos de forma mensurável. Isso facilita validação e negociação.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Propriedade</th>
+  <th style="text-align:left">Exemplo de medida</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Velocidade</td>
+  <td style="text-align:left">transações por segundo, tempo de resposta</td>
+</tr>
+<tr>
+  <td style="text-align:left">Tamanho</td>
+  <td style="text-align:left">megabytes, uso de memória</td>
+</tr>
+<tr>
+  <td style="text-align:left">Facilidade de uso</td>
+  <td style="text-align:left">tempo de treinamento, número de erros por hora</td>
+</tr>
+<tr>
+  <td style="text-align:left">Confiabilidade</td>
+  <td style="text-align:left">tempo médio para falha, taxa de falhas</td>
+</tr>
+<tr>
+  <td style="text-align:left">Robustez</td>
+  <td style="text-align:left">tempo de reinício, perda de dados após falha</td>
+</tr>
+<tr>
+  <td style="text-align:left">Portabilidade</td>
+  <td style="text-align:left">número de plataformas suportadas</td>
+</tr>
+</tbody>
+</table>
+<p>Um requisito como &quot;o sistema deve ser fácil de usar&quot; é vago. Já uma formulação como &quot;um usuário treinado deve conseguir executar as funções principais após 4 horas de treinamento&quot; é muito mais verificável.</p>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner"><br /></span>
+  </div>
+  <div class="callout-content">
+<p>Um erro comum é escrever requisitos nao funcionais vagos, como &quot;o sistema deve ser rapido&quot; ou &quot;o sistema deve ser seguro&quot;. Sempre que possivel, transforme isso em medida observavel.</p>
+  </div>
+</div>
+<h2 id="o-documento-de-requisitos-de-software"><span class="heading-text">O Documento de Requisitos de Software</span><span class="heading-arabic">5.4</span></h2>
+<p>O documento de requisitos de software, frequentemente chamado de <strong>SRS</strong> (<em>Software Requirements Specification</em>), é a declaração formal do que deve ser implementado. Ele funciona como ponte entre o problema do negócio e a solução técnica.</p>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Se o mesmo documento vai ser lido por cliente, desenvolvedor, testador e equipe de manutenção, como ele pode ser claro o suficiente para todos esses públicos ao mesmo tempo?</p>
+  </div>
+</div>
+<p>Esse documento pode ser usado por diferentes públicos:</p>
+<ol>
+<li>Clientes e gestores, para verificar se o sistema atende às necessidades organizacionais.</li>
+<li>Engenheiros de software, para orientar projeto e implementação.</li>
+<li>Testadores, para derivar casos de teste.</li>
+<li>Equipes de manutenção, para compreender a intenção original do sistema.</li>
+</ol>
+<p>Uma estrutura típica inclui:</p>
+<ol>
+<li>Introdução e contexto do sistema.</li>
+<li>Glossário de termos.</li>
+<li>Requisitos de usuário.</li>
+<li>Arquitetura geral do sistema.</li>
+<li>Requisitos detalhados de sistema.</li>
+<li>Modelos e diagramas.</li>
+<li>Evolução prevista do sistema.</li>
+<li>Apêndices e índice.</li>
+</ol>
+<div class="mermaid-outer-container">  <div class="mermaid-switcher">    <div class="switcher-track">      <button class="switcher-btn active" onclick="CourseForgeUI.switchMermaidView(this, 'diagram')"><i data-lucide="eye"></i> Diagrama</button>      <button class="switcher-btn" onclick="CourseForgeUI.switchMermaidView(this, 'code')"><i data-lucide="code"></i> Código</button>      <div class="switcher-slider"></div>    </div>  </div>  <div class="mermaid-content">    <div class="mermaid-display">      <pre class="mermaid">flowchart TD
+    A[Documento de requisitos] --&gt; B[Introducao e contexto]
+    A --&gt; C[Glossario]
+    A --&gt; D[Requisitos de usuario]
+    A --&gt; E[Requisitos de sistema]
+    A --&gt; F[Modelos e diagramas]
+    A --&gt; G[Evolucao prevista]
+    A --&gt; H[Apendices]</pre>    </div>    <div class="mermaid-source" style="display: none;">      <pre class="language-mermaid"><code>flowchart TD
+    A[Documento de requisitos] --&gt; B[Introducao e contexto]
+    A --&gt; C[Glossario]
+    A --&gt; D[Requisitos de usuario]
+    A --&gt; E[Requisitos de sistema]
+    A --&gt; F[Modelos e diagramas]
+    A --&gt; G[Evolucao prevista]
+    A --&gt; H[Apendices]</code></pre>    </div>  </div></div>
+
+<p>Em ambientes ágeis, muitas vezes esse documento é mais enxuto. Em sistemas grandes, regulados ou críticos, ele tende a ser mais detalhado e formal.</p>
+<h2 id="processos-de-engenharia-de-requisitos"><span class="heading-text">Processos de Engenharia de Requisitos</span><span class="heading-arabic">5.5</span></h2>
+<p>Sommerville organiza a Engenharia de Requisitos em quatro atividades principais:</p>
+<ol>
+<li><strong>Estudo de viabilidade</strong></li>
+<li><strong>Elicitação e análise de requisitos</strong></li>
+<li><strong>Especificação de requisitos</strong></li>
+<li><strong>Validação de requisitos</strong></li>
+</ol>
+<p>Na prática, essas atividades não acontecem linearmente. Elas são iterativas e frequentemente se sobrepõem.</p>
+<div class="mermaid-outer-container">  <div class="mermaid-switcher">    <div class="switcher-track">      <button class="switcher-btn active" onclick="CourseForgeUI.switchMermaidView(this, 'diagram')"><i data-lucide="eye"></i> Diagrama</button>      <button class="switcher-btn" onclick="CourseForgeUI.switchMermaidView(this, 'code')"><i data-lucide="code"></i> Código</button>      <div class="switcher-slider"></div>    </div>  </div>  <div class="mermaid-content">    <div class="mermaid-display">      <pre class="mermaid">flowchart LR
+    A[Estudo de viabilidade] --&gt; B[Elicitacao e analise]
+    B --&gt; C[Especificacao]
+    C --&gt; D[Validacao]
+    D --&gt; B
+    C --&gt; E[Gerenciamento de requisitos]
+    D --&gt; E
+    B --&gt; E</pre>    </div>    <div class="mermaid-source" style="display: none;">      <pre class="language-mermaid"><code>flowchart LR
+    A[Estudo de viabilidade] --&gt; B[Elicitacao e analise]
+    B --&gt; C[Especificacao]
+    C --&gt; D[Validacao]
+    D --&gt; B
+    C --&gt; E[Gerenciamento de requisitos]
+    D --&gt; E
+    B --&gt; E</code></pre>    </div>  </div></div>
+
+<h3 id="estudo-de-viabilidade"><span class="heading-text">Estudo de viabilidade</span><span class="heading-arabic">5.5.1</span></h3>
+<p>O estudo de viabilidade é uma análise inicial para verificar se o sistema faz sentido do ponto de vista técnico, operacional e econômico. Algumas perguntas típicas são:</p>
+<ol>
+<li>A tecnologia atual permite construir o sistema?</li>
+<li>O sistema cabe no orçamento e no prazo disponíveis?</li>
+<li>O ganho organizacional justifica o investimento?</li>
+</ol>
+<h3 id="elicitação-e-análise"><span class="heading-text">Elicitação e análise</span><span class="heading-arabic">5.5.2</span></h3>
+<p>É o processo de descobrir os requisitos junto aos stakeholders. Aqui, o foco está em entender o domínio da aplicação, os objetivos do sistema, os conflitos entre interessados e as restrições reais do contexto.</p>
+<p>Exemplo: em um sistema acadêmico, o coordenador pode pedir relatórios de evasão, o professor pode pedir diário de classe simplificado e a secretaria pode exigir integração com o sistema institucional. Todos falam do mesmo sistema, mas com prioridades diferentes.</p>
+<p>Outro exemplo: em um sistema hospitalar, o médico pode priorizar rapidez de acesso ao prontuário, enquanto o setor jurídico pode priorizar trilha de auditoria e consentimento do paciente. Ambos estão certos, mas puxam o requisito para direções diferentes.</p>
+<div class="example">
+  <div class="example-title">Questão de concurso - Técnicas de elicitação</div>
+  <p>Em uma organização, o processo oficial afirma que todo atendimento deve ser registrado ao final da consulta. No entanto, na prática, alguns profissionais registram parte das informações antes do término para ganhar tempo em atendimentos recorrentes.</p>
+<p>Qual técnica tem maior chance de descobrir esse comportamento real?</p>
+<ul>
+<li>A) Entrevista fechada</li>
+<li>B) Caso de uso de alto nível</li>
+<li>C) Etnografia</li>
+<li>D) Especificação formal</li>
+</ul>
+<hr />
+<p><strong>Resposta:</strong> <strong>C) Etnografia</strong>.</p>
+<p>Ela é a mais adequada porque observa o trabalho real no ambiente em que ele ocorre, revelando diferenças entre processo oficial e prática cotidiana.</p>
+</div>
+<h3 id="especificação"><span class="heading-text">Especificação</span><span class="heading-arabic">5.5.3</span></h3>
+<p>É o processo de documentar os requisitos em alguma forma estruturada, normalmente em linguagem natural, tabelas, diagramas, cenários e, em alguns casos, notações formais.</p>
+<h3 id="validação"><span class="heading-text">Validação</span><span class="heading-arabic">5.5.4</span></h3>
+<p>É a verificação de que os requisitos são consistentes, completos, realistas e verificáveis.</p>
+<h3 id="gerenciamento-de-requisitos"><span class="heading-text">Gerenciamento de requisitos</span><span class="heading-arabic">5.5.5</span></h3>
+<p>Como os requisitos mudam ao longo do tempo, é necessário controlar essas mudanças. O gerenciamento de requisitos acompanha solicitações de alteração, impacto, prioridade e rastreabilidade.</p>
+<h2 id="elicitação-e-análise-de-requisitos"><span class="heading-text">Elicitação e Análise de Requisitos</span><span class="heading-arabic">5.6</span></h2>
+<p>A elicitação é difícil porque diferentes stakeholders têm visões diferentes do sistema, falam a partir de seus próprios contextos e muitas vezes não sabem exatamente o que querem até verem exemplos concretos.</p>
+<p>Algumas dificuldades típicas são:</p>
+<ol>
+<li>Usuários não conseguem explicitar todas as necessidades.</li>
+<li>Stakeholders possuem interesses conflitantes.</li>
+<li>Requisitos mudam durante a análise.</li>
+<li>Regras do domínio são implícitas e nem sempre verbalizadas.</li>
+</ol>
+<div class="mermaid-outer-container">  <div class="mermaid-switcher">    <div class="switcher-track">      <button class="switcher-btn active" onclick="CourseForgeUI.switchMermaidView(this, 'diagram')"><i data-lucide="eye"></i> Diagrama</button>      <button class="switcher-btn" onclick="CourseForgeUI.switchMermaidView(this, 'code')"><i data-lucide="code"></i> Código</button>      <div class="switcher-slider"></div>    </div>  </div>  <div class="mermaid-content">    <div class="mermaid-display">      <pre class="mermaid">flowchart TD
+    A[Stakeholders] --&gt; B[Entrevistas]
+    A --&gt; C[Cenarios e casos de uso]
+    A --&gt; D[Observacao do trabalho]
+    B --&gt; E[Requisitos iniciais]
+    C --&gt; E
+    D --&gt; E
+    E --&gt; F[Negociacao e refinamento]</pre>    </div>    <div class="mermaid-source" style="display: none;">      <pre class="language-mermaid"><code>flowchart TD
+    A[Stakeholders] --&gt; B[Entrevistas]
+    A --&gt; C[Cenarios e casos de uso]
+    A --&gt; D[Observacao do trabalho]
+    B --&gt; E[Requisitos iniciais]
+    C --&gt; E
+    D --&gt; E
+    E --&gt; F[Negociacao e refinamento]</code></pre>    </div>  </div></div>
+
+<p>Sommerville destaca algumas técnicas importantes para apoiar essa atividade.</p>
+<h3 id="entrevistas"><span class="heading-text">Entrevistas</span><span class="heading-arabic">5.6.1</span></h3>
+<p>Entrevistas podem ser:</p>
+<ol>
+<li><strong>Fechadas</strong>, com perguntas pré-definidas.</li>
+<li><strong>Abertas</strong>, com exploração mais livre dos problemas do domínio.</li>
+</ol>
+<p>São úteis para entender objetivos, dores e expectativas, mas têm limitações para capturar conhecimento tácito e regras organizacionais implícitas.</p>
+<p><strong>Exemplo:</strong> perguntar ao coordenador &quot;quais relatórios você precisa emitir no fechamento do semestre?&quot; é eficiente para captar objetivos, mas pode não revelar atalhos informais usados pela secretaria no dia a dia.</p>
+<p><strong>Outro exemplo:</strong> entrevistar um professor pode revelar a necessidade de importar notas por planilha, mas talvez não revele o fluxo completo de validação das notas antes do fechamento do diário.</p>
+<h3 id="cenários"><span class="heading-text">Cenários</span><span class="heading-arabic">5.6.2</span></h3>
+<p>Cenários descrevem exemplos concretos de uso do sistema. Eles ajudam os usuários a reagir a situações realistas, o que normalmente é mais fácil do que reagir a descrições abstratas.</p>
+<p>Um cenário bem escrito pode incluir:</p>
+<ol>
+<li>Situação inicial.</li>
+<li>Fluxo normal de eventos.</li>
+<li>Exceções e problemas possíveis.</li>
+<li>Estado final do sistema.</li>
+</ol>
+<p><strong>Exemplo:</strong><br />
+Aluno solicita matrícula em disciplina optativa. O sistema verifica pré-requisito, vagas disponíveis e conflito de horário. Se houver vaga e o aluno atender aos critérios, a matrícula é registrada. Se não houver vaga, o sistema informa indisponibilidade e orienta a fila de espera.</p>
+<p><strong>Outro exemplo:</strong><br />
+Paciente chega à clínica sem agendamento. A recepção busca o prontuário, verifica se existe encaixe, registra a chegada e encaminha o caso para triagem. Se o paciente não estiver cadastrado, o sistema abre fluxo de cadastro inicial.</p>
+<h3 id="casos-de-uso"><span class="heading-text">Casos de uso</span><span class="heading-arabic">5.6.3</span></h3>
+<p>Casos de uso identificam interações entre atores e o sistema. Eles ajudam a esclarecer objetivos do usuário e a delimitar funcionalidades relevantes. São especialmente úteis quando queremos entender interações externas, mas não substituem por completo outras técnicas de elicitação.</p>
+<p><strong>Exemplos de casos de uso em um sistema acadêmico:</strong></p>
+<ol>
+<li>Realizar matrícula.</li>
+<li>Lançar notas.</li>
+<li>Emitir histórico.</li>
+<li>Consultar frequência.</li>
+</ol>
+<p>Esses casos de uso ajudam a responder a uma pergunta muito cobrada em avaliação: <strong>quem interage com o sistema e com qual objetivo?</strong> O ator não executa passos isolados; ele busca atingir um objetivo completo de negócio.</p>
+<h3 id="etnografia"><span class="heading-text">Etnografia</span><span class="heading-arabic">5.6.4</span></h3>
+<p>A etnografia observa o trabalho real dos usuários no ambiente em que o sistema será utilizado. Ela é valiosa porque muitas organizações não funcionam exatamente como seus processos oficiais descrevem. O trabalho cotidiano, os atalhos, as exceções e as cooperações informais entre pessoas podem gerar requisitos críticos que não apareceriam em entrevistas formais.</p>
+<p><strong>Exemplo:</strong> a secretaria pode oficialmente registrar trancamentos de matrícula por um formulário padronizado, mas na prática pode manter uma planilha paralela para acompanhar casos especiais. Se isso não for observado, o sistema poderá ignorar uma necessidade real do setor.</p>
+<p><strong>Outro exemplo:</strong> em uma clínica, o fluxo oficial pode dizer que toda medicação é registrada após a consulta, mas na prática um enfermeiro pode antecipar esse registro em casos recorrentes para ganhar tempo no atendimento.</p>
+<h2 id="validação-de-requisitos"><span class="heading-text">Validação de Requisitos</span><span class="heading-arabic">5.7</span></h2>
+<p>A validação de requisitos procura verificar se os requisitos realmente definem o sistema que o cliente quer e se são tecnicamente sólidos o suficiente para orientar o desenvolvimento.</p>
+<p>As verificações principais são:</p>
+<ol>
+<li><strong>Validade:</strong> os requisitos refletem necessidades reais?</li>
+<li><strong>Consistência:</strong> existem contradições entre requisitos?</li>
+<li><strong>Completude:</strong> faltam funções ou restrições importantes?</li>
+<li><strong>Realismo:</strong> os requisitos podem ser implementados com tecnologia, prazo e orçamento disponíveis?</li>
+<li><strong>Verificabilidade:</strong> é possível testar se o requisito foi atendido?</li>
+</ol>
+<div class="mermaid-outer-container">  <div class="mermaid-switcher">    <div class="switcher-track">      <button class="switcher-btn active" onclick="CourseForgeUI.switchMermaidView(this, 'diagram')"><i data-lucide="eye"></i> Diagrama</button>      <button class="switcher-btn" onclick="CourseForgeUI.switchMermaidView(this, 'code')"><i data-lucide="code"></i> Código</button>      <div class="switcher-slider"></div>    </div>  </div>  <div class="mermaid-content">    <div class="mermaid-display">      <pre class="mermaid">flowchart TD
+    A[Validacao de requisitos] --&gt; B[Validade]
+    A --&gt; C[Consistencia]
+    A --&gt; D[Completude]
+    A --&gt; E[Realismo]
+    A --&gt; F[Verificabilidade]</pre>    </div>    <div class="mermaid-source" style="display: none;">      <pre class="language-mermaid"><code>flowchart TD
+    A[Validacao de requisitos] --&gt; B[Validade]
+    A --&gt; C[Consistencia]
+    A --&gt; D[Completude]
+    A --&gt; E[Realismo]
+    A --&gt; F[Verificabilidade]</code></pre>    </div>  </div></div>
+
+<p>Técnicas comuns de validação incluem:</p>
+<ol>
+<li>Revisões de requisitos com equipe multidisciplinar.</li>
+<li>Prototipação.</li>
+<li>Geração de casos de teste a partir dos requisitos.</li>
+</ol>
+<div class="example">
+  <div class="example-title">Pegadinha de prova: requisito verificável ou vago?</div>
+  <p><strong>Caso 1:</strong> O sistema deve ser rápido.</p>
+<p>Esse requisito é <strong>vago</strong>. Ele não diz em qual operação, em qual contexto e com qual limite mensurável.</p>
+<p><strong>Caso 2:</strong> O sistema deve exibir a situação acadêmica do aluno em até 2 segundos para consultas com até 10 semestres cadastrados.</p>
+<p>Esse requisito é <strong>verificável</strong>, porque define operação, contexto e limite observável.</p>
+<p><strong>Caso 3:</strong> O sistema deve ser seguro.</p>
+<p>Também é vago.</p>
+<p><strong>Caso 4:</strong> O sistema deve bloquear o acesso após 5 tentativas inválidas de login e registrar o evento em log de auditoria.</p>
+<p>Agora temos um requisito muito mais verificável.</p>
+</div>
+<div class="example">
+  <div class="example-title">Questão de concurso - Validação de requisitos</div>
+  <p>Assinale a alternativa que melhor expressa o objetivo da validação de requisitos.</p>
+<ul>
+<li>A) Garantir que o sistema já esteja implementado e sem defeitos.</li>
+<li>B) Verificar se os requisitos são válidos, consistentes, completos, realistas e verificáveis.</li>
+<li>C) Escolher a linguagem de programação mais adequada ao projeto.</li>
+<li>D) Substituir completamente os testes de sistema.</li>
+</ul>
+<hr />
+<p><strong>Resposta:</strong> <strong>B</strong>.</p>
+<p>Validação de requisitos ocorre antes da implementação completa e busca verificar a qualidade do próprio conjunto de requisitos. Ela não substitui testes de sistema e não tem como foco principal decisões tecnológicas.</p>
+</div>
+<p>Mesmo com validação, nem todos os problemas serão encontrados. Por isso, mudanças de requisitos continuam ocorrendo ao longo do projeto.</p>
+<h2 id="gerenciamento-de-requisitos"><span class="heading-text">Gerenciamento de Requisitos</span><span class="heading-arabic">5.8</span></h2>
+<p>Os requisitos de sistemas reais evoluem continuamente. Negócio muda, legislação muda, tecnologia muda, prioridades dos usuários mudam. Por isso, a Engenharia de Requisitos não termina quando o documento é escrito.</p>
+<p>O gerenciamento de requisitos envolve:</p>
+<ol>
+<li>Identificar unicamente cada requisito.</li>
+<li>Controlar solicitações de mudança.</li>
+<li>Avaliar impactos e custos dessas mudanças.</li>
+<li>Manter rastreabilidade entre requisitos, projeto, implementação e testes.</li>
+</ol>
+<div class="mermaid-outer-container">  <div class="mermaid-switcher">    <div class="switcher-track">      <button class="switcher-btn active" onclick="CourseForgeUI.switchMermaidView(this, 'diagram')"><i data-lucide="eye"></i> Diagrama</button>      <button class="switcher-btn" onclick="CourseForgeUI.switchMermaidView(this, 'code')"><i data-lucide="code"></i> Código</button>      <div class="switcher-slider"></div>    </div>  </div>  <div class="mermaid-content">    <div class="mermaid-display">      <pre class="mermaid">flowchart LR
+    A[Problema ou mudanca proposta] --&gt; B[Analise da mudanca]
+    B --&gt; C[Estimativa de impacto e custo]
+    C --&gt; D[Decisao]
+    D --&gt; E[Atualizacao de requisitos]
+    E --&gt; F[Atualizacao de projeto e testes]</pre>    </div>    <div class="mermaid-source" style="display: none;">      <pre class="language-mermaid"><code>flowchart LR
+    A[Problema ou mudanca proposta] --&gt; B[Analise da mudanca]
+    B --&gt; C[Estimativa de impacto e custo]
+    C --&gt; D[Decisao]
+    D --&gt; E[Atualizacao de requisitos]
+    E --&gt; F[Atualizacao de projeto e testes]</code></pre>    </div>  </div></div>
+
+<p>Isso é especialmente importante em sistemas grandes, onde uma pequena alteração em um requisito pode afetar várias partes da arquitetura, da implementação e da validação.</p>
+<p>Um bom exemplo é este: se um requisito aparentemente simples mudar de &quot;o sistema deve autenticar o usuário&quot; para &quot;o sistema deve autenticar via login institucional e segundo fator&quot;, isso pode afetar interface, integração externa, regras de negócio, testes e treinamento.</p>
+<div class="example">
+  <div class="example-title">Questão de concurso - Gerenciamento de requisitos</div>
+  <p>Uma pequena mudança em um requisito pode afetar arquitetura, código, testes, cronograma e custo. O processo responsável por acompanhar essas alterações, avaliar seu impacto e manter rastreabilidade é chamado de:</p>
+<ul>
+<li>A) Prototipação</li>
+<li>B) Validação estrutural</li>
+<li>C) Gerenciamento de requisitos</li>
+<li>D) Refatoração arquitetural</li>
+</ul>
+<hr />
+<p><strong>Resposta:</strong> <strong>C) Gerenciamento de requisitos</strong>.</p>
+<p>Ele existe justamente porque, em sistemas reais, os requisitos evoluem continuamente e precisam ser controlados de forma explícita.</p>
+</div>
+<h2 id="estudo-de-caso-mhc-pms"><span class="heading-text">Estudo de Caso: MHC-PMS</span><span class="heading-arabic">5.9</span></h2>
+<p>O MHC-PMS, usado por Sommerville como estudo de caso recorrente, é um bom exemplo de por que a Engenharia de Requisitos é central. Trata-se de um sistema de informação para cuidados com saúde mental, com dois objetivos principais:</p>
+<ol>
+<li>apoiar o tratamento clínico com informações atualizadas sobre pacientes;</li>
+<li>gerar informação gerencial para planejamento e controle do serviço de saúde.</li>
+</ol>
+<p>Nesse sistema, há exemplos claros de requisitos funcionais e não funcionais:</p>
+<p><strong>Funcionais</strong></p>
+<ol>
+<li>registrar pacientes;</li>
+<li>manter histórico clínico;</li>
+<li>acompanhar consultas e tratamentos;</li>
+<li>gerar relatórios administrativos.</li>
+</ol>
+<p><strong>Não funcionais</strong></p>
+<ol>
+<li>privacidade dos dados do paciente;</li>
+<li>disponibilidade do sistema nas clínicas;</li>
+<li>segurança de acesso;</li>
+<li>suporte ao uso local quando não houver conexão segura com a rede.</li>
+</ol>
+<p>Esse tipo de sistema também ilustra um ponto importante: requisitos podem entrar em conflito. Por exemplo, manter uma única cópia dos dados ajuda a privacidade, mas múltiplas cópias locais ajudam a disponibilidade. O trabalho da Engenharia de Requisitos é justamente tornar esses conflitos explícitos para que sejam negociados.</p>
+<h2 id="questões"><span class="heading-text">Questões</span><span class="heading-arabic">5.10</span></h2>
+<div class="questions">
+  <p><strong>1.</strong> Diferencie requisitos de usuário e requisitos de sistema. Explique por que essa separação é importante em projetos reais.</p>
+<p><strong>2.</strong> Explique a diferença entre requisitos funcionais e não funcionais e dê dois exemplos de cada um para um sistema acadêmico.</p>
+<p><strong>3.</strong> Por que requisitos não funcionais frequentemente são mais críticos do que vários requisitos funcionais individuais?</p>
+<p><strong>4.</strong> Explique por que um documento de requisitos precisa atender públicos diferentes, como clientes, desenvolvedores e testadores.</p>
+<p><strong>5.</strong> Descreva as quatro atividades principais da Engenharia de Requisitos segundo Sommerville.</p>
+<p><strong>6.</strong> Compare entrevistas, cenários, casos de uso e etnografia como técnicas de elicitação. Em que situação cada uma é mais útil?</p>
+<p><strong>7.</strong> Explique por que a validação de requisitos é essencial para reduzir retrabalho no projeto e na implementação.</p>
+<p><strong>8.</strong> O que significa dizer que um requisito deve ser verificável? Dê um exemplo de requisito mal formulado e reescreva-o de forma verificável.</p>
+<p><strong>9.</strong> Por que o gerenciamento de requisitos é indispensável em sistemas de grande porte?</p>
+<p><strong>10.</strong> No contexto do MHC-PMS, explique como privacidade, disponibilidade e segurança podem entrar em conflito.</p>
+</div>
+<div class="example">
+  <div class="example-title">Gabarito</div>
+  <p><strong>1.</strong> Requisitos de usuário são descrições em alto nível, voltadas a clientes e usuários finais. Requisitos de sistema são descrições mais detalhadas, técnicas e verificáveis, usadas pela equipe de desenvolvimento. A separação é importante porque públicos diferentes precisam de níveis diferentes de abstração.</p>
+<p><strong>2.</strong> Requisitos funcionais descrevem serviços do sistema, como cadastrar disciplinas ou emitir histórico. Requisitos não funcionais descrevem qualidades e restrições, como responder em até 2 segundos ou manter disponibilidade de 99,5%.</p>
+<p><strong>3.</strong> Porque, mesmo com funcionalidades corretas, um sistema lento, inseguro, indisponível ou difícil de usar pode ser rejeitado na prática.</p>
+<p><strong>4.</strong> Porque o documento de requisitos é uma ponte entre negócio e implementação. Clientes verificam aderência ao problema; desenvolvedores implementam; testadores derivam testes; manutenção entende a intenção do sistema.</p>
+<p><strong>5.</strong> Estudo de viabilidade, elicitação e análise, especificação e validação. Em muitos contextos, também se inclui gerenciamento de requisitos como atividade contínua.</p>
+<p><strong>6.</strong> Entrevistas ajudam a captar objetivos e dores. Cenários ajudam a visualizar fluxos concretos de uso. Casos de uso ajudam a modelar interações entre atores e sistema. Etnografia ajuda a descobrir práticas reais de trabalho que não aparecem em documentos ou entrevistas.</p>
+<p><strong>7.</strong> Porque corrige ambiguidades, contradições e lacunas antes do projeto e da implementação, reduzindo retrabalho e custo de correção posterior.</p>
+<p><strong>8.</strong> Um requisito verificável é aquele que pode ser testado objetivamente. Exemplo ruim: &quot;o sistema deve ser rápido&quot;. Exemplo melhor: &quot;o sistema deve retornar a consulta de histórico escolar em até 2 segundos&quot;.</p>
+<p><strong>9.</strong> Porque os requisitos mudam constantemente e, em sistemas grandes, essas mudanças impactam arquitetura, código, testes, cronograma e custo. Sem gerenciamento, perde-se controle e rastreabilidade.</p>
+<p><strong>10.</strong> Privacidade pode exigir centralização e controle rígido de acesso. Disponibilidade pode exigir cópias locais ou redundância. Segurança pode exigir autenticação e auditoria mais fortes. Essas necessidades podem entrar em conflito e precisam ser negociadas.</p>
+</div>
+<h2 id="próximos-passos"><span class="heading-text">Próximos passos</span><span class="heading-arabic">5.11</span></h2>
+<p>Na próxima aula, avançaremos para <a href="6-system-modeling-uml.html">Modelagem de Sistemas com UML</a>, onde veremos como transformar requisitos em modelos visuais de contexto, interação, estrutura e comportamento.</p>
+
+                </div>
+            </article>
+            <footer class="footer">
+                <p>© 2025 · <a href="#">Gabriel Soares Baptista</a></p>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        const toggle = document.querySelector('.mobile-menu-toggle');
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.querySelector('.mobile-menu-overlay');
+
+        function openMenu() {
+            sidebar.classList.add('open');
+            overlay.classList.add('open');
+            toggle.classList.add('open');
+            toggle.innerHTML = '<i data-lucide="x"></i>';
+            CourseForgeUI.initIcons();
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMenu() {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('open');
+            toggle.classList.remove('open');
+            toggle.innerHTML = '<i data-lucide="menu"></i>';
+            CourseForgeUI.initIcons();
+            document.body.style.overflow = '';
+        }
+
+        toggle.addEventListener('click', () => {
+            if (sidebar.classList.contains('open')) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        overlay.addEventListener('click', closeMenu);
+    </script>
+
+    
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            renderMathInElement(document.body, {
+                output: 'html',
+                delimiters: [
+                    { left: "$$", right: "$$", display: true },
+                    { left: "$", right: "$", display: false },
+                    { left: "\\(", right: "\\)", display: false },
+                    { left: "\\[", right: "\\]", display: true }
+                ],
+                throwOnError: false,
+                strict: false
+            });
+        });
+    </script>
+    
+    
+    <script src="/aulas-faesa/js/vendor/prism/prism.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-c.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-cpp.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-python.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-clike.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-perl.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-java.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-mermaid.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-php.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js" data-no-bundle></script>
+    
+    
+    
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            mermaid.initialize({
+                startOnLoad: true,
+                theme: 'default',
+                securityLevel: 'loose',
+                fontFamily: 'Inter, system-ui, sans-serif',
+                themeVariables: {
+                    fontSize: '16px',
+                    edgeLabelFontSize: '16px',
+                    multiplicityFontSize: '18px'
+                }
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const isSubcourse = false;
+        const courseName = "Engenharia de Software";
+        CourseForgeNav.applyDynamicBreadcrumbs('.breadcrumb', isSubcourse);
+        CourseForgeNav.initScrollSpy();
+        CourseForgeUI.initCopyButtons();
+        CourseForgeUI.initExamples();
+        });
+
+        function handleBackNavigation() {
+            const isSubcourse = false;
+        const dynamic = CourseForgeNav.getBackLink('contents.html', 'Voltar', isSubcourse);
+        window.location.href = dynamic.url;
+        }
+    </script>
+</body>
+
+</html>
