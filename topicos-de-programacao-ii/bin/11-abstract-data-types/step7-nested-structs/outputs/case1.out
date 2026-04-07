@@ -1,0 +1,16 @@
+OPERACOES
+APLICADO 6002 2.00
+APLICADO 6001 1.00
+RELATORIO FINAL
+6001 Ana Niteroi RJ 8.33 APROVADO
+6002 Bruno Campinas SP 5.67 RECUPERACAO
+6003 Clara Vitoria ES 9.00 REPROVADO_FALTA
+Aprovados: 1
+Recuperacao: 1
+Reprovados por nota: 0
+Reprovados por falta: 1
+Maior media geral: Clara 6003 9.00
+CONSULTA POR ESTADO RJ
+6001 Ana Niteroi 8.33 APROVADO
+Total no estado: 1
+Aprovados no estado: 1

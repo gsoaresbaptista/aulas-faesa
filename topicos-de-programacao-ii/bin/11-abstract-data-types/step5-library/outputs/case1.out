@@ -1,0 +1,9 @@
+RELATORIO COM BIBLIOTECA
+4001 Alice 8.00 APROVADO
+4002 Breno 6.00 RECUPERACAO
+4003 Ceci 3.00 REPROVADO_FALTA
+Aprovados: 1
+Recuperacao: 1
+Reprovados por nota: 0
+Reprovados por falta: 1
+Maior media geral: Alice 4001 8.00

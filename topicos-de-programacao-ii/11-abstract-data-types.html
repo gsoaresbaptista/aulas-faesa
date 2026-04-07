@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toposia - Tópicos de Programação II (TEP II)</title>
+    <link rel="icon" href="/aulas-faesa/img/dark-favicon.svg" media="(prefers-color-scheme: light)">
+    <link rel="icon" href="/aulas-faesa/img/light-favicon.svg" media="(prefers-color-scheme: dark)">
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/fonts.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/bundle.min.css">
+    
+    
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css" data-no-bundle>
+    <script src="/aulas-faesa/js/bundle.min.js"></script>
+</head>
+
+<body>
+    <script>
+        // Restore sidebar state instantly (before first paint) to avoid transition flash
+        (function() {
+            if (localStorage.getItem('cf_sidebar_hidden') === 'true') {
+                document.body.classList.add('sidebar-hidden', 'no-transition');
+            }
+            requestAnimationFrame(function() {
+                requestAnimationFrame(function() {
+                    document.body.classList.remove('no-transition');
+                });
+            });
+        })();
+    </script>
+    <div class="page-wrapper">
+        <nav class="sidebar">
+            <div class="sidebar-content">
+                <header class="sidebar-title-section">
+                    <a href="contents.html" class="course-title-link">
+                        <h1 class="sidebar-course-title">Tópicos de Programação II (TEP II)</h1>
+                    </a>
+                    <div class="sidebar-ornament">❧</div>
+                </header>
+
+                
+                <section class="sidebar-toc-section">
+                    <h2 class="toc-header">Tabela de Conteúdos</h2>
+                    <ol class="toc-list">
+                        
+                        <li class="toc-item level-2">
+                            <a href="#tipos-definidos-pelo-programador-em-estudo-dirigido">11.1. Tipos Definidos pelo Programador em Estudo Dirigido</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#material-complementar">11.2. Material Complementar</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#como-usar-o-arquivo-codezipcode">11.3. O projeto da aula</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#etapa-1-o-programa-funciona-mas-a-modelagem-ainda-é-ruim">11.4. Etapa 1: o programa funciona, mas a modelagem ainda é ruim</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#o-que-já-sabemos-fazer">11.4.1. O que já sabemos fazer</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#o-problema-desta-abordagem">11.4.2. O problema desta abordagem</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#arquivos-desta-etapa">11.4.3. Arquivos desta etapa</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#etapa-2-o-mesmo-aluno-agora-vira-uma-estrutura">11.5. Etapa 2: o mesmo aluno agora vira uma estrutura</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#o-novo-problema">11.5.1. O novo problema</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#a-teoria-que-entra-aqui-codestructcode">11.5.2.1. Forma geral</a>
+                        </li>
+                        
+                        <li class="toc-item level-4">
+                            <a href="#como-acessar-os-campos">11.5.2.2. Como acessar os campos</a>
+                        </li>
+                        
+                        <li class="toc-item level-4">
+                            <a href="#como-inicializar">11.5.2.3. Como inicializar</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#o-que-o-código-ganha-com-isso">11.5.3. O que o código ganha com isso</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#o-ponto-didático-desta-etapa">11.5.4. O ponto didático desta etapa</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#arquivos-desta-etapa">11.5.5. Arquivos desta etapa</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#etapa-3-agora-não-é-mais-um-aluno-é-uma-turma">11.6. Etapa 3: agora não é mais um aluno, é uma turma</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#nova-forma-de-entrada">11.6.1. Nova forma de entrada</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#o-que-precisamos-fazer-agora">11.6.2. O que precisamos fazer agora</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#a-teoria-que-entra-aqui-vetor-de-estruturas">11.6.3. A teoria que entra aqui: vetor de estruturas</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#como-a-solução-cresce">11.6.4. Como a solução cresce</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#o-problema-que-ainda-resta">11.6.5. O problema que ainda resta</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#arquivos-desta-etapa">11.6.6. Arquivos desta etapa</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#etapa-4-a-situação-do-aluno-vira-um-conjunto-formal-de-estados">11.7. Etapa 4: a situação do aluno vira um conjunto formal de estados</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#nova-entrada">11.7.1. Nova entrada</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#nova-regra-de-negócio">11.7.2. Nova regra de negócio</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#a-teoria-que-entra-aqui-codeenumcode">11.7.5. O ponto didático desta etapa</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#arquivos-desta-etapa">11.7.6. Arquivos desta etapa</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#etapa-5-a-estrutura-do-programa-agora-precisa-acompanhar-a-estrutura-dos-dados">11.8. Etapa 5: a estrutura do programa agora precisa acompanhar a estrutura dos dados</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#a-ideia-desta-etapa">11.8.1. A ideia desta etapa</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#a-teoria-que-entra-aqui-biblioteca-própria">11.8.2. A teoria que entra aqui: biblioteca própria</a>
+                        </li>
+                        
+                        <li class="toc-item level-4">
+                            <a href="#codealunohcode">11.8.3. O que o aluno deve perceber nesta etapa</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#compilação">11.8.4. Compilação</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#arquivos-desta-etapa">11.8.5. Arquivos desta etapa</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#etapa-6-consultar-não-basta-agora-precisamos-alterar-o-aluno-correto">11.9. Etapa 6: consultar não basta, agora precisamos alterar o aluno correto</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#nova-entrada">11.9.1. Nova entrada</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#nova-regra">11.9.2. Nova regra</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#a-teoria-que-entra-aqui-passagem-por-referência-e-operador-code-gtcode">11.9.4. O que esta etapa resolve</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#arquivos-desta-etapa">11.9.5. Arquivos desta etapa</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#etapa-7-agora-o-aluno-carrega-outra-estrutura-dentro-dele">11.10. Etapa 7: agora o aluno carrega outra estrutura dentro dele</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#nova-entrada">11.10.1. Nova entrada</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#a-teoria-que-entra-aqui-estrutura-aninhada">11.10.2. A teoria que entra aqui: estrutura aninhada</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#o-que-o-programa-precisa-fazer-nesta-etapa">11.10.3. O que o programa precisa fazer nesta etapa</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#arquivos-desta-etapa">11.10.4. Arquivos desta etapa</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#etapa-8-um-experimento-controlado-com-codeunioncode">11.11.1. O problema desta etapa</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#a-teoria-que-entra-aqui-codeunioncode">11.11.3. O que esta etapa ensina</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#arquivos-desta-etapa">11.11.4. Arquivos desta etapa</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#como-estudar-esta-aula-na-prática">11.12. Como estudar esta aula na prática</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#questões">11.13. Questões</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#próximos-passos">11.14. Próximos passos</a>
+                        </li>
+                        
+                    </ol>
+                </section>
+                
+
+                <nav class="sidebar-nav-section">
+                    
+                    <a href="10-libraries-in-c.html" class="sidebar-nav-link prev"><i data-lucide="chevron-left" class="nav-icon"></i> Bibliotecas e Modularização em C</a>
+                    
+                    
+                    <a href="javascript:void(0)" onclick="handleBackNavigation()"
+                        class="sidebar-nav-link back"><i data-lucide="arrow-left" class="nav-icon"></i> Voltar</a>
+                </nav>
+
+            </div>
+        </nav>
+
+        <button class="mobile-menu-toggle" aria-label="Menu">
+            <i data-lucide="menu"></i>
+        </button>
+
+        <button class="sidebar-toggle" onclick="CourseForgeNav.toggleSidebar()" aria-label="Alternar Barra Lateral">
+            <i data-lucide="chevron-left" class="toggle-icon" id="sidebar-toggle-icon"></i>
+        </button>
+
+        <div class="mobile-menu-overlay"></div>
+
+        <main class="main-content">
+            <article class="article">
+                <header class="article-header">
+                    <span class="chapter-number">11</span>
+                    <h1 class="article-title">
+                        <span class="title-ornament left">❧</span>
+                        <span class="title-text">Tipos Definidos pelo Programador em Estudo Dirigido</span>
+                        <span class="title-ornament right">❧</span>
+                    </h1>
+                    
+                    <p class="article-date">07/04/2026</p>
+                    
+                    
+                    <nav class="breadcrumb" aria-label="Breadcrumb">
+                        
+                        
+                        
+                        <a href="contents.html" class="breadcrumb-link">Tópicos de Programação II</a>
+                        
+                        <span class="breadcrumb-separator"><i data-lucide="chevron-right" class="breadcrumb-icon"></i></span>
+                        
+                        
+                        
+                        
+                        <a href="contents.html#part-III" class="breadcrumb-link">III - Modularização e Gerenciamento de Memória</a>
+                        
+                        <span class="breadcrumb-separator"><i data-lucide="chevron-right" class="breadcrumb-icon"></i></span>
+                        
+                        
+                        
+                        <span class="breadcrumb-current">Tipos Definidos pelo Programador em Estudo Dirigido</span>
+                        
+                        
+                    </nav>
+                    
+                </header>
+                <div class="article-body">
+                    <h2 id="tipos-definidos-pelo-programador-em-estudo-dirigido"><span class="heading-text">Tipos Definidos pelo Programador em Estudo Dirigido</span><span class="heading-arabic">11.1</span></h2>
+<p>Nesta aula, nós não vamos estudar <code>struct</code>, <code>typedef</code>, <code>enum</code>, <code>union</code> e passagem de estruturas para funções como tópicos isolados. Vamos tratar esse conteúdo do jeito como ele costuma aparecer de verdade em programação: quando um programa começa pequeno, parece suficiente, mas logo passa a exigir uma modelagem melhor para continuar crescendo sem virar um conjunto confuso de variáveis e regras espalhadas.</p>
+<p>Vamos construir, passo a passo, um pequeno sistema de boletim de alunos. Em cada etapa, a entrada muda um pouco, a regra de negócio fica mais rica e a solução anterior começa a mostrar suas limitações. O que hoje parece só um detalhe de organização rapidamente se transforma em uma exigência real do programa.</p>
+<p>O ponto central desta aula é este: <strong>não vamos jogar fora o que já foi feito</strong>. Em vez disso, vamos reorganizar, modularizar e ampliar a solução para que fique claro por que os tipos definidos pelo programador existem e por que eles fazem tanta diferença quando o programa deixa de ser um exercício pequeno e passa a ter partes que realmente precisam conversar entre si.</p>
+<h2 id="material-complementar"><span class="heading-text">Material Complementar</span><span class="heading-arabic">11.2</span></h2>
+<p>Baixe os <a href="bin/11-abstract-data-types-test-cases.zip" class="download-link">casos de teste da aula (11 - abstract data types test cases.zip)</a> para acompanhar o estudo dirigido.</p>
+<h3 id="como-usar-o-arquivo-codezipcode"><span class="heading-text">Como usar o arquivo <code>.zip</code></span><span class="heading-arabic">11.2.1</span></h3>
+<p>Depois de baixar e extrair o material, você encontrará uma pasta para cada etapa da aula. Em cada etapa existem duas subpastas:</p>
+<ul>
+<li><code>inputs/</code>, com os arquivos de entrada</li>
+<li><code>outputs/</code>, com as saídas esperadas</li>
+</ul>
+<p>O uso recomendado é este:</p>
+<ol>
+<li>leia a etapa correspondente na aula</li>
+<li>implemente ou acompanhe o código daquela etapa</li>
+<li>compile o programa da etapa</li>
+<li>execute usando redirecionamento de entrada</li>
+<li>compare sua saída com o arquivo esperado</li>
+</ol>
+<p>Por exemplo:</p>
+<pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">gcc main.c -o programa
+./programa &lt; inputs/case1.in
+</code></pre>
+<p>Se a sua saída não coincidir com o arquivo correspondente em <code>outputs/</code>, isso indica que ainda existe alguma diferença entre a lógica implementada e o comportamento esperado para aquela etapa.</p>
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">Como este estudo dirigido foi organizado<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Os códigos completos desta aula foram organizados por etapas dentro de <code>bin/11 - abstract data types/</code>. O material compactado para os alunos contém apenas entradas e saídas, justamente para que a implementação continue sendo parte ativa do estudo. A intenção é que você acompanhe como a solução cresce de uma etapa para outra e perceba o que foi acrescentado em cada momento.</p>
+  </div>
+</div>
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">Sobre a entrada e a saída dos programas<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Para facilitar os testes com redirecionamento, os programas desta aula foram escritos sem mensagens interativas como <code>Digite o nome:</code>. Isso deixa as saídas determinísticas e facilita comparar o resultado do seu programa com os arquivos de saída esperada.</p>
+  </div>
+</div>
+<h2 id="o-projeto-da-aula"><span class="heading-text">O projeto da aula</span><span class="heading-arabic">11.3</span></h2>
+<p>Nosso projeto vai evoluir assim:</p>
+<ol>
+<li>Começamos com <strong>um único aluno</strong> e variáveis soltas.</li>
+<li>Reorganizamos o mesmo problema com <strong><code>struct</code></strong>.</li>
+<li>Crescemos para uma <strong>turma</strong>, usando <strong>vetor de estruturas</strong>.</li>
+<li>Tornamos a classificação mais rica com <strong><code>enum</code></strong>.</li>
+<li>Separamos o programa em arquivos <code>.h</code> e <code>.c</code>, como na aula de <strong>bibliotecas</strong>.</li>
+<li>Passamos a modificar dados usando <strong>passagem por referência</strong> e o operador <strong><code>-&gt;</code></strong>.</li>
+<li>Acrescentamos <strong>estruturas aninhadas</strong>.</li>
+<li>Fechamos com um experimento controlado de <strong><code>union</code></strong>, para contrastar com <code>struct</code>.</li>
+</ol>
+<p>Essa ordem foi escolhida para que cada novo conceito apareça exatamente no momento em que ele passa a ser necessário. Assim, a teoria deixa de ser um bloco abstrato de sintaxe e passa a funcionar como resposta para um problema concreto que o código já começou a apresentar.</p>
+<h2 id="etapa-1-o-programa-funciona-mas-a-modelagem-ainda-é-ruim"><span class="heading-text">Etapa 1: o programa funciona, mas a modelagem ainda é ruim</span><span class="heading-arabic">11.4</span></h2>
+<p>Nosso primeiro problema é simples de propósito. O programa vai receber os dados de <strong>um único aluno</strong> nesta ordem:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">nome matricula nota1 nota2 nota3
+</code></pre>
+<p>Por exemplo:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">Ana 1001 8.0 7.0 9.0
+</code></pre>
+<p>E, a partir disso, precisamos produzir:</p>
+<ul>
+<li>o nome do aluno</li>
+<li>a matrícula</li>
+<li>a média</li>
+<li>a situação final</li>
+</ul>
+<h3 id="o-que-já-sabemos-fazer"><span class="heading-text">O que já sabemos fazer</span><span class="heading-arabic">11.4.1</span></h3>
+<p>Com as aulas de variáveis, operações, condicionais e funções, já conseguimos resolver isso sem dificuldade. O código da primeira etapa usa variáveis simples e duas funções auxiliares. Ou seja, tecnicamente o problema ainda cabe muito bem na base da disciplina já estudada.</p>
+<p>Trecho central:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">float calcular_media(float nota1, float nota2, float nota3){
+    return (nota1 + nota2 + nota3) / 3.0f;
+}
+
+const char *classificar_media(float media){
+    if(media &gt;= 7.0f)
+        return &quot;APROVADO&quot;;
+    if(media &gt;= 5.0f)
+        return &quot;RECUPERACAO&quot;;
+    return &quot;REPROVADO&quot;;
+}
+</code></pre>
+<p>E no <code>main</code>:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">char nome[50];
+int matricula;
+float nota1, nota2, nota3;
+</code></pre>
+<h3 id="o-problema-desta-abordagem"><span class="heading-text">O problema desta abordagem</span><span class="heading-arabic">11.4.2</span></h3>
+<p>Ela funciona para uma pessoa e, nesse ponto, seria errado dizer que a solução está incorreta. O problema é outro. Pense com calma no que acontece quando o sistema cresce:</p>
+<ul>
+<li>e se o programa precisar armazenar 30 alunos?</li>
+<li>e se quisermos passar “um aluno” para uma função?</li>
+<li>e se precisarmos guardar as três notas dentro da mesma entidade lógica?</li>
+</ul>
+<p>O que quebra aqui não é a lógica do cálculo. A média continua sendo calculada corretamente. O que começa a ficar ruim é a <strong>organização dos dados</strong>. O programa sabe calcular, mas ainda não sabe representar bem aquilo que está calculando.</p>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Neste ponto, o programa realmente manipula um “aluno” ou apenas cinco variáveis sem ligação explícita entre si?</p>
+  </div>
+</div>
+<h3 id="arquivos-desta-etapa"><span class="heading-text">Arquivos desta etapa</span><span class="heading-arabic">11.4.3</span></h3>
+<p>Pasta:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">bin/11 - abstract data types/step1-single-student
+</code></pre>
+<p>Arquivo principal:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">main.c
+</code></pre>
+<p>Entradas:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">inputs/case1.in
+inputs/case2.in
+inputs/case3.in
+</code></pre>
+<p>Saídas esperadas:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">outputs/case1.out
+outputs/case2.out
+outputs/case3.out
+</code></pre>
+<p>Compilação:</p>
+<pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">gcc main.c -o programa
+</code></pre>
+<p>Execução de teste:</p>
+<pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">./programa &lt; inputs/case1.in
+</code></pre>
+<h2 id="etapa-2-o-mesmo-aluno-agora-vira-uma-estrutura"><span class="heading-text">Etapa 2: o mesmo aluno agora vira uma estrutura</span><span class="heading-arabic">11.5</span></h2>
+<p>Agora vamos resolver exatamente o mesmo problema, com a mesma entrada e a mesma ideia geral de saída. A diferença é que, desta vez, vamos explicitar no código algo que antes só existia na nossa interpretação do enunciado: aquelas informações pertencem a uma única entidade lógica, o aluno.</p>
+<h3 id="o-novo-problema"><span class="heading-text">O novo problema</span><span class="heading-arabic">11.5.1</span></h3>
+<p>Ainda recebemos:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">nome matricula nota1 nota2 nota3
+</code></pre>
+<p>Mas agora queremos deixar explícito no código que essas informações pertencem ao mesmo aluno e que devem viajar juntas quando o programa precisar consultá-las, imprimi-las ou passá-las para uma função.</p>
+<h3 id="a-teoria-que-entra-aqui-codestructcode"><span class="heading-text">A teoria que entra aqui: <code>struct</code></span><span class="heading-arabic">11.5.2</span></h3>
+<p>Uma <code>struct</code> permite agrupar, sob um mesmo nome, várias informações que pertencem à mesma entidade. Em vez de tratar nome, matrícula e notas como variáveis independentes, passamos a dizer ao programa que tudo isso forma um único objeto lógico.</p>
+<p>Esse é o ponto mais importante da ideia de estrutura em <strong>C</strong>. Ela não existe para deixar o código mais sofisticado visualmente. Ela existe para fazer a representação do problema ficar mais fiel. Se o problema fala de um aluno, o programa deveria conseguir trabalhar com algo que também se comporte como um aluno.</p>
+<h4 id="forma-geral"><span class="heading-text">Forma geral</span><span class="heading-arabic">11.5.2.1</span></h4>
+<p>Em <strong>C</strong>, a declaração de uma estrutura segue esta forma:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">struct NomeDaStruct {
+    tipo campo1;
+    tipo campo2;
+    tipo campo3;
+};
+</code></pre>
+<p>Cada campo pode ter um tipo diferente. Isso é justamente o que torna <code>struct</code> tão útil para modelar entidades do mundo real. Um aluno pode ter uma string para o nome, um inteiro para a matrícula e um conjunto de números reais para as notas.</p>
+<p>Depois da definição, declaramos variáveis desse tipo assim:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">struct NomeDaStruct variavel;
+</code></pre>
+<p>No nosso caso:</p>
+<p>Nesta etapa, usamos:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">typedef struct {
+    char nome[50];
+    int matricula;
+    float notas[3];
+} Aluno;
+</code></pre>
+<p>Repare que já aproveitamos também a aula de vetores. Em vez de três variáveis <code>nota1</code>, <code>nota2</code> e <code>nota3</code>, passamos a armazenar as notas em um vetor de tamanho 3 dentro da estrutura.</p>
+<p>Isso já melhora bastante a modelagem.</p>
+<h4 id="como-acessar-os-campos"><span class="heading-text">Como acessar os campos</span><span class="heading-arabic">11.5.2.2</span></h4>
+<p>Quando temos uma variável comum do tipo estrutura, usamos o operador <code>.</code> para acessar seus campos.</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">Aluno aluno;
+
+printf(&quot;%s\n&quot;, aluno.nome);
+printf(&quot;%d\n&quot;, aluno.matricula);
+printf(&quot;%.2f\n&quot;, aluno.notas[0]);
+</code></pre>
+<p>Se o campo da estrutura for uma string, continuamos obedecendo às mesmas regras da aula de strings. Isso significa que copiar texto para dentro do campo ainda exige <code>strcpy()</code>, porque arrays de caracteres não aceitam atribuição direta com <code>=</code>.</p>
+<h4 id="como-inicializar"><span class="heading-text">Como inicializar</span><span class="heading-arabic">11.5.2.3</span></h4>
+<p>Também podemos inicializar uma estrutura no momento da declaração:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">Aluno aluno = {&quot;Ana&quot;, 1001, {8.0f, 7.0f, 9.0f}};
+</code></pre>
+<p>Aqui vale um cuidado importante: a ordem dos valores precisa acompanhar exatamente a ordem dos campos da estrutura. Se a ordem for trocada, a inicialização deixa de representar corretamente o que o tipo foi pensado para armazenar.</p>
+<h3 id="o-que-o-código-ganha-com-isso"><span class="heading-text">O que o código ganha com isso</span><span class="heading-arabic">11.5.3</span></h3>
+<p>Antes, o programa recebia “peças soltas”. Agora ele recebe um <code>Aluno</code>.</p>
+<p>A função da média deixa de operar sobre três notas separadas e passa a operar sobre uma estrutura:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">float aluno_media(const Aluno *a){
+    return (a-&gt;notas[0] + a-&gt;notas[1] + a-&gt;notas[2]) / 3.0f;
+}
+</code></pre>
+<p>Mesmo com um único aluno, isso já mostra uma vantagem importante: os dados ficam agrupados e a função começa a trabalhar com um objeto mais coerente.</p>
+<h3 id="o-ponto-didático-desta-etapa"><span class="heading-text">O ponto didático desta etapa</span><span class="heading-arabic">11.5.4</span></h3>
+<p>Aqui, a entrada ainda é simples porque o foco não é complexidade de leitura. O foco é perceber que <code>struct</code> não serve para enfeitar o código. Ela serve para representar melhor o problema.</p>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Se amanhã o aluno ganhar mais um campo, como <code>curso</code> ou <code>periodo</code>, o código com <code>struct</code> cresce de forma mais organizada do que o código com variáveis soltas?</p>
+  </div>
+</div>
+<h3 id="arquivos-desta-etapa"><span class="heading-text">Arquivos desta etapa</span><span class="heading-arabic">11.5.5</span></h3>
+<p>Pasta:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">bin/11 - abstract data types/step2-struct
+</code></pre>
+<p>O programa continua em um único <code>main.c</code>, mas agora usa <code>typedef struct</code> e vetor de notas dentro do tipo <code>Aluno</code>.</p>
+<h2 id="etapa-3-agora-não-é-mais-um-aluno-é-uma-turma"><span class="heading-text">Etapa 3: agora não é mais um aluno, é uma turma</span><span class="heading-arabic">11.6</span></h2>
+<p>Até agora, mesmo com <code>struct</code>, nosso programa ainda resolve um problema pequeno. A próxima mudança natural é esta: em vez de um aluno, vamos receber uma turma inteira.</p>
+<h3 id="nova-forma-de-entrada"><span class="heading-text">Nova forma de entrada</span><span class="heading-arabic">11.6.1</span></h3>
+<p>Agora a entrada começa com um inteiro <code>n</code>, indicando a quantidade de alunos. Depois disso, vêm os dados dos <code>n</code> alunos:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">n
+nome matricula nota1 nota2 nota3
+nome matricula nota1 nota2 nota3
+...
+</code></pre>
+<p>Exemplo:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">3
+Ana 1001 8.0 7.0 9.0
+Bruno 1002 5.0 6.0 4.0
+Caio 1003 3.0 4.0 5.0
+</code></pre>
+<h3 id="o-que-precisamos-fazer-agora"><span class="heading-text">O que precisamos fazer agora</span><span class="heading-arabic">11.6.2</span></h3>
+<p>Além de calcular a média individual, precisamos:</p>
+<ul>
+<li>imprimir um relatório da turma</li>
+<li>contar quantos alunos foram aprovados</li>
+<li>contar quantos ficaram em recuperação</li>
+<li>contar quantos foram reprovados</li>
+<li>identificar a melhor média da turma</li>
+</ul>
+<h3 id="a-teoria-que-entra-aqui-vetor-de-estruturas"><span class="heading-text">A teoria que entra aqui: vetor de estruturas</span><span class="heading-arabic">11.6.3</span></h3>
+<p>Como <code>Aluno</code> agora é um tipo, podemos criar um vetor desse tipo:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">Aluno turma[100];
+</code></pre>
+<p>Ou seja, estamos aplicando a ideia da aula de arrays a um tipo definido pelo programador. Isso é importante porque mostra que <code>struct</code> não substitui o que você aprendeu sobre vetores. Na verdade, ela se integra a esse conteúdo e torna os vetores mais expressivos.</p>
+<p>Essa etapa é importante porque une três ideias que antes apareciam separadas:</p>
+<ul>
+<li><strong>vetores</strong></li>
+<li><strong>laços de repetição</strong></li>
+<li><strong>estruturas</strong></li>
+</ul>
+<h3 id="como-a-solução-cresce"><span class="heading-text">Como a solução cresce</span><span class="heading-arabic">11.6.4</span></h3>
+<p>Observe a lógica principal:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">for(i = 0; i &lt; n; i++){
+    ler_aluno(&amp;turma[i]);
+}
+
+for(i = 0; i &lt; n; i++){
+    float media = aluno_media(&amp;turma[i]);
+    const char *situacao = classificar_media(media);
+    ...
+}
+</code></pre>
+<p>O ganho aqui é enorme. Em vez de duplicar lógica para cada aluno, tratamos todos os registros da mesma forma e deixamos que o índice do vetor indique com qual aluno estamos trabalhando em cada instante. A repetição continua a mesma, mas o significado dos dados ficou muito mais forte.</p>
+<h3 id="o-problema-que-ainda-resta"><span class="heading-text">O problema que ainda resta</span><span class="heading-arabic">11.6.5</span></h3>
+<p>Até este ponto, a situação do aluno ainda é representada por strings ou por regras diretas espalhadas no código. Isso funciona, mas ainda deixa a modelagem meio solta.</p>
+<p>Na próxima etapa, vamos dar nome formal a esses estados.</p>
+<h3 id="arquivos-desta-etapa"><span class="heading-text">Arquivos desta etapa</span><span class="heading-arabic">11.6.6</span></h3>
+<p>Pasta:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">bin/11 - abstract data types/step3-array-of-structs
+</code></pre>
+<p>O código continua em um único arquivo, mas agora já temos um programa com lógica de turma e relatório.</p>
+<h2 id="etapa-4-a-situação-do-aluno-vira-um-conjunto-formal-de-estados"><span class="heading-text">Etapa 4: a situação do aluno vira um conjunto formal de estados</span><span class="heading-arabic">11.7</span></h2>
+<p>Nosso sistema ficou melhor, mas ainda existe uma fragilidade conceitual. O programa depende de textos ou convenções informais para representar a situação do aluno. Isso funciona enquanto a regra é pequena, mas começa a introduzir ruído quando esses estados passam a ter papel importante na lógica do sistema.</p>
+<p>Quando fazemos isso, fica fácil cometer erros, como:</p>
+<ul>
+<li>escrever uma string diferente do esperado</li>
+<li>repetir regras em vários pontos</li>
+<li>usar números mágicos sem significado claro</li>
+</ul>
+<h3 id="nova-entrada"><span class="heading-text">Nova entrada</span><span class="heading-arabic">11.7.1</span></h3>
+<p>Agora cada aluno também terá o número de faltas:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">n
+nome matricula nota1 nota2 nota3 faltas
+...
+</code></pre>
+<h3 id="nova-regra-de-negócio"><span class="heading-text">Nova regra de negócio</span><span class="heading-arabic">11.7.2</span></h3>
+<p>Agora a situação do aluno depende de duas coisas:</p>
+<ul>
+<li>média</li>
+<li>faltas</li>
+</ul>
+<p>As regras ficam assim:</p>
+<ul>
+<li>se <code>faltas &gt; 18</code>, então o aluno está em <code>REPROVADO_FALTA</code></li>
+<li>caso contrário, se <code>media &gt;= 7.0</code>, então <code>APROVADO</code></li>
+<li>caso contrário, se <code>media &gt;= 5.0</code>, então <code>RECUPERACAO</code></li>
+<li>caso contrário, <code>REPROVADO_NOTA</code></li>
+</ul>
+<h3 id="a-teoria-que-entra-aqui-codeenumcode"><span class="heading-text">A teoria que entra aqui: <code>enum</code></span><span class="heading-arabic">11.7.3</span></h3>
+<p>Agora faz sentido criar uma enumeração para representar formalmente esses estados. O ganho aqui não é apenas estético. Ao nomear esses valores, o programa deixa de depender de números mágicos ou strings espalhadas e passa a trabalhar com categorias explícitas, que podem ser reaproveitadas em outras funções sem ambiguidade.</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">typedef enum {
+    REPROVADO_NOTA,
+    RECUPERACAO,
+    APROVADO,
+    REPROVADO_FALTA
+} SituacaoAluno;
+</code></pre>
+<p>Isso nos permite separar duas coisas que antes estavam misturadas:</p>
+<ul>
+<li>a <strong>regra lógica</strong> da situação</li>
+<li>a <strong>forma textual</strong> como essa situação será impressa</li>
+</ul>
+<p>Por exemplo:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">SituacaoAluno aluno_situacao(const Aluno *a){
+    float media = aluno_media(a);
+
+    if(a-&gt;faltas &gt; 18)
+        return REPROVADO_FALTA;
+    if(media &gt;= 7.0f)
+        return APROVADO;
+    if(media &gt;= 5.0f)
+        return RECUPERACAO;
+    return REPROVADO_NOTA;
+}
+</code></pre>
+<p>E depois, em outra função:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">const char *situacao_texto(SituacaoAluno situacao){
+    switch(situacao){
+        case APROVADO: return &quot;APROVADO&quot;;
+        case RECUPERACAO: return &quot;RECUPERACAO&quot;;
+        case REPROVADO_NOTA: return &quot;REPROVADO_NOTA&quot;;
+        case REPROVADO_FALTA: return &quot;REPROVADO_FALTA&quot;;
+    }
+
+    return &quot;DESCONHECIDA&quot;;
+}
+</code></pre>
+<h3 id="o-papel-do-codetypedefcode-aqui"><span class="heading-text">O papel do <code>typedef</code> aqui</span><span class="heading-arabic">11.7.4</span></h3>
+<p>Nesta etapa, <code>typedef</code> deixa o código menos repetitivo. Em vez de escrever <code>enum SituacaoAluno</code> e <code>struct Aluno</code> o tempo todo, trabalhamos diretamente com <code>SituacaoAluno</code> e <code>Aluno</code>. Isso parece um detalhe pequeno, mas faz diferença real quando o tipo aparece em vários protótipos, várias funções e depois em mais de um arquivo.</p>
+<h3 id="o-ponto-didático-desta-etapa"><span class="heading-text">O ponto didático desta etapa</span><span class="heading-arabic">11.7.5</span></h3>
+<p>Agora o programa ficou mais rico logicamente. Não estamos apenas organizando dados. Estamos também organizando <strong>estados</strong>. Essa separação melhora muito a clareza do código quando a regra de negócio começa a crescer, porque fica mais fácil distinguir o cálculo da média, a decisão sobre a situação e a forma como essa situação será exibida.</p>
+<h3 id="arquivos-desta-etapa"><span class="heading-text">Arquivos desta etapa</span><span class="heading-arabic">11.7.6</span></h3>
+<p>Pasta:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">bin/11 - abstract data types/step4-typedef-enum
+</code></pre>
+<p>Ainda estamos em um único <code>main.c</code>, mas a modelagem já está bem mais forte do que no início.</p>
+<h2 id="etapa-5-a-estrutura-do-programa-agora-precisa-acompanhar-a-estrutura-dos-dados"><span class="heading-text">Etapa 5: a estrutura do programa agora precisa acompanhar a estrutura dos dados</span><span class="heading-arabic">11.8</span></h2>
+<p>Até aqui, o código cresceu bastante. E agora aparece um problema novo: tudo continua dentro de um único arquivo. Isso não atrapalha apenas a leitura. Também torna mais difícil enxergar onde termina a definição dos tipos, onde começa a interface pública do módulo e onde fica a implementação real das funções.</p>
+<p>Isso começa a conflitar diretamente com a aula de bibliotecas. Se queremos um programa mais organizado, precisamos separar:</p>
+<ul>
+<li>a definição dos tipos</li>
+<li>os protótipos das funções</li>
+<li>a implementação das funções</li>
+<li>o programa principal</li>
+</ul>
+<h3 id="a-ideia-desta-etapa"><span class="heading-text">A ideia desta etapa</span><span class="heading-arabic">11.8.1</span></h3>
+<p>Vamos manter a mesma entrada e a mesma lógica da etapa 4. A diferença agora é organizacional. O comportamento geral do programa quase não muda, mas a forma de distribuir as responsabilidades no projeto passa a acompanhar melhor o que foi estudado na aula de bibliotecas.</p>
+<h3 id="a-teoria-que-entra-aqui-biblioteca-própria"><span class="heading-text">A teoria que entra aqui: biblioteca própria</span><span class="heading-arabic">11.8.2</span></h3>
+<p>Nesta etapa, o código é dividido em:</p>
+<ul>
+<li><code>aluno.h</code></li>
+<li><code>aluno.c</code></li>
+<li><code>main.c</code></li>
+</ul>
+<h4 id="codealunohcode"><span class="heading-text"><code>aluno.h</code></span><span class="heading-arabic">11.8.2.1</span></h4>
+<p>Aqui ficam:</p>
+<ul>
+<li><code>typedef struct</code></li>
+<li><code>typedef enum</code></li>
+<li>protótipos das funções</li>
+<li><em>header guard</em></li>
+</ul>
+<h4 id="codealunoccode"><span class="heading-text"><code>aluno.c</code></span><span class="heading-arabic">11.8.2.2</span></h4>
+<p>Aqui ficam:</p>
+<ul>
+<li>as implementações das funções</li>
+</ul>
+<h4 id="codemainccode"><span class="heading-text"><code>main.c</code></span><span class="heading-arabic">11.8.2.3</span></h4>
+<p>Aqui fica:</p>
+<ul>
+<li>a leitura da entrada</li>
+<li>a chamada das funções da biblioteca</li>
+<li>a impressão do relatório</li>
+</ul>
+<h3 id="o-que-o-aluno-deve-perceber-nesta-etapa"><span class="heading-text">O que o aluno deve perceber nesta etapa</span><span class="heading-arabic">11.8.3</span></h3>
+<p>O programa faz praticamente a mesma coisa da etapa anterior, mas a organização interna melhorou muito. Esse é um aprendizado importante: às vezes a evolução do código não está em “fazer uma conta nova”, mas em <strong>separar responsabilidades</strong>. Quando tipos, protótipos e implementações deixam de ficar todos misturados, o programa fica mais fácil de manter, de reaproveitar e de ampliar.</p>
+<h3 id="compilação"><span class="heading-text">Compilação</span><span class="heading-arabic">11.8.4</span></h3>
+<p>Agora a compilação muda, exatamente como foi visto na aula de bibliotecas:</p>
+<pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">gcc main.c aluno.c -o programa
+</code></pre>
+<h3 id="arquivos-desta-etapa"><span class="heading-text">Arquivos desta etapa</span><span class="heading-arabic">11.8.5</span></h3>
+<p>Pasta:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">bin/11 - abstract data types/step5-library
+</code></pre>
+<p>Arquivos principais:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">aluno.h
+aluno.c
+main.c
+</code></pre>
+<h2 id="etapa-6-consultar-não-basta-agora-precisamos-alterar-o-aluno-correto"><span class="heading-text">Etapa 6: consultar não basta, agora precisamos alterar o aluno correto</span><span class="heading-arabic">11.9</span></h2>
+<p>Até aqui, nossas funções praticamente consultavam dados e geravam relatórios. Agora o programa vai crescer mais uma vez e isso muda a natureza do problema. Não basta mais observar a turma. Vamos precisar localizar um aluno específico e alterar o seu conteúdo original dentro do vetor.</p>
+<h3 id="nova-entrada"><span class="heading-text">Nova entrada</span><span class="heading-arabic">11.9.1</span></h3>
+<p>Além da turma, a entrada agora vai trazer uma lista de operações de bônus:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">n
+nome matricula nota1 nota2 nota3 faltas
+...
+m
+matricula bonus
+matricula bonus
+...
+</code></pre>
+<p>Depois de ler a turma, o programa deve aplicar cada bônus ao aluno correspondente.</p>
+<h3 id="nova-regra"><span class="heading-text">Nova regra</span><span class="heading-arabic">11.9.2</span></h3>
+<p>O bônus não será somado às três notas. Ele será aplicado <strong>apenas à menor nota</strong> do aluno. Se a nota ultrapassar <code>10.0</code>, ela deve ser limitada em <code>10.0</code>.</p>
+<p>Isso deixa a lógica mais interessante porque agora precisamos:</p>
+<ul>
+<li>buscar um aluno por matrícula dentro do vetor</li>
+<li>devolver o endereço desse aluno</li>
+<li>alterar diretamente a estrutura encontrada</li>
+</ul>
+<h3 id="a-teoria-que-entra-aqui-passagem-por-referência-e-operador-code-gtcode"><span class="heading-text">A teoria que entra aqui: passagem por referência e operador <code>-&gt;</code></span><span class="heading-arabic">11.9.3</span></h3>
+<p>Agora faz todo sentido usar funções como estas:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">Aluno *buscar_aluno_por_matricula(Aluno turma[], int n, int matricula);
+void aplicar_bonus(Aluno *a, float bonus);
+</code></pre>
+<p>Na primeira função, retornamos um ponteiro para o aluno encontrado.</p>
+<p>Na segunda, recebemos um ponteiro para o aluno e alteramos diretamente seu conteúdo.</p>
+<p>O acesso aos campos é feito com <code>-&gt;</code>:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">a-&gt;notas[indice_menor] += bonus;
+</code></pre>
+<h3 id="o-que-esta-etapa-resolve"><span class="heading-text">O que esta etapa resolve</span><span class="heading-arabic">11.9.4</span></h3>
+<p>Antes, o sistema apenas observava os alunos. Agora ele passa a <strong>modificar</strong> os alunos corretos dentro da turma. É justamente aqui que ponteiros para estruturas deixam de parecer um detalhe de sintaxe e passam a ter uma função concreta no projeto.</p>
+<p>É aqui que a diferença entre passar uma estrutura por valor e por referência fica realmente concreta.</p>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Se <code>aplicar_bonus</code> recebesse um <code>Aluno</code> por valor, a alteração feita dentro da função chegaria até o vetor da turma?</p>
+  </div>
+</div>
+<h3 id="arquivos-desta-etapa"><span class="heading-text">Arquivos desta etapa</span><span class="heading-arabic">11.9.5</span></h3>
+<p>Pasta:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">bin/11 - abstract data types/step6-pointer-and-arrow
+</code></pre>
+<p>Aqui o projeto continua modular, mas cresce com busca, atualização e nova lógica de negócio.</p>
+<h2 id="etapa-7-agora-o-aluno-carrega-outra-estrutura-dentro-dele"><span class="heading-text">Etapa 7: agora o aluno carrega outra estrutura dentro dele</span><span class="heading-arabic">11.10</span></h2>
+<p>Nosso sistema já trabalha com tipo definido pelo programador, vetor, enumeração, biblioteca e alteração por referência. Vamos acrescentar mais uma camada de modelagem. Isso é importante porque, em sistemas reais, as entidades raramente são planas. Um aluno pode carregar outras informações estruturadas dentro dele, como cidade, estado, endereço ou dados de contato.</p>
+<h3 id="nova-entrada"><span class="heading-text">Nova entrada</span><span class="heading-arabic">11.10.1</span></h3>
+<p>Agora cada aluno também terá cidade e estado:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">n
+nome matricula nota1 nota2 nota3 faltas cidade estado
+...
+m
+matricula bonus
+...
+estado_consulta
+</code></pre>
+<p>No fim da entrada, o programa recebe um estado e precisa listar apenas os alunos daquele estado.</p>
+<h3 id="a-teoria-que-entra-aqui-estrutura-aninhada"><span class="heading-text">A teoria que entra aqui: estrutura aninhada</span><span class="heading-arabic">11.10.2</span></h3>
+<p>Vamos criar uma estrutura para a localização:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">typedef struct {
+    char cidade[30];
+    char estado[3];
+} Localidade;
+</code></pre>
+<p>E incorporá-la à estrutura do aluno:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">typedef struct {
+    char nome[50];
+    int matricula;
+    float notas[3];
+    int faltas;
+    Localidade local;
+} Aluno;
+</code></pre>
+<p>Agora o acesso passa a usar dois níveis lógicos:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">aluno.local.cidade
+aluno.local.estado
+</code></pre>
+<p>ou, se estivermos com ponteiro:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">a-&gt;local.estado
+</code></pre>
+<h3 id="o-que-o-programa-precisa-fazer-nesta-etapa"><span class="heading-text">O que o programa precisa fazer nesta etapa</span><span class="heading-arabic">11.10.3</span></h3>
+<p>Além de tudo que já fazia antes, ele agora também deve:</p>
+<ul>
+<li>imprimir a cidade e o estado no relatório</li>
+<li>filtrar alunos por estado</li>
+<li>contar quantos alunos daquele estado foram aprovados</li>
+</ul>
+<p>Perceba como o programa foi crescendo sem abandonar a base anterior. Nós só fomos acrescentando camadas mais organizadas de modelagem e de lógica. Essa é justamente a ideia central deste estudo dirigido: mostrar que a solução não precisa ser recomeçada do zero sempre que o problema evolui, desde que ela tenha sido bem organizada.</p>
+<h3 id="arquivos-desta-etapa"><span class="heading-text">Arquivos desta etapa</span><span class="heading-arabic">11.10.4</span></h3>
+<p>Pasta:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">bin/11 - abstract data types/step7-nested-structs
+</code></pre>
+<p>Arquivos principais:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">aluno.h
+aluno.c
+main.c
+</code></pre>
+<h2 id="etapa-8-um-experimento-controlado-com-codeunioncode"><span class="heading-text">Etapa 8: um experimento controlado com <code>union</code></span><span class="heading-arabic">11.11</span></h2>
+<p>O nosso sistema de alunos não precisa de <code>union</code> para funcionar bem. E isso é importante dizer com clareza. Nem todo recurso da linguagem entra naturalmente em todo problema. Em vez de forçar <code>union</code> dentro do projeto principal, vamos tratá-la como um experimento separado, pensado especificamente para mostrar o tipo de situação em que ela realmente faz sentido.</p>
+<p>Por isso, vamos tratar <code>union</code> como um experimento separado e controlado.</p>
+<h3 id="o-problema-desta-etapa"><span class="heading-text">O problema desta etapa</span><span class="heading-arabic">11.11.1</span></h3>
+<p>Queremos ler registros de tipos diferentes. Cada registro tem um nome e um valor. Só que esse valor pode ser:</p>
+<ul>
+<li>um inteiro</li>
+<li>um real</li>
+<li>um texto</li>
+</ul>
+<p>Entrada:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">n
+tipo nome valor
+tipo nome valor
+...
+</code></pre>
+<p>Onde <code>tipo</code> pode ser:</p>
+<ul>
+<li><code>I</code> para inteiro</li>
+<li><code>F</code> para float</li>
+<li><code>T</code> para texto</li>
+</ul>
+<h3 id="a-teoria-que-entra-aqui-codeunioncode"><span class="heading-text">A teoria que entra aqui: <code>union</code></span><span class="heading-arabic">11.11.2</span></h3>
+<p>Aqui faz sentido usar:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">typedef union {
+    int inteiro;
+    float real;
+    char texto[40];
+} Dado;
+</code></pre>
+<p>Mas uma <code>union</code> sozinha não resolve tudo. Precisamos também de uma forma de saber qual campo está válido. Por isso ela aparece junto com uma enumeração:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">typedef enum {
+    TIPO_INT,
+    TIPO_FLOAT,
+    TIPO_TEXTO
+} TipoRegistro;
+</code></pre>
+<p>E então criamos a estrutura final:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">typedef struct {
+    char nome[30];
+    TipoRegistro tipo;
+    Dado valor;
+} Registro;
+</code></pre>
+<h3 id="o-que-esta-etapa-ensina"><span class="heading-text">O que esta etapa ensina</span><span class="heading-arabic">11.11.3</span></h3>
+<p>Ela mostra a diferença central entre <code>struct</code> e <code>union</code>:</p>
+<ul>
+<li>em <code>struct</code>, os campos coexistem</li>
+<li>em <code>union</code>, os campos compartilham memória</li>
+</ul>
+<p>No nosso caso, isso faz sentido porque cada registro armazena <strong>apenas um tipo de valor por vez</strong>.</p>
+<h3 id="arquivos-desta-etapa"><span class="heading-text">Arquivos desta etapa</span><span class="heading-arabic">11.11.4</span></h3>
+<p>Pasta:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">bin/11 - abstract data types/step8-union-demo
+</code></pre>
+<p>O programa desta etapa é curto e serve como contraste conceitual com o restante da aula. Ele existe menos para ampliar o sistema de boletim e mais para consolidar a diferença entre <code>struct</code>, que faz os campos coexistirem, e <code>union</code>, que faz os campos disputarem o mesmo espaço de memória.</p>
+<h2 id="como-estudar-esta-aula-na-prática"><span class="heading-text">Como estudar esta aula na prática</span><span class="heading-arabic">11.12</span></h2>
+<p>Uma boa forma de usar este material é seguir esta ordem:</p>
+<ol>
+<li>Compile e execute a etapa 1 com os três casos de teste.</li>
+<li>Compare o resultado com os arquivos de saída esperada.</li>
+<li>Só então avance para a etapa seguinte.</li>
+<li>Em cada etapa, identifique exatamente o que foi acrescentado ao código.</li>
+<li>Tente implementar a nova etapa antes de abrir o código pronto.</li>
+</ol>
+<p>O objetivo não é apenas “fazer funcionar”. O objetivo é entender <strong>por que a nova estrutura do código passou a ser necessária</strong>, em que ponto a solução anterior começou a ficar insuficiente e como cada novo recurso da linguagem foi entrando para resolver uma limitação concreta do projeto.</p>
+<h2 id="questões"><span class="heading-text">Questões</span><span class="heading-arabic">11.13</span></h2>
+<div class="questions">
+  <p><strong>1.</strong> Na etapa 1, o programa já funciona. Então por que ainda dizemos que a modelagem é ruim?</p>
+<p><strong>2.</strong> Reescreva a solução da etapa 1 usando uma <code>struct Aluno</code>, mas sem usar vetor de notas. Depois compare essa versão com a da etapa 2 e diga qual ficou mais organizada.</p>
+<p><strong>3.</strong> Na etapa 3, acrescente ao relatório a menor média da turma, sem remover nenhuma função já existente.</p>
+<p><strong>4.</strong> Na etapa 4, modifique as regras para que alunos com média maior ou igual a <code>9.0</code> recebam a observação textual <code>DESTAQUE</code>, sem criar um novo valor no <code>enum</code>.</p>
+<p><strong>5.</strong> Na etapa 5, crie uma nova função na biblioteca chamada <code>int aluno_foi_aprovado(const Aluno *a)</code> e use essa função no <code>main</code> para contar aprovados.</p>
+<p><strong>6.</strong> Na etapa 6, altere a função de bônus para aplicar o valor na maior nota, e não na menor. Depois compare o efeito dessa mudança nas saídas.</p>
+<p><strong>7.</strong> Na etapa 6, faça com que o programa informe também quantas operações de bônus falharam porque a matrícula não foi encontrada.</p>
+<p><strong>8.</strong> Na etapa 7, além de consultar por estado, faça uma consulta por cidade. A entrada deve receber mais uma string ao final, e o programa deve imprimir os alunos daquela cidade.</p>
+<p><strong>9.</strong> Na etapa 7, acrescente ao relatório final a quantidade de aprovados por estado, sem remover a funcionalidade anterior de listagem.</p>
+<p><strong>10.</strong> Explique com suas palavras por que <code>a.local.estado</code> e <code>a-&gt;local.estado</code> não são a mesma coisa em termos de sintaxe, embora apontem para o mesmo campo lógico do aluno.</p>
+<p><strong>11.</strong> Na etapa 8, substitua o tipo <code>float</code> do campo real por <code>double</code> e explique o que precisou mudar no código.</p>
+<p><strong>12.</strong> Em que situação você escolheria <code>struct</code> em vez de <code>union</code>? E em que situação uma <code>union</code> faria mais sentido?</p>
+</div>
+<div class="example">
+  <div class="example-title">Gabarito</div>
+  <p><strong>1.</strong> Porque os dados do aluno ainda estão espalhados em variáveis independentes, o que dificulta crescimento, manutenção e passagem para funções.</p>
+<p><strong>2.</strong> A resposta deve mostrar uma <code>struct</code> com três campos de nota separados e depois comparar com a versão que usa <code>float notas[3]</code>. A versão com vetor tende a escalar melhor para operações com laço.</p>
+<p><strong>3.</strong> Espera-se uma nova lógica de busca da menor média usando laço e comparação, sem quebrar as funções já existentes.</p>
+<p><strong>4.</strong> Espera-se uso de <code>if</code> adicional na impressão ou em função de relatório, sem alterar a enumeração principal.</p>
+<p><strong>5.</strong> A função pode retornar <code>1</code> quando <code>aluno_situacao(a) == APROVADO</code> e <code>0</code> caso contrário.</p>
+<p><strong>6.</strong> Espera-se alteração apenas na lógica que escolhe o índice da nota a ser modificada, mantendo a organização geral do programa.</p>
+<p><strong>7.</strong> Basta manter um contador de falhas e incrementá-lo sempre que <code>buscar_aluno_por_matricula</code> retornar <code>NULL</code>.</p>
+<p><strong>8.</strong> Espera-se leitura de uma nova string, uso de <code>strcmp</code> e filtragem semelhante à consulta por estado.</p>
+<p><strong>9.</strong> A solução deve percorrer o vetor e acumular quantidades por estado conforme a regra definida pelo aluno.</p>
+<p><strong>10.</strong> <code>a.local.estado</code> é acesso direto sobre uma variável do tipo estrutura. <code>a-&gt;local.estado</code> é acesso indireto, feito a partir de um ponteiro para estrutura.</p>
+<p><strong>11.</strong> Deve mudar o tipo na <code>union</code>, os usos correspondentes e a formatação de leitura e escrita, como <code>%lf</code> na entrada e <code>%f</code> ou <code>%.2f</code> na saída, conforme o caso.</p>
+<p><strong>12.</strong> <code>struct</code> faz sentido quando vários campos precisam coexistir. <code>union</code> faz sentido quando apenas um entre vários formatos de dado estará ativo por vez e queremos compartilhar memória.</p>
+</div>
+<h2 id="próximos-passos"><span class="heading-text">Próximos passos</span><span class="heading-arabic">11.14</span></h2>
+<p>Agora que você já consegue modelar entidades mais complexas, organizá-las em bibliotecas e manipulá-las por referência, o próximo passo natural é aprender o que fazer quando a quantidade de dados não é conhecida em tempo de compilação. Na próxima aula, [[12 - dynamic allocation.md]], estudaremos alocação dinâmica em <strong>C</strong>.</p>
+
+                </div>
+            </article>
+            <footer class="footer">
+                <p>© 2025 · <a href="#">Gabriel Soares Baptista</a></p>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        const toggle = document.querySelector('.mobile-menu-toggle');
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.querySelector('.mobile-menu-overlay');
+
+        function openMenu() {
+            sidebar.classList.add('open');
+            overlay.classList.add('open');
+            toggle.classList.add('open');
+            toggle.innerHTML = '<i data-lucide="x"></i>';
+            CourseForgeUI.initIcons();
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMenu() {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('open');
+            toggle.classList.remove('open');
+            toggle.innerHTML = '<i data-lucide="menu"></i>';
+            CourseForgeUI.initIcons();
+            document.body.style.overflow = '';
+        }
+
+        toggle.addEventListener('click', () => {
+            if (sidebar.classList.contains('open')) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        overlay.addEventListener('click', closeMenu);
+    </script>
+
+    
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            renderMathInElement(document.body, {
+                output: 'html',
+                delimiters: [
+                    { left: "$$", right: "$$", display: true },
+                    { left: "$", right: "$", display: false },
+                    { left: "\\(", right: "\\)", display: false },
+                    { left: "\\[", right: "\\]", display: true }
+                ],
+                throwOnError: false,
+                strict: false
+            });
+        });
+    </script>
+    
+    
+    <script src="/aulas-faesa/js/vendor/prism/prism.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-c.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-cpp.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-python.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-clike.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-perl.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-java.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-mermaid.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-php.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js" data-no-bundle></script>
+    
+    
+    
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            mermaid.initialize({
+                startOnLoad: true,
+                theme: 'default',
+                securityLevel: 'loose',
+                fontFamily: 'Inter, system-ui, sans-serif',
+                themeVariables: {
+                    fontSize: '16px',
+                    edgeLabelFontSize: '16px',
+                    multiplicityFontSize: '18px'
+                }
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const isSubcourse = false;
+        const courseName = "T\u00f3picos de Programa\u00e7\u00e3o II (TEP II)";
+        CourseForgeNav.applyDynamicBreadcrumbs('.breadcrumb', isSubcourse);
+        CourseForgeNav.initScrollSpy();
+        CourseForgeUI.initCopyButtons();
+        CourseForgeUI.initExamples();
+        });
+
+        function handleBackNavigation() {
+            const isSubcourse = false;
+        const dynamic = CourseForgeNav.getBackLink('contents.html', 'Voltar', isSubcourse);
+        window.location.href = dynamic.url;
+        }
+    </script>
+</body>
+
+</html>

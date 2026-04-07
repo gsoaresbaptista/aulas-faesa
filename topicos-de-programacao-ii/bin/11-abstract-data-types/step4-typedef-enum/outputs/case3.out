@@ -1,0 +1,11 @@
+RELATORIO COMPLETO
+3001 Bia 10.00 APROVADO
+3002 Cris 7.00 APROVADO
+3003 Enzo 6.00 RECUPERACAO
+3004 Gabi 4.00 REPROVADO_NOTA
+3005 Hugo 8.00 REPROVADO_FALTA
+Aprovados: 2
+Recuperacao: 1
+Reprovados por nota: 1
+Reprovados por falta: 1
+Maior media geral: Bia 3001 10.00

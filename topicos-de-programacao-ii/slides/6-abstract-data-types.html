@@ -1,0 +1,914 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <title>Tipos Definidos pelo Programador em Estudo Dirigido</title>
+    <link rel="icon" href="/aulas-faesa/img/dark-favicon.svg" media="(prefers-color-scheme: light)">
+    <link rel="icon" href="/aulas-faesa/img/light-favicon.svg" media="(prefers-color-scheme: dark)">
+
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/reset.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/reveal.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/theme/white.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/aulas-faesa/css/prism-one-light.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/fonts.css" data-no-bundle>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+            <section><h1>Programação de Computadores</h1>
+<h2>Tipos Definidos pelo Programador em C</h2>
+<p>Professor: Gabriel Soares Baptista</p>
+</section>
+<section><h1>Material Complementar</h1>
+<p>Baixe os <a href="../bin/11-abstract-data-types-test-cases.zip" class="download-link">casos de teste da aula (11 - abstract data types test cases.zip)</a>.</p>
+<ul>
+<li>O <code>.zip</code> contém apenas <code>inputs/</code> e <code>outputs</code> por etapa. <!-- .element: class="fragment" --></li>
+<li>A ideia é implementar o código e comparar sua saída com a saída esperada. <!-- .element: class="fragment" --></li>
+<li>Cada etapa do estudo dirigido cresce a partir da anterior. <!-- .element: class="fragment" --></li>
+</ul>
+</section>
+<section><h1>Como usar o material</h1>
+<pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">gcc main.c -o programa
+./programa &lt; inputs/case1.in
+</code></pre>
+<ul>
+<li>Compile o programa da etapa. <!-- .element: class="fragment" --></li>
+<li>Rode com uma das entradas fornecidas. <!-- .element: class="fragment" --></li>
+<li>Compare com o arquivo correspondente em <code>outputs/</code>. <!-- .element: class="fragment" --></li>
+<li>Só depois avance para a próxima etapa. <!-- .element: class="fragment" --></li>
+</ul>
+</section>
+<section><h2>Objetivos</h2>
+<ul>
+<li>Entender por que variáveis soltas deixam de funcionar bem em programas maiores. <!-- .element: class="fragment" --></li>
+<li>Usar <code>struct</code>, <code>typedef</code>, <code>enum</code> e <code>union</code> em problemas reais. <!-- .element: class="fragment" --></li>
+<li>Integrar tipos definidos pelo programador com vetores, funções e bibliotecas. <!-- .element: class="fragment" --></li>
+<li>Compreender passagem por valor, passagem por referência e operador <code>-&gt;</code>. <!-- .element: class="fragment" --></li>
+</ul>
+</section>
+<section><h1>Ideia da Aula</h1>
+<p>Nesta aula, nós não vamos estudar cada recurso isoladamente.</p>
+<p>Vamos construir um pequeno sistema de boletim. <!-- .element: class="fragment" --></p>
+<p>Cada etapa muda a entrada, aumenta a regra de negócio e obriga o código a ficar mais organizado. <!-- .element: class="fragment" --></p>
+</section>
+<section><h1>O Projeto Vai Crescer Assim</h1>
+<ol>
+<li>Um aluno com variáveis soltas. <!-- .element: class="fragment" --></li>
+<li>O mesmo aluno usando <code>struct</code>. <!-- .element: class="fragment" --></li>
+<li>Uma turma com vetor de estruturas. <!-- .element: class="fragment" --></li>
+<li>Situações formais com <code>enum</code>. <!-- .element: class="fragment" --></li>
+<li>Separação em <code>.h</code> e <code>.c</code>. <!-- .element: class="fragment" --></li>
+<li>Alterações por referência com <code>-&gt;</code>. <!-- .element: class="fragment" --></li>
+<li>Estruturas aninhadas. <!-- .element: class="fragment" --></li>
+<li>Um contraste final com <code>union</code>. <!-- .element: class="fragment" --></li>
+</ol>
+</section>
+<section><h1>Etapa 1</h1>
+<h2>Um aluno com variáveis soltas</h2>
+<p>Entrada:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">nome matricula nota1 nota2 nota3
+</code></pre>
+<p>Exemplo:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">Ana 1001 8.0 7.0 9.0
+</code></pre>
+</section>
+<section><h1>Etapa 1</h1>
+<h2>O que o programa precisa fazer</h2>
+<ul>
+<li>Ler os dados de um aluno. <!-- .element: class="fragment" --></li>
+<li>Calcular a média. <!-- .element: class="fragment" --></li>
+<li>Classificar a situação final. <!-- .element: class="fragment" --></li>
+<li>Imprimir um relatório simples. <!-- .element: class="fragment" --></li>
+</ul>
+</section>
+<section><h1>Etapa 1</h1>
+<h2>O que já sabemos usar</h2>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">float calcular_media(float n1, float n2, float n3){
+    return (n1 + n2 + n3) / 3.0f;
+}
+
+const char *classificar_media(float media){
+    if(media &gt;= 7.0f) return &quot;APROVADO&quot;;
+    if(media &gt;= 5.0f) return &quot;RECUPERACAO&quot;;
+    return &quot;REPROVADO&quot;;
+}
+</code></pre>
+</section>
+<section><h1>Etapa 1</h1>
+<h2>Onde a solução começa a falhar</h2>
+<ul>
+<li>Funciona para um aluno. <!-- .element: class="fragment" --></li>
+<li>Mas e se precisarmos de 30 alunos? <!-- .element: class="fragment" --></li>
+<li>E se quisermos passar “um aluno” para uma função? <!-- .element: class="fragment" --></li>
+<li>E se quisermos guardar tudo como uma única entidade lógica? <!-- .element: class="fragment" --></li>
+</ul>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Problema real<br /></span>
+  </div>
+  <div class="callout-content">
+<p>O cálculo ainda funciona. O que começa a falhar é a organização dos dados.</p>
+  </div>
+</div>
+</section>
+<section><h1>Etapa 2</h1>
+<h2>O mesmo problema, mas com <code>struct</code></h2>
+<p>Agora a entrada continua a mesma.</p>
+<p>O que muda é a modelagem do programa. <!-- .element: class="fragment" --></p>
+<p>As informações deixam de ser “peças soltas” e passam a representar explicitamente um aluno. <!-- .element: class="fragment" --></p>
+</section>
+<section><h1>Antes de usar <code>struct</code></h1>
+<h2>O que ela resolve?</h2>
+<ul>
+<li>Uma <code>struct</code> permite agrupar dados diferentes sob um mesmo nome. <!-- .element: class="fragment" --></li>
+<li>Ela é útil quando várias informações pertencem à mesma entidade lógica. <!-- .element: class="fragment" --></li>
+<li>Em vez de pensar em <code>nome</code>, <code>matricula</code>, <code>nota1</code>, <code>nota2</code> e <code>nota3</code> separadamente, passamos a pensar em um <strong>Aluno</strong>. <!-- .element: class="fragment" --></li>
+</ul>
+<div class="callout callout-tip">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .5 2.2 1.5 3.1.7.7 1.3 1.5 1.5 2.4"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span>
+    <span class="callout-title-inner"><br /></span>
+  </div>
+  <div class="callout-content">
+<code>struct</code> não existe para &quot;enfeitar&quot; o código. Ela existe para fazer o programa representar melhor o problema.</p>
+  </div>
+</div>
+</section>
+<section><h1>Antes de usar <code>struct</code></h1>
+<h2>Forma geral</h2>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">struct NomeDaStruct {
+    tipo campo1;
+    tipo campo2;
+    tipo campo3;
+};
+</code></pre>
+<ul>
+<li>Cada campo pode ter um tipo diferente. <!-- .element: class="fragment" --></li>
+<li>Depois da definição, podemos declarar variáveis desse tipo. <!-- .element: class="fragment" --></li>
+</ul>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">struct NomeDaStruct variavel;
+</code></pre>
+</section>
+<section><h1>Antes de usar <code>struct</code></h1>
+<h2>Exemplo mínimo</h2>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">struct Aluno {
+    char nome[50];
+    int matricula;
+    float nota1;
+    float nota2;
+    float nota3;
+};
+</code></pre>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">struct Aluno a;
+</code></pre>
+<ul>
+<li>Aqui, <code>Aluno</code> passa a ser um modelo de dados do programa. <!-- .element: class="fragment" --></li>
+</ul>
+</section>
+<section><h1>Como usar uma <code>struct</code></h1>
+<h2>Acessando campos com <code>.</code></h2>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">struct Aluno a;
+
+strcpy(a.nome, &quot;Ana&quot;);
+a.matricula = 1001;
+a.nota1 = 8.0f;
+a.nota2 = 7.0f;
+a.nota3 = 9.0f;
+</code></pre>
+<ul>
+<li>O operador <code>.</code> acessa um campo da estrutura. <!-- .element: class="fragment" --></li>
+<li>Se o campo for string, continuamos precisando de <code>strcpy()</code>. <!-- .element: class="fragment" --></li>
+</ul>
+</section>
+<section><h1>Como usar uma <code>struct</code></h1>
+<h2>Inicialização direta</h2>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">struct Aluno a = {&quot;Ana&quot;, 1001, 8.0f, 7.0f, 9.0f};
+</code></pre>
+<ul>
+<li>Os valores seguem a ordem dos campos. <!-- .element: class="fragment" --></li>
+<li>Se a ordem estiver errada, a leitura do código e a inicialização ficam confusas. <!-- .element: class="fragment" --></li>
+</ul>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner"><br /></span>
+  </div>
+  <div class="callout-content">
+<p>Em <code>struct</code>, a ordem da inicialização importa.</p>
+  </div>
+</div>
+</section>
+<section><h1>Etapa 2</h1>
+<h2>A estrutura do aluno</h2>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">typedef struct {
+    char nome[50];
+    int matricula;
+    float notas[3];
+} Aluno;
+</code></pre>
+<ul>
+<li><code>nome</code> reaproveita a ideia de strings. <!-- .element: class="fragment" --></li>
+<li><code>notas[3]</code> reaproveita a ideia de vetor. <!-- .element: class="fragment" --></li>
+<li><code>Aluno</code> agora vira um tipo de verdade dentro do programa. <!-- .element: class="fragment" --></li>
+</ul>
+</section>
+<section><h1>Etapa 2</h1>
+<h2>O que melhora</h2>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">float aluno_media(const Aluno *a){
+    return (a-&gt;notas[0] + a-&gt;notas[1] + a-&gt;notas[2]) / 3.0f;
+}
+</code></pre>
+<ul>
+<li>A função passa a receber um aluno, não três notas soltas. <!-- .element: class="fragment" --></li>
+<li>O código fica mais coerente com o problema modelado. <!-- .element: class="fragment" --></li>
+</ul>
+</section>
+<section><h1>Etapa 3</h1>
+<h2>Agora não é mais um aluno, é uma turma</h2>
+<p>Nova entrada:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">n
+nome matricula nota1 nota2 nota3
+nome matricula nota1 nota2 nota3
+...
+</code></pre>
+</section>
+<section><h1>Etapa 3</h1>
+<h2>O que precisamos fazer agora</h2>
+<ul>
+<li>Ler <code>n</code> alunos. <!-- .element: class="fragment" --></li>
+<li>Calcular a média de cada um. <!-- .element: class="fragment" --></li>
+<li>Contar aprovados, recuperação e reprovados. <!-- .element: class="fragment" --></li>
+<li>Identificar a maior média da turma. <!-- .element: class="fragment" --></li>
+</ul>
+</section>
+<section><h1>Etapa 3</h1>
+<h2>Vetor de estruturas</h2>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">Aluno turma[100];
+
+for(i = 0; i &lt; n; i++)
+    ler_aluno(&amp;turma[i]);
+</code></pre>
+<ul>
+<li>Aqui juntamos arrays, laços e <code>struct</code>. <!-- .element: class="fragment" --></li>
+<li>O código não precisa ser duplicado para cada aluno. <!-- .element: class="fragment" --></li>
+</ul>
+</section>
+<section><h1>Etapa 4</h1>
+<h2>A situação do aluno precisa virar um estado formal</h2>
+<p>Nova entrada:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">n
+nome matricula nota1 nota2 nota3 faltas
+...
+</code></pre>
+<p>Nova regra:</p>
+<ul>
+<li>média continua importando <!-- .element: class="fragment" --></li>
+<li>faltas agora também importam <!-- .element: class="fragment" --></li>
+</ul>
+</section>
+<section><h1>Etapa 4</h1>
+<h2><code>enum</code> para organizar estados</h2>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">typedef enum {
+    REPROVADO_NOTA,
+    RECUPERACAO,
+    APROVADO,
+    REPROVADO_FALTA
+} SituacaoAluno;
+</code></pre>
+<ul>
+<li>Não dependemos mais de números mágicos. <!-- .element: class="fragment" --></li>
+<li>Também evitamos strings espalhadas pela lógica. <!-- .element: class="fragment" --></li>
+</ul>
+</section>
+<section><h1>Etapa 4</h1>
+<h2>Regra de negócio mais forte</h2>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">SituacaoAluno aluno_situacao(const Aluno *a){
+    float media = aluno_media(a);
+
+    if(a-&gt;faltas &gt; 18) return REPROVADO_FALTA;
+    if(media &gt;= 7.0f) return APROVADO;
+    if(media &gt;= 5.0f) return RECUPERACAO;
+    return REPROVADO_NOTA;
+}
+</code></pre>
+</section>
+<section><h1>Etapa 5</h1>
+<h2>O código cresceu, então a organização também precisa crescer</h2>
+<p>Até aqui, tudo ainda estava em um arquivo só. <!-- .element: class="fragment" --></p>
+<p>Agora isso começa a conflitar com a aula de bibliotecas. <!-- .element: class="fragment" --></p>
+<p>Precisamos separar: <!-- .element: class="fragment" --></p>
+<ul>
+<li>tipos</li>
+<li>protótipos</li>
+<li>implementações</li>
+<li>programa principal</li>
+</ul>
+</section>
+<section><h1>Etapa 5</h1>
+<h2>Estrutura do projeto</h2>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">aluno.h
+aluno.c
+main.c
+</code></pre>
+<ul>
+<li><code>aluno.h</code>: tipos e protótipos <!-- .element: class="fragment" --></li>
+<li><code>aluno.c</code>: implementação das funções <!-- .element: class="fragment" --></li>
+<li><code>main.c</code>: leitura da entrada e relatório <!-- .element: class="fragment" --></li>
+</ul>
+</section>
+<section><h1>Etapa 5</h1>
+<h2>Compilação com múltiplos arquivos</h2>
+<pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">gcc main.c aluno.c -o programa
+</code></pre>
+<ul>
+<li>Mesma lógica da etapa anterior. <!-- .element: class="fragment" --></li>
+<li>Organização interna muito melhor. <!-- .element: class="fragment" --></li>
+</ul>
+</section>
+<section><h1>Etapa 6</h1>
+<h2>Agora não basta consultar, precisamos alterar</h2>
+<p>Nova entrada:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">n
+... turma ...
+m
+matricula bonus
+matricula bonus
+...
+</code></pre>
+</section>
+<section><h1>Etapa 6</h1>
+<h2>Nova regra</h2>
+<p>O bônus será aplicado apenas à menor nota do aluno.</p>
+<ul>
+<li>precisamos buscar um aluno por matrícula <!-- .element: class="fragment" --></li>
+<li>precisamos devolver o endereço desse aluno <!-- .element: class="fragment" --></li>
+<li>precisamos modificar a estrutura original dentro do vetor <!-- .element: class="fragment" --></li>
+</ul>
+</section>
+<section><h1>Etapa 6</h1>
+<h2>Ponteiro para estrutura e operador <code>-&gt;</code></h2>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">Aluno *buscar_aluno_por_matricula(Aluno turma[], int n, int matricula);
+void aplicar_bonus(Aluno *a, float bonus);
+</code></pre>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">a-&gt;notas[indice_menor] += bonus;
+</code></pre>
+<ul>
+<li>É aqui que referência deixa de ser teoria e vira ferramenta real. <!-- .element: class="fragment" --></li>
+</ul>
+</section>
+<section><h1>Etapa 7</h1>
+<h2>O aluno agora carrega outra estrutura dentro dele</h2>
+<p>Nova entrada:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">n
+nome matricula nota1 nota2 nota3 faltas cidade estado
+...
+m
+... bonus ...
+estado_consulta
+</code></pre>
+</section>
+<section><h1>Etapa 7</h1>
+<h2>Estruturas aninhadas</h2>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">typedef struct {
+    char cidade[30];
+    char estado[3];
+} Localidade;
+
+typedef struct {
+    char nome[50];
+    int matricula;
+    float notas[3];
+    int faltas;
+    Localidade local;
+} Aluno;
+</code></pre>
+</section>
+<section><h1>Etapa 7</h1>
+<h2>O que passa a ser possível</h2>
+<ul>
+<li>Imprimir cidade e estado no relatório. <!-- .element: class="fragment" --></li>
+<li>Filtrar alunos por estado. <!-- .element: class="fragment" --></li>
+<li>Contar aprovados por estado. <!-- .element: class="fragment" --></li>
+</ul>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">a-&gt;local.estado
+</code></pre>
+</section>
+<section><h1>Etapa 8</h1>
+<h2><code>union</code> entra como contraste, não como núcleo do sistema</h2>
+<p>O sistema principal não precisa de <code>union</code>. <!-- .element: class="fragment" --></p>
+<p>Então vamos usá-la em um experimento separado. <!-- .element: class="fragment" --></p>
+<p>Problema:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">n
+tipo nome valor
+tipo nome valor
+...
+</code></pre>
+</section>
+<section><h1>Etapa 8</h1>
+<h2>Quando <code>union</code> faz sentido</h2>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">typedef union {
+    int inteiro;
+    float real;
+    char texto[40];
+} Dado;
+</code></pre>
+<p>Mas sozinha ela não basta.</p>
+<p>Precisamos combinar com <code>enum</code> para saber qual campo está ativo. <!-- .element: class="fragment" --></p>
+</section>
+<section><h1>Estruturas x Uniões</h1>
+<ul>
+<li>Em <code>struct</code>, os campos coexistem. <!-- .element: class="fragment" --></li>
+<li>Em <code>union</code>, os campos compartilham memória. <!-- .element: class="fragment" --></li>
+<li><code>struct</code> é a solução natural do projeto principal. <!-- .element: class="fragment" --></li>
+<li><code>union</code> aparece quando só um formato de dado é válido por vez. <!-- .element: class="fragment" --></li>
+</ul>
+</section>
+<section><h1>Como estudar esta aula</h1>
+<ol>
+<li>Comece pela etapa 1. <!-- .element: class="fragment" --></li>
+<li>Rode os casos de teste. <!-- .element: class="fragment" --></li>
+<li>Entenda por que a etapa seguinte foi necessária. <!-- .element: class="fragment" --></li>
+<li>Só então avance. <!-- .element: class="fragment" --></li>
+</ol>
+<div class="callout callout-tip">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .5 2.2 1.5 3.1.7.7 1.3 1.5 1.5 2.4"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span>
+    <span class="callout-title-inner">Foco correto<br /></span>
+  </div>
+  <div class="callout-content">
+<p>O objetivo não é apenas fazer funcionar. O objetivo é entender por que a solução anterior começou a ficar insuficiente.</p>
+  </div>
+</div>
+</section>
+<section><h1>Próximos Passos</h1>
+<p>Agora que os dados já podem ser melhor modelados e organizados, surge uma nova pergunta:</p>
+<p><strong>e quando a quantidade de dados não é conhecida em tempo de compilação?</strong> <!-- .element: class="fragment" --></p>
+<p>Na próxima aula, isso nos levará naturalmente para <strong>alocação dinâmica em C</strong>. <!-- .element: class="fragment" --></p>
+</section>
+        </div>
+    </div>
+
+    <script src="/aulas-faesa/js/vendor/reveal/reveal.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/notes/notes.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/markdown/markdown.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/math/math.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/zoom/zoom.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/prism.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-c.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-python.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-clike.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-perl.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-java.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-php.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/toolbar/prism-toolbar.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/show-language/prism-show-language.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/prism-slang.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/mermaid.min.js" data-no-bundle></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            mermaid.initialize({
+                startOnLoad: false,
+                theme: 'default',
+                securityLevel: 'loose',
+                fontFamily: 'Inter, system-ui, sans-serif',
+            });
+        });
+    </script>
+    <script>
+        Reveal.initialize({
+            hash: true,
+            slideNumber: 'c/t',
+            center: false,
+            controls: false,
+            plugins: [RevealMarkdown, RevealNotes, RevealMath.KaTeX, RevealZoom],
+            katex: {
+                local: '/aulas-faesa/js/vendor/katex',
+                output: 'html',
+                throwOnError: false,
+                strict: false,
+            },
+            width: 960,
+            height: 800,
+            margin: 0.15,
+            maxScale: 2.0,
+        });
+
+        // Ensure Prism highlights code on slide changes
+        Reveal.on('slideready', event => {
+            Prism.highlightAll();
+            try {
+                let mermaids = event.currentSlide.querySelectorAll('.mermaid');
+                if (mermaids.length > 0) {
+                    mermaid.init(undefined, mermaids);
+                }
+            } catch (err) { console.warn("Mermaid init failed", err); }
+        });
+        Reveal.on('slidechanged', event => {
+            Prism.highlightAll();
+            try {
+                let mermaids = event.currentSlide.querySelectorAll('.mermaid');
+                if (mermaids.length > 0) {
+                    mermaid.init(undefined, mermaids);
+                }
+            } catch (err) { console.warn("Mermaid init failed", err); }
+        });
+    </script>
+    <script src="/aulas-faesa/js/rough.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/apply_sketch.js" data-no-bundle></script>
+    <style>
+        /* Modern base styles */
+        .reveal {
+            font-size: 20px;
+            text-align: left !important;
+        }
+
+        .reveal code:not(pre code) {
+            font-family: 'JetBrains Mono', 'Fira Code', Consolas, monospace !important;
+            background-color: var(--code-bg) !important;
+            padding: 0.1em 0.3em !important;
+            border-radius: 4px !important;
+            font-size: 0.85em !important;
+            color: #3b82f6 !important;
+            border: 1px dashed var(--border) !important;
+            white-space: pre-wrap !important;
+            word-break: break-word !important;
+        }
+
+        .reveal h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px !important;
+            margin-left: 0 !important;
+            /* min-height: 2.3em; */
+            display: flex;
+            align-items: center;
+            justify-content: flex-start !important;
+            text-align: left !important;
+            width: 100% !important;
+            text-shadow: none !important;
+        }
+
+        /* Prism overrides for Reveal.js */
+        .reveal div.code-toolbar {
+            position: relative;
+            width: 90% !important;
+            margin: 1em auto !important;
+        }
+
+        .reveal pre[class*="language-"] {
+            margin: 0 !important;
+            padding: 1em !important;
+            width: 100% !important;
+            font-size: 0.8em !important;
+        }
+
+        .reveal pre[class*="language-"] > code {
+            position: relative !important;
+            display: block !important;
+        }
+
+        .reveal .line-numbers-rows {
+            position: absolute !important;
+            top: 0 !important;
+            left: -3.8em !important;
+            width: 3.2em !important;
+            padding-top: 0 !important;
+            border-right: 1px solid #ccc !important;
+        }
+
+        .reveal .line-numbers-rows > span:before {
+            padding-right: 0.5em !important;
+            color: #999 !important;
+            display: block !important;
+            text-align: right !important;
+        }
+
+        .reveal pre[class*="language-"].line-numbers,
+        .reveal pre[class*="language-"]:has(.line-numbers-rows) {
+            padding-left: 3.8em !important;
+        }
+
+        /* Language label styling */
+        .reveal div.toolbar {
+            position: absolute !important;
+            top: 0.2em !important;
+            right: 0.5em !important;
+            opacity: 1 !important;
+            padding-right: 0.1em !important;
+            z-index: 10;
+        }
+
+        .reveal div.toolbar-item span {
+            font-family: 'Inter', sans-serif !important;
+            font-size: 0.7em !important;
+            font-weight: 600 !important;
+            color: #999 !important;
+            text-transform: uppercase !important;
+            background: none !important;
+            box-shadow: none !important;
+            border: none !important;
+            padding: 0 !important;
+        }
+
+        .reveal h2 {
+            font-size: 1.6em;
+            margin-top: 30px !important;
+            margin-bottom: 20px !important;
+            text-align: left !important;
+        }
+
+        .reveal h3 {
+            font-size: 1.3em;
+            margin-top: 20px !important;
+            margin-bottom: 15px !important;
+            text-align: left !important;
+        }
+
+        .reveal p {
+            line-height: 1.5;
+            margin-top: 20px !important;
+            margin-left: 0 !important;
+            text-align: left !important;
+        }
+
+        .reveal ul,
+        .reveal ol,
+        .reveal li {
+            line-height: 1.5;
+            text-align: left !important;
+            margin-left: 0 !important;
+        }
+        
+        .reveal ul, .reveal ol {
+            display: block !important;
+            padding-left: 1.2em !important;
+        }
+
+        /* Slide padding and layout */
+        .reveal .slides section {
+            padding: 40px !important;
+            box-sizing: border-box;
+            text-align: left !important;
+        }
+
+        .reveal .slides {
+            text-align: left !important;
+        }
+
+        /* Centering for Title slides (h1 ONLY, h1 + h2 ONLY, or h1 + h2 + p ONLY) */
+        .reveal .slides section:not(.stack):has(> h1:only-child),
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child),
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) {
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: center !important;
+            align-items: center !important;
+            text-align: center !important;
+            height: 100% !important;
+            top: 0 !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:only-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child) h2,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h2,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) p {
+            justify-content: center !important;
+            text-align: center !important;
+            margin: 0 !important;
+            min-height: auto !important;
+            width: 100% !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h1 {
+            margin-bottom: 0.5em !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h2 {
+            margin-bottom: 0.3em !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) p {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        /* Full screen slide fix */
+        .reveal .slides section:has(.full-screen-image) {
+            padding: 0 !important;
+        }
+
+        /* Full screen slide fix - Garantindo que o fundo do Reveal fique visível e a imagem carregada */
+        .reveal:has(section.present .full-screen-image) {
+            background-image: url('../../slide_end_background.png') !important;
+            background-size: cover !important;
+            background-position: center !important;
+        }
+
+        /* Torna o slide e o container de slides transparentes para mostrar o fundo da .reveal */
+        .reveal:has(section.present .full-screen-image) .slides,
+        .reveal:has(section.present .full-screen-image) .slides section.present {
+            background: transparent !important;
+        }
+
+        .full-screen-image {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 !important;
+            /* Se houver texto, ele centraliza aqui */
+        }
+
+        /* Spacing for diagrams */
+        .reveal .svg-graph {
+            margin-top: 1em !important;
+            margin-bottom: 1em !important;
+            overflow: visible !important; /* Prevent labels from being cut off */
+            max-width: 100%;
+            height: auto;
+        }
+
+        .reveal .mermaid-switcher {
+            display: none !important;
+        }
+
+        .centered {
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            width: 100% !important;
+            margin: 1em 0 !important;
+        }
+
+        .no-break {
+            display: block;
+            width: 100%;
+        }
+
+        .reveal blockquote {
+            display: block;
+            position: relative;
+            margin: var(--r-block-margin) auto !important;
+            padding: 5px;
+            font-style: italic;
+            background: rgba(255, 170, 73, 0.2);
+            box-shadow: 0 0 2px rgba(0,0,0,.2);
+            text-align: left !important;
+        }
+
+        .col1 {
+            width: 90%;
+            margin: 0 auto;
+        }
+
+        .col2 {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start;
+            width: 90%;
+            margin: 0 auto;
+            align-items: flex-start;
+        }
+
+        /* Callout Styles */
+        :root {
+            --callout-note: #448aff;
+            --callout-abstract: #00b0ff;
+            --callout-info: #00b8d4;
+            --callout-todo: #00bfa5;
+            --callout-tip: #00c853;
+            --callout-success: #64dd17;
+            --callout-question: #ffab00;
+            --callout-warning: #ff9100;
+            --callout-failure: #ff5252;
+            --callout-danger: #ff1744;
+            --callout-bug: #f50057;
+            --callout-example: #7c4dff;
+            --callout-quote: #9e9e9e;
+            --code-bg: #f8f8f8;
+            --border: #ddd;
+        }
+
+        .reveal .callout {
+            margin: 1rem auto !important;
+            border: 1px solid var(--border);
+            border-left: 6px solid var(--callout-note);
+            border-radius: 4px;
+            overflow: hidden;
+            text-align: left !important;
+            font-size: 0.8em;
+            width: 75% !important;
+            max-width: 100% !important;
+        }
+
+        .reveal .callout-title {
+            padding: 0.5rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            color: var(--callout-note);
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .reveal .callout-icon {
+            display: flex;
+            align-items: center;
+        }
+
+        .reveal .callout-icon svg {
+            width: 1.2em;
+            height: 1.2em;
+        }
+
+        .reveal .callout-content {
+            padding: 0.5rem 1rem;
+        }
+
+        .reveal .callout-content p {
+            margin-top: 0.5rem !important;
+        }
+
+        .reveal .callout-content p:first-child {
+            margin-top: 0 !important;
+        }
+
+        .reveal h1 { text-transform: none !important; }
+
+        .reveal .callout-abstract { border-left-color: var(--callout-abstract); }
+        .reveal .callout-abstract .callout-title { color: var(--callout-abstract); }
+        .reveal .callout-info { border-left-color: var(--callout-info); }
+        .reveal .callout-info .callout-title { color: var(--callout-info); }
+        .reveal .callout-todo { border-left-color: var(--callout-todo); }
+        .reveal .callout-todo .callout-title { color: var(--callout-todo); }
+        .reveal .callout-tip { border-left-color: var(--callout-tip); }
+        .reveal .callout-tip .callout-title { color: var(--callout-tip); }
+        .reveal .callout-success { border-left-color: var(--callout-success); }
+        .reveal .callout-success .callout-title { color: var(--callout-success); }
+        .reveal .callout-question { border-left-color: var(--callout-question); }
+        .reveal .callout-question .callout-title { color: var(--callout-question) ; }
+        .reveal .callout-warning { border-left-color: var(--callout-warning); }
+        .reveal .callout-warning .callout-title { color: var(--callout-warning); }
+        .reveal .callout-failure { border-left-color: var(--callout-failure); }
+        .reveal .callout-failure .callout-title { color: var(--callout-failure); }
+        .reveal .callout-danger { border-left-color: var(--callout-danger); }
+        .reveal .callout-danger .callout-title { color: var(--callout-danger); }
+        .reveal .callout-bug { border-left-color: var(--callout-bug); }
+        .reveal .callout-bug .callout-title { color: var(--callout-bug); }
+        .reveal .callout-example { border-left-color: var(--callout-example); }
+        .reveal .callout-example .callout-title { color: var(--callout-example); }
+        .reveal .callout-quote { border-left-color: var(--callout-quote); }
+        .reveal .callout-quote .callout-title { color: var(--callout-quote); }
+        .red-note { color: var(--callout-failure); }
+
+        .reveal .slide-number {
+            font-size: 0.8em !important;
+            padding: 5px 10px !important;
+            background: rgba(0,0,0,0.1) !important;
+            border-radius: 4px;
+            color: #000000b1 !important;
+        }
+
+        /* Print styles */
+        @media print {
+            .reveal .slides section {
+                display: block !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                position: relative !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+                page-break-after: always !important;
+                overflow: hidden !important;
+            }
+
+            .reveal .slides {
+                transform: none !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+            }
+            
+            .reveal {
+                overflow: visible !important;
+            }
+        }
+    </style>
+</body>
+
+</html>

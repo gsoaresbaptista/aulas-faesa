@@ -1,0 +1,19 @@
+OPERACOES
+APLICADO 6101 1.50
+APLICADO 6103 4.00
+NAO_ENCONTRADO 9999
+RELATORIO FINAL
+6101 Davi Salvador BA 5.50 RECUPERACAO
+6102 Eva Recife PE 8.00 APROVADO
+6103 Fred Recife PE 4.33 REPROVADO_FALTA
+6104 Gina Salvador BA 9.67 APROVADO
+Aprovados: 2
+Recuperacao: 1
+Reprovados por nota: 0
+Reprovados por falta: 1
+Maior media geral: Gina 6104 9.67
+CONSULTA POR ESTADO PE
+6102 Eva Recife 8.00 APROVADO
+6103 Fred Recife 4.33 REPROVADO_FALTA
+Total no estado: 2
+Aprovados no estado: 1

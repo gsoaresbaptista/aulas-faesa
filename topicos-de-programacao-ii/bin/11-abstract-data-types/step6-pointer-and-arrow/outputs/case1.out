@@ -1,0 +1,13 @@
+OPERACOES
+APLICADO 5002 1.50
+APLICADO 5003 2.00
+NAO_ENCONTRADO 9999
+RELATORIO FINAL
+5001 Alice 8.00 APROVADO
+5002 Breno 6.50 RECUPERACAO
+5003 Ceci 4.67 REPROVADO_NOTA
+Aprovados: 1
+Recuperacao: 1
+Reprovados por nota: 1
+Reprovados por falta: 0
+Maior media geral: Alice 5001 8.00

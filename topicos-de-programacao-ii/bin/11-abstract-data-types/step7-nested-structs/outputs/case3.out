@@ -1,0 +1,20 @@
+OPERACOES
+APLICADO 6201 1.00
+APLICADO 6203 3.00
+RELATORIO FINAL
+6201 Heitor Manaus AM 6.33 RECUPERACAO
+6202 Iris Manaus AM 8.00 APROVADO
+6203 Joao Belem PA 5.00 RECUPERACAO
+6204 Katia Belem PA 7.00 REPROVADO_FALTA
+6205 Luna Manaus AM 9.33 APROVADO
+Aprovados: 2
+Recuperacao: 2
+Reprovados por nota: 0
+Reprovados por falta: 1
+Maior media geral: Luna 6205 9.33
+CONSULTA POR ESTADO AM
+6201 Heitor Manaus 6.33 RECUPERACAO
+6202 Iris Manaus 8.00 APROVADO
+6205 Luna Manaus 9.33 APROVADO
+Total no estado: 3
+Aprovados no estado: 2
