@@ -1,0 +1,1405 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <title>Modelagem de Sistemas com UML</title>
+    <link rel="icon" href="/aulas-faesa/img/dark-favicon.svg" media="(prefers-color-scheme: light)">
+    <link rel="icon" href="/aulas-faesa/img/light-favicon.svg" media="(prefers-color-scheme: dark)">
+
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/reset.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/reveal.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/theme/white.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/aulas-faesa/css/prism-one-light.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/fonts.css" data-no-bundle>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+            <section><h1>Engenharia de Software</h1>
+<h2>Modelagem de Sistemas com UML</h2>
+<p>Professor: Gabriel Soares Baptista</p>
+</section>
+<section><h2>Por que modelar antes de programar?</h2>
+<p>Quando alguém parte direto para o código, vários problemas aparecem cedo:</p>
+<ul>
+<li>classes com responsabilidade demais</li>
+<li>nomes confusos</li>
+<li>entendimento diferente entre membros da equipe</li>
+<li>banco de dados criado sem ligação clara com o domínio</li>
+</ul>
+<p>UML ajuda a reduzir esse ruído porque mostra o sistema por perspectivas diferentes.</p>
+</section>
+<section><h2>Ideia central da aula</h2>
+<p>Hoje vamos acompanhar <strong>um único domínio</strong> do começo ao fim.</p>
+<p>Usaremos o Pet Shop <strong>Amigo Fiel</strong> para ligar:</p>
+<ul>
+<li>requisitos</li>
+<li>UML</li>
+<li>código C++ orientado a objetos</li>
+<li>banco de dados relacional</li>
+</ul>
+</section>
+<section><h2>O problema do Pet Shop</h2>
+<p>O pet shop oferece:</p>
+<ul>
+<li>banho</li>
+<li>tosa</li>
+<li>consulta veterinária</li>
+</ul>
+<p>Hoje, o processo é manual.</p>
+<ul>
+<li>recepcionista anota em papel</li>
+<li>conflitos de horário acontecem</li>
+<li>histórico se perde</li>
+<li>nem sempre está claro quem atenderá cada pet</li>
+</ul>
+</section>
+<section><div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Se você precisasse implementar um sistema de agendamento para esse pet shop hoje, começaria pelas telas, pelas tabelas do banco, pelas classes em C++ ou pelas funcionalidades que o negócio realmente precisa?</p>
+  </div>
+</div>
+</section>
+<section><h2>O fio condutor da modelagem</h2>
+<p>Vamos evoluir o mesmo sistema nesta ordem:</p>
+<ol>
+<li><strong>Casos de Uso</strong> para entender o que o sistema oferece</li>
+<li><strong>Classes</strong> para entender quais objetos existem</li>
+<li><strong>Sequência</strong> para entender como os objetos colaboram</li>
+<li><strong>Atividades</strong> para entender o fluxo do processo</li>
+<li><strong>Banco de Dados</strong> para persistir o modelo</li>
+</ol>
+</section>
+<section><h2>Casos de Uso: o que o sistema oferece?</h2>
+<p>O <strong>Diagrama de Casos de Uso</strong> mostra as funcionalidades percebidas pelos atores externos.</p>
+<p>Use quando quiser:</p>
+<ul>
+<li>validar escopo</li>
+<li>conversar com o cliente em alto nível</li>
+<li>organizar requisitos funcionais</li>
+<li>separar o que está dentro e fora do sistema</li>
+</ul>
+</section>
+<section><h2>Cuidado importante</h2>
+<p>Caso de uso <strong>não</strong> é passo de algoritmo.</p>
+<p>Evite modelar como caso de uso:</p>
+<ul>
+<li>salvar no banco</li>
+<li>validar telefone</li>
+<li>buscar cliente por ID</li>
+</ul>
+<p>Prefira metas relevantes para o ator, como:</p>
+<ul>
+<li>agendar serviço</li>
+<li>cadastrar pet</li>
+<li>finalizar cobrança</li>
+</ul>
+</section>
+<section><h2><code>include</code> e <code>extend</code></h2>
+<p>Essas relações ajudam a explicar dependência entre casos de uso.</p>
+<ul>
+<li><strong><code>include</code></strong>: incorporação obrigatória</li>
+<li><strong><code>extend</code></strong>: ampliação opcional ou condicional</li>
+</ul>
+<p>Em linguagem simples:</p>
+<ul>
+<li><code>include</code> = isso sempre acontece junto</li>
+<li><code>extend</code> = isso só acontece em alguns casos</li>
+</ul>
+</section>
+<section><h2>Quando usar <code>include</code></h2>
+<p>Use <code>include</code> quando uma funcionalidade:</p>
+<ul>
+<li>é obrigatória dentro de outra</li>
+<li>pode ser reutilizada</li>
+<li>faz parte do fluxo normal</li>
+</ul>
+<p>No Pet Shop:</p>
+<ul>
+<li><code>Agendar Serviço</code> incorpora a verificação de horário disponível</li>
+</ul>
+<p>Pergunta prática:</p>
+<p><strong>o caso principal consegue terminar corretamente sem esse outro?</strong></p>
+<p>Se a resposta for não, <code>include</code> é forte candidato.</p>
+</section>
+<section><h2>Quando usar <code>extend</code></h2>
+<p>Use <code>extend</code> quando uma funcionalidade:</p>
+<ul>
+<li>não acontece sempre</li>
+<li>depende de condição</li>
+<li>complementa um caso base que já faz sentido sozinho</li>
+</ul>
+<p>No Pet Shop:</p>
+<ul>
+<li><code>Aplicar Desconto</code> pode estender <code>Finalizar Cobrança</code></li>
+</ul>
+<p>Pergunta prática:</p>
+<p><strong>o caso base já funciona sozinho, e esse outro só entra em condições específicas?</strong></p>
+<p>Se sim, <code>extend</code> é forte candidato.</p>
+</section>
+<section><h2>Observação sobre ferramentas</h2>
+<p>Nem toda ferramenta representa <code>include</code> e <code>extend</code> com a mesma fidelidade visual.</p>
+<ul>
+<li>algumas ferramentas UML dão suporte mais explícito</li>
+<li>outras apenas ajudam a desenhar a relação visualmente</li>
+</ul>
+<p>O mais importante não é decorar sintaxe da ferramenta.</p>
+<p>O mais importante é <strong>entender a ideia conceitual</strong> de incorporar obrigatoriamente ou estender condicionalmente.</p>
+</section>
+<section><h2>Exemplo isolado: <code>include</code> e <code>extend</code></h2>
+<div class="mermaid-outer-container">  <div class="mermaid-switcher">    <div class="switcher-track">      <button class="switcher-btn active" onclick="CourseForgeUI.switchMermaidView(this, 'diagram')"><i data-lucide="eye"></i> Diagrama</button>      <button class="switcher-btn" onclick="CourseForgeUI.switchMermaidView(this, 'code')"><i data-lucide="code"></i> Código</button>      <div class="switcher-slider"></div>    </div>  </div>  <div class="mermaid-content">    <div class="mermaid-display centered" style="width: 700px">      <pre class="mermaid">graph LR
+    R[Recepcionista]
+    subgraph Sistema[Pet Shop Amigo Fiel]
+        UC1([Agendar Serviço])
+        UC2([Consultar Disponibilidade])
+        UC3([Finalizar Cobrança])
+        UC4([Aplicar Desconto])
+    end
+    R --&gt; UC1
+    R --&gt; UC3
+    UC1 -.-&gt; UC2
+    UC4 -.-&gt; UC3</pre>    </div>    <div class="mermaid-source" style="display: none;">      <pre class="language-mermaid"><code>graph LR
+    R[Recepcionista]
+    subgraph Sistema[Pet Shop Amigo Fiel]
+        UC1([Agendar Serviço])
+        UC2([Consultar Disponibilidade])
+        UC3([Finalizar Cobrança])
+        UC4([Aplicar Desconto])
+    end
+    R --&gt; UC1
+    R --&gt; UC3
+    UC1 -.-&gt; UC2
+    UC4 -.-&gt; UC3</code></pre>    </div>  </div></div>
+
+</section>
+<section><h2>Casos de Uso do Pet Shop</h2>
+<div class="mermaid-outer-container">  <div class="mermaid-switcher">    <div class="switcher-track">      <button class="switcher-btn active" onclick="CourseForgeUI.switchMermaidView(this, 'diagram')"><i data-lucide="eye"></i> Diagrama</button>      <button class="switcher-btn" onclick="CourseForgeUI.switchMermaidView(this, 'code')"><i data-lucide="code"></i> Código</button>      <div class="switcher-slider"></div>    </div>  </div>  <div class="mermaid-content">    <div class="mermaid-display centered" style="width: 700px">      <pre class="mermaid">graph LR
+    R[Recepcionista]
+    V[Veterinário / Esteticista]
+    A[Administrador]
+    subgraph Sistema[Pet Shop Amigo Fiel]
+        UC1([Cadastrar Cliente])
+        UC2([Cadastrar Pet])
+        UC3([Consultar Disponibilidade])
+        UC4([Agendar Serviço])
+        UC5([Registrar Atendimento])
+        UC6([Finalizar Cobrança])
+        UC7([Emitir Relatório Diário])
+    end
+    R --&gt; UC1
+    R --&gt; UC2
+    R --&gt; UC3
+    R --&gt; UC4
+    V --&gt; UC5
+    A --&gt; UC7
+    R --&gt; UC6
+    UC4 -.-&gt;|&lt;include&gt;| UC3</pre>    </div>    <div class="mermaid-source" style="display: none;">      <pre class="language-mermaid"><code>graph LR
+    R[Recepcionista]
+    V[Veterinário / Esteticista]
+    A[Administrador]
+    subgraph Sistema[Pet Shop Amigo Fiel]
+        UC1([Cadastrar Cliente])
+        UC2([Cadastrar Pet])
+        UC3([Consultar Disponibilidade])
+        UC4([Agendar Serviço])
+        UC5([Registrar Atendimento])
+        UC6([Finalizar Cobrança])
+        UC7([Emitir Relatório Diário])
+    end
+    R --&gt; UC1
+    R --&gt; UC2
+    R --&gt; UC3
+    R --&gt; UC4
+    V --&gt; UC5
+    A --&gt; UC7
+    R --&gt; UC6
+    UC4 -.-&gt;|&lt;include&gt;| UC3</code></pre>    </div>  </div></div>
+
+</section>
+<section><h2>Lendo o diagrama de casos de uso</h2>
+<ul>
+<li>o Recepcionista participa do fluxo operacional principal</li>
+<li>o Veterinário ou Esteticista entra quando o atendimento ocorre</li>
+<li>o Administrador atua em relatórios e supervisão</li>
+<li><code>Agendar Serviço</code> depende da consulta de disponibilidade</li>
+</ul>
+<p>Este diagrama ainda <strong>não</strong> mostra:</p>
+<ul>
+<li>classes</li>
+<li>tabelas</li>
+<li>métodos internos</li>
+</ul>
+<p>Ele responde apenas à pergunta: <strong>o que o sistema oferece?</strong></p>
+</section>
+<section><h2>Casos de Uso e código C++</h2>
+<p>Mesmo antes do modelo estrutural, já conseguimos imaginar operações do sistema.</p>
+<pre class="line-numbers language-cpp" data-lang="CPP"><code class="language-cpp">class PetShopSystem {
+public:
+    void cadastrarCliente(const std::string&amp; nome, const std::string&amp; telefone);
+    void cadastrarPet(int clienteId, const std::string&amp; nomePet, const std::string&amp; especie);
+    bool consultarDisponibilidade(const std::string&amp; dataHora) const;
+    int agendarServico(int petId, int servicoId, int funcionarioId, const std::string&amp; dataHora);
+    void registrarAtendimento(int agendamentoId, const std::string&amp; observacoes);
+    void finalizarCobranca(int atendimentoId);
+};
+</code></pre>
+<p>Casos de uso ajudam a nomear responsabilidades da camada de aplicação.</p>
+</section>
+<section><h2>Classes: que objetos precisam existir?</h2>
+<p>O <strong>Diagrama de Classes</strong> mostra:</p>
+<ul>
+<li>entidades do domínio</li>
+<li>atributos</li>
+<li>métodos</li>
+<li>associações</li>
+<li>cardinalidades</li>
+</ul>
+<p>Se o caso de uso responde <strong>o que o sistema faz</strong>, o diagrama de classes responde <strong>do que o sistema é composto</strong>.</p>
+</section>
+<section><h2>Primeira extração de classes</h2>
+<p>Do domínio do Pet Shop, surgem naturalmente:</p>
+<ul>
+<li><code>Cliente</code></li>
+<li><code>Pet</code></li>
+<li><code>Servico</code></li>
+<li><code>Funcionario</code></li>
+<li><code>Agendamento</code></li>
+</ul>
+</section>
+<section><h2>Primeira versão do Diagrama de Classes</h2>
+<div class="mermaid-outer-container">  <div class="mermaid-switcher">    <div class="switcher-track">      <button class="switcher-btn active" onclick="CourseForgeUI.switchMermaidView(this, 'diagram')"><i data-lucide="eye"></i> Diagrama</button>      <button class="switcher-btn" onclick="CourseForgeUI.switchMermaidView(this, 'code')"><i data-lucide="code"></i> Código</button>      <div class="switcher-slider"></div>    </div>  </div>  <div class="mermaid-content">    <div class="mermaid-display centered" style="width: 850px">      <pre class="mermaid">classDiagram
+    direction LR
+    class Cliente {
+        -int id
+        -string nome
+        -string telefone
+        +adicionarPet(pet)
+    }
+    class Pet {
+        -int id
+        -string nome
+        -string especie
+        -int idade
+    }
+    class Servico {
+        -int id
+        -string descricao
+        -double precoBase
+    }
+    class Funcionario {
+        -int id
+        -string nome
+        -string especialidade
+    }
+    class Agendamento {
+        -int id
+        -string dataHora
+        -string status
+        +confirmar()
+        +cancelar()
+    }
+    Cliente &quot;1&quot; --&gt; &quot;0..*&quot; Pet : possui
+    Pet &quot;1&quot; --&gt; &quot;0..*&quot; Agendamento : gera
+    Agendamento &quot;1&quot; --&gt; &quot;1&quot; Servico : solicita
+    Agendamento &quot;1&quot; --&gt; &quot;1&quot; Funcionario : atribui</pre>    </div>    <div class="mermaid-source" style="display: none;">      <pre class="language-mermaid"><code>classDiagram
+    direction LR
+    class Cliente {
+        -int id
+        -string nome
+        -string telefone
+        +adicionarPet(pet)
+    }
+    class Pet {
+        -int id
+        -string nome
+        -string especie
+        -int idade
+    }
+    class Servico {
+        -int id
+        -string descricao
+        -double precoBase
+    }
+    class Funcionario {
+        -int id
+        -string nome
+        -string especialidade
+    }
+    class Agendamento {
+        -int id
+        -string dataHora
+        -string status
+        +confirmar()
+        +cancelar()
+    }
+    Cliente &quot;1&quot; --&gt; &quot;0..*&quot; Pet : possui
+    Pet &quot;1&quot; --&gt; &quot;0..*&quot; Agendamento : gera
+    Agendamento &quot;1&quot; --&gt; &quot;1&quot; Servico : solicita
+    Agendamento &quot;1&quot; --&gt; &quot;1&quot; Funcionario : atribui</code></pre>    </div>  </div></div>
+
+</section>
+<section><h2>Como ler as cardinalidades</h2>
+<ul>
+<li>um <code>Cliente</code> pode possuir <strong>zero ou muitos</strong> <code>Pet</code></li>
+<li>um <code>Pet</code> pode gerar <strong>zero ou muitos</strong> <code>Agendamento</code></li>
+<li>cada <code>Agendamento</code> envolve <strong>um</strong> <code>Servico</code></li>
+<li>cada <code>Agendamento</code> envolve <strong>um</strong> <code>Funcionario</code></li>
+</ul>
+<p>Essa primeira versão simplifica o domínio para ensinar a base sem excesso de detalhe.</p>
+</section>
+<section><h2>Diagrama de Classes e C++</h2>
+<pre class="line-numbers language-cpp" data-lang="CPP"><code class="language-cpp">#include &lt;memory&gt;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+
+class Pet;
+
+class Cliente {
+private:
+    int id;
+    std::string nome;
+    std::string telefone;
+    std::vector&lt;std::shared_ptr&lt;Pet&gt;&gt; pets;
+
+public:
+    Cliente(int id, std::string nome, std::string telefone)
+        : id(id), nome(std::move(nome)), telefone(std::move(telefone)) {}
+
+    void adicionarPet(const std::shared_ptr&lt;Pet&gt;&amp; pet) {
+        pets.push_back(pet);
+    }
+};
+
+class Pet {
+private:
+    int id;
+    std::string nome;
+    std::string especie;
+    int idade;
+
+public:
+    Pet(int id, std::string nome, std::string especie, int idade)
+        : id(id), nome(std::move(nome)), especie(std::move(especie)), idade(idade) {}
+};
+
+class Servico {
+private:
+    int id;
+    std::string descricao;
+    double precoBase;
+
+public:
+    Servico(int id, std::string descricao, double precoBase)
+        : id(id), descricao(std::move(descricao)), precoBase(precoBase) {}
+};
+
+class Funcionario {
+private:
+    int id;
+    std::string nome;
+    std::string especialidade;
+
+public:
+    Funcionario(int id, std::string nome, std::string especialidade)
+        : id(id), nome(std::move(nome)), especialidade(std::move(especialidade)) {}
+};
+
+class Agendamento {
+private:
+    int id;
+    std::string dataHora;
+    std::string status;
+    std::shared_ptr&lt;Pet&gt; pet;
+    std::shared_ptr&lt;Servico&gt; servico;
+    std::shared_ptr&lt;Funcionario&gt; funcionario;
+
+public:
+    Agendamento(int id,
+                std::string dataHora,
+                std::shared_ptr&lt;Pet&gt; pet,
+                std::shared_ptr&lt;Servico&gt; servico,
+                std::shared_ptr&lt;Funcionario&gt; funcionario)
+        : id(id),
+          dataHora(std::move(dataHora)),
+          status(&quot;AGENDADO&quot;),
+          pet(std::move(pet)),
+          servico(std::move(servico)),
+          funcionario(std::move(funcionario)) {}
+
+    void confirmar() { status = &quot;CONFIRMADO&quot;; }
+    void cancelar() { status = &quot;CANCELADO&quot;; }
+};
+</code></pre>
+</section>
+<section><h2>O que o código mostra</h2>
+<p>A tradução do modelo para C++ fica clara:</p>
+<ul>
+<li>atributos UML viram membros privados</li>
+<li>operações UML viram métodos públicos</li>
+<li>associações para muitos viram <code>std::vector</code></li>
+<li>referências entre objetos podem virar <code>std::shared_ptr</code></li>
+</ul>
+<p>Esse é o ponto em que o diagrama deixa de ser só desenho e passa a orientar implementação.</p>
+</section>
+<section><h2>Refinando o domínio</h2>
+<p>Nossa primeira versão ainda mistura duas ideias diferentes:</p>
+<ul>
+<li>o compromisso futuro de atender um pet</li>
+<li>o atendimento efetivamente realizado</li>
+</ul>
+<p>Por isso, vamos separar <code>Agendamento</code> de <code>Atendimento</code>.</p>
+</section>
+<section><h2>Diagrama de Classes refinado</h2>
+<div class="mermaid-outer-container">  <div class="mermaid-switcher">    <div class="switcher-track">      <button class="switcher-btn active" onclick="CourseForgeUI.switchMermaidView(this, 'diagram')"><i data-lucide="eye"></i> Diagrama</button>      <button class="switcher-btn" onclick="CourseForgeUI.switchMermaidView(this, 'code')"><i data-lucide="code"></i> Código</button>      <div class="switcher-slider"></div>    </div>  </div>  <div class="mermaid-content">    <div class="mermaid-display centered" style="width: 900px">      <pre class="mermaid">classDiagram
+    direction LR
+    class Cliente {
+        -int id
+        -string nome
+        -string telefone
+        +adicionarPet(pet)
+    }
+    class Pet {
+        -int id
+        -string nome
+        -string especie
+        -int idade
+    }
+    class Servico {
+        -int id
+        -string descricao
+        -double precoBase
+    }
+    class Funcionario {
+        -int id
+        -string nome
+        -string especialidade
+    }
+    class Agendamento {
+        -int id
+        -string dataHora
+        -string status
+        +confirmar()
+        +cancelar()
+        +gerarAtendimento()
+    }
+    class Atendimento {
+        -int id
+        -string inicio
+        -string fim
+        -string observacoes
+        -double valorCobrado
+        +encerrar()
+    }
+    Cliente &quot;1&quot; --&gt; &quot;0..*&quot; Pet : possui
+    Pet &quot;1&quot; --&gt; &quot;0..*&quot; Agendamento : agenda
+    Agendamento &quot;1&quot; --&gt; &quot;1&quot; Servico : solicita
+    Agendamento &quot;1&quot; --&gt; &quot;1&quot; Funcionario : atribui
+    Agendamento &quot;1&quot; --&gt; &quot;0..1&quot; Atendimento : gera</pre>    </div>    <div class="mermaid-source" style="display: none;">      <pre class="language-mermaid"><code>classDiagram
+    direction LR
+    class Cliente {
+        -int id
+        -string nome
+        -string telefone
+        +adicionarPet(pet)
+    }
+    class Pet {
+        -int id
+        -string nome
+        -string especie
+        -int idade
+    }
+    class Servico {
+        -int id
+        -string descricao
+        -double precoBase
+    }
+    class Funcionario {
+        -int id
+        -string nome
+        -string especialidade
+    }
+    class Agendamento {
+        -int id
+        -string dataHora
+        -string status
+        +confirmar()
+        +cancelar()
+        +gerarAtendimento()
+    }
+    class Atendimento {
+        -int id
+        -string inicio
+        -string fim
+        -string observacoes
+        -double valorCobrado
+        +encerrar()
+    }
+    Cliente &quot;1&quot; --&gt; &quot;0..*&quot; Pet : possui
+    Pet &quot;1&quot; --&gt; &quot;0..*&quot; Agendamento : agenda
+    Agendamento &quot;1&quot; --&gt; &quot;1&quot; Servico : solicita
+    Agendamento &quot;1&quot; --&gt; &quot;1&quot; Funcionario : atribui
+    Agendamento &quot;1&quot; --&gt; &quot;0..1&quot; Atendimento : gera</code></pre>    </div>  </div></div>
+
+</section>
+<section><h2>Por que esse refinamento melhora o modelo?</h2>
+<p>Separar <code>Agendamento</code> de <code>Atendimento</code> evita confundir:</p>
+<ul>
+<li>planejamento</li>
+<li>execução</li>
+</ul>
+<p>Ganhos práticos:</p>
+<ul>
+<li>no código, reduz classes infladas</li>
+<li>no banco, evita colunas sem sentido antes da execução</li>
+<li>no domínio, deixa a regra de negócio mais clara</li>
+</ul>
+</section>
+<section><h2>Sequência: como os objetos colaboram?</h2>
+<p>O <strong>Diagrama de Sequência</strong> mostra interações dinâmicas.</p>
+<p>Use quando quiser:</p>
+<ul>
+<li>detalhar um cenário específico</li>
+<li>distribuir responsabilidades</li>
+<li>verificar a ordem das mensagens</li>
+<li>testar se a estrutura realmente sustenta o comportamento</li>
+</ul>
+</section>
+<section><h2>Cenário escolhido</h2>
+<p>Vamos detalhar o caso de uso <strong>Agendar Serviço</strong>.</p>
+<p>Participantes:</p>
+<ul>
+<li><code>Recepcionista</code></li>
+<li><code>TelaAgendamento</code></li>
+<li><code>AgendamentoService</code></li>
+<li><code>AgendaRepository</code></li>
+<li><code>Agendamento</code></li>
+</ul>
+</section>
+<section><h2>Diagrama de Sequência do agendamento</h2>
+<div class="mermaid-outer-container">  <div class="mermaid-switcher">    <div class="switcher-track">      <button class="switcher-btn active" onclick="CourseForgeUI.switchMermaidView(this, 'diagram')"><i data-lucide="eye"></i> Diagrama</button>      <button class="switcher-btn" onclick="CourseForgeUI.switchMermaidView(this, 'code')"><i data-lucide="code"></i> Código</button>      <div class="switcher-slider"></div>    </div>  </div>  <div class="mermaid-content">    <div class="mermaid-display centered" style="width: 900px">      <pre class="mermaid">sequenceDiagram
+    actor R as Recepcionista
+    participant T as TelaAgendamento
+    participant S as AgendamentoService
+    participant Repo as AgendaRepository
+    participant A as Agendamento
+    R-&gt;&gt;T: informar pet, serviço, funcionário e horário
+    T-&gt;&gt;S: solicitarAgendamento(petId, servicoId, funcionarioId, dataHora)
+    S-&gt;&gt;Repo: verificarDisponibilidade(funcionarioId, dataHora)
+    Repo--&gt;&gt;S: disponível
+    S-&gt;&gt;A: criar(status = AGENDADO)
+    S-&gt;&gt;Repo: salvar(A)
+    Repo--&gt;&gt;S: idGerado
+    S--&gt;&gt;T: agendamentoCriado(idGerado)
+    T--&gt;&gt;R: exibir confirmação</pre>    </div>    <div class="mermaid-source" style="display: none;">      <pre class="language-mermaid"><code>sequenceDiagram
+    actor R as Recepcionista
+    participant T as TelaAgendamento
+    participant S as AgendamentoService
+    participant Repo as AgendaRepository
+    participant A as Agendamento
+    R-&gt;&gt;T: informar pet, serviço, funcionário e horário
+    T-&gt;&gt;S: solicitarAgendamento(petId, servicoId, funcionarioId, dataHora)
+    S-&gt;&gt;Repo: verificarDisponibilidade(funcionarioId, dataHora)
+    Repo--&gt;&gt;S: disponível
+    S-&gt;&gt;A: criar(status = AGENDADO)
+    S-&gt;&gt;Repo: salvar(A)
+    Repo--&gt;&gt;S: idGerado
+    S--&gt;&gt;T: agendamentoCriado(idGerado)
+    T--&gt;&gt;R: exibir confirmação</code></pre>    </div>  </div></div>
+
+</section>
+<section><h2>O que esse diagrama acrescenta?</h2>
+<p>O Diagrama de Classes nos dizia <strong>quem existe</strong>.</p>
+<p>O Diagrama de Sequência nos mostra:</p>
+<ul>
+<li>quem chama quem</li>
+<li>em que ordem</li>
+<li>quem valida a disponibilidade</li>
+<li>quem cria o objeto</li>
+<li>quem persiste os dados</li>
+</ul>
+<p>Ele responde melhor à pergunta: <strong>como esse cenário acontece no tempo?</strong></p>
+</section>
+<section><h2>Sequência e código C++</h2>
+<pre class="line-numbers language-cpp" data-lang="CPP"><code class="language-cpp">class AgendaRepository {
+public:
+    bool verificarDisponibilidade(int funcionarioId, const std::string&amp; dataHora) const;
+    int salvar(const Agendamento&amp; agendamento);
+};
+
+class AgendamentoService {
+private:
+    AgendaRepository&amp; repository;
+
+public:
+    explicit AgendamentoService(AgendaRepository&amp; repository) : repository(repository) {}
+
+    int solicitarAgendamento(int petId,
+                             int servicoId,
+                             int funcionarioId,
+                             const std::string&amp; dataHora) {
+        if (!repository.verificarDisponibilidade(funcionarioId, dataHora)) {
+            throw std::runtime_error(&quot;Horário indisponível para o funcionário informado&quot;);
+        }
+
+        Agendamento agendamento(/* id */ 0,
+                                dataHora,
+                                buscarPet(petId),
+                                buscarServico(servicoId),
+                                buscarFuncionario(funcionarioId));
+
+        return repository.salvar(agendamento);
+    }
+
+private:
+    std::shared_ptr&lt;Pet&gt; buscarPet(int petId);
+    std::shared_ptr&lt;Servico&gt; buscarServico(int servicoId);
+    std::shared_ptr&lt;Funcionario&gt; buscarFuncionario(int funcionarioId);
+};
+</code></pre>
+</section>
+<section><h2>Decisão importante de projeto</h2>
+<p>No fluxo acima:</p>
+<ul>
+<li>a tela <strong>não</strong> fala diretamente com o banco</li>
+<li>a regra de negócio fica em <code>AgendamentoService</code></li>
+<li>persistência fica em <code>AgendaRepository</code></li>
+</ul>
+<p>Isso melhora a separação de responsabilidades.</p>
+</section>
+<section><h2>Atividades: como o processo flui?</h2>
+<p>O <strong>Diagrama de Atividades</strong> mostra fluxo de ações e decisões.</p>
+<p>Use quando quiser modelar:</p>
+<ul>
+<li>processos de negócio</li>
+<li>ramificações</li>
+<li>validações</li>
+<li>caminhos alternativos</li>
+</ul>
+<p>Diferença importante:</p>
+<ul>
+<li><strong>Sequência</strong> enfatiza objetos e mensagens</li>
+<li><strong>Atividades</strong> enfatiza ações e decisões</li>
+</ul>
+</section>
+<section><h2>Fluxo do atendimento no Pet Shop</h2>
+<div class="mermaid-outer-container">  <div class="mermaid-switcher">    <div class="switcher-track">      <button class="switcher-btn active" onclick="CourseForgeUI.switchMermaidView(this, 'diagram')"><i data-lucide="eye"></i> Diagrama</button>      <button class="switcher-btn" onclick="CourseForgeUI.switchMermaidView(this, 'code')"><i data-lucide="code"></i> Código</button>      <div class="switcher-slider"></div>    </div>  </div>  <div class="mermaid-content">    <div class="mermaid-display centered" style="width: 900px">      <pre class="mermaid">flowchart TD
+    A([Início]) --&gt; B[Recepcionista identifica cliente e pet]
+    B --&gt; C{Cliente já está cadastrado?}
+    C -- Não --&gt; D[Cadastrar cliente]
+    D --&gt; E[Cadastrar pet]
+    C -- Sim --&gt; F[Consultar dados do pet]
+    E --&gt; G{Há horário disponível?}
+    F --&gt; G
+    G -- Não --&gt; H[Oferecer novo horário]
+    H --&gt; I{Cliente aceita reagendar?}
+    I -- Sim --&gt; J[Registrar novo agendamento]
+    I -- Não --&gt; K[Encerrar solicitação]
+    G -- Sim --&gt; L[Confirmar serviço e funcionário]
+    L --&gt; M[Registrar agendamento]
+    M --&gt; N[No dia do atendimento, confirmar chegada do pet]
+    N --&gt; O{Pet compareceu?}
+    O -- Não --&gt; P[Marcar agendamento como cancelado]
+    O -- Sim --&gt; Q[Iniciar atendimento]
+    J --&gt; R([Fim])
+    K --&gt; R
+    P --&gt; R
+    Q --&gt; R</pre>    </div>    <div class="mermaid-source" style="display: none;">      <pre class="language-mermaid"><code>flowchart TD
+    A([Início]) --&gt; B[Recepcionista identifica cliente e pet]
+    B --&gt; C{Cliente já está cadastrado?}
+    C -- Não --&gt; D[Cadastrar cliente]
+    D --&gt; E[Cadastrar pet]
+    C -- Sim --&gt; F[Consultar dados do pet]
+    E --&gt; G{Há horário disponível?}
+    F --&gt; G
+    G -- Não --&gt; H[Oferecer novo horário]
+    H --&gt; I{Cliente aceita reagendar?}
+    I -- Sim --&gt; J[Registrar novo agendamento]
+    I -- Não --&gt; K[Encerrar solicitação]
+    G -- Sim --&gt; L[Confirmar serviço e funcionário]
+    L --&gt; M[Registrar agendamento]
+    M --&gt; N[No dia do atendimento, confirmar chegada do pet]
+    N --&gt; O{Pet compareceu?}
+    O -- Não --&gt; P[Marcar agendamento como cancelado]
+    O -- Sim --&gt; Q[Iniciar atendimento]
+    J --&gt; R([Fim])
+    K --&gt; R
+    P --&gt; R
+    Q --&gt; R</code></pre>    </div>  </div></div>
+
+</section>
+<section><h2>O que o Diagrama de Atividades esclarece?</h2>
+<p>Ele ajuda a enxergar decisões como:</p>
+<ul>
+<li>cliente já cadastrado?</li>
+<li>há horário disponível?</li>
+<li>cliente aceita reagendar?</li>
+<li>pet compareceu?</li>
+</ul>
+<p>Essas decisões depois viram:</p>
+<ul>
+<li><code>if</code></li>
+<li>validações</li>
+<li>mudança de estado</li>
+</ul>
+</section>
+<section><h2>Atividades e código C++</h2>
+<pre class="line-numbers language-cpp" data-lang="CPP"><code class="language-cpp">void confirmarChegadaDoPet(Agendamento&amp; agendamento, bool compareceu) {
+    if (!compareceu) {
+        agendamento.cancelar();
+        return;
+    }
+
+    agendamento.confirmar();
+}
+</code></pre>
+<p>O fluxo do processo ajuda a tornar explícitas regras que o código precisa respeitar.</p>
+</section>
+<section><h2>Do modelo de classes para o banco</h2>
+<p>A modelagem orientada a objetos e a modelagem relacional não devem ficar separadas.</p>
+<p>Mapeamento direto no nosso exemplo:</p>
+<ul>
+<li><code>Cliente</code> → <code>clientes</code></li>
+<li><code>Pet</code> → <code>pets</code></li>
+<li><code>Funcionario</code> → <code>funcionarios</code></li>
+<li><code>Servico</code> → <code>servicos</code></li>
+<li><code>Agendamento</code> → <code>agendamentos</code></li>
+<li><code>Atendimento</code> → <code>atendimentos</code></li>
+</ul>
+</section>
+<section><h2>Cardinalidade e banco relacional</h2>
+<p>Exemplos de tradução:</p>
+<ul>
+<li><code>Cliente 1 -&gt; 0..* Pet</code> → <code>pets</code> recebe <code>cliente_id</code></li>
+<li><code>Pet 1 -&gt; 0..* Agendamento</code> → <code>agendamentos</code> recebe <code>pet_id</code></li>
+<li><code>Agendamento 1 -&gt; 1 Servico</code> → <code>agendamentos</code> recebe <code>servico_id</code></li>
+<li><code>Agendamento 1 -&gt; 1 Funcionario</code> → <code>agendamentos</code> recebe <code>funcionario_id</code></li>
+<li><code>Agendamento 1 -&gt; 0..1 Atendimento</code> → <code>atendimentos</code> referencia <code>agendamentos</code></li>
+</ul>
+</section>
+<section><h2>Diagrama ER do Pet Shop</h2>
+<div class="mermaid-outer-container">  <div class="mermaid-switcher">    <div class="switcher-track">      <button class="switcher-btn active" onclick="CourseForgeUI.switchMermaidView(this, 'diagram')"><i data-lucide="eye"></i> Diagrama</button>      <button class="switcher-btn" onclick="CourseForgeUI.switchMermaidView(this, 'code')"><i data-lucide="code"></i> Código</button>      <div class="switcher-slider"></div>    </div>  </div>  <div class="mermaid-content">    <div class="mermaid-display centered" style="width: 950px">      <pre class="mermaid">erDiagram
+    CLIENTES ||--o{ PETS : possui
+    PETS ||--o{ AGENDAMENTOS : gera
+    SERVICOS ||--o{ AGENDAMENTOS : classifica
+    FUNCIONARIOS ||--o{ AGENDAMENTOS : executa
+    AGENDAMENTOS ||--o| ATENDIMENTOS : origina
+    CLIENTES {
+        int id PK
+        string nome
+        string telefone
+    }
+    PETS {
+        int id PK
+        int cliente_id FK
+        string nome
+        string especie
+        int idade
+    }
+    SERVICOS {
+        int id PK
+        string descricao
+        decimal preco_base
+    }
+    FUNCIONARIOS {
+        int id PK
+        string nome
+        string especialidade
+    }
+    AGENDAMENTOS {
+        int id PK
+        int pet_id FK
+        int servico_id FK
+        int funcionario_id FK
+        string data_hora
+        string status
+    }
+    ATENDIMENTOS {
+        int id PK
+        int agendamento_id FK
+        string inicio
+        string fim
+        string observacoes
+        decimal valor_cobrado
+    }</pre>    </div>    <div class="mermaid-source" style="display: none;">      <pre class="language-mermaid"><code>erDiagram
+    CLIENTES ||--o{ PETS : possui
+    PETS ||--o{ AGENDAMENTOS : gera
+    SERVICOS ||--o{ AGENDAMENTOS : classifica
+    FUNCIONARIOS ||--o{ AGENDAMENTOS : executa
+    AGENDAMENTOS ||--o| ATENDIMENTOS : origina
+    CLIENTES {
+        int id PK
+        string nome
+        string telefone
+    }
+    PETS {
+        int id PK
+        int cliente_id FK
+        string nome
+        string especie
+        int idade
+    }
+    SERVICOS {
+        int id PK
+        string descricao
+        decimal preco_base
+    }
+    FUNCIONARIOS {
+        int id PK
+        string nome
+        string especialidade
+    }
+    AGENDAMENTOS {
+        int id PK
+        int pet_id FK
+        int servico_id FK
+        int funcionario_id FK
+        string data_hora
+        string status
+    }
+    ATENDIMENTOS {
+        int id PK
+        int agendamento_id FK
+        string inicio
+        string fim
+        string observacoes
+        decimal valor_cobrado
+    }</code></pre>    </div>  </div></div>
+
+</section>
+<section><h2>O que o diagrama ER preserva do UML?</h2>
+<p>O diagrama ER é continuação do modelo de classes.</p>
+<ul>
+<li>associações viram chaves estrangeiras</li>
+<li>cardinalidades viram restrições estruturais</li>
+<li>entidades persistentes viram tabelas</li>
+</ul>
+<p>Se a modelagem UML estiver ruim, o banco tende a denunciar isso rapidamente.</p>
+</section>
+<section><h2>Banco e código C++</h2>
+<pre class="line-numbers language-cpp" data-lang="CPP"><code class="language-cpp">struct AgendamentoRecord {
+    int id;
+    int petId;
+    int servicoId;
+    int funcionarioId;
+    std::string dataHora;
+    std::string status;
+};
+
+class AgendaRepository {
+public:
+    int salvar(const Agendamento&amp; agendamento);
+    std::optional&lt;AgendamentoRecord&gt; buscarPorId(int id) const;
+};
+</code></pre>
+<p>Aqui vemos duas camadas convivendo:</p>
+<ul>
+<li>domínio orientado a objetos</li>
+<li>persistência relacional</li>
+</ul>
+</section>
+<section><h2>Refinamento importante do domínio</h2>
+<p>Até aqui, cada <code>Agendamento</code> possui um único <code>Servico</code>.</p>
+<p>Mas e se o pet fizer banho e tosa no mesmo horário?</p>
+<p>Nesse caso:</p>
+<ul>
+<li>o Diagrama de Classes precisa rever cardinalidade</li>
+<li>o banco precisa de tabela associativa</li>
+<li>o código pode precisar de coleção de serviços em <code>Agendamento</code></li>
+</ul>
+<p>Isso mostra que modelagem é <strong>iterativa</strong>.</p>
+</section>
+<section><h2>Fechando a progressão</h2>
+<p>Percurso completo da aula:</p>
+<ul>
+<li><strong>Casos de Uso</strong> → o que o sistema oferece</li>
+<li><strong>Classes</strong> → quais objetos existem</li>
+<li><strong>Sequência</strong> → como colaboram no tempo</li>
+<li><strong>Atividades</strong> → como o processo flui</li>
+<li><strong>ER</strong> → como persistir o modelo</li>
+</ul>
+<p>Essa sequência evita começar pelo ponto errado.</p>
+</section>
+<section><div class="callout callout-success">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></span>
+    <span class="callout-title-inner">Ideia central<br /></span>
+  </div>
+  <div class="callout-content">
+<p>UML não substitui o código. Ela melhora o código que você vai escrever, reduz ambiguidade e cria uma ponte entre requisito, projeto orientado a objetos e persistência em banco de dados.</p>
+  </div>
+</div>
+</section>
+<section><h2>Próxima aula</h2>
+<p>Na próxima aula, avançaremos para <strong>Arquitetura de Software: Estilos Arquiteturais</strong>, com foco em exemplos como <strong>MVC</strong>. A pergunta central deixará de ser &quot;como modelar o domínio&quot; e passará a ser &quot;como organizar a solução em camadas, componentes e responsabilidades&quot;.</p>
+<p>Siga para <a href="./8%20-%20software%20architecture%20architectural%20styles%20mvc.html">8 - software architecture architectural styles mvc</a>.</p>
+</section>
+        </div>
+    </div>
+
+    <script src="/aulas-faesa/js/vendor/reveal/reveal.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/notes/notes.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/markdown/markdown.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/math/math.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/zoom/zoom.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/prism.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-c.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-python.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-clike.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-perl.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-java.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-php.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/toolbar/prism-toolbar.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/show-language/prism-show-language.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/prism-slang.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/mermaid.min.js" data-no-bundle></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            mermaid.initialize({
+                startOnLoad: false,
+                theme: 'default',
+                securityLevel: 'loose',
+                fontFamily: 'Inter, system-ui, sans-serif',
+            });
+        });
+    </script>
+    <script>
+        Reveal.initialize({
+            hash: true,
+            slideNumber: 'c/t',
+            center: false,
+            controls: false,
+            plugins: [RevealMarkdown, RevealNotes, RevealMath.KaTeX, RevealZoom],
+            katex: {
+                local: '/aulas-faesa/js/vendor/katex',
+                output: 'html',
+                throwOnError: false,
+                strict: false,
+            },
+            width: 960,
+            height: 800,
+            margin: 0.15,
+            maxScale: 2.0,
+        });
+
+        // Ensure Prism highlights code on slide changes
+        Reveal.on('slideready', event => {
+            Prism.highlightAll();
+            try {
+                let mermaids = event.currentSlide.querySelectorAll('.mermaid');
+                if (mermaids.length > 0) {
+                    mermaid.init(undefined, mermaids);
+                }
+            } catch (err) { console.warn("Mermaid init failed", err); }
+        });
+        Reveal.on('slidechanged', event => {
+            Prism.highlightAll();
+            try {
+                let mermaids = event.currentSlide.querySelectorAll('.mermaid');
+                if (mermaids.length > 0) {
+                    mermaid.init(undefined, mermaids);
+                }
+            } catch (err) { console.warn("Mermaid init failed", err); }
+        });
+    </script>
+    <script src="/aulas-faesa/js/rough.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/apply_sketch.js" data-no-bundle></script>
+    <style>
+        /* Modern base styles */
+        .reveal {
+            font-size: 20px;
+            text-align: left !important;
+        }
+
+        .reveal code:not(pre code) {
+            font-family: 'JetBrains Mono', 'Fira Code', Consolas, monospace !important;
+            background-color: var(--code-bg) !important;
+            padding: 0.1em 0.3em !important;
+            border-radius: 4px !important;
+            font-size: 0.85em !important;
+            color: #3b82f6 !important;
+            border: 1px dashed var(--border) !important;
+            white-space: pre-wrap !important;
+            word-break: break-word !important;
+        }
+
+        .reveal h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px !important;
+            margin-left: 0 !important;
+            /* min-height: 2.3em; */
+            display: flex;
+            align-items: center;
+            justify-content: flex-start !important;
+            text-align: left !important;
+            width: 100% !important;
+            text-shadow: none !important;
+        }
+
+        /* Prism overrides for Reveal.js */
+        .reveal div.code-toolbar {
+            position: relative;
+            width: 90% !important;
+            margin: 1em auto !important;
+        }
+
+        .reveal pre[class*="language-"] {
+            margin: 0 !important;
+            padding: 1em !important;
+            width: 100% !important;
+            font-size: 0.8em !important;
+        }
+
+        .reveal pre[class*="language-"] > code {
+            position: relative !important;
+            display: block !important;
+        }
+
+        .reveal .line-numbers-rows {
+            position: absolute !important;
+            top: 0 !important;
+            left: -3.8em !important;
+            width: 3.2em !important;
+            padding-top: 0 !important;
+            border-right: 1px solid #ccc !important;
+        }
+
+        .reveal .line-numbers-rows > span:before {
+            padding-right: 0.5em !important;
+            color: #999 !important;
+            display: block !important;
+            text-align: right !important;
+        }
+
+        .reveal pre[class*="language-"].line-numbers,
+        .reveal pre[class*="language-"]:has(.line-numbers-rows) {
+            padding-left: 3.8em !important;
+        }
+
+        /* Language label styling */
+        .reveal div.toolbar {
+            position: absolute !important;
+            top: 0.2em !important;
+            right: 0.5em !important;
+            opacity: 1 !important;
+            padding-right: 0.1em !important;
+            z-index: 10;
+        }
+
+        .reveal div.toolbar-item span {
+            font-family: 'Inter', sans-serif !important;
+            font-size: 0.7em !important;
+            font-weight: 600 !important;
+            color: #999 !important;
+            text-transform: uppercase !important;
+            background: none !important;
+            box-shadow: none !important;
+            border: none !important;
+            padding: 0 !important;
+        }
+
+        .reveal h2 {
+            font-size: 1.6em;
+            margin-top: 30px !important;
+            margin-bottom: 20px !important;
+            text-align: left !important;
+        }
+
+        .reveal h3 {
+            font-size: 1.3em;
+            margin-top: 20px !important;
+            margin-bottom: 15px !important;
+            text-align: left !important;
+        }
+
+        .reveal p {
+            line-height: 1.5;
+            margin-top: 20px !important;
+            margin-left: 0 !important;
+            text-align: left !important;
+        }
+
+        .reveal ul,
+        .reveal ol,
+        .reveal li {
+            line-height: 1.5;
+            text-align: left !important;
+            margin-left: 0 !important;
+        }
+        
+        .reveal ul, .reveal ol {
+            display: block !important;
+            padding-left: 1.2em !important;
+        }
+
+        /* Slide padding and layout */
+        .reveal .slides section {
+            padding: 40px !important;
+            box-sizing: border-box;
+            text-align: left !important;
+        }
+
+        .reveal .slides {
+            text-align: left !important;
+        }
+
+        /* Centering for Title slides (h1 ONLY, h1 + h2 ONLY, or h1 + h2 + p ONLY) */
+        .reveal .slides section:not(.stack):has(> h1:only-child),
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child),
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) {
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: center !important;
+            align-items: center !important;
+            text-align: center !important;
+            height: 100% !important;
+            top: 0 !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:only-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child) h2,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h2,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) p {
+            justify-content: center !important;
+            text-align: center !important;
+            margin: 0 !important;
+            min-height: auto !important;
+            width: 100% !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h1 {
+            margin-bottom: 0.5em !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h2 {
+            margin-bottom: 0.3em !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) p {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        /* Full screen slide fix */
+        .reveal .slides section:has(.full-screen-image) {
+            padding: 0 !important;
+        }
+
+        /* Full screen slide fix - Garantindo que o fundo do Reveal fique visível e a imagem carregada */
+        .reveal:has(section.present .full-screen-image) {
+            background-image: url('../../slide_end_background.png') !important;
+            background-size: cover !important;
+            background-position: center !important;
+        }
+
+        /* Torna o slide e o container de slides transparentes para mostrar o fundo da .reveal */
+        .reveal:has(section.present .full-screen-image) .slides,
+        .reveal:has(section.present .full-screen-image) .slides section.present {
+            background: transparent !important;
+        }
+
+        .full-screen-image {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 !important;
+            /* Se houver texto, ele centraliza aqui */
+        }
+
+        /* Spacing for diagrams */
+        .reveal .svg-graph {
+            margin-top: 1em !important;
+            margin-bottom: 1em !important;
+            overflow: visible !important; /* Prevent labels from being cut off */
+            max-width: 100%;
+            height: auto;
+        }
+
+        .reveal .mermaid-switcher {
+            display: none !important;
+        }
+
+        .centered {
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            width: 100% !important;
+            margin: 1em 0 !important;
+        }
+
+        .no-break {
+            display: block;
+            width: 100%;
+        }
+
+        .reveal blockquote {
+            display: block;
+            position: relative;
+            margin: var(--r-block-margin) auto !important;
+            padding: 5px;
+            font-style: italic;
+            background: rgba(255, 170, 73, 0.2);
+            box-shadow: 0 0 2px rgba(0,0,0,.2);
+            text-align: left !important;
+        }
+
+        .col1 {
+            width: 90%;
+            margin: 0 auto;
+        }
+
+        .col2 {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start;
+            width: 90%;
+            margin: 0 auto;
+            align-items: flex-start;
+        }
+
+        /* Callout Styles */
+        :root {
+            --callout-note: #448aff;
+            --callout-abstract: #00b0ff;
+            --callout-info: #00b8d4;
+            --callout-todo: #00bfa5;
+            --callout-tip: #00c853;
+            --callout-success: #64dd17;
+            --callout-question: #ffab00;
+            --callout-warning: #ff9100;
+            --callout-failure: #ff5252;
+            --callout-danger: #ff1744;
+            --callout-bug: #f50057;
+            --callout-example: #7c4dff;
+            --callout-quote: #9e9e9e;
+            --code-bg: #f8f8f8;
+            --border: #ddd;
+        }
+
+        .reveal .callout {
+            margin: 1rem auto !important;
+            border: 1px solid var(--border);
+            border-left: 6px solid var(--callout-note);
+            border-radius: 4px;
+            overflow: hidden;
+            text-align: left !important;
+            font-size: 0.8em;
+            width: 75% !important;
+            max-width: 100% !important;
+        }
+
+        .reveal .callout-title {
+            padding: 0.5rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            color: var(--callout-note);
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .reveal .callout-icon {
+            display: flex;
+            align-items: center;
+        }
+
+        .reveal .callout-icon svg {
+            width: 1.2em;
+            height: 1.2em;
+        }
+
+        .reveal .callout-content {
+            padding: 0.5rem 1rem;
+        }
+
+        .reveal .callout-content p {
+            margin-top: 0.5rem !important;
+        }
+
+        .reveal .callout-content p:first-child {
+            margin-top: 0 !important;
+        }
+
+        .reveal h1 { text-transform: none !important; }
+
+        .reveal .callout-abstract { border-left-color: var(--callout-abstract); }
+        .reveal .callout-abstract .callout-title { color: var(--callout-abstract); }
+        .reveal .callout-info { border-left-color: var(--callout-info); }
+        .reveal .callout-info .callout-title { color: var(--callout-info); }
+        .reveal .callout-todo { border-left-color: var(--callout-todo); }
+        .reveal .callout-todo .callout-title { color: var(--callout-todo); }
+        .reveal .callout-tip { border-left-color: var(--callout-tip); }
+        .reveal .callout-tip .callout-title { color: var(--callout-tip); }
+        .reveal .callout-success { border-left-color: var(--callout-success); }
+        .reveal .callout-success .callout-title { color: var(--callout-success); }
+        .reveal .callout-question { border-left-color: var(--callout-question); }
+        .reveal .callout-question .callout-title { color: var(--callout-question) ; }
+        .reveal .callout-warning { border-left-color: var(--callout-warning); }
+        .reveal .callout-warning .callout-title { color: var(--callout-warning); }
+        .reveal .callout-failure { border-left-color: var(--callout-failure); }
+        .reveal .callout-failure .callout-title { color: var(--callout-failure); }
+        .reveal .callout-danger { border-left-color: var(--callout-danger); }
+        .reveal .callout-danger .callout-title { color: var(--callout-danger); }
+        .reveal .callout-bug { border-left-color: var(--callout-bug); }
+        .reveal .callout-bug .callout-title { color: var(--callout-bug); }
+        .reveal .callout-example { border-left-color: var(--callout-example); }
+        .reveal .callout-example .callout-title { color: var(--callout-example); }
+        .reveal .callout-quote { border-left-color: var(--callout-quote); }
+        .reveal .callout-quote .callout-title { color: var(--callout-quote); }
+        .red-note { color: var(--callout-failure); }
+
+        .reveal .slide-number {
+            font-size: 0.8em !important;
+            padding: 5px 10px !important;
+            background: rgba(0,0,0,0.1) !important;
+            border-radius: 4px;
+            color: #000000b1 !important;
+        }
+
+        /* Print styles */
+        @media print {
+            .reveal .slides section {
+                display: block !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                position: relative !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+                page-break-after: always !important;
+                overflow: hidden !important;
+            }
+
+            .reveal .slides {
+                transform: none !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+            }
+            
+            .reveal {
+                overflow: visible !important;
+            }
+        }
+    </style>
+</body>
+
+</html>
