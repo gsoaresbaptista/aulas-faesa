@@ -1,231 +1,1075 @@
-<!doctype html><html lang=pt-BR><meta charset=UTF-8><meta content="width=device-width,initial-scale=1.0" name=viewport><title>Toposia - Compiladores</title><link media="(prefers-color-scheme: light)" href=/aulas-faesa/img/dark-favicon.svg rel=icon><link media="(prefers-color-scheme: dark)" href=/aulas-faesa/img/light-favicon.svg rel=icon><link data-no-bundle href=/aulas-faesa/css/vendor/fonts.css rel=stylesheet><link href=/aulas-faesa/css/bundle.min.css rel=stylesheet><link data-no-bundle href=/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css rel=stylesheet><script src=/aulas-faesa/js/bundle.min.js></script></head><body><script>// Restore sidebar state instantly (before first paint) to avoid transition flash
-(function(){localStorage.getItem(`cf_sidebar_hidden`)===`true`&&document.body.classList.add(`sidebar-hidden`,`no-transition`),requestAnimationFrame(function(){requestAnimationFrame(function(){document.body.classList.remove(`no-transition`)})})})();</script><div class=page-wrapper><nav class=sidebar><div class=sidebar-content><header class=sidebar-title-section><a class=course-title-link href=contents.html> <h1 class=sidebar-course-title>Compiladores</h1> </a><div class=sidebar-ornament>❧</div></header><section class=sidebar-toc-section><h2 class=toc-header>Tabela de Conteúdos</h2><ol class=toc-list><li class="toc-item level-2"><a href=#introdução>12.1. Introdução</a></li><li class="toc-item level-2"><a href=#da-árvore-de-expressões-para-a-árvore-do-programa>12.2. Da árvore de expressões para a árvore do programa</a></li><li class="toc-item level-2"><a href=#a-gramática-estrutural-do-slang>12.3. A gramática estrutural do Slang</a></li><li class="toc-item level-2"><a href=#uma-ast-mais-completa>12.4. Uma AST mais completa</a></li><li class="toc-item level-3"><a href=#estrutura-geral>12.4.1. Estrutura geral</a></li><li class="toc-item level-3"><a href=#criando-codeincludecompilerasthcode>12.4.3. O que essa estrutura resolve</a></li><li class="toc-item level-2"><a href=#implementando-os-construtores-da-ast>12.5. Implementando os construtores da AST</a></li><li class="toc-item level-2"><a href=#imprimindo-a-árvore-completa>12.6. Imprimindo a árvore completa</a></li><li class="toc-item level-2"><a href=#ajustando-o-parser-para-produzir-a-ast-completa>12.7. Ajustando o parser para produzir a AST completa</a></li><li class="toc-item level-3"><a href=#nova-função-inicial>12.7.1. Nova função inicial</a></li><li class="toc-item level-3"><a href=#separando-declaração-e-comando>12.7.2. Separando declaração e comando</a></li><li class="toc-item level-2"><a href=#mensagens-de-erro-mais-comuns>12.8. Mensagens de erro mais comuns</a></li><li class="toc-item level-3"><a href=#falta-de-codecode>12.8.3. Declaração de variável sem tipo</a></li><li class="toc-item level-3"><a href=#atribuição-sem-expressão-à-direita>12.8.4. Atribuição sem expressão à direita</a></li><li class="toc-item level-3"><a href=#codereturncode-incompleto-em-contexto-inadequado>12.8.6. Chamada de função com vírgula sobrando</a></li><li class="toc-item level-3"><a href=#como-escrever-essas-mensagens-no-parser>12.8.7. Como escrever essas mensagens no parser</a></li><li class="toc-item level-2"><a href=#o-que-muda-na-prática-ao-final-desta-etapa>12.9. O que muda na prática ao final desta etapa</a></li><li class="toc-item level-2"><a href=#próximos-passos>12.10. Próximos Passos</a></li></ol></section><nav class=sidebar-nav-section><a class="sidebar-nav-link next" href=2-compiler-as-translator.html>Compilador como Tradutor <i class=nav-icon data-lucide=chevron-right></i></a><a class="sidebar-nav-link back" href=javascript:void(0) onclick=handleBackNavigation()><i class=nav-icon data-lucide=arrow-left></i> Voltar</a></nav></div></nav><button aria-label=Menu class=mobile-menu-toggle><i data-lucide=menu></i></button><button aria-label="Alternar Barra Lateral" class=sidebar-toggle onclick=CourseForgeNav.toggleSidebar()><i class=toggle-icon data-lucide=chevron-left id=sidebar-toggle-icon></i></button><div class=mobile-menu-overlay></div><main class=main-content><article class=article><header class=article-header><span class=chapter-number>1</span><h1 class=article-title><span class="title-ornament left">❧</span> <span class=title-text>Lab - AST Completa e Erros Sintáticos Comuns no Slang</span> <span class="title-ornament right">❧</span></h1><p class=article-date>29/03/2026</p><nav aria-label=Breadcrumb class=breadcrumb><a class=breadcrumb-link href=contents.html>Compiladores</a><span class=breadcrumb-separator><i class=breadcrumb-icon data-lucide=chevron-right></i></span><span class=breadcrumb-current>Lab - AST Completa e Erros Sintáticos Comuns no Slang</span></nav></header><div class=article-body><h2 id=introdução><span class=heading-text>Introdução</span><span class=heading-arabic>12.1</span></h2><p>No capítulo anterior, o parser já passou a reconhecer expressões do Slang e a construir uma AST para esse subconjunto da linguagem. Isso resolve a base da precedência de operadores, mas ainda não representa o programa inteiro.</p><p>Agora vamos dar o próximo passo natural. Em vez de construir árvores apenas para expressões, você vai organizar uma AST para as principais construções da linguagem:</p><ul><li>declarações de variável;</li><li>blocos;</li><li>condicionais <code>if</code> e <code>else</code>;</li><li>laços <code>loop</code>;</li><li><code>break</code>, <code>continue</code> e <code>return</code>;</li><li>funções e listas de parâmetros;</li><li>chamadas de função.</li></ul><p>Além disso, vamos melhorar algumas mensagens de erro sintático que costumam aparecer com frequência quando o parser ainda está em construção.</p><h2 id=da-árvore-de-expressões-para-a-árvore-do-programa><span class=heading-text>Da árvore de expressões para a árvore do programa</span><span class=heading-arabic>12.2</span></h2><p>Quando você parseia apenas uma expressão, a raiz da AST costuma ser um operador, um literal ou um agrupamento. Mas um programa real não é só isso. Ele é uma sequência de declarações e comandos.</p><p>Por exemplo, este trecho:</p><pre class="line-numbers language-slang" data-lang=SLANG><code class=language-slang>fn main(args: void) -> void {
-    x: int = 10
-    if x > 0 {
-        print(x)
-    } else {
-        return
-    }
-}
-</code></pre><p>não deve virar apenas uma árvore de operadores. Ele precisa virar uma árvore sintática que represente:</p><ul><li>uma função;</li><li>um bloco como corpo;</li><li>uma declaração de variável;</li><li>um comando <code>if</code>;</li><li>uma chamada de função;</li><li>um <code>return</code>.</li></ul><h2 id=a-gramática-estrutural-do-slang><span class=heading-text>A gramática estrutural do Slang</span><span class=heading-arabic>12.3</span></h2><p>Para organizar essa etapa, vamos usar uma gramática de alto nível para o programa.</p><p>$$ \begin{split} Program &\to Declaration^*\ EOF \\ Declaration &\to FunctionDecl \mid VarDecl \mid Statement \\ FunctionDecl &\to \texttt{fn}\ id\ (Params)\ \texttt{->}\ Type\ Block \\ VarDecl &\to id\ \texttt{:}\ Type\ \texttt{=}\ Expression \\ Statement &\to IfStmt \mid LoopStmt \mid BreakStmt \mid ContinueStmt \mid ReturnStmt \mid Block \mid Expression \\ Block &\to \{\ Declaration^*\ \} \\ IfStmt &\to \texttt{if}\ Expression\ Block\ ElsePart \\ ElsePart &\to \texttt{else}\ Block \mid \epsilon \\ LoopStmt &\to \texttt{loop}\ Expression\ Block \\ BreakStmt &\to \texttt{break} \\ ContinueStmt &\to \texttt{continue} \\ ReturnStmt &\to \texttt{return}\ Expression \mid \texttt{return} \end{split} $$</p><p>Essa não é a única forma possível de organizar a gramática, mas ela já é suficiente para estruturar a AST da linguagem de maneira coerente.</p><h2 id=uma-ast-mais-completa><span class=heading-text>Uma AST mais completa</span><span class=heading-arabic>12.4</span></h2><p>Agora precisamos abandonar a AST minimalista de expressões e passar a uma árvore com nós para programa, comandos e declarações.</p><h3 id=estrutura-geral><span class=heading-text>Estrutura geral</span><span class=heading-arabic>12.4.1</span></h3><p>Uma forma prática de fazer isso em C é usar:</p><ul><li>um <code>enum</code> com todos os tipos de nó;</li><li>uma <code>struct AstNode</code> com <code>union</code>;</li><li>uma estrutura auxiliar de lista encadeada para armazenar sequências de filhos.</li></ul><h3 id=criando-codeincludecompilerasthcode><span class=heading-text>Criando <code>include/compiler/ast.h</code></span><span class=heading-arabic>12.4.2</span></h3><p>Substitua <code>include/compiler/ast.h</code> por uma versão mais completa:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>#ifndef COMPILER_AST_H_
+<!doctype html><html lang=pt-BR><meta charset=UTF-8><meta content="width=device-width,initial-scale=1.0" name=viewport><title>Toposia - Compiladores</title><link media="(prefers-color-scheme: light)" href=/aulas-faesa/img/dark-favicon.svg rel=icon><link media="(prefers-color-scheme: dark)" href=/aulas-faesa/img/light-favicon.svg rel=icon><link data-no-bundle href=/aulas-faesa/css/vendor/fonts.css rel=stylesheet><link href=/aulas-faesa/css/bundles/katex-base-prism-one-light-b0347952c973.bundle.min.css rel=stylesheet><link data-no-bundle href=/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css rel=stylesheet><script src=/aulas-faesa/js/bundles/lucide-katex-auto-render-4b36e8bd8642.bundle.min.js></script></head><body><script>// Restore sidebar state instantly (before first paint) to avoid transition flash
+(function(){localStorage.getItem(`cf_sidebar_hidden`)===`true`&&document.body.classList.add(`sidebar-hidden`,`no-transition`),requestAnimationFrame(function(){requestAnimationFrame(function(){document.body.classList.remove(`no-transition`)})})})();</script><div class=page-wrapper><nav class=sidebar><div class=sidebar-content><header class=sidebar-title-section><a class=course-title-link href=contents.html> <h1 class=sidebar-course-title>Compiladores</h1> </a><div class=sidebar-ornament>❧</div></header><section class=sidebar-toc-section><h2 class=toc-header>Tabela de Conteúdos</h2><ol class=toc-list><li class="toc-item level-2"><a href=#introdução>12.1. Introdução</a></li><li class="toc-item level-2"><a href=#o-que-muda-nessa-etapa>12.2. O que muda nessa etapa</a></li><li class="toc-item level-2"><a href=#da-ast-mínima-para-a-ast-final-do-projeto>12.3. Da AST mínima para a AST final do projeto</a></li><li class="toc-item level-3"><a href=#substituindo-codeincludecompilerasthcode>12.3.2. Entendendo essa estrutura</a></li><li class="toc-item level-4"><a href=#codekindcode>12.4.1. O que mudou conceitualmente na AST</a></li><li class="toc-item level-4"><a href=#não-existem-mais-construtores-específicos-para-cada-forma-de-expressão>12.4.1.1. Não existem mais construtores específicos para cada forma de expressão</a></li><li class="toc-item level-4"><a href=#a-ast-agora-suporta-filhos-em-quantidade-variável>12.4.1.2. A AST agora suporta filhos em quantidade variável</a></li><li class="toc-item level-4"><a href=#a-impressão-da-árvore-fica-mais-semântica>12.4.1.3. A impressão da árvore fica mais semântica</a></li><li class="toc-item level-2"><a href=#atualizando-a-definição-do-parser>12.5. Atualizando a definição do parser</a></li><li class="toc-item level-3"><a href=#substituindo-codeincludecompilerparserhcode>12.6. Implementando o parser estrutural final</a></li><li class="toc-item level-2"><a href=#entendendo-a-nova-organização-do-parser>12.7. Entendendo a nova organização do parser</a></li><li class="toc-item level-3"><a href=#codeparser-initcode-com-três-posições-codepreviouscode-codecurrentcode-e-codenextcode>12.9. Reorganizando os testes do projeto</a></li><li class="toc-item level-3"><a href=#testando-diretamente-os-dois-modos-do-compilador>12.9.1. Testando diretamente os dois modos do compilador</a></li><li class="toc-item level-2"><a href=#próximos-passos>12.10. Próximos Passos</a></li></ol></section><nav class=sidebar-nav-section><a class="sidebar-nav-link prev" href=11-recursive-descent-parser-for-slang.html><i class=nav-icon data-lucide=chevron-left></i> Lab - Analisador Sintático I</a><a class="sidebar-nav-link back" href=javascript:void(0) onclick=handleBackNavigation()><i class=nav-icon data-lucide=arrow-left></i> Voltar</a></nav></div></nav><button aria-label=Menu class=mobile-menu-toggle><i data-lucide=menu></i></button><button aria-label="Alternar Barra Lateral" class=sidebar-toggle onclick=CourseForgeNav.toggleSidebar()><i class=toggle-icon data-lucide=chevron-left id=sidebar-toggle-icon></i></button><div class=mobile-menu-overlay></div><main class=main-content><article class=article><header class=article-header><span class=chapter-number>12</span><h1 class=article-title><span class="title-ornament left">❧</span> <span class=title-text>Lab - AST Completa, Parser Estrutural e Testes do Slang</span> <span class="title-ornament right">❧</span></h1><p class=article-date>29/03/2026</p><nav aria-label=Breadcrumb class=breadcrumb><a class=breadcrumb-link href=contents.html>Compiladores</a><span class=breadcrumb-separator><i class=breadcrumb-icon data-lucide=chevron-right></i></span><a class=breadcrumb-link href=contents.html#part-III>III - Análise Sintática</a><span class=breadcrumb-separator><i class=breadcrumb-icon data-lucide=chevron-right></i></span><span class=breadcrumb-current>Lab - AST Completa, Parser Estrutural e Testes do Slang</span></nav></header><div class=article-body><h2 id=introdução><span class=heading-text>Introdução</span><span class=heading-arabic>12.1</span></h2><p>No capítulo anterior, construímos o núcleo do parser descendente recursivo para <strong>expressões</strong>. Isso foi importante para consolidar três ideias centrais:</p><ul><li>leitura recursiva guiada pela gramática;</li><li>precedência e associatividade;</li><li>construção de uma AST durante a análise.</li></ul><p>Mas o compilador ainda está longe de entender um programa real. Neste momento, ele só sabe reconhecer entradas como:</p><pre class="line-numbers language-slang" data-lang=SLANG><code class=language-slang>x + 3 * y
+</code></pre><p>ou:</p><pre class="line-numbers language-slang" data-lang=SLANG><code class=language-slang>not (a &lt; b)
+</code></pre><p>Isso não basta para analisar arquivos reais da linguagem, porque um programa do Slang contém elementos estruturais muito maiores:</p><ul><li>declarações de variável;</li><li>blocos;</li><li>funções;</li><li>condicionais <code>if</code> e <code>else</code>;</li><li>laços <code>loop</code>;</li><li>comandos <code>break</code>, <code>continue</code> e <code>return</code>;</li><li>chamadas de função usadas como expressão e também como comando isolado.</li></ul><p>É justamente isso que vamos finalizar neste laboratório.</p><p>Ao final deste capítulo, o projeto ficará no <strong>mesmo estado do código atual do repositório</strong>, incluindo:</p><ul><li>AST completa em <code>ast.h</code> e <code>ast.c</code>;</li><li>parser estrutural em <code>parser.h</code> e <code>parser.c</code>;</li><li><code>main.c</code> com dois modos de execução: <code>lex</code> e <code>parse</code>;</li><li>impressão final da AST do programa inteiro;</li><li>reorganização da suíte de testes em <code>tests/lexer</code> e <code>tests/parser</code>;</li><li>contrato sintático do parser em <code>tests/parser/contract.md</code>.</li></ul><p>Em outras palavras: este capítulo fecha a transição da fase “parser de expressões” para a fase “parser de programa”.</p><h2 id=o-que-muda-nessa-etapa><span class=heading-text>O que muda nessa etapa</span><span class=heading-arabic>12.2</span></h2><p>No laboratório anterior, a AST tinha apenas quatro tipos de nó e o <code>main.c</code> estava temporariamente voltado para análise de expressões.</p><p>Agora vamos fazer quatro mudanças grandes.</p><ol><li><p>A AST deixará de representar apenas expressões.<br> Agora ela representará também declarações, comandos, blocos, funções e programa inteiro.</p></li><li><p>O parser deixará de começar por <code>parse_expression</code>.<br> Agora ele começará por <code>program -> declaration* EOF</code>.</p></li><li><p>O parser passará a precisar de um pequeno lookahead de token.<br> Isso será necessário para distinguir casos como:</p></li></ol><pre class="line-numbers language-slang" data-lang=SLANG><code class=language-slang>x: int = 5
+</code></pre><p>de:</p><pre class="line-numbers language-slang" data-lang=SLANG><code class=language-slang>x = 5
+</code></pre><p>e também para separar expressão comum de chamada de função usada como comando.</p><ol start=4><li>A interface do executável será finalizada.<br> O compilador passará a aceitar:</li></ol><pre class="line-numbers language-bash" data-lang=BASH><code class=language-bash>./build/compiler lex arquivo.slang
+./build/compiler parse arquivo.slang
+</code></pre><p>Para organizar a implementação, vamos trabalhar com a gramática abaixo.</p><pre class="line-numbers language-text" data-lang=TEXT><code class=language-text>program        -> declaration* EOF
+declaration    -> function_decl | var_decl | statement
+
+function_decl  -> "fn" IDENT "(" params? ")" "->" type block
+params         -> param ("," param)*
+param          -> IDENT ":" type
+var_decl       -> IDENT ":" type "=" expression
+type           -> "int" | "float" | "bool" | "char" | "string" | "void"
+
+statement      -> if_stmt
+               | loop_stmt
+               | return_stmt
+               | break_stmt
+               | continue_stmt
+               | assign_stmt
+               | call_stmt
+               | block
+
+block          -> "{" declaration* "}"
+if_stmt        -> "if" expression block ("else" block | "else" if_stmt)?
+loop_stmt      -> "loop" block | "loop" expression block
+return_stmt    -> "return" expression?
+break_stmt     -> "break"
+continue_stmt  -> "continue"
+assign_stmt    -> IDENT "=" expression
+call_stmt      -> call
+
+expression     -> or
+or             -> and (("or" | "||") and)*
+and            -> equality (("and" | "&&") equality)*
+equality       -> comparison (("==" | "!=") comparison)*
+comparison     -> term ((">" | ">=" | "&lt;" | "&lt;=") term)*
+term           -> factor (("+" | "-") factor)*
+factor         -> unary (("*" | "/" | "%") unary)*
+unary          -> ("!" | "not" | "-") unary | call
+call           -> primary ("(" arguments? ")")*
+arguments      -> expression ("," expression)*
+primary        -> NUMBER | STRING | CHAR | "true" | "false" | IDENT | "(" expression ")"
+</code></pre><p>Alguns detalhes importantes dessa gramática:</p><ul><li>uma declaração de variável é reconhecida por <code>IDENT :</code>;</li><li>uma atribuição é reconhecida por <code>IDENT =</code>;</li><li>uma chamada como <code>print(x)</code> pode aparecer tanto dentro de expressão quanto como comando isolado;</li><li><code>loop { ... }</code> representa laço infinito;</li><li><code>loop expr { ... }</code> representa laço condicional;</li><li><code>return</code> pode aparecer com ou sem expressão neste marco.</li></ul><h2 id=da-ast-mínima-para-a-ast-final-do-projeto><span class=heading-text>Da AST mínima para a AST final do projeto</span><span class=heading-arabic>12.3</span></h2><p>No capítulo 11, a árvore era pequena porque servia apenas às expressões. Agora vamos substituí-la pela estrutura final do projeto atual.</p><p>Esta nova AST segue uma estratégia mais direta do que a versão antiga com <code>union</code>:</p><ul><li>cada nó tem um <code>kind</code>;</li><li>três ponteiros genéricos (<code>first</code>, <code>second</code>, <code>third</code>) são usados para relacionamentos fixos;</li><li>um vetor dinâmico <code>children</code> é usado quando o número de filhos varia;</li><li>dois tokens auxiliares (<code>token</code> e <code>extra</code>) carregam nomes, operadores e tipos.</li></ul><p>Essa abordagem é menos “bonita” no papel do que uma grande <code>union</code>, mas fica muito prática para um compilador didático. Ela reduz bastante a quantidade de código cerimonial e deixa o parser mais direto.</p><h3 id=substituindo-codeincludecompilerasthcode><span class=heading-text>Substituindo <code>include/compiler/ast.h</code></span><span class=heading-arabic>12.3.1</span></h3><p>Substitua completamente <code>include/compiler/ast.h</code> por:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>#ifndef COMPILER_AST_H_
 #define COMPILER_AST_H_
 
-#include &lt;stdbool.h>
+#include &lt;stdio.h>
 #include "compiler/token.h"
 
 typedef enum {
     AST_PROGRAM,
     AST_FUNCTION,
     AST_PARAM,
-    AST_VAR_DECL,
     AST_BLOCK,
+    AST_VAR_DECL,
     AST_IF,
     AST_LOOP,
+    AST_RETURN,
     AST_BREAK,
     AST_CONTINUE,
-    AST_RETURN,
-    AST_EXPR_STMT,
     AST_ASSIGN,
+    AST_EXPR_STMT,
     AST_BINARY,
     AST_UNARY,
     AST_CALL,
-    AST_LITERAL,
-    AST_VARIABLE,
-    AST_GROUPING,
-    AST_TYPE
-} AstNodeType;
+    AST_IDENTIFIER,
+    AST_NUMBER,
+    AST_STRING,
+    AST_CHAR,
+    AST_BOOL
+} AstKind;
 
 typedef struct AstNode AstNode;
 
-typedef struct AstNodeList {
-    AstNode *node;
-    struct AstNodeList *next;
-} AstNodeList;
+typedef struct {
+    AstNode **items;
+    int count;
+    int capacity;
+} AstNodeArray;
 
 struct AstNode {
-    AstNodeType type;
-
-    union {
-        struct {
-            AstNodeList *declarations;
-        } program;
-
-        struct {
-            Token name;
-            AstNodeList *params;
-            AstNode *return_type;
-            AstNode *body;
-        } function;
-
-        struct {
-            Token name;
-            AstNode *param_type;
-        } param;
-
-        struct {
-            Token name;
-            AstNode *decl_type;
-            AstNode *initializer;
-        } var_decl;
-
-        struct {
-            AstNodeList *statements;
-        } block;
-
-        struct {
-            AstNode *condition;
-            AstNode *then_branch;
-            AstNode *else_branch;
-        } if_stmt;
-
-        struct {
-            AstNode *condition;
-            AstNode *body;
-        } loop_stmt;
-
-        struct {
-            AstNode *value;
-        } return_stmt;
-
-        struct {
-            AstNode *expression;
-        } expr_stmt;
-
-        struct {
-            Token name;
-            AstNode *value;
-        } assign;
-
-        struct {
-            Token operator;
-            AstNode *left;
-            AstNode *right;
-        } binary;
-
-        struct {
-            Token operator;
-            AstNode *operand;
-        } unary;
-
-        struct {
-            AstNode *callee;
-            AstNodeList *arguments;
-        } call;
-
-        struct {
-            Token value;
-        } literal;
-
-        struct {
-            Token name;
-        } variable;
-
-        struct {
-            AstNode *expression;
-        } grouping;
-
-        struct {
-            Token name;
-        } type_name;
-    } as;
+    AstKind kind;
+    Token token;
+    Token extra;
+    AstNode *first;
+    AstNode *second;
+    AstNode *third;
+    AstNodeArray children;
 };
 
-AstNodeList *ast_list_append(AstNodeList *list, AstNode *node);
-
-AstNode *ast_make_program(AstNodeList *declarations);
-AstNode *ast_make_function(Token name, AstNodeList *params, AstNode *return_type, AstNode *body);
-AstNode *ast_make_param(Token name, AstNode *param_type);
-AstNode *ast_make_var_decl(Token name, AstNode *decl_type, AstNode *initializer);
-AstNode *ast_make_block(AstNodeList *statements);
-AstNode *ast_make_if(AstNode *condition, AstNode *then_branch, AstNode *else_branch);
-AstNode *ast_make_loop(AstNode *condition, AstNode *body);
-AstNode *ast_make_break(void);
-AstNode *ast_make_continue(void);
-AstNode *ast_make_return(AstNode *value);
-AstNode *ast_make_expr_stmt(AstNode *expression);
-AstNode *ast_make_assign(Token name, AstNode *value);
-AstNode *ast_make_binary(Token operator, AstNode *left, AstNode *right);
-AstNode *ast_make_unary(Token operator, AstNode *operand);
-AstNode *ast_make_call(AstNode *callee, AstNodeList *arguments);
-AstNode *ast_make_literal(Token value);
-AstNode *ast_make_variable(Token name);
-AstNode *ast_make_grouping(AstNode *expression);
-AstNode *ast_make_type(Token name);
-
-void ast_print(const AstNode *node);
+AstNode *ast_new_node(AstKind kind);
+void ast_add_child(AstNode *node, AstNode *child);
+void ast_print(FILE *stream, const AstNode *node);
 void ast_free(AstNode *node);
 
 #endif
-</code></pre><h3 id=o-que-essa-estrutura-resolve><span class=heading-text>O que essa estrutura resolve</span><span class=heading-arabic>12.4.3</span></h3><p>Com essa versão, a árvore deixa de representar apenas expressões e passa a representar um programa inteiro. Isso é importante porque as próximas fases do compilador, como análise semântica e geração de código, normalmente trabalham sobre essa visão mais ampla da estrutura.</p><h2 id=implementando-os-construtores-da-ast><span class=heading-text>Implementando os construtores da AST</span><span class=heading-arabic>12.5</span></h2><p>O arquivo <code>src/compiler/ast.c</code> vai crescer bastante, mas o padrão continua o mesmo. Você aloca um nó, preenche o tipo e grava os campos da união correspondente.</p><p>Em vez de repetir aqui centenas de linhas quase idênticas de construtores, vale organizar o arquivo em três grupos:</p><ul><li>helpers de alocação e listas;</li><li>construtores de declarações e comandos;</li><li>construtores de expressões e impressão da árvore.</li></ul><p>O helper de lista pode ser implementado assim:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>AstNodeList *ast_list_append(AstNodeList *list, AstNode *node) {
-    AstNodeList *item = (AstNodeList *)malloc(sizeof(AstNodeList));
-    if (item == NULL) {
-        fprintf(stderr, "Erro: memória insuficiente para lista da AST.\n");
+</code></pre><h3 id=entendendo-essa-estrutura><span class=heading-text>Entendendo essa estrutura</span><span class=heading-arabic>12.3.2</span></h3><p>Vale entender bem o papel de cada campo.</p><h4 id=codekindcode><span class=heading-text><code>kind</code></span><span class=heading-arabic>12.3.2.1</span></h4><p>Identifica o tipo do nó atual. É ele que diz se estamos olhando para:</p><ul><li>um programa;</li><li>uma função;</li><li>um <code>if</code>;</li><li>uma expressão binária;</li><li>um identificador;</li><li>um literal numérico.</li></ul><h4 id=codetokencode><span class=heading-text><code>token</code></span><span class=heading-arabic>12.3.2.2</span></h4><p>Guarda o token principal do nó. Alguns exemplos:</p><ul><li>em <code>AST_FUNCTION</code>, <code>token</code> guarda o nome da função;</li><li>em <code>AST_VAR_DECL</code>, <code>token</code> guarda o nome da variável;</li><li>em <code>AST_BINARY</code>, <code>token</code> guarda o operador;</li><li>em <code>AST_IDENTIFIER</code>, <code>token</code> guarda o identificador;</li><li>em <code>AST_NUMBER</code>, <code>token</code> guarda o literal numérico.</li></ul><h4 id=codeextracode><span class=heading-text><code>extra</code></span><span class=heading-arabic>12.3.2.3</span></h4><p>Serve como um segundo token auxiliar. Ele é útil quando o nó precisa guardar mais de uma informação textual.</p><p>Por exemplo:</p><ul><li>em <code>AST_FUNCTION</code>, <code>extra</code> guarda o tipo de retorno;</li><li>em <code>AST_PARAM</code>, <code>extra</code> guarda o tipo do parâmetro;</li><li>em <code>AST_VAR_DECL</code>, <code>extra</code> guarda o tipo declarado.</li></ul><h4 id=codefirstcode-codesecondcode-codethirdcode><span class=heading-text><code>first</code>, <code>second</code>, <code>third</code></span><span class=heading-arabic>12.3.2.4</span></h4><p>São usados para relações estruturais fixas.</p><p>Exemplos:</p><ul><li>em <code>AST_IF</code>:<ul><li><code>first</code> = condição</li><li><code>second</code> = bloco <code>then</code></li><li><code>third</code> = ramo <code>else</code></li></ul></li><li>em <code>AST_ASSIGN</code>:<ul><li><code>first</code> = expressão do lado direito</li></ul></li><li>em <code>AST_LOOP</code>:<ul><li><code>first</code> = condição opcional</li><li><code>second</code> = corpo</li></ul></li></ul><h4 id=codechildrencode><span class=heading-text><code>children</code></span><span class=heading-arabic>12.3.2.5</span></h4><p>É usado quando a quantidade de filhos não é fixa.</p><p>Exemplos:</p><ul><li><code>AST_PROGRAM</code> armazena suas declarações em <code>children</code>;</li><li><code>AST_FUNCTION</code> armazena seus parâmetros em <code>children</code>;</li><li><code>AST_BLOCK</code> armazena suas declarações internas em <code>children</code>;</li><li><code>AST_CALL</code> armazena seus argumentos em <code>children</code>.</li></ul><h2 id=implementando-codesrccompilerastccode><span class=heading-text>Implementando <code>src/compiler/ast.c</code></span><span class=heading-arabic>12.4</span></h2><p>Agora substitua <code>src/compiler/ast.c</code> pelo código abaixo.</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>#include &lt;stdbool.h>
+#include &lt;stdio.h>
+#include &lt;stdlib.h>
+#include "compiler/ast.h"
+
+static void ast_print_tree(FILE *stream, const AstNode *node, const char *prefix, bool is_last);
+
+static void *xrealloc(void *pointer, size_t size) {
+    void *result = realloc(pointer, size);
+    if (result == NULL) {
+        fprintf(stderr, "Erro: memória insuficiente.\n");
+        exit(74);
+    }
+    return result;
+}
+
+AstNode *ast_new_node(AstKind kind) {
+    AstNode *node = (AstNode *)calloc(1, sizeof(AstNode));
+    if (node == NULL) {
+        fprintf(stderr, "Erro: memória insuficiente.\n");
         exit(74);
     }
 
-    item->node = node;
-    item->next = NULL;
-
-    if (list == NULL) return item;
-
-    AstNodeList *current = list;
-    while (current->next != NULL) current = current->next;
-    current->next = item;
-    return list;
-}
-</code></pre><p>Um construtor de declaração de variável, por exemplo, segue o mesmo modelo dos nós da aula anterior:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>AstNode *ast_make_var_decl(Token name, AstNode *decl_type, AstNode *initializer) {
-    AstNode *node = ast_allocate();
-    node->type = AST_VAR_DECL;
-    node->as.var_decl.name = name;
-    node->as.var_decl.decl_type = decl_type;
-    node->as.var_decl.initializer = initializer;
+    node->kind = kind;
     return node;
 }
-</code></pre><p>O mesmo vale para <code>AST_FUNCTION</code>, <code>AST_IF</code>, <code>AST_LOOP</code>, <code>AST_RETURN</code>, <code>AST_CALL</code> e os demais.</p><h2 id=imprimindo-a-árvore-completa><span class=heading-text>Imprimindo a árvore completa</span><span class=heading-arabic>12.6</span></h2><p>Quando a AST deixa de ser apenas uma expressão, a impressão precisa deixar mais claro que tipo de nó você está vendo. Um programa completo pode ser mostrado com rótulos como:</p><pre class="line-numbers language-text" data-lang=TEXT><code class=language-text>program
-├── fn(main)
-│   ├── params
-│   ├── type(void)
-│   └── block
-│       ├── var_decl(x)
-│       │   ├── type(int)
-│       │   └── num(10)
-│       └── if
-│           ├── >
-│           │   ├── id(x)
-│           │   └── num(0)
-│           ├── block
-│           │   └── call
-│           │       ├── id(print)
-│           │       └── args
-│           │           └── id(x)
-│           └── block
-│               └── return
-</code></pre><p>Esse tipo de impressão é especialmente útil para depurar problemas de associação estrutural entre comandos e expressões.</p><h2 id=ajustando-o-parser-para-produzir-a-ast-completa><span class=heading-text>Ajustando o parser para produzir a AST completa</span><span class=heading-arabic>12.7</span></h2><p>Agora o parser precisa deixar de retornar apenas uma expressão e passar a retornar um programa.</p><h3 id=nova-função-inicial><span class=heading-text>Nova função inicial</span><span class=heading-arabic>12.7.1</span></h3><p>Em vez de começar em <code>parse_expression</code>, a entrada principal passa a ser algo como:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>static AstNode *parse_program(Parser *parser) {
-    AstNodeList *declarations = NULL;
 
-    while (!check(parser, TOK_EOF)) {
-        declarations = ast_list_append(declarations, parse_declaration(parser));
+void ast_add_child(AstNode *node, AstNode *child) {
+    if (node->children.count == node->children.capacity) {
+        int old_capacity = node->children.capacity;
+        int new_capacity = old_capacity &lt; 8 ? 8 : old_capacity * 2;
+        node->children.items = (AstNode **)xrealloc(node->children.items,
+                                                    sizeof(AstNode *) * new_capacity);
+        node->children.capacity = new_capacity;
     }
 
-    return ast_make_program(declarations);
+    node->children.items[node->children.count++] = child;
 }
-</code></pre><h3 id=separando-declaração-e-comando><span class=heading-text>Separando declaração e comando</span><span class=heading-arabic>12.7.2</span></h3><p>Essa divisão é importante porque nem tudo no topo do programa é um simples comando.</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>static AstNode *parse_declaration(Parser *parser) {
-    if (match(parser, TOK_KW_FN)) return parse_function_decl(parser);
 
-    if (check(parser, TOK_IDENTIFIER) && parser_next_starts_var_decl(parser)) {
+static void print_token(FILE *stream, Token token) {
+    fprintf(stream, "%.*s", token.length, token.start);
+}
+
+static void build_child_prefix(char *buffer, size_t size, const char *prefix, bool is_last) {
+    snprintf(buffer, size, "%s%s", prefix, is_last ? "    " : "│   ");
+}
+
+static void print_branch(FILE *stream, const char *prefix, bool is_last, const char *label) {
+    fprintf(stream, "%s%s%s\n", prefix, is_last ? "└── " : "├── ", label);
+}
+
+static void print_node_label(FILE *stream, const AstNode *node) {
+    switch (node->kind) {
+        case AST_PROGRAM:
+            fputs("Programa", stream);
+            break;
+
+        case AST_FUNCTION:
+            fputs("Funcao nome=", stream);
+            print_token(stream, node->token);
+            fputs(" retorno=", stream);
+            print_token(stream, node->extra);
+            break;
+
+        case AST_PARAM:
+            fputs("Parametro nome=", stream);
+            print_token(stream, node->token);
+            fputs(" tipo=", stream);
+            print_token(stream, node->extra);
+            break;
+
+        case AST_BLOCK:
+            fputs("Bloco", stream);
+            break;
+
+        case AST_VAR_DECL:
+            fputs("DeclVar nome=", stream);
+            print_token(stream, node->token);
+            fputs(" tipo=", stream);
+            print_token(stream, node->extra);
+            break;
+
+        case AST_IF:
+            fputs("If", stream);
+            break;
+
+        case AST_LOOP:
+            fputs("Laco", stream);
+            break;
+
+        case AST_RETURN:
+            fputs("Retorno", stream);
+            break;
+
+        case AST_BREAK:
+            fputs("Pare", stream);
+            break;
+
+        case AST_CONTINUE:
+            fputs("Continua", stream);
+            break;
+
+        case AST_ASSIGN:
+            fputs("Atrib nome=", stream);
+            print_token(stream, node->token);
+            break;
+
+        case AST_EXPR_STMT:
+            fputs("ComandoExpr", stream);
+            break;
+
+        case AST_BINARY:
+            fputs("Binario op=", stream);
+            print_token(stream, node->token);
+            break;
+
+        case AST_UNARY:
+            fputs("Unario op=", stream);
+            print_token(stream, node->token);
+            break;
+
+        case AST_CALL:
+            fputs("Chamada", stream);
+            break;
+
+        case AST_IDENTIFIER:
+            fputs("Identificador nome=", stream);
+            print_token(stream, node->token);
+            break;
+
+        case AST_NUMBER:
+            fputs("Numero valor=", stream);
+            print_token(stream, node->token);
+            break;
+
+        case AST_STRING:
+            fputs("Texto valor=", stream);
+            print_token(stream, node->token);
+            break;
+
+        case AST_CHAR:
+            fputs("Caractere valor=", stream);
+            print_token(stream, node->token);
+            break;
+
+        case AST_BOOL:
+            fputs("Booleano valor=", stream);
+            fputs(node->token.type == TOK_KW_TRUE ? "true" : "false", stream);
+            break;
+    }
+}
+
+static void print_labeled_child(FILE *stream,
+                                const char *prefix,
+                                bool is_last,
+                                const char *label,
+                                const AstNode *child) {
+    char child_prefix[1024];
+
+    print_branch(stream, prefix, is_last, label);
+    build_child_prefix(child_prefix, sizeof(child_prefix), prefix, is_last);
+    ast_print_tree(stream, child, child_prefix, true);
+}
+
+static void ast_print_tree(FILE *stream, const AstNode *node, const char *prefix, bool is_last) {
+    char child_prefix[1024];
+
+    if (node == NULL) {
+        return;
+    }
+
+    fprintf(stream, "%s%s", prefix, is_last ? "└── " : "├── ");
+    print_node_label(stream, node);
+    fputc('\n', stream);
+
+    build_child_prefix(child_prefix, sizeof(child_prefix), prefix, is_last);
+
+    switch (node->kind) {
+        case AST_PROGRAM:
+            for (int i = 0; i &lt; node->children.count; i++) {
+                ast_print_tree(stream,
+                               node->children.items[i],
+                               child_prefix,
+                               i == node->children.count - 1);
+            }
+            break;
+
+        case AST_FUNCTION:
+            for (int i = 0; i &lt; node->children.count; i++) {
+                ast_print_tree(stream,
+                               node->children.items[i],
+                               child_prefix,
+                               i == node->children.count - 1 && node->first == NULL);
+            }
+            if (node->first != NULL) {
+                ast_print_tree(stream, node->first, child_prefix, true);
+            }
+            break;
+
+        case AST_BLOCK:
+            for (int i = 0; i &lt; node->children.count; i++) {
+                ast_print_tree(stream,
+                               node->children.items[i],
+                               child_prefix,
+                               i == node->children.count - 1);
+            }
+            break;
+
+        case AST_VAR_DECL:
+        case AST_RETURN:
+        case AST_ASSIGN:
+        case AST_EXPR_STMT:
+        case AST_UNARY:
+            if (node->first != NULL) {
+                ast_print_tree(stream, node->first, child_prefix, true);
+            }
+            break;
+
+        case AST_IF:
+            print_labeled_child(stream, child_prefix, node->third == NULL && node->second == NULL, "Condicao", node->first);
+            print_labeled_child(stream, child_prefix, node->third == NULL, "Entao", node->second);
+            if (node->third != NULL) {
+                print_labeled_child(stream, child_prefix, true, "Senao", node->third);
+            }
+            break;
+
+        case AST_LOOP:
+            if (node->first != NULL) {
+                print_labeled_child(stream, child_prefix, node->second == NULL, "Condicao", node->first);
+            }
+            if (node->second != NULL) {
+                ast_print_tree(stream, node->second, child_prefix, true);
+            }
+            break;
+
+        case AST_BINARY:
+            if (node->first != NULL) {
+                ast_print_tree(stream, node->first, child_prefix, false);
+            }
+            if (node->second != NULL) {
+                ast_print_tree(stream, node->second, child_prefix, true);
+            }
+            break;
+
+        case AST_CALL:
+            print_labeled_child(stream,
+                                child_prefix,
+                                node->children.count == 0,
+                                "Alvo",
+                                node->first);
+            for (int i = 0; i &lt; node->children.count; i++) {
+                print_labeled_child(stream,
+                                    child_prefix,
+                                    i == node->children.count - 1,
+                                    "Argumento",
+                                    node->children.items[i]);
+            }
+            break;
+
+        case AST_PARAM:
+        case AST_BREAK:
+        case AST_CONTINUE:
+        case AST_IDENTIFIER:
+        case AST_NUMBER:
+        case AST_STRING:
+        case AST_CHAR:
+        case AST_BOOL:
+            break;
+    }
+}
+
+void ast_print(FILE *stream, const AstNode *node) {
+    if (node == NULL) {
+        return;
+    }
+
+    print_node_label(stream, node);
+    fputc('\n', stream);
+
+    for (int i = 0; i &lt; node->children.count; i++) {
+        ast_print_tree(stream, node->children.items[i], "", i == node->children.count - 1);
+    }
+}
+
+void ast_free(AstNode *node) {
+    if (node == NULL) {
+        return;
+    }
+
+    ast_free(node->first);
+    ast_free(node->second);
+    ast_free(node->third);
+
+    for (int i = 0; i &lt; node->children.count; i++) {
+        ast_free(node->children.items[i]);
+    }
+
+    free(node->children.items);
+    free(node);
+}
+</code></pre><h3 id=o-que-mudou-conceitualmente-na-ast><span class=heading-text>O que mudou conceitualmente na AST</span><span class=heading-arabic>12.4.1</span></h3><p>Aqui há três diferenças importantes em relação ao capítulo anterior.</p><h4 id=não-existem-mais-construtores-específicos-para-cada-forma-de-expressão><span class=heading-text>Não existem mais construtores específicos para cada forma de expressão</span><span class=heading-arabic>12.4.1.1</span></h4><p>Antes havia funções como <code>ast_make_binary</code> e <code>ast_make_literal</code>. Agora usamos um construtor genérico:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>AstNode *ast_new_node(AstKind kind);
+</code></pre><p>Depois disso, o próprio parser preenche os campos <code>token</code>, <code>extra</code>, <code>first</code>, <code>second</code>, <code>third</code> e <code>children</code>.</p><p>Isso simplifica muito a implementação do parser estrutural.</p><h4 id=a-ast-agora-suporta-filhos-em-quantidade-variável><span class=heading-text>A AST agora suporta filhos em quantidade variável</span><span class=heading-arabic>12.4.1.2</span></h4><p>Sem <code>children</code>, seria muito difícil representar:</p><ul><li>vários parâmetros de função;</li><li>várias declarações dentro de um bloco;</li><li>vários argumentos de chamada.</li></ul><p>Por isso <code>ast_add_child</code> se torna uma peça central.</p><h4 id=a-impressão-da-árvore-fica-mais-semântica><span class=heading-text>A impressão da árvore fica mais semântica</span><span class=heading-arabic>12.4.1.3</span></h4><p>Em vez de imprimir apenas <code>+</code>, <code>*</code> e <code>id(x)</code>, a AST agora imprime rótulos mais ricos, como:</p><ul><li><code>Funcao nome=main retorno=void</code></li><li><code>DeclVar nome=x tipo=int</code></li><li><code>Atrib nome=x</code></li><li><code>Binario op=%</code></li><li><code>Chamada</code></li></ul><p>Isso deixa a inspeção do programa muito mais clara.</p><h2 id=atualizando-a-definição-do-parser><span class=heading-text>Atualizando a definição do parser</span><span class=heading-arabic>12.5</span></h2><p>Agora precisamos substituir o parser mínimo do capítulo 11 pela versão final usada no projeto atual.</p><h3 id=substituindo-codeincludecompilerparserhcode><span class=heading-text>Substituindo <code>include/compiler/parser.h</code></span><span class=heading-arabic>12.5.1</span></h3><p>Substitua <code>include/compiler/parser.h</code> por:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>#ifndef COMPILER_PARSER_H_
+#define COMPILER_PARSER_H_
+
+#include &lt;stdbool.h>
+#include &lt;stdio.h>
+#include "compiler/ast.h"
+#include "compiler/lexer.h"
+
+typedef struct {
+    Lexer lexer;
+    Token previous;
+    Token current;
+    Token next;
+    bool had_error;
+    FILE *error_stream;
+} Parser;
+
+void parser_init(Parser *parser, const char *source, FILE *error_stream);
+AstNode *parser_parse(Parser *parser);
+
+#endif
+</code></pre><h3 id=por-que-agora-existe-codenextcode><span class=heading-text>Por que agora existe <code>next</code></span><span class=heading-arabic>12.5.2</span></h3><p>No capítulo 11, <code>current</code> e <code>previous</code> bastavam para parsear expressões.</p><p>Agora precisamos olhar um token à frente para distinguir construções como estas:</p><pre class="line-numbers language-slang" data-lang=SLANG><code class=language-slang>x: int = 5
+x = 5
+</code></pre><p>No primeiro caso, <code>x</code> inicia uma declaração de variável.<br> No segundo caso, <code>x</code> inicia uma atribuição.</p><p>Sem <code>next</code>, o parser teria que consumir tokens prematuramente ou criar mecanismos de retrocesso. Com <code>next</code>, basta fazer perguntas como:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>parser_check(parser, TOK_IDENTIFIER) && parser_check_next(parser, TOK_COLON)
+</code></pre><p>ou:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>parser_check(parser, TOK_IDENTIFIER) && parser_check_next(parser, TOK_ASSIGN)
+</code></pre><h3 id=por-que-agora-existe-codeerror-streamcode><span class=heading-text>Por que agora existe <code>error_stream</code></span><span class=heading-arabic>12.5.3</span></h3><p>No parser do capítulo 11, os erros eram enviados diretamente para <code>stderr</code>. Agora o parser recebe o fluxo onde quer escrever erros.</p><p>Isso é útil porque:</p><ul><li>o <code>main.c</code> final passa <code>stderr</code> normalmente;</li><li>testes automatizados podem capturar a saída com mais flexibilidade;</li><li>o parser deixa de depender rigidamente de um fluxo fixo.</li></ul><h2 id=implementando-o-parser-estrutural-final><span class=heading-text>Implementando o parser estrutural final</span><span class=heading-arabic>12.6</span></h2><p>Agora substitua <code>src/compiler/parser.c</code> pela versão final do projeto:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>#include &lt;stdbool.h>
+#include &lt;stdio.h>
+#include "compiler/parser.h"
+
+static void parser_advance(Parser *parser);
+static bool parser_check(Parser *parser, TokenType type);
+static bool parser_check_next(Parser *parser, TokenType type);
+static bool parser_match(Parser *parser, TokenType type);
+static Token parser_consume(Parser *parser, TokenType type, const char *message);
+static void parser_error_at(Parser *parser, Token token, const char *message);
+static AstNode *parse_declaration(Parser *parser);
+static AstNode *parse_function(Parser *parser);
+static AstNode *parse_var_decl(Parser *parser);
+static AstNode *parse_statement(Parser *parser);
+static AstNode *parse_block(Parser *parser);
+static AstNode *parse_if(Parser *parser);
+static AstNode *parse_loop(Parser *parser);
+static AstNode *parse_return(Parser *parser);
+static AstNode *parse_assignment(Parser *parser);
+static AstNode *parse_expression_statement(Parser *parser);
+static Token parse_type(Parser *parser);
+static AstNode *parse_expression(Parser *parser);
+static AstNode *parse_or(Parser *parser);
+static AstNode *parse_and(Parser *parser);
+static AstNode *parse_equality(Parser *parser);
+static AstNode *parse_comparison(Parser *parser);
+static AstNode *parse_term(Parser *parser);
+static AstNode *parse_factor(Parser *parser);
+static AstNode *parse_unary(Parser *parser);
+static AstNode *parse_call(Parser *parser);
+static AstNode *parse_primary(Parser *parser);
+
+void parser_init(Parser *parser, const char *source, FILE *error_stream) {
+    lexer_init(&parser->lexer, source);
+    parser->previous.type = TOK_ERROR;
+    parser->previous.start = "";
+    parser->previous.length = 0;
+    parser->previous.line = 1;
+    parser->current = lexer_next_token(&parser->lexer);
+    parser->next = lexer_next_token(&parser->lexer);
+    parser->had_error = false;
+    parser->error_stream = error_stream;
+}
+
+static void parser_advance(Parser *parser) {
+    parser->previous = parser->current;
+    parser->current = parser->next;
+    parser->next = lexer_next_token(&parser->lexer);
+}
+
+static bool parser_check(Parser *parser, TokenType type) {
+    return parser->current.type == type;
+}
+
+static bool parser_check_next(Parser *parser, TokenType type) {
+    return parser->next.type == type;
+}
+
+static bool parser_match(Parser *parser, TokenType type) {
+    if (!parser_check(parser, type)) {
+        return false;
+    }
+
+    parser_advance(parser);
+    return true;
+}
+
+static void parser_error_at(Parser *parser, Token token, const char *message) {
+    if (parser->had_error) {
+        return;
+    }
+
+    parser->had_error = true;
+    fprintf(parser->error_stream, "[linha %d] Erro perto de ", token.line);
+
+    if (token.type == TOK_EOF) {
+        fputs("end", parser->error_stream);
+    } else if (token.type == TOK_ERROR) {
+        fprintf(parser->error_stream, "'%.*s'", token.length, token.start);
+    } else {
+        fprintf(parser->error_stream, "'%.*s'", token.length, token.start);
+    }
+
+    fprintf(parser->error_stream, ": %s\n", message);
+}
+
+static Token parser_consume(Parser *parser, TokenType type, const char *message) {
+    if (parser_check(parser, type)) {
+        Token token = parser->current;
+        parser_advance(parser);
+        return token;
+    }
+
+    parser_error_at(parser, parser->current, message);
+    return parser->current;
+}
+
+static Token parse_type(Parser *parser) {
+    switch (parser->current.type) {
+        case TOK_KW_INT:
+        case TOK_KW_FLOAT:
+        case TOK_KW_VOID:
+        case TOK_KW_BOOL:
+        case TOK_KW_CHAR:
+        case TOK_KW_STRING: {
+            Token type = parser->current;
+            parser_advance(parser);
+            return type;
+        }
+        default:
+            parser_error_at(parser, parser->current, "Esperado um tipo.");
+            return parser->current;
+    }
+}
+
+AstNode *parser_parse(Parser *parser) {
+    AstNode *program = ast_new_node(AST_PROGRAM);
+
+    while (!parser_check(parser, TOK_EOF) && !parser->had_error) {
+        AstNode *declaration = parse_declaration(parser);
+        if (parser->had_error) {
+            ast_free(declaration);
+            break;
+        }
+        ast_add_child(program, declaration);
+    }
+
+    if (parser->had_error) {
+        ast_free(program);
+        return NULL;
+    }
+
+    return program;
+}
+
+static AstNode *parse_declaration(Parser *parser) {
+    if (parser_match(parser, TOK_KW_FN)) {
+        return parse_function(parser);
+    }
+
+    if (parser_check(parser, TOK_IDENTIFIER) && parser_check_next(parser, TOK_COLON)) {
         return parse_var_decl(parser);
     }
 
     return parse_statement(parser);
 }
-</code></pre><p>Esse <code>parser_next_starts_var_decl</code> pode ser implementado com uma forma de lookahead ou com uma organização diferente da estrutura do parser. O importante aqui é a ideia. Uma declaração de variável começa com <code>id :</code>, enquanto uma atribuição ou expressão simples começa de outro jeito.</p><h2 id=mensagens-de-erro-mais-comuns><span class=heading-text>Mensagens de erro mais comuns</span><span class=heading-arabic>12.8</span></h2><p>Quando o parser começa a crescer, as mensagens de erro deixam de ser um detalhe. Elas passam a ser uma ferramenta essencial de depuração.</p><p>Aqui estão alguns erros frequentes que vale tratar explicitamente.</p><h3 id=falta-de-codecode><span class=heading-text>Falta de <code>)</code></span><span class=heading-arabic>12.8.1</span></h3><pre class="line-numbers language-txt" data-lang=TXT><code class=language-txt>[linha 4] Erro sintático próximo de "{": Esperado ')' após a expressão.
-</code></pre><p>Esse erro aparece muito em condições de <code>if</code>, chamadas de função e agrupamentos.</p><h3 id=falta-de-codecode-ao-final-de-bloco><span class=heading-text>Falta de <code>}</code> ao final de bloco</span><span class=heading-arabic>12.8.2</span></h3><pre class="line-numbers language-txt" data-lang=TXT><code class=language-txt>[linha 12] Erro sintático próximo de "else": Esperado '}' fechando o bloco.
-</code></pre><p>Esse é um dos erros mais comuns quando o corpo de <code>if</code>, <code>loop</code> ou <code>fn</code> está sendo escrito.</p><h3 id=declaração-de-variável-sem-tipo><span class=heading-text>Declaração de variável sem tipo</span><span class=heading-arabic>12.8.3</span></h3><pre class="line-numbers language-txt" data-lang=TXT><code class=language-txt>[linha 3] Erro sintático próximo de "=": Esperado ':' após o nome da variável.
-</code></pre><p>ou:</p><pre class="line-numbers language-txt" data-lang=TXT><code class=language-txt>[linha 3] Erro sintático próximo de "=": Esperado um tipo após ':'.
-</code></pre><h3 id=atribuição-sem-expressão-à-direita><span class=heading-text>Atribuição sem expressão à direita</span><span class=heading-arabic>12.8.4</span></h3><pre class="line-numbers language-txt" data-lang=TXT><code class=language-txt>[linha 7] Erro sintático próximo de "}": Esperado uma expressão após '='.
-</code></pre><h3 id=codereturncode-incompleto-em-contexto-inadequado><span class=heading-text><code>return</code> incompleto em contexto inadequado</span><span class=heading-arabic>12.8.5</span></h3><pre class="line-numbers language-txt" data-lang=TXT><code class=language-txt>[linha 15] Erro sintático próximo de "}": Esperado expressão após 'return'.
-</code></pre><p>se a gramática exigir retorno com valor naquele caso.</p><h3 id=chamada-de-função-com-vírgula-sobrando><span class=heading-text>Chamada de função com vírgula sobrando</span><span class=heading-arabic>12.8.6</span></h3><pre class="line-numbers language-txt" data-lang=TXT><code class=language-txt>[linha 9] Erro sintático próximo de ")": Esperado argumento após ','.
-</code></pre><h3 id=como-escrever-essas-mensagens-no-parser><span class=heading-text>Como escrever essas mensagens no parser</span><span class=heading-arabic>12.8.7</span></h3><p>Sempre que possível, associe a mensagem a um ponto sintático preciso.</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>consume(parser, TOK_RBRACE, "Esperado '}' fechando o bloco.");
-consume(parser, TOK_COLON, "Esperado ':' após o nome da variável.");
-consume(parser, TOK_RPAREN, "Esperado ')' após a lista de argumentos.");
-</code></pre><p>Isso costuma ser muito mais útil do que uma mensagem genérica como "Erro de sintaxe".</p><h2 id=o-que-muda-na-prática-ao-final-desta-etapa><span class=heading-text>O que muda na prática ao final desta etapa</span><span class=heading-arabic>12.9</span></h2><p>Depois dessa expansão, o compilador passa a ter uma visão estrutural muito mais rica do programa. Ele já não enxerga apenas uma expressão isolada. Ele passa a distinguir:</p><ul><li>o que é declaração;</li><li>o que é comando;</li><li>o que é bloco;</li><li>o que é função;</li><li>o que é chamada;</li><li>o que é expressão interna de cada construção.</li></ul><p>É essa árvore maior que permitirá implementar depois checagem de tipos, análise de escopo, validação de <code>return</code>, uso correto de <code>break</code> e <code>continue</code>, além da própria geração de código.</p><h2 id=próximos-passos><span class=heading-text>Próximos Passos</span><span class=heading-arabic>12.10</span></h2><p>Com a AST completa em mãos e com mensagens de erro sintático mais úteis, o próximo avanço natural é a análise semântica. A partir daí, o compilador deixa de perguntar apenas se a estrutura é válida e passa a perguntar também se ela faz sentido dentro das regras da linguagem.</p></div></article><footer class=footer><p>© 2025 · <a href=#>Gabriel Soares Baptista</a></p></footer></main></div><script>const toggle=document.querySelector(`.mobile-menu-toggle`),sidebar=document.querySelector(`.sidebar`),overlay=document.querySelector(`.mobile-menu-overlay`);function openMenu(){sidebar.classList.add(`open`),overlay.classList.add(`open`),toggle.classList.add(`open`),toggle.innerHTML=`<i data-lucide="x"></i>`,CourseForgeUI.initIcons(),document.body.style.overflow=`hidden`}function closeMenu(){sidebar.classList.remove(`open`),overlay.classList.remove(`open`),toggle.classList.remove(`open`),toggle.innerHTML=`<i data-lucide="menu"></i>`,CourseForgeUI.initIcons(),document.body.style.overflow=``}toggle.addEventListener(`click`,()=>{sidebar.classList.contains(`open`)?closeMenu():openMenu()}),overlay.addEventListener(`click`,closeMenu);</script><script>document.addEventListener(`DOMContentLoaded`,function(){renderMathInElement(document.body,{output:`html`,delimiters:[{left:`$$`,right:`$$`,display:!0},{left:`$`,right:`$`,display:!1},{left:`\\(`,right:`\\)`,display:!1},{left:`\\[`,right:`\\]`,display:!0}],throwOnError:!1,strict:!1})});</script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/prism.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-c.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-cpp.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-python.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-clike.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-perl.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-java.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-mermaid.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-php.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js></script><script>document.addEventListener(`DOMContentLoaded`,function(){mermaid.initialize({startOnLoad:!0,theme:`default`,securityLevel:`loose`,fontFamily:`Inter, system-ui, sans-serif`,themeVariables:{fontSize:`16px`,edgeLabelFontSize:`16px`,multiplicityFontSize:`18px`}})});</script><script>document.addEventListener(`DOMContentLoaded`,function(){let isSubcourse=!1,courseName=`Compiladores`;CourseForgeNav.applyDynamicBreadcrumbs(`.breadcrumb`,!1),CourseForgeNav.initScrollSpy(),CourseForgeUI.initCopyButtons(),CourseForgeUI.initExamples()});function handleBackNavigation(){let isSubcourse=!1,dynamic=CourseForgeNav.getBackLink(`contents.html`,`Voltar`,!1);window.location.href=dynamic.url}</script></body></html>
+
+static AstNode *parse_function(Parser *parser) {
+    AstNode *function = ast_new_node(AST_FUNCTION);
+    function->token = parser_consume(parser, TOK_IDENTIFIER, "Esperado nome da funcao.");
+    parser_consume(parser, TOK_LPAREN, "Esperado '(' apos o nome da funcao.");
+
+    if (!parser_check(parser, TOK_RPAREN)) {
+        do {
+            AstNode *param = ast_new_node(AST_PARAM);
+            param->token = parser_consume(parser, TOK_IDENTIFIER, "Esperado nome do parametro.");
+            parser_consume(parser, TOK_COLON, "Esperado ':' apos o nome do parametro.");
+            param->extra = parse_type(parser);
+            ast_add_child(function, param);
+        } while (parser_match(parser, TOK_COMMA));
+    }
+
+    parser_consume(parser, TOK_RPAREN, "Esperado ')' apos os parametros.");
+    parser_consume(parser, TOK_ARROW, "Esperado '->' apos os parametros.");
+    function->extra = parse_type(parser);
+    function->first = parse_block(parser);
+    return function;
+}
+
+static AstNode *parse_var_decl(Parser *parser) {
+    AstNode *var_decl = ast_new_node(AST_VAR_DECL);
+    var_decl->token = parser_consume(parser, TOK_IDENTIFIER, "Esperado nome da variavel.");
+    parser_consume(parser, TOK_COLON, "Esperado ':' apos o nome da variavel.");
+    var_decl->extra = parse_type(parser);
+    parser_consume(parser, TOK_ASSIGN, "Esperado '=' apos o tipo da variavel.");
+    var_decl->first = parse_expression(parser);
+    return var_decl;
+}
+
+static AstNode *parse_statement(Parser *parser) {
+    if (parser_check(parser, TOK_LBRACE)) {
+        return parse_block(parser);
+    }
+
+    if (parser_match(parser, TOK_KW_IF)) {
+        return parse_if(parser);
+    }
+
+    if (parser_match(parser, TOK_KW_LOOP)) {
+        return parse_loop(parser);
+    }
+
+    if (parser_match(parser, TOK_KW_RETURN)) {
+        return parse_return(parser);
+    }
+
+    if (parser_match(parser, TOK_KW_BREAK)) {
+        return ast_new_node(AST_BREAK);
+    }
+
+    if (parser_match(parser, TOK_KW_CONTINUE)) {
+        return ast_new_node(AST_CONTINUE);
+    }
+
+    if (parser_check(parser, TOK_IDENTIFIER) && parser_check_next(parser, TOK_ASSIGN)) {
+        return parse_assignment(parser);
+    }
+
+    return parse_expression_statement(parser);
+}
+
+static AstNode *parse_block(Parser *parser) {
+    AstNode *block = ast_new_node(AST_BLOCK);
+
+    parser_consume(parser, TOK_LBRACE, "Esperado '{' antes do bloco.");
+
+    while (!parser_check(parser, TOK_RBRACE) && !parser_check(parser, TOK_EOF) && !parser->had_error) {
+        AstNode *declaration = parse_declaration(parser);
+        if (parser->had_error) {
+            ast_free(declaration);
+            break;
+        }
+        ast_add_child(block, declaration);
+    }
+
+    parser_consume(parser, TOK_RBRACE, "Esperado '}' apos o bloco.");
+    return block;
+}
+
+static AstNode *parse_if(Parser *parser) {
+    AstNode *node = ast_new_node(AST_IF);
+    node->first = parse_expression(parser);
+    node->second = parse_block(parser);
+
+    if (parser_match(parser, TOK_KW_ELSE)) {
+        if (parser_match(parser, TOK_KW_IF)) {
+            node->third = parse_if(parser);
+        } else {
+            node->third = parse_block(parser);
+        }
+    }
+
+    return node;
+}
+
+static AstNode *parse_loop(Parser *parser) {
+    AstNode *node = ast_new_node(AST_LOOP);
+
+    if (parser_check(parser, TOK_LBRACE)) {
+        node->second = parse_block(parser);
+        return node;
+    }
+
+    node->first = parse_expression(parser);
+    node->second = parse_block(parser);
+    return node;
+}
+
+static AstNode *parse_return(Parser *parser) {
+    AstNode *node = ast_new_node(AST_RETURN);
+
+    if (!parser_check(parser, TOK_RBRACE) && !parser_check(parser, TOK_EOF)) {
+        node->first = parse_expression(parser);
+    }
+
+    return node;
+}
+
+static AstNode *parse_assignment(Parser *parser) {
+    AstNode *node = ast_new_node(AST_ASSIGN);
+    node->token = parser_consume(parser, TOK_IDENTIFIER, "Esperado alvo da atribuicao.");
+    parser_consume(parser, TOK_ASSIGN, "Esperado '=' apos o alvo da atribuicao.");
+    node->first = parse_expression(parser);
+    return node;
+}
+
+static AstNode *parse_expression_statement(Parser *parser) {
+    AstNode *expr_stmt = ast_new_node(AST_EXPR_STMT);
+    expr_stmt->first = parse_expression(parser);
+
+    if (expr_stmt->first != NULL && expr_stmt->first->kind != AST_CALL) {
+        parser_error_at(parser, parser->previous, "Esperado comando de chamada de funcao.");
+    }
+
+    return expr_stmt;
+}
+
+static AstNode *make_binary(Token operator, AstNode *left, AstNode *right) {
+    AstNode *node = ast_new_node(AST_BINARY);
+    node->token = operator;
+    node->first = left;
+    node->second = right;
+    return node;
+}
+
+static AstNode *make_unary(Token operator, AstNode *operand) {
+    AstNode *node = ast_new_node(AST_UNARY);
+    node->token = operator;
+    node->first = operand;
+    return node;
+}
+
+static AstNode *parse_expression(Parser *parser) {
+    return parse_or(parser);
+}
+
+static AstNode *parse_or(Parser *parser) {
+    AstNode *expr = parse_and(parser);
+
+    while (parser_match(parser, TOK_OR)) {
+        Token operator = parser->previous;
+        AstNode *right = parse_and(parser);
+        expr = make_binary(operator, expr, right);
+    }
+
+    return expr;
+}
+
+static AstNode *parse_and(Parser *parser) {
+    AstNode *expr = parse_equality(parser);
+
+    while (parser_match(parser, TOK_AND)) {
+        Token operator = parser->previous;
+        AstNode *right = parse_equality(parser);
+        expr = make_binary(operator, expr, right);
+    }
+
+    return expr;
+}
+
+static AstNode *parse_equality(Parser *parser) {
+    AstNode *expr = parse_comparison(parser);
+
+    while (parser_match(parser, TOK_EQ) || parser_match(parser, TOK_BANG_EQ)) {
+        Token operator = parser->previous;
+        AstNode *right = parse_comparison(parser);
+        expr = make_binary(operator, expr, right);
+    }
+
+    return expr;
+}
+
+static AstNode *parse_comparison(Parser *parser) {
+    AstNode *expr = parse_term(parser);
+
+    while (parser_match(parser, TOK_GT) || parser_match(parser, TOK_GT_EQ) ||
+           parser_match(parser, TOK_LT) || parser_match(parser, TOK_LT_EQ)) {
+        Token operator = parser->previous;
+        AstNode *right = parse_term(parser);
+        expr = make_binary(operator, expr, right);
+    }
+
+    return expr;
+}
+
+static AstNode *parse_term(Parser *parser) {
+    AstNode *expr = parse_factor(parser);
+
+    while (parser_match(parser, TOK_PLUS) || parser_match(parser, TOK_MINUS)) {
+        Token operator = parser->previous;
+        AstNode *right = parse_factor(parser);
+        expr = make_binary(operator, expr, right);
+    }
+
+    return expr;
+}
+
+static AstNode *parse_factor(Parser *parser) {
+    AstNode *expr = parse_unary(parser);
+
+    while (parser_match(parser, TOK_STAR) || parser_match(parser, TOK_SLASH) ||
+           parser_match(parser, TOK_PERCENT)) {
+        Token operator = parser->previous;
+        AstNode *right = parse_unary(parser);
+        expr = make_binary(operator, expr, right);
+    }
+
+    return expr;
+}
+
+static AstNode *parse_unary(Parser *parser) {
+    if (parser_match(parser, TOK_NOT) || parser_match(parser, TOK_MINUS)) {
+        Token operator = parser->previous;
+        AstNode *operand = parse_unary(parser);
+        return make_unary(operator, operand);
+    }
+
+    return parse_call(parser);
+}
+
+static AstNode *parse_call(Parser *parser) {
+    AstNode *expr = parse_primary(parser);
+
+    while (parser_match(parser, TOK_LPAREN)) {
+        AstNode *call = ast_new_node(AST_CALL);
+        call->first = expr;
+
+        if (!parser_check(parser, TOK_RPAREN)) {
+            do {
+                ast_add_child(call, parse_expression(parser));
+            } while (parser_match(parser, TOK_COMMA));
+        }
+
+        parser_consume(parser, TOK_RPAREN, "Esperado ')' apos os argumentos.");
+        expr = call;
+    }
+
+    return expr;
+}
+
+static AstNode *parse_primary(Parser *parser) {
+    AstNode *node = NULL;
+
+    switch (parser->current.type) {
+        case TOK_NUMBER:
+            node = ast_new_node(AST_NUMBER);
+            node->token = parser->current;
+            parser_advance(parser);
+            return node;
+
+        case TOK_STRING:
+            node = ast_new_node(AST_STRING);
+            node->token = parser->current;
+            parser_advance(parser);
+            return node;
+
+        case TOK_CHAR:
+            node = ast_new_node(AST_CHAR);
+            node->token = parser->current;
+            parser_advance(parser);
+            return node;
+
+        case TOK_KW_TRUE:
+        case TOK_KW_FALSE:
+            node = ast_new_node(AST_BOOL);
+            node->token = parser->current;
+            parser_advance(parser);
+            return node;
+
+        case TOK_IDENTIFIER:
+            node = ast_new_node(AST_IDENTIFIER);
+            node->token = parser->current;
+            parser_advance(parser);
+            return node;
+
+        case TOK_LPAREN: {
+            parser_advance(parser);
+            node = parse_expression(parser);
+            parser_consume(parser, TOK_RPAREN, "Esperado ')' apos a expressao.");
+            return node;
+        }
+
+        case TOK_ERROR:
+            parser_error_at(parser, parser->current, parser->current.start);
+            return NULL;
+
+        default:
+            parser_error_at(parser, parser->current, "Esperada uma expressao.");
+            return NULL;
+    }
+}
+</code></pre><h2 id=entendendo-a-nova-organização-do-parser><span class=heading-text>Entendendo a nova organização do parser</span><span class=heading-arabic>12.7</span></h2><p>Agora que a implementação inteira está no arquivo, vamos percorrer a lógica por partes.</p><h3 id=codeparser-initcode-com-três-posições-codepreviouscode-codecurrentcode-e-codenextcode><span class=heading-text><code>parser_init</code> com três posições: <code>previous</code>, <code>current</code> e <code>next</code></span><span class=heading-arabic>12.7.1</span></h3><p>Logo na inicialização, o parser já consome dois tokens do lexer:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>parser->current = lexer_next_token(&parser->lexer);
+parser->next = lexer_next_token(&parser->lexer);
+</code></pre><p>Isso significa que, desde o começo, o parser já tem acesso ao token atual e ao próximo token.</p><p>Esse pequeno lookahead é o que viabiliza decisões estruturais sem retrocesso.</p><h3 id=codeparser-parsecode-agora-constrói-um-codeast-programcode><span class=heading-text><code>parser_parse</code> agora constrói um <code>AST_PROGRAM</code></span><span class=heading-arabic>12.7.2</span></h3><p>No capítulo 11, a função principal chamava <code>parse_expression</code> e devolvia uma única árvore de expressão.</p><p>Agora o parser faz isto:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>AstNode *program = ast_new_node(AST_PROGRAM);
+
+while (!parser_check(parser, TOK_EOF) && !parser->had_error) {
+    AstNode *declaration = parse_declaration(parser);
+    ast_add_child(program, declaration);
+}
+</code></pre><p>Ou seja, a raiz da AST passa a ser sempre um programa, e suas declarações ficam armazenadas em <code>children</code>.</p><h3 id=codeparse-declarationcode-separa-topo-do-programa><span class=heading-text><code>parse_declaration</code> separa topo do programa</span><span class=heading-arabic>12.7.3</span></h3><p>Essa função decide qual grande construção começa no ponto atual.</p><p>O raciocínio é:</p><ol><li>se vier <code>fn</code>, então é função;</li><li>se vier <code>IDENT :</code>, então é declaração de variável;</li><li>caso contrário, tratamos como comando.</li></ol><p>Esse é um ótimo exemplo de por que <code>next</code> foi adicionado ao parser.</p><h3 id=codeparse-functioncode><span class=heading-text><code>parse_function</code></span><span class=heading-arabic>12.7.4</span></h3><p>Essa função monta um nó <code>AST_FUNCTION</code> com:</p><ul><li>nome em <code>token</code>;</li><li>tipo de retorno em <code>extra</code>;</li><li>parâmetros em <code>children</code>;</li><li>corpo em <code>first</code>.</li></ul><p>Essa convenção é a mesma usada pela impressão da AST em <code>ast.c</code>.</p><h3 id=codeparse-var-declcode><span class=heading-text><code>parse_var_decl</code></span><span class=heading-arabic>12.7.5</span></h3><p>Reconhece entradas como:</p><pre class="line-numbers language-slang" data-lang=SLANG><code class=language-slang>x: int = 5
+</code></pre><p>e constrói um <code>AST_VAR_DECL</code> com:</p><ul><li>nome em <code>token</code>;</li><li>tipo em <code>extra</code>;</li><li>expressão inicializadora em <code>first</code>.</li></ul><p>Note que, neste marco, a inicialização é obrigatória.</p><h3 id=codeparse-statementcode><span class=heading-text><code>parse_statement</code></span><span class=heading-arabic>12.7.6</span></h3><p>Essa função centraliza a decisão entre:</p><ul><li>bloco;</li><li><code>if</code>;</li><li><code>loop</code>;</li><li><code>return</code>;</li><li><code>break</code>;</li><li><code>continue</code>;</li><li>atribuição;</li><li>chamada de função como comando.</li></ul><p>Essa última parte é particularmente importante: uma expressão isolada só é aceita como comando se o resultado for um <code>AST_CALL</code>.</p><p>É por isso que existe esta checagem:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>if (expr_stmt->first != NULL && expr_stmt->first->kind != AST_CALL) {
+    parser_error_at(parser, parser->previous, "Esperado comando de chamada de funcao.");
+}
+</code></pre><p>Ou seja, algo como:</p><pre class="line-numbers language-slang" data-lang=SLANG><code class=language-slang>foo(1, 2)
+</code></pre><p>é permitido como comando, mas algo como:</p><pre class="line-numbers language-slang" data-lang=SLANG><code class=language-slang>x + 1
+</code></pre><p>não é.</p><h3 id=codeparse-blockcode><span class=heading-text><code>parse_block</code></span><span class=heading-arabic>12.7.7</span></h3><p>O bloco é uma peça estrutural importante porque ele contém outras declarações e comandos. Portanto, ele não chama <code>parse_statement</code> diretamente em loop. Ele chama <code>parse_declaration</code>.</p><p>Isso permite coisas como:</p><pre class="line-numbers language-slang" data-lang=SLANG><code class=language-slang>{
+    x: int = 5
+    if x > 0 {
+        print(x)
+    }
+}
+</code></pre><h3 id=codeparse-ifcode><span class=heading-text><code>parse_if</code></span><span class=heading-arabic>12.7.8</span></h3><p>Aqui aparece um detalhe elegante: <code>else if</code> é tratado recursivamente.</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>if (parser_match(parser, TOK_KW_ELSE)) {
+    if (parser_match(parser, TOK_KW_IF)) {
+        node->third = parse_if(parser);
+    } else {
+        node->third = parse_block(parser);
+    }
+}
+</code></pre><p>Isso faz com que <code>else if</code> vire simplesmente um ramo <code>else</code> cujo conteúdo é outro nó <code>AST_IF</code>.</p><h3 id=codeparse-loopcode><span class=heading-text><code>parse_loop</code></span><span class=heading-arabic>12.7.9</span></h3><p>Essa função reconhece dois formatos:</p><pre class="line-numbers language-slang" data-lang=SLANG><code class=language-slang>loop {
+    ...
+}
+</code></pre><p>e:</p><pre class="line-numbers language-slang" data-lang=SLANG><code class=language-slang>loop x &lt; 10 {
+    ...
+}
+</code></pre><p>No primeiro caso, o laço é infinito e <code>first</code> fica <code>NULL</code>.<br> No segundo, <code>first</code> guarda a condição.</p><h3 id=codeparse-callcode><span class=heading-text><code>parse_call</code></span><span class=heading-arabic>12.7.10</span></h3><p>No capítulo 11, o parser parava em <code>parse_primary</code>. Agora ele possui um nível intermediário <code>parse_call</code>, que permite reconhecer chamadas encadeadas sobre um primário.</p><p>Se a entrada for:</p><pre class="line-numbers language-slang" data-lang=SLANG><code class=language-slang>print(factorial(value))
+</code></pre><p>o parser:</p><ol><li>reconhece <code>print</code> como identificador;</li><li>vê <code>(</code>;</li><li>cria um <code>AST_CALL</code> cujo <code>first</code> é o callee;</li><li>armazena cada argumento em <code>children</code>.</li></ol><p>Essa é a mudança que permite chamadas tanto em expressões quanto em comandos.</p><h2 id=finalizando-o-codemainccode><span class=heading-text>Finalizando o <code>main.c</code></span><span class=heading-arabic>12.8</span></h2><p>Agora vamos substituir o <code>main.c</code> temporário do capítulo 11 pela interface final do projeto.</p><p>Substitua <code>src/main.c</code> por:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>#include &lt;stdio.h>
+#include &lt;stdlib.h>
+#include &lt;string.h>
+#include "compiler/ast.h"
+#include "compiler/lexer.h"
+#include "compiler/parser.h"
+
+static char* read_file(const char* path) {
+    FILE* file = fopen(path, "rb");
+    if (file == NULL) {
+        fprintf(stderr, "Erro: Não foi possível abrir o arquivo \"%s\".\n", path);
+        exit(74);
+    }
+
+    fseek(file, 0L, SEEK_END);
+    size_t fileSize = ftell(file);
+    rewind(file);
+
+    char* buffer = (char*)malloc(fileSize + 1);
+    if (buffer == NULL) {
+        fprintf(stderr, "Erro: Memória insuficiente para ler \"%s\".\n", path);
+        exit(74);
+    }
+
+    size_t bytesRead = fread(buffer, sizeof(char), fileSize, file);
+    if (bytesRead &lt; fileSize) {
+        fprintf(stderr, "Erro: Falha na leitura do arquivo \"%s\".\n", path);
+        exit(74);
+    }
+
+    buffer[bytesRead] = '\0';
+    fclose(file);
+    return buffer;
+}
+
+static int run_lexer_mode(const char *source) {
+    Lexer lexer;
+    lexer_init(&lexer, source);
+
+    Token token;
+    do {
+        token = lexer_next_token(&lexer);
+        token_println(&token);
+    } while (token.type != TOK_EOF && token.type != TOK_ERROR);
+
+    return 0;
+}
+
+static int run_parser_mode(const char *source) {
+    Parser parser;
+    parser_init(&parser, source, stderr);
+
+    AstNode *program = parser_parse(&parser);
+    if (program == NULL) {
+        return 65;
+    }
+
+    ast_print(stdout, program);
+    ast_free(program);
+    return 0;
+}
+
+int main(int argc, char* argv[]) {
+    if (argc != 3) {
+        fprintf(stderr, "Uso: compiler &lt;lex|parse> &lt;arquivo>\n");
+        return 64;
+    }
+
+    char* source = read_file(argv[2]);
+
+    int result = 0;
+
+    if (strcmp(argv[1], "lex") == 0) {
+        result = run_lexer_mode(source);
+    } else if (strcmp(argv[1], "parse") == 0) {
+        result = run_parser_mode(source);
+    } else {
+        fprintf(stderr, "Uso: compiler &lt;lex|parse> &lt;arquivo>\n");
+        free(source);
+        return 64;
+    }
+
+    free(source);
+    return result;
+}
+</code></pre><p>Antes, o executável estava temporariamente voltado para um único fluxo de parsing de expressões. Agora ele passa a suportar dois modos explícitos:</p><ul><li><code>lex</code>, para imprimir a sequência de tokens;</li><li><code>parse</code>, para imprimir a AST do programa.</li></ul><p>Isso é importante porque o compilador volta a expor as duas fases que já temos implementadas.</p><p>Como a interface final do projeto também mantém o modo léxico, vale alinhar o <code>token_print</code> com o estado atual do repositório. Substitua <code>src/compiler/token.c</code> por:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>#include &lt;stdio.h>
+#include "compiler/token.h"
+
+void token_print(Token *token) {
+    printf("&lt;%s, \"%.*s\", linha=%d>",
+           TokenNames[token->type],
+           token->length,
+           token->start,
+           token->line);
+}
+
+void token_println(Token *token) {
+    token_print(token);
+    printf("\n");
+}
+</code></pre><p>Esse ajuste é pequeno, mas útil. Ele faz a saída do lexer carregar também a linha em que o token foi encontrado, o que ajuda muito em testes e em depuração.</p><h2 id=reorganizando-os-testes-do-projeto><span class=heading-text>Reorganizando os testes do projeto</span><span class=heading-arabic>12.9</span></h2><p>Em vez de pedir que você crie manualmente cada arquivo de teste desta etapa, vamos fazer algo mais prático: substituir a pasta <strong>tests</strong> inteira pela versão final já preparada. Baixe <a download href=bin/testes-c2.zip>testes-c2.zip</a>. Esse arquivo contém a estrutura final da suíte de testes usada no estado atual do repositório.</p><ol><li>Remova ou renomeie a pasta <code>tests</code> antiga do projeto.</li><li>Extraia <code>testes-c2.zip</code> na raiz do projeto.</li><li>Verifique se, ao final, você ficou novamente com uma pasta <code>tests/</code>.</li></ol><p>Depois da substituição, a estrutura ficará assim:</p><pre class="line-numbers language-text" data-lang=TEXT><code class=language-text>tests/
+├── lexer/
+│   ├── expected/
+│   └── input/
+├── parser/
+│   ├── contract.md
+│   ├── expected/
+│   └── input/
+└── run_tests.sh
+</code></pre><p>As mudanças mais importantes são:</p><ul><li>os testes do lexer deixaram de ficar todos soltos em <code>tests/</code> e passaram para <code>tests/lexer/</code>;</li><li>os testes do parser agora ficam em <code>tests/parser/</code>;</li><li>cada suíte passou a ter <code>input/</code> e <code>expected/</code> separados;</li><li>o arquivo <code>tests/parser/contract.md</code> documenta a gramática que essa etapa está validando;</li><li>o script <code>tests/run_tests.sh</code> agora sabe rodar as duas fases do compilador;</li><li>ele aceita <code>lexer</code>, <code>parser</code> e <code>all</code> como alvo.</li></ul><p>Essa reorganização melhora muito a manutenção do projeto, porque separa claramente o que pertence à análise léxica e o que pertence à análise sintática.</p><p>Com a nova pasta <code>tests</code> no lugar, compile o projeto:</p><pre class="line-numbers language-bash" data-lang=BASH><code class=language-bash>cmake -B build
+cmake --build build
+</code></pre><p>Agora rode a suíte do lexer:</p><pre class="line-numbers language-bash" data-lang=BASH><code class=language-bash>./tests/run_tests.sh lexer
+</code></pre><p>Saída esperada:</p><pre class="line-numbers language-txt" data-lang=TXT><code class=language-txt>=============================================
+   EXECUTANDO TESTES DE LEXER
+=============================================
+  [OK] lexer/01_delimiters
+  [OK] lexer/02_simple_operators
+  [OK] lexer/03_lookahead_tokens
+  [OK] lexer/04_logical_operators
+  [OK] lexer/05_keywords
+  [OK] lexer/06_identifiers
+  [OK] lexer/07_numbers
+  [OK] lexer/08_strings
+  [OK] lexer/09_chars
+  [OK] lexer/10_comments
+  [OK] lexer/11_invalid_number_error
+  [OK] lexer/12_single_ampersand_error
+  [OK] lexer/13_complete_program
+  [OK] lexer/14_modulo_operator
+  [OK] lexer/15_single_pipe_error
+  [OK] lexer/16_unterminated_string_error
+
+=============================================
+   RESULTADO: 16 PASSARAM | 0 FALHARAM | 16 TOTAL
+=============================================
+</code></pre><p>Agora rode a suíte do parser:</p><pre class="line-numbers language-bash" data-lang=BASH><code class=language-bash>./tests/run_tests.sh parser
+</code></pre><p>Saída esperada:</p><pre class="line-numbers language-txt" data-lang=TXT><code class=language-txt>=============================================
+   EXECUTANDO TESTES DE PARSER
+=============================================
+  [OK] parser/01_variable_declaration
+  [OK] parser/02_function_declaration
+  [OK] parser/03_expression_precedence
+  [OK] parser/04_control_flow
+  [OK] parser/05_complete_program
+  [OK] parser/06_infinite_loop
+  [OK] parser/07_missing_initializer
+  [OK] parser/08_missing_block_end
+  [OK] parser/09_invalid_parameter
+
+=============================================
+   RESULTADO: 9 PASSARAM | 0 FALHARAM | 9 TOTAL
+=============================================
+</code></pre><p>Se quiser rodar tudo de uma vez:</p><pre class="line-numbers language-bash" data-lang=BASH><code class=language-bash>./tests/run_tests.sh all
+</code></pre><h3 id=testando-diretamente-os-dois-modos-do-compilador><span class=heading-text>Testando diretamente os dois modos do compilador</span><span class=heading-arabic>12.9.1</span></h3><p>Você também pode testar os modos manualmente.</p><p>Modo léxico:</p><pre class="line-numbers language-bash" data-lang=BASH><code class=language-bash>./build/compiler lex tests/lexer/input/14_modulo_operator.slang
+</code></pre><p>Modo sintático:</p><pre class="line-numbers language-bash" data-lang=BASH><code class=language-bash>./build/compiler parse tests/parser/input/05_complete_program.slang
+</code></pre><p>Esse segundo comando deve imprimir a árvore sintática completa do programa de teste.</p><h2 id=próximos-passos><span class=heading-text>Próximos Passos</span><span class=heading-arabic>12.10</span></h2><ul><li></li></ul></div></article><footer class=footer><p>© 2025 · <a href=#>Gabriel Soares Baptista</a></p></footer></main></div><script>const toggle=document.querySelector(`.mobile-menu-toggle`),sidebar=document.querySelector(`.sidebar`),overlay=document.querySelector(`.mobile-menu-overlay`);function openMenu(){sidebar.classList.add(`open`),overlay.classList.add(`open`),toggle.classList.add(`open`),toggle.innerHTML=`<i data-lucide="x"></i>`,CourseForgeUI.initIcons(),document.body.style.overflow=`hidden`}function closeMenu(){sidebar.classList.remove(`open`),overlay.classList.remove(`open`),toggle.classList.remove(`open`),toggle.innerHTML=`<i data-lucide="menu"></i>`,CourseForgeUI.initIcons(),document.body.style.overflow=``}toggle.addEventListener(`click`,()=>{sidebar.classList.contains(`open`)?closeMenu():openMenu()}),overlay.addEventListener(`click`,closeMenu);</script><script>document.addEventListener(`DOMContentLoaded`,function(){renderMathInElement(document.body,{output:`html`,delimiters:[{left:`$$`,right:`$$`,display:!0},{left:`$`,right:`$`,display:!1},{left:`\\(`,right:`\\)`,display:!1},{left:`\\[`,right:`\\]`,display:!0}],throwOnError:!1,strict:!1})});</script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/prism.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-c.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-cpp.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-python.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-clike.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-perl.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-java.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-mermaid.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-php.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js></script><script>document.addEventListener(`DOMContentLoaded`,function(){mermaid.initialize({startOnLoad:!0,theme:`default`,securityLevel:`loose`,fontFamily:`Inter, system-ui, sans-serif`,themeVariables:{fontSize:`16px`,edgeLabelFontSize:`16px`,multiplicityFontSize:`18px`}})});</script><script>document.addEventListener(`DOMContentLoaded`,function(){let isSubcourse=!1,courseName=`Compiladores`;CourseForgeNav.applyDynamicBreadcrumbs(`.breadcrumb`,!1),CourseForgeNav.initScrollSpy(),CourseForgeUI.initCopyButtons(),CourseForgeUI.initExamples()});function handleBackNavigation(){let isSubcourse=!1,dynamic=CourseForgeNav.getBackLink(`contents.html`,`Voltar`,!1);window.location.href=dynamic.url}</script></body></html>

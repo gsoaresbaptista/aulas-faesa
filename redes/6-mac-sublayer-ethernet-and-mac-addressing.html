@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toposia - Redes</title>
+    <link rel="icon" href="/aulas-faesa/img/dark-favicon.svg" media="(prefers-color-scheme: light)">
+    <link rel="icon" href="/aulas-faesa/img/light-favicon.svg" media="(prefers-color-scheme: dark)">
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/fonts.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/bundles/katex-base-prism-one-light-b0347952c973.bundle.min.css">
+    
+    
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css" data-no-bundle>
+    <script src="/aulas-faesa/js/bundles/lucide-katex-auto-render-4b36e8bd8642.bundle.min.js"></script>
+</head>
+
+<body>
+    <script>
+        // Restore sidebar state instantly (before first paint) to avoid transition flash
+        (function() {
+            if (localStorage.getItem('cf_sidebar_hidden') === 'true') {
+                document.body.classList.add('sidebar-hidden', 'no-transition');
+            }
+            requestAnimationFrame(function() {
+                requestAnimationFrame(function() {
+                    document.body.classList.remove('no-transition');
+                });
+            });
+        })();
+    </script>
+    <div class="page-wrapper">
+        <nav class="sidebar">
+            <div class="sidebar-content">
+                <header class="sidebar-title-section">
+                    <a href="contents.html" class="course-title-link">
+                        <h1 class="sidebar-course-title">Redes</h1>
+                    </a>
+                    <div class="sidebar-ornament">❧</div>
+                </header>
+
+                
+                <section class="sidebar-toc-section">
+                    <h2 class="toc-header">Tabela de Conteúdos</h2>
+                    <ol class="toc-list">
+                        
+                        <li class="toc-item level-2">
+                            <a href="#introdução">6.1. Introdução</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#quando-o-problema-deixa-de-ser-o-quadro-e-passa-a-ser-a-disputa">6.2. Quando o problema deixa de ser o quadro e passa a ser a disputa</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#o-que-a-subcamada-mac-resolve">6.2.1. O que a subcamada MAC resolve</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#por-que-a-alocação-estática-costuma-desperdiçar-capacidade">6.3. Por que a alocação estática costuma desperdiçar capacidade</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#a-intuição-do-problema">6.3.1. A intuição do problema</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#protocolos-de-acesso-múltiplo">6.4. Protocolos de acesso múltiplo</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#aloha-transmitir-e-torcer-para-dar-certo">6.4.1. ALOHA: transmitir e torcer para dar certo</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#slotted-aloha-organizar-o-tempo-ajuda">6.4.2. Slotted ALOHA: organizar o tempo ajuda</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#csma-escutar-antes-de-falar">6.4.3. CSMA: escutar antes de falar</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#csmacd-detectar-colisão-enquanto-transmite">6.4.4. CSMA/CD: detectar colisão enquanto transmite</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#ethernet-da-disputa-em-barramento-ao-enlace-comutado">6.5. Ethernet: da disputa em barramento ao enlace comutado</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#ethernet-clássica">6.5.1. Ethernet clássica</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#ethernet-comutada">6.5.2. Ethernet comutada</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#hub-e-switch-não-fazem-a-mesma-coisa">6.5.3. Hub e switch não fazem a mesma coisa</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#o-quadro-ethernet-na-prática">6.6. O quadro Ethernet na prática</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#por-que-esses-campos-existem">6.6.1. Por que esses campos existem</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#endereçamento-mac">6.7. Endereçamento MAC</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#o-que-esse-endereço-identifica">6.7.1. O que esse endereço identifica</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#unicast-multicast-e-broadcast">6.7.2. Unicast, multicast e broadcast</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#oui-e-fabricante">6.7.3. OUI e fabricante</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#mac-não-substitui-ip">6.8. MAC não substitui IP</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#diferença-de-função">6.8.1. Diferença de função</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#linux-olhando-para-mac-ip-e-enlace-em-um-sistema-real">6.9. Linux: olhando para MAC, IP e enlace em um sistema real</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#interfaces-e-endereços-mac">6.9.1. Interfaces e endereços MAC</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#a-mesma-interface-possui-mac-e-ip">6.9.2. A mesma interface possui MAC e IP</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#vizinhança-local-e-relação-entre-ip-e-mac">6.9.3. Vizinhança local e relação entre IP e MAC</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#velocidade-e-duplex-do-enlace-ethernet">6.9.4. Velocidade e duplex do enlace Ethernet</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#questões">6.10. Questões</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#próximos-passos">6.11. Próximos passos</a>
+                        </li>
+                        
+                    </ol>
+                </section>
+                
+
+                <nav class="sidebar-nav-section">
+                    
+                    <a href="5-data-link-layer-framing-and-error-detection.html" class="sidebar-nav-link prev"><i data-lucide="chevron-left" class="nav-icon"></i> Camada de Enlace, Enquadramento e Detecção de Erros</a>
+                    
+                    
+                    <a href="javascript:void(0)" onclick="handleBackNavigation()"
+                        class="sidebar-nav-link back"><i data-lucide="arrow-left" class="nav-icon"></i> Voltar</a>
+                </nav>
+
+            </div>
+        </nav>
+
+        <button class="mobile-menu-toggle" aria-label="Menu">
+            <i data-lucide="menu"></i>
+        </button>
+
+        <button class="sidebar-toggle" onclick="CourseForgeNav.toggleSidebar()" aria-label="Alternar Barra Lateral">
+            <i data-lucide="chevron-left" class="toggle-icon" id="sidebar-toggle-icon"></i>
+        </button>
+
+        <div class="mobile-menu-overlay"></div>
+
+        <main class="main-content">
+            <article class="article">
+                <header class="article-header">
+                    <span class="chapter-number">6</span>
+                    <h1 class="article-title">
+                        <span class="title-ornament left">❧</span>
+                        <span class="title-text">Subcamada MAC, Ethernet e Endereçamento MAC</span>
+                        <span class="title-ornament right">❧</span>
+                    </h1>
+                    
+                    <p class="article-date">09/04/2026</p>
+                    
+                    
+                    <nav class="breadcrumb" aria-label="Breadcrumb">
+                        
+                        
+                        
+                        <a href="contents.html" class="breadcrumb-link">Redes</a>
+                        
+                        <span class="breadcrumb-separator"><i data-lucide="chevron-right" class="breadcrumb-icon"></i></span>
+                        
+                        
+                        
+                        
+                        <a href="contents.html#part-III" class="breadcrumb-link">III - Camada de Enlace</a>
+                        
+                        <span class="breadcrumb-separator"><i data-lucide="chevron-right" class="breadcrumb-icon"></i></span>
+                        
+                        
+                        
+                        <span class="breadcrumb-current">Subcamada MAC, Ethernet e Endereçamento MAC</span>
+                        
+                        
+                    </nav>
+                    
+                </header>
+                <div class="article-body">
+                    <h2 id="introdução"><span class="heading-text">Introdução</span><span class="heading-arabic">6.1</span></h2>
+<p>Hoje você vai ver por que não basta transformar bits em quadros. Quando várias máquinas compartilham o mesmo meio físico, aparece outro problema decisivo. Não basta saber onde o quadro começa, onde termina e se ele chegou íntegro. Também é preciso decidir quem pode transmitir agora sem atrapalhar as demais estações.</p>
+<p>Na aula anterior, a camada de enlace apareceu como a responsável por enquadramento, detecção de erros e coordenação local. Agora vamos aprofundar essa mesma camada por outro ângulo. O foco deixa de ser apenas a estrutura do quadro e passa a ser a disputa pelo meio. É exatamente nesse ponto que entra a <strong>subcamada MAC</strong>.</p>
+<p>Em outras palavras, a aula passada respondeu perguntas como estas: como transformar um fluxo bruto de bits em quadros, como marcar começo e fim e como verificar se houve erro com mecanismos como CRC. A aula de hoje começa quando tudo isso já funciona. Mesmo com quadros bem formados e com verificação de integridade, ainda falta resolver quem ganha o direito de usar o meio em cada instante.</p>
+<div class="callout callout-abstract">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
+    <span class="callout-title-inner">Ideia central<br /></span>
+  </div>
+  <div class="callout-content">
+<p>A subcamada MAC existe para organizar o acesso a um meio compartilhado. A Ethernet é a tecnologia mais importante para entender como isso foi resolvido na prática, e o endereço MAC é a forma de identificar interfaces dentro do enlace local.</p>
+  </div>
+</div>
+<h2 id="quando-o-problema-deixa-de-ser-o-quadro-e-passa-a-ser-a-disputa"><span class="heading-text">Quando o problema deixa de ser o quadro e passa a ser a disputa</span><span class="heading-arabic">6.2</span></h2>
+<p>Imagine um cabo compartilhado por várias máquinas. Cada uma delas pode montar seus próprios quadros corretamente, com cabeçalho, carga útil e CRC. Ainda assim, existe um problema óbvio. Se duas máquinas tentarem transmitir no mesmo instante pelo mesmo meio, os sinais se sobrepõem.</p>
+<p>Nesse momento, o problema já não é mais “como montar o quadro”. O problema passa a ser “como dividir o meio”. Isso é especialmente importante em meios de natureza compartilhada, como barramentos clássicos, rádio e outras formas de broadcast.</p>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Se duas estações possuem quadros válidos e corretos ao mesmo tempo, o que falta para que a comunicação funcione de verdade?</p>
+  </div>
+</div>
+<p>Falta uma regra de acesso. Em outras palavras, falta um mecanismo que diga quando transmitir, quando esperar e o que fazer quando duas transmissões entram em conflito. Essa é a função da <strong>subcamada MAC</strong>, sigla de <em>Medium Access Control</em>.</p>
+<h3 id="o-que-a-subcamada-mac-resolve"><span class="heading-text">O que a subcamada MAC resolve</span><span class="heading-arabic">6.2.1</span></h3>
+<p>A subcamada MAC é a parte da camada de enlace que trata do uso do meio compartilhado. Ela responde a perguntas como estas.</p>
+<ol>
+<li>Quando uma estação pode transmitir.</li>
+<li>O que fazer se o meio já estiver em uso.</li>
+<li>Como reagir quando duas transmissões colidem.</li>
+<li>Como identificar o destinatário local de um quadro.</li>
+</ol>
+<p>Perceba a diferença de foco. Na aula anterior, o centro da discussão era a organização interna do quadro. Agora, o centro da discussão é a convivência entre várias estações sobre o mesmo enlace.</p>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Erro comum<br /></span>
+  </div>
+  <div class="callout-content">
+<p>É comum pensar que a camada de enlace trata apenas de enquadramento e detecção de erros. Isso é incompleto. Em meios compartilhados, a parte de acesso ao meio é tão importante quanto a estrutura do quadro.</p>
+  </div>
+</div>
+<h2 id="por-que-a-alocação-estática-costuma-desperdiçar-capacidade"><span class="heading-text">Por que a alocação estática costuma desperdiçar capacidade</span><span class="heading-arabic">6.3</span></h2>
+<p>Uma ideia aparentemente organizada seria dividir o canal em partes fixas. Por exemplo, cada usuário recebe sua própria faixa de frequência ou seu próprio intervalo de tempo. Em telefonia clássica, essa solução faz bastante sentido quando os fluxos são contínuos. Em redes de computadores, o cenário costuma ser diferente.</p>
+<p>O tráfego de dados é tipicamente em rajadas. Um computador pode ficar vários segundos sem transmitir nada e, de repente, enviar uma sequência de quadros em pouco tempo. Se o canal estiver dividido de modo rígido, a parte reservada para uma estação ociosa fica parada, mesmo que outra estação esteja precisando transmitir naquele momento.</p>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Se dez usuários recebem partes fixas de um canal e apenas dois estão ativos agora, o que acontece com a capacidade reservada para os outros oito?</p>
+  </div>
+</div>
+<p>A resposta é simples. Ela fica desperdiçada. Por isso, o Tanenbaum mostra que <strong>alocação dinâmica</strong> é mais adequada para redes de computadores do que esquemas puramente estáticos como <strong>FDM</strong> e <strong>TDM</strong> quando o tráfego é irregular.</p>
+<p>Aqui vale nomear essas siglas com clareza.</p>
+<ol>
+<li><strong>FDM</strong> significa <em>Frequency Division Multiplexing</em>, ou <strong>Multiplexação por Divisão de Frequência</strong>.</li>
+<li><strong>TDM</strong> significa <em>Time Division Multiplexing</em>, ou <strong>Multiplexação por Divisão de Tempo</strong>.</li>
+</ol>
+<p>No FDM, o canal é dividido em faixas de frequência, e cada usuário ou comunicação ocupa uma parte fixa do espectro. Esse modelo foi tipicamente muito usado em sistemas de rádio, TV e telefonia analógica, em que diferentes transmissões coexistem em bandas separadas.</p>
+<p>No TDM, o canal é dividido em intervalos de tempo, e cada usuário transmite no seu turno. Esse modelo foi tipicamente muito usado em telefonia digital e em enlaces síncronos, em que faz sentido reservar tempos regulares para fluxos mais previsíveis.</p>
+<p>Em redes de computadores, o problema é que o tráfego costuma ser muito irregular. Um host pode ficar ocioso por um tempo e, logo depois, gerar uma rajada curta de dados. Nessa situação, reservar uma frequência fixa ou um intervalo fixo de tempo para cada máquina tende a desperdiçar capacidade.</p>
+<h3 id="a-intuição-do-problema"><span class="heading-text">A intuição do problema</span><span class="heading-arabic">6.3.1</span></h3>
+<p>Pense em um laboratório com vinte computadores. Em certos momentos, quase ninguém transmite. Em outros, vários alunos abrem páginas, baixam arquivos, fazem login e disparam rajadas curtas de dados. Isso não combina bem com uma divisão fixa e permanente do canal.</p>
+<p>Em redes desse tipo, faz mais sentido deixar as estações disputarem o meio quando realmente precisam usá-lo. A dificuldade, claro, é fazer isso sem transformar a rede em caos.</p>
+<h2 id="protocolos-de-acesso-múltiplo"><span class="heading-text">Protocolos de acesso múltiplo</span><span class="heading-arabic">6.4</span></h2>
+<p>Os protocolos de acesso múltiplo surgem para resolver exatamente esse impasse. Todos partem da mesma pergunta. Como várias estações usam um único canal compartilhado sem desperdiçar largura de banda demais com colisões ou espera excessiva?</p>
+<p>Vamos construir essa resposta em etapas, do mais simples ao mais eficiente.</p>
+<h3 id="aloha-transmitir-e-torcer-para-dar-certo"><span class="heading-text">ALOHA: transmitir e torcer para dar certo</span><span class="heading-arabic">6.4.1</span></h3>
+<p>No ALOHA, a ideia é radicalmente simples. Se a estação tiver dados, ela transmite. Se houver colisão, espera um tempo aleatório e tenta de novo.</p>
+<p>Essa simplicidade é didaticamente valiosa porque revela o problema em estado puro. Quando todos podem transmitir a qualquer instante, colisões passam a ser inevitáveis.</p>
+<div class="example">
+  <div class="example-title">Exemplo simples</div>
+  As estações A e B querem transmitir quase ao mesmo tempo. Ambas enviam seus quadros sem verificar o canal. Os sinais se sobrepõem, o quadro é perdido e as duas precisam retransmitir mais tarde.
+</div>
+<p>O ALOHA é importante historicamente, mas sua eficiência é baixa. Ele ensina a intuição do problema, não a melhor solução prática para LANs cabeadas.</p>
+<p>Na imagem abaixo, a ideia principal é observar que os quadros são gerados independentemente pelas estações e lançados no meio assim que ficam prontos. O ponto importante não é o formato do quadro, mas o fato de que não existe coordenação prévia entre as transmissões.</p>
+<img src="static/fig4_1_aloha_quadro.png" width="75%">
+
+<h3 id="slotted-aloha-organizar-o-tempo-ajuda"><span class="heading-text">Slotted ALOHA: organizar o tempo ajuda</span><span class="heading-arabic">6.4.2</span></h3>
+<p>O slotted ALOHA melhora a ideia anterior dividindo o tempo em intervalos discretos. Agora, uma estação só pode começar a transmitir no início de um slot.</p>
+<p>Isso não elimina colisões, mas reduz o intervalo de vulnerabilidade. Em termos intuitivos, a bagunça diminui porque as tentativas deixam de acontecer em qualquer ponto do tempo.</p>
+<div class="example">
+  <div class="example-title">Exemplo intermediário</div>
+  Se A e B só podem começar no início de um slot, as colisões deixam de acontecer por pequenas sobreposições em instantes arbitrários. Ainda pode haver colisão, mas o sistema fica mais organizado e mais eficiente do que o ALOHA original.
+</div>
+<p>Na próxima imagem, observe o <strong>período de vulnerabilidade</strong> de um quadro. Ela mostra que uma colisão não depende apenas de duas estações começarem exatamente no mesmo instante. Basta que outra transmissão comece dentro de uma certa janela de tempo para comprometer o quadro sombreado.</p>
+<img src="static/fig4_2_periodo_vulnerabilidade_aloha.png" width="75%">
+
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>É por isso que a Internet fica mais lenta quando tem muita gente usando ao mesmo tempo?</p>
+  </div>
+</div>
+<p>Em parte, sim, mas com uma diferença importante. A ideia geral está correta. Quando muitas estações ou muitos usuários tentam usar recursos compartilhados ao mesmo tempo, o desempenho tende a piorar. No contexto do ALOHA e de outros meios compartilhados, isso acontece porque aumentam as colisões e as retransmissões. Na Internet moderna, o problema costuma aparecer mais como <strong>congestionamento</strong>, disputa por largura de banda, filas em roteadores, enlaces saturados e servidores sobrecarregados.</p>
+<p>Ou seja, a intuição é a mesma. Recursos compartilhados demais para demanda demais produzem atraso e pior aproveitamento. A diferença é que, em uma LAN Ethernet comutada atual, a lentidão normalmente não vem de colisões como nos exemplos clássicos, mas de gargalos e congestionamento em outros pontos da rede.</p>
+<p>O gráfico seguinte ajuda a transformar a intuição em desempenho observável. Conforme o tráfego oferecido aumenta, o throughput não cresce indefinidamente. Depois de certo ponto, o excesso de tentativas produz tantas colisões que o aproveitamento real do canal piora.</p>
+<img src="static/fig4_3_throughput_aloha.png" width="75%">
+
+<h3 id="csma-escutar-antes-de-falar"><span class="heading-text">CSMA: escutar antes de falar</span><span class="heading-arabic">6.4.3</span></h3>
+<p>O próximo passo é ainda mais natural. Antes de transmitir, a estação verifica se o meio está ocupado. Essa ideia recebe o nome de <strong>CSMA</strong>, sigla de <em>Carrier Sense Multiple Access</em>.</p>
+<p>Agora a regra deixa de ser “transmita quando quiser” e passa a ser “transmita quando o canal estiver livre”.</p>
+<p>Essa mudança parece pequena, mas é enorme em termos práticos. Se a estação consegue perceber que outra já está transmitindo, ela evita colisões desnecessárias.</p>
+<div class="example">
+  <div class="example-title">Exemplo comparativo</div>
+  No ALOHA, A começa a transmitir mesmo sem saber se alguém já estava usando o meio. No CSMA, A escuta primeiro. Se B já estiver transmitindo, A espera.
+</div>
+<h3 id="csmacd-detectar-colisão-enquanto-transmite"><span class="heading-text">CSMA/CD: detectar colisão enquanto transmite</span><span class="heading-arabic">6.4.4</span></h3>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Se duas estações escutaram o meio, concluíram quase ao mesmo tempo que ele estava livre e começaram a transmitir juntas, como a rede pode perceber que houve colisão?</p>
+  </div>
+</div>
+<p>Mesmo escutando antes, ainda existe uma janela em que duas estações podem concluir quase ao mesmo tempo que o canal estava livre e começar a transmitir juntas. É aí que entra o <strong>CSMA/CD</strong>, sigla de <em>Carrier Sense Multiple Access with Collision Detection</em>.</p>
+<p>Nesse modelo, a estação não apenas escuta antes. Ela continua monitorando o meio durante a transmissão. Se detectar colisão, interrompe o envio, emite um sinal de interferência e tenta novamente depois de um tempo aleatório.</p>
+<p>Esse tempo de espera cresce de forma controlada com o número de colisões consecutivas. É o famoso <strong>backoff exponencial binário</strong>.</p>
+<p>Na figura abaixo, acompanhe a lógica do CSMA/CD como um ciclo. A estação primeiro escuta o meio. Se ele estiver livre, transmite. Enquanto transmite, continua observando o canal. Se notar uma discrepância entre o sinal esperado e o sinal presente no meio, conclui que houve colisão.</p>
+<img src="static/fig4_5_modelo_csma_cd.png" width="75%">
+
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">Por que isso ajuda<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Se poucas estações colidem, o tempo médio de espera permanece baixo. Se muitas estações colidem ao mesmo tempo, o intervalo de espera cresce e reduz a chance de novas colisões em sequência.</p>
+  </div>
+</div>
+<div class="example">
+  <div class="example-title">Exemplo mais rico</div>
+  Depois da primeira colisão, duas estações escolhem aleatoriamente esperar 0 ou 1 slot. Se colidirem de novo, passam a escolher entre 0, 1, 2 ou 3 slots. O intervalo de escolha aumenta progressivamente para espalhar melhor as tentativas.
+</div>
+<p>Esta imagem é importante para justificar o tamanho mínimo do quadro Ethernet clássico. Ela mostra que a colisão pode acontecer longe do transmissor e levar um tempo de propagação para ser percebida. Se o quadro fosse curto demais, a estação poderia terminar de transmitir antes de descobrir que sua transmissão colidiu.</p>
+<img src="static/fig4_6_deteccao_colisao_2t.png" width="75%">
+
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Cuidado conceitual<br /></span>
+  </div>
+  <div class="callout-content">
+<p>CSMA/CD é essencial para entender a Ethernet clássica. No entanto, isso não significa que as redes Ethernet atuais continuem operando como um barramento antigo cheio de colisões.</p>
+  </div>
+</div>
+<h2 id="ethernet-da-disputa-em-barramento-ao-enlace-comutado"><span class="heading-text">Ethernet: da disputa em barramento ao enlace comutado</span><span class="heading-arabic">6.5</span></h2>
+<p>A Ethernet é a tecnologia de LAN com fio mais importante da história das redes. Ela se tornou dominante justamente porque ofereceu uma solução prática, simples e evolutiva para redes locais.</p>
+<h3 id="ethernet-clássica"><span class="heading-text">Ethernet clássica</span><span class="heading-arabic">6.5.1</span></h3>
+<p>Na forma clássica, a Ethernet funcionava sobre um meio compartilhado. Várias estações estavam conectadas ao mesmo cabo. Nesse cenário, o problema de acesso múltiplo era real e constante. Por isso, o protocolo MAC Ethernet clássico usa CSMA/CD.</p>
+<p>Esse contexto ajuda a entender vários detalhes de projeto, como tamanho mínimo de quadro, tempo de propagação e a necessidade de detectar colisão ainda durante a transmissão.</p>
+<p>Na imagem abaixo, o que merece atenção é a ideia de <strong>meio comum</strong>. Todas as estações estão ligadas ao mesmo barramento físico. Isso significa que, quando uma transmite, todas compartilham aquele mesmo canal e todas estão sujeitas ao mesmo domínio de colisão.</p>
+<img src="static/fig4_13_arquitetura_ethernet_classica.png" width="75%">
+
+<h3 id="ethernet-comutada"><span class="heading-text">Ethernet comutada</span><span class="heading-arabic">6.5.2</span></h3>
+<p>Com o tempo, a topologia prática mudou. Em vez de um único barramento compartilhado, cada estação passou a se ligar a uma porta de um <strong>switch</strong>. Isso muda profundamente o comportamento da rede.</p>
+<p>Em uma Ethernet comutada, cada enlace entre host e switch é normalmente ponto a ponto. Se esse enlace opera em <strong>full-duplex</strong>, uma ponta pode transmitir enquanto a outra também transmite, sem colisão. Nesse cenário, o CSMA/CD deixa de ser necessário.</p>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Se cada computador está ligado a uma porta própria de switch e o enlace é full-duplex, ainda existe um meio único realmente compartilhado entre todas as estações?</p>
+  </div>
+</div>
+<p>A resposta prática é não. É por isso que, embora o CSMA/CD seja fundamental na teoria e na história da Ethernet, ele quase não aparece no funcionamento cotidiano das redes cabeadas modernas.</p>
+<h3 id="hub-e-switch-não-fazem-a-mesma-coisa"><span class="heading-text">Hub e switch não fazem a mesma coisa</span><span class="heading-arabic">6.5.3</span></h3>
+<p>Essa distinção merece destaque porque costuma gerar confusão.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Dispositivo</th>
+  <th style="text-align:left">Comportamento lógico</th>
+  <th style="text-align:left">Consequência principal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><strong>Hub</strong></td>
+  <td style="text-align:left">Repete sinais para todos</td>
+  <td style="text-align:left">Um único domínio de colisão</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Switch</strong></td>
+  <td style="text-align:left">Encaminha quadros para a porta correta</td>
+  <td style="text-align:left">Colisões isoladas ou inexistentes</td>
+</tr>
+</tbody>
+</table>
+<p>No hub, todas as estações compartilham o mesmo domínio de colisão. No switch, cada porta passa a ser um domínio independente. Em full-duplex, as colisões somem do cenário normal.</p>
+<p>Esta figura funciona bem como comparação direta. No lado do hub, o sinal é repetido para todos e o meio continua logicamente compartilhado. No lado do switch, cada porta participa de um encaminhamento separado, o que muda completamente o comportamento da rede.</p>
+<img src="static/fig4_17_hub_switch.png" width="75%">
+
+<p>Já a imagem do switch ajuda a concretizar o equipamento real que substituiu o hub nas LANs modernas. Use-a para chamar atenção para a ideia de portas, encaminhamento seletivo e isolamento entre enlaces.</p>
+<img src="static/fig4_18_switch_ethernet.png" width="75%">
+
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Erro comum<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Switch não é apenas um “hub mais inteligente”. Ele altera a estrutura lógica do enlace e muda completamente o papel das colisões na rede.</p>
+  </div>
+</div>
+<h2 id="o-quadro-ethernet-na-prática"><span class="heading-text">O quadro Ethernet na prática</span><span class="heading-arabic">6.6</span></h2>
+<p>Até aqui, falamos sobre o direito de transmitir. Agora precisamos olhar para o objeto concreto que trafega no enlace. Esse objeto é o <strong>quadro Ethernet</strong>.</p>
+<p>Essa transição se conecta diretamente com a aula anterior. Lá, o quadro apareceu como a unidade em que a camada de enlace organiza os dados e acrescenta verificação de integridade. Aqui, vamos olhar para um quadro específico, o da Ethernet, e observar como ele combina endereçamento local, tipo de conteúdo e detecção de erro no mesmo formato.</p>
+<p>Em termos simplificados, um quadro Ethernet possui os seguintes campos principais.</p>
+<ol>
+<li>Preâmbulo.</li>
+<li>Endereço MAC de destino.</li>
+<li>Endereço MAC de origem.</li>
+<li>Campo Tipo ou Tamanho.</li>
+<li>Dados.</li>
+<li>Preenchimento, se necessário.</li>
+<li>FCS, normalmente com CRC.</li>
+</ol>
+<h3 id="por-que-esses-campos-existem"><span class="heading-text">Por que esses campos existem</span><span class="heading-arabic">6.6.1</span></h3>
+<p>O endereço de destino diz para qual interface local o quadro se destina. O endereço de origem identifica quem enviou. O campo Tipo ajuda a indicar o conteúdo da carga útil, como IPv4. O FCS permite verificar se o quadro chegou sem erro detectável.</p>
+<p>O tamanho mínimo de quadro também não é um capricho. Na Ethernet clássica, ele precisava ser grande o suficiente para que a estação ainda estivesse transmitindo quando uma colisão distante pudesse ser percebida. É daí que vem o valor tradicional de <strong>64 bytes</strong> como tamanho mínimo do quadro Ethernet.</p>
+<p>Na figura do formato do quadro, peça atenção especial para três regiões. Primeiro, os campos de <strong>destino</strong> e <strong>origem</strong>, que trazem os endereços MAC. Depois, o campo <strong>Tipo/Tamanho</strong>, que ajuda a interpretar a carga útil. Por fim, o <strong>FCS</strong>, que retoma diretamente a discussão de detecção de erros feita na aula anterior.</p>
+<img src="static/fig4_14_formato_quadros_ethernet.png" width="80%">
+
+<div class="example">
+  <div class="example-title">Leitura conceitual de um quadro Ethernet</div>
+  Se um quadro chega com um MAC de destino correspondente à sua interface, a placa aceita esse quadro. Se o campo Tipo for <code>0x0800</code>, o sistema entende que a carga útil contém um pacote IPv4.
+</div>
+<h2 id="endereçamento-mac"><span class="heading-text">Endereçamento MAC</span><span class="heading-arabic">6.7</span></h2>
+<p>O endereço MAC é a forma de identificar interfaces no enlace local. Em Ethernet, ele tem tradicionalmente <strong>48 bits</strong>, normalmente representados em hexadecimal, em grupos como este:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">70:85:c2:94:54:22
+</code></pre>
+<h3 id="o-que-esse-endereço-identifica"><span class="heading-text">O que esse endereço identifica</span><span class="heading-arabic">6.7.1</span></h3>
+<p>Ele identifica a <strong>interface de rede</strong>, não a máquina abstrata em todos os contextos possíveis. Se um equipamento possui mais de uma interface, cada uma pode ter seu próprio endereço MAC.</p>
+<h3 id="unicast-multicast-e-broadcast"><span class="heading-text">Unicast, multicast e broadcast</span><span class="heading-arabic">6.7.2</span></h3>
+<p>Esses três conceitos aparecem diretamente no nível MAC.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Tipo</th>
+  <th style="text-align:left">Significado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><strong>Unicast</strong></td>
+  <td style="text-align:left">Quadro destinado a uma única interface</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Multicast</strong></td>
+  <td style="text-align:left">Quadro destinado a um grupo específico</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Broadcast</strong></td>
+  <td style="text-align:left">Quadro enviado para todas as estações da LAN</td>
+</tr>
+</tbody>
+</table>
+<p>O broadcast Ethernet clássico usa o endereço:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">ff:ff:ff:ff:ff:ff
+</code></pre>
+<p>Isso significa que toda interface da LAN deve aceitar aquele quadro.</p>
+<h3 id="oui-e-fabricante"><span class="heading-text">OUI e fabricante</span><span class="heading-arabic">6.7.3</span></h3>
+<p>Os endereços MAC não são números aleatórios no sentido mais ingênuo. Os primeiros bits tradicionalmente carregam um identificador do fabricante, chamado <strong>OUI</strong>, sigla de <em>Organizationally Unique Identifier</em>.</p>
+<p>Isso ajuda a garantir unicidade global de fabricação e explica por que placas de fabricantes diferentes costumam ter prefixos distintos.</p>
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">Observação importante<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Em software moderno, virtualização e algumas técnicas de administração, endereços MAC podem ser configurados manualmente. Mesmo assim, a lógica conceitual do MAC como identificador do enlace local continua válida.</p>
+  </div>
+</div>
+<h2 id="mac-não-substitui-ip"><span class="heading-text">MAC não substitui IP</span><span class="heading-arabic">6.8</span></h2>
+<p>Essa é uma das confusões mais frequentes em Redes. O endereço MAC não elimina a necessidade de endereço IP porque os dois resolvem problemas diferentes.</p>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Se o MAC já identifica a interface, por que a rede ainda precisa de IP?</p>
+  </div>
+</div>
+<h3 id="diferença-de-função"><span class="heading-text">Diferença de função</span><span class="heading-arabic">6.8.1</span></h3>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Conceito</th>
+  <th style="text-align:left">Pergunta que responde</th>
+  <th style="text-align:left">Escopo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><strong>MAC</strong></td>
+  <td style="text-align:left">Para qual interface local este quadro vai?</td>
+  <td style="text-align:left">Enlace local</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>IP</strong></td>
+  <td style="text-align:left">Para qual host lógico e para qual rede este pacote deve seguir?</td>
+  <td style="text-align:left">Inter-redes</td>
+</tr>
+</tbody>
+</table>
+<p>O MAC trabalha bem para entrega local no enlace atual. Já o IP organiza a comunicação lógica entre redes diferentes. Em uma comunicação que atravessa roteadores, o pacote IP segue com seu destino lógico, mas o quadro Ethernet muda a cada enlace.</p>
+<div class="example">
+  <div class="example-title">Exemplo de camada</div>
+  Quando seu computador envia um pacote para o roteador da rede local, o quadro Ethernet de saída usa o MAC do roteador como destino local. O pacote IP dentro dele, porém, pode ter como destino final um servidor muito distante na Internet.
+</div>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Cuidado conceitual<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Dizer que “o MAC é o endereço físico da máquina na Internet” está errado. O MAC atua no enlace local. A Internet depende de endereçamento lógico e roteamento, isto é, depende de IP.</p>
+  </div>
+</div>
+<h2 id="linux-olhando-para-mac-ip-e-enlace-em-um-sistema-real"><span class="heading-text">Linux: olhando para MAC, IP e enlace em um sistema real</span><span class="heading-arabic">6.9</span></h2>
+<p>Em vez de tratar isso apenas de forma abstrata, vale muito a pena olhar para um sistema Linux real. Abaixo estão comandos executados neste ambiente, com seus resultados reais, para que você possa usar os exemplos em aula.</p>
+<h3 id="interfaces-e-endereços-mac"><span class="heading-text">Interfaces e endereços MAC</span><span class="heading-arabic">6.9.1</span></h3>
+<p>Comando:</p>
+<pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">ip -br link
+</code></pre>
+<p>Resultado:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">lo               UNKNOWN        00:00:00:00:00:00 &lt;LOOPBACK,UP,LOWER_UP&gt;
+enp5s0           UP             70:85:c2:94:54:22 &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt;
+wlp4s0           DOWN           a0:b3:39:33:65:6c &lt;BROADCAST,MULTICAST&gt;
+</code></pre>
+<p>Esse resultado já mostra três ideias importantes.</p>
+<ol>
+<li><code>enp5s0</code> é uma interface Ethernet ativa.</li>
+<li><code>70:85:c2:94:54:22</code> é um endereço MAC real.</li>
+<li>A própria interface anuncia suporte a broadcast e multicast.</li>
+</ol>
+<h3 id="a-mesma-interface-possui-mac-e-ip"><span class="heading-text">A mesma interface possui MAC e IP</span><span class="heading-arabic">6.9.2</span></h3>
+<p>Comando:</p>
+<pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">ip addr show
+</code></pre>
+<p>Trecho relevante do resultado:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">2: enp5s0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc fq_codel state UP group default qlen 1000
+    link/ether 70:85:c2:94:54:22 brd ff:ff:ff:ff:ff:ff
+    inet 192.168.100.33/24 brd 192.168.100.255 scope global dynamic noprefixroute enp5s0
+</code></pre>
+<p>Esse pequeno trecho é didaticamente excelente porque concentra dois níveis da pilha na mesma interface.</p>
+<ol>
+<li><code>link/ether</code> mostra o endereço MAC.</li>
+<li><code>inet 192.168.100.33/24</code> mostra o endereço IP.</li>
+<li><code>ff:ff:ff:ff:ff:ff</code> aparece como broadcast Ethernet.</li>
+</ol>
+<p>Ou seja, a interface não escolhe entre MAC e IP. Ela participa dos dois níveis ao mesmo tempo, cada um com sua função.</p>
+<h3 id="vizinhança-local-e-relação-entre-ip-e-mac"><span class="heading-text">Vizinhança local e relação entre IP e MAC</span><span class="heading-arabic">6.9.3</span></h3>
+<p>Comando:</p>
+<pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">ip neigh
+</code></pre>
+<p>Resultado:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">192.168.100.1 dev enp5s0 lladdr ac:8d:34:0f:a4:48 DELAY
+fe80::1 dev enp5s0 lladdr ac:8d:34:0f:a4:48 router REACHABLE
+</code></pre>
+<p>Esse resultado mostra uma relação muito importante. Um vizinho da rede local, identificado por IP, está associado a um endereço MAC específico.</p>
+<p>É exatamente esse tipo de associação que permite ao sistema saber qual endereço MAC usar quando precisa enviar um quadro Ethernet para um destino local ou para o roteador.</p>
+<h3 id="velocidade-e-duplex-do-enlace-ethernet"><span class="heading-text">Velocidade e duplex do enlace Ethernet</span><span class="heading-arabic">6.9.4</span></h3>
+<p>Comando:</p>
+<pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">ethtool enp5s0
+</code></pre>
+<p>Trecho relevante do resultado:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">Speed: 1000Mb/s
+Duplex: Full
+Auto-negotiation: on
+Port: Twisted Pair
+Link detected: yes
+</code></pre>
+<p>Esse trecho ajuda a fechar várias ideias teóricas.</p>
+<ol>
+<li><code>1000Mb/s</code> conecta o exemplo à gigabit Ethernet.</li>
+<li><code>Duplex: Full</code> ajuda a explicar por que colisões não fazem mais parte do comportamento normal dessa interface.</li>
+<li><code>Twisted Pair</code> conecta a aula atual com o estudo anterior da camada física e do par trançado.</li>
+</ol>
+<h2 id="questões"><span class="heading-text">Questões</span><span class="heading-arabic">6.10</span></h2>
+<div class="questions">
+  <p><strong>1.</strong> Explique, com suas palavras, por que a subcamada MAC se torna especialmente importante quando várias estações compartilham o mesmo meio.</p>
+<p><strong>2.</strong> Por que alocação estática de canal tende a ser ineficiente para tráfego de dados em rajadas?</p>
+<p><strong>3.</strong> Diferencie de forma conceitual ALOHA, slotted ALOHA, CSMA e CSMA/CD.</p>
+<p><strong>4.</strong> Por que o tamanho mínimo do quadro Ethernet clássico está relacionado à detecção de colisão?</p>
+<p><strong>5.</strong> Diferencie claramente hub e switch do ponto de vista lógico.</p>
+<p><strong>6.</strong> Explique por que colisões praticamente desaparecem em enlaces Ethernet comutados em full-duplex.</p>
+<p><strong>7.</strong> O que o endereço MAC identifica exatamente?</p>
+<p><strong>8.</strong> Diferencie unicast, multicast e broadcast no contexto do endereçamento MAC.</p>
+<p><strong>9.</strong> Explique por que endereço MAC e endereço IP não são concorrentes, mas complementares.</p>
+<p><strong>10.</strong> Observe o trecho abaixo e diga o que cada parte revela sobre a interface:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">link/ether 70:85:c2:94:54:22 brd ff:ff:ff:ff:ff:ff
+inet 192.168.100.33/24
+</code></pre>
+</div>
+<div class="example">
+  <div class="example-title">Gabarito</div>
+  <p><strong>1.</strong> Porque, em meio compartilhado, além de montar quadros, é preciso coordenar quem transmite, quando transmite e como reagir a conflitos no uso do canal.</p>
+<p><strong>2.</strong> Porque partes fixas do canal ficam ociosas quando os usuários reservados não estão transmitindo, desperdiçando capacidade que poderia ser usada por outros.</p>
+<p><strong>3.</strong> ALOHA transmite sem escutar. Slotted ALOHA só transmite no início de slots. CSMA escuta antes de transmitir. CSMA/CD escuta antes e também detecta colisão durante a transmissão.</p>
+<p><strong>4.</strong> Porque, na Ethernet clássica, o quadro precisava durar tempo suficiente para que uma colisão distante ainda pudesse ser percebida enquanto a estação estivesse transmitindo.</p>
+<p><strong>5.</strong> O hub repete sinais para todos e mantém um único domínio de colisão. O switch encaminha quadros para a porta apropriada e separa os domínios de colisão.</p>
+<p><strong>6.</strong> Porque cada enlace host-switch é normalmente ponto a ponto e pode operar em full-duplex, eliminando a disputa simultânea pelo mesmo meio compartilhado.</p>
+<p><strong>7.</strong> A interface de rede no enlace local.</p>
+<p><strong>8.</strong> Unicast vai para uma interface específica. Multicast vai para um grupo. Broadcast vai para todas as estações da LAN.</p>
+<p><strong>9.</strong> O MAC resolve entrega local no enlace atual. O IP resolve endereçamento lógico e roteamento entre redes.</p>
+<p><strong>10.</strong> <code>link/ether 70:85:c2:94:54:22</code> mostra o endereço MAC da interface. <code>brd ff:ff:ff:ff:ff:ff</code> mostra o endereço de broadcast Ethernet. <code>inet 192.168.100.33/24</code> mostra o endereço IPv4 configurado na mesma interface.</p>
+</div>
+<h2 id="próximos-passos"><span class="heading-text">Próximos passos</span><span class="heading-arabic">6.11</span></h2>
+<p>Na próxima aula, avançaremos para <strong>Hardware de Interconexão (Switches) e VLANs</strong>.</p>
+<p>Você verá como os switches aprendem endereços MAC, como decidem por qual porta encaminhar cada quadro e como as VLANs permitem segmentar logicamente a rede mesmo quando a infraestrutura física é compartilhada.</p>
+
+                </div>
+            </article>
+            <footer class="footer">
+                <p>© 2025 · <a href="#">Gabriel Soares Baptista</a></p>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        const toggle = document.querySelector('.mobile-menu-toggle');
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.querySelector('.mobile-menu-overlay');
+
+        function openMenu() {
+            sidebar.classList.add('open');
+            overlay.classList.add('open');
+            toggle.classList.add('open');
+            toggle.innerHTML = '<i data-lucide="x"></i>';
+            CourseForgeUI.initIcons();
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMenu() {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('open');
+            toggle.classList.remove('open');
+            toggle.innerHTML = '<i data-lucide="menu"></i>';
+            CourseForgeUI.initIcons();
+            document.body.style.overflow = '';
+        }
+
+        toggle.addEventListener('click', () => {
+            if (sidebar.classList.contains('open')) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        overlay.addEventListener('click', closeMenu);
+    </script>
+
+    
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            renderMathInElement(document.body, {
+                output: 'html',
+                delimiters: [
+                    { left: "$$", right: "$$", display: true },
+                    { left: "$", right: "$", display: false },
+                    { left: "\\(", right: "\\)", display: false },
+                    { left: "\\[", right: "\\]", display: true }
+                ],
+                throwOnError: false,
+                strict: false
+            });
+        });
+    </script>
+    
+    
+    <script src="/aulas-faesa/js/vendor/prism/prism.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-c.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-cpp.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-python.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-clike.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-perl.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-java.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-mermaid.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-php.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js" data-no-bundle></script>
+    
+    
+    
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            mermaid.initialize({
+                startOnLoad: true,
+                theme: 'default',
+                securityLevel: 'loose',
+                fontFamily: 'Inter, system-ui, sans-serif',
+                themeVariables: {
+                    fontSize: '16px',
+                    edgeLabelFontSize: '16px',
+                    multiplicityFontSize: '18px'
+                }
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const isSubcourse = false;
+        const courseName = "Redes";
+        CourseForgeNav.applyDynamicBreadcrumbs('.breadcrumb', isSubcourse);
+        CourseForgeNav.initScrollSpy();
+        CourseForgeUI.initCopyButtons();
+        CourseForgeUI.initExamples();
+        });
+
+        function handleBackNavigation() {
+            const isSubcourse = false;
+        const dynamic = CourseForgeNav.getBackLink('contents.html', 'Voltar', isSubcourse);
+        window.location.href = dynamic.url;
+        }
+    </script>
+</body>
+
+</html>

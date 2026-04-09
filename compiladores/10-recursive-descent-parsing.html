@@ -8,11 +8,11 @@
     <link rel="icon" href="/aulas-faesa/img/dark-favicon.svg" media="(prefers-color-scheme: light)">
     <link rel="icon" href="/aulas-faesa/img/light-favicon.svg" media="(prefers-color-scheme: dark)">
     <link rel="stylesheet" href="/aulas-faesa/css/vendor/fonts.css" data-no-bundle>
-    <link rel="stylesheet" href="/aulas-faesa/css/bundle.min.css">
+    <link rel="stylesheet" href="/aulas-faesa/css/bundles/katex-base-prism-one-light-b0347952c973.bundle.min.css">
     
     
     <link rel="stylesheet" href="/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css" data-no-bundle>
-    <script src="/aulas-faesa/js/bundle.min.js"></script>
+    <script src="/aulas-faesa/js/bundles/lucide-katex-auto-render-4b36e8bd8642.bundle.min.js"></script>
 </head>
 
 <body>
@@ -57,23 +57,15 @@
                         </li>
                         
                         <li class="toc-item level-3">
-                            <a href="#a-função-de-sucesso-e-erro-codematchcode">10.3.2. A ponte prática com os problemas da gramática</a>
+                            <a href="#exemplo-de-execução-entrada-válida">10.3.1. Exemplo de execução: Entrada Válida</a>
                         </li>
                         
                         <li class="toc-item level-3">
-                            <a href="#exemplo-de-execução-o-caminho-de-sucesso">10.3.3. Exemplo de execução: O caminho de sucesso</a>
-                        </li>
-                        
-                        <li class="toc-item level-3">
-                            <a href="#exemplo-de-execução-o-caminho-de-falha">10.3.4. Exemplo de execução: O caminho de falha</a>
+                            <a href="#exemplo-de-execução-entrada-inválida">10.3.2. Exemplo de execução: Entrada Inválida</a>
                         </li>
                         
                         <li class="toc-item level-2">
-                            <a href="#fechamento">10.4. Fechamento</a>
-                        </li>
-                        
-                        <li class="toc-item level-2">
-                            <a href="#próximos-passos">10.5. Próximos Passos</a>
+                            <a href="#próximos-passos">10.4. Próximos Passos</a>
                         </li>
                         
                     </ol>
@@ -82,8 +74,10 @@
 
                 <nav class="sidebar-nav-section">
                     
+                    <a href="9-grammars.html" class="sidebar-nav-link prev"><i data-lucide="chevron-left" class="nav-icon"></i> Gramáticas</a>
                     
-                    <a href="2-compiler-as-translator.html" class="sidebar-nav-link next">Compilador como Tradutor <i data-lucide="chevron-right" class="nav-icon"></i></a>
+                    
+                    <a href="11-recursive-descent-parser-for-slang.html" class="sidebar-nav-link next">Lab - Analisador Sintático I <i data-lucide="chevron-right" class="nav-icon"></i></a>
                     
                     <a href="javascript:void(0)" onclick="handleBackNavigation()"
                         class="sidebar-nav-link back"><i data-lucide="arrow-left" class="nav-icon"></i> Voltar</a>
@@ -105,10 +99,10 @@
         <main class="main-content">
             <article class="article">
                 <header class="article-header">
-                    <span class="chapter-number">1</span>
+                    <span class="chapter-number">10</span>
                     <h1 class="article-title">
                         <span class="title-ornament left">❧</span>
-                        <span class="title-text">Introdução à Análise Sintática e ao Parsing Descendente Recursivo</span>
+                        <span class="title-text">Parsing Descendente Recursivo</span>
                         <span class="title-ornament right">❧</span>
                     </h1>
                     
@@ -125,7 +119,14 @@
                         
                         
                         
-                        <span class="breadcrumb-current">Introdução à Análise Sintática e ao Parsing Descendente Recursivo</span>
+                        
+                        <a href="contents.html#part-III" class="breadcrumb-link">III - Análise Sintática</a>
+                        
+                        <span class="breadcrumb-separator"><i data-lucide="chevron-right" class="breadcrumb-icon"></i></span>
+                        
+                        
+                        
+                        <span class="breadcrumb-current">Parsing Descendente Recursivo</span>
                         
                         
                     </nav>
@@ -145,10 +146,7 @@
 </div>
 <h2 id="duas-formas-de-analisar-uma-entrada"><span class="heading-text">Duas formas de analisar uma entrada</span><span class="heading-arabic">10.2</span></h2>
 <p>Antes de focarmos na implementação, precisamos entender a direção do raciocínio. A análise sintática pode ser feita de duas maneiras principais: de cima para baixo (descendente) ou de baixo para cima (ascendente).</p>
-<p>Para entender a diferença prática, vamos observar como uma mesma palavra pode ser estruturada a partir da gramática de duas formas inversas.</p>
-<div class="example">
-  <div class="example-title">Top-down vs Bottom-up na prática</div>
-  <p>Considere a gramática:</p>
+<p>Para entender a diferença prática, vamos observar como uma mesma palavra pode ser estruturada a partir da gramática de duas formas inversas. Considere a gramática:</p>
 <p>$$
 G = (N, T, P, S)
 $$</p>
@@ -168,13 +166,8 @@ C &\to dD \\
 D &\to e
 \end{split}
 $$</p>
-<p>e a cadeia de entrada:</p>
-<p>$$
-abcde
-$$</p>
-<p>Como as duas abordagens leem essa palavra?</p>
-<hr />
-<div class="col2"><div>
+<p>e a cadeia de entrada: $abcde$. Como as duas abordagens leem essa palavra?</p>
+<div class="col2" style="gap:20px"><div>
 
 <p><strong>Leitura descendente (Top-down)</strong></p>
 <p>O parser começa do símbolo inicial $S$ e tenta derivar até a palavra. O raciocínio é: &quot;como a estrutura inicial gera esta entrada específica?&quot;.</p>
@@ -201,13 +194,9 @@ abcde &\Rightarrow abcdD \\
 \end{split}
 $$</p>
 </div></div>
-</div>
+
 <p>A leitura <strong>descendente</strong> imita o pensamento de fora para dentro. Ela começa no símbolo inicial, escolhe uma produção, e repete o processo até cobrir todos os terminais. Porém, se o parser usar tentativa e erro (o chamado <em>backtracking</em>), ele pode perder muito tempo explorando caminhos incorretos. Por isso, na prática, buscamos um parser preditivo: aquele que olha para o próximo token da entrada e consegue adivinhar com segurança qual regra usar. É aqui que os problemas vistos na aula anterior (ambiguidade, recursão à esquerda, e fatoração) atrapalham: eles impedem essa previsão segura.</p>
-<p>Já a leitura <strong>ascendente</strong> constrói a árvore de baixo para cima, reconhecendo pedaços menores e aglutinando-os em não terminais maiores.</p>
-<div class="example">
-  <div class="example-title">Onde a abordagem descendente se perde</div>
-  <p>Por que a família de analisadores LR (bottom-up) lida melhor com algumas gramáticas mais naturais do que a abordagem top-down?</p>
-<hr />
+<p>Já a leitura <strong>ascendente</strong> constrói a árvore de baixo para cima, reconhecendo pedaços menores e aglutinando-os em não terminais maiores. Mas, podemos nos perguntar, por que a família de analisadores LR (bottom-up) lida melhor com algumas gramáticas mais naturais do que a abordagem top-down?</p>
 <p>Considere uma gramática clássica com recursão à esquerda:</p>
 <p>$$
 G = (N, T, P, S)
@@ -227,6 +216,7 @@ $$</p>
 <p>Para reconhecer $id + id$, um parser <strong>descendente</strong> preditivo fica preso: ele tenta iniciar a derivação de $E$, vê a regra $E \to E + id$, e ao expandir $E$, precisa expandir $E$ novamente, entrando em loop infinito sem consumir nenhum <code>id</code>.</p>
 <p>Um parser <strong>ascendente</strong>, por outro lado, leria o primeiro <code>id</code>, reconheceria a regra $E \to id$, e reduziria para $E$. Depois leria o <code>+</code> e o próximo <code>id</code>, formando $E + id$, que seria inteiramente reduzido para o $E$ final. Ele lida bem com recursões à esquerda porque a redução ocorre apenas depois que os tokens já foram lidos da entrada.</p>
 </div>
+
 <div class="callout callout-question">
   <div class="callout-title">
     <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
@@ -238,14 +228,17 @@ $$</p>
 </div>
 <h2 id="o-algoritmo-descendente-recursivo"><span class="heading-text">O algoritmo descendente recursivo</span><span class="heading-arabic">10.3</span></h2>
 <p>O <strong>parser descendente recursivo</strong> é a forma mais direta de transformar a ideia top-down em um programa. A ideia central é mapear diretamente a gramática para funções. O princípio do algoritmo é:</p>
+<div style="padding: 10px 50px">
+
 <ul>
 <li>cada não terminal da gramática vira uma função;</li>
 <li>a função <code>main</code> chama a função do símbolo inicial;</li>
 <li>o parser observa a entrada um símbolo por vez;</li>
 <li>quando ele espera um terminal, usa uma rotina auxiliar (geralmente chamada de <code>match</code>) para consumir esse terminal se ele coincidir com o próximo token;</li>
-<li>se a produção é vazia ($\epsilon$), a função apenas retorna.</li>
+<li>se a produção é vazia ($\epsilon$), a função apenas retorna.</div>
+
+</li>
 </ul>
-<h3 id="a-função-de-sucesso-e-erro-codematchcode"><span class="heading-text">A função de sucesso e erro: <code>match</code></span><span class="heading-arabic">10.3.1</span></h3>
 <p>A rotina <code>match</code> é responsável por avançar a leitura e lidar com falhas. Ela compara o símbolo que a gramática exige naquele momento com o símbolo atual da entrada.</p>
 <pre class="line-numbers language-c" data-lang="C"><code class="language-c">void match(char esperado) {
     if (entrada[ponteiro] == esperado) {
@@ -255,9 +248,7 @@ $$</p>
     }
 }
 </code></pre>
-<p>Se o token bater, o ponteiro avança. Se vier um token inesperado (ou a entrada acabar antes da hora), o <code>match</code> levanta um erro sintático.</p>
-<h3 id="a-ponte-prática-com-os-problemas-da-gramática"><span class="heading-text">A ponte prática com os problemas da gramática</span><span class="heading-arabic">10.3.2</span></h3>
-<p>Na aula anterior, vimos que a recursão à esquerda é inimiga de parsers descendentes. Agora podemos ver o motivo exato disso em código. Se tivéssemos a produção $E \to E + T$, a implementação direta seria:</p>
+<p>Se o token bater, o ponteiro avança. Se vier um token inesperado (ou a entrada acabar antes da hora), o <code>match</code> levanta um erro sintático. Na aula anterior, vimos que a recursão à esquerda é inimiga de parsers descendentes. Agora podemos ver o motivo exato disso em código. Se tivéssemos a produção $E \to E + T$, a implementação direta seria:</p>
 <pre class="line-numbers language-c" data-lang="C"><code class="language-c">void E() {
     E();           // Chamada recursiva infinita sem consumir entrada!
     match('+');
@@ -265,11 +256,9 @@ $$</p>
 }
 </code></pre>
 <p>Ao executar <code>E()</code>, a função chama <code>E()</code> novamente na primeira linha. Isso causa um <em>stack overflow</em> antes que qualquer caractere seja lido ou testado. É por isso que eliminamos a recursão à esquerda antes de implementar esse algoritmo.</p>
-<h3 id="exemplo-de-execução-o-caminho-de-sucesso"><span class="heading-text">Exemplo de execução: O caminho de sucesso</span><span class="heading-arabic">10.3.3</span></h3>
+<h3 id="exemplo-de-execução-entrada-válida"><span class="heading-text">Exemplo de execução: Entrada Válida</span><span class="heading-arabic">10.3.1</span></h3>
 <p>Vamos acompanhar passo a passo a leitura de uma entrada válida.</p>
-<div class="example">
-  <div class="example-title">Reconhecendo uma entrada correta</div>
-  <p>Considere a gramática já sem recursão à esquerda:</p>
+<p>Considere a gramática já sem recursão à esquerda:</p>
 <p>$$
 G = (N, T, P, S)
 $$</p>
@@ -287,25 +276,25 @@ E' &\to +\ T\ E' \mid \epsilon \\
 T &\to i
 \end{split}
 $$</p>
-<p>e a cadeia:</p>
-<p>$$
-i + i
-$$</p>
-<p>Como as funções reconhecem essa entrada passo a passo?</p>
-<hr />
-<p>As funções correspondentes na linguagem C seriam:</p>
-<pre class="line-numbers language-c" data-lang="C"><code class="language-c">void E() { T(); E_linha(); }
+<p>e a cadeia: $i + i$. Como as funções reconhecem essa entrada passo a passo? As funções correspondentes na linguagem C seriam:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">void E() {
+    T();
+    E_linha();
+}
+
 void E_linha() {
     if (entrada[ponteiro] == '+') {
-        match('+'); T(); E_linha();
+        match('+');
+        T();
+        E_linha();
     }
 }
-void T() { match('i'); }
+
+void T() {
+    match('i');
+}
 </code></pre>
 <p>Podemos representar a execução como uma pilha de chamadas que espelha exatamente a derivação top-down:</p>
-<div class="col2"><div>
-
-<p><strong>Derivação Passo a Passo</strong></p>
 <p>$$
 \begin{split}
 E &\Rightarrow T\ E' \\
@@ -315,9 +304,6 @@ E &\Rightarrow T\ E' \\
   &\Rightarrow i + i
 \end{split}
 $$</p>
-</div><div style="width: 1px; background: #333; height: 180px; align-self: center;"></div><div>
-
-<p><strong>Pilha de Chamadas de Função</strong></p>
 <pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">main
 └── E()
     ├── T()
@@ -328,20 +314,9 @@ $$</p>
         │   └── match('i')
         └── E_linha() -&gt; retorna (vazio)
 </code></pre>
-</div></div>
-
 <p>Observe como a função <code>E_linha()</code> no último nível percebe que não há mais o símbolo <code>+</code> na entrada. Como ela possui a regra $\epsilon$, ela apenas retorna, concluindo o reconhecimento com sucesso.</p>
-</div>
-<h3 id="exemplo-de-execução-o-caminho-de-falha"><span class="heading-text">Exemplo de execução: O caminho de falha</span><span class="heading-arabic">10.3.4</span></h3>
-<p>O que acontece quando o programador escreve código inválido?</p>
-<div class="example">
-  <div class="example-title">Detectando um erro sintático</div>
-  <p>Utilizando a mesma gramática anterior, imagine a entrada incompleta:</p>
-<p>$$
-i +
-$$</p>
-<p>Onde exatamente o parser percebe a falha?</p>
-<hr />
+<h3 id="exemplo-de-execução-entrada-inválida"><span class="heading-text">Exemplo de execução: Entrada Inválida</span><span class="heading-arabic">10.3.2</span></h3>
+<p>O que acontece quando o programador escreve código inválido? Utilizando a mesma gramática anterior, imagine a entrada incompleta: $i +$. Onde exatamente o parser percebe a falha?</p>
 <p>O processo ocorre normalmente até faltar o segundo <code>i</code>.</p>
 <pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">main
 └── E()
@@ -353,7 +328,6 @@ $$</p>
         │   └── match('i') // ERRO SINTÁTICO!
 </code></pre>
 <p>A chamada de <code>E_linha()</code> reconhece o <code>+</code>, mas obrigatoriamente tem que chamar <code>T()</code> em seguida. A função <code>T()</code> invoca <code>match('i')</code>. Como a entrada já terminou e não há mais o token <code>i</code>, o <code>match</code> dispara a falha sintática. É assim que o parser garante que a cadeia obedeça a uma estrutura completa.</p>
-</div>
 <div class="callout callout-warning">
   <div class="callout-title">
     <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
@@ -363,17 +337,7 @@ $$</p>
 <p>O parser não aceita a entrada só porque conseguiu reconhecer um prefixo dela. Para haver sucesso, a análise precisa terminar tendo consumido toda a cadeia esperada. O fato de algumas chamadas retornarem por vazio não significa fim de análise, mas sim fim de uma estrutura específica.</p>
   </div>
 </div>
-<h2 id="fechamento"><span class="heading-text">Fechamento</span><span class="heading-arabic">10.4</span></h2>
-<div class="callout callout-success">
-  <div class="callout-title">
-    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></span>
-    <span class="callout-title-inner">Síntese<br /></span>
-  </div>
-  <div class="callout-content">
-<p>A análise descendente recursiva transforma diretamente as regras de uma gramática em execução estruturada. Cada não terminal vira uma função e cada terminal guia o avanço da leitura pela entrada através do <code>match</code>. Ela consolida o porquê de prepararmos as gramáticas com tanto rigor: remover ambiguidades e recursões à esquerda garante que o parser nunca fique preso e consiga tomar a decisão certa apenas checando o próximo token.</p>
-  </div>
-</div>
-<h2 id="próximos-passos"><span class="heading-text">Próximos Passos</span><span class="heading-arabic">10.5</span></h2>
+<h2 id="próximos-passos"><span class="heading-text">Próximos Passos</span><span class="heading-arabic">10.4</span></h2>
 <p>Agora que a base conceitual está clara, o próximo passo é aplicar esse algoritmo à nossa linguagem. No capítulo seguinte, <a href="11-recursive-descent-parser-for-slang.html">Parser Descendente Recursivo para Expressões do Slang</a>, vamos pegar essa mesma lógica e transformá-la em código dentro do compilador.</p>
 
                 </div>
