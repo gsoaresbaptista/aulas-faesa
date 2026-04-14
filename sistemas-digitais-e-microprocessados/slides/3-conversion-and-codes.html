@@ -6,15 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
     <title>Conversão entre bases e Códigos</title>
-    <link rel="icon" href="/aulas-faesa/img/dark-favicon.svg" media="(prefers-color-scheme: light)">
-    <link rel="icon" href="/aulas-faesa/img/light-favicon.svg" media="(prefers-color-scheme: dark)">
+    <link rel="icon" href="/img/dark-favicon.svg" media="(prefers-color-scheme: light)">
+    <link rel="icon" href="/img/light-favicon.svg" media="(prefers-color-scheme: dark)">
 
-    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/reset.min.css" data-no-bundle />
-    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/reveal.min.css" data-no-bundle />
-    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/theme/white.min.css" data-no-bundle />
-    <link rel="stylesheet" href="/aulas-faesa/css/prism-one-light.css" data-no-bundle>
-    <link rel="stylesheet" href="/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css" data-no-bundle>
-    <link rel="stylesheet" href="/aulas-faesa/css/vendor/fonts.css" data-no-bundle>
+    <link rel="stylesheet" href="/css/vendor/reveal/reset.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/css/vendor/reveal/reveal.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/css/vendor/reveal/theme/white.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/css/prism-one-light.css" data-no-bundle>
+    <link rel="stylesheet" href="/css/vendor/prism/prism-line-numbers.min.css" data-no-bundle>
+    <link rel="stylesheet" href="/css/vendor/fonts.css" data-no-bundle>
 </head>
 
 <body>
@@ -68,7 +68,7 @@
 <p>$$\boxed{453_{10} = 111000101_2}$$</p>
 </section>
 <section><h1>Fluxograma de Conversão</h1>
-<div class="error">Graphviz error: failed to execute PosixPath('dot'), make sure the Graphviz executables are on your systems' PATH</div>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="270" viewBox="0.00 0.00 240.50 443.00" class="svg-graph graphviz-img" data-sketch="true"><g id="svg-graphviz-ed89739afa2e-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 439)"><title>ConversaoBinario</title><g id="svg-graphviz-ed89739afa2e-node1" class="node"><title>inicio</title><ellipse fill="#efe9ff" stroke="#8a6cff" stroke-dasharray="5,2" cx="166.5" cy="-417" rx="40.09" ry="18" /><text text-anchor="middle" x="166.5" y="-413.3" font-family="Helvetica,sans-Serif" font-size="14.00">INÍCIO</text></g><g id="svg-graphviz-ed89739afa2e-node2" class="node"><title>div2</title><path fill="#efe9ff" stroke="#8a6cff" stroke-dasharray="5,2" d="M220.5,-356C220.5,-356 112.5,-356 112.5,-356 106.5,-356 100.5,-350 100.5,-344 100.5,-344 100.5,-332 100.5,-332 100.5,-326 106.5,-320 112.5,-320 112.5,-320 220.5,-320 220.5,-320 226.5,-320 232.5,-326 232.5,-332 232.5,-332 232.5,-344 232.5,-344 232.5,-350 226.5,-356 220.5,-356" /><text text-anchor="middle" x="166.5" y="-334.3" font-family="Helvetica,sans-Serif" font-size="14.00">Divida pela Base</text></g><g id="svg-graphviz-ed89739afa2e-edge1" class="edge"><title>inicio-&gt;div2</title><path fill="none" stroke="#333333" d="M169.55,-398.85C170.39,-390.85 170.17,-382.8 168.89,-366.3" /><polygon fill="#333333" stroke="#333333" points="172.37,-365.9 168.07,-356.22 165.39,-366.47 172.37,-365.9" /></g><g id="svg-graphviz-ed89739afa2e-node3" class="node"><title>guarda</title><path fill="#efe9ff" stroke="#8a6cff" stroke-dasharray="5,2" d="M167,-277C167,-277 12,-277 12,-277 6,-277 0,-271 0,-265 0,-265 0,-251 0,-251 0,-245 6,-239 12,-239 12,-239 167,-239 167,-239 173,-239 179,-245 179,-251 179,-251 179,-265 179,-265 179,-271 173,-277 167,-277" /><text text-anchor="middle" x="89.5" y="-261.8" font-family="Helvetica,sans-Serif" font-size="14.00">Guarde o quociente (Q)</text><text text-anchor="middle" x="89.5" y="-246.8" font-family="Helvetica,sans-Serif" font-size="14.00">e o resto (R)</text></g><g id="svg-graphviz-ed89739afa2e-edge2" class="edge"><title>div2-&gt;guarda</title><path fill="none" stroke="#333333" d="M129.83,-319.96C120.46,-312.98 113.97,-303.76 104.21,-285.95" /><polygon fill="#333333" stroke="#333333" points="107.3,-284.29 99.48,-277.13 101.13,-287.6 107.3,-284.29" /></g><g id="svg-graphviz-ed89739afa2e-node4" class="node"><title>decisao</title><path fill="#efe9ff" stroke="#8a6cff" stroke-dasharray="5,2" d="M155.01,-192.55C155.01,-192.55 118,-181.45 118,-181.45 112.26,-179.72 112.26,-176.28 118,-174.55 118,-174.55 155.01,-163.45 155.01,-163.45 160.75,-161.72 172.25,-161.72 177.99,-163.45 177.99,-163.45 215,-174.55 215,-174.55 220.74,-176.28 220.74,-179.72 215,-181.45 215,-181.45 177.99,-192.55 177.99,-192.55 172.25,-194.28 160.75,-194.28 155.01,-192.55" /><text text-anchor="middle" x="166.5" y="-174.3" font-family="Helvetica,sans-Serif" font-size="14.00">Q = 0?</text></g><g id="svg-graphviz-ed89739afa2e-edge3" class="edge"><title>guarda-&gt;decisao</title><path fill="none" stroke="#333333" d="M99.47,-238.89C113.29,-212.76 120.36,-202.03 133.17,-193.72" /><polygon fill="#333333" stroke="#333333" points="135.01,-196.7 142.01,-188.74 131.58,-190.6 135.01,-196.7" /></g><g id="svg-graphviz-ed89739afa2e-edge5" class="edge"><title>decisao-&gt;div2</title><path fill="none" stroke="#333333" d="M177.32,-310.6C196.25,-261.14 194.79,-249.45 172.94,-194.15" /><polygon fill="#333333" stroke="#333333" points="174.05,-309.35 173.69,-319.94 180.58,-311.89 174.05,-309.35" /><text text-anchor="middle" x="210.49" y="-260.61" font-family="Helvetica,sans-Serif" font-size="14.00"> NÃO </text></g><g id="svg-graphviz-ed89739afa2e-node5" class="node"><title>resultado</title><path fill="#efe9ff" stroke="#8a6cff" stroke-dasharray="5,2" d="M218,-117C218,-117 115,-117 115,-117 109,-117 103,-111 103,-105 103,-105 103,-91 103,-91 103,-85 109,-79 115,-79 115,-79 218,-79 218,-79 224,-79 230,-85 230,-91 230,-91 230,-105 230,-105 230,-111 224,-117 218,-117" /><text text-anchor="middle" x="166.5" y="-101.8" font-family="Helvetica,sans-Serif" font-size="14.00">Ler R's de baixo</text><text text-anchor="middle" x="166.5" y="-86.8" font-family="Helvetica,sans-Serif" font-size="14.00">para cima</text></g><g id="svg-graphviz-ed89739afa2e-edge4" class="edge"><title>decisao-&gt;resultado</title><path fill="none" stroke="#333333" d="M169.23,-160.77C171.74,-144.6 172.97,-135.01 172.91,-127.35" /><polygon fill="#333333" stroke="#333333" points="176.39,-126.95 171.98,-117.32 169.42,-127.6 176.39,-126.95" /><text text-anchor="middle" x="154.7" y="-143.19" font-family="Helvetica,sans-Serif" font-size="14.00"> SIM </text></g><g id="svg-graphviz-ed89739afa2e-node6" class="node"><title>fim</title><ellipse fill="#efe9ff" stroke="#8a6cff" stroke-dasharray="5,2" cx="166.5" cy="-18" rx="27" ry="18" /><text text-anchor="middle" x="166.5" y="-14.3" font-family="Helvetica,sans-Serif" font-size="14.00">FIM</text></g><g id="svg-graphviz-ed89739afa2e-edge6" class="edge"><title>resultado-&gt;fim</title><path fill="none" stroke="#333333" d="M168.16,-78.72C169.48,-63.04 170.13,-53.58 170.11,-46.18" /><polygon fill="#333333" stroke="#333333" points="173.59,-45.79 169.56,-36 166.6,-46.17 173.59,-45.79" /></g></g></svg></div></div>
 
 </section>
 <section><h1>Conversão: Decimal para Hexa</h1>
@@ -300,26 +300,26 @@
         </div>
     </div>
 
-    <script src="/aulas-faesa/js/vendor/reveal/reveal.min.js" data-no-bundle></script>
-    <script src="/aulas-faesa/js/vendor/reveal/plugin/notes/notes.min.js" data-no-bundle></script>
-    <script src="/aulas-faesa/js/vendor/reveal/plugin/markdown/markdown.min.js" data-no-bundle></script>
-    <script src="/aulas-faesa/js/vendor/reveal/plugin/math/math.min.js" data-no-bundle></script>
-    <script src="/aulas-faesa/js/vendor/reveal/plugin/zoom/zoom.min.js" data-no-bundle></script>
-    <script src="/aulas-faesa/js/vendor/prism/prism.min.js" data-no-bundle></script>
-    <script src="/aulas-faesa/js/vendor/prism/components/prism-c.min.js" data-no-bundle></script>
-    <script src="/aulas-faesa/js/vendor/prism/components/prism-python.min.js" data-no-bundle></script>
-    <script src="/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js" data-no-bundle></script>
-    <script src="/aulas-faesa/js/vendor/prism/components/prism-clike.min.js" data-no-bundle></script>
-    <script src="/aulas-faesa/js/vendor/prism/components/prism-cpp.min.js" data-no-bundle></script>
-    <script src="/aulas-faesa/js/vendor/prism/components/prism-perl.min.js" data-no-bundle></script>
-    <script src="/aulas-faesa/js/vendor/prism/components/prism-java.min.js" data-no-bundle></script>
-    <script src="/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js" data-no-bundle></script>
-    <script src="/aulas-faesa/js/vendor/prism/components/prism-php.min.js" data-no-bundle></script>
-    <script src="/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js" data-no-bundle></script>
-    <script src="/aulas-faesa/js/vendor/prism/plugins/toolbar/prism-toolbar.min.js" data-no-bundle></script>
-    <script src="/aulas-faesa/js/vendor/prism/plugins/show-language/prism-show-language.min.js" data-no-bundle></script>
-    <script src="/aulas-faesa/js/prism-slang.js" data-no-bundle></script>
-    <script src="/aulas-faesa/js/mermaid.min.js" data-no-bundle></script>
+    <script src="/js/vendor/reveal/reveal.min.js" data-no-bundle></script>
+    <script src="/js/vendor/reveal/plugin/notes/notes.min.js" data-no-bundle></script>
+    <script src="/js/vendor/reveal/plugin/markdown/markdown.min.js" data-no-bundle></script>
+    <script src="/js/vendor/reveal/plugin/math/math.min.js" data-no-bundle></script>
+    <script src="/js/vendor/reveal/plugin/zoom/zoom.min.js" data-no-bundle></script>
+    <script src="/js/vendor/prism/prism.min.js" data-no-bundle></script>
+    <script src="/js/vendor/prism/components/prism-c.min.js" data-no-bundle></script>
+    <script src="/js/vendor/prism/components/prism-python.min.js" data-no-bundle></script>
+    <script src="/js/vendor/prism/components/prism-javascript.min.js" data-no-bundle></script>
+    <script src="/js/vendor/prism/components/prism-clike.min.js" data-no-bundle></script>
+    <script src="/js/vendor/prism/components/prism-cpp.min.js" data-no-bundle></script>
+    <script src="/js/vendor/prism/components/prism-perl.min.js" data-no-bundle></script>
+    <script src="/js/vendor/prism/components/prism-java.min.js" data-no-bundle></script>
+    <script src="/js/vendor/prism/components/prism-markup-templating.min.js" data-no-bundle></script>
+    <script src="/js/vendor/prism/components/prism-php.min.js" data-no-bundle></script>
+    <script src="/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js" data-no-bundle></script>
+    <script src="/js/vendor/prism/plugins/toolbar/prism-toolbar.min.js" data-no-bundle></script>
+    <script src="/js/vendor/prism/plugins/show-language/prism-show-language.min.js" data-no-bundle></script>
+    <script src="/js/prism-slang.js" data-no-bundle></script>
+    <script src="/js/mermaid.min.js" data-no-bundle></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             mermaid.initialize({
@@ -331,10 +331,10 @@
             });
         });
     </script>
-    <script src="/aulas-faesa/js/rough.min.js" data-no-bundle></script>
-    <script src="/aulas-faesa/js/apply_sketch.js" data-no-bundle></script>
-    <script src="/aulas-faesa/js/lucide.min.js" data-no-bundle></script>
-    <script src="/aulas-faesa/js/ui.js" data-no-bundle></script>
+    <script src="/js/rough.min.js" data-no-bundle></script>
+    <script src="/js/apply_sketch.js" data-no-bundle></script>
+    <script src="/js/lucide.min.js" data-no-bundle></script>
+    <script src="/js/ui.js" data-no-bundle></script>
     <script>
         const waitForNextFrame = () => new Promise(resolve => requestAnimationFrame(resolve));
 
@@ -433,7 +433,7 @@
             controls: false,
             plugins: [RevealMarkdown, RevealNotes, RevealMath.KaTeX, RevealZoom],
             katex: {
-                local: '/aulas-faesa/js/vendor/katex',
+                local: '/js/vendor/katex',
                 output: 'html',
                 throwOnError: false,
                 strict: false,

@@ -12,7 +12,7 @@
   "../obsidian-vault/6. Teaching/Compiladores/10 - recursive descent parsing.md": "5f9c1afd2a7d7be39b35b30d5a7abfe8",
   "../obsidian-vault/6. Teaching/Compiladores/Virtual Machine/1 - about.md": "29ae165a5f2bc22dec7204d89176c645",
   "../obsidian-vault/6. Teaching/Compiladores/3 - the cpu.md": "9df246119bb66a4e9741d3a167fb51ee",
-  "../obsidian-vault/6. Teaching/Compiladores/12 - full slang ast and parser errors.md": "9e7e86e3da3160b25e7e8925663513df",
+  "../obsidian-vault/6. Teaching/Compiladores/12 - full slang ast and parser errors.md": "fbaba34e91fee5e4158773bc3e8c075b",
   "../obsidian-vault/6. Teaching/Compiladores/Virtual Machine/2 - opcodes.md": "b7775906bf565c4e5d2dd4d6b25fb607",
   "../obsidian-vault/6. Teaching/Compiladores/1 - about.md": "baef725cf49f6a6b97520ebff8b1359c",
   "../obsidian-vault/6. Teaching/Compiladores/6 - configuring the setup.md": "c318cdd96ec813243a3906adb8b74948",
@@ -309,7 +309,7 @@
   "../obsidian-vault/6. Teaching/T\u00f3picos de Programa\u00e7\u00e3o II/10 - libraries in c.md": "d47c75fb77a38a57acedf0fb8b6d6a33",
   "../obsidian-vault/6. Teaching/Sistemas Operacionais/static/fig_2_5_esqueleto_interrupcao.png": "0df0ec19564148d468541c796f1f1046",
   "../obsidian-vault/6. Teaching/T\u00f3picos de Programa\u00e7\u00e3o II/9 - functions.md": "9d251bf7782343639ad9b8c4d2f83064",
-  "../obsidian-vault/6. Teaching/T\u00f3picos de Programa\u00e7\u00e3o II/11 - abstract data types.md": "4d5e780a116769ad66f52285d512e4e9",
+  "../obsidian-vault/6. Teaching/T\u00f3picos de Programa\u00e7\u00e3o II/11 - abstract data types.md": "eca0504e398c0ddf4430f8a26172a097",
   "../obsidian-vault/6. Teaching/T\u00f3picos de Programa\u00e7\u00e3o II/3 - variables.md": "4c575fd21d458ae6b8510952bb8d3bd4",
   "../obsidian-vault/6. Teaching/T\u00f3picos de Programa\u00e7\u00e3o II/assignments/first exam.md": "5dbedc843d7a91e139d5e9474391254e",
   "../obsidian-vault/6. Teaching/T\u00f3picos de Programa\u00e7\u00e3o II/2 - c language.md": "bdabb8aa5d7ec685d91a928e5e42ea19",
@@ -413,7 +413,7 @@
   "../obsidian-vault/6. Teaching/T\u00f3picos de Programa\u00e7\u00e3o II/slides/5 - libraries in c.md": "eee8b7630c9447fc7bdf4d6a0642490a",
   "../obsidian-vault/6. Teaching/T\u00f3picos de Programa\u00e7\u00e3o II/slides/6 - abstract data types.md": "9b041cfaec858198b54112723df9ff44",
   "../obsidian-vault/6. Teaching/Sistemas Operacionais/static/fig_dining_philosophers.png": "7bdd4c6686f2e0534c44f8096fb53067",
-  "../obsidian-vault/6. Teaching/.course_forge_cache/build_cache.json": "a7a5d7b998992d614f68d8e115edf95f",
+  "../obsidian-vault/6. Teaching/.course_forge_cache/build_cache.json": "b2291ddb976ebf7fb40cb99dfd1dfb9e",
   "../obsidian-vault/6. Teaching/Redes/6 - mac sublayer, ethernet and mac addressing.md": "6c07c69cbad857bdba2ec8e1933b60b6",
   "../obsidian-vault/6. Teaching/Compiladores/bin/tests/lexer/expected/01_delimiters.txt": "7eee78b2a963b2b5582b4959d31eb53c",
   "../obsidian-vault/6. Teaching/Compiladores/bin/tests/lexer/expected/08_strings.txt": "3a48f84a1c1c66feb1064c6c970613b6",
@@ -481,5 +481,8 @@
   "../obsidian-vault/6. Teaching/Redes/static/fig4_18_switch_ethernet.png": "477045b3c136e27c04cb511fe1bb0b65",
   "../obsidian-vault/6. Teaching/Redes/static/fig4_6_deteccao_colisao_2t.png": "a909c312ddd1db1805d82e0971caa0ba",
   "../obsidian-vault/6. Teaching/Redes/static/fig4_3_throughput_aloha.png": "bd3365e836ea4805b698ee1c74006746",
-  "../obsidian-vault/6. Teaching/Redes/slides/6 - mac sublayer, ethernet and mac addressing.md": "ec70776159f81d8d881f8bf2e66ccd9f"
+  "../obsidian-vault/6. Teaching/Redes/slides/6 - mac sublayer, ethernet and mac addressing.md": "ec70776159f81d8d881f8bf2e66ccd9f",
+  "../obsidian-vault/6. Teaching/T\u00f3picos de Programa\u00e7\u00e3o II/bin/aula11-testes.zip": "6ef7bcfe79efe173c5cc9c333643b3dc",
+  "../obsidian-vault/6. Teaching/redes-de-computadores-tanenbaum-5a-edicao.pdf": "49edc6435978807383a48eeab44d02df",
+  "../obsidian-vault/6. Teaching/T\u00f3picos de Programa\u00e7\u00e3o II/12 - pointers.md": "f4bfe576e80872a27533392553d91200"
 }

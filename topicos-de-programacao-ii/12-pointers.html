@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toposia - Tópicos de Programação II (TEP II)</title>
+    <link rel="icon" href="/img/dark-favicon.svg" media="(prefers-color-scheme: light)">
+    <link rel="icon" href="/img/light-favicon.svg" media="(prefers-color-scheme: dark)">
+    <link rel="stylesheet" href="/css/vendor/fonts.css" data-no-bundle>
+    <link rel="stylesheet" href="/css/bundles/katex-base-prism-one-light-b0347952c973.bundle.min.css">
+    
+    
+    <link rel="stylesheet" href="/css/vendor/prism/prism-line-numbers.min.css" data-no-bundle>
+    <script src="/js/bundles/lucide-katex-auto-render-4b36e8bd8642.bundle.min.js"></script>
+</head>
+
+<body>
+    <script>
+        // Restore sidebar state instantly (before first paint) to avoid transition flash
+        (function() {
+            if (localStorage.getItem('cf_sidebar_hidden') === 'true') {
+                document.body.classList.add('sidebar-hidden', 'no-transition');
+            }
+            requestAnimationFrame(function() {
+                requestAnimationFrame(function() {
+                    document.body.classList.remove('no-transition');
+                });
+            });
+        })();
+    </script>
+    <div class="page-wrapper">
+        <nav class="sidebar">
+            <div class="sidebar-content">
+                <header class="sidebar-title-section">
+                    <a href="contents.html" class="course-title-link">
+                        <h1 class="sidebar-course-title">Tópicos de Programação II (TEP II)</h1>
+                    </a>
+                    <div class="sidebar-ornament">❧</div>
+                </header>
+
+                
+                <section class="sidebar-toc-section">
+                    <h2 class="toc-header">Tabela de Conteúdos</h2>
+                    <ol class="toc-list">
+                        
+                        <li class="toc-item level-2">
+                            <a href="#ponteiros">12.1. Ponteiros</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#o-ponto-de-partida-variáveis-vivem-na-memória">12.2. O ponto de partida: variáveis vivem na memória</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#questões-do-conceito">12.2.1. Questões do conceito</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#um-ponteiro-é-uma-variável-que-guarda-endereço">12.3. Um ponteiro é uma variável que guarda endereço</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#questões-do-conceito">12.3.1. Questões do conceito</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#o-operador-codecode-também-serve-para-acessar-o-conteúdo-apontado">12.4.1. Questões do conceito</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#codeprintfcode-e-codescanfcode-ajudam-a-enxergar-a-memória">12.5.3. Questões do conceito</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#passagem-por-valor-e-passagem-por-endereço">12.6. Passagem por valor e passagem por endereço</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#questões-do-conceito">12.6.1. Questões do conceito</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#ponteiros-para-codestructcode-e-o-operador-code-gtcode">12.7.1. Questões do conceito</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#codenullcode-significa-ausência-de-endereço-válido">12.8.1. Questões do conceito</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#arrays-e-endereços-uma-ponte-com-o-que-já-vimos">12.9. Arrays e endereços: uma ponte com o que já vimos</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#o-que-isso-esclarece-na-prática">12.9.1. O que isso esclarece na prática</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#como-a-aula-11-passa-a-fazer-sentido-por-dentro">12.10. Como a aula 11 passa a fazer sentido por dentro</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#erros-comuns-desta-aula">12.11. Erros comuns desta aula</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#questões">12.12. Questões</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#próximos-passos">12.13. Próximos passos</a>
+                        </li>
+                        
+                    </ol>
+                </section>
+                
+
+                <nav class="sidebar-nav-section">
+                    
+                    <a href="11-abstract-data-types.html" class="sidebar-nav-link prev"><i data-lucide="chevron-left" class="nav-icon"></i> Tipos Definidos pelo Programador</a>
+                    
+                    
+                    <a href="javascript:void(0)" onclick="handleBackNavigation()"
+                        class="sidebar-nav-link back"><i data-lucide="arrow-left" class="nav-icon"></i> Voltar</a>
+                </nav>
+
+            </div>
+        </nav>
+
+        <button class="mobile-menu-toggle" aria-label="Menu">
+            <i data-lucide="menu"></i>
+        </button>
+
+        <button class="sidebar-toggle" onclick="CourseForgeNav.toggleSidebar()" aria-label="Alternar Barra Lateral">
+            <i data-lucide="chevron-left" class="toggle-icon" id="sidebar-toggle-icon"></i>
+        </button>
+
+        <div class="mobile-menu-overlay"></div>
+
+        <main class="main-content">
+            <article class="article">
+                <header class="article-header">
+                    <span class="chapter-number">12</span>
+                    <h1 class="article-title">
+                        <span class="title-ornament left">❧</span>
+                        <span class="title-text">Ponteiros</span>
+                        <span class="title-ornament right">❧</span>
+                    </h1>
+                    
+                    <p class="article-date">14/04/2026</p>
+                    
+                    
+                    <nav class="breadcrumb" aria-label="Breadcrumb">
+                        
+                        
+                        
+                        <a href="contents.html" class="breadcrumb-link">Tópicos de Programação II</a>
+                        
+                        <span class="breadcrumb-separator"><i data-lucide="chevron-right" class="breadcrumb-icon"></i></span>
+                        
+                        
+                        
+                        
+                        <a href="contents.html#part-III" class="breadcrumb-link">III - Modularização e Gerenciamento de Memória</a>
+                        
+                        <span class="breadcrumb-separator"><i data-lucide="chevron-right" class="breadcrumb-icon"></i></span>
+                        
+                        
+                        
+                        <span class="breadcrumb-current">Ponteiros</span>
+                        
+                        
+                    </nav>
+                    
+                </header>
+                <div class="article-body">
+                    <h2 id="ponteiros"><span class="heading-text">Ponteiros</span><span class="heading-arabic">12.1</span></h2>
+<p>Na aula anterior, nós usamos <code>&amp;</code>, parâmetros com <code>*</code>, acessos com <code>-&gt;</code> e retornos com <code>NULL</code> para fazer o programa localizar e modificar alunos reais dentro da memória. Isso foi suficiente para construir soluções corretas, mas ainda faltava desmontar a lógica por trás desses símbolos.</p>
+<p>É exatamente isso que esta aula faz. Aqui, o foco não é apresentar ponteiros como um tópico isolado e misterioso, mas explicar por que eles aparecem naturalmente quando um programa precisa encontrar variáveis, escrever nelas, passá-las para funções e acessar estruturas que já existem em outro lugar da memória.</p>
+<p>Ao final deste estudo, você deve ser capaz de:</p>
+<ul>
+<li>entender que toda variável ocupa um endereço de memória</li>
+<li>usar <code>&amp;</code> para obter esse endereço</li>
+<li>declarar ponteiros e interpretar corretamente o papel do <code>*</code></li>
+<li>diferenciar valor, endereço e conteúdo apontado</li>
+<li>explicar por que <code>scanf()</code> precisa receber endereços</li>
+<li>entender por que uma função com ponteiro consegue alterar uma variável externa</li>
+<li>ligar naturalmente ponteiros ao uso de <code>struct</code> com <code>-&gt;</code></li>
+<li>interpretar <code>NULL</code> como ausência de endereço válido</li>
+</ul>
+<div class="callout callout-tip">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .5 2.2 1.5 3.1.7.7 1.3 1.5 1.5 2.4"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span>
+    <span class="callout-title-inner">Ligação com a aula 11<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Se a aula anterior mostrou <strong>como usar</strong> <code>&amp;</code>, <code>*</code>, <code>-&gt;</code> e <code>NULL</code>, esta aula mostra <strong>o que essas coisas significam por dentro</strong>.</p>
+  </div>
+</div>
+<h2 id="o-ponto-de-partida-variáveis-vivem-na-memória"><span class="heading-text">O ponto de partida: variáveis vivem na memória</span><span class="heading-arabic">12.2</span></h2>
+<p>Quando declaramos uma variável em <strong>C</strong>, o programa reserva um espaço na memória para armazenar o seu conteúdo. Esse espaço não é apenas uma ideia abstrata. Ele ocupa uma posição concreta, e essa posição tem um endereço.</p>
+<p>Veja este exemplo:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">int idade = 20;
+
+printf(&quot;Valor: %d\n&quot;, idade);
+printf(&quot;Endereco: %p\n&quot;, (void*)&amp;idade);
+</code></pre>
+<p>O primeiro <code>printf()</code> exibe o valor guardado na variável. O segundo exibe o endereço onde esse valor está armazenado.</p>
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">Endereços nos diagramas<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Valores como <code>0x100</code> e <code>0x200</code> aparecem aqui apenas como exemplos ilustrativos. Em um programa real, os endereços exatos dependem da execução e do ambiente.</p>
+  </div>
+</div>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="760" viewBox="0.00 0.00 434.00 76.00" class="svg-graph graphviz-img"><g id="svg-graphviz-0360b9488afc-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 72)"><title>VariavelEndereco</title><polygon fill="white" stroke="transparent" points="-4,4 -4,-72 430,-72 430,4 -4,4" /><g id="svg-graphviz-0360b9488afc-node1" class="node"><title>codigo</title><path fill="#e8f4f8" stroke="#5b8def" d="M74,-53C74,-53 12,-53 12,-53 6,-53 0,-47 0,-41 0,-41 0,-27 0,-27 0,-21 6,-15 12,-15 12,-15 74,-15 74,-15 80,-15 86,-21 86,-27 86,-27 86,-41 86,-41 86,-47 80,-53 74,-53" /><text text-anchor="middle" x="43" y="-37.8" font-family="Helvetica,sans-Serif" font-size="14.00">No codigo</text><text text-anchor="middle" x="43" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">idade</text></g><g id="svg-graphviz-0360b9488afc-node2" class="node"><title>memoria</title><path fill="#fff4d6" stroke="#d4a72c" d="M414,-68C414,-68 304,-68 304,-68 298,-68 292,-62 292,-56 292,-56 292,-12 292,-12 292,-6 298,0 304,0 304,0 414,0 414,0 420,0 426,-6 426,-12 426,-12 426,-56 426,-56 426,-62 420,-68 414,-68" /><text text-anchor="middle" x="359" y="-52.8" font-family="Helvetica,sans-Serif" font-size="14.00">Memoria</text><text text-anchor="middle" x="359" y="-37.8" font-family="Helvetica,sans-Serif" font-size="14.00">variavel: idade</text><text text-anchor="middle" x="359" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">endereco: 0x100</text><text text-anchor="middle" x="359" y="-7.8" font-family="Helvetica,sans-Serif" font-size="14.00">conteudo: 20</text></g><g id="svg-graphviz-0360b9488afc-edge1" class="edge"><title>codigo-&gt;memoria</title><path fill="none" stroke="#444444" stroke-width="2" d="M86.28,-34C86.28,-34 282,-34 282,-34" /><polygon fill="#444444" stroke="#444444" stroke-width="2" points="282,-37.5 292,-34 282,-30.5 282,-37.5" /><text text-anchor="middle" x="189" y="-37.8" font-family="Times,serif" font-size="14.00">esta armazenada em</text></g></g></svg></div></div>
+
+<p>Leia esse diagrama assim:</p>
+<ul>
+<li>no código, usamos o nome <code>idade</code></li>
+<li>na memória, essa variável ocupa um lugar</li>
+<li>o valor guardado nesse lugar é <code>20</code></li>
+<li>o endereço desse lugar pode ser obtido com <code>&amp;idade</code></li>
+</ul>
+<p>O ponto central aqui é este:</p>
+<ul>
+<li><code>idade</code> representa o valor da variável</li>
+<li><code>&amp;idade</code> representa o endereço da variável</li>
+</ul>
+<p>Essas duas coisas estão relacionadas, mas não são a mesma coisa.</p>
+<h3 id="questões-do-conceito"><span class="heading-text">Questões do conceito</span><span class="heading-arabic">12.2.1</span></h3>
+<p><strong>1.</strong> Se <code>idade</code> vale <code>20</code>, o que <code>idade</code> representa no código? E o que <code>&amp;idade</code> representa?</p>
+<p><strong>2.</strong> Por que usamos <code>%p</code> para imprimir <code>&amp;idade</code>, em vez de <code>%d</code>?</p>
+<p><strong>3.</strong> Duas variáveis com o mesmo valor precisam ter o mesmo endereço? Explique.</p>
+<h2 id="um-ponteiro-é-uma-variável-que-guarda-endereço"><span class="heading-text">Um ponteiro é uma variável que guarda endereço</span><span class="heading-arabic">12.3</span></h2>
+<p>Agora podemos introduzir a ideia principal da aula. Um ponteiro é uma variável cujo conteúdo não é um número comum do problema, mas um endereço de memória.</p>
+<p>Exemplo:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">int idade = 20;
+int *p = &amp;idade;
+</code></pre>
+<p>Leia essa declaração assim:</p>
+<ul>
+<li><code>idade</code> guarda o valor <code>20</code></li>
+<li><code>&amp;idade</code> produz o endereço de <code>idade</code></li>
+<li><code>p</code> guarda esse endereço</li>
+<li>portanto, <code>p</code> aponta para <code>idade</code></li>
+</ul>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="760" viewBox="0.00 0.00 398.00 61.00" class="svg-graph graphviz-img"><g id="svg-graphviz-01336bdfeec6-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 57)"><title>PonteiroBasico</title><polygon fill="white" stroke="transparent" points="-4,4 -4,-57 394,-57 394,4 -4,4" /><g id="svg-graphviz-01336bdfeec6-node1" class="node"><title>p</title><path fill="#e8f4f8" stroke="#5b8def" d="M122,-45.5C122,-45.5 12,-45.5 12,-45.5 6,-45.5 0,-39.5 0,-33.5 0,-33.5 0,-19.5 0,-19.5 0,-13.5 6,-7.5 12,-7.5 12,-7.5 122,-7.5 122,-7.5 128,-7.5 134,-13.5 134,-19.5 134,-19.5 134,-33.5 134,-33.5 134,-39.5 128,-45.5 122,-45.5" /><text text-anchor="middle" x="67" y="-30.3" font-family="Helvetica,sans-Serif" font-size="14.00">Variavel p</text><text text-anchor="middle" x="67" y="-15.3" font-family="Helvetica,sans-Serif" font-size="14.00">conteudo: 0x100</text></g><g id="svg-graphviz-01336bdfeec6-node2" class="node"><title>idade</title><path fill="#fff4d6" stroke="#d4a72c" d="M378,-53C378,-53 268,-53 268,-53 262,-53 256,-47 256,-41 256,-41 256,-12 256,-12 256,-6 262,0 268,0 268,0 378,0 378,0 384,0 390,-6 390,-12 390,-12 390,-41 390,-41 390,-47 384,-53 378,-53" /><text text-anchor="middle" x="323" y="-37.8" font-family="Helvetica,sans-Serif" font-size="14.00">Variavel idade</text><text text-anchor="middle" x="323" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">endereco: 0x100</text><text text-anchor="middle" x="323" y="-7.8" font-family="Helvetica,sans-Serif" font-size="14.00">conteudo: 20</text></g><g id="svg-graphviz-01336bdfeec6-edge1" class="edge"><title>p-&gt;idade</title><path fill="none" stroke="#444444" stroke-width="2" d="M134.26,-26.5C134.26,-26.5 245.74,-26.5 245.74,-26.5" /><polygon fill="#444444" stroke="#444444" stroke-width="2" points="245.74,-30 255.74,-26.5 245.74,-23 245.74,-30" /><text text-anchor="middle" x="195" y="-30.3" font-family="Times,serif" font-size="14.00">aponta para</text></g></g></svg></div></div>
+
+<p>Esse diagrama ajuda a evitar uma confusão muito comum: <code>p</code> não guarda <code>20</code>. Quem guarda <code>20</code> é <code>idade</code>. O que <code>p</code> guarda é o endereço de <code>idade</code>.</p>
+<p>O tipo do ponteiro importa. Se escrevemos:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">int *p;
+</code></pre>
+<p>isso significa que <code>p</code> aponta para um <code>int</code>. Da mesma forma:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">float *q;
+Aluno *a;
+char *texto;
+</code></pre>
+<p>significam, respectivamente, ponteiro para <code>float</code>, ponteiro para <code>Aluno</code> e ponteiro para <code>char</code>.</p>
+<h3 id="questões-do-conceito"><span class="heading-text">Questões do conceito</span><span class="heading-arabic">12.3.1</span></h3>
+<p><strong>4.</strong> Em <code>int *p = &amp;idade;</code>, o que exatamente fica armazenado em <code>p</code>?</p>
+<p><strong>5.</strong> Qual é a leitura correta de <code>int *p</code> em linguagem natural?</p>
+<p><strong>6.</strong> Por que o tipo do ponteiro precisa ser compatível com o tipo da variável apontada?</p>
+<h2 id="o-operador-codecode-também-serve-para-acessar-o-conteúdo-apontado"><span class="heading-text">O operador <code>*</code> também serve para acessar o conteúdo apontado</span><span class="heading-arabic">12.4</span></h2>
+<p>O símbolo <code>*</code> aparece em dois contextos diferentes nesta aula:</p>
+<ul>
+<li>na declaração, ele faz parte do tipo do ponteiro</li>
+<li>em uma expressão, ele significa acesso ao conteúdo apontado</li>
+</ul>
+<p>Veja:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">int idade = 20;
+int *p = &amp;idade;
+
+printf(&quot;Endereco guardado em p: %p\n&quot;, (void*)p);
+printf(&quot;Conteudo apontado por p: %d\n&quot;, *p);
+</code></pre>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="780" viewBox="0.00 0.00 656.00 46.00" class="svg-graph graphviz-img"><g id="svg-graphviz-6f471f100826-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 42)"><title>PonteiroConteudo</title><polygon fill="white" stroke="transparent" points="-4,4 -4,-42 652,-42 652,4 -4,4" /><g id="svg-graphviz-6f471f100826-node1" class="node"><title>p</title><path fill="#e8f4f8" stroke="#5b8def" d="M128,-38C128,-38 12,-38 12,-38 6,-38 0,-32 0,-26 0,-26 0,-12 0,-12 0,-6 6,0 12,0 12,0 128,0 128,0 134,0 140,-6 140,-12 140,-12 140,-26 140,-26 140,-32 134,-38 128,-38" /><text text-anchor="middle" x="70" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">p</text><text text-anchor="middle" x="70" y="-7.8" font-family="Helvetica,sans-Serif" font-size="14.00">valor de p: 0x100</text></g><g id="svg-graphviz-6f471f100826-node2" class="node"><title>idade</title><path fill="#fff4d6" stroke="#d4a72c" d="M390,-38C390,-38 285,-38 285,-38 279,-38 273,-32 273,-26 273,-26 273,-12 273,-12 273,-6 279,0 285,0 285,0 390,0 390,0 396,0 402,-6 402,-12 402,-12 402,-26 402,-26 402,-32 396,-38 390,-38" /><text text-anchor="middle" x="337.5" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">endereco 0x100</text><text text-anchor="middle" x="337.5" y="-7.8" font-family="Helvetica,sans-Serif" font-size="14.00">idade = 20</text></g><g id="svg-graphviz-6f471f100826-edge1" class="edge"><title>p-&gt;idade</title><path fill="none" stroke="#444444" stroke-width="2" d="M140.28,-19C140.28,-19 262.73,-19 262.73,-19" /><polygon fill="#444444" stroke="#444444" stroke-width="2" points="262.73,-22.5 272.73,-19 262.73,-15.5 262.73,-22.5" /><text text-anchor="middle" x="206.5" y="-22.8" font-family="Times,serif" font-size="14.00">vai ate 0x100</text></g><g id="svg-graphviz-6f471f100826-node3" class="node"><title>conteudo</title><path fill="#eaf7e8" stroke="#5a9c5a" d="M636,-37C636,-37 589,-37 589,-37 583,-37 577,-31 577,-25 577,-25 577,-13 577,-13 577,-7 583,-1 589,-1 589,-1 636,-1 636,-1 642,-1 648,-7 648,-13 648,-13 648,-25 648,-25 648,-31 642,-37 636,-37" /><text text-anchor="middle" x="612.5" y="-15.3" font-family="Helvetica,sans-Serif" font-size="14.00">*p = 20</text></g><g id="svg-graphviz-6f471f100826-edge2" class="edge"><title>idade-&gt;conteudo</title><path fill="none" stroke="#5a9c5a" stroke-dasharray="5,2" d="M402.32,-19C402.32,-19 566.72,-19 566.72,-19" /><polygon fill="#5a9c5a" stroke="#5a9c5a" points="566.72,-22.5 576.72,-19 566.72,-15.5 566.72,-22.5" /><text text-anchor="middle" x="489.5" y="-22.8" font-family="Times,serif" font-size="14.00">valor encontrado la</text></g></g></svg></div></div>
+
+<p>Leia assim:</p>
+<ul>
+<li><code>p</code> é o endereço guardado no ponteiro</li>
+<li><code>*p</code> é o valor encontrado nesse endereço</li>
+</ul>
+<p>Por isso, se fizermos:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">*p = 35;
+</code></pre>
+<p>o valor de <code>idade</code> passa a ser <code>35</code>, porque <code>p</code> aponta justamente para a posição onde <code>idade</code> está armazenada.</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">int idade = 20;
+int *p = &amp;idade;
+
+*p = 35;
+printf(&quot;%d\n&quot;, idade);
+</code></pre>
+<p>Saída:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">35
+</code></pre>
+<div class="callout callout-important">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">Leitura que precisa ficar firme<br /></span>
+  </div>
+  <div class="callout-content">
+<code>p</code> e <code>*p</code> não são a mesma coisa. <code>p</code> é endereço. <code>*p</code> é o conteúdo encontrado nesse endereço.</p>
+  </div>
+</div>
+<h3 id="questões-do-conceito"><span class="heading-text">Questões do conceito</span><span class="heading-arabic">12.4.1</span></h3>
+<p><strong>7.</strong> Qual é a diferença entre <code>p</code> e <code>*p</code>?</p>
+<p><strong>8.</strong> Se <code>p</code> aponta para <code>idade</code>, o que acontece quando executamos <code>*p = 35;</code>?</p>
+<p><strong>9.</strong> Por que <code>*p</code> não representa o endereço guardado em <code>p</code>?</p>
+<h2 id="codeprintfcode-e-codescanfcode-ajudam-a-enxergar-a-memória"><span class="heading-text"><code>printf()</code> e <code>scanf()</code> ajudam a enxergar a memória</span><span class="heading-arabic">12.5</span></h2>
+<p>Desde o início da disciplina, você já usa <code>printf()</code> e <code>scanf()</code>. Agora podemos usá-los para entender melhor o que acontece com os dados na memória.</p>
+<h3 id="codeprintfcode-pode-mostrar-valor-e-endereço"><span class="heading-text"><code>printf()</code> pode mostrar valor e endereço</span><span class="heading-arabic">12.5.1</span></h3>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">int idade = 20;
+
+printf(&quot;Valor: %d\n&quot;, idade);
+printf(&quot;Endereco: %p\n&quot;, (void*)&amp;idade);
+</code></pre>
+<p>O primeiro <code>printf()</code> lê o conteúdo da variável para exibir. O segundo mostra a localização da variável na memória.</p>
+<h3 id="codescanfcode-precisa-receber-um-endereço"><span class="heading-text"><code>scanf()</code> precisa receber um endereço</span><span class="heading-arabic">12.5.2</span></h3>
+<p>Agora observe:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">int idade;
+scanf(&quot;%d&quot;, &amp;idade);
+</code></pre>
+<p><code>scanf()</code> não foi chamado para apenas observar a variável. Ele precisa escrever nela. Para fazer isso, precisa saber onde essa variável está.</p>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="860" viewBox="0.00 0.00 980.00 61.00" class="svg-graph graphviz-img"><g id="svg-graphviz-5377cc68dc4f-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 57)"><title>ScanfMemoria</title><polygon fill="white" stroke="transparent" points="-4,4 -4,-57 976,-57 976,4 -4,4" /><g id="svg-graphviz-5377cc68dc4f-node1" class="node"><title>entrada</title><path fill="#fce8f3" stroke="#c65a8a" d="M137,-45.5C137,-45.5 12,-45.5 12,-45.5 6,-45.5 0,-39.5 0,-33.5 0,-33.5 0,-19.5 0,-19.5 0,-13.5 6,-7.5 12,-7.5 12,-7.5 137,-7.5 137,-7.5 143,-7.5 149,-13.5 149,-19.5 149,-19.5 149,-33.5 149,-33.5 149,-39.5 143,-45.5 137,-45.5" /><text text-anchor="middle" x="74.5" y="-30.3" font-family="Helvetica,sans-Serif" font-size="14.00">Entrada do usuario</text><text text-anchor="middle" x="74.5" y="-15.3" font-family="Helvetica,sans-Serif" font-size="14.00">"25"</text></g><g id="svg-graphviz-5377cc68dc4f-node2" class="node"><title>scanf</title><path fill="#e8f4f8" stroke="#5b8def" d="M345,-44.5C345,-44.5 210,-44.5 210,-44.5 204,-44.5 198,-38.5 198,-32.5 198,-32.5 198,-20.5 198,-20.5 198,-14.5 204,-8.5 210,-8.5 210,-8.5 345,-8.5 345,-8.5 351,-8.5 357,-14.5 357,-20.5 357,-20.5 357,-32.5 357,-32.5 357,-38.5 351,-44.5 345,-44.5" /><text text-anchor="middle" x="277.5" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">scanf("%d", &amp;idade)</text></g><g id="svg-graphviz-5377cc68dc4f-edge1" class="edge"><title>entrada-&gt;scanf</title><path fill="none" stroke="#444444" d="M149.22,-26.5C149.22,-26.5 187.82,-26.5 187.82,-26.5" /><polygon fill="#444444" stroke="#444444" points="187.82,-30 197.82,-26.5 187.82,-23 187.82,-30" /><text text-anchor="middle" x="173.5" y="-30.3" font-family="Times,serif" font-size="14.00">le</text></g><g id="svg-graphviz-5377cc68dc4f-node3" class="node"><title>endereco</title><path fill="#eef0ff" stroke="#6b6bd6" d="M643,-44.5C643,-44.5 536,-44.5 536,-44.5 530,-44.5 524,-38.5 524,-32.5 524,-32.5 524,-20.5 524,-20.5 524,-14.5 530,-8.5 536,-8.5 536,-8.5 643,-8.5 643,-8.5 649,-8.5 655,-14.5 655,-20.5 655,-20.5 655,-32.5 655,-32.5 655,-38.5 649,-44.5 643,-44.5" /><text text-anchor="middle" x="589.5" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">&amp;idade = 0x100</text></g><g id="svg-graphviz-5377cc68dc4f-edge2" class="edge"><title>scanf-&gt;endereco</title><path fill="none" stroke="#444444" d="M357.04,-26.5C357.04,-26.5 513.79,-26.5 513.79,-26.5" /><polygon fill="#444444" stroke="#444444" points="513.79,-30 523.79,-26.5 513.79,-23 513.79,-30" /><text text-anchor="middle" x="440.5" y="-30.3" font-family="Times,serif" font-size="14.00">recebe o endereco</text></g><g id="svg-graphviz-5377cc68dc4f-node4" class="node"><title>idade</title><path fill="#fff4d6" stroke="#d4a72c" d="M960,-53C960,-53 841,-53 841,-53 835,-53 829,-47 829,-41 829,-41 829,-12 829,-12 829,-6 835,0 841,0 841,0 960,0 960,0 966,0 972,-6 972,-12 972,-12 972,-41 972,-41 972,-47 966,-53 960,-53" /><text text-anchor="middle" x="900.5" y="-37.8" font-family="Helvetica,sans-Serif" font-size="14.00">Memoria</text><text text-anchor="middle" x="900.5" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">endereco: 0x100</text><text text-anchor="middle" x="900.5" y="-7.8" font-family="Helvetica,sans-Serif" font-size="14.00">conteudo final: 25</text></g><g id="svg-graphviz-5377cc68dc4f-edge3" class="edge"><title>endereco-&gt;idade</title><path fill="none" stroke="#444444" stroke-width="2" d="M655.08,-26.5C655.08,-26.5 818.78,-26.5 818.78,-26.5" /><polygon fill="#444444" stroke="#444444" stroke-width="2" points="818.78,-30 828.78,-26.5 818.78,-23 818.78,-30" /><text text-anchor="middle" x="742" y="-30.3" font-family="Times,serif" font-size="14.00">escreve nesse local</text></g></g></svg></div></div>
+
+<p>Esse diagrama é importante porque revela o motivo real do <code>&amp;</code> em <code>scanf()</code>:</p>
+<ul>
+<li>o usuário digita um valor</li>
+<li><code>scanf()</code> interpreta esse valor</li>
+<li>o programa precisa saber onde gravá-lo</li>
+<li><code>&amp;idade</code> entrega o endereço correto</li>
+<li>a escrita ocorre na posição correspondente à variável</li>
+</ul>
+<p>Portanto:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">scanf(&quot;%d&quot;, &amp;idade);
+</code></pre>
+<p>está correto, mas:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">scanf(&quot;%d&quot;, idade);
+</code></pre>
+<p>está errado, porque <code>idade</code> representa um valor de <code>int</code>, não um endereço para escrita.</p>
+<h3 id="questões-do-conceito"><span class="heading-text">Questões do conceito</span><span class="heading-arabic">12.5.3</span></h3>
+<p><strong>10.</strong> Por que <code>scanf()</code> precisa receber <code>&amp;idade</code>, e não apenas <code>idade</code>?</p>
+<p><strong>11.</strong> O que <code>printf(&quot;%p&quot;, (void*)&amp;idade)</code> mostra que <code>printf(&quot;%d&quot;, idade)</code> não mostra?</p>
+<p><strong>12.</strong> Se uma variável <code>int *p</code> já guarda o endereço de um inteiro, por que <code>scanf(&quot;%d&quot;, p)</code> pode funcionar?</p>
+<h2 id="passagem-por-valor-e-passagem-por-endereço"><span class="heading-text">Passagem por valor e passagem por endereço</span><span class="heading-arabic">12.6</span></h2>
+<p>Na aula de funções, vimos que parâmetros são variáveis locais. Isso significa que, quando passamos um valor comum para uma função, o que a função recebe é uma cópia.</p>
+<p>Veja:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">void tentar_alterar(int x){
+    x = 100;
+}
+
+int main(void){
+    int n = 10;
+    tentar_alterar(n);
+    printf(&quot;%d\n&quot;, n);
+    return 0;
+}
+</code></pre>
+<p>A saída continua sendo <code>10</code>, porque a função alterou apenas a sua cópia local.</p>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="760" viewBox="0.00 0.00 273.00 46.00" class="svg-graph graphviz-img"><g id="svg-graphviz-9d0de999e888-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 42)"><title>PassagemValor</title><polygon fill="white" stroke="transparent" points="-4,4 -4,-42 269,-42 269,4 -4,4" /><g id="svg-graphviz-9d0de999e888-node1" class="node"><title>main</title><path fill="#fff4d6" stroke="#d4a72c" d="M53,-38C53,-38 12,-38 12,-38 6,-38 0,-32 0,-26 0,-26 0,-12 0,-12 0,-6 6,0 12,0 12,0 53,0 53,0 59,0 65,-6 65,-12 65,-12 65,-26 65,-26 65,-32 59,-38 53,-38" /><text text-anchor="middle" x="32.5" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">main</text><text text-anchor="middle" x="32.5" y="-7.8" font-family="Helvetica,sans-Serif" font-size="14.00">n = 10</text></g><g id="svg-graphviz-9d0de999e888-node2" class="node"><title>func</title><path fill="#e8f4f8" stroke="#5b8def" d="M253,-38C253,-38 213,-38 213,-38 207,-38 201,-32 201,-26 201,-26 201,-12 201,-12 201,-6 207,0 213,0 213,0 253,0 253,0 259,0 265,-6 265,-12 265,-12 265,-26 265,-26 265,-32 259,-38 253,-38" /><text text-anchor="middle" x="233" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">funcao</text><text text-anchor="middle" x="233" y="-7.8" font-family="Helvetica,sans-Serif" font-size="14.00">x = 10</text></g><g id="svg-graphviz-9d0de999e888-edge1" class="edge"><title>main-&gt;func</title><path fill="none" stroke="#444444" stroke-width="2" d="M65.16,-19C65.16,-19 190.69,-19 190.69,-19" /><polygon fill="#444444" stroke="#444444" stroke-width="2" points="190.69,-22.5 200.69,-19 190.69,-15.5 190.69,-22.5" /><text text-anchor="middle" x="133" y="-22.8" font-family="Times,serif" font-size="14.00">copia do valor</text></g></g></svg></div></div>
+
+<p>Agora compare com uma função que recebe endereço:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">void alterar(int *p){
+    *p = 100;
+}
+
+int main(void){
+    int n = 10;
+    alterar(&amp;n);
+    printf(&quot;%d\n&quot;, n);
+    return 0;
+}
+</code></pre>
+<p>Nesse caso, a saída passa a ser <code>100</code>.</p>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="760" viewBox="0.00 0.00 441.00 61.00" class="svg-graph graphviz-img"><g id="svg-graphviz-51754a90d3d9-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 57)"><title>PassagemReferencia</title><polygon fill="white" stroke="transparent" points="-4,4 -4,-57 437,-57 437,4 -4,4" /><g id="svg-graphviz-51754a90d3d9-node1" class="node"><title>p</title><path fill="#e8f4f8" stroke="#5b8def" d="M79,-45.5C79,-45.5 12,-45.5 12,-45.5 6,-45.5 0,-39.5 0,-33.5 0,-33.5 0,-19.5 0,-19.5 0,-13.5 6,-7.5 12,-7.5 12,-7.5 79,-7.5 79,-7.5 85,-7.5 91,-13.5 91,-19.5 91,-19.5 91,-33.5 91,-33.5 91,-39.5 85,-45.5 79,-45.5" /><text text-anchor="middle" x="45.5" y="-30.3" font-family="Helvetica,sans-Serif" font-size="14.00">funcao</text><text text-anchor="middle" x="45.5" y="-15.3" font-family="Helvetica,sans-Serif" font-size="14.00">p = 0x100</text></g><g id="svg-graphviz-51754a90d3d9-node2" class="node"><title>n</title><path fill="#fff4d6" stroke="#d4a72c" d="M421,-53C421,-53 311,-53 311,-53 305,-53 299,-47 299,-41 299,-41 299,-12 299,-12 299,-6 305,0 311,0 311,0 421,0 421,0 427,0 433,-6 433,-12 433,-12 433,-41 433,-41 433,-47 427,-53 421,-53" /><text text-anchor="middle" x="366" y="-37.8" font-family="Helvetica,sans-Serif" font-size="14.00">main</text><text text-anchor="middle" x="366" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">endereco: 0x100</text><text text-anchor="middle" x="366" y="-7.8" font-family="Helvetica,sans-Serif" font-size="14.00">n = 10</text></g><g id="svg-graphviz-51754a90d3d9-edge1" class="edge"><title>p-&gt;n</title><path fill="none" stroke="#444444" stroke-width="2" d="M91.08,-26.5C91.08,-26.5 288.8,-26.5 288.8,-26.5" /><polygon fill="#444444" stroke="#444444" stroke-width="2" points="288.8,-30 298.8,-26.5 288.8,-23 288.8,-30" /><text text-anchor="middle" x="195" y="-30.3" font-family="Times,serif" font-size="14.00">mesma variavel original</text></g></g></svg></div></div>
+
+<p>O que mudou foi isto:</p>
+<ul>
+<li>antes, a função recebia apenas uma cópia do valor</li>
+<li>agora, ela recebe o endereço da variável original</li>
+<li>usando <code>*p</code>, ela acessa exatamente o conteúdo dessa variável</li>
+</ul>
+<p>Foi exatamente isso que aconteceu na aula 11 quando usamos funções como:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">void aplicar_bonus(Aluno *a, float bonus);
+</code></pre>
+<p>Essa função não recebia uma cópia inteira do aluno. Ela recebia o endereço do aluno real, e por isso conseguia modificar a estrutura armazenada no vetor da turma.</p>
+<h3 id="questões-do-conceito"><span class="heading-text">Questões do conceito</span><span class="heading-arabic">12.6.1</span></h3>
+<p><strong>13.</strong> Por que <code>tentar_alterar(int x)</code> não modifica a variável original do <code>main</code>?</p>
+<p><strong>14.</strong> Por que <code>alterar(int *p)</code> consegue modificar a variável original?</p>
+<p><strong>15.</strong> Como essa diferença explica o funcionamento de <code>aplicar_bonus(Aluno *a, float bonus)</code> na aula 11?</p>
+<h2 id="ponteiros-para-codestructcode-e-o-operador-code-gtcode"><span class="heading-text">Ponteiros para <code>struct</code> e o operador <code>-&gt;</code></span><span class="heading-arabic">12.7</span></h2>
+<p>Na aula anterior, você viu dois tipos de acesso a campos de estrutura:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">aluno.matricula
+</code></pre>
+<p>e</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">a-&gt;matricula
+</code></pre>
+<p>Agora a diferença pode ser explicada com precisão.</p>
+<p>Quando temos a estrutura diretamente, usamos <code>.</code>:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">Aluno aluno;
+aluno.matricula = 1001;
+</code></pre>
+<p>Quando temos um ponteiro para a estrutura, usamos <code>-&gt;</code>:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">Aluno aluno;
+Aluno *a = &amp;aluno;
+
+a-&gt;matricula = 1001;
+</code></pre>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="900" viewBox="0.00 0.00 603.00 121.00" class="svg-graph graphviz-img"><g id="svg-graphviz-eaad3885107e-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 117)"><title>PonteiroStruct</title><polygon fill="white" stroke="transparent" points="-4,4 -4,-117 599,-117 599,4 -4,4" /><g id="svg-graphviz-eaad3885107e-node1" class="node"><title>ponteiro</title><path fill="#e8f4f8" stroke="#5b8def" d="M122,-75.5C122,-75.5 12,-75.5 12,-75.5 6,-75.5 0,-69.5 0,-63.5 0,-63.5 0,-49.5 0,-49.5 0,-43.5 6,-37.5 12,-37.5 12,-37.5 122,-37.5 122,-37.5 128,-37.5 134,-43.5 134,-49.5 134,-49.5 134,-63.5 134,-63.5 134,-69.5 128,-75.5 122,-75.5" /><text text-anchor="middle" x="67" y="-60.3" font-family="Helvetica,sans-Serif" font-size="14.00">Aluno *a</text><text text-anchor="middle" x="67" y="-45.3" font-family="Helvetica,sans-Serif" font-size="14.00">conteudo: 0x200</text></g><g id="svg-graphviz-eaad3885107e-node2" class="node"><title>aluno</title><path fill="#fff4d6" stroke="#d4a72c" d="M375,-113C375,-113 268,-113 268,-113 262,-113 256,-107 256,-101 256,-101 256,-12 256,-12 256,-6 262,0 268,0 268,0 375,0 375,0 381,0 387,-6 387,-12 387,-12 387,-101 387,-101 387,-107 381,-113 375,-113" /><text text-anchor="middle" x="321.5" y="-97.8" font-family="Helvetica,sans-Serif" font-size="14.00">Aluno em 0x200</text><text text-anchor="middle" x="321.5" y="-82.8" font-family="Helvetica,sans-Serif" font-size="14.00">nome: Ana</text><text text-anchor="middle" x="321.5" y="-67.8" font-family="Helvetica,sans-Serif" font-size="14.00">matricula: 1001</text><text text-anchor="middle" x="321.5" y="-52.8" font-family="Helvetica,sans-Serif" font-size="14.00">notas[0]: 8.0</text><text text-anchor="middle" x="321.5" y="-37.8" font-family="Helvetica,sans-Serif" font-size="14.00">notas[1]: 7.0</text><text text-anchor="middle" x="321.5" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">notas[2]: 9.0</text><text text-anchor="middle" x="321.5" y="-7.8" font-family="Helvetica,sans-Serif" font-size="14.00">faltas: 3</text></g><g id="svg-graphviz-eaad3885107e-edge1" class="edge"><title>ponteiro-&gt;aluno</title><path fill="none" stroke="#444444" stroke-width="2" d="M134.2,-56.5C134.2,-56.5 245.69,-56.5 245.69,-56.5" /><polygon fill="#444444" stroke="#444444" stroke-width="2" points="245.69,-60 255.69,-56.5 245.69,-53 245.69,-60" /><text text-anchor="middle" x="195" y="-60.3" font-family="Times,serif" font-size="14.00">aponta para</text></g><g id="svg-graphviz-eaad3885107e-node3" class="node"><title>campo</title><path fill="#eaf7e8" stroke="#5a9c5a" d="M583,-75.5C583,-75.5 436,-75.5 436,-75.5 430,-75.5 424,-69.5 424,-63.5 424,-63.5 424,-49.5 424,-49.5 424,-43.5 430,-37.5 436,-37.5 436,-37.5 583,-37.5 583,-37.5 589,-37.5 595,-43.5 595,-49.5 595,-49.5 595,-63.5 595,-63.5 595,-69.5 589,-75.5 583,-75.5" /><text text-anchor="middle" x="509.5" y="-60.3" font-family="Helvetica,sans-Serif" font-size="14.00">a-&gt;faltas acessa</text><text text-anchor="middle" x="509.5" y="-45.3" font-family="Helvetica,sans-Serif" font-size="14.00">faltas dentro da struct</text></g><g id="svg-graphviz-eaad3885107e-edge2" class="edge"><title>aluno-&gt;campo</title><path fill="none" stroke="#5a9c5a" stroke-dasharray="5,2" d="M387.25,-56.5C387.25,-56.5 413.96,-56.5 413.96,-56.5" /><polygon fill="#5a9c5a" stroke="#5a9c5a" points="413.96,-60 423.96,-56.5 413.96,-53 413.96,-60" /></g></g></svg></div></div>
+
+<p>Leia esse diagrama assim:</p>
+<ul>
+<li><code>a</code> guarda o endereço do aluno</li>
+<li>o programa usa esse endereço para localizar a estrutura</li>
+<li>depois disso, acessa o campo desejado</li>
+</ul>
+<p>Portanto:</p>
+<ul>
+<li><code>aluno.faltas</code> acessa o campo quando temos a estrutura diretamente</li>
+<li><code>a-&gt;faltas</code> acessa o campo quando temos o endereço dessa estrutura</li>
+</ul>
+<p>Se quisermos, podemos escrever também:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">(*a).faltas
+</code></pre>
+<p>que significa a mesma coisa que:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">a-&gt;faltas
+</code></pre>
+<p>Na prática, usamos <code>-&gt;</code> porque a leitura fica mais natural.</p>
+<h3 id="questões-do-conceito"><span class="heading-text">Questões do conceito</span><span class="heading-arabic">12.7.1</span></h3>
+<p><strong>16.</strong> Qual é a diferença entre <code>aluno.matricula</code> e <code>a-&gt;matricula</code>?</p>
+<p><strong>17.</strong> O que <code>a</code> precisa guardar para que <code>a-&gt;matricula</code> faça sentido?</p>
+<p><strong>18.</strong> Por que a função <code>aluno_media(const Aluno *a)</code> da aula 11 usava <code>a-&gt;notas[0]</code> em vez de <code>a.notas[0]</code>?</p>
+<h2 id="codenullcode-significa-ausência-de-endereço-válido"><span class="heading-text"><code>NULL</code> significa ausência de endereço válido</span><span class="heading-arabic">12.8</span></h2>
+<p>Nem todo ponteiro precisa apontar para uma variável válida o tempo todo. Às vezes, o programa precisa representar justamente o contrário: a ideia de que nenhum endereço útil foi encontrado.</p>
+<p>É para isso que usamos <code>NULL</code>.</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">int *p = NULL;
+</code></pre>
+<p>Esse comando significa que <code>p</code> existe como variável, mas no momento não aponta para nenhum objeto válido do programa.</p>
+<p>Isso aparece naturalmente em funções de busca. Lembre da aula 11:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">Aluno *a = buscar_aluno_por_matricula(turma, n, matricula);
+
+if(a != NULL){
+    aplicar_bonus(a, bonus);
+}
+</code></pre>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="860" viewBox="0.00 0.00 709.00 149.00" class="svg-graph graphviz-img"><g id="svg-graphviz-7ba224b86bac-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 145)"><title>BuscaNull</title><polygon fill="white" stroke="transparent" points="-4,4 -4,-145 705,-145 705,4 -4,4" /><g id="svg-graphviz-7ba224b86bac-node1" class="node"><title>busca</title><path fill="#e8f4f8" stroke="#5b8def" d="M223,-88C223,-88 12,-88 12,-88 6,-88 0,-82 0,-76 0,-76 0,-64 0,-64 0,-58 6,-52 12,-52 12,-52 223,-52 223,-52 229,-52 235,-58 235,-64 235,-64 235,-76 235,-76 235,-82 229,-88 223,-88" /><text text-anchor="middle" x="117.5" y="-66.3" font-family="Helvetica,sans-Serif" font-size="14.00">buscar_aluno_por_matricula(...)</text></g><g id="svg-graphviz-7ba224b86bac-node2" class="node"><title>ok</title><path fill="#eaf7e8" stroke="#5a9c5a" d="M452,-141C452,-141 386,-141 386,-141 380,-141 374,-135 374,-129 374,-129 374,-115 374,-115 374,-109 380,-103 386,-103 386,-103 452,-103 452,-103 458,-103 464,-109 464,-115 464,-115 464,-129 464,-129 464,-135 458,-141 452,-141" /><text text-anchor="middle" x="419" y="-125.8" font-family="Helvetica,sans-Serif" font-size="14.00">caso 1</text><text text-anchor="middle" x="419" y="-110.8" font-family="Helvetica,sans-Serif" font-size="14.00">a = 0x200</text></g><g id="svg-graphviz-7ba224b86bac-edge1" class="edge"><title>busca-&gt;ok</title><path fill="none" stroke="#5a9c5a" d="M235.26,-76C315.03,-76 406,-76 406,-76 406,-76 406,-92.76 406,-92.76" /><polygon fill="#5a9c5a" stroke="#5a9c5a" points="402.5,-92.76 406,-102.76 409.5,-92.76 402.5,-92.76" /><text text-anchor="middle" x="304.5" y="-120.8" font-family="Times,serif" font-size="14.00">encontrou</text></g><g id="svg-graphviz-7ba224b86bac-node4" class="node"><title>nullcase</title><path fill="#fdeaea" stroke="#c94f4f" d="M448,-38C448,-38 390,-38 390,-38 384,-38 378,-32 378,-26 378,-26 378,-12 378,-12 378,-6 384,0 390,0 390,0 448,0 448,0 454,0 460,-6 460,-12 460,-12 460,-26 460,-26 460,-32 454,-38 448,-38" /><text text-anchor="middle" x="419" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">caso 2</text><text text-anchor="middle" x="419" y="-7.8" font-family="Helvetica,sans-Serif" font-size="14.00">a = NULL</text></g><g id="svg-graphviz-7ba224b86bac-edge3" class="edge"><title>busca-&gt;nullcase</title><path fill="none" stroke="#c94f4f" d="M235.43,-64C325.04,-64 433,-64 433,-64 433,-64 433,-48.08 433,-48.08" /><polygon fill="#c94f4f" stroke="#c94f4f" points="436.5,-48.08 433,-38.08 429.5,-48.08 436.5,-48.08" /><text text-anchor="middle" x="304.5" y="-31.8" font-family="Times,serif" font-size="14.00">nao encontrou</text></g><g id="svg-graphviz-7ba224b86bac-node3" class="node"><title>aluno</title><path fill="#fff4d6" stroke="#d4a72c" d="M659,-141C659,-141 543,-141 543,-141 537,-141 531,-135 531,-129 531,-129 531,-115 531,-115 531,-109 537,-103 543,-103 543,-103 659,-103 659,-103 665,-103 671,-109 671,-115 671,-115 671,-129 671,-129 671,-135 665,-141 659,-141" /><text text-anchor="middle" x="601" y="-125.8" font-family="Helvetica,sans-Serif" font-size="14.00">Aluno encontrado</text><text text-anchor="middle" x="601" y="-110.8" font-family="Helvetica,sans-Serif" font-size="14.00">endereco: 0x200</text></g><g id="svg-graphviz-7ba224b86bac-edge2" class="edge"><title>ok-&gt;aluno</title><path fill="none" stroke="#5a9c5a" stroke-width="2" d="M464.46,-122C464.46,-122 521,-122 521,-122" /><polygon fill="#5a9c5a" stroke="#5a9c5a" stroke-width="2" points="521,-125.5 531,-122 521,-118.5 521,-125.5" /></g><g id="svg-graphviz-7ba224b86bac-node5" class="node"><title>vazio</title><path fill="lightgrey" stroke="transparent" d="M689,-37C689,-37 513,-37 513,-37 507,-37 501,-31 501,-25 501,-25 501,-13 501,-13 501,-7 507,-1 513,-1 513,-1 689,-1 689,-1 695,-1 701,-7 701,-13 701,-13 701,-25 701,-25 701,-31 695,-37 689,-37" /><text text-anchor="middle" x="601" y="-15.3" font-family="Helvetica,sans-Serif" font-size="14.00">nenhum aluno encontrado</text></g><g id="svg-graphviz-7ba224b86bac-edge4" class="edge"><title>nullcase-&gt;vazio</title><path fill="none" stroke="#c94f4f" stroke-dasharray="5,2" d="M460.3,-19C460.3,-19 490.89,-19 490.89,-19" /><polygon fill="#c94f4f" stroke="#c94f4f" points="490.89,-22.5 500.89,-19 490.89,-15.5 490.89,-22.5" /></g></g></svg></div></div>
+
+<p>Esse diagrama mostra dois cenários possíveis:</p>
+<ul>
+<li>a busca encontrou um aluno e devolveu um endereço válido</li>
+<li>a busca não encontrou ninguém e devolveu <code>NULL</code></li>
+</ul>
+<p>É por isso que o teste vem antes do uso. Se <code>a == NULL</code>, não faz sentido tentar acessar <code>a-&gt;faltas</code>, porque não existe uma estrutura válida naquele caminho.</p>
+<h3 id="questões-do-conceito"><span class="heading-text">Questões do conceito</span><span class="heading-arabic">12.8.1</span></h3>
+<p><strong>19.</strong> O que significa dizer que um ponteiro vale <code>NULL</code>?</p>
+<p><strong>20.</strong> Por que o teste <code>if(a != NULL)</code> vem antes de <code>aplicar_bonus(a, bonus)</code>?</p>
+<p><strong>21.</strong> Em uma função de busca, o que <code>NULL</code> comunica para quem chamou a função?</p>
+<h2 id="arrays-e-endereços-uma-ponte-com-o-que-já-vimos"><span class="heading-text">Arrays e endereços: uma ponte com o que já vimos</span><span class="heading-arabic">12.9</span></h2>
+<p>Ponteiros também aparecem o tempo todo quando trabalhamos com vetores. Considere:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">int v[3] = {10, 20, 30};
+</code></pre>
+<p>O vetor ocupa posições consecutivas de memória. O nome <code>v</code>, em muitos contextos, se comporta como o endereço do primeiro elemento.</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">printf(&quot;%d\n&quot;, v[0]);
+printf(&quot;%d\n&quot;, *v);
+</code></pre>
+<p>Nessa situação, <code>v[0]</code> e <code>*v</code> acessam o mesmo primeiro elemento.</p>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="900" viewBox="0.00 0.00 1084.00 147.50" class="svg-graph graphviz-img"><g id="svg-graphviz-8f38ccc0da69-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 143.5)"><title>ArrayMemoria</title><polygon fill="white" stroke="transparent" points="-4,4 -4,-143.5 1080,-143.5 1080,4 -4,4" /><g id="svg-graphviz-8f38ccc0da69-node1" class="node"><title>nome</title><path fill="#e8f4f8" stroke="#5b8def" d="M221,-60C221,-60 12,-60 12,-60 6,-60 0,-54 0,-48 0,-48 0,-34 0,-34 0,-28 6,-22 12,-22 12,-22 221,-22 221,-22 227,-22 233,-28 233,-34 233,-34 233,-48 233,-48 233,-54 227,-60 221,-60" /><text text-anchor="middle" x="116.5" y="-44.8" font-family="Helvetica,sans-Serif" font-size="14.00">v</text><text text-anchor="middle" x="116.5" y="-29.8" font-family="Helvetica,sans-Serif" font-size="14.00">endereco do primeiro elemento</text></g><g id="svg-graphviz-8f38ccc0da69-node2" class="node"><title>e0</title><path fill="#fff4d6" stroke="#d4a72c" d="M626,-67.5C626,-67.5 516,-67.5 516,-67.5 510,-67.5 504,-61.5 504,-55.5 504,-55.5 504,-26.5 504,-26.5 504,-20.5 510,-14.5 516,-14.5 516,-14.5 626,-14.5 626,-14.5 632,-14.5 638,-20.5 638,-26.5 638,-26.5 638,-55.5 638,-55.5 638,-61.5 632,-67.5 626,-67.5" /><text text-anchor="middle" x="571" y="-52.3" font-family="Helvetica,sans-Serif" font-size="14.00">v[0]</text><text text-anchor="middle" x="571" y="-37.3" font-family="Helvetica,sans-Serif" font-size="14.00">endereco: 0x300</text><text text-anchor="middle" x="571" y="-22.3" font-family="Helvetica,sans-Serif" font-size="14.00">conteudo: 10</text></g><g id="svg-graphviz-8f38ccc0da69-edge1" class="edge"><title>nome-&gt;e0</title><path fill="none" stroke="#444444" stroke-width="2" d="M233.25,-41C233.25,-41 493.94,-41 493.94,-41" /><polygon fill="#444444" stroke="#444444" stroke-width="2" points="493.94,-44.5 503.94,-41 493.94,-37.5 493.94,-44.5" /><text text-anchor="middle" x="368.5" y="-44.8" font-family="Times,serif" font-size="14.00">aponta para o primeiro elemento</text></g><g id="svg-graphviz-8f38ccc0da69-node3" class="node"><title>e1</title><path fill="#fff4d6" stroke="#d4a72c" d="M893,-139.5C893,-139.5 783,-139.5 783,-139.5 777,-139.5 771,-133.5 771,-127.5 771,-127.5 771,-98.5 771,-98.5 771,-92.5 777,-86.5 783,-86.5 783,-86.5 893,-86.5 893,-86.5 899,-86.5 905,-92.5 905,-98.5 905,-98.5 905,-127.5 905,-127.5 905,-133.5 899,-139.5 893,-139.5" /><text text-anchor="middle" x="838" y="-124.3" font-family="Helvetica,sans-Serif" font-size="14.00">v[1]</text><text text-anchor="middle" x="838" y="-109.3" font-family="Helvetica,sans-Serif" font-size="14.00">endereco: 0x304</text><text text-anchor="middle" x="838" y="-94.3" font-family="Helvetica,sans-Serif" font-size="14.00">conteudo: 20</text></g><g id="svg-graphviz-8f38ccc0da69-edge2" class="edge"><title>e0-&gt;e1</title><path fill="none" stroke="#888888" stroke-dasharray="5,2" d="M638.16,-51.75C701.57,-51.75 787,-51.75 787,-51.75 787,-51.75 787,-76.31 787,-76.31" /><polygon fill="#888888" stroke="#888888" points="783.5,-76.31 787,-86.31 790.5,-76.31 783.5,-76.31" /></g><g id="svg-graphviz-8f38ccc0da69-node5" class="node"><title>leitura</title><path fill="#eaf7e8" stroke="#5a9c5a" d="M861.5,-36C861.5,-36 814.5,-36 814.5,-36 808.5,-36 802.5,-30 802.5,-24 802.5,-24 802.5,-12 802.5,-12 802.5,-6 808.5,0 814.5,0 814.5,0 861.5,0 861.5,0 867.5,0 873.5,-6 873.5,-12 873.5,-12 873.5,-24 873.5,-24 873.5,-30 867.5,-36 861.5,-36" /><text text-anchor="middle" x="838" y="-14.3" font-family="Helvetica,sans-Serif" font-size="14.00">*v = 10</text></g><g id="svg-graphviz-8f38ccc0da69-edge4" class="edge"><title>e0-&gt;leitura</title><path fill="none" stroke="#5a9c5a" stroke-dasharray="5,2" d="M638.03,-25.25C638.03,-25.25 792.13,-25.25 792.13,-25.25" /><polygon fill="#5a9c5a" stroke="#5a9c5a" points="792.13,-28.75 802.13,-25.25 792.13,-21.75 792.13,-28.75" /><text text-anchor="middle" x="704.5" y="-21.8" font-family="Times,serif" font-size="14.00">conteudo lido</text></g><g id="svg-graphviz-8f38ccc0da69-node4" class="node"><title>e2</title><path fill="#fff4d6" stroke="#d4a72c" d="M1064,-139.5C1064,-139.5 954,-139.5 954,-139.5 948,-139.5 942,-133.5 942,-127.5 942,-127.5 942,-98.5 942,-98.5 942,-92.5 948,-86.5 954,-86.5 954,-86.5 1064,-86.5 1064,-86.5 1070,-86.5 1076,-92.5 1076,-98.5 1076,-98.5 1076,-127.5 1076,-127.5 1076,-133.5 1070,-139.5 1064,-139.5" /><text text-anchor="middle" x="1009" y="-124.3" font-family="Helvetica,sans-Serif" font-size="14.00">v[2]</text><text text-anchor="middle" x="1009" y="-109.3" font-family="Helvetica,sans-Serif" font-size="14.00">endereco: 0x308</text><text text-anchor="middle" x="1009" y="-94.3" font-family="Helvetica,sans-Serif" font-size="14.00">conteudo: 30</text></g><g id="svg-graphviz-8f38ccc0da69-edge3" class="edge"><title>e1-&gt;e2</title><path fill="none" stroke="#888888" stroke-dasharray="5,2" d="M905.09,-113C905.09,-113 931.82,-113 931.82,-113" /><polygon fill="#888888" stroke="#888888" points="931.82,-116.5 941.82,-113 931.82,-109.5 931.82,-116.5" /></g></g></svg></div></div>
+
+<p>Nesse diagrama, o nome <code>v</code> está ligado ao primeiro elemento do vetor. Por isso, <code>*v</code> acessa o conteúdo armazenado em <code>v[0]</code>. Ao mesmo tempo, o desenho deixa claro que o vetor não é um valor único: ele é uma sequência de posições vizinhas de memória.</p>
+<p>Essa ideia ajuda a reler vários trechos já usados na disciplina. Por exemplo, na aula 11:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">Aluno turma[100];
+ler_aluno(&amp;turma[i]);
+</code></pre>
+<p>Aqui, <code>turma[i]</code> é o aluno da posição <code>i</code>, enquanto <code>&amp;turma[i]</code> é o endereço desse aluno. Como <code>ler_aluno()</code> recebe <code>Aluno *</code>, o que precisamos entregar para a função é justamente o endereço do elemento correto.</p>
+<h3 id="o-que-isso-esclarece-na-prática"><span class="heading-text">O que isso esclarece na prática</span><span class="heading-arabic">12.9.1</span></h3>
+<p>Se a chamada fosse:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">ler_aluno(turma[i]);
+</code></pre>
+<p>estaríamos tentando passar uma estrutura inteira para uma função que espera um ponteiro. Mas quando fazemos:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">ler_aluno(&amp;turma[i]);
+</code></pre>
+<p>estamos dizendo: “use exatamente a posição do aluno <code>i</code> dentro do vetor”.</p>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Quando o programa percorre a turma com um <code>for</code>, ele está apenas repetindo contas ou está caminhando por várias posições de memória que guardam alunos distintos?</p>
+  </div>
+</div>
+<h2 id="como-a-aula-11-passa-a-fazer-sentido-por-dentro"><span class="heading-text">Como a aula 11 passa a fazer sentido por dentro</span><span class="heading-arabic">12.10</span></h2>
+<p>Agora podemos reler quatro linhas da aula anterior de forma muito mais clara:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">scanf(&quot;%d&quot;, &amp;idade);
+</code></pre>
+<p>Aqui, <code>scanf()</code> recebe o endereço de <code>idade</code> para poder gravar nela.</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">ler_aluno(&amp;turma[i]);
+</code></pre>
+<p>Aqui, a função recebe o endereço do aluno correto dentro do vetor.</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">Aluno *a = buscar_aluno_por_matricula(turma, n, matricula);
+</code></pre>
+<p>Aqui, <code>a</code> guarda o endereço do aluno encontrado.</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">a-&gt;notas[indice] += bonus;
+</code></pre>
+<p>Aqui, o programa usa esse endereço para localizar a estrutura real e alterar uma nota dentro dela.</p>
+<p>Essa é a ideia que deve ficar firme: ponteiros não existem para “enfeitar” código em <strong>C</strong>. Eles existem porque o programa precisa localizar dados reais na memória e, às vezes, modificá-los diretamente.</p>
+<h2 id="erros-comuns-desta-aula"><span class="heading-text">Erros comuns desta aula</span><span class="heading-arabic">12.11</span></h2>
+<p>Algumas confusões aparecem com frequência quando o assunto é ponteiro:</p>
+<ul>
+<li>achar que <code>p</code> e <code>*p</code> são a mesma coisa</li>
+<li>esquecer que <code>&amp;x</code> é endereço, não valor comum do problema</li>
+<li>usar <code>scanf(&quot;%d&quot;, idade)</code> em vez de <code>scanf(&quot;%d&quot;, &amp;idade)</code></li>
+<li>tentar usar <code>-&gt;</code> em algo que não é ponteiro para estrutura</li>
+<li>tentar acessar <code>*p</code> quando <code>p</code> vale <code>NULL</code></li>
+<li>imaginar que uma função altera a variável original só porque recebeu o mesmo número, quando na verdade recebeu apenas uma cópia</li>
+</ul>
+<p>Se você conseguir diferenciar claramente estas três ideias, metade da dificuldade com ponteiros desaparece:</p>
+<ul>
+<li>valor</li>
+<li>endereço</li>
+<li>conteúdo localizado por um endereço</li>
+</ul>
+<h2 id="questões"><span class="heading-text">Questões</span><span class="heading-arabic">12.12</span></h2>
+<div class="questions">
+  <p><strong>1.</strong> No trecho <code>int idade = 20;</code>, explique a diferença entre <code>idade</code> e <code>&amp;idade</code>.</p>
+<p><strong>2.</strong> O que significa dizer que um ponteiro é uma variável que armazena endereços?</p>
+<p><strong>3.</strong> Em <code>int *p = &amp;idade;</code>, o que está guardado em <code>p</code>? E o que está guardado em <code>idade</code>?</p>
+<p><strong>4.</strong> Explique, com suas palavras, por que <code>p</code> e <code>*p</code> não representam a mesma coisa.</p>
+<p><strong>5.</strong> Se <code>int *p = &amp;idade;</code> e depois executamos <code>*p = 50;</code>, qual será o novo valor de <code>idade</code>? Justifique.</p>
+<p><strong>6.</strong> Por que <code>scanf(&quot;%d&quot;, &amp;idade)</code> está correto, mas <code>scanf(&quot;%d&quot;, idade)</code> está errado?</p>
+<p><strong>7.</strong> Explique a diferença entre uma função que recebe <code>int x</code> e outra que recebe <code>int *p</code>.</p>
+<p><strong>8.</strong> Por que uma função que recebe <code>&amp;n</code> pode modificar a variável <code>n</code> do <code>main</code>?</p>
+<p><strong>9.</strong> Qual é a diferença entre <code>aluno.faltas</code> e <code>a-&gt;faltas</code>?</p>
+<p><strong>10.</strong> Reescreva com <code>-&gt;</code> o acesso equivalente a <code>(*a).matricula</code>.</p>
+<p><strong>11.</strong> Em uma função de busca, por que retornar <code>NULL</code> pode ser melhor do que retornar um aluno inventado ou valores arbitrários?</p>
+<p><strong>12.</strong> Explique o papel de <code>&amp;turma[i]</code> em uma chamada como <code>ler_aluno(&amp;turma[i])</code>.</p>
+</div>
+<div class="example">
+  <div class="example-title">Gabarito</div>
+  <p><strong>1.</strong> <code>idade</code> representa o valor guardado na variável. <code>&amp;idade</code> representa o endereço onde essa variável está armazenada.</p>
+<p><strong>2.</strong> Significa que o conteúdo do ponteiro é uma localização de memória, e não um valor comum do problema, como nota, idade ou matrícula.</p>
+<p><strong>3.</strong> Em <code>p</code> fica guardado o endereço de <code>idade</code>. Em <code>idade</code> fica guardado o valor inteiro associado à variável.</p>
+<p><strong>4.</strong> <code>p</code> é o endereço armazenado no ponteiro. <code>*p</code> é o conteúdo encontrado nesse endereço.</p>
+<p><strong>5.</strong> O novo valor de <code>idade</code> será <code>50</code>, porque <code>p</code> aponta para <code>idade</code> e <code>*p = 50</code> altera o conteúdo da variável original.</p>
+<p><strong>6.</strong> <code>scanf()</code> precisa de um endereço para saber onde gravar o valor lido. <code>&amp;idade</code> fornece esse endereço. Já <code>idade</code> sozinho representa apenas um valor inteiro.</p>
+<p><strong>7.</strong> <code>int x</code> faz a função receber uma cópia do valor. <code>int *p</code> faz a função receber um endereço, permitindo acessar ou modificar a variável original por meio de <code>*p</code>.</p>
+<p><strong>8.</strong> Porque <code>&amp;n</code> entrega o endereço de <code>n</code>. Assim, a função passa a trabalhar com a posição real da variável na memória, e não apenas com uma cópia do seu valor.</p>
+<p><strong>9.</strong> <code>aluno.faltas</code> é acesso direto a um campo de uma estrutura. <code>a-&gt;faltas</code> é acesso a esse mesmo campo quando <code>a</code> é um ponteiro para a estrutura.</p>
+<p><strong>10.</strong> A forma com <code>-&gt;</code> é <code>a-&gt;matricula</code>.</p>
+<p><strong>11.</strong> Porque <code>NULL</code> comunica claramente que nenhum endereço válido foi encontrado. Isso permite ao programa testar a falha antes de acessar o resultado.</p>
+<p><strong>12.</strong> <code>&amp;turma[i]</code> entrega o endereço do aluno que está na posição <code>i</code> do vetor, permitindo que a função trabalhe diretamente sobre esse elemento.</p>
+</div>
+<h2 id="próximos-passos"><span class="heading-text">Próximos passos</span><span class="heading-arabic">12.13</span></h2>
+<p>Agora que entendemos o que é um endereço, o que um ponteiro realmente armazena e por que <code>&amp;</code>, <code>*</code> e <code>-&gt;</code> aparecem no código, estamos prontos para avançar mais um passo no uso da memória em <strong>C</strong>.</p>
+<p>Na próxima aula, vamos estudar <strong>alocação dinâmica</strong>. Até aqui, os endereços com que trabalhamos vieram de variáveis que já existiam no programa. Depois, veremos como pedir memória durante a execução com funções como <code>malloc()</code> e como liberar essa memória corretamente quando ela não for mais necessária.</p>
+
+                </div>
+            </article>
+            <footer class="footer">
+                <p>© 2025 · <a href="#">Gabriel Soares Baptista</a></p>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        const toggle = document.querySelector('.mobile-menu-toggle');
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.querySelector('.mobile-menu-overlay');
+
+        function openMenu() {
+            sidebar.classList.add('open');
+            overlay.classList.add('open');
+            toggle.classList.add('open');
+            toggle.innerHTML = '<i data-lucide="x"></i>';
+            CourseForgeUI.initIcons();
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMenu() {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('open');
+            toggle.classList.remove('open');
+            toggle.innerHTML = '<i data-lucide="menu"></i>';
+            CourseForgeUI.initIcons();
+            document.body.style.overflow = '';
+        }
+
+        toggle.addEventListener('click', () => {
+            if (sidebar.classList.contains('open')) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        overlay.addEventListener('click', closeMenu);
+    </script>
+
+    
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            renderMathInElement(document.body, {
+                output: 'html',
+                delimiters: [
+                    { left: "$$", right: "$$", display: true },
+                    { left: "$", right: "$", display: false },
+                    { left: "\\(", right: "\\)", display: false },
+                    { left: "\\[", right: "\\]", display: true }
+                ],
+                throwOnError: false,
+                strict: false
+            });
+        });
+    </script>
+    
+    
+    <script src="/js/vendor/prism/prism.min.js" data-no-bundle></script>
+    <script src="/js/vendor/prism/components/prism-c.min.js" data-no-bundle></script>
+    <script src="/js/vendor/prism/components/prism-cpp.min.js" data-no-bundle></script>
+    <script src="/js/vendor/prism/components/prism-python.min.js" data-no-bundle></script>
+    <script src="/js/vendor/prism/components/prism-javascript.min.js" data-no-bundle></script>
+    <script src="/js/vendor/prism/components/prism-clike.min.js" data-no-bundle></script>
+    <script src="/js/vendor/prism/components/prism-perl.min.js" data-no-bundle></script>
+    <script src="/js/vendor/prism/components/prism-java.min.js" data-no-bundle></script>
+    <script src="/js/vendor/prism/components/prism-mermaid.min.js" data-no-bundle></script>
+    <script src="/js/vendor/prism/components/prism-markup-templating.min.js" data-no-bundle></script>
+    <script src="/js/vendor/prism/components/prism-php.min.js" data-no-bundle></script>
+    <script src="/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js" data-no-bundle></script>
+    
+    
+    
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            mermaid.initialize({
+                startOnLoad: true,
+                theme: 'default',
+                securityLevel: 'loose',
+                fontFamily: 'Inter, system-ui, sans-serif',
+                themeVariables: {
+                    fontSize: '16px',
+                    edgeLabelFontSize: '16px',
+                    multiplicityFontSize: '18px'
+                }
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const isSubcourse = false;
+        const courseName = "T\u00f3picos de Programa\u00e7\u00e3o II (TEP II)";
+        CourseForgeNav.applyDynamicBreadcrumbs('.breadcrumb', isSubcourse);
+        CourseForgeNav.initScrollSpy();
+        CourseForgeUI.initCopyButtons();
+        CourseForgeUI.initExamples();
+        });
+
+        function handleBackNavigation() {
+            const isSubcourse = false;
+        const dynamic = CourseForgeNav.getBackLink('contents.html', 'Voltar', isSubcourse);
+        window.location.href = dynamic.url;
+        }
+    </script>
+</body>
+
+</html>

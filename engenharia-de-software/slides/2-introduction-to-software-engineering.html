@@ -6,15 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
     <title>Introdução à Engenharia de Software</title>
-    <link rel="icon" href="/aulas-faesa/img/dark-favicon.svg" media="(prefers-color-scheme: light)">
-    <link rel="icon" href="/aulas-faesa/img/light-favicon.svg" media="(prefers-color-scheme: dark)">
+    <link rel="icon" href="/img/dark-favicon.svg" media="(prefers-color-scheme: light)">
+    <link rel="icon" href="/img/light-favicon.svg" media="(prefers-color-scheme: dark)">
 
-    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/reset.min.css" data-no-bundle />
-    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/reveal.min.css" data-no-bundle />
-    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/theme/white.min.css" data-no-bundle />
-    <link rel="stylesheet" href="/aulas-faesa/css/prism-one-light.css" data-no-bundle>
-    <link rel="stylesheet" href="/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css" data-no-bundle>
-    <link rel="stylesheet" href="/aulas-faesa/css/vendor/fonts.css" data-no-bundle>
+    <link rel="stylesheet" href="/css/vendor/reveal/reset.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/css/vendor/reveal/reveal.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/css/vendor/reveal/theme/white.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/css/prism-one-light.css" data-no-bundle>
+    <link rel="stylesheet" href="/css/vendor/prism/prism-line-numbers.min.css" data-no-bundle>
+    <link rel="stylesheet" href="/css/vendor/fonts.css" data-no-bundle>
 </head>
 
 <body>
@@ -249,7 +249,7 @@
 <section><h1>Estudo de Caso 1: Bomba de Insulina</h1>
 <p><em>Tipo: Sistema Embutido | Foco: Segurança Crítica</em></p>
 <p>Simula o pâncreas. Coleta dados do sensor e injeta insulina.</p>
-<div class="error">Graphviz error: failed to execute PosixPath('dot'), make sure the Graphviz executables are on your systems' PATH</div>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="500" viewBox="0.00 0.00 512.00 339.00" class="svg-graph graphviz-img"><g id="svg-graphviz-b6f42de98bed-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 335)"><title>Insulina</title><g id="svg-graphviz-b6f42de98bed-node1" class="node"><title>reservatorio</title><polygon fill="#e0e0e0" stroke="black" points="504,-331 0,-331 0,-288 504,-288 504,-331" /><text text-anchor="middle" x="252" y="-305.8" font-family="Arial" font-size="14.00">Reservatório de insulina</text></g><g id="svg-graphviz-b6f42de98bed-node2" class="node"><title>bomba</title><polygon fill="white" stroke="black" points="282,-259 222,-259 222,-216 282,-216 282,-259" /><text text-anchor="middle" x="252" y="-233.8" font-family="Arial" font-size="14.00">Bomba</text></g><g id="svg-graphviz-b6f42de98bed-edge1" class="edge"><title>reservatorio:s-&gt;bomba:n</title><path fill="none" stroke="black" d="M252,-287.5C252,-287.5 252,-259.5 252,-259.5" /></g><g id="svg-graphviz-b6f42de98bed-node3" class="node"><title>controlador</title><polygon fill="white" stroke="black" points="306,-187 198,-187 198,-144 306,-144 306,-187" /><text text-anchor="middle" x="252" y="-161.8" font-family="Arial" font-size="14.00">Controlador</text></g><g id="svg-graphviz-b6f42de98bed-edge2" class="edge"><title>bomba:s-&gt;controlador:n</title><path fill="none" stroke="black" d="M252,-205.5C252,-205.5 252,-187.5 252,-187.5" /><polygon fill="black" stroke="black" points="248.5,-205.5 252,-215.5 255.5,-205.5 248.5,-205.5" /></g><g id="svg-graphviz-b6f42de98bed-node4" class="node"><title>fonte</title><polygon fill="#e0e0e0" stroke="black" points="504,-43 0,-43 0,0 504,0 504,-43" /><text text-anchor="middle" x="252" y="-17.8" font-family="Arial" font-size="14.00">Fonte de energia</text></g><g id="svg-graphviz-b6f42de98bed-node8" class="node"><title>alarme</title><polygon fill="white" stroke="black" points="424,-187 364,-187 364,-144 424,-144 424,-187" /><text text-anchor="middle" x="394" y="-161.8" font-family="Arial" font-size="14.00">Alarme</text></g><g id="svg-graphviz-b6f42de98bed-edge7" class="edge"><title>controlador:e-&gt;alarme</title><path fill="none" stroke="black" d="M306,-165C306,-165 353.72,-165 353.72,-165" /><polygon fill="black" stroke="black" points="353.72,-168.5 363.72,-165 353.72,-161.5 353.72,-168.5" /></g><g id="svg-graphviz-b6f42de98bed-node9" class="node"><title>disp1</title><polygon fill="white" stroke="black" points="164,-115 92,-115 92,-72 164,-72 164,-115" /><text text-anchor="middle" x="128" y="-89.8" font-family="Arial" font-size="14.00">Display 1</text></g><g id="svg-graphviz-b6f42de98bed-edge8" class="edge"><title>controlador:sw-&gt;disp1:n</title><path fill="none" stroke="black" d="M198,-158C198,-158 151.75,-158 151.75,-158 151.75,-158 151.75,-125.5 151.75,-125.5" /><polygon fill="black" stroke="black" points="155.25,-125.5 151.75,-115.5 148.25,-125.5 155.25,-125.5" /></g><g id="svg-graphviz-b6f42de98bed-node10" class="node"><title>disp2</title><polygon fill="white" stroke="black" points="412,-115 340,-115 340,-72 412,-72 412,-115" /><text text-anchor="middle" x="376" y="-89.8" font-family="Arial" font-size="14.00">Display 2</text></g><g id="svg-graphviz-b6f42de98bed-edge9" class="edge"><title>controlador:se-&gt;disp2:n</title><path fill="none" stroke="black" d="M306,-154C306,-154 348,-154 348,-154 348,-154 348,-125.5 348,-125.5" /><polygon fill="black" stroke="black" points="351.5,-125.5 348,-115.5 344.5,-125.5 351.5,-125.5" /></g><g id="svg-graphviz-b6f42de98bed-node5" class="node"><title>modulo</title><polygon fill="white" stroke="black" points="164,-259 88,-259 88,-216 164,-216 164,-259" /><text text-anchor="middle" x="126" y="-241.3" font-family="Arial" font-size="14.00">Módulo</text><text text-anchor="middle" x="126" y="-226.3" font-family="Arial" font-size="14.00">de agulha</text></g><g id="svg-graphviz-b6f42de98bed-edge4" class="edge"><title>modulo:e-&gt;bomba:w</title><path fill="none" stroke="black" d="M164,-237C164,-237 212,-237 212,-237" /><polygon fill="black" stroke="black" points="212,-240.5 222,-237 212,-233.5 212,-240.5" /></g><g id="svg-graphviz-b6f42de98bed-node6" class="node"><title>relogio</title><polygon fill="white" stroke="black" points="402,-259 340,-259 340,-216 402,-216 402,-259" /><text text-anchor="middle" x="371" y="-233.8" font-family="Arial" font-size="14.00">Relógio</text></g><g id="svg-graphviz-b6f42de98bed-edge5" class="edge"><title>relogio-&gt;controlador:ne</title><path fill="none" stroke="black" d="M356,-215.99C356,-198.26 356,-176 356,-176 356,-176 316,-176 316,-176" /><polygon fill="black" stroke="black" points="316,-172.5 306,-176 316,-179.5 316,-172.5" /></g><g id="svg-graphviz-b6f42de98bed-node7" class="node"><title>sensor</title><polygon fill="white" stroke="black" points="139.5,-187 80.5,-187 80.5,-144 139.5,-144 139.5,-187" /><text text-anchor="middle" x="110" y="-161.8" font-family="Arial" font-size="14.00">Sensor</text></g><g id="svg-graphviz-b6f42de98bed-edge6" class="edge"><title>sensor-&gt;controlador:w</title><path fill="none" stroke="black" d="M139.79,-172C139.79,-172 188,-172 188,-172" /><polygon fill="black" stroke="black" points="188,-175.5 198,-172 188,-168.5 188,-175.5" /></g></g></svg></div></div>
 
 <p><strong>Requisitos Críticos:</strong></p>
 <ul>
@@ -316,26 +316,26 @@
         </div>
     </div>
 
-    <script src="/aulas-faesa/js/vendor/reveal/reveal.min.js" data-no-bundle></script>
-    <script src="/aulas-faesa/js/vendor/reveal/plugin/notes/notes.min.js" data-no-bundle></script>
-    <script src="/aulas-faesa/js/vendor/reveal/plugin/markdown/markdown.min.js" data-no-bundle></script>
-    <script src="/aulas-faesa/js/vendor/reveal/plugin/math/math.min.js" data-no-bundle></script>
-    <script src="/aulas-faesa/js/vendor/reveal/plugin/zoom/zoom.min.js" data-no-bundle></script>
-    <script src="/aulas-faesa/js/vendor/prism/prism.min.js" data-no-bundle></script>
-    <script src="/aulas-faesa/js/vendor/prism/components/prism-c.min.js" data-no-bundle></script>
-    <script src="/aulas-faesa/js/vendor/prism/components/prism-python.min.js" data-no-bundle></script>
-    <script src="/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js" data-no-bundle></script>
-    <script src="/aulas-faesa/js/vendor/prism/components/prism-clike.min.js" data-no-bundle></script>
-    <script src="/aulas-faesa/js/vendor/prism/components/prism-cpp.min.js" data-no-bundle></script>
-    <script src="/aulas-faesa/js/vendor/prism/components/prism-perl.min.js" data-no-bundle></script>
-    <script src="/aulas-faesa/js/vendor/prism/components/prism-java.min.js" data-no-bundle></script>
-    <script src="/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js" data-no-bundle></script>
-    <script src="/aulas-faesa/js/vendor/prism/components/prism-php.min.js" data-no-bundle></script>
-    <script src="/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js" data-no-bundle></script>
-    <script src="/aulas-faesa/js/vendor/prism/plugins/toolbar/prism-toolbar.min.js" data-no-bundle></script>
-    <script src="/aulas-faesa/js/vendor/prism/plugins/show-language/prism-show-language.min.js" data-no-bundle></script>
-    <script src="/aulas-faesa/js/prism-slang.js" data-no-bundle></script>
-    <script src="/aulas-faesa/js/mermaid.min.js" data-no-bundle></script>
+    <script src="/js/vendor/reveal/reveal.min.js" data-no-bundle></script>
+    <script src="/js/vendor/reveal/plugin/notes/notes.min.js" data-no-bundle></script>
+    <script src="/js/vendor/reveal/plugin/markdown/markdown.min.js" data-no-bundle></script>
+    <script src="/js/vendor/reveal/plugin/math/math.min.js" data-no-bundle></script>
+    <script src="/js/vendor/reveal/plugin/zoom/zoom.min.js" data-no-bundle></script>
+    <script src="/js/vendor/prism/prism.min.js" data-no-bundle></script>
+    <script src="/js/vendor/prism/components/prism-c.min.js" data-no-bundle></script>
+    <script src="/js/vendor/prism/components/prism-python.min.js" data-no-bundle></script>
+    <script src="/js/vendor/prism/components/prism-javascript.min.js" data-no-bundle></script>
+    <script src="/js/vendor/prism/components/prism-clike.min.js" data-no-bundle></script>
+    <script src="/js/vendor/prism/components/prism-cpp.min.js" data-no-bundle></script>
+    <script src="/js/vendor/prism/components/prism-perl.min.js" data-no-bundle></script>
+    <script src="/js/vendor/prism/components/prism-java.min.js" data-no-bundle></script>
+    <script src="/js/vendor/prism/components/prism-markup-templating.min.js" data-no-bundle></script>
+    <script src="/js/vendor/prism/components/prism-php.min.js" data-no-bundle></script>
+    <script src="/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js" data-no-bundle></script>
+    <script src="/js/vendor/prism/plugins/toolbar/prism-toolbar.min.js" data-no-bundle></script>
+    <script src="/js/vendor/prism/plugins/show-language/prism-show-language.min.js" data-no-bundle></script>
+    <script src="/js/prism-slang.js" data-no-bundle></script>
+    <script src="/js/mermaid.min.js" data-no-bundle></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             mermaid.initialize({
@@ -347,10 +347,10 @@
             });
         });
     </script>
-    <script src="/aulas-faesa/js/rough.min.js" data-no-bundle></script>
-    <script src="/aulas-faesa/js/apply_sketch.js" data-no-bundle></script>
-    <script src="/aulas-faesa/js/lucide.min.js" data-no-bundle></script>
-    <script src="/aulas-faesa/js/ui.js" data-no-bundle></script>
+    <script src="/js/rough.min.js" data-no-bundle></script>
+    <script src="/js/apply_sketch.js" data-no-bundle></script>
+    <script src="/js/lucide.min.js" data-no-bundle></script>
+    <script src="/js/ui.js" data-no-bundle></script>
     <script>
         const waitForNextFrame = () => new Promise(resolve => requestAnimationFrame(resolve));
 
@@ -449,7 +449,7 @@
             controls: false,
             plugins: [RevealMarkdown, RevealNotes, RevealMath.KaTeX, RevealZoom],
             katex: {
-                local: '/aulas-faesa/js/vendor/katex',
+                local: '/js/vendor/katex',
                 output: 'html',
                 throwOnError: false,
                 strict: false,

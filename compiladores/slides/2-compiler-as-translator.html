@@ -6,15 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
     <title>Compilador como Tradutor</title>
-    <link rel="icon" href="/aulas-faesa/img/dark-favicon.svg" media="(prefers-color-scheme: light)">
-    <link rel="icon" href="/aulas-faesa/img/light-favicon.svg" media="(prefers-color-scheme: dark)">
+    <link rel="icon" href="/img/dark-favicon.svg" media="(prefers-color-scheme: light)">
+    <link rel="icon" href="/img/light-favicon.svg" media="(prefers-color-scheme: dark)">
 
-    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/reset.min.css" data-no-bundle />
-    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/reveal.min.css" data-no-bundle />
-    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/theme/white.min.css" data-no-bundle />
-    <link rel="stylesheet" href="/aulas-faesa/css/prism-one-light.css" data-no-bundle>
-    <link rel="stylesheet" href="/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css" data-no-bundle>
-    <link rel="stylesheet" href="/aulas-faesa/css/vendor/fonts.css" data-no-bundle>
+    <link rel="stylesheet" href="/css/vendor/reveal/reset.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/css/vendor/reveal/reveal.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/css/vendor/reveal/theme/white.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/css/prism-one-light.css" data-no-bundle>
+    <link rel="stylesheet" href="/css/vendor/prism/prism-line-numbers.min.css" data-no-bundle>
+    <link rel="stylesheet" href="/css/vendor/fonts.css" data-no-bundle>
 </head>
 
 <body>
@@ -90,7 +90,7 @@
 <section><h1>Visualização do Problema Monolítico</h1>
 <div class="col-2">
 
-<div class="error">Graphviz error: failed to execute PosixPath('dot'), make sure the Graphviz executables are on your systems' PATH</div>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="200" viewBox="0.00 0.00 184.00 243.00" class="svg-graph graphviz-img" data-sketch="true"><g id="svg-graphviz-dce841abeb08-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 239)"><title>SourceToTarget</title><g id="svg-graphviz-dce841abeb08-clust1" class="cluster"><title>cluster_sources</title><path fill="#f6f6d8" stroke="#e0e08a" d="M20,-8C20,-8 66,-8 66,-8 72,-8 78,-14 78,-20 78,-20 78,-215 78,-215 78,-221 72,-227 66,-227 66,-227 20,-227 20,-227 14,-227 8,-221 8,-215 8,-215 8,-20 8,-20 8,-14 14,-8 20,-8" /><text text-anchor="middle" x="43" y="-211.8" font-family="Times,serif" font-size="14.00">Fontes</text></g><g id="svg-graphviz-dce841abeb08-clust2" class="cluster"><title>cluster_targets</title><path fill="#f6f6d8" stroke="#e0e08a" d="M110,-8C110,-8 156,-8 156,-8 162,-8 168,-14 168,-20 168,-20 168,-215 168,-215 168,-221 162,-227 156,-227 156,-227 110,-227 110,-227 104,-227 98,-221 98,-215 98,-215 98,-20 98,-20 98,-14 104,-8 110,-8" /><text text-anchor="middle" x="133" y="-211.8" font-family="Times,serif" font-size="14.00">Alvo</text></g><g id="svg-graphviz-dce841abeb08-node1" class="node"><title>c</title><path fill="#efe9ff" stroke="#8a6cff" stroke-dasharray="5,2" d="M58,-124C58,-124 28,-124 28,-124 22,-124 16,-118 16,-112 16,-112 16,-100 16,-100 16,-94 22,-88 28,-88 28,-88 58,-88 58,-88 64,-88 70,-94 70,-100 70,-100 70,-112 70,-112 70,-118 64,-124 58,-124" /><text text-anchor="middle" x="43" y="-103.5" font-family="Helvetica,sans-Serif" font-size="10.00">C</text></g><g id="svg-graphviz-dce841abeb08-node4" class="node"><title>x86</title><path fill="#efe9ff" stroke="#8a6cff" stroke-dasharray="5,2" d="M148,-52C148,-52 118,-52 118,-52 112,-52 106,-46 106,-40 106,-40 106,-28 106,-28 106,-22 112,-16 118,-16 118,-16 148,-16 148,-16 154,-16 160,-22 160,-28 160,-28 160,-40 160,-40 160,-46 154,-52 148,-52" /><text text-anchor="middle" x="133" y="-31.5" font-family="Helvetica,sans-Serif" font-size="10.00">x86</text></g><g id="svg-graphviz-dce841abeb08-edge1" class="edge"><title>c-&gt;x86</title><path fill="none" stroke="#444444" d="M56.9,-87.83C75.21,-64.12 84.47,-53.66 96.71,-46.85" /><polygon fill="#444444" stroke="#444444" points="98.22,-50 105.8,-42.6 95.26,-43.66 98.22,-50" /></g><g id="svg-graphviz-dce841abeb08-node5" class="node"><title>arm</title><path fill="#efe9ff" stroke="#8a6cff" stroke-dasharray="5,2" d="M148,-196C148,-196 118,-196 118,-196 112,-196 106,-190 106,-184 106,-184 106,-172 106,-172 106,-166 112,-160 118,-160 118,-160 148,-160 148,-160 154,-160 160,-166 160,-172 160,-172 160,-184 160,-184 160,-190 154,-196 148,-196" /><text text-anchor="middle" x="133" y="-175.5" font-family="Helvetica,sans-Serif" font-size="10.00">ARM</text></g><g id="svg-graphviz-dce841abeb08-edge2" class="edge"><title>c-&gt;arm</title><path fill="none" stroke="#444444" d="M56.9,-124.17C75.21,-147.88 84.47,-158.34 96.71,-165.15" /><polygon fill="#444444" stroke="#444444" points="95.26,-168.34 105.8,-169.4 98.22,-162 95.26,-168.34" /></g><g id="svg-graphviz-dce841abeb08-node6" class="node"><title>mips</title><path fill="#efe9ff" stroke="#8a6cff" stroke-dasharray="5,2" d="M148,-124C148,-124 118,-124 118,-124 112,-124 106,-118 106,-112 106,-112 106,-100 106,-100 106,-94 112,-88 118,-88 118,-88 148,-88 148,-88 154,-88 160,-94 160,-100 160,-100 160,-112 160,-112 160,-118 154,-124 148,-124" /><text text-anchor="middle" x="133" y="-103.5" font-family="Helvetica,sans-Serif" font-size="10.00">MIPS</text></g><g id="svg-graphviz-dce841abeb08-edge3" class="edge"><title>c-&gt;mips</title><path fill="none" stroke="#444444" d="M70.05,-95.77C80.1,-92.58 87.28,-91.73 95.79,-93.2" /><polygon fill="#444444" stroke="#444444" points="95.19,-96.65 105.74,-95.7 96.9,-89.86 95.19,-96.65" /></g><g id="svg-graphviz-dce841abeb08-node2" class="node"><title>java</title><path fill="#efe9ff" stroke="#8a6cff" stroke-dasharray="5,2" d="M58,-52C58,-52 28,-52 28,-52 22,-52 16,-46 16,-40 16,-40 16,-28 16,-28 16,-22 22,-16 28,-16 28,-16 58,-16 58,-16 64,-16 70,-22 70,-28 70,-28 70,-40 70,-40 70,-46 64,-52 58,-52" /><text text-anchor="middle" x="43" y="-31.5" font-family="Helvetica,sans-Serif" font-size="10.00">Java</text></g><g id="svg-graphviz-dce841abeb08-edge4" class="edge"><title>java-&gt;x86</title><path fill="none" stroke="#444444" d="M70.05,-23.77C80.1,-20.58 87.28,-19.73 95.79,-21.2" /><polygon fill="#444444" stroke="#444444" points="95.19,-24.65 105.74,-23.7 96.9,-17.86 95.19,-24.65" /></g><g id="svg-graphviz-dce841abeb08-edge5" class="edge"><title>java-&gt;arm</title><path fill="none" stroke="#444444" d="M64.16,-52.33C86.59,-73.01 94.57,-88.01 121.25,-150.4" /><polygon fill="#444444" stroke="#444444" points="118.19,-152.13 125.33,-159.95 124.63,-149.38 118.19,-152.13" /></g><g id="svg-graphviz-dce841abeb08-edge6" class="edge"><title>java-&gt;mips</title><path fill="none" stroke="#444444" d="M70.05,-42.54C85.92,-48.79 94.65,-56.77 112.73,-79.67" /><polygon fill="#444444" stroke="#444444" points="110.04,-81.91 118.95,-87.64 115.56,-77.6 110.04,-81.91" /></g><g id="svg-graphviz-dce841abeb08-node3" class="node"><title>python</title><path fill="#efe9ff" stroke="#8a6cff" stroke-dasharray="5,2" d="M58,-196C58,-196 28,-196 28,-196 22,-196 16,-190 16,-184 16,-184 16,-172 16,-172 16,-166 22,-160 28,-160 28,-160 58,-160 58,-160 64,-160 70,-166 70,-172 70,-172 70,-184 70,-184 70,-190 64,-196 58,-196" /><text text-anchor="middle" x="43" y="-175.5" font-family="Helvetica,sans-Serif" font-size="10.00">Python</text></g><g id="svg-graphviz-dce841abeb08-edge7" class="edge"><title>python-&gt;x86</title><path fill="none" stroke="#444444" d="M50.7,-159.89C77.42,-97.13 86.39,-78.04 104.67,-59.28" /><polygon fill="#444444" stroke="#444444" points="107.12,-61.77 111.87,-52.3 102.25,-56.74 107.12,-61.77" /></g><g id="svg-graphviz-dce841abeb08-edge8" class="edge"><title>python-&gt;arm</title><path fill="none" stroke="#444444" d="M70.05,-188.23C80.1,-191.42 87.28,-192.27 95.79,-190.8" /><polygon fill="#444444" stroke="#444444" points="96.9,-194.14 105.74,-188.3 95.19,-187.35 96.9,-194.14" /></g><g id="svg-graphviz-dce841abeb08-edge9" class="edge"><title>python-&gt;mips</title><path fill="none" stroke="#444444" d="M70.05,-169.46C85.92,-163.21 94.65,-155.23 112.73,-132.33" /><polygon fill="#444444" stroke="#444444" points="115.56,-134.4 118.95,-124.36 110.04,-130.09 115.56,-134.4" /></g></g></svg></div></div>
 
 <div>
 
@@ -123,7 +123,7 @@ Explosão combinatória de manutenção.</p>
 <section><h1>Visualização da Abordagem Modular</h1>
 <div class="col-2">
 
-<div class="error">Graphviz error: failed to execute PosixPath('dot'), make sure the Graphviz executables are on your systems' PATH</div>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="400" viewBox="0.00 0.00 293.00 243.00" class="svg-graph graphviz-img" data-sketch="true"><g id="svg-graphviz-b1bb1eaa556c-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 239)"><title>CompilerPipeline</title><g id="svg-graphviz-b1bb1eaa556c-clust1" class="cluster"><title>cluster_frontends</title><path fill="#f5f5e8" stroke="#d6d6a5" d="M12,-8C12,-8 78,-8 78,-8 84,-8 90,-14 90,-20 90,-20 90,-215 90,-215 90,-221 84,-227 78,-227 78,-227 12,-227 12,-227 6,-227 0,-221 0,-215 0,-215 0,-20 0,-20 0,-14 6,-8 12,-8" /><text text-anchor="middle" x="45" y="-211.8" font-family="Times,serif" font-size="14.00">Frontends</text></g><g id="svg-graphviz-b1bb1eaa556c-clust2" class="cluster"><title>cluster_backends</title><path fill="#f5f5e8" stroke="#d6d6a5" d="M212,-8C212,-8 273,-8 273,-8 279,-8 285,-14 285,-20 285,-20 285,-215 285,-215 285,-221 279,-227 273,-227 273,-227 212,-227 212,-227 206,-227 200,-221 200,-215 200,-215 200,-20 200,-20 200,-14 206,-8 212,-8" /><text text-anchor="middle" x="242.5" y="-211.8" font-family="Times,serif" font-size="14.00">Backends</text></g><g id="svg-graphviz-b1bb1eaa556c-node1" class="node"><title>c</title><path fill="none" stroke="black" stroke-dasharray="5,2" d="M60,-196C60,-196 30,-196 30,-196 24,-196 18,-190 18,-184 18,-184 18,-172 18,-172 18,-166 24,-160 30,-160 30,-160 60,-160 60,-160 66,-160 72,-166 72,-172 72,-172 72,-184 72,-184 72,-190 66,-196 60,-196" /><text text-anchor="middle" x="45" y="-175.5" font-family="Helvetica,sans-Serif" font-size="10.00">C</text></g><g id="svg-graphviz-b1bb1eaa556c-node4" class="node"><title>ir</title><path fill="none" stroke="#7a5cff" stroke-width="2" d="M160,-124C160,-124 130,-124 130,-124 124,-124 118,-118 118,-112 118,-112 118,-100 118,-100 118,-94 124,-88 130,-88 130,-88 160,-88 160,-88 166,-88 172,-94 172,-100 172,-100 172,-112 172,-112 172,-118 166,-124 160,-124" /><text text-anchor="middle" x="145" y="-103.5" font-family="Helvetica,sans-Serif" font-size="10.00">IR</text></g><g id="svg-graphviz-b1bb1eaa556c-edge1" class="edge"><title>c-&gt;ir</title><path fill="none" stroke="#333333" d="M66.16,-159.88C76.01,-151.97 86.61,-144.59 109.37,-129.49" /><polygon fill="#333333" stroke="#333333" points="111.54,-132.25 117.95,-123.81 107.68,-126.41 111.54,-132.25" /></g><g id="svg-graphviz-b1bb1eaa556c-node2" class="node"><title>java</title><path fill="none" stroke="black" stroke-dasharray="5,2" d="M60,-124C60,-124 30,-124 30,-124 24,-124 18,-118 18,-112 18,-112 18,-100 18,-100 18,-94 24,-88 30,-88 30,-88 60,-88 60,-88 66,-88 72,-94 72,-100 72,-100 72,-112 72,-112 72,-118 66,-124 60,-124" /><text text-anchor="middle" x="45" y="-103.5" font-family="Helvetica,sans-Serif" font-size="10.00">Java</text></g><g id="svg-graphviz-b1bb1eaa556c-edge2" class="edge"><title>java-&gt;ir</title><path fill="none" stroke="#333333" d="M72.02,-102.68C80.61,-102.23 90.35,-102.51 107.4,-103.53" /><polygon fill="#333333" stroke="#333333" points="107.47,-107.04 117.67,-104.17 107.91,-100.05 107.47,-107.04" /></g><g id="svg-graphviz-b1bb1eaa556c-node3" class="node"><title>python</title><path fill="none" stroke="black" stroke-dasharray="5,2" d="M60,-52C60,-52 30,-52 30,-52 24,-52 18,-46 18,-40 18,-40 18,-28 18,-28 18,-22 24,-16 30,-16 30,-16 60,-16 60,-16 66,-16 72,-22 72,-28 72,-28 72,-40 72,-40 72,-46 66,-52 60,-52" /><text text-anchor="middle" x="45" y="-31.5" font-family="Helvetica,sans-Serif" font-size="10.00">Python</text></g><g id="svg-graphviz-b1bb1eaa556c-edge3" class="edge"><title>python-&gt;ir</title><path fill="none" stroke="#333333" d="M72.14,-50.17C82.22,-56.8 93,-64.96 114.01,-81.49" /><polygon fill="#333333" stroke="#333333" points="111.86,-84.25 121.88,-87.7 116.2,-78.76 111.86,-84.25" /></g><g id="svg-graphviz-b1bb1eaa556c-node5" class="node"><title>x86</title><path fill="none" stroke="black" stroke-dasharray="5,2" d="M257,-196C257,-196 227,-196 227,-196 221,-196 215,-190 215,-184 215,-184 215,-172 215,-172 215,-166 221,-160 227,-160 227,-160 257,-160 257,-160 263,-160 269,-166 269,-172 269,-172 269,-184 269,-184 269,-190 263,-196 257,-196" /><text text-anchor="middle" x="242" y="-175.5" font-family="Helvetica,sans-Serif" font-size="10.00">x86</text></g><g id="svg-graphviz-b1bb1eaa556c-edge4" class="edge"><title>ir-&gt;x86</title><path fill="none" stroke="#333333" d="M172.27,-124.05C193.66,-138.27 205.38,-146.3 214.45,-153.35" /><polygon fill="#333333" stroke="#333333" points="212.27,-156.09 222.24,-159.7 216.7,-150.67 212.27,-156.09" /></g><g id="svg-graphviz-b1bb1eaa556c-node6" class="node"><title>arm</title><path fill="none" stroke="black" stroke-dasharray="5,2" d="M257,-124C257,-124 227,-124 227,-124 221,-124 215,-118 215,-112 215,-112 215,-100 215,-100 215,-94 221,-88 227,-88 227,-88 257,-88 257,-88 263,-88 269,-94 269,-100 269,-100 269,-112 269,-112 269,-118 263,-124 257,-124" /><text text-anchor="middle" x="242" y="-103.5" font-family="Helvetica,sans-Serif" font-size="10.00">ARM</text></g><g id="svg-graphviz-b1bb1eaa556c-edge5" class="edge"><title>ir-&gt;arm</title><path fill="none" stroke="#333333" d="M172.04,-104.31C186.88,-103.42 196.87,-102.92 204.76,-102.82" /><polygon fill="#333333" stroke="#333333" points="204.74,-106.32 214.79,-102.94 204.83,-99.32 204.74,-106.32" /></g><g id="svg-graphviz-b1bb1eaa556c-node7" class="node"><title>mips</title><path fill="none" stroke="black" stroke-dasharray="5,2" d="M257,-52C257,-52 227,-52 227,-52 221,-52 215,-46 215,-40 215,-40 215,-28 215,-28 215,-22 221,-16 227,-16 227,-16 257,-16 257,-16 263,-16 269,-22 269,-28 269,-28 269,-40 269,-40 269,-46 263,-52 257,-52" /><text text-anchor="middle" x="242" y="-31.5" font-family="Helvetica,sans-Serif" font-size="10.00">MIPS</text></g><g id="svg-graphviz-b1bb1eaa556c-edge6" class="edge"><title>ir-&gt;mips</title><path fill="none" stroke="#333333" d="M167.8,-87.94C186.32,-73.28 197.66,-64.41 206.58,-57.78" /><polygon fill="#333333" stroke="#333333" points="208.84,-60.47 214.88,-51.77 204.73,-54.8 208.84,-60.47" /></g></g></svg></div></div>
 
 <div>
 
@@ -163,26 +163,26 @@ $$</p>
         </div>
     </div>
 
-    <script src="/aulas-faesa/js/vendor/reveal/reveal.min.js" data-no-bundle></script>
-    <script src="/aulas-faesa/js/vendor/reveal/plugin/notes/notes.min.js" data-no-bundle></script>
-    <script src="/aulas-faesa/js/vendor/reveal/plugin/markdown/markdown.min.js" data-no-bundle></script>
-    <script src="/aulas-faesa/js/vendor/reveal/plugin/math/math.min.js" data-no-bundle></script>
-    <script src="/aulas-faesa/js/vendor/reveal/plugin/zoom/zoom.min.js" data-no-bundle></script>
-    <script src="/aulas-faesa/js/vendor/prism/prism.min.js" data-no-bundle></script>
-    <script src="/aulas-faesa/js/vendor/prism/components/prism-c.min.js" data-no-bundle></script>
-    <script src="/aulas-faesa/js/vendor/prism/components/prism-python.min.js" data-no-bundle></script>
-    <script src="/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js" data-no-bundle></script>
-    <script src="/aulas-faesa/js/vendor/prism/components/prism-clike.min.js" data-no-bundle></script>
-    <script src="/aulas-faesa/js/vendor/prism/components/prism-cpp.min.js" data-no-bundle></script>
-    <script src="/aulas-faesa/js/vendor/prism/components/prism-perl.min.js" data-no-bundle></script>
-    <script src="/aulas-faesa/js/vendor/prism/components/prism-java.min.js" data-no-bundle></script>
-    <script src="/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js" data-no-bundle></script>
-    <script src="/aulas-faesa/js/vendor/prism/components/prism-php.min.js" data-no-bundle></script>
-    <script src="/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js" data-no-bundle></script>
-    <script src="/aulas-faesa/js/vendor/prism/plugins/toolbar/prism-toolbar.min.js" data-no-bundle></script>
-    <script src="/aulas-faesa/js/vendor/prism/plugins/show-language/prism-show-language.min.js" data-no-bundle></script>
-    <script src="/aulas-faesa/js/prism-slang.js" data-no-bundle></script>
-    <script src="/aulas-faesa/js/mermaid.min.js" data-no-bundle></script>
+    <script src="/js/vendor/reveal/reveal.min.js" data-no-bundle></script>
+    <script src="/js/vendor/reveal/plugin/notes/notes.min.js" data-no-bundle></script>
+    <script src="/js/vendor/reveal/plugin/markdown/markdown.min.js" data-no-bundle></script>
+    <script src="/js/vendor/reveal/plugin/math/math.min.js" data-no-bundle></script>
+    <script src="/js/vendor/reveal/plugin/zoom/zoom.min.js" data-no-bundle></script>
+    <script src="/js/vendor/prism/prism.min.js" data-no-bundle></script>
+    <script src="/js/vendor/prism/components/prism-c.min.js" data-no-bundle></script>
+    <script src="/js/vendor/prism/components/prism-python.min.js" data-no-bundle></script>
+    <script src="/js/vendor/prism/components/prism-javascript.min.js" data-no-bundle></script>
+    <script src="/js/vendor/prism/components/prism-clike.min.js" data-no-bundle></script>
+    <script src="/js/vendor/prism/components/prism-cpp.min.js" data-no-bundle></script>
+    <script src="/js/vendor/prism/components/prism-perl.min.js" data-no-bundle></script>
+    <script src="/js/vendor/prism/components/prism-java.min.js" data-no-bundle></script>
+    <script src="/js/vendor/prism/components/prism-markup-templating.min.js" data-no-bundle></script>
+    <script src="/js/vendor/prism/components/prism-php.min.js" data-no-bundle></script>
+    <script src="/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js" data-no-bundle></script>
+    <script src="/js/vendor/prism/plugins/toolbar/prism-toolbar.min.js" data-no-bundle></script>
+    <script src="/js/vendor/prism/plugins/show-language/prism-show-language.min.js" data-no-bundle></script>
+    <script src="/js/prism-slang.js" data-no-bundle></script>
+    <script src="/js/mermaid.min.js" data-no-bundle></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             mermaid.initialize({
@@ -194,10 +194,10 @@ $$</p>
             });
         });
     </script>
-    <script src="/aulas-faesa/js/rough.min.js" data-no-bundle></script>
-    <script src="/aulas-faesa/js/apply_sketch.js" data-no-bundle></script>
-    <script src="/aulas-faesa/js/lucide.min.js" data-no-bundle></script>
-    <script src="/aulas-faesa/js/ui.js" data-no-bundle></script>
+    <script src="/js/rough.min.js" data-no-bundle></script>
+    <script src="/js/apply_sketch.js" data-no-bundle></script>
+    <script src="/js/lucide.min.js" data-no-bundle></script>
+    <script src="/js/ui.js" data-no-bundle></script>
     <script>
         const waitForNextFrame = () => new Promise(resolve => requestAnimationFrame(resolve));
 
@@ -296,7 +296,7 @@ $$</p>
             controls: false,
             plugins: [RevealMarkdown, RevealNotes, RevealMath.KaTeX, RevealZoom],
             katex: {
-                local: '/aulas-faesa/js/vendor/katex',
+                local: '/js/vendor/katex',
                 output: 'html',
                 throwOnError: false,
                 strict: false,
