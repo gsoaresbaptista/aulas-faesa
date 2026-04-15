@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toposia - Engenharia de Software</title>
+    <link rel="icon" href="/aulas-faesa/img/dark-favicon.svg" media="(prefers-color-scheme: light)">
+    <link rel="icon" href="/aulas-faesa/img/light-favicon.svg" media="(prefers-color-scheme: dark)">
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/fonts.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/bundles/katex-base-prism-one-light-b0347952c973.bundle.min.css">
+    
+    
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css" data-no-bundle>
+    <script src="/aulas-faesa/js/bundles/lucide-katex-auto-render-4b36e8bd8642.bundle.min.js"></script>
+</head>
+
+<body>
+    <script>
+        // Restore sidebar state instantly (before first paint) to avoid transition flash
+        (function() {
+            if (localStorage.getItem('cf_sidebar_hidden') === 'true') {
+                document.body.classList.add('sidebar-hidden', 'no-transition');
+            }
+            requestAnimationFrame(function() {
+                requestAnimationFrame(function() {
+                    document.body.classList.remove('no-transition');
+                });
+            });
+        })();
+    </script>
+    <div class="page-wrapper">
+        <nav class="sidebar">
+            <div class="sidebar-content">
+                <header class="sidebar-title-section">
+                    <a href="contents.html" class="course-title-link">
+                        <h1 class="sidebar-course-title">Engenharia de Software</h1>
+                    </a>
+                    <div class="sidebar-ornament">❧</div>
+                </header>
+
+                
+                <section class="sidebar-toc-section">
+                    <h2 class="toc-header">Tabela de Conteúdos</h2>
+                    <ol class="toc-list">
+                        
+                        <li class="toc-item level-2">
+                            <a href="#introdução">7.1. Introdução</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#o-que-é-arquitetura-de-software">7.2. O que é arquitetura de software</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#por-que-arquitetura-importa">7.2.1. Por que arquitetura importa</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#decisões-de-projeto-arquitetural">7.3. Decisões de projeto arquitetural</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#requisitos-não-funcionais-e-arquitetura">7.3.1. Requisitos não funcionais e arquitetura</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#visões-arquiteturais">7.4. Visões arquiteturais</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#estilos-arquiteturais">7.5. Estilos arquiteturais</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#mvc">7.5.1. MVC</a>
+                        </li>
+                        
+                        <li class="toc-item level-4">
+                            <a href="#exemplo-curto-em-c-mvc">7.5.1.1. Exemplo curto em C++: MVC</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#arquitetura-em-camadas">7.5.2. Arquitetura em camadas</a>
+                        </li>
+                        
+                        <li class="toc-item level-4">
+                            <a href="#exemplo-curto-em-c-camadas">7.5.2.1. Exemplo curto em C++: camadas</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#repositório">7.5.3. Repositório</a>
+                        </li>
+                        
+                        <li class="toc-item level-4">
+                            <a href="#exemplo-curto-em-c-repositório">7.5.3.1. Exemplo curto em C++: repositório</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#cliente-servidor">7.5.4. Cliente-servidor</a>
+                        </li>
+                        
+                        <li class="toc-item level-4">
+                            <a href="#exemplo-curto-em-c-cliente-servidor">7.5.4.1. Exemplo curto em C++: cliente-servidor</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#duto-e-filtro">7.5.5. Duto e filtro</a>
+                        </li>
+                        
+                        <li class="toc-item level-4">
+                            <a href="#exemplo-curto-em-c-duto-e-filtro">7.5.5.1. Exemplo curto em C++: duto e filtro</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#comparando-os-estilos">7.5.6. Comparando os estilos</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#um-mesmo-sistema-pode-combinar-estilos">7.6. Um mesmo sistema pode combinar estilos</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#conectando-com-a-aula-de-uml">7.7. Conectando com a aula de UML</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#escolhendo-um-estilo-arquitetural-na-prática">7.8. Escolhendo um estilo arquitetural na prática</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#próximos-passos">7.9. Próximos passos</a>
+                        </li>
+                        
+                    </ol>
+                </section>
+                
+
+                <nav class="sidebar-nav-section">
+                    
+                    <a href="6-system-modeling-uml.html" class="sidebar-nav-link prev"><i data-lucide="chevron-left" class="nav-icon"></i> Modelagem de Sistemas com UML</a>
+                    
+                    
+                    <a href="javascript:void(0)" onclick="handleBackNavigation()"
+                        class="sidebar-nav-link back"><i data-lucide="arrow-left" class="nav-icon"></i> Voltar</a>
+                </nav>
+
+            </div>
+        </nav>
+
+        <button class="mobile-menu-toggle" aria-label="Menu">
+            <i data-lucide="menu"></i>
+        </button>
+
+        <button class="sidebar-toggle" onclick="CourseForgeNav.toggleSidebar()" aria-label="Alternar Barra Lateral">
+            <i data-lucide="chevron-left" class="toggle-icon" id="sidebar-toggle-icon"></i>
+        </button>
+
+        <div class="mobile-menu-overlay"></div>
+
+        <main class="main-content">
+            <article class="article">
+                <header class="article-header">
+                    <span class="chapter-number">7</span>
+                    <h1 class="article-title">
+                        <span class="title-ornament left">❧</span>
+                        <span class="title-text">Estilos Arquiteturais de Software</span>
+                        <span class="title-ornament right">❧</span>
+                    </h1>
+                    
+                    <p class="article-date">15/04/2026</p>
+                    
+                    
+                    <nav class="breadcrumb" aria-label="Breadcrumb">
+                        
+                        
+                        
+                        <a href="contents.html" class="breadcrumb-link">Engenharia de Software</a>
+                        
+                        <span class="breadcrumb-separator"><i data-lucide="chevron-right" class="breadcrumb-icon"></i></span>
+                        
+                        
+                        
+                        
+                        <a href="contents.html#part-II" class="breadcrumb-link">II - Descrição de Software</a>
+                        
+                        <span class="breadcrumb-separator"><i data-lucide="chevron-right" class="breadcrumb-icon"></i></span>
+                        
+                        
+                        
+                        <span class="breadcrumb-current">Estilos Arquiteturais de Software</span>
+                        
+                        
+                    </nav>
+                    
+                </header>
+                <div class="article-body">
+                    <h2 id="introdução"><span class="heading-text">Introdução</span><span class="heading-arabic">7.1</span></h2>
+<p>Na aula anterior, modelamos um sistema com UML para enxergar funcionalidades, entidades, colaborações e fluxo. Isso foi importante porque nos ajudou a sair da descrição textual dos requisitos e construir representações mais organizadas do problema. No entanto, ainda falta uma pergunta decisiva: <strong>como o software será organizado em partes grandes, com responsabilidades bem separadas, para que possa evoluir sem virar um acúmulo caótico de classes, telas e consultas ao banco?</strong></p>
+<p>Essa é a pergunta da <strong>arquitetura de software</strong>.</p>
+<p>Quando falamos em arquitetura, não estamos discutindo detalhes finos de implementação, como o nome de uma variável, o método de uma classe específica ou a sintaxe de um framework. Estamos discutindo a <strong>estrutura global do sistema</strong>, os grandes componentes, a forma como se relacionam e o tipo de organização que melhor atende aos requisitos funcionais e, principalmente, aos <strong>requisitos não funcionais</strong>.</p>
+<p>Segundo Sommerville, o projeto de arquitetura é o elo crítico entre os requisitos e o projeto detalhado. É nele que começamos a decidir a forma do sistema como um todo. E isso importa muito, porque mudar uma função ou uma classe isolada costuma ser relativamente barato; já refatorar a arquitetura de um sistema grande, quando ele já está em produção, costuma ser caro, arriscado e demorado.</p>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Se duas equipes diferentes precisassem implementar o mesmo sistema acadêmico, uma poderia acabar com um software fácil de manter e a outra com um sistema frágil, mesmo que ambas usassem a mesma linguagem, o mesmo banco e o mesmo framework?</p>
+  </div>
+</div>
+<p>Se sua resposta foi “sim”, então você já percebeu o papel da arquitetura: <strong>a organização global importa tanto quanto a tecnologia escolhida</strong>.</p>
+<h2 id="o-que-é-arquitetura-de-software"><span class="heading-text">O que é arquitetura de software</span><span class="heading-arabic">7.2</span></h2>
+<p>Arquitetura de software é a organização de alto nível de um sistema. Ela descreve:</p>
+<ol>
+<li>quais são os principais componentes ou subsistemas;</li>
+<li>como esses componentes se relacionam;</li>
+<li>como dados, controle e responsabilidades circulam entre eles;</li>
+<li>como essa organização ajuda o sistema a satisfazer seus requisitos.</li>
+</ol>
+<p>Sommerville chama atenção para um ponto muito importante: a arquitetura não existe apenas para “deixar o sistema bonito”. Ela afeta diretamente características como:</p>
+<ol>
+<li>desempenho;</li>
+<li>segurança;</li>
+<li>disponibilidade;</li>
+<li>robustez;</li>
+<li>manutenção;</li>
+<li>distribuição do sistema em rede.</li>
+</ol>
+<p>Ou seja, os requisitos funcionais dizem <strong>o que</strong> o sistema deve fazer, mas a arquitetura influencia fortemente <strong>como bem</strong> ele fará isso.</p>
+<img src="static/figura-6-1-arquitetura-sistema-robotizado.png" width="80%">
+
+<p>Observe o tipo de visão que aparece na figura do Sommerville: ela não detalha métodos, nem atributos, nem código. Ela mostra apenas os grandes blocos e como se comunicam. Esse é o nível de abstração mais útil quando queremos conversar com stakeholders, planejar o sistema ou tomar decisões estruturais.</p>
+<h3 id="por-que-arquitetura-importa"><span class="heading-text">Por que arquitetura importa</span><span class="heading-arabic">7.2.1</span></h3>
+<p>Sommerville destaca pelo menos três razões centrais para projetar e documentar a arquitetura de software de forma explícita:</p>
+<ol>
+<li><strong>Comunicação entre stakeholders.</strong> A arquitetura oferece uma visão de alto nível que ajuda gerentes, clientes, analistas, arquitetos e desenvolvedores a discutirem o sistema sem se perderem nos detalhes da implementação.</li>
+<li><strong>Análise antecipada do sistema.</strong> Muitas consequências importantes de projeto aparecem cedo quando pensamos na arquitetura, especialmente as relacionadas a desempenho, disponibilidade, proteção e manutenção.</li>
+<li><strong>Reúso em larga escala.</strong> Sistemas parecidos tendem a compartilhar estruturas arquiteturais parecidas. Isso permite reaproveitar ideias, modelos, padrões e até partes inteiras da organização do software.</li>
+</ol>
+<p>Na prática, a arquitetura também ajuda a responder perguntas que aparecem cedo em qualquer projeto real:</p>
+<ol>
+<li>como separar interface, regra de negócio e dados?</li>
+<li>como distribuir o sistema entre cliente, servidor e banco?</li>
+<li>como permitir evolução futura sem quebrar tudo?</li>
+<li>como organizar o trabalho de várias equipes?</li>
+</ol>
+<h2 id="decisões-de-projeto-arquitetural"><span class="heading-text">Decisões de projeto arquitetural</span><span class="heading-arabic">7.3</span></h2>
+<p>Sommerville trata o projeto de arquitetura menos como uma receita fixa e mais como uma sequência de decisões importantes. Durante esse processo, o arquiteto precisa lidar com questões como:</p>
+<ol>
+<li>existe uma arquitetura genérica que pode servir de base para este tipo de sistema?</li>
+<li>o sistema será centralizado ou distribuído?</li>
+<li>que estilo arquitetural faz mais sentido?</li>
+<li>como o sistema será decomposto em componentes?</li>
+<li>como esses componentes vão se comunicar e ser controlados?</li>
+<li>como os requisitos não funcionais influenciam essa escolha?</li>
+<li>como a arquitetura será documentada?</li>
+</ol>
+<p>Essas perguntas deixam claro que arquitetura não é apenas um desenho bonito. Ela é uma resposta técnica e organizacional para as necessidades do sistema.</p>
+<h3 id="requisitos-não-funcionais-e-arquitetura"><span class="heading-text">Requisitos não funcionais e arquitetura</span><span class="heading-arabic">7.3.1</span></h3>
+<p>Um dos pontos mais importantes do capítulo 6 é a relação entre arquitetura e requisitos não funcionais. Sommerville argumenta que a escolha arquitetural deve levar em conta, explicitamente, qualidades como:</p>
+<ol>
+<li><strong>Desempenho.</strong> Às vezes vale concentrar operações críticas em poucos componentes ou na mesma máquina para reduzir comunicação.</li>
+<li><strong>Proteção.</strong> Uma organização em camadas pode ajudar a isolar partes sensíveis do sistema.</li>
+<li><strong>Segurança.</strong> Centralizar operações sensíveis em poucos componentes pode facilitar validação e controle.</li>
+<li><strong>Disponibilidade.</strong> Sistemas altamente disponíveis costumam exigir redundância e substituição de componentes sem parada total.</li>
+<li><strong>Manutenção.</strong> Componentes menores, autocontidos e com baixo acoplamento facilitam evolução.</li>
+</ol>
+<p>Esse trecho é importante porque combate uma confusão comum entre estudantes: a ideia de que a arquitetura é escolhida apenas por gosto ou moda tecnológica. Em um projeto profissional, a pergunta correta não é “qual arquitetura está popular?”, mas sim <strong>“qual organização ajuda este sistema a cumprir seus objetivos e restrições?”</strong></p>
+<h2 id="visões-arquiteturais"><span class="heading-text">Visões arquiteturais</span><span class="heading-arabic">7.4</span></h2>
+<p>Uma única figura raramente é suficiente para representar tudo o que importa na arquitetura de um sistema. Por isso, Sommerville apresenta a noção de <strong>múltiplas visões arquiteturais</strong>.</p>
+<p>Com base no modelo 4+1, ele destaca quatro visões fundamentais:</p>
+<ol>
+<li><strong>Visão lógica.</strong> Mostra as abstrações principais do sistema, como classes ou objetos centrais.</li>
+<li><strong>Visão de processo.</strong> Mostra como o sistema se comporta em execução, em termos de processos e interações.</li>
+<li><strong>Visão de desenvolvimento.</strong> Mostra como o software é decomposto para ser implementado por equipes.</li>
+<li><strong>Visão física.</strong> Mostra em que hardware ou nós de rede os componentes serão distribuídos.</li>
+</ol>
+<p>Além disso, o livro também comenta a utilidade de uma <strong>visão conceitual</strong>, mais abstrata, para discutir a essência do sistema e orientar a decomposição inicial.</p>
+<p>O ponto pedagógico importante aqui é simples: <strong>arquitetura não é um único desenho universal</strong>. Dependendo da pergunta que queremos responder, a melhor visão muda.</p>
+<div class="callout callout-tip">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .5 2.2 1.5 3.1.7.7 1.3 1.5 1.5 2.4"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span>
+    <span class="callout-title-inner"><br /></span>
+  </div>
+  <div class="callout-content">
+<p>Se a pergunta for “quais grandes módulos existem?”, uma visão conceitual basta. Se a pergunta for “como isso roda em rede?”, você precisa de uma visão física ou cliente-servidor. Se a pergunta for “como a equipe vai dividir o trabalho?”, a visão de desenvolvimento passa a ser mais útil.</p>
+  </div>
+</div>
+<h2 id="estilos-arquiteturais"><span class="heading-text">Estilos arquiteturais</span><span class="heading-arabic">7.5</span></h2>
+<p>Sommerville usa a ideia de <strong>padrões</strong> ou <strong>estilos arquiteturais</strong> como formas já experimentadas de organizar sistemas. Um estilo arquitetural é, portanto, uma organização recorrente, usada em muitos sistemas diferentes, que carrega vantagens, limitações e contextos típicos de uso.</p>
+<p>Nesta aula, vamos estudar cinco estilos relevantes:</p>
+<ol>
+<li>MVC;</li>
+<li>arquitetura em camadas;</li>
+<li>repositório;</li>
+<li>cliente-servidor;</li>
+<li>duto e filtro.</li>
+</ol>
+<p>É importante entender desde já que esses estilos <strong>não são mutuamente exclusivos</strong>. Um mesmo sistema pode combinar mais de um deles. Um sistema Web, por exemplo, pode usar MVC na interface, camadas no backend e cliente-servidor na distribuição lógica.</p>
+<h3 id="mvc"><span class="heading-text">MVC</span><span class="heading-arabic">7.5.1</span></h3>
+<p>O padrão <strong>Model-View-Controller</strong> separa um sistema em três partes lógicas:</p>
+<ol>
+<li><strong>Model</strong>: representa dados e regras associadas;</li>
+<li><strong>View</strong>: representa a forma como os dados são exibidos;</li>
+<li><strong>Controller</strong>: coordena a interação do usuário e aciona modelo e visão.</li>
+</ol>
+<p>Segundo Sommerville, ele é especialmente útil quando:</p>
+<ol>
+<li>existem várias formas de apresentar os mesmos dados;</li>
+<li>o modo de interação pode evoluir com o tempo;</li>
+<li>queremos alterar a interface sem misturar tudo com a lógica de negócio.</li>
+</ol>
+<p>As principais vantagens do MVC são:</p>
+<ol>
+<li>separação entre dados, apresentação e controle;</li>
+<li>facilidade de alterar visualizações;</li>
+<li>possibilidade de reaproveitar o mesmo modelo com interfaces diferentes.</li>
+</ol>
+<p>A principal desvantagem é que, em sistemas muito simples, ele pode introduzir complexidade desnecessária.</p>
+<img src="static/figura-6-2-organizacao-mvc.png" width="80%">
+
+<img src="static/figura-6-3-mvc-web.png" width="80%">
+
+<h4 id="exemplo-curto-em-c-mvc"><span class="heading-text">Exemplo curto em C++: MVC</span><span class="heading-arabic">7.5.1.1</span></h4>
+<pre class="line-numbers language-cpp" data-lang="CPP"><code class="language-cpp">class Pet {
+public:
+    std::string nome;
+    std::string servico;
+};
+
+class PetView {
+public:
+    void mostrar(const Pet&amp; pet) {
+        std::cout &lt;&lt; &quot;Pet: &quot; &lt;&lt; pet.nome &lt;&lt; &quot;\n&quot;;
+        std::cout &lt;&lt; &quot;Servico: &quot; &lt;&lt; pet.servico &lt;&lt; &quot;\n&quot;;
+    }
+};
+
+class PetController {
+private:
+    Pet&amp; model;
+    PetView&amp; view;
+
+public:
+    PetController(Pet&amp; m, PetView&amp; v) : model(m), view(v) {}
+
+    void atualizarServico(const std::string&amp; novoServico) {
+        model.servico = novoServico;
+    }
+
+    void renderizar() {
+        view.mostrar(model);
+    }
+};
+</code></pre>
+<p>Nesse exemplo:</p>
+<ol>
+<li><code>Pet</code> é o <strong>modelo</strong>;</li>
+<li><code>PetView</code> é a <strong>visão</strong>;</li>
+<li><code>PetController</code> coordena a alteração e a exibição.</li>
+</ol>
+<p>O exemplo é pequeno, mas suficiente para mostrar a ideia principal: quem guarda os dados não é quem decide como exibi-los, e quem coordena a interação não precisa conter toda a regra de visualização.</p>
+<h3 id="arquitetura-em-camadas"><span class="heading-text">Arquitetura em camadas</span><span class="heading-arabic">7.5.2</span></h3>
+<p>Na arquitetura em camadas, o sistema é organizado em níveis, onde cada camada usa os serviços da camada imediatamente abaixo e fornece serviços para a camada acima.</p>
+<p>Sommerville destaca esse estilo como uma forma de promover separação e independência. Em um sistema corporativo típico, é comum enxergar algo próximo de:</p>
+<ol>
+<li>interface do usuário;</li>
+<li>gerenciamento da interface;</li>
+<li>lógica de negócio;</li>
+<li>apoio de sistema, banco de dados e sistema operacional.</li>
+</ol>
+<img src="static/figura-6-4-arquitetura-camadas-generica.png" width="80%">
+
+<p>As vantagens principais são:</p>
+<ol>
+<li>melhor organização estrutural;</li>
+<li>substituição mais simples de uma camada, desde que a interface seja mantida;</li>
+<li>apoio a manutenção e evolução localizadas;</li>
+<li>boa aderência a cenários com preocupação de proteção multinível.</li>
+</ol>
+<p>As limitações principais são:</p>
+<ol>
+<li>na prática, separar perfeitamente as camadas pode ser difícil;</li>
+<li>às vezes a camada superior quer acessar diretamente detalhes da inferior;</li>
+<li>múltiplas camadas podem adicionar overhead e afetar desempenho.</li>
+</ol>
+<h4 id="exemplo-curto-em-c-camadas"><span class="heading-text">Exemplo curto em C++: camadas</span><span class="heading-arabic">7.5.2.1</span></h4>
+<pre class="line-numbers language-cpp" data-lang="CPP"><code class="language-cpp">class AgendamentoRepository {
+public:
+    void salvar(const std::string&amp; pet, const std::string&amp; horario) {
+        std::cout &lt;&lt; &quot;Salvando agendamento de &quot; &lt;&lt; pet
+                  &lt;&lt; &quot; em &quot; &lt;&lt; horario &lt;&lt; &quot;\n&quot;;
+    }
+};
+
+class AgendamentoService {
+private:
+    AgendamentoRepository&amp; repository;
+
+public:
+    AgendamentoService(AgendamentoRepository&amp; repo) : repository(repo) {}
+
+    void agendar(const std::string&amp; pet, const std::string&amp; horario) {
+        repository.salvar(pet, horario);
+    }
+};
+
+class AgendamentoScreen {
+private:
+    AgendamentoService&amp; service;
+
+public:
+    AgendamentoScreen(AgendamentoService&amp; srv) : service(srv) {}
+
+    void confirmar() {
+        service.agendar(&quot;Rex&quot;, &quot;15:00&quot;);
+    }
+};
+</code></pre>
+<p>Aqui aparece claramente o fluxo em camadas:</p>
+<ol>
+<li>a tela recebe a ação do usuário;</li>
+<li>a camada de serviço aplica a lógica da aplicação;</li>
+<li>o repositório lida com persistência.</li>
+</ol>
+<p>Esse é um exemplo didático simples, mas mostra como a responsabilidade pode ser separada em níveis diferentes.</p>
+<h3 id="repositório"><span class="heading-text">Repositório</span><span class="heading-arabic">7.5.3</span></h3>
+<p>Na arquitetura de <strong>repositório</strong>, todos os dados importantes do sistema são mantidos em um repositório central compartilhado. Os componentes não interagem diretamente entre si; em vez disso, leem e escrevem nesse repositório comum.</p>
+<p>Sommerville observa que esse estilo é apropriado quando:</p>
+<ol>
+<li>grandes volumes de dados precisam ser compartilhados;</li>
+<li>esses dados precisam ser armazenados por longo tempo;</li>
+<li>diferentes ferramentas ou componentes usam os mesmos dados.</li>
+</ol>
+<p>Casos típicos:</p>
+<ol>
+<li>IDEs;</li>
+<li>sistemas CAD;</li>
+<li>sistemas de informação;</li>
+<li>ambientes dirigidos a modelos.</li>
+</ol>
+<img src="static/figura-6-6-arquitetura-repositorio-ide.png" width="80%">
+
+<p>As vantagens principais são:</p>
+<ol>
+<li>compartilhamento consistente de dados;</li>
+<li>independência relativa entre componentes;</li>
+<li>centralização facilita backup, controle e consistência.</li>
+</ol>
+<p>As desvantagens principais são:</p>
+<ol>
+<li>o repositório pode virar ponto único de falha;</li>
+<li>pode haver gargalos de desempenho;</li>
+<li>distribuir o repositório por várias máquinas pode ser difícil;</li>
+<li>novos componentes precisam se adaptar ao modelo de dados já definido.</li>
+</ol>
+<h4 id="exemplo-curto-em-c-repositório"><span class="heading-text">Exemplo curto em C++: repositório</span><span class="heading-arabic">7.5.3.1</span></h4>
+<pre class="line-numbers language-cpp" data-lang="CPP"><code class="language-cpp">class ProjectRepository {
+public:
+    void salvarModelo(const std::string&amp; nome) {
+        std::cout &lt;&lt; &quot;Modelo salvo: &quot; &lt;&lt; nome &lt;&lt; &quot;\n&quot;;
+    }
+
+    void gerarRelatorio() {
+        std::cout &lt;&lt; &quot;Relatorio gerado a partir do repositorio central\n&quot;;
+    }
+};
+
+class UmlEditor {
+public:
+    void exportar(ProjectRepository&amp; repo) {
+        repo.salvarModelo(&quot;Diagrama de Classes&quot;);
+    }
+};
+
+class ReportGenerator {
+public:
+    void executar(ProjectRepository&amp; repo) {
+        repo.gerarRelatorio();
+    }
+};
+</code></pre>
+<p>Nesse caso, <code>UmlEditor</code> e <code>ReportGenerator</code> não precisam conversar diretamente. Ambos operam em torno do mesmo repositório central.</p>
+<h3 id="cliente-servidor"><span class="heading-text">Cliente-servidor</span><span class="heading-arabic">7.5.4</span></h3>
+<p>Na arquitetura <strong>cliente-servidor</strong>, o sistema é organizado como um conjunto de serviços oferecidos por servidores e utilizados por clientes.</p>
+<p>Sommerville descreve três elementos centrais:</p>
+<ol>
+<li>servidores que oferecem serviços;</li>
+<li>clientes que os utilizam;</li>
+<li>uma rede que permite o acesso a esses serviços.</li>
+</ol>
+<p>Esse estilo é muito comum em sistemas distribuídos e em sistemas baseados em Internet.</p>
+<img src="static/figura-6-7-arquitetura-cliente-servidor.png" width="80%">
+
+<p>As vantagens principais são:</p>
+<ol>
+<li>distribuição natural de serviços;</li>
+<li>possibilidade de centralizar funcionalidades comuns;</li>
+<li>facilidade relativa de adicionar ou atualizar servidores.</li>
+</ol>
+<p>As desvantagens principais são:</p>
+<ol>
+<li>cada servidor pode virar um ponto de falha;</li>
+<li>o desempenho depende da rede;</li>
+<li>ataques de negação de serviço e indisponibilidade de servidor tornam-se relevantes;</li>
+<li>a gestão pode ser difícil quando há vários servidores ou organizações envolvidas.</li>
+</ol>
+<h4 id="exemplo-curto-em-c-cliente-servidor"><span class="heading-text">Exemplo curto em C++: cliente-servidor</span><span class="heading-arabic">7.5.4.1</span></h4>
+<pre class="line-numbers language-cpp" data-lang="CPP"><code class="language-cpp">class CatalogServer {
+public:
+    std::string buscarFilme(int id) {
+        return &quot;Filme #&quot; + std::to_string(id);
+    }
+};
+
+class CatalogClient {
+private:
+    CatalogServer&amp; server;
+
+public:
+    CatalogClient(CatalogServer&amp; srv) : server(srv) {}
+
+    void mostrarFilme(int id) {
+        std::cout &lt;&lt; server.buscarFilme(id) &lt;&lt; &quot;\n&quot;;
+    }
+};
+</code></pre>
+<p>Aqui não implementamos rede real, mas a separação lógica já aparece: o cliente solicita um serviço; o servidor o fornece.</p>
+<h3 id="duto-e-filtro"><span class="heading-text">Duto e filtro</span><span class="heading-arabic">7.5.5</span></h3>
+<p>No estilo <strong>duto e filtro</strong>, o sistema é organizado como uma sequência de transformações. Cada componente processa dados de entrada, gera uma saída e a repassa para o próximo estágio.</p>
+<p>Esse estilo é muito apropriado quando o problema pode ser naturalmente decomposto em etapas de processamento de dados.</p>
+<p>Sommerville cita aplicações típicas como:</p>
+<ol>
+<li>processamento em lote;</li>
+<li>faturamento;</li>
+<li>compiladores;</li>
+<li>vários tipos de processamento de linguagem.</li>
+</ol>
+<img src="static/figura-6-8-duto-e-filtro.png" width="80%">
+
+<p>As vantagens principais são:</p>
+<ol>
+<li>reuso de transformações;</li>
+<li>clareza no pipeline de processamento;</li>
+<li>evolução por adição de novos filtros;</li>
+<li>possibilidade de implementação sequencial ou concorrente.</li>
+</ol>
+<p>As desvantagens principais são:</p>
+<ol>
+<li>necessidade de formatos de dados compatíveis entre etapas;</li>
+<li>overhead de parsing e conversão entre estágios;</li>
+<li>pouca adequação para sistemas fortemente interativos com GUI complexa.</li>
+</ol>
+<h4 id="exemplo-curto-em-c-duto-e-filtro"><span class="heading-text">Exemplo curto em C++: duto e filtro</span><span class="heading-arabic">7.5.5.1</span></h4>
+<pre class="line-numbers language-cpp" data-lang="CPP"><code class="language-cpp">std::vector&lt;std::string&gt; lerPedidos() {
+    return {&quot;pedido1:pago&quot;, &quot;pedido2:pendente&quot;, &quot;pedido3:pago&quot;};
+}
+
+std::vector&lt;std::string&gt; filtrarPagos(const std::vector&lt;std::string&gt;&amp; pedidos) {
+    std::vector&lt;std::string&gt; pagos;
+    for (const auto&amp; pedido : pedidos) {
+        if (pedido.find(&quot;pago&quot;) != std::string::npos) {
+            pagos.push_back(pedido);
+        }
+    }
+    return pagos;
+}
+
+void gerarRecibos(const std::vector&lt;std::string&gt;&amp; pagos) {
+    for (const auto&amp; pedido : pagos) {
+        std::cout &lt;&lt; &quot;Recibo emitido para &quot; &lt;&lt; pedido &lt;&lt; &quot;\n&quot;;
+    }
+}
+</code></pre>
+<p>Esse pipeline é pequeno, mas mostra exatamente a ideia:</p>
+<ol>
+<li>uma etapa lê;</li>
+<li>outra filtra;</li>
+<li>outra transforma o resultado em saída útil.</li>
+</ol>
+<h3 id="comparando-os-estilos"><span class="heading-text">Comparando os estilos</span><span class="heading-arabic">7.5.6</span></h3>
+<p>Até aqui, fica claro que cada estilo responde melhor a um tipo de problema.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Estilo</th>
+  <th style="text-align:left">Melhor quando</th>
+  <th style="text-align:left">Vantagem forte</th>
+  <th style="text-align:left">Risco forte</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><strong>MVC</strong></td>
+  <td style="text-align:left">há múltiplas visualizações e interação rica</td>
+  <td style="text-align:left">separa apresentação de dados</td>
+  <td style="text-align:left">pode complicar sistemas simples</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Camadas</strong></td>
+  <td style="text-align:left">queremos organização clara por níveis</td>
+  <td style="text-align:left">manutenção e separação de responsabilidades</td>
+  <td style="text-align:left">fronteiras entre camadas podem vazar</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Repositório</strong></td>
+  <td style="text-align:left">dados compartilhados são o centro do sistema</td>
+  <td style="text-align:left">consistência e compartilhamento</td>
+  <td style="text-align:left">ponto único de falha</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Cliente-servidor</strong></td>
+  <td style="text-align:left">há serviços distribuídos para vários clientes</td>
+  <td style="text-align:left">distribuição natural de funcionalidades</td>
+  <td style="text-align:left">dependência de rede e servidor</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Duto e filtro</strong></td>
+  <td style="text-align:left">o problema é naturalmente um pipeline de transformação</td>
+  <td style="text-align:left">composição clara e reuso de etapas</td>
+  <td style="text-align:left">ruim para forte interatividade</td>
+</tr>
+</tbody>
+</table>
+<p>Essa comparação é importante porque ajuda a combater uma simplificação muito comum: imaginar que existe uma arquitetura universalmente superior. Na prática, a escolha depende do tipo de sistema e dos requisitos dominantes.</p>
+<h2 id="um-mesmo-sistema-pode-combinar-estilos"><span class="heading-text">Um mesmo sistema pode combinar estilos</span><span class="heading-arabic">7.6</span></h2>
+<p>Um erro comum é imaginar que um sistema precisa “ser” apenas MVC ou apenas cliente-servidor ou apenas em camadas. Em projetos reais, isso quase nunca é verdade.</p>
+<p>Considere um sistema acadêmico Web:</p>
+<ol>
+<li>ele pode usar <strong>MVC</strong> na interface e na lógica de interação com o usuário;</li>
+<li>pode usar uma <strong>arquitetura em camadas</strong> no backend;</li>
+<li>sua implantação lógica pode seguir um modelo <strong>cliente-servidor</strong>;</li>
+<li>pode usar um <strong>repositório</strong> central de dados no banco;</li>
+<li>pode ainda ter um subsistema de importação de notas com estilo <strong>duto e filtro</strong>.</li>
+</ol>
+<p>Isso mostra que os estilos arquiteturais devem ser vistos como ferramentas conceituais e não como rótulos rígidos.</p>
+<h2 id="conectando-com-a-aula-de-uml"><span class="heading-text">Conectando com a aula de UML</span><span class="heading-arabic">7.7</span></h2>
+<p>Na aula anterior, usamos UML para enxergar diferentes perspectivas de um sistema. Agora, a arquitetura nos ajuda a dar um passo acima: em vez de pensar apenas em classes, casos de uso ou sequências, passamos a pensar em <strong>subsistemas, responsabilidades globais, distribuição e estratégias de organização</strong>.</p>
+<p>Essa ligação é importante:</p>
+<ol>
+<li>requisitos ajudam a entender o problema;</li>
+<li>UML ajuda a modelar partes e relações;</li>
+<li>arquitetura ajuda a organizar a solução em larga escala.</li>
+</ol>
+<p>Quando essa transição não é feita, o risco é o sistema nascer apenas como um conjunto de classes desconectadas, sem uma estrutura global coerente.</p>
+<h2 id="escolhendo-um-estilo-arquitetural-na-prática"><span class="heading-text">Escolhendo um estilo arquitetural na prática</span><span class="heading-arabic">7.8</span></h2>
+<p>Ao escolher um estilo arquitetural, algumas perguntas práticas ajudam bastante:</p>
+<ol>
+<li>os dados precisam ser compartilhados por vários componentes?</li>
+<li>o sistema é fortemente interativo com interface rica?</li>
+<li>o problema parece uma sequência de transformações de dados?</li>
+<li>o sistema será distribuído em vários computadores?</li>
+<li>há forte preocupação com manutenção, segurança ou disponibilidade?</li>
+</ol>
+<p>Se você faz essas perguntas cedo, a escolha arquitetural passa a ser uma decisão técnica argumentada, e não uma escolha por moda.</p>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner"><br /></span>
+  </div>
+  <div class="callout-content">
+<p>Framework não é arquitetura completa. Dizer que um sistema usa <code>Spring</code>, <code>Qt</code>, <code>React</code>, <code>Django</code> ou <code>ASP.NET</code> não basta para descrever sua arquitetura. No máximo, isso indica parte da pilha tecnológica e, às vezes, algum estilo favorecido por essa pilha.</p>
+  </div>
+</div>
+<h2 id="próximos-passos"><span class="heading-text">Próximos passos</span><span class="heading-arabic">7.9</span></h2>
+<p>Depois de entender os estilos arquiteturais, o próximo passo natural é aprofundar como essas decisões estruturais se relacionam com qualidades como manutenção, proteção, distribuição e evolução do software ao longo do tempo.</p>
+
+                </div>
+            </article>
+            <footer class="footer">
+                <p>© 2025 · <a href="#">Gabriel Soares Baptista</a></p>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        const toggle = document.querySelector('.mobile-menu-toggle');
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.querySelector('.mobile-menu-overlay');
+
+        function openMenu() {
+            sidebar.classList.add('open');
+            overlay.classList.add('open');
+            toggle.classList.add('open');
+            toggle.innerHTML = '<i data-lucide="x"></i>';
+            CourseForgeUI.initIcons();
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMenu() {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('open');
+            toggle.classList.remove('open');
+            toggle.innerHTML = '<i data-lucide="menu"></i>';
+            CourseForgeUI.initIcons();
+            document.body.style.overflow = '';
+        }
+
+        toggle.addEventListener('click', () => {
+            if (sidebar.classList.contains('open')) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        overlay.addEventListener('click', closeMenu);
+    </script>
+
+    
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            renderMathInElement(document.body, {
+                output: 'html',
+                delimiters: [
+                    { left: "$$", right: "$$", display: true },
+                    { left: "$", right: "$", display: false },
+                    { left: "\\(", right: "\\)", display: false },
+                    { left: "\\[", right: "\\]", display: true }
+                ],
+                throwOnError: false,
+                strict: false
+            });
+        });
+    </script>
+    
+    
+    <script src="/aulas-faesa/js/vendor/prism/prism.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-c.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-cpp.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-python.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-clike.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-perl.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-java.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-mermaid.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-php.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js" data-no-bundle></script>
+    
+    
+    
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            mermaid.initialize({
+                startOnLoad: true,
+                theme: 'default',
+                securityLevel: 'loose',
+                fontFamily: 'Inter, system-ui, sans-serif',
+                themeVariables: {
+                    fontSize: '16px',
+                    edgeLabelFontSize: '16px',
+                    multiplicityFontSize: '18px'
+                }
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const isSubcourse = false;
+        const courseName = "Engenharia de Software";
+        CourseForgeNav.applyDynamicBreadcrumbs('.breadcrumb', isSubcourse);
+        CourseForgeNav.initScrollSpy();
+        CourseForgeUI.initCopyButtons();
+        CourseForgeUI.initExamples();
+        });
+
+        function handleBackNavigation() {
+            const isSubcourse = false;
+        const dynamic = CourseForgeNav.getBackLink('contents.html', 'Voltar', isSubcourse);
+        window.location.href = dynamic.url;
+        }
+    </script>
+</body>
+
+</html>

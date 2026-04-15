@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toposia - Processamento Digital de Sinais</title>
+    <link rel="icon" href="/aulas-faesa/img/dark-favicon.svg" media="(prefers-color-scheme: light)">
+    <link rel="icon" href="/aulas-faesa/img/light-favicon.svg" media="(prefers-color-scheme: dark)">
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/fonts.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/bundles/katex-base-prism-one-light-b0347952c973.bundle.min.css">
+    
+    
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css" data-no-bundle>
+    <script src="/aulas-faesa/js/bundles/lucide-katex-auto-render-4b36e8bd8642.bundle.min.js"></script>
+</head>
+
+<body>
+    <script>
+        // Restore sidebar state instantly (before first paint) to avoid transition flash
+        (function() {
+            if (localStorage.getItem('cf_sidebar_hidden') === 'true') {
+                document.body.classList.add('sidebar-hidden', 'no-transition');
+            }
+            requestAnimationFrame(function() {
+                requestAnimationFrame(function() {
+                    document.body.classList.remove('no-transition');
+                });
+            });
+        })();
+    </script>
+    <div class="page-wrapper">
+        <nav class="sidebar">
+            <div class="sidebar-content">
+                <header class="sidebar-title-section">
+                    <a href="contents.html" class="course-title-link">
+                        <h1 class="sidebar-course-title">Processamento Digital de Sinais</h1>
+                    </a>
+                    <div class="sidebar-ornament">❧</div>
+                </header>
+
+                
+                <section class="sidebar-toc-section">
+                    <h2 class="toc-header">Tabela de Conteúdos</h2>
+                    <ol class="toc-list">
+                        
+                        <li class="toc-item level-2">
+                            <a href="#introdução">7.1. Introdução</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#a-transformada-de-fourier">7.2. A Transformada de Fourier</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#espectro-de-amplitude-e-fase">7.2.1. Espectro de amplitude e fase</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#da-série-de-fourier-para-a-integral-de-fourier">7.2.2. Da série de Fourier para a integral de Fourier</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#existência-da-transformada">7.3. Existência da Transformada</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#conexão-entre-fourier-e-laplace">7.4. Conexão entre Fourier e Laplace</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#a-partir-daqui-tabela-e-propriedades">7.5. A partir daqui: tabela e propriedades</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#tabela-de-referência">7.5.1. Tabela de referência</a>
+                        </li>
+                        
+                        <li class="toc-item level-4">
+                            <a href="#alguns-pares-usados-nesta-aula">7.5.1.1. Alguns pares usados nesta aula</a>
+                        </li>
+                        
+                        <li class="toc-item level-4">
+                            <a href="#algumas-propriedades-usadas-nesta-aula">7.5.1.2. Algumas propriedades usadas nesta aula</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#propriedades-fundamentais">7.6. Propriedades fundamentais</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#linearidade">7.6.1. Linearidade</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#dualidade">7.6.2. Dualidade</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#escalamento">7.6.3. Escalamento</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#deslocamento-no-tempo">7.6.4. Deslocamento no tempo</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#deslocamento-na-frequência">7.6.5. Deslocamento na frequência</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#modulação-por-cosseno">7.6.6. Modulação por cosseno</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#questões">7.7. Questões</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#próximos-passos">7.8. Próximos passos</a>
+                        </li>
+                        
+                    </ol>
+                </section>
+                
+
+                <nav class="sidebar-nav-section">
+                    
+                    <a href="6-laplace.html" class="sidebar-nav-link prev"><i data-lucide="chevron-left" class="nav-icon"></i> Tranformada de Laplace</a>
+                    
+                    
+                    <a href="javascript:void(0)" onclick="handleBackNavigation()"
+                        class="sidebar-nav-link back"><i data-lucide="arrow-left" class="nav-icon"></i> Voltar</a>
+                </nav>
+
+            </div>
+        </nav>
+
+        <button class="mobile-menu-toggle" aria-label="Menu">
+            <i data-lucide="menu"></i>
+        </button>
+
+        <button class="sidebar-toggle" onclick="CourseForgeNav.toggleSidebar()" aria-label="Alternar Barra Lateral">
+            <i data-lucide="chevron-left" class="toggle-icon" id="sidebar-toggle-icon"></i>
+        </button>
+
+        <div class="mobile-menu-overlay"></div>
+
+        <main class="main-content">
+            <article class="article">
+                <header class="article-header">
+                    <span class="chapter-number">7</span>
+                    <h1 class="article-title">
+                        <span class="title-ornament left">❧</span>
+                        <span class="title-text">Transformada de Fourier Contínua</span>
+                        <span class="title-ornament right">❧</span>
+                    </h1>
+                    
+                    <p class="article-date">15/04/2026</p>
+                    
+                    
+                    <nav class="breadcrumb" aria-label="Breadcrumb">
+                        
+                        
+                        
+                        <a href="contents.html" class="breadcrumb-link">Processamento Digital de Sinais</a>
+                        
+                        <span class="breadcrumb-separator"><i data-lucide="chevron-right" class="breadcrumb-icon"></i></span>
+                        
+                        
+                        
+                        
+                        <a href="contents.html#part-III" class="breadcrumb-link">III - Teoria de Frequência e Conversão A/D</a>
+                        
+                        <span class="breadcrumb-separator"><i data-lucide="chevron-right" class="breadcrumb-icon"></i></span>
+                        
+                        
+                        
+                        <span class="breadcrumb-current">Transformada de Fourier Contínua</span>
+                        
+                        
+                    </nav>
+                    
+                </header>
+                <div class="article-body">
+                    <h2 id="introdução"><span class="heading-text">Introdução</span><span class="heading-arabic">7.1</span></h2>
+<p>Até este ponto da disciplina, estudamos sinais e sistemas principalmente no domínio do tempo e, mais recentemente, no domínio complexo por meio da <strong>Transformada de Laplace</strong>. Agora, daremos um passo natural: estudar como um sinal pode ser descrito em termos de suas <strong>componentes espectrais</strong>.</p>
+<p>A <strong>Transformada de Fourier contínua</strong> será apresentada aqui como uma continuação do que já discutimos em série de Fourier e em Laplace. Entretanto, do ponto de vista prático, a abordagem desta aula será deliberadamente operacional: após compreender a definição e algumas derivações fundamentais, passaremos a resolver a maior parte dos exemplos por <strong>tabela</strong> e por <strong>propriedades</strong>.</p>
+<div class="callout callout-tip">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .5 2.2 1.5 3.1.7.7 1.3 1.5 1.5 2.4"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span>
+    <span class="callout-title-inner">Material de consulta permanente<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Ao longo desta aula e da próxima, utilizaremos como referência o apêndice <a href="tables/appendix-tabela-da-transformada-de-fourier.html">Tabela da Transformada de Fourier</a>.</p>
+  </div>
+</div>
+<h2 id="a-transformada-de-fourier"><span class="heading-text">A Transformada de Fourier</span><span class="heading-arabic">7.2</span></h2>
+<p>Para um sinal $x(t)$, definimos sua transformada de Fourier por</p>
+<p>$$
+X(\omega) = \int_{-\infty}^{\infty} x(t)e^{-j\omega t}\,dt
+$$</p>
+<p>e a transformada inversa por</p>
+<p>$$
+x(t) = \frac{1}{2\pi}\int_{-\infty}^{\infty} X(\omega)e^{j\omega t}\,d\omega
+$$</p>
+<p>Escrevemos esse par de forma compacta como</p>
+<p>$$
+x(t) \iff X(\omega)
+$$</p>
+<p>O papel de $X(\omega)$ é dizer quanto de cada frequência angular $\omega$ está presente no sinal $x(t)$.</p>
+<h3 id="espectro-de-amplitude-e-fase"><span class="heading-text">Espectro de amplitude e fase</span><span class="heading-arabic">7.2.1</span></h3>
+<p>Como $X(\omega)$ em geral é complexo, podemos escrevê-lo como</p>
+<p>$$
+X(\omega) = \lvert X(\omega) \rvert e^{j\angle X(\omega)}
+$$</p>
+<p>Desse modo, analisamos separadamente:</p>
+<ol>
+<li>o <strong>espectro de amplitude</strong> $\lvert X(\omega) \rvert$;</li>
+<li>o <strong>espectro de fase</strong> $\angle X(\omega)$.</li>
+</ol>
+<p>Essa separação será muito importante em comunicações, quando quisermos entender o que acontece com a posição do espectro e com a fase após atrasos, modulação e filtragem.</p>
+<h3 id="da-série-de-fourier-para-a-integral-de-fourier"><span class="heading-text">Da série de Fourier para a integral de Fourier</span><span class="heading-arabic">7.2.2</span></h3>
+<p>Na série de Fourier, um sinal periódico é representado por uma soma de exponenciais complexas em frequências discretas. Quando o período cresce indefinidamente, o espaçamento entre essas frequências tende a zero e a soma se transforma em uma integral. É justamente desse limite que nasce a <strong>transformada de Fourier de sinais não periódicos</strong>.</p>
+<p>Em outras palavras:</p>
+<ol>
+<li>a <strong>série de Fourier</strong> trabalha com espectro discreto;</li>
+<li>a <strong>transformada de Fourier</strong> trabalha com espectro contínuo.</li>
+</ol>
+<div class="callout callout-info">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></span>
+    <span class="callout-title-inner">Interpretação física<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Em um espectro contínuo, não faz sentido pensar em “amplitude finita de uma única linha” como no caso periódico. O que passa a importar é a densidade espectral em torno de cada frequência.</p>
+  </div>
+</div>
+<img src="static/figura-7-5-analogia-carga-espectro.png" width="75%">
+
+<h2 id="existência-da-transformada"><span class="heading-text">Existência da Transformada</span><span class="heading-arabic">7.3</span></h2>
+<p>Nem todo sinal possui transformada de Fourier no sentido usual da integral acima. Um critério suficiente bastante útil é que o sinal seja <strong>absolutamente integrável</strong>, isto é,</p>
+<p>$$
+\int_{-\infty}^{\infty} \lvert x(t) \rvert\,dt < \infty
+$$</p>
+<p>Esse critério não é o mais geral possível, mas é suficiente para a maior parte dos sinais físicos que queremos analisar inicialmente.</p>
+<p>Na prática, vale a pena separar duas ideias:</p>
+<ol>
+<li>um critério <strong>suficiente</strong> para garantir a existência da transformada pela integral direta;</li>
+<li>uma classe mais ampla de sinais que ainda pode ser tratada por extensões da teoria, mesmo quando a integral direta não converge da forma mais ingênua.</li>
+</ol>
+<p>Isso explica por que alguns sinais muito importantes em engenharia, como o degrau unitário, exigem mais cuidado conceitual. Eles não se comportam tão bem quanto um pulso de energia finita, mas continuam sendo relevantes demais para serem ignorados.</p>
+<p>Nesta aula, não faremos uma discussão formal longa sobre convergência. Em vez disso, vamos nos concentrar em dois pontos pedagógicos:</p>
+<ol>
+<li>compreender o significado da definição;</li>
+<li>migrar rapidamente para o uso prático da tabela e das propriedades.</li>
+</ol>
+<h2 id="conexão-entre-fourier-e-laplace"><span class="heading-text">Conexão entre Fourier e Laplace</span><span class="heading-arabic">7.4</span></h2>
+<p>Na aula anterior, vimos que a transformada de Laplace bilateral é</p>
+<p>$$
+X(s) = \int_{-\infty}^{\infty} x(t)e^{-st}\,dt
+$$</p>
+<p>Se fizermos $s=j\omega$, obtemos formalmente</p>
+<p>$$
+X(j\omega)=\int_{-\infty}^{\infty} x(t)e^{-j\omega t}\,dt
+$$</p>
+<p>que tem exatamente a forma da transformada de Fourier.</p>
+<p>Isso sugere a ideia:</p>
+<p>$$
+\text{Fourier} \subset \text{Laplace}
+$$</p>
+<p>Essa ideia é útil, mas deve ser usada com cuidado.</p>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Ponto de atenção<br /></span>
+  </div>
+  <div class="callout-content">
+<p>A substituição $s=j\omega$ só produz a transformada de Fourier quando o <strong>eixo imaginário</strong> pertence à <strong>região de convergência</strong> da transformada de Laplace.</p>
+<p>Portanto, não é correto afirmar que basta sempre substituir $s$ por $j\omega$.</p>
+  </div>
+</div>
+<p>Esse detalhe é uma excelente ponte com o que acabamos de estudar: Laplace é mais geral, enquanto Fourier foca especificamente na decomposição espectral ao longo do eixo de frequências puras.</p>
+<p>Vale a pena guardar a leitura operacional dessa relação:</p>
+<ol>
+<li>a transformada de Laplace permite trabalhar com um conjunto mais amplo de sinais, inclusive sinais exponencialmente crescentes em regiões adequadas do plano-$s$;</li>
+<li>a transformada de Fourier é mais restrita, mas fornece uma leitura espectral muito mais direta;</li>
+<li>sempre que a RDC incluir o eixo imaginário, a passagem de Laplace para Fourier é natural;</li>
+<li>quando isso não acontece, a conexão ainda existe conceitualmente, mas não pode ser usada como simples substituição algébrica.</li>
+</ol>
+<p>Em particular:</p>
+<ol>
+<li>para $e^{-at}u(t)$ com $a>0$, a substituição $s=j\omega$ funciona bem;</li>
+<li>para sinais como $u(t)$, a situação é mais sutil, e a transformada de Fourier precisa ser entendida com cuidado adicional.</li>
+</ol>
+<div class="example">
+  <div class="example-title">Exemplo 1</div>
+  <p>Vamos determinar a transformada de Fourier de</p>
+<p>$$
+x(t)=e^{-at}u(t), \quad a>0
+$$</p>
+<p>usando diretamente a definição.</p>
+<hr />
+<p><strong>1. Montagem da integral</strong></p>
+<p>Como $u(t)=0$ para $t<0$, temos</p>
+<p>$$
+X(\omega)=\int_0^{\infty} e^{-at}e^{-j\omega t}\,dt
+$$</p>
+<p>$$
+X(\omega)=\int_0^{\infty} e^{-(a+j\omega)t}\,dt
+$$</p>
+<hr />
+<p><strong>2. Integração</strong></p>
+<p>$$
+X(\omega)=\left[-\frac{1}{a+j\omega}e^{-(a+j\omega)t}\right]_0^{\infty}
+$$</p>
+<p>Como $a>0$, o termo exponencial tende a zero quando $t\to\infty$. Logo,</p>
+<p>$$
+X(\omega)=\frac{1}{a+j\omega}
+$$</p>
+<hr />
+<p><strong>3. Resultado final</strong></p>
+<p>$$
+\boxed{e^{-at}u(t) \iff \frac{1}{a+j\omega}, \quad a>0}
+$$</p>
+<p>Este será um dos pares mais importantes de toda a tabela.</p>
+</div>
+<div class="example">
+  <div class="example-title">Exemplo 2</div>
+  <p>Vamos determinar a transformada de Fourier de $\delta(t)$ pela definição.</p>
+<hr />
+<p>Usando a propriedade de amostragem,</p>
+<p>$$
+X(\omega)=\int_{-\infty}^{\infty}\delta(t)e^{-j\omega t}\,dt=e^{-j\omega\cdot 0}=1
+$$</p>
+<p>Portanto,</p>
+<p>$$
+\boxed{\delta(t) \iff 1}
+$$</p>
+<p>Esse resultado é simples, mas conceitualmente muito importante: um impulso no tempo possui espectro constante em todas as frequências.</p>
+</div>
+<h2 id="a-partir-daqui-tabela-e-propriedades"><span class="heading-text">A partir daqui: tabela e propriedades</span><span class="heading-arabic">7.5</span></h2>
+<p>Agora que justificamos a definição com dois exemplos fundamentais, adotaremos a estratégia prática da engenharia: trabalhar principalmente com a <strong>tabela de Fourier</strong> e com as <strong>propriedades operacionais</strong>.</p>
+<div class="callout callout-tip">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .5 2.2 1.5 3.1.7.7 1.3 1.5 1.5 2.4"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span>
+    <span class="callout-title-inner">Regra de ouro para os exercícios<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Antes de pensar em integrar, tente responder às perguntas abaixo:</p>
+<ol>
+<li>O sinal já está na tabela?</li>
+<li>Ele é uma soma de sinais da tabela?</li>
+<li>Há deslocamento, escalamento ou modulação?</li>
+<li>Posso usar dualidade?</li>
+</ol></p>
+  </div>
+</div>
+<h3 id="tabela-de-referência"><span class="heading-text">Tabela de referência</span><span class="heading-arabic">7.5.1</span></h3>
+<p>A tabela completa está no apêndice <a href="appendix%20-%20tabela%20da%20transformada%20de%20fourier.html">Tabela da Transformada de Fourier</a>. A seguir, destacamos os pares e propriedades que usaremos imediatamente.</p>
+<h4 id="alguns-pares-usados-nesta-aula"><span class="heading-text">Alguns pares usados nesta aula</span><span class="heading-arabic">7.5.1.1</span></h4>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Regra</th>
+  <th style="text-align:left">$x(t)$</th>
+  <th style="text-align:left">$X(\omega)$</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">1</td>
+  <td style="text-align:left">$\delta(t)$</td>
+  <td style="text-align:left">$1$</td>
+</tr>
+<tr>
+  <td style="text-align:left">2</td>
+  <td style="text-align:left">$1$</td>
+  <td style="text-align:left">$2\pi\delta(\omega)$</td>
+</tr>
+<tr>
+  <td style="text-align:left">5a</td>
+  <td style="text-align:left">$\cos(\omega_0 t)$</td>
+  <td style="text-align:left">$\pi[\delta(\omega-\omega_0)+\delta(\omega+\omega_0)]$</td>
+</tr>
+<tr>
+  <td style="text-align:left">6</td>
+  <td style="text-align:left">$e^{-at}u(t)$</td>
+  <td style="text-align:left">$\dfrac{1}{a+j\omega}$</td>
+</tr>
+<tr>
+  <td style="text-align:left">8</td>
+  <td style="text-align:left">$e^{-a\lvert t \rvert}$</td>
+  <td style="text-align:left">$\dfrac{2a}{a^2+\omega^2}$</td>
+</tr>
+<tr>
+  <td style="text-align:left">9</td>
+  <td style="text-align:left">$\operatorname{ret}(t/\tau)$</td>
+  <td style="text-align:left">$\tau\operatorname{sinc}(\omega\tau/2)$</td>
+</tr>
+<tr>
+  <td style="text-align:left">10</td>
+  <td style="text-align:left">$\Delta(t/\tau)$</td>
+  <td style="text-align:left">$\dfrac{\tau}{2}\operatorname{sinc}^2(\omega\tau/4)$</td>
+</tr>
+</tbody>
+</table>
+<h4 id="algumas-propriedades-usadas-nesta-aula"><span class="heading-text">Algumas propriedades usadas nesta aula</span><span class="heading-arabic">7.5.1.2</span></h4>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Propriedade</th>
+  <th style="text-align:left">Operação no tempo</th>
+  <th style="text-align:left">Resultado na frequência</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">P1</td>
+  <td style="text-align:left">$a_1x_1(t)+a_2x_2(t)$</td>
+  <td style="text-align:left">$a_1X_1(\omega)+a_2X_2(\omega)$</td>
+</tr>
+<tr>
+  <td style="text-align:left">P3</td>
+  <td style="text-align:left">$x(at)$</td>
+  <td style="text-align:left">$\dfrac{1}{\lvert a\rvert}X(\omega/a)$</td>
+</tr>
+<tr>
+  <td style="text-align:left">P4</td>
+  <td style="text-align:left">$x(t-t_0)$</td>
+  <td style="text-align:left">$e^{-j\omega t_0}X(\omega)$</td>
+</tr>
+<tr>
+  <td style="text-align:left">P5</td>
+  <td style="text-align:left">$e^{j\omega_0 t}x(t)$</td>
+  <td style="text-align:left">$X(\omega-\omega_0)$</td>
+</tr>
+<tr>
+  <td style="text-align:left">P7</td>
+  <td style="text-align:left">$x(t)\cos(\omega_0 t)$</td>
+  <td style="text-align:left">$\dfrac{1}{2}[X(\omega-\omega_0)+X(\omega+\omega_0)]$</td>
+</tr>
+<tr>
+  <td style="text-align:left">P13</td>
+  <td style="text-align:left">dualidade</td>
+  <td style="text-align:left">$X(t) \iff 2\pi x(-\omega)$</td>
+</tr>
+</tbody>
+</table>
+<p>A tabela não deve ser usada como coleção de respostas prontas para decorar mecanicamente. O uso correto consiste em reconhecer um sinal básico e, a partir dele, aplicar as propriedades até transformar o problema no formato de alguma regra conhecida.</p>
+<h2 id="propriedades-fundamentais"><span class="heading-text">Propriedades fundamentais</span><span class="heading-arabic">7.6</span></h2>
+<h3 id="linearidade"><span class="heading-text">Linearidade</span><span class="heading-arabic">7.6.1</span></h3>
+<p>Se</p>
+<p>$$
+x_1(t) \iff X_1(\omega)
+\quad \text{e} \quad
+x_2(t) \iff X_2(\omega)
+$$</p>
+<p>então</p>
+<p>$$
+a_1x_1(t)+a_2x_2(t) \iff a_1X_1(\omega)+a_2X_2(\omega)
+$$</p>
+<p>Esta será a propriedade mais usada na passagem de senos e cossenos para impulsos em frequência.</p>
+<h3 id="dualidade"><span class="heading-text">Dualidade</span><span class="heading-arabic">7.6.2</span></h3>
+<p>Se</p>
+<p>$$
+x(t) \iff X(\omega)
+$$</p>
+<p>então</p>
+<p>$$
+X(t) \iff 2\pi x(-\omega)
+$$</p>
+<p>Ela é poderosa porque permite gerar novos pares a partir de pares já conhecidos, sem recalcular integrais.</p>
+<p>A dualidade existe porque as fórmulas de transformação direta e inversa são quase simétricas: em certo sentido, tempo e frequência trocam de papel, restando apenas o ajuste do fator $2\pi$ e da inversão de sinal. Por isso, sempre que encontramos um par útil, devemos nos perguntar imediatamente se seu dual também pode ser explorado.</p>
+<h3 id="escalamento"><span class="heading-text">Escalamento</span><span class="heading-arabic">7.6.3</span></h3>
+<p>Se $x(t) \iff X(\omega)$, então</p>
+<p>$$
+x(at) \iff \frac{1}{\lvert a\rvert}X(\omega/a)
+$$</p>
+<p>Essa propriedade formaliza um fato físico importante:</p>
+<ol>
+<li>quando o sinal é comprimido no tempo, o espectro se expande;</li>
+<li>quando o sinal é alargado no tempo, o espectro se comprime.</li>
+</ol>
+<img src="static/figura-7-20-escalamento-fourier.png" width="80%">
+
+<h3 id="deslocamento-no-tempo"><span class="heading-text">Deslocamento no tempo</span><span class="heading-arabic">7.6.4</span></h3>
+<p>Se $x(t) \iff X(\omega)$, então</p>
+<p>$$
+x(t-t_0) \iff e^{-j\omega t_0}X(\omega)
+$$</p>
+<p>Observe a leitura física:</p>
+<ol>
+<li>o espectro de amplitude não muda;</li>
+<li>a fase ganha um termo linear em $\omega$.</li>
+</ol>
+<p>Esse ponto merece atenção especial. Um atraso de tempo igual para todo o sinal não pode privilegiar uma frequência em relação a outra no módulo do espectro. O que muda é o alinhamento temporal de cada componente senoidal usada na síntese do sinal. Como uma senoide de frequência mais alta oscila mais rapidamente, ela precisa sofrer um deslocamento de fase proporcionalmente maior para produzir o mesmo atraso temporal. É exatamente por isso que surge o termo linear $-\omega t_0$.</p>
+<img src="static/figura-7-22-fase-linear-atraso.png" width="75%">
+
+<h3 id="deslocamento-na-frequência"><span class="heading-text">Deslocamento na frequência</span><span class="heading-arabic">7.6.5</span></h3>
+<p>Se $x(t) \iff X(\omega)$, então</p>
+<p>$$
+e^{j\omega_0 t}x(t) \iff X(\omega-\omega_0)
+$$</p>
+<p>Esse resultado é a base matemática da modulação em amplitude.</p>
+<p>Em linguagem física, multiplicar por uma exponencial complexa não altera a forma básica do espectro: apenas o translada ao longo do eixo de frequências. Quando usamos cosseno em vez de exponencial complexa, obtemos duas translações simultâneas, uma para a direita e outra para a esquerda. Essa observação será a base de toda a próxima aula.</p>
+<h3 id="modulação-por-cosseno"><span class="heading-text">Modulação por cosseno</span><span class="heading-arabic">7.6.6</span></h3>
+<p>Como</p>
+<p>$$
+\cos(\omega_0 t)=\frac{1}{2}(e^{j\omega_0 t}+e^{-j\omega_0 t})
+$$</p>
+<p>segue que</p>
+<p>$$
+x(t)\cos(\omega_0 t) \iff \frac{1}{2}[X(\omega-\omega_0)+X(\omega+\omega_0)]
+$$</p>
+<p>Em outras palavras, multiplicar por cosseno desloca o espectro para a direita e para a esquerda.</p>
+<img src="static/figura-7-25-modulacao-deslocamento-espectral.png" width="85%">
+
+<div class="example">
+  <div class="example-title">Exemplo 3</div>
+  <p>Determine a transformada de Fourier de</p>
+<p>$$
+x(t)=\cos(\omega_0 t)
+$$</p>
+<p>usando a tabela.</p>
+<hr />
+<p>Pela identidade de Euler,</p>
+<p>$$
+\cos(\omega_0 t)=\frac{1}{2}e^{j\omega_0 t}+\frac{1}{2}e^{-j\omega_0 t}
+$$</p>
+<p>Aplicando a <strong>linearidade</strong> e as <strong>Regras 3 e 4</strong> da tabela do apêndice,</p>
+<p>$$
+X(\omega)=\frac{1}{2}\cdot 2\pi\delta(\omega-\omega_0)+\frac{1}{2}\cdot 2\pi\delta(\omega+\omega_0)
+$$</p>
+<p>Logo,</p>
+<p>$$
+\boxed{\cos(\omega_0 t) \iff \pi[\delta(\omega-\omega_0)+\delta(\omega+\omega_0)]}
+$$</p>
+<p>Perceba que este exemplo foi resolvido sem retornar à integral de definição.</p>
+</div>
+<div class="example">
+  <div class="example-title">Exemplo 4</div>
+  <p>Determine a transformada de Fourier de</p>
+<p>$$
+x(t)=e^{-a\lvert t \rvert}, \quad a>0
+$$</p>
+<p>usando decomposição em sinais básicos da tabela.</p>
+<hr />
+<p><strong>1. Reescrita do sinal</strong></p>
+<p>Podemos escrever</p>
+<p>$$
+e^{-a\lvert t \rvert}=e^{-at}u(t)+e^{at}u(-t)
+$$</p>
+<p>Essa decomposição é natural: para $t\ge 0$, o sinal vale $e^{-at}$, enquanto para $t<0$ ele vale $e^{at}$.</p>
+<hr />
+<p><strong>2. Aplicação da tabela</strong></p>
+<p>Pelas <strong>Regras 6 e 7</strong> do apêndice,</p>
+<p>$$
+e^{-at}u(t) \iff \frac{1}{a+j\omega}
+$$</p>
+<p>e</p>
+<p>$$
+e^{at}u(-t) \iff \frac{1}{a-j\omega}
+$$</p>
+<p>Logo, pela <strong>linearidade</strong>,</p>
+<p>$$
+X(\omega)=\frac{1}{a+j\omega}+\frac{1}{a-j\omega}
+$$</p>
+<hr />
+<p><strong>3. Simplificação algébrica</strong></p>
+<p>Somando as frações,</p>
+<p>$$
+X(\omega)=\frac{(a-j\omega)+(a+j\omega)}{(a+j\omega)(a-j\omega)}
+$$</p>
+<p>$$
+X(\omega)=\frac{2a}{a^2+\omega^2}
+$$</p>
+<hr />
+<p><strong>4. Resultado final</strong></p>
+<p>$$
+\boxed{e^{-a\lvert t \rvert} \iff \frac{2a}{a^2+\omega^2}}
+$$</p>
+<p>Observe o valor pedagógico deste exemplo: o par final até aparece na tabela, mas a resolução foi feita por <strong>manipulação</strong> de dois pares mais básicos. Esse é exatamente o tipo de raciocínio que iremos treinar.</p>
+<p>Além disso, a simetria do sinal já antecipa o tipo de espectro: como $x(t)$ é real e par, o espectro também deve ser real e par.</p>
+</div>
+<div class="example">
+  <div class="example-title">Exemplo 5</div>
+  <p>Determine a transformada de Fourier do sinal modulado</p>
+<p>$$
+y(t)=\operatorname{ret}(t/4)\cos(10t)
+$$</p>
+<hr />
+<p><strong>1. Transformada do sinal-base</strong></p>
+<p>Pela <strong>Regra 9</strong>,</p>
+<p>$$
+\operatorname{ret}(t/4) \iff 4\operatorname{sinc}(2\omega)
+$$</p>
+<p>Portanto, se chamarmos a transformada do pulso de $X(\omega)$, então</p>
+<p>$$
+X(\omega)=4\operatorname{sinc}(2\omega)
+$$</p>
+<hr />
+<p><strong>2. Aplicação da modulação por cosseno</strong></p>
+<p>Pela <strong>Propriedade P7</strong>,</p>
+<p>$$
+Y(\omega)=\frac{1}{2}[X(\omega-10)+X(\omega+10)]
+$$</p>
+<p>Substituindo $X(\omega)$,</p>
+<p>$$
+Y(\omega)=\frac{1}{2}\left[4\operatorname{sinc}(2(\omega-10))+4\operatorname{sinc}(2(\omega+10))\right]
+$$</p>
+<p>$$
+Y(\omega)=2\operatorname{sinc}(2\omega-20)+2\operatorname{sinc}(2\omega+20)
+$$</p>
+<hr />
+<p><strong>3. Interpretação espectral</strong></p>
+<p>O que fizemos foi pegar o espectro passa-baixas do pulso retangular e criar duas cópias dele:</p>
+<ol>
+<li>uma centrada em $+10$ rad/s;</li>
+<li>outra centrada em $-10$ rad/s;</li>
+<li>ambas com amplitude multiplicada por $1/2$ em relação ao deslocamento puro.</li>
+</ol>
+<p>Portanto,</p>
+<p>$$
+\boxed{Y(\omega)=2\operatorname{sinc}(2\omega-20)+2\operatorname{sinc}(2\omega+20)}
+$$</p>
+<p>Esse é exatamente o mecanismo que será reutilizado em modulação DSB-SC na próxima aula.</p>
+</div>
+<h2 id="questões"><span class="heading-text">Questões</span><span class="heading-arabic">7.7</span></h2>
+<h2 id="próximos-passos"><span class="heading-text">Próximos passos</span><span class="heading-arabic">7.8</span></h2>
+
+                </div>
+            </article>
+            <footer class="footer">
+                <p>© 2025 · <a href="#">Gabriel Soares Baptista</a></p>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        const toggle = document.querySelector('.mobile-menu-toggle');
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.querySelector('.mobile-menu-overlay');
+
+        function openMenu() {
+            sidebar.classList.add('open');
+            overlay.classList.add('open');
+            toggle.classList.add('open');
+            toggle.innerHTML = '<i data-lucide="x"></i>';
+            CourseForgeUI.initIcons();
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMenu() {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('open');
+            toggle.classList.remove('open');
+            toggle.innerHTML = '<i data-lucide="menu"></i>';
+            CourseForgeUI.initIcons();
+            document.body.style.overflow = '';
+        }
+
+        toggle.addEventListener('click', () => {
+            if (sidebar.classList.contains('open')) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        overlay.addEventListener('click', closeMenu);
+    </script>
+
+    
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            renderMathInElement(document.body, {
+                output: 'html',
+                delimiters: [
+                    { left: "$$", right: "$$", display: true },
+                    { left: "$", right: "$", display: false },
+                    { left: "\\(", right: "\\)", display: false },
+                    { left: "\\[", right: "\\]", display: true }
+                ],
+                throwOnError: false,
+                strict: false
+            });
+        });
+    </script>
+    
+    
+    <script src="/aulas-faesa/js/vendor/prism/prism.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-c.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-cpp.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-python.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-clike.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-perl.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-java.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-mermaid.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-php.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js" data-no-bundle></script>
+    
+    
+    
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            mermaid.initialize({
+                startOnLoad: true,
+                theme: 'default',
+                securityLevel: 'loose',
+                fontFamily: 'Inter, system-ui, sans-serif',
+                themeVariables: {
+                    fontSize: '16px',
+                    edgeLabelFontSize: '16px',
+                    multiplicityFontSize: '18px'
+                }
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const isSubcourse = false;
+        const courseName = "Processamento Digital de Sinais";
+        CourseForgeNav.applyDynamicBreadcrumbs('.breadcrumb', isSubcourse);
+        CourseForgeNav.initScrollSpy();
+        CourseForgeUI.initCopyButtons();
+        CourseForgeUI.initExamples();
+        });
+
+        function handleBackNavigation() {
+            const isSubcourse = false;
+        const dynamic = CourseForgeNav.getBackLink('contents.html', 'Voltar', isSubcourse);
+        window.location.href = dynamic.url;
+        }
+    </script>
+</body>
+
+</html>

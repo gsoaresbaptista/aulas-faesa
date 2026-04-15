@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toposia - Processamento Digital de Sinais</title>
+    <link rel="icon" href="/aulas-faesa/img/dark-favicon.svg" media="(prefers-color-scheme: light)">
+    <link rel="icon" href="/aulas-faesa/img/light-favicon.svg" media="(prefers-color-scheme: dark)">
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/fonts.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/bundles/katex-base-prism-one-light-b0347952c973.bundle.min.css">
+    
+    
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css" data-no-bundle>
+    <script src="/aulas-faesa/js/bundles/lucide-katex-auto-render-4b36e8bd8642.bundle.min.js"></script>
+</head>
+
+<body>
+    <script>
+        // Restore sidebar state instantly (before first paint) to avoid transition flash
+        (function() {
+            if (localStorage.getItem('cf_sidebar_hidden') === 'true') {
+                document.body.classList.add('sidebar-hidden', 'no-transition');
+            }
+            requestAnimationFrame(function() {
+                requestAnimationFrame(function() {
+                    document.body.classList.remove('no-transition');
+                });
+            });
+        })();
+    </script>
+    <div class="page-wrapper">
+        <nav class="sidebar">
+            <div class="sidebar-content">
+                <header class="sidebar-title-section">
+                    <a href="contents.html" class="course-title-link">
+                        <h1 class="sidebar-course-title">Processamento Digital de Sinais</h1>
+                    </a>
+                    <div class="sidebar-ornament">❧</div>
+                </header>
+
+                
+                <section class="sidebar-toc-section">
+                    <h2 class="toc-header">Tabela de Conteúdos</h2>
+                    <ol class="toc-list">
+                        
+                        <li class="toc-item level-2">
+                            <a href="#introdução">8.1. Introdução</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#por-que-modular">8.2. Por que modular?</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#revisão-rápida-da-propriedade-de-modulação">8.3. Revisão rápida da propriedade de modulação</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#modulação-dsb-sc">8.4. Modulação DSB-SC</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#largura-de-faixa">8.4.1. Largura de faixa</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#demodulação-síncrona">8.5. Demodulação síncrona</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#sensibilidade-a-erro-de-fase-e-frequência">8.5.1. Sensibilidade a erro de fase e frequência</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#modulação-em-amplitude-am">8.6. Modulação em Amplitude (AM)</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#condição-para-detecção-por-envelope">8.6.1. Condição para detecção por envelope</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#faixa-lateral-simples-ssb">8.7. Faixa lateral simples (SSB)</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#multiplexação-por-divisão-em-frequência-fdm">8.8. Multiplexação por divisão em frequência (FDM)</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#próximos-passos">8.9. Próximos passos</a>
+                        </li>
+                        
+                    </ol>
+                </section>
+                
+
+                <nav class="sidebar-nav-section">
+                    
+                    
+                    <a href="2-review.html" class="sidebar-nav-link next">Revisão - Números Complexos <i data-lucide="chevron-right" class="nav-icon"></i></a>
+                    
+                    <a href="javascript:void(0)" onclick="handleBackNavigation()"
+                        class="sidebar-nav-link back"><i data-lucide="arrow-left" class="nav-icon"></i> Voltar</a>
+                </nav>
+
+            </div>
+        </nav>
+
+        <button class="mobile-menu-toggle" aria-label="Menu">
+            <i data-lucide="menu"></i>
+        </button>
+
+        <button class="sidebar-toggle" onclick="CourseForgeNav.toggleSidebar()" aria-label="Alternar Barra Lateral">
+            <i data-lucide="chevron-left" class="toggle-icon" id="sidebar-toggle-icon"></i>
+        </button>
+
+        <div class="mobile-menu-overlay"></div>
+
+        <main class="main-content">
+            <article class="article">
+                <header class="article-header">
+                    <span class="chapter-number">1</span>
+                    <h1 class="article-title">
+                        <span class="title-ornament left">❧</span>
+                        <span class="title-text">Modulação em Amplitude e Comunicações</span>
+                        <span class="title-ornament right">❧</span>
+                    </h1>
+                    
+                    <p class="article-date">15/04/2026</p>
+                    
+                    
+                    <nav class="breadcrumb" aria-label="Breadcrumb">
+                        
+                        
+                        
+                        <a href="contents.html" class="breadcrumb-link">Processamento Digital de Sinais</a>
+                        
+                        <span class="breadcrumb-separator"><i data-lucide="chevron-right" class="breadcrumb-icon"></i></span>
+                        
+                        
+                        
+                        <span class="breadcrumb-current">Modulação em Amplitude e Comunicações</span>
+                        
+                        
+                    </nav>
+                    
+                </header>
+                <div class="article-body">
+                    <h2 id="introdução"><span class="heading-text">Introdução</span><span class="heading-arabic">8.1</span></h2>
+<p>Na aula anterior, vimos que multiplicar um sinal por um cosseno desloca seu espectro em frequência. Esse resultado, que em um primeiro momento parece apenas uma propriedade algébrica da transformada de Fourier, é na verdade a base matemática de uma enorme classe de sistemas de comunicação.</p>
+<p>Nesta aula, estudaremos as formas clássicas de <strong>modulação em amplitude</strong>. Em vez de repetir cálculos integrais, trabalharemos quase sempre com a <strong>tabela de Fourier</strong> e com as propriedades operacionais apresentadas no apêndice <a href="appendix%20-%20tabela%20da%20transformada%20de%20fourier.html">Tabela da Transformada de Fourier</a>.</p>
+<h2 id="por-que-modular"><span class="heading-text">Por que modular?</span><span class="heading-arabic">8.2</span></h2>
+<p>A modulação é útil por várias razões práticas. Entre as mais importantes, destacam-se:</p>
+<ol>
+<li>permitir que diferentes sinais ocupem faixas espectrais distintas no mesmo meio de transmissão;</li>
+<li>deslocar sinais de banda-base para frequências mais altas, compatíveis com antenas e canais reais;</li>
+<li>facilitar separação, filtragem e multiplexação no receptor.</li>
+</ol>
+<p>Do ponto de vista matemático, tudo começa com a propriedade</p>
+<p>$$
+x(t)\cos(\omega_c t) \iff \frac{1}{2}[X(\omega-\omega_c)+X(\omega+\omega_c)]
+$$</p>
+<p>ou seja, a modulação por cosseno produz duas cópias deslocadas do espectro original.</p>
+<h2 id="revisão-rápida-da-propriedade-de-modulação"><span class="heading-text">Revisão rápida da propriedade de modulação</span><span class="heading-arabic">8.3</span></h2>
+<p>Se $x(t) \iff X(\omega)$, então pela <strong>Propriedade P7</strong> do apêndice temos</p>
+<p>$$
+x(t)\cos(\omega_c t) \iff \frac{1}{2}[X(\omega-\omega_c)+X(\omega+\omega_c)]
+$$</p>
+<p>Isso significa que:</p>
+<ol>
+<li>o espectro original é deslocado para a direita por $\omega_c$;</li>
+<li>outra cópia é deslocada para a esquerda por $\omega_c$;</li>
+<li>cada cópia aparece com fator $1/2$.</li>
+</ol>
+<p>Esse é o mecanismo que estudaremos repetidamente em DSB-SC, AM e SSB.</p>
+<h2 id="modulação-dsb-sc"><span class="heading-text">Modulação DSB-SC</span><span class="heading-arabic">8.4</span></h2>
+<p>Chamamos de <strong>modulação em faixa lateral dupla com portadora suprimida</strong> o sinal</p>
+<p>$$
+\phi_{DSB-SC}(t)=m(t)\cos(\omega_c t)
+$$</p>
+<p>onde:</p>
+<ol>
+<li>$m(t)$ é a mensagem ou sinal banda-base;</li>
+<li>$\cos(\omega_c t)$ é a portadora;</li>
+<li>o produto é o sinal modulado.</li>
+</ol>
+<p>Aplicando a propriedade de modulação,</p>
+<p>$$
+\Phi_{DSB-SC}(\omega)=\frac{1}{2}[M(\omega-\omega_c)+M(\omega+\omega_c)]
+$$</p>
+<p>Portanto, o processo de modulação não cria informação nova: ele apenas <strong>reposiciona</strong> o espectro da mensagem.</p>
+<h3 id="largura-de-faixa"><span class="heading-text">Largura de faixa</span><span class="heading-arabic">8.4.1</span></h3>
+<p>Se a mensagem $m(t)$ ocupa uma largura de faixa $B$ em hertz, então o sinal DSB-SC ocupa largura aproximadamente $2B$ em torno da portadora. Além disso, para evitar sobreposição espectral, a frequência da portadora deve ser suficientemente alta em comparação com a banda da mensagem.</p>
+<div class="example">
+  <div class="example-title">Exemplo 1</div>
+  <p>Considere a mensagem</p>
+<p>$$
+m(t)=\cos(\omega_m t)
+$$</p>
+<p>Determine o sinal DSB-SC e seu espectro.</p>
+<hr />
+<p>Pela <strong>Regra 5a</strong> da tabela,</p>
+<p>$$
+m(t)=\cos(\omega_m t) \iff \pi[\delta(\omega-\omega_m)+\delta(\omega+\omega_m)]
+$$</p>
+<p>Agora modulamos por $\cos(\omega_c t)$ e aplicamos a <strong>Propriedade P7</strong>:</p>
+<p>$$
+\Phi_{DSB-SC}(\omega)=\frac{1}{2}[M(\omega-\omega_c)+M(\omega+\omega_c)]
+$$</p>
+<p>Isso desloca os impulsos de $\pm\omega_m$ para quatro posições:</p>
+<p>$$
+\omega=\pm(\omega_c-\omega_m), \quad \omega=\pm(\omega_c+\omega_m)
+$$</p>
+<p>No tempo, também podemos escrever diretamente</p>
+<p>$$
+\phi_{DSB-SC}(t)=\cos(\omega_m t)\cos(\omega_c t)
+$$</p>
+<p>e usar a identidade trigonométrica</p>
+<p>$$
+\cos A\cos B=\frac{1}{2}[\cos(A+B)+\cos(A-B)]
+$$</p>
+<p>obtendo</p>
+<p>$$
+\boxed{\phi_{DSB-SC}(t)=\frac{1}{2}\cos[(\omega_c+\omega_m)t]+\frac{1}{2}\cos[(\omega_c-\omega_m)t]}
+$$</p>
+<p>As duas componentes correspondem à <strong>faixa lateral superior</strong> e à <strong>faixa lateral inferior</strong>.</p>
+</div>
+<h2 id="demodulação-síncrona"><span class="heading-text">Demodulação síncrona</span><span class="heading-arabic">8.5</span></h2>
+<p>Para recuperar a mensagem de um sinal DSB-SC, multiplicamos novamente por uma portadora coerente e depois usamos um filtro passa-baixas.</p>
+<p>Se a entrada do demodulador for</p>
+<p>$$
+\phi_{DSB-SC}(t)=m(t)\cos(\omega_c t)
+$$</p>
+<p>então o sinal após a multiplicação é</p>
+<p>$$
+e(t)=m(t)\cos(\omega_c t)\cos(\omega_c t)=m(t)\cos^2(\omega_c t)
+$$</p>
+<p>Usando</p>
+<p>$$
+\cos^2(\omega_c t)=\frac{1}{2}[1+\cos(2\omega_c t)]
+$$</p>
+<p>temos</p>
+<p>$$
+e(t)=\frac{1}{2}m(t)+\frac{1}{2}m(t)\cos(2\omega_c t)
+$$</p>
+<p>O primeiro termo está em banda-base; o segundo fica centrado em torno de $\pm2\omega_c$. Um filtro passa-baixas elimina esse segundo termo, restando uma versão escalada da mensagem.</p>
+<div class="example">
+  <div class="example-title">Exemplo 2</div>
+  <p>Mostre, usando propriedades espectrais, por que a detecção síncrona recupera a mensagem em DSB-SC.</p>
+<hr />
+<p>O espectro do sinal modulado é</p>
+<p>$$
+\Phi_{DSB-SC}(\omega)=\frac{1}{2}[M(\omega-\omega_c)+M(\omega+\omega_c)]
+$$</p>
+<p>Ao multiplicar o sinal modulado por $\cos(\omega_c t)$, aplicamos novamente a <strong>Propriedade P7</strong>. Logo, o novo espectro será composto de quatro cópias deslocadas do espectro anterior.</p>
+<p>Entre essas cópias, duas acabam retornando à banda-base e as outras duas são empurradas para a região em torno de $\pm2\omega_c$.</p>
+<p>Portanto, após a multiplicação, obtemos:</p>
+<ol>
+<li>uma componente desejada proporcional a $M(\omega)$;</li>
+<li>uma componente indesejada em alta frequência;</li>
+<li>um filtro passa-baixas elimina a parte de alta frequência.</li>
+</ol>
+<p>Essa é a essência da demodulação síncrona.</p>
+</div>
+<h3 id="sensibilidade-a-erro-de-fase-e-frequência"><span class="heading-text">Sensibilidade a erro de fase e frequência</span><span class="heading-arabic">8.5.1</span></h3>
+<p>O método síncrono exige que a portadora do receptor esteja em frequência e fase coerentes com a do transmissor.</p>
+<p>Se houver erro de fase $\theta$, a saída é atenuada por um fator proporcional a $\cos\theta$.</p>
+<p>Se houver erro de frequência $\Delta\omega$, surge um ganho variante no tempo, o chamado <strong>batimento</strong>, que distorce fortemente a recuperação da mensagem.</p>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Consequência prática<br /></span>
+  </div>
+  <div class="callout-content">
+<p>A detecção síncrona é conceitualmente elegante, mas exige sincronismo preciso. Essa é uma das motivações para o uso da modulação AM convencional em sistemas de radiodifusão.</p>
+  </div>
+</div>
+<h2 id="modulação-em-amplitude-am"><span class="heading-text">Modulação em Amplitude (AM)</span><span class="heading-arabic">8.6</span></h2>
+<p>Na AM tradicional, transmitimos não apenas o sinal modulado, mas também a portadora:</p>
+<p>$$
+\phi_{AM}(t)=[A+m(t)]\cos(\omega_c t)
+$$</p>
+<p>Aqui, $A$ é uma constante positiva associada à amplitude da portadora.</p>
+<p>Esse esquema facilita a demodulação por <strong>detecção de envelope</strong>, desde que a envoltória do sinal preserve a forma da mensagem.</p>
+<h3 id="condição-para-detecção-por-envelope"><span class="heading-text">Condição para detecção por envelope</span><span class="heading-arabic">8.6.1</span></h3>
+<p>Para que o envelope reproduza a mensagem sem inversões, precisamos ter</p>
+<p>$$
+A+m(t) \geq 0 \quad \text{para todo } t
+$$</p>
+<p>Se chamarmos de $m_p$ o valor máximo absoluto da mensagem, a condição prática torna-se</p>
+<p>$$
+A \geq m_p
+$$</p>
+<p>Define-se o <strong>índice de modulação</strong> por</p>
+<p>$$
+\mu=\frac{m_p}{A}
+$$</p>
+<p>Assim, a detecção de envelope funciona corretamente quando</p>
+<p>$$
+\mu \leq 1
+$$</p>
+<p>Quando $\mu>1$, ocorre <strong>sobremodulação</strong>.</p>
+<div class="example">
+  <div class="example-title">Exemplo 3</div>
+  <p>Considere a mensagem</p>
+<p>$$
+m(t)=B\cos(\omega_m t)
+$$</p>
+<p>e determine o sinal AM em função do índice de modulação $\mu$.</p>
+<hr />
+<p>Neste caso, o pico da mensagem é</p>
+<p>$$
+m_p=B
+$$</p>
+<p>Como</p>
+<p>$$
+\mu=\frac{B}{A}
+$$</p>
+<p>temos</p>
+<p>$$
+B=\mu A
+$$</p>
+<p>Substituindo na definição de AM:</p>
+<p>$$
+\phi_{AM}(t)=[A+B\cos(\omega_m t)]\cos(\omega_c t)
+$$</p>
+<p>$$
+\phi_{AM}(t)=A[1+\mu\cos(\omega_m t)]\cos(\omega_c t)
+$$</p>
+<p>Portanto,</p>
+<p>$$
+\boxed{\phi_{AM}(t)=A[1+\mu\cos(\omega_m t)]\cos(\omega_c t)}
+$$</p>
+<p>Daqui seguem interpretações imediatas:</p>
+<ol>
+<li>se $\mu<1$, o envelope mantém a forma da mensagem;</li>
+<li>se $\mu=1$, estamos no limite de modulação de 100%;</li>
+<li>se $\mu>1$, há sobremodulação e a detecção de envelope falha.</li>
+</ol>
+</div>
+<h2 id="faixa-lateral-simples-ssb"><span class="heading-text">Faixa lateral simples (SSB)</span><span class="heading-arabic">8.7</span></h2>
+<p>No sinal DSB-SC, as duas faixas laterais carregam essencialmente a mesma informação espectral. Isso sugere uma ineficiência: estamos ocupando o dobro da largura de faixa necessária.</p>
+<p>Na <strong>modulação em faixa lateral simples</strong> transmitimos apenas uma das faixas:</p>
+<ol>
+<li><strong>USB</strong>: faixa lateral superior;</li>
+<li><strong>LSB</strong>: faixa lateral inferior.</li>
+</ol>
+<p>Com isso, a largura de faixa necessária cai aproximadamente pela metade em relação à DSB.</p>
+<div class="example">
+  <div class="example-title">Exemplo 4</div>
+  <p>Para $m(t)=\cos(\omega_m t)$, identifique os sinais USB e LSB a partir do sinal DSB-SC.</p>
+<hr />
+<p>No exemplo de DSB-SC, obtivemos</p>
+<p>$$
+\phi_{DSB-SC}(t)=\frac{1}{2}\cos[(\omega_c+\omega_m)t]+\frac{1}{2}\cos[(\omega_c-\omega_m)t]
+$$</p>
+<p>Portanto:</p>
+<ol>
+<li>a componente em $\omega_c+\omega_m$ é a <strong>USB</strong>;</li>
+<li>a componente em $\omega_c-\omega_m$ é a <strong>LSB</strong>.</li>
+</ol>
+<p>Logo, podemos escrever</p>
+<p>$$
+\boxed{\phi_{USB}(t)=\frac{1}{2}\cos[(\omega_c+\omega_m)t]}
+$$</p>
+<p>$$
+\boxed{\phi_{LSB}(t)=\frac{1}{2}\cos[(\omega_c-\omega_m)t]}
+$$</p>
+<p>Este é um caso particularmente simples porque a mensagem possui apenas uma frequência.</p>
+</div>
+<h2 id="multiplexação-por-divisão-em-frequência-fdm"><span class="heading-text">Multiplexação por divisão em frequência (FDM)</span><span class="heading-arabic">8.8</span></h2>
+<p>A modulação permite que múltiplos sinais compartilhem um mesmo canal, desde que cada um seja deslocado para uma faixa de frequência diferente.</p>
+<p>Essa ideia dá origem à <strong>multiplexação por divisão em frequência</strong>, ou <strong>FDM</strong>.</p>
+<p>O procedimento geral é:</p>
+<ol>
+<li>cada mensagem $m_k(t)$ é modulada por uma portadora diferente $\omega_{c_k}$;</li>
+<li>os espectros resultantes são posicionados em bandas distintas;</li>
+<li>todos os sinais modulados são somados e transmitidos juntos;</li>
+<li>no receptor, filtros passa-faixa separam cada canal;</li>
+<li>cada canal é então demodulado individualmente.</li>
+</ol>
+<p>Essa é a lógica por trás de vários sistemas clássicos de radiodifusão e telecomunicações analógicas.</p>
+<div class="example">
+  <div class="example-title">Exemplo 5</div>
+  <p>Explique por que a modulação é essencial em um sistema FDM com várias mensagens de áudio distintas.</p>
+<hr />
+<p>Sinais de áudio típicos ocupam aproximadamente a mesma faixa de banda-base. Se todos fossem transmitidos diretamente no mesmo canal, seus espectros se sobreporiam em torno de $\omega=0$, tornando impossível separá-los depois.</p>
+<p>Ao modular cada mensagem por uma portadora diferente, seus espectros são deslocados para bandas distintas. Isso permite:</p>
+<ol>
+<li>coexistência no mesmo meio físico;</li>
+<li>separação por filtros no receptor;</li>
+<li>recuperação individual de cada mensagem.</li>
+</ol>
+<p>Sem modulação, o FDM simplesmente não seria possível.</p>
+</div>
+<h2 id="próximos-passos"><span class="heading-text">Próximos passos</span><span class="heading-arabic">8.9</span></h2>
+<p>Nos próximos tópicos, a intuição espectral construída aqui será importante para o estudo de amostragem, filtragem e conversão entre representações contínuas e discretas.</p>
+
+                </div>
+            </article>
+            <footer class="footer">
+                <p>© 2025 · <a href="#">Gabriel Soares Baptista</a></p>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        const toggle = document.querySelector('.mobile-menu-toggle');
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.querySelector('.mobile-menu-overlay');
+
+        function openMenu() {
+            sidebar.classList.add('open');
+            overlay.classList.add('open');
+            toggle.classList.add('open');
+            toggle.innerHTML = '<i data-lucide="x"></i>';
+            CourseForgeUI.initIcons();
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMenu() {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('open');
+            toggle.classList.remove('open');
+            toggle.innerHTML = '<i data-lucide="menu"></i>';
+            CourseForgeUI.initIcons();
+            document.body.style.overflow = '';
+        }
+
+        toggle.addEventListener('click', () => {
+            if (sidebar.classList.contains('open')) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        overlay.addEventListener('click', closeMenu);
+    </script>
+
+    
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            renderMathInElement(document.body, {
+                output: 'html',
+                delimiters: [
+                    { left: "$$", right: "$$", display: true },
+                    { left: "$", right: "$", display: false },
+                    { left: "\\(", right: "\\)", display: false },
+                    { left: "\\[", right: "\\]", display: true }
+                ],
+                throwOnError: false,
+                strict: false
+            });
+        });
+    </script>
+    
+    
+    <script src="/aulas-faesa/js/vendor/prism/prism.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-c.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-cpp.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-python.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-clike.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-perl.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-java.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-mermaid.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-php.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js" data-no-bundle></script>
+    
+    
+    
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            mermaid.initialize({
+                startOnLoad: true,
+                theme: 'default',
+                securityLevel: 'loose',
+                fontFamily: 'Inter, system-ui, sans-serif',
+                themeVariables: {
+                    fontSize: '16px',
+                    edgeLabelFontSize: '16px',
+                    multiplicityFontSize: '18px'
+                }
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const isSubcourse = false;
+        const courseName = "Processamento Digital de Sinais";
+        CourseForgeNav.applyDynamicBreadcrumbs('.breadcrumb', isSubcourse);
+        CourseForgeNav.initScrollSpy();
+        CourseForgeUI.initCopyButtons();
+        CourseForgeUI.initExamples();
+        });
+
+        function handleBackNavigation() {
+            const isSubcourse = false;
+        const dynamic = CourseForgeNav.getBackLink('contents.html', 'Voltar', isSubcourse);
+        window.location.href = dynamic.url;
+        }
+    </script>
+</body>
+
+</html>
