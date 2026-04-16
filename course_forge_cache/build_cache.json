@@ -12,7 +12,7 @@
   "../obsidian-vault/6. Teaching/Compiladores/10 - recursive descent parsing.md": "5f9c1afd2a7d7be39b35b30d5a7abfe8",
   "../obsidian-vault/6. Teaching/Compiladores/Virtual Machine/1 - about.md": "29ae165a5f2bc22dec7204d89176c645",
   "../obsidian-vault/6. Teaching/Compiladores/3 - the cpu.md": "9df246119bb66a4e9741d3a167fb51ee",
-  "../obsidian-vault/6. Teaching/Compiladores/12 - full slang ast and parser errors.md": "fbaba34e91fee5e4158773bc3e8c075b",
+  "../obsidian-vault/6. Teaching/Compiladores/12 - full slang ast and parser errors.md": "883806ddd474aaa2ce18b37ab2831045",
   "../obsidian-vault/6. Teaching/Compiladores/Virtual Machine/2 - opcodes.md": "b7775906bf565c4e5d2dd4d6b25fb607",
   "../obsidian-vault/6. Teaching/Compiladores/1 - about.md": "baef725cf49f6a6b97520ebff8b1359c",
   "../obsidian-vault/6. Teaching/Compiladores/6 - configuring the setup.md": "c318cdd96ec813243a3906adb8b74948",
@@ -413,7 +413,7 @@
   "../obsidian-vault/6. Teaching/T\u00f3picos de Programa\u00e7\u00e3o II/slides/5 - libraries in c.md": "eee8b7630c9447fc7bdf4d6a0642490a",
   "../obsidian-vault/6. Teaching/T\u00f3picos de Programa\u00e7\u00e3o II/slides/6 - abstract data types.md": "9b041cfaec858198b54112723df9ff44",
   "../obsidian-vault/6. Teaching/Sistemas Operacionais/static/fig_dining_philosophers.png": "7bdd4c6686f2e0534c44f8096fb53067",
-  "../obsidian-vault/6. Teaching/.course_forge_cache/build_cache.json": "5ac04a306a66fcc34c812e5c7e97b01e",
+  "../obsidian-vault/6. Teaching/.course_forge_cache/build_cache.json": "de5a8682395321f38e033cc6e1765c4c",
   "../obsidian-vault/6. Teaching/Redes/6 - mac sublayer, ethernet and mac addressing.md": "6c07c69cbad857bdba2ec8e1933b60b6",
   "../obsidian-vault/6. Teaching/Compiladores/bin/tests/lexer/expected/01_delimiters.txt": "7eee78b2a963b2b5582b4959d31eb53c",
   "../obsidian-vault/6. Teaching/Compiladores/bin/tests/lexer/expected/08_strings.txt": "3a48f84a1c1c66feb1064c6c970613b6",
@@ -504,5 +504,13 @@
   "../obsidian-vault/6. Teaching/Engenharia de Software/static/figura-6-1-arquitetura-sistema-robotizado.png": "167a59bb4ecb057c7029e69f6e9d32ef",
   "../obsidian-vault/6. Teaching/Engenharia de Software/static/figura-6-7-arquitetura-cliente-servidor.png": "d81cf55ef510a036992faf6af54fc1fd",
   "../obsidian-vault/6. Teaching/Processamento Digital de Sinais/slides/7 - continuous fourier transform.md": "ac832ac3522adfab66babb97798868b6",
-  "../obsidian-vault/6. Teaching/Engenharia de Software/slides/8 - software architecture styles.md": "c6d3a462920905594d3e2b832ce77e22"
+  "../obsidian-vault/6. Teaching/Engenharia de Software/slides/8 - software architecture styles.md": "c6d3a462920905594d3e2b832ce77e22",
+  "../obsidian-vault/6. Teaching/Compiladores/13 - ll1 parsing.md": "24e11a9c0e44036865c96c9deaca300a",
+  "../obsidian-vault/6. Teaching/Compiladores/slides/7 - ll1 parsing.md": "2db1ecc7346eb64b63443dd95532de85",
+  "../obsidian-vault/6. Teaching/Redes/7 - switches and vlans.md": "9dc6c5ca72df3915a20ed04686a765f5",
+  "../obsidian-vault/6. Teaching/Redes/static/fig15_6_bridge_aprendizado.png": "fa2681f7b03eed88655e623f3e1b30ce",
+  "../obsidian-vault/6. Teaching/Redes/static/fig15_7_loop_bridge_aprendizado.png": "63964b94a95a2a25dd302762c2ef91dc",
+  "../obsidian-vault/6. Teaching/Redes/static/fig4_43_fiacao_centralizada_hubs_switch.png": "2840030a9d8e2359b13928bc63ae97dd",
+  "../obsidian-vault/6. Teaching/Redes/static/fig4_46_ethernet_8021q.png": "4d44c92a8d82af73ba9646feb5789828",
+  "../obsidian-vault/6. Teaching/Redes/slides/7 - switches and vlans.md": "92679a5ebba70be9c36235fbf82de7cb"
 }

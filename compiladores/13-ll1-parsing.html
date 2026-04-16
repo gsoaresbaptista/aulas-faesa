@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toposia - Compiladores</title>
+    <link rel="icon" href="/aulas-faesa/img/dark-favicon.svg" media="(prefers-color-scheme: light)">
+    <link rel="icon" href="/aulas-faesa/img/light-favicon.svg" media="(prefers-color-scheme: dark)">
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/fonts.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/bundles/katex-base-prism-one-light-b0347952c973.bundle.min.css">
+    
+    
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css" data-no-bundle>
+    <script src="/aulas-faesa/js/bundles/lucide-katex-auto-render-4b36e8bd8642.bundle.min.js"></script>
+</head>
+
+<body>
+    <script>
+        // Restore sidebar state instantly (before first paint) to avoid transition flash
+        (function() {
+            if (localStorage.getItem('cf_sidebar_hidden') === 'true') {
+                document.body.classList.add('sidebar-hidden', 'no-transition');
+            }
+            requestAnimationFrame(function() {
+                requestAnimationFrame(function() {
+                    document.body.classList.remove('no-transition');
+                });
+            });
+        })();
+    </script>
+    <div class="page-wrapper">
+        <nav class="sidebar">
+            <div class="sidebar-content">
+                <header class="sidebar-title-section">
+                    <a href="contents.html" class="course-title-link">
+                        <h1 class="sidebar-course-title">Compiladores</h1>
+                    </a>
+                    <div class="sidebar-ornament">❧</div>
+                </header>
+
+                
+                <section class="sidebar-toc-section">
+                    <h2 class="toc-header">Tabela de Conteúdos</h2>
+                    <ol class="toc-list">
+                        
+                        <li class="toc-item level-2">
+                            <a href="#introdução">13.1. Introdução</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#o-problema-da-decisão-local">13.2. O problema da decisão local</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#o-que-significa-ll1">13.3. O que significa LL(1)</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#conjuntos-first-e-follow">13.4. Conjuntos FIRST e FOLLOW</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#first">13.4.1. FIRST</a>
+                        </li>
+                        
+                        <li class="toc-item level-4">
+                            <a href="#exemplo-mínimo-de-first">13.4.1.1. Exemplo mínimo de FIRST</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#follow">13.4.2. FOLLOW</a>
+                        </li>
+                        
+                        <li class="toc-item level-4">
+                            <a href="#exemplo-mínimo-de-follow">13.4.2.1. Exemplo mínimo de FOLLOW</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#exemplo-guiado-de-first-e-follow">13.4.3. Exemplo guiado de FIRST e FOLLOW</a>
+                        </li>
+                        
+                        <li class="toc-item level-4">
+                            <a href="#segundo-exemplo-de-conjuntos-first-follow">13.4.3.1. Segundo Exemplo de Conjuntos First-Follow</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#como-montar-a-tabela-ll1">13.5. Como montar a tabela LL(1)</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#exemplo-curto">13.5.1. Exemplo curto</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#exemplo-completo-com-a-gramática-de-parênteses">13.5.2. Exemplo completo com a gramática de parênteses</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#exemplo-completo-com-expressões">13.6. Exemplo completo com expressões</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#tabela-de-análise">13.6.1. Tabela de análise</a>
+                        </li>
+                        
+                        <li class="toc-item level-4">
+                            <a href="#o-que-essa-tabela-prova">13.6.1.1. O que essa tabela prova</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#traço-curto-com-expressão-simples">13.6.2. Traço curto com expressão simples</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#executando-o-algoritmo">13.7. Executando o algoritmo</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#rastreamento-da-palavra-codecode">13.7.1.1. Outro traço curto, agora com três decisões diferentes</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#questões">13.8. Questões</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#próximos-passos">13.9. Próximos passos</a>
+                        </li>
+                        
+                    </ol>
+                </section>
+                
+
+                <nav class="sidebar-nav-section">
+                    
+                    <a href="12-full-slang-ast-and-parser-errors.html" class="sidebar-nav-link prev"><i data-lucide="chevron-left" class="nav-icon"></i> Lab - Analisador Sintático II</a>
+                    
+                    
+                    <a href="javascript:void(0)" onclick="handleBackNavigation()"
+                        class="sidebar-nav-link back"><i data-lucide="arrow-left" class="nav-icon"></i> Voltar</a>
+                </nav>
+
+            </div>
+        </nav>
+
+        <button class="mobile-menu-toggle" aria-label="Menu">
+            <i data-lucide="menu"></i>
+        </button>
+
+        <button class="sidebar-toggle" onclick="CourseForgeNav.toggleSidebar()" aria-label="Alternar Barra Lateral">
+            <i data-lucide="chevron-left" class="toggle-icon" id="sidebar-toggle-icon"></i>
+        </button>
+
+        <div class="mobile-menu-overlay"></div>
+
+        <main class="main-content">
+            <article class="article">
+                <header class="article-header">
+                    <span class="chapter-number">13</span>
+                    <h1 class="article-title">
+                        <span class="title-ornament left">❧</span>
+                        <span class="title-text">Parsing LL(1)</span>
+                        <span class="title-ornament right">❧</span>
+                    </h1>
+                    
+                    <p class="article-date">16/04/2026</p>
+                    
+                    
+                    <nav class="breadcrumb" aria-label="Breadcrumb">
+                        
+                        
+                        
+                        <a href="contents.html" class="breadcrumb-link">Compiladores</a>
+                        
+                        <span class="breadcrumb-separator"><i data-lucide="chevron-right" class="breadcrumb-icon"></i></span>
+                        
+                        
+                        
+                        
+                        <a href="contents.html#part-III" class="breadcrumb-link">III - Análise Sintática</a>
+                        
+                        <span class="breadcrumb-separator"><i data-lucide="chevron-right" class="breadcrumb-icon"></i></span>
+                        
+                        
+                        
+                        <span class="breadcrumb-current">Parsing LL(1)</span>
+                        
+                        
+                    </nav>
+                    
+                </header>
+                <div class="article-body">
+                    <h2 id="introdução"><span class="heading-text">Introdução</span><span class="heading-arabic">13.1</span></h2>
+<p>Agora vamos transformar a ideia de parser preditivo em um procedimento mecânico. Em vez de tentar caminhos e voltar atrás, o analisador vai olhar um único símbolo da entrada e decidir qual produção usar.</p>
+<p>Até aqui, você já viu que um parser descendente pode falhar por três motivos muito parecidos por fora, mas diferentes por dentro. Ele pode não saber qual regra escolher, pode voltar ao mesmo não terminal sem avançar, ou pode ter uma gramática boa para a linguagem mas ruim para decisão local. O LL(1) aparece justamente para organizar esse ponto de decisão.</p>
+<div class="callout callout-abstract">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
+    <span class="callout-title-inner">Ideia central<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Um parser LL(1) lê da esquerda para a direita, constrói uma derivação mais à esquerda e decide cada passo com um símbolo de lookahead.</p>
+  </div>
+</div>
+<h2 id="o-problema-da-decisão-local"><span class="heading-text">O problema da decisão local</span><span class="heading-arabic">13.2</span></h2>
+<p>Na aula anterior, vimos que uma gramática pode ser correta do ponto de vista da linguagem e ainda assim ser ruim para um parser descendente. Às vezes, o problema não é mais a estrutura semântica, mas a capacidade de decidir cedo o bastante.</p>
+<p>O LL(1) surge exatamente para isso. Ele organiza a análise sintática em torno de três elementos:</p>
+<ul>
+<li>o <strong>buffer de entrada</strong>, que guarda a cadeia a reconhecer e termina em <span>$</span>;</li>
+<li>a <strong>pilha de análise</strong>, que começa com <span>$</span> no fundo e o símbolo inicial no topo;</li>
+<li>a <strong>tabela de análise</strong>, que diz qual produção usar a partir do topo da pilha e do símbolo atual da entrada.</li>
+</ul>
+<p>Em termos práticos, o parser sempre pergunta a mesma coisa. O que está no topo da pilha, o que está olhando na entrada e qual produção a tabela manda usar para esse par.</p>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="760" viewBox="0.00 0.00 328.50 325.00" class="svg-graph graphviz-img"><g id="svg-graphviz-cf695f44ae56-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 321)"><title>LL1Flow</title><polygon fill="white" stroke="transparent" points="-4,4 -4,-321 324.5,-321 324.5,4 -4,4" /><g id="svg-graphviz-cf695f44ae56-node1" class="node"><title>entrada</title><path fill="#f5f5e8" stroke="black" d="M128,-317C128,-317 12,-317 12,-317 6,-317 0,-311 0,-305 0,-305 0,-291 0,-291 0,-285 6,-279 12,-279 12,-279 128,-279 128,-279 134,-279 140,-285 140,-291 140,-291 140,-305 140,-305 140,-311 134,-317 128,-317" /><text text-anchor="middle" x="70" y="-301.8" font-family="Helvetica,sans-Serif" font-size="14.00">Buffer de entrada</text><text text-anchor="middle" x="70" y="-286.8" font-family="Helvetica,sans-Serif" font-size="14.00">... a b c $</text></g><g id="svg-graphviz-cf695f44ae56-node5" class="node"><title>lookahead</title><path fill="#f5f5e8" stroke="black" d="M127.5,-229C127.5,-229 40.5,-229 40.5,-229 34.5,-229 28.5,-223 28.5,-217 28.5,-217 28.5,-188 28.5,-188 28.5,-182 34.5,-176 40.5,-176 40.5,-176 127.5,-176 127.5,-176 133.5,-176 139.5,-182 139.5,-188 139.5,-188 139.5,-217 139.5,-217 139.5,-223 133.5,-229 127.5,-229" /><text text-anchor="middle" x="84" y="-213.8" font-family="Helvetica,sans-Serif" font-size="14.00">Símbolo atual</text><text text-anchor="middle" x="84" y="-198.8" font-family="Helvetica,sans-Serif" font-size="14.00">da entrada</text><text text-anchor="middle" x="84" y="-183.8" font-family="Helvetica,sans-Serif" font-size="14.00">a</text></g><g id="svg-graphviz-cf695f44ae56-edge1" class="edge"><title>entrada-&gt;lookahead</title><path fill="none" stroke="black" d="M72.7,-278.97C74.38,-267.72 76.61,-252.85 78.64,-239.29" /><polygon fill="black" stroke="black" points="82.12,-239.66 80.14,-229.25 75.2,-238.62 82.12,-239.66" /></g><g id="svg-graphviz-cf695f44ae56-node2" class="node"><title>pilha</title><path fill="#f5f5e8" stroke="black" d="M308.5,-317C308.5,-317 195.5,-317 195.5,-317 189.5,-317 183.5,-311 183.5,-305 183.5,-305 183.5,-291 183.5,-291 183.5,-285 189.5,-279 195.5,-279 195.5,-279 308.5,-279 308.5,-279 314.5,-279 320.5,-285 320.5,-291 320.5,-291 320.5,-305 320.5,-305 320.5,-311 314.5,-317 308.5,-317" /><text text-anchor="middle" x="252" y="-301.8" font-family="Helvetica,sans-Serif" font-size="14.00">Pilha de análise</text><text text-anchor="middle" x="252" y="-286.8" font-family="Helvetica,sans-Serif" font-size="14.00">$ / símbolo inicial</text></g><g id="svg-graphviz-cf695f44ae56-node4" class="node"><title>topo</title><path fill="#f5f5e8" stroke="black" d="M286,-221.5C286,-221.5 202,-221.5 202,-221.5 196,-221.5 190,-215.5 190,-209.5 190,-209.5 190,-195.5 190,-195.5 190,-189.5 196,-183.5 202,-183.5 202,-183.5 286,-183.5 286,-183.5 292,-183.5 298,-189.5 298,-195.5 298,-195.5 298,-209.5 298,-209.5 298,-215.5 292,-221.5 286,-221.5" /><text text-anchor="middle" x="244" y="-206.3" font-family="Helvetica,sans-Serif" font-size="14.00">Topo da pilha</text><text text-anchor="middle" x="244" y="-191.3" font-family="Helvetica,sans-Serif" font-size="14.00">X</text></g><g id="svg-graphviz-cf695f44ae56-edge2" class="edge"><title>pilha-&gt;topo</title><path fill="none" stroke="black" d="M250.46,-278.97C249.31,-265.61 247.73,-247.13 246.42,-231.8" /><polygon fill="black" stroke="black" points="249.9,-231.46 245.57,-221.79 242.93,-232.05 249.9,-231.46" /></g><g id="svg-graphviz-cf695f44ae56-node3" class="node"><title>tabela</title><path fill="#f5f5e8" stroke="black" d="M197.5,-126C197.5,-126 122.5,-126 122.5,-126 116.5,-126 110.5,-120 110.5,-114 110.5,-114 110.5,-100 110.5,-100 110.5,-94 116.5,-88 122.5,-88 122.5,-88 197.5,-88 197.5,-88 203.5,-88 209.5,-94 209.5,-100 209.5,-100 209.5,-114 209.5,-114 209.5,-120 203.5,-126 197.5,-126" /><text text-anchor="middle" x="160" y="-110.8" font-family="Helvetica,sans-Serif" font-size="14.00">Tabela LL(1)</text><text text-anchor="middle" x="160" y="-95.8" font-family="Helvetica,sans-Serif" font-size="14.00">M[A, a]</text></g><g id="svg-graphviz-cf695f44ae56-node6" class="node"><title>decisao</title><path fill="#f5f5e8" stroke="black" d="M210.5,-38C210.5,-38 109.5,-38 109.5,-38 103.5,-38 97.5,-32 97.5,-26 97.5,-26 97.5,-12 97.5,-12 97.5,-6 103.5,0 109.5,0 109.5,0 210.5,0 210.5,0 216.5,0 222.5,-6 222.5,-12 222.5,-12 222.5,-26 222.5,-26 222.5,-32 216.5,-38 210.5,-38" /><text text-anchor="middle" x="160" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">Expandir, casar</text><text text-anchor="middle" x="160" y="-7.8" font-family="Helvetica,sans-Serif" font-size="14.00">ou erro</text></g><g id="svg-graphviz-cf695f44ae56-edge5" class="edge"><title>tabela-&gt;decisao</title><path fill="none" stroke="black" d="M160,-87.76C160,-76.36 160,-61.43 160,-48.49" /><polygon fill="black" stroke="black" points="163.5,-48.21 160,-38.21 156.5,-48.21 163.5,-48.21" /></g><g id="svg-graphviz-cf695f44ae56-edge3" class="edge"><title>topo-&gt;tabela</title><path fill="none" stroke="black" d="M227.8,-183.47C215.22,-169.46 197.59,-149.84 183.46,-134.11" /><polygon fill="black" stroke="black" points="185.72,-131.39 176.43,-126.29 180.51,-136.07 185.72,-131.39" /></g><g id="svg-graphviz-cf695f44ae56-edge4" class="edge"><title>lookahead-&gt;tabela</title><path fill="none" stroke="black" d="M104.77,-175.95C115.39,-162.88 128.3,-146.99 138.97,-133.87" /><polygon fill="black" stroke="black" points="141.69,-136.08 145.28,-126.11 136.26,-131.66 141.69,-136.08" /></g></g></svg></div></div>
+
+<p>Repare que o parser não precisa adivinhar. Ele precisa apenas consultar a tabela certa.</p>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Se você só pode olhar um símbolo à frente, de onde vêm as informações suficientes para escolher uma produção sem retroceder?</p>
+  </div>
+</div>
+<h2 id="o-que-significa-ll1"><span class="heading-text">O que significa LL(1)</span><span class="heading-arabic">13.3</span></h2>
+<p>A sigla LL(1) resume a estratégia do analisador.</p>
+<ul>
+<li>O primeiro <strong>L</strong> significa <em>left-to-right</em>. A leitura da entrada acontece da esquerda para a direita.</li>
+<li>O segundo <strong>L</strong> significa <em>leftmost derivation</em>. A derivação construída é sempre a mais à esquerda.</li>
+<li>O <strong>1</strong> indica <em>lookahead</em> de um símbolo. Em cada decisão, o parser olha apenas o próximo terminal da entrada.</li>
+</ul>
+<p>Essa combinação é importante porque liga a teoria da derivação ao comportamento real do algoritmo.</p>
+<h2 id="conjuntos-first-e-follow"><span class="heading-text">Conjuntos FIRST e FOLLOW</span><span class="heading-arabic">13.4</span></h2>
+<p>Para montar a tabela LL(1), precisamos de dois tipos de informação. Primeiro, o que pode começar uma derivação. Depois, o que pode aparecer logo após um não terminal quando ele ainda está no meio de uma frase.</p>
+<p>A ideia por trás dos dois conjuntos é bem diferente. O <code>FIRST</code> responde à pergunta sobre início. O <code>FOLLOW</code> responde à pergunta sobre continuidade. Um olha para dentro da produção, o outro olha para fora dela, para o contexto em que o símbolo aparece.</p>
+<h3 id="first"><span class="heading-text">FIRST</span><span class="heading-arabic">13.4.1</span></h3>
+<p>O conjunto $FIRST(A)$ contém os terminais que podem iniciar alguma cadeia derivada de $A$.</p>
+<p>Se você quiser decidir qual produção pode ser usada sem tentativa e erro, esse é o primeiro dado que precisa. O <code>FIRST</code> diz o que pode aparecer logo na frente quando o não terminal for expandido.</p>
+<p>Ele pode conter $\epsilon$, porque uma variável pode desaparecer por completo antes de qualquer terminal aparecer.</p>
+<p>Se $A \to a\alpha$, então $a \in FIRST(A)$.</p>
+<p>Se $A$ pode derivar o vazio, então $\epsilon \in FIRST(A)$.</p>
+<h4 id="exemplo-mínimo-de-first"><span class="heading-text">Exemplo mínimo de FIRST</span><span class="heading-arabic">13.4.1.1</span></h4>
+<p>Considere apenas:</p>
+<p>$$
+A \to a \mid \epsilon
+$$</p>
+<p>Aqui a leitura é direta. Se a derivação escolhe a primeira produção, a cadeia começa com $a$. Se escolhe a segunda, ela desaparece. O conjunto precisa registrar as duas possibilidades porque o parser também precisa saber quando uma variável pode sumir sem consumir entrada.</p>
+<p>$$
+FIRST(A) = \{a, \epsilon\}
+$$</p>
+<p>Isso serve para entender a notação. Não há segredo aqui, só a pergunta certa. Qual símbolo pode aparecer primeiro nessa expansão.</p>
+<p>Em produções maiores, o raciocínio é o mesmo, só que você precisa atravessar os símbolos da direita até encontrar o primeiro terminal obrigatório. Se o começo puder desaparecer, o próximo símbolo passa a ser o novo candidato para o <code>FIRST</code>.</p>
+<h3 id="follow"><span class="heading-text">FOLLOW</span><span class="heading-arabic">13.4.2</span></h3>
+<p>O conjunto $FOLLOW(A)$ contém os terminais que podem aparecer imediatamente à direita de $A$ em alguma derivação.</p>
+<p>Esse conjunto é o que permite ao parser tomar a decisão quando uma produção termina com vazio. Se você expandiu uma variável e ela desapareceu, o que importa agora é o símbolo que estava esperando para entrar no lugar dela.</p>
+<p>O <code>FOLLOW</code> nunca contém $\epsilon$. Se a variável desapareceu, o vazio não vira símbolo visível na entrada. Ele só indica que precisamos olhar para o que vem depois.</p>
+<p>O símbolo <span>$</span> sempre pertence a $FOLLOW(S)$, onde $S$ é o símbolo inicial.</p>
+<p>Leia essas regras assim.</p>
+<ul>
+<li>Se depois de $B$ ainda existe um pedaço $\beta$, então tudo o que pode começar esse pedaço pode aparecer logo depois de $B$.</li>
+<li>Se esse pedaço $\beta$ pode sumir, então $B$ também pode herdar o que vem depois de $A$.</li>
+</ul>
+<p>Na forma formal:</p>
+<ul>
+<li>Se $A \to \alpha B\beta$, então tudo de $FIRST(\beta)$, exceto $\epsilon$, entra em $FOLLOW(B)$.</li>
+<li>Se $\beta \Rightarrow^* \epsilon$, então $FOLLOW(A)$ entra em $FOLLOW(B)$.</li>
+<li>Em particular, se $A \to \alpha B$, então $FOLLOW(A)$ entra em $FOLLOW(B)$.</li>
+</ul>
+<h4 id="exemplo-mínimo-de-follow"><span class="heading-text">Exemplo mínimo de FOLLOW</span><span class="heading-arabic">13.4.2.1</span></h4>
+<p>Considere:</p>
+<p>$$
+\begin{split}
+S &\to AB \\
+A &\to a \\
+B &\to b
+\end{split}
+$$</p>
+<p>Como $S$ é o símbolo inicial, temos:</p>
+<p>$$
+FOLLOW(S) = \{\$\}
+$$</p>
+<p>Como $A$ aparece antes de $B$, tudo o que pode começar $B$ também pode aparecer logo depois de $A$. Em outras palavras, o <code>FOLLOW(A)</code> precisa incluir o começo de quem vem na sequência, porque esse começo ocupa exatamente a posição que sobra depois de $A$.</p>
+<p>E como $B$ está no fim da produção de $S$, ele herda o que pode seguir $S$. O símbolo de fim entra aqui porque ele representa o contexto onde a análise pode terminar de verdade.</p>
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">Cuidado conceitual<br /></span>
+  </div>
+  <div class="callout-content">
+<p>$\epsilon$ não vai para a pilha nem para a tabela como símbolo a ser consumido. Ele só indica que a produção pode desaparecer e deixar o contexto seguinte aparecer.</p>
+  </div>
+</div>
+<h3 id="exemplo-guiado-de-first-e-follow"><span class="heading-text">Exemplo guiado de FIRST e FOLLOW</span><span class="heading-arabic">13.4.3</span></h3>
+<p>Considere a gramática:</p>
+<p>$$
+G = (N, T, P, S)
+$$</p>
+<p>com os elementos abaixo:</p>
+<p>$$
+\begin{split}
+N &= \{S, A, B, C, D\} \\
+T &= \{a, b, c, d\} \\
+S &= S
+\end{split}
+\hspace{1cm}
+\begin{split}
+P = S &\to ABCD \\
+A &\to a \mid \epsilon \\
+B &\to b \mid \epsilon \\
+C &\to c \mid \epsilon \\
+D &\to d \mid \epsilon
+\end{split}
+$$</p>
+<p>Vamos calcular os conjuntos completos primeiro, e só depois interpretar o que eles significam.</p>
+<p>$$
+\begin{split}
+FIRST(A) &= \{a, \epsilon\} \\
+FIRST(B) &= \{b, \epsilon\} \\
+FIRST(C) &= \{c, \epsilon\} \\
+FIRST(D) &= \{d, \epsilon\}
+\end{split}
+$$</p>
+<p>$$
+\begin{split}
+FIRST(S) &= \{a, b, c, d, \epsilon\}
+\end{split}
+$$</p>
+<p>$$
+\begin{split}
+FOLLOW(S) &= \{\$\} \\
+FOLLOW(A) &= \{b, c, d, \$\} \\
+FOLLOW(B) &= \{c, d, \$\} \\
+FOLLOW(C) &= \{d, \$\} \\
+FOLLOW(D) &= \{\$\}
+\end{split}
+$$</p>
+<p>Agora olhe para $S \to ABCD$. Como $A$ pode sumir, o parser precisa continuar olhando para $B$. Como $B$ também pode sumir, ele continua para $C$. Como $C$ também pode sumir, ele continua para $D$.</p>
+<p>Isso significa que o começo de $S$ pode vir de qualquer um deles.</p>
+<p>$$
+\begin{split}
+FIRST(S) &= \{a, b, c, d, \epsilon\}
+\end{split}
+$$</p>
+<p>Agora os conjuntos FOLLOW. Começamos com o símbolo inicial.</p>
+<p>$$
+\begin{split}
+FOLLOW(S) &= \{\$\} \\
+FOLLOW(A) &= \{b, c, d, \$\} \\
+FOLLOW(B) &= \{c, d, \$\} \\
+FOLLOW(C) &= \{d, \$\} \\
+FOLLOW(D) &= \{\$\}
+\end{split}
+$$</p>
+<p>O ponto importante aqui é observar como os conjuntos se propagam. Como $A$ pode desaparecer, o que vem depois dele em $S$ passa a influenciar seu FOLLOW. O mesmo acontece com $B$, $C$ e $D$.</p>
+<p>Essa propagação existe porque o parser precisa saber o que pode ocupar o lugar de um símbolo que sumiu. O <code>FOLLOW</code> é, na prática, um conjunto de contextos permitidos.</p>
+<p>Se você quiser enxergar isso como uma regra de leitura, pense assim. O FOLLOW sempre pergunta qual símbolo pode ocupar o lugar que ficou livre depois que uma parte some.</p>
+<p>Por isso ele nunca é calculado isoladamente só olhando a própria variável. Ele depende do lado direito das produções e, quando necessário, do FOLLOW de outras variáveis que estão mais à esquerda na mesma cadeia.</p>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Erro comum<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Em gramáticas com símbolos anuláveis, é muito fácil esquecer de “pular” o $\epsilon$ e continuar a propagação até o próximo símbolo útil. É exatamente isso que faz o FOLLOW crescer corretamente.</p>
+  </div>
+</div>
+<h4 id="segundo-exemplo-de-conjuntos-first-follow"><span class="heading-text">Segundo Exemplo de Conjuntos First-Follow</span><span class="heading-arabic">13.4.3.1</span></h4>
+<p>Considere:</p>
+<p>$$
+\begin{split}
+S &\to A B c \\
+A &\to a \mid \epsilon \\
+B &\to b \mid \epsilon
+\end{split}
+$$</p>
+<p>Aqui o raciocínio já exige mais cuidado.</p>
+<p>Primeiro, feche todos os <code>FIRST</code>.</p>
+<p>$$
+\begin{split}
+FIRST(A) &= \{a, \epsilon\} \\
+FIRST(B) &= \{b, \epsilon\} \\
+FIRST(S) &= \{a, b, c\}
+\end{split}
+$$</p>
+<p>Depois, feche todos os <code>FOLLOW</code>.</p>
+<p>$$
+\begin{split}
+FOLLOW(S) &= \{\$\} \\
+FOLLOW(B) &= \{c\} \\
+FOLLOW(A) &= \{b, c\}
+\end{split}
+$$</p>
+<p>O objetivo agora é ver como os dois conjuntos se combinam. O <code>FIRST</code> nos diz o que pode surgir imediatamente depois de um símbolo. O <code>FOLLOW</code> entra quando esse símbolo pode sumir e o próximo da fila precisa assumir a posição.</p>
+<ul>
+<li>Como $B$ vem antes de $c$, temos $c \in FOLLOW(B)$.</li>
+<li>Como $A$ vem antes de $B$, tudo de $FIRST(B)$, exceto $\epsilon$, entra em $FOLLOW(A)$, porque qualquer coisa que possa começar <code>B</code> pode aparecer logo depois de <code>A</code>.</li>
+<li>Como $B$ pode sumir, $c$ também entra em $FOLLOW(A)$, porque nesse caso o <code>c</code> passa a ser o primeiro símbolo realmente visível depois de <code>A</code>.</li>
+</ul>
+<p>Esse é o tipo de passagem que mais costuma confundir. Não basta olhar o símbolo imediatamente depois. Você precisa continuar andando enquanto o que está à direita puder desaparecer.</p>
+<p>É exatamente essa ideia que torna o cálculo útil para a tabela LL(1). O conjunto não está tentando descrever a gramática inteira, e sim o contexto imediato que o parser precisa enxergar para decidir sem voltar atrás.</p>
+<h2 id="como-montar-a-tabela-ll1"><span class="heading-text">Como montar a tabela LL(1)</span><span class="heading-arabic">13.5</span></h2>
+<p>Antes de preencher qualquer célula, feche os conjuntos de <code>FIRST</code> e <code>FOLLOW</code> da gramática que você vai usar.</p>
+<p>Por exemplo, na gramática de expressões:</p>
+<p>$$
+\begin{split}
+E &\to T E' \\
+E' &\to + T E' \mid \epsilon \\
+T &\to F T' \\
+T' &\to * F T' \mid \epsilon \\
+F &\to (E) \mid id
+\end{split}
+$$</p>
+<p>Primeiro, os conjuntos de início.</p>
+<p>$$
+\begin{split}
+FIRST(E) &= FIRST(T) = \{(, id\} \\
+FIRST(E') &= \{+, \epsilon\} \\
+FIRST(T) &= FIRST(F) = \{(, id\} \\
+FIRST(T') &= \{*, \epsilon\} \\
+FIRST(F) &= \{(, id\}
+\end{split}
+$$</p>
+<p>Depois, os conjuntos de continuidade.</p>
+<p>$$
+\begin{split}
+FOLLOW(E) &= \{\$, )\} \\
+FOLLOW(E') &= \{\$, )\} \\
+FOLLOW(T) &= \{+, \$, )\} \\
+FOLLOW(T') &= \{+, \$, )\} \\
+FOLLOW(F) &= \{*, +, \$, )\}
+\end{split}
+$$</p>
+<p>Agora sim, a tabela LL(1) tem uma linha para cada não terminal e uma coluna para cada terminal, mais a coluna do <span>$</span>.</p>
+<p>Para cada produção $A \to \alpha$:</p>
+<ol>
+<li>coloque essa produção em todas as células $M[A, a]$ para todo $a \in FIRST(\alpha)$, exceto $\epsilon$;</li>
+<li>se $\epsilon \in FIRST(\alpha)$, coloque a produção em todas as células $M[A, b]$ para todo $b \in FOLLOW(A)$.</li>
+</ol>
+<p>Em outras palavras, quando o lado direito pode virar vazio, a produção não entra por uma coluna de vazio. Ela entra pelas colunas de contexto, isto é, pelas colunas de $FOLLOW(A)$.</p>
+<p>Se alguma célula receber mais de uma produção, a gramática não é LL(1).</p>
+<h3 id="exemplo-curto"><span class="heading-text">Exemplo curto</span><span class="heading-arabic">13.5.1</span></h3>
+<p>Considere:</p>
+<p>$$
+\begin{split}
+S &\to aA \mid b \\
+A &\to c \mid \epsilon
+\end{split}
+$$</p>
+<p>Antes de discutir a tabela, feche os conjuntos.</p>
+<p>$$
+\begin{split}
+FIRST(S) &= \{a, b\} \\
+FIRST(A) &= \{c, \epsilon\}
+\end{split}
+$$</p>
+<p>$$
+\begin{split}
+FOLLOW(S) &= \{\$\} \\
+FOLLOW(A) &= \{\$\}
+\end{split}
+$$</p>
+<p>Com isso em mãos, a leitura da tabela fica imediata. $M[S, a]$ recebe $S \to aA$ e $M[S, b]$ recebe $S \to b$. Para $A$, a produção $A \to c$ entra em $M[A, c]$ e a produção $A \to \epsilon$ vai para as colunas de $FOLLOW(A)$.</p>
+<p>Esse exemplo é pequeno de propósito. Ele mostra a regra sem esconder nada atrás de uma expressão maior.</p>
+<p>$$
+\begin{array}{c|ccc}
+ & a & b & c \\
+\hline
+S & S \to aA & S \to b &  \\
+A &  &  & A \to c
+\end{array}
+$$</p>
+<p>Quando $\epsilon$ aparece em uma produção, o preenchimento deixa de olhar apenas para o que a produção começa e passa a olhar para o contexto que vem depois.</p>
+<h3 id="exemplo-completo-com-a-gramática-de-parênteses"><span class="heading-text">Exemplo completo com a gramática de parênteses</span><span class="heading-arabic">13.5.2</span></h3>
+<p>Considere:</p>
+<p>$$
+S \to (S) \mid \epsilon
+$$</p>
+<p>Os conjuntos são simples, mas a lógica é muito útil.</p>
+<p>$$
+\begin{split}
+FIRST(S) &= \{(, \epsilon\} \\
+FOLLOW(S) &= \{\$, )\}
+\end{split}
+$$</p>
+<p>Agora a tabela.</p>
+<p>$$
+\begin{array}{c|ccc}
+ & ( & ) & \$ \\
+\hline
+S & S \to (S) & S \to \epsilon & S \to \epsilon
+\end{array}
+$$</p>
+<p>Essa tabela já permite reconhecer qualquer número de pares de parênteses bem formados, inclusive a cadeia vazia.</p>
+<h2 id="exemplo-completo-com-expressões"><span class="heading-text">Exemplo completo com expressões</span><span class="heading-arabic">13.6</span></h2>
+<p>Agora vamos para a gramática clássica de expressões.</p>
+<p>$$
+\begin{split}
+E &\to T E' \\
+E' &\to + T E' \mid \epsilon \\
+T &\to F T' \\
+T' &\to * F T' \mid \epsilon \\
+F &\to (E) \mid id
+\end{split}
+$$</p>
+<p>Os conjuntos necessários são:</p>
+<p>$$
+\begin{split}
+FIRST(E) &= FIRST(T) = \{(, id\} \\
+FIRST(E') &= \{+, \epsilon\} \\
+FIRST(T) &= FIRST(F) = \{(, id\} \\
+FIRST(T') &= \{*, \epsilon\} \\
+FIRST(F) &= \{(, id\}
+\end{split}
+$$</p>
+<p>E os FOLLOW mais importantes são:</p>
+<p>$$
+\begin{split}
+FOLLOW(E) &= \{\$, )\} \\
+FOLLOW(E') &= \{\$, )\} \\
+FOLLOW(T) &= \{+, \$, )\} \\
+FOLLOW(T') &= \{+, \$, )\} \\
+FOLLOW(F) &= \{*, +, \$, )\}
+\end{split}
+$$</p>
+<p>Isso basta para preencher a tabela. As produções com $\epsilon$ vão exatamente para as colunas do FOLLOW correspondente.</p>
+<h3 id="tabela-de-análise"><span class="heading-text">Tabela de análise</span><span class="heading-arabic">13.6.1</span></h3>
+<p>$$
+\begin{array}{c|cccccc}
+ & id & + & * & ( & ) & \$ \\
+\hline
+E  & E \to T E' &  &  & E \to T E' &  &  \\
+E' &  & E' \to + T E' &  &  & E' \to \epsilon & E' \to \epsilon \\
+T  & T \to F T' &  &  & T \to F T' &  &  \\
+T' &  & T' \to \epsilon & T' \to * F T' &  & T' \to \epsilon & T' \to \epsilon \\
+F  & F \to id &  &  & F \to (E) &  & 
+\end{array}
+$$</p>
+<p>Essa tabela já mostra o ponto essencial. Quando a produção pode desaparecer, ela aparece exatamente nas colunas do FOLLOW.</p>
+<p>Agora vale ler uma linha por vez.</p>
+<ul>
+<li>Em $E$, o parser só entra por <code>id</code> ou <code>(</code>.</li>
+<li>Em $E'$, o parser continua quando encontra <code>+</code>, ou para quando vê o fim da expressão ou um <code>)</code>.</li>
+<li>Em $T'$, o parser continua com <code>*</code>, ou encerra o nível de multiplicação quando encontra um símbolo de nível mais fraco.</li>
+</ul>
+<h4 id="o-que-essa-tabela-prova"><span class="heading-text">O que essa tabela prova</span><span class="heading-arabic">13.6.1.1</span></h4>
+<p>Ela prova que a gramática foi organizada para que cada símbolo da entrada leve a uma única decisão local. Quando isso acontece, o parser descendente não precisa testar alternativas.</p>
+<h3 id="traço-curto-com-expressão-simples"><span class="heading-text">Traço curto com expressão simples</span><span class="heading-arabic">13.6.2</span></h3>
+<p>Antes de ir para a execução completa, veja uma leitura mínima.</p>
+<p>Entrada:</p>
+<p>$$
+id
+$$</p>
+<p>Execução inicial:</p>
+<table>
+<thead>
+<tr>
+  <th>Passo</th>
+  <th>Pilha</th>
+  <th>Entrada</th>
+  <th>Ação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>1</td>
+  <td>[<span>$</span>, E]</td>
+  <td>id<span>$</span></td>
+  <td>Consulta $M[E, id]$</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td>[<span>$</span>, E', T]</td>
+  <td>id<span>$</span></td>
+  <td>Expande $E \to T E'$</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td>[<span>$</span>, E', T', F]</td>
+  <td>id<span>$</span></td>
+  <td>Expande $T \to F T'$</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td>[<span>$</span>, E', T', id]</td>
+  <td>id<span>$</span></td>
+  <td>Expande $F \to id$</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td>[<span>$</span>, E', T']</td>
+  <td><span>$</span></td>
+  <td>Faz <em>match</em> de <code>id</code></td>
+</tr>
+<tr>
+  <td>6</td>
+  <td>[<span>$</span>, E']</td>
+  <td><span>$</span></td>
+  <td>Expande $T' \to \epsilon$</td>
+</tr>
+<tr>
+  <td>7</td>
+  <td>[<span>$</span>]</td>
+  <td><span>$</span></td>
+  <td>Expande $E' \to \epsilon$</td>
+</tr>
+<tr>
+  <td>8</td>
+  <td>[<span>$</span>]</td>
+  <td><span>$</span></td>
+  <td>Sucesso</td>
+</tr>
+</tbody>
+</table>
+<p>Esse traço é pequeno, mas já mostra a mecânica completa. A pilha cresce com expansões e encolhe com <em>match</em>.</p>
+<h2 id="executando-o-algoritmo"><span class="heading-text">Executando o algoritmo</span><span class="heading-arabic">13.7</span></h2>
+<p>O parser começa com a pilha:</p>
+<p>$$
+[\$, S]
+$$</p>
+<p>e com a entrada terminada em:</p>
+<p>$$
+\text{palavra}\$
+$$</p>
+<p>Em cada passo, acontecem duas possibilidades.</p>
+<ul>
+<li>Se o topo da pilha é um terminal igual ao símbolo atual da entrada, ocorre <em>match</em>. O terminal sai da pilha e o ponteiro avança.</li>
+<li>Se o topo da pilha é um não terminal, o parser consulta a tabela e expande o símbolo pela produção indicada.</li>
+</ul>
+<p>Se a célula da tabela estiver vazia, há erro sintático.</p>
+<h3 id="rastreamento-da-palavra-codecode"><span class="heading-text">Rastreamento da palavra <code>(())</code></span><span class="heading-arabic">13.7.1</span></h3>
+<p>Considere a gramática:</p>
+<p>$$
+S \to (S) \mid \epsilon
+$$</p>
+<p>Uma execução possível é:</p>
+<table>
+<thead>
+<tr>
+  <th>Passo</th>
+  <th>Pilha</th>
+  <th>Entrada</th>
+  <th>Ação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>1</td>
+  <td>[<span>$</span>, S]</td>
+  <td><code>(())\$</code></td>
+  <td>Consulta $M[S, (]$</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td>[<span>$</span>, ), S, (]</td>
+  <td><code>(())\$</code></td>
+  <td>Expande $S \to (S)$</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td>[<span>$</span>, ), S]</td>
+  <td><code>(())\$</code></td>
+  <td>Faz <em>match</em> de <code>(</code></td>
+</tr>
+<tr>
+  <td>4</td>
+  <td>[<span>$</span>, ), S]</td>
+  <td><code>())\$</code></td>
+  <td>Consulta $M[S, (]$</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td>[<span>$</span>, ), ), S, (]</td>
+  <td><code>())\$</code></td>
+  <td>Expande $S \to (S)$</td>
+</tr>
+<tr>
+  <td>6</td>
+  <td>[<span>$</span>, ), ), S]</td>
+  <td><code>())\$</code></td>
+  <td>Faz <em>match</em> de <code>(</code></td>
+</tr>
+<tr>
+  <td>7</td>
+  <td>[<span>$</span>, ), )]</td>
+  <td><code>))\$</code></td>
+  <td>Consulta $M[S, )]$</td>
+</tr>
+<tr>
+  <td>8</td>
+  <td>[<span>$</span>, ), )]</td>
+  <td><code>))\$</code></td>
+  <td>Expande $S \to \epsilon$</td>
+</tr>
+<tr>
+  <td>9</td>
+  <td>[<span>$</span>, )]</td>
+  <td><code>))\$</code></td>
+  <td>Faz <em>match</em> de <code>)</code></td>
+</tr>
+<tr>
+  <td>10</td>
+  <td>[<span>$</span>]</td>
+  <td><code>)\$</code></td>
+  <td>Faz <em>match</em> de <code>)</code></td>
+</tr>
+<tr>
+  <td>11</td>
+  <td>[<span>$</span>]</td>
+  <td><span>$</span></td>
+  <td>Sucesso</td>
+</tr>
+</tbody>
+</table>
+<p>O rastreamento mostra a ideia central do LL(1) na prática. A pilha dirige a análise e a tabela evita qualquer tentativa e erro.</p>
+<h4 id="outro-traço-curto-agora-com-três-decisões-diferentes"><span class="heading-text">Outro traço curto, agora com três decisões diferentes</span><span class="heading-arabic">13.7.1.1</span></h4>
+<p>Considere a palavra:</p>
+<p>$$
+id + id * id
+$$</p>
+<p>Você não precisa seguir toda a execução para perceber o padrão. Primeiro o parser reconhece o primeiro identificador. Depois ele vê o <code>+</code> e sabe que precisa continuar em $E'$. Em seguida, ao entrar no lado direito, ele encontra <code>id * id</code> e deixa o nível de multiplicação resolver <code>*</code> antes de voltar ao nível da soma.</p>
+<p>Esse é o ponto mais importante do LL(1). A precedência não aparece como uma regra separada no algoritmo. Ela aparece embutida na tabela e na forma da gramática.</p>
+<div class="callout callout-success">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></span>
+    <span class="callout-title-inner">Fechamento parcial<br /></span>
+  </div>
+  <div class="callout-content">
+<p>O parser LL(1) funciona porque cada decisão foi antecipada para a tabela. A execução final vira apenas consulta, expansão e casamento de terminais.</p>
+  </div>
+</div>
+<h2 id="questões"><span class="heading-text">Questões</span><span class="heading-arabic">13.8</span></h2>
+<div class="questions">
+  <p><strong>1.</strong> Explique, com suas palavras, o que significa LL(1). Inclua o sentido de cada letra e do número.</p>
+<br>
+
+<p><strong>2.</strong> Considere a gramática $A \to a \mid \epsilon$. Determine $FIRST(A)$ e explique o significado de cada elemento encontrado.</p>
+<br>
+
+<p><strong>3.</strong> Considere a gramática:</p>
+<p>$$
+\begin{split}
+S &\to AB \\
+A &\to a \\
+B &\to b
+\end{split}
+$$</p>
+<p>Determine $FOLLOW(A)$ e $FOLLOW(B)$ e explique por que esses conjuntos não são iguais.</p>
+<br>
+
+<p><strong>4.</strong> Considere a gramática:</p>
+<p>$$
+\begin{split}
+S &\to ABCD \\
+A &\to a \mid \epsilon \\
+B &\to b \mid \epsilon \\
+C &\to c \mid \epsilon \\
+D &\to d \mid \epsilon
+\end{split}
+$$</p>
+<p>Determine os conjuntos $FIRST(S)$, $FOLLOW(A)$, $FOLLOW(B)$, $FOLLOW(C)$ e $FOLLOW(D)$.</p>
+<br>
+
+<p><strong>5.</strong> Na construção da tabela LL(1), explique por que uma produção com $\epsilon$ deve ser colocada nas colunas de $FOLLOW(A)$ e não nas colunas de $FIRST(A)$.</p>
+<br>
+
+<p><strong>6.</strong> Complete a tabela LL(1) para a gramática $S \to (S) \mid \epsilon$. Depois, faça o rastreamento da palavra <code>(())</code> por pelo menos oito passos.</p>
+<br>
+
+<p><strong>7.</strong> Considere a gramática:</p>
+<p>$$
+\begin{split}
+E &\to T E' \\
+E' &\to + T E' \mid \epsilon \\
+T &\to F T' \\
+T' &\to * F T' \mid \epsilon \\
+F &\to (E) \mid id
+\end{split}
+$$</p>
+<p>Explique por que a produção $E' \to \epsilon$ deve ser colocada nas colunas de $FOLLOW(E')$.</p>
+<br>
+
+<p><strong>8.</strong> Explique por que as três situações abaixo impedem, em geral, que uma gramática seja LL(1):</p>
+<ul>
+<li>ambiguidade;</li>
+<li>recursão à esquerda;</li>
+<li>falta de fatoração à esquerda.</li>
+</ul>
+<br>
+
+<p><strong>9.</strong> Considere a gramática $A \to ab \mid ac$. Explique por que ela gera conflito na tabela LL(1) e indique qual ideia resolve esse problema.</p>
+</div>
+<div class="example">
+  <div class="example-title">Gabarito</div>
+  <p><strong>1.</strong> LL(1) significa leitura da esquerda para a direita, derivação mais à esquerda e um símbolo de lookahead.</p>
+<p><strong>2.</strong></p>
+<p>$$
+FIRST(A) = \{a, \epsilon\}
+$$</p>
+<p>O <code>a</code> indica a produção que começa com terminal. O <code>\epsilon</code> indica que a variável pode desaparecer.</p>
+<p><strong>3.</strong></p>
+<p>$$
+FOLLOW(A) = \{b\}, \qquad FOLLOW(B) = \{\$\}
+$$</p>
+<p><code>A</code> é seguida por <code>B</code>, então recebe o começo de <code>B</code>. <code>B</code> está no fim da produção de <code>S</code>, então recebe o fim da entrada.</p>
+<p><strong>4.</strong></p>
+<p>$$
+\begin{split}
+FIRST(S) &= \{a, b, c, d, \epsilon\} \\
+FOLLOW(A) &= \{b, c, d, \$\} \\
+FOLLOW(B) &= \{c, d, \$\} \\
+FOLLOW(C) &= \{d, \$\} \\
+FOLLOW(D) &= \{\$\}
+\end{split}
+$$</p>
+<p><strong>5.</strong> Porque $\epsilon$ não é consumido na entrada. Quando uma produção desaparece, o parser precisa olhar para o que vem depois do não terminal, e isso é exatamente o que $FOLLOW(A)$ representa.</p>
+<p><strong>6.</strong> A tabela de $S \to (S) \mid \epsilon$ é:</p>
+<p>$$
+\begin{array}{c|ccc}
+ & ( & ) & \$ \\
+\hline
+S & S \to (S) & S \to \epsilon & S \to \epsilon
+\end{array}
+$$</p>
+<p>Uma execução possível é:</p>
+<p>| Passo | Pilha | Entrada | Ação |<br />
+|---|---|---|---|<br />
+| 1 | [<span>$</span>, S] | <code>(())\$</code> | Consulta $M[S, (]$ |<br />
+| 2 | [<span>$</span>, ), S, (] | <code>(())\$</code> | Expande $S \to (S)$ |<br />
+| 3 | [<span>$</span>, ), S] | <code>(())\$</code> | Faz <em>match</em> de <code>(</code> |<br />
+| 4 | [<span>$</span>, ), S] | <code>())\$</code> | Consulta $M[S, (]$ |<br />
+| 5 | [<span>$</span>, ), ), S, (] | <code>())\$</code> | Expande $S \to (S)$ |<br />
+| 6 | [<span>$</span>, ), ), S] | <code>())\$</code> | Faz <em>match</em> de <code>(</code> |<br />
+| 7 | [<span>$</span>, ), )] | <code>))\$</code> | Consulta $M[S, )]$ |<br />
+| 8 | [<span>$</span>, ), )] | <code>))\$</code> | Expande $S \to \epsilon$ |<br />
+| 9 | [<span>$</span>, )] | <code>))\$</code> | Faz <em>match</em> de <code>)</code> |<br />
+| 10 | [<span>$</span>] | <code>)\$</code> | Faz <em>match</em> de <code>)</code> |<br />
+| 11 | [<span>$</span>] | <span>$</span> | Sucesso |</p>
+<p><strong>7.</strong> Porque $E' \to \epsilon$ só deve ser usada quando não há mais <code>+</code> após o trecho reconhecido. As colunas de $FOLLOW(E')$ indicam justamente os símbolos que podem aparecer depois de $E'$.</p>
+<p><strong>8.</strong></p>
+<ul>
+<li>Ambiguidade produz mais de uma árvore para a mesma cadeia.</li>
+<li>Recursão à esquerda faz o parser voltar ao mesmo não terminal antes de consumir entrada.</li>
+<li>Falta de fatoração à esquerda deixa duas produções começando pelo mesmo prefixo, então o lookahead não basta para decidir.</li>
+</ul>
+<p><strong>9.</strong> A gramática conflita porque ambas as produções começam com <code>a</code>. A ideia correta é fatorar o prefixo comum e adiar a decisão para depois de consumir esse início compartilhado.</p>
+</div>
+<h2 id="próximos-passos"><span class="heading-text">Próximos passos</span><span class="heading-arabic">13.9</span></h2>
+<p>Agora você já tem a base formal do parser preditivo. Na próxima aula, vamos fazer uma revisão para consolidar esses conceitos antes de avançar. Depois disso, o próximo passo será a geração de código na parte sintática.</p>
+
+                </div>
+            </article>
+            <footer class="footer">
+                <p>© 2025 · <a href="#">Gabriel Soares Baptista</a></p>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        const toggle = document.querySelector('.mobile-menu-toggle');
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.querySelector('.mobile-menu-overlay');
+
+        function openMenu() {
+            sidebar.classList.add('open');
+            overlay.classList.add('open');
+            toggle.classList.add('open');
+            toggle.innerHTML = '<i data-lucide="x"></i>';
+            CourseForgeUI.initIcons();
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMenu() {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('open');
+            toggle.classList.remove('open');
+            toggle.innerHTML = '<i data-lucide="menu"></i>';
+            CourseForgeUI.initIcons();
+            document.body.style.overflow = '';
+        }
+
+        toggle.addEventListener('click', () => {
+            if (sidebar.classList.contains('open')) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        overlay.addEventListener('click', closeMenu);
+    </script>
+
+    
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            renderMathInElement(document.body, {
+                output: 'html',
+                delimiters: [
+                    { left: "$$", right: "$$", display: true },
+                    { left: "$", right: "$", display: false },
+                    { left: "\\(", right: "\\)", display: false },
+                    { left: "\\[", right: "\\]", display: true }
+                ],
+                throwOnError: false,
+                strict: false
+            });
+        });
+    </script>
+    
+    
+    <script src="/aulas-faesa/js/vendor/prism/prism.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-c.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-cpp.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-python.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-clike.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-perl.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-java.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-mermaid.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-php.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js" data-no-bundle></script>
+    
+    
+    
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            mermaid.initialize({
+                startOnLoad: true,
+                theme: 'default',
+                securityLevel: 'loose',
+                fontFamily: 'Inter, system-ui, sans-serif',
+                themeVariables: {
+                    fontSize: '16px',
+                    edgeLabelFontSize: '16px',
+                    multiplicityFontSize: '18px'
+                }
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const isSubcourse = false;
+        const courseName = "Compiladores";
+        CourseForgeNav.applyDynamicBreadcrumbs('.breadcrumb', isSubcourse);
+        CourseForgeNav.initScrollSpy();
+        CourseForgeUI.initCopyButtons();
+        CourseForgeUI.initExamples();
+        });
+
+        function handleBackNavigation() {
+            const isSubcourse = false;
+        const dynamic = CourseForgeNav.getBackLink('contents.html', 'Voltar', isSubcourse);
+        window.location.href = dynamic.url;
+        }
+    </script>
+</body>
+
+</html>

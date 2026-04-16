@@ -1,0 +1,1310 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <title>Parsing LL(1)</title>
+    <link rel="icon" href="/aulas-faesa/img/dark-favicon.svg" media="(prefers-color-scheme: light)">
+    <link rel="icon" href="/aulas-faesa/img/light-favicon.svg" media="(prefers-color-scheme: dark)">
+
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/reset.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/reveal.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/theme/white.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/aulas-faesa/css/prism-one-light.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/fonts.css" data-no-bundle>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+            <section><h1>Compiladores</h1>
+<h2>Parsing LL(1)</h2>
+<p>Professor: Gabriel Soares Baptista</p>
+</section>
+<section><h1>O problema</h1>
+<p>Hoje queremos responder a uma pergunta simples.</p>
+<ul>
+<li class="fragment">Como o parser escolhe a produção certa sem voltar atrás?</li>
+<li class="fragment">Como ele usa apenas um símbolo de olhar adiante?</li>
+<li class="fragment">O que precisa estar pronto antes da tabela funcionar?</li>
+</ul>
+</section>
+<section><h1>LL(1)</h1>
+<div class="callout callout-abstract">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
+    <span class="callout-title-inner">Ideia central<br /></span>
+  </div>
+  <div class="callout-content">
+<p>LL(1) lê da esquerda para a direita, constrói derivação mais à esquerda e decide com um símbolo de lookahead.</p>
+  </div>
+</div>
+<ul>
+<li class="fragment fade-up"><strong>L</strong>: left-to-right</li>
+<li class="fragment fade-up"><strong>L</strong>: leftmost derivation</li>
+<li class="fragment fade-up"><strong>1</strong>: um símbolo de lookahead</li>
+</ul>
+
+</section>
+<section><h1>Os três componentes</h1>
+<ul>
+<li class="fragment"><strong>Buffer de entrada</strong>: a cadeia termina em <span>$</span>.</li>
+<li class="fragment"><strong>Pilha de análise</strong>: começa com <span>$</span> e o símbolo inicial.</li>
+<li class="fragment"><strong>Tabela LL(1)</strong>: decide qual produção usar.</li>
+</ul>
+<div class="fragment">
+  <div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="500" viewBox="0.00 0.00 328.50 325.00" class="svg-graph graphviz-img"><g id="svg-graphviz-794e4126dc9e-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 321)"><title>LL1Flow</title><polygon fill="white" stroke="transparent" points="-4,4 -4,-321 324.5,-321 324.5,4 -4,4" /><g id="svg-graphviz-794e4126dc9e-node1" class="node"><title>entrada</title><path fill="#f5f5e8" stroke="black" d="M128,-317C128,-317 12,-317 12,-317 6,-317 0,-311 0,-305 0,-305 0,-291 0,-291 0,-285 6,-279 12,-279 12,-279 128,-279 128,-279 134,-279 140,-285 140,-291 140,-291 140,-305 140,-305 140,-311 134,-317 128,-317" /><text text-anchor="middle" x="70" y="-301.8" font-family="Helvetica,sans-Serif" font-size="14.00">Buffer de entrada</text><text text-anchor="middle" x="70" y="-286.8" font-family="Helvetica,sans-Serif" font-size="14.00">... a b c $</text></g><g id="svg-graphviz-794e4126dc9e-node5" class="node"><title>lookahead</title><path fill="#f5f5e8" stroke="black" d="M127.5,-229C127.5,-229 40.5,-229 40.5,-229 34.5,-229 28.5,-223 28.5,-217 28.5,-217 28.5,-188 28.5,-188 28.5,-182 34.5,-176 40.5,-176 40.5,-176 127.5,-176 127.5,-176 133.5,-176 139.5,-182 139.5,-188 139.5,-188 139.5,-217 139.5,-217 139.5,-223 133.5,-229 127.5,-229" /><text text-anchor="middle" x="84" y="-213.8" font-family="Helvetica,sans-Serif" font-size="14.00">Símbolo atual</text><text text-anchor="middle" x="84" y="-198.8" font-family="Helvetica,sans-Serif" font-size="14.00">da entrada</text><text text-anchor="middle" x="84" y="-183.8" font-family="Helvetica,sans-Serif" font-size="14.00">a</text></g><g id="svg-graphviz-794e4126dc9e-edge1" class="edge"><title>entrada-&gt;lookahead</title><path fill="none" stroke="black" d="M72.7,-278.97C74.38,-267.72 76.61,-252.85 78.64,-239.29" /><polygon fill="black" stroke="black" points="82.12,-239.66 80.14,-229.25 75.2,-238.62 82.12,-239.66" /></g><g id="svg-graphviz-794e4126dc9e-node2" class="node"><title>pilha</title><path fill="#f5f5e8" stroke="black" d="M308.5,-317C308.5,-317 195.5,-317 195.5,-317 189.5,-317 183.5,-311 183.5,-305 183.5,-305 183.5,-291 183.5,-291 183.5,-285 189.5,-279 195.5,-279 195.5,-279 308.5,-279 308.5,-279 314.5,-279 320.5,-285 320.5,-291 320.5,-291 320.5,-305 320.5,-305 320.5,-311 314.5,-317 308.5,-317" /><text text-anchor="middle" x="252" y="-301.8" font-family="Helvetica,sans-Serif" font-size="14.00">Pilha de análise</text><text text-anchor="middle" x="252" y="-286.8" font-family="Helvetica,sans-Serif" font-size="14.00">$ / símbolo inicial</text></g><g id="svg-graphviz-794e4126dc9e-node4" class="node"><title>topo</title><path fill="#f5f5e8" stroke="black" d="M286,-221.5C286,-221.5 202,-221.5 202,-221.5 196,-221.5 190,-215.5 190,-209.5 190,-209.5 190,-195.5 190,-195.5 190,-189.5 196,-183.5 202,-183.5 202,-183.5 286,-183.5 286,-183.5 292,-183.5 298,-189.5 298,-195.5 298,-195.5 298,-209.5 298,-209.5 298,-215.5 292,-221.5 286,-221.5" /><text text-anchor="middle" x="244" y="-206.3" font-family="Helvetica,sans-Serif" font-size="14.00">Topo da pilha</text><text text-anchor="middle" x="244" y="-191.3" font-family="Helvetica,sans-Serif" font-size="14.00">X</text></g><g id="svg-graphviz-794e4126dc9e-edge2" class="edge"><title>pilha-&gt;topo</title><path fill="none" stroke="black" d="M250.46,-278.97C249.31,-265.61 247.73,-247.13 246.42,-231.8" /><polygon fill="black" stroke="black" points="249.9,-231.46 245.57,-221.79 242.93,-232.05 249.9,-231.46" /></g><g id="svg-graphviz-794e4126dc9e-node3" class="node"><title>tabela</title><path fill="#f5f5e8" stroke="black" d="M197.5,-126C197.5,-126 122.5,-126 122.5,-126 116.5,-126 110.5,-120 110.5,-114 110.5,-114 110.5,-100 110.5,-100 110.5,-94 116.5,-88 122.5,-88 122.5,-88 197.5,-88 197.5,-88 203.5,-88 209.5,-94 209.5,-100 209.5,-100 209.5,-114 209.5,-114 209.5,-120 203.5,-126 197.5,-126" /><text text-anchor="middle" x="160" y="-110.8" font-family="Helvetica,sans-Serif" font-size="14.00">Tabela LL(1)</text><text text-anchor="middle" x="160" y="-95.8" font-family="Helvetica,sans-Serif" font-size="14.00">M[A, a]</text></g><g id="svg-graphviz-794e4126dc9e-node6" class="node"><title>decisao</title><path fill="#f5f5e8" stroke="black" d="M210.5,-38C210.5,-38 109.5,-38 109.5,-38 103.5,-38 97.5,-32 97.5,-26 97.5,-26 97.5,-12 97.5,-12 97.5,-6 103.5,0 109.5,0 109.5,0 210.5,0 210.5,0 216.5,0 222.5,-6 222.5,-12 222.5,-12 222.5,-26 222.5,-26 222.5,-32 216.5,-38 210.5,-38" /><text text-anchor="middle" x="160" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">Expandir, casar</text><text text-anchor="middle" x="160" y="-7.8" font-family="Helvetica,sans-Serif" font-size="14.00">ou erro</text></g><g id="svg-graphviz-794e4126dc9e-edge5" class="edge"><title>tabela-&gt;decisao</title><path fill="none" stroke="black" d="M160,-87.76C160,-76.36 160,-61.43 160,-48.49" /><polygon fill="black" stroke="black" points="163.5,-48.21 160,-38.21 156.5,-48.21 163.5,-48.21" /></g><g id="svg-graphviz-794e4126dc9e-edge3" class="edge"><title>topo-&gt;tabela</title><path fill="none" stroke="black" d="M227.8,-183.47C215.22,-169.46 197.59,-149.84 183.46,-134.11" /><polygon fill="black" stroke="black" points="185.72,-131.39 176.43,-126.29 180.51,-136.07 185.72,-131.39" /></g><g id="svg-graphviz-794e4126dc9e-edge4" class="edge"><title>lookahead-&gt;tabela</title><path fill="none" stroke="black" d="M104.77,-175.95C115.39,-162.88 128.3,-146.99 138.97,-133.87" /><polygon fill="black" stroke="black" points="141.69,-136.08 145.28,-126.11 136.26,-131.66 141.69,-136.08" /></g></g></svg></div></div>
+</div>
+</section>
+<section><h1>FIRST</h1>
+<p>O <code>FIRST(A)</code> responde a pergunta:</p>
+<ul>
+<li class="fragment">com que símbolo uma derivação de $A$ pode começar?</li>
+<li class="fragment">pode começar com vazio?</li>
+</ul>
+<div class="fragment">
+  <p>$$
+A \to a \mid \epsilon
+$$</p>
+<p>$$
+FIRST(A) = \{a, \epsilon\}
+$$</p>
+<ul>
+<li class="fragment"><code>a</code> entra porque pode aparecer primeiro.</li>
+<li class="fragment"><code>\epsilon</code> entra porque $A$ pode desaparecer.</li>
+</ul>
+</div>
+</section>
+<section><h1>FOLLOW</h1>
+<p>O <code>FOLLOW(A)</code> responde a pergunta:</p>
+<ul>
+<li class="fragment">o que pode aparecer logo depois de $A$?</li>
+<li class="fragment">se $A$ desaparecer, quem ocupa o lugar dele?</li>
+</ul>
+<div class="fragment">
+  <ul>
+<li class="fragment"><code>\epsilon</code> <strong>não</strong> entra em FOLLOW.</li>
+<li class="fragment"><code>\$</code> entra em <code>FOLLOW(S)</code>, onde $S$ é o símbolo inicial.</li>
+</ul>
+</div>
+<div class="fragment">
+  <p>$$
+\begin{split}
+S &\to AB \\
+A &\to a \\
+B &\to b
+\end{split}
+$$</p>
+<p>$$
+FOLLOW(S)=\{\$\},\quad FOLLOW(A)=\{b\},\quad FOLLOW(B)=\{\$\}
+$$</p>
+</div>
+</section>
+<section><h1>Exemplo 1</h1>
+<h2>FIRST e FOLLOW completos</h2>
+<p>Gramática:</p>
+<div class="fragment">
+  $$
+\begin{split}
+S &\to ABCD \\
+A &\to a \mid \epsilon \\
+B &\to b \mid \epsilon \\
+C &\to c \mid \epsilon \\
+D &\to d \mid \epsilon
+\end{split}
+$$
+</div>
+<div class="fragment">
+  $$
+\begin{split}
+FIRST(A) &= \{a, \epsilon\} \\
+FIRST(B) &= \{b, \epsilon\} \\
+FIRST(C) &= \{c, \epsilon\} \\
+FIRST(D) &= \{d, \epsilon\} \\
+FIRST(S) &= \{a, b, c, d, \epsilon\}
+\end{split}
+$$
+</div>
+<div class="fragment">
+  $$
+\begin{split}
+FOLLOW(S) &= \{\$\} \\
+FOLLOW(A) &= \{b, c, d, \$\} \\
+FOLLOW(B) &= \{c, d, \$\} \\
+FOLLOW(C) &= \{d, \$\} \\
+FOLLOW(D) &= \{\$\}
+\end{split}
+$$
+</div>
+</section>
+<section><h1>Exemplo 2</h1>
+<h2>Follow em cadeia</h2>
+<p>Gramática:</p>
+<div class="fragment">
+  $$
+\begin{split}
+S &\to A B c \\
+A &\to a \mid \epsilon \\
+B &\to b \mid \epsilon
+\end{split}
+$$
+</div>
+<div class="fragment">
+  $$
+\begin{split}
+FIRST(A) &= \{a, \epsilon\} \\
+FIRST(B) &= \{b, \epsilon\} \\
+FIRST(S) &= \{a, b, c\}
+\end{split}
+$$
+</div>
+<div class="fragment">
+  $$
+\begin{split}
+FOLLOW(S) &= \{\$\} \\
+FOLLOW(B) &= \{c\} \\
+FOLLOW(A) &= \{b, c\}
+\end{split}
+$$
+</div>
+<div class="fragment">
+  <ul>
+<li class="fragment">Se $B$ some, <code>c</code> passa a ficar logo depois de $A$.</li>
+<li class="fragment">Se $B$ não some, o que começa <code>B</code> também pode seguir <code>A</code>.</li>
+</ul>
+</div>
+</section>
+<section><h1>Montando a tabela</h1>
+<p>Antes de preencher qualquer célula, feche <code>FIRST</code> e <code>FOLLOW</code>.</p>
+<p><strong>Regra:</strong></p>
+<ol>
+<li>coloque $A \to \alpha$ nas células de $FIRST(\alpha)$ exceto $\epsilon$</li>
+<li>se $\epsilon \in FIRST(\alpha)$, coloque a produção nas colunas de $FOLLOW(A)$</li>
+</ol>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Não existe coluna de vazio<br /></span>
+  </div>
+  <div class="callout-content">
+<code>\epsilon</code> não vira coluna da tabela. Ele só diz que precisamos usar o contexto de <code>FOLLOW(A)</code>.</p>
+  </div>
+</div>
+</section>
+<section><h1>Exemplo 3</h1>
+<h2>Tabela curta</h2>
+<p>Gramática:</p>
+<div class="fragment">
+  $$
+\begin{split}
+S &\to aA \mid b \\
+A &\to c \mid \epsilon
+\end{split}
+$$
+</div>
+<div class="fragment">
+  $$
+\begin{split}
+FIRST(S) &= \{a, b\} \\
+FIRST(A) &= \{c, \epsilon\} \\
+FOLLOW(S) &= \{\$\} \\
+FOLLOW(A) &= \{\$\}
+\end{split}
+$$
+</div>
+<div class="fragment">
+  $$
+\begin{array}{c|ccc}
+ & a & b & c \\
+\hline
+S & S \to aA & S \to b &  \\
+A &  &  & A \to c
+\end{array}
+$$
+</div>
+</section>
+<section><h1>Exemplo 4</h1>
+<h2>Parênteses</h2>
+<p>Gramática:</p>
+<div class="fragment">
+  $$
+S \to (S) \mid \epsilon
+$$
+</div>
+<div class="fragment">
+  $$
+\begin{split}
+FIRST(S) &= \{(, \epsilon\} \\
+FOLLOW(S) &= \{\$, )\}
+\end{split}
+$$
+</div>
+<div class="fragment">
+  $$
+\begin{array}{c|ccc}
+ & ( & ) & \$ \\
+\hline
+S & S \to (S) & S \to \epsilon & S \to \epsilon
+\end{array}
+$$
+</div>
+</section>
+<section><h1>Exemplo 4</h1>
+<h2>Entrada de <code>(())</code></h2>
+<table>
+<thead>
+<tr>
+  <th>Passo</th>
+  <th>Pilha</th>
+  <th>Entrada</th>
+  <th>Ação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>1</td>
+  <td>[<span>$</span>, S]</td>
+  <td><code>(())\$</code></td>
+  <td>Consulta $M[S, (]$</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td>[<span>$</span>, ), S, (]</td>
+  <td><code>(())\$</code></td>
+  <td>Expande $S \to (S)$</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td>[<span>$</span>, ), S]</td>
+  <td><code>(())\$</code></td>
+  <td>Faz match de <code>(</code></td>
+</tr>
+<tr>
+  <td>4</td>
+  <td>[<span>$</span>, ), S]</td>
+  <td><code>())\$</code></td>
+  <td>Consulta $M[S, (]$</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td>[<span>$</span>, ), ), S, (]</td>
+  <td><code>())\$</code></td>
+  <td>Expande $S \to (S)$</td>
+</tr>
+<tr>
+  <td>6</td>
+  <td>[<span>$</span>, ), ), S]</td>
+  <td><code>())\$</code></td>
+  <td>Faz match de <code>(</code></td>
+</tr>
+<tr>
+  <td>7</td>
+  <td>[<span>$</span>, ), )]</td>
+  <td><code>))\$</code></td>
+  <td>Consulta $M[S, )]$</td>
+</tr>
+<tr>
+  <td>8</td>
+  <td>[<span>$</span>, ), )]</td>
+  <td><code>))\$</code></td>
+  <td>Expande $S \to \epsilon$</td>
+</tr>
+<tr>
+  <td>9</td>
+  <td>[<span>$</span>, )]</td>
+  <td><code>))\$</code></td>
+  <td>Faz match de <code>)</code></td>
+</tr>
+<tr>
+  <td>10</td>
+  <td>[<span>$</span>]</td>
+  <td><code>)\$</code></td>
+  <td>Faz match de <code>)</code></td>
+</tr>
+<tr>
+  <td>11</td>
+  <td>[<span>$</span>]</td>
+  <td><span>$</span></td>
+  <td>Sucesso</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section><h1>Exemplo 5</h1>
+<h2>Expressões</h2>
+<p>Gramática clássica:</p>
+<div class="fragment">
+  $$
+\begin{split}
+E &\to T E' \\
+E' &\to + T E' \mid \epsilon \\
+T &\to F T' \\
+T' &\to * F T' \mid \epsilon \\
+F &\to (E) \mid id
+\end{split}
+$$
+</div>
+<div class="fragment">
+  $$
+\begin{split}
+FIRST(E) &= FIRST(T) = \{(, id\} \\
+FIRST(E') &= \{+, \epsilon\} \\
+FIRST(T) &= FIRST(F) = \{(, id\} \\
+FIRST(T') &= \{*, \epsilon\} \\
+FIRST(F) &= \{(, id\}
+\end{split}
+$$
+</div>
+<div class="fragment">
+  $$
+\begin{split}
+FOLLOW(E) &= \{\$, )\} \\
+FOLLOW(E') &= \{\$, )\} \\
+FOLLOW(T) &= \{+, \$, )\} \\
+FOLLOW(T') &= \{+, \$, )\} \\
+FOLLOW(F) &= \{*, +, \$, )\}
+\end{split}
+$$
+</div>
+</section>
+<section><h1>Exemplo 5</h1>
+<h2>Tabela e leitura</h2>
+<div class="fragment">
+  $$
+\begin{array}{c|cccccc}
+ & id & + & * & ( & ) & \$ \\
+\hline
+E  & E \to T E' &  &  & E \to T E' &  &  \\
+E' &  & E' \to + T E' &  &  & E' \to \epsilon & E' \to \epsilon \\
+T  & T \to F T' &  &  & T \to F T' &  &  \\
+T' &  & T' \to \epsilon & T' \to * F T' &  & T' \to \epsilon & T' \to \epsilon \\
+F  & F \to id &  &  & F \to (E) &  &
+\end{array}
+$$
+</div>
+</section>
+<section><h1>Exemplo 5</h1>
+<h2>Trace curto</h2>
+<table>
+<thead>
+<tr>
+  <th>Passo</th>
+  <th>Pilha</th>
+  <th>Entrada</th>
+  <th>Ação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>1</td>
+  <td>[<span>$</span>, E]</td>
+  <td>id<span>$</span></td>
+  <td>Consulta $M[E, id]$</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td>[<span>$</span>, E', T]</td>
+  <td>id<span>$</span></td>
+  <td>Expande $E \to T E'$</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td>[<span>$</span>, E', T', F]</td>
+  <td>id<span>$</span></td>
+  <td>Expande $T \to F T'$</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td>[<span>$</span>, E', T', id]</td>
+  <td>id<span>$</span></td>
+  <td>Expande $F \to id$</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td>[<span>$</span>, E', T']</td>
+  <td><span>$</span></td>
+  <td>Faz match de <code>id</code></td>
+</tr>
+<tr>
+  <td>6</td>
+  <td>[<span>$</span>, E']</td>
+  <td><span>$</span></td>
+  <td>Expande $T' \to \epsilon$</td>
+</tr>
+<tr>
+  <td>7</td>
+  <td>[<span>$</span>]</td>
+  <td><span>$</span></td>
+  <td>Expande $E' \to \epsilon$</td>
+</tr>
+<tr>
+  <td>8</td>
+  <td>[<span>$</span>]</td>
+  <td><span>$</span></td>
+  <td>Sucesso</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section><h1>Quando não é LL(1)</h1>
+<p>Três causas comuns:</p>
+<ul>
+<li class="fragment fade-up"><strong>Ambiguidade</strong>: duas árvores para a mesma cadeia</li>
+<li class="fragment fade-up"><strong>Recursão à esquerda</strong>: o parser volta ao mesmo não terminal antes de consumir entrada</li>
+<li class="fragment fade-up"><strong>Falta de fatoração</strong>: duas produções começam igual e o lookahead não basta</li>
+</ul>
+
+</section>
+<section><h1>Prefixo comum</h1>
+<div class="fragment">
+  $$
+A \to ab \mid ac
+$$
+</div>
+<ul>
+<li class="fragment">com lookahead só em <code>a</code>, a decisão ainda não está pronta.</li>
+<li class="fragment">a solução é fatorar o prefixo comum.</li>
+</ul>
+</section>
+<section><h1>Recursão à esquerda</h1>
+<div class="fragment">
+  $$
+E \to E + T \mid T
+$$
+</div>
+<ul>
+<li class="fragment">o parser tenta expandir <code>E</code> e volta para <code>E</code> antes de consumir qualquer coisa.</li>
+<li class="fragment">isso causa loop em parser top-down.</li>
+</ul>
+</section>
+<section><h1>Ambiguidade</h1>
+<div class="fragment">
+  $$
+E \to E + E \mid id
+$$
+</div>
+<ul>
+<li class="fragment">para <code>id + id + id</code>, mais de uma árvore continua possível.</li>
+<li class="fragment">a tabela não consegue esconder um conflito que já existe na gramática.</li>
+</ul>
+</section>
+<section><h1>Pŕoximos Passos</h1>
+<p>Na próxima aula, vamos fazer uma revisão para consolidar esses conceitos. Depois disso, o próximo passo será a geração de código na parte sintática.</p>
+</section>
+        </div>
+    </div>
+
+    <script src="/aulas-faesa/js/vendor/reveal/reveal.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/notes/notes.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/markdown/markdown.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/math/math.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/zoom/zoom.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/prism.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-c.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-python.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-clike.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-cpp.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-perl.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-java.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-php.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/toolbar/prism-toolbar.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/show-language/prism-show-language.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/prism-slang.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/mermaid.min.js" data-no-bundle></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            mermaid.initialize({
+                startOnLoad: false,
+                theme: 'default',
+                securityLevel: 'loose',
+                htmlLabels: false,
+                fontFamily: 'Inter, system-ui, sans-serif',
+            });
+        });
+    </script>
+    <script src="/aulas-faesa/js/rough.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/apply_sketch.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/lucide.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/ui.js" data-no-bundle></script>
+    <script>
+        const waitForNextFrame = () => new Promise(resolve => requestAnimationFrame(resolve));
+
+        const initSlideUI = () => {
+            if (!window.CourseForgeUI) {
+                return;
+            }
+
+            window.CourseForgeUI.initCopyButtons();
+            window.CourseForgeUI.initIcons();
+        };
+
+        const renderMermaidsInSlide = async (slide) => {
+            if (!slide) {
+                return;
+            }
+
+            const mermaids = slide.querySelectorAll('.mermaid');
+            if (!mermaids.length) {
+                return;
+            }
+
+            try {
+                if (document.fonts?.ready) {
+                    await document.fonts.ready;
+                }
+
+                await waitForNextFrame();
+                await waitForNextFrame();
+
+                for (const element of mermaids) {
+                    if (element.dataset.mermaidRendered === 'true') {
+                        continue;
+                    }
+
+                    await mermaid.run({
+                        nodes: [element],
+                    });
+                    element.dataset.mermaidRendered = 'true';
+                }
+            } catch (err) {
+                console.warn('Mermaid render failed', err);
+            }
+        };
+
+        const updateMermaidDisplayBounds = (slide) => {
+            const scope = slide || document;
+            const displays = scope.querySelectorAll('.mermaid-display');
+
+            for (const display of displays) {
+                const rect = display.getBoundingClientRect();
+                const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+                const bottomGap = 24;
+                const availableHeight = Math.max(160, Math.floor(viewportHeight - rect.top - bottomGap));
+                display.style.setProperty('--mermaid-max-height', `${availableHeight}px`);
+            }
+        };
+
+        const resetNativeLineNumbers = (pre) => {
+            if (!pre?.classList.contains('line-numbers')) {
+                return;
+            }
+
+            const existingRows = pre.querySelector('.line-numbers-rows');
+            if (existingRows) {
+                existingRows.remove();
+            }
+        };
+
+        const highlightCodeInSlide = (slide) => {
+            const scope = slide || document;
+            const codeBlocks = scope.querySelectorAll('pre[class*="language-"] > code[class*="language-"]');
+
+            for (const code of codeBlocks) {
+                const pre = code.parentElement;
+                resetNativeLineNumbers(pre);
+                Prism.highlightElement(code);
+
+                if (pre?.classList.contains('line-numbers') && Prism.plugins?.lineNumbers?.resize) {
+                    Prism.plugins.lineNumbers.resize(pre);
+                }
+            }
+        };
+
+        const enhanceCurrentSlide = async (slide) => {
+            highlightCodeInSlide(slide);
+            await renderMermaidsInSlide(slide);
+            updateMermaidDisplayBounds(slide);
+            initSlideUI();
+        };
+
+        Reveal.initialize({
+            hash: true,
+            slideNumber: 'c/t',
+            center: false,
+            controls: false,
+            plugins: [RevealMarkdown, RevealNotes, RevealMath.KaTeX, RevealZoom],
+            katex: {
+                local: '/aulas-faesa/js/vendor/katex',
+                output: 'html',
+                throwOnError: false,
+                strict: false,
+            },
+            width: 960,
+            height: 800,
+            margin: 0.15,
+            maxScale: 2.0,
+        });
+
+        Reveal.on('ready', event => {
+            enhanceCurrentSlide(event.currentSlide);
+        });
+
+        Reveal.on('slideready', event => {
+            enhanceCurrentSlide(event.currentSlide);
+        });
+
+        Reveal.on('slidechanged', event => {
+            enhanceCurrentSlide(event.currentSlide);
+        });
+
+        window.addEventListener('resize', () => {
+            updateMermaidDisplayBounds(Reveal.getCurrentSlide());
+        });
+    </script>
+    <style>
+        /* Modern base styles */
+        :root {
+            --callout-note: #448aff;
+            --callout-abstract: #00b0ff;
+            --callout-info: #00b8d4;
+            --callout-todo: #00bfa5;
+            --callout-tip: #00c853;
+            --callout-success: #64dd17;
+            --callout-question: #ffab00;
+            --callout-warning: #ff9100;
+            --callout-failure: #ff5252;
+            --callout-danger: #ff1744;
+            --callout-bug: #f50057;
+            --callout-example: #7c4dff;
+            --callout-quote: #9e9e9e;
+            --code-bg: #f1f5f9;
+            --border: #e2e8f0;
+            --radius: 6px;
+            --radius-sm: 4px;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --text-muted: #64748b;
+            --text: #334155;
+            --bg: #ffffff;
+            --heading: #0f172a;
+            --link: #3b82f6;
+            --font-code: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+        }
+
+        .reveal {
+            font-size: 20px;
+            text-align: left !important;
+        }
+
+        .reveal code:not(pre code) {
+            font-family: var(--font-code) !important;
+            background-color: var(--code-bg) !important;
+            padding: 0.1em 0.35em !important;
+            border-radius: var(--radius-sm) !important;
+            font-size: 0.9em !important;
+            color: var(--link) !important;
+            border: 1px dashed var(--border) !important;
+            white-space: pre-wrap !important;
+            word-break: break-word !important;
+            font-variant-ligatures: none;
+            font-feature-settings: "liga" 0, "calt" 0;
+        }
+
+        .reveal h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px !important;
+            margin-left: 0 !important;
+            /* min-height: 2.3em; */
+            display: flex;
+            align-items: center;
+            justify-content: flex-start !important;
+            text-align: left !important;
+            width: 100% !important;
+            text-shadow: none !important;
+        }
+
+        /* Prism overrides for Reveal.js */
+        .reveal div.code-toolbar {
+            position: relative;
+            width: 100% !important;
+            margin: 1.5rem 0 !important;
+        }
+
+        .reveal pre[class*="language-"] {
+            background: hsl(230, 1%, 98%) !important;
+            margin: 1.5rem 0 !important;
+            padding: 1rem !important;
+            border: 1px solid var(--border) !important;
+            border-radius: var(--radius) !important;
+            box-shadow: var(--shadow-sm) !important;
+            font-family: var(--font-code) !important;
+            font-size: 0.85em !important;
+            position: relative;
+            overflow-x: auto;
+            box-sizing: border-box !important;
+            max-width: 100% !important;
+            font-variant-ligatures: none;
+            font-feature-settings: "liga" 0, "calt" 0;
+        }
+
+        .reveal pre[class*="language-"] > code {
+            background: 0 0 !important;
+            text-shadow: none !important;
+            color: hsl(230, 8%, 24%) !important;
+            position: relative !important;
+            display: block !important;
+        }
+
+        .reveal .line-numbers .line-numbers-rows {
+            border-right: 1px solid #444 !important;
+            padding-right: .5rem !important;
+            margin-bottom: 1.5rem;
+        }
+
+        .reveal .line-numbers-rows>span:before {
+            color: #666 !important;
+        }
+
+        .reveal pre[class*="language-"].line-numbers,
+        .reveal pre[class*="language-"]:has(.line-numbers-rows) {
+            padding-left: 3.8em !important;
+            overflow-y: hidden !important;
+        }
+
+        .reveal .copy-button,
+        .reveal pre[data-lang]::before {
+            position: absolute;
+            top: .5rem;
+            height: 26px;
+            background: hsl(230, 1%, 92%);
+            border: 1px solid hsl(230, 1%, 85%);
+            border-radius: var(--radius-sm);
+            box-sizing: border-box;
+        }
+
+        .reveal .copy-button {
+            right: .5rem;
+            width: 26px;
+            padding: 0;
+            color: hsl(230, 6%, 44%);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all .2s ease;
+            z-index: 20;
+            opacity: .8;
+        }
+
+        .reveal .copy-button:hover {
+            background: hsl(230, 1%, 85%);
+            color: hsl(230, 8%, 24%);
+            opacity: 1;
+        }
+
+        .reveal .copy-button svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Language label styling - hide all Prism toolbar plugins, keep only data-lang label */
+        .reveal div.toolbar,
+        .reveal div.toolbar-item,
+        .reveal button.toolbar-item,
+        .reveal span.toolbar-item {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            height: 0 !important;
+            width: 0 !important;
+            overflow: hidden !important;
+            position: absolute !important;
+            pointer-events: none !important;
+        }
+
+        /* Use the pseudo-element data-lang label only */
+        .reveal pre[data-lang]::before {
+            content: attr(data-lang);
+            right: 2.35rem;
+            padding: 0 .5rem;
+            font-size: .65rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: hsl(230, 6%, 50%);
+            pointer-events: none;
+            z-index: 10;
+            display: inline-flex !important;
+            align-items: center !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            height: 26px !important;
+            width: auto !important;
+            position: absolute !important;
+            overflow: visible !important;
+            line-height: 26px !important;
+        }
+
+        .reveal h2 {
+            font-size: 1.6em;
+            margin-top: 30px !important;
+            margin-bottom: 20px !important;
+            text-align: left !important;
+        }
+
+        .reveal h3 {
+            font-size: 1.3em;
+            margin-top: 20px !important;
+            margin-bottom: 15px !important;
+            text-align: left !important;
+        }
+
+        .reveal p {
+            line-height: 1.5;
+            margin-top: 20px !important;
+            margin-left: 0 !important;
+            text-align: left !important;
+        }
+
+        .reveal ul,
+        .reveal ol,
+        .reveal li {
+            line-height: 1.5;
+            text-align: left !important;
+            margin-left: 0 !important;
+        }
+        
+        .reveal ul, .reveal ol {
+            display: block !important;
+            padding-left: 1.2em !important;
+        }
+
+        /* Slide padding and layout */
+        .reveal .slides section {
+            padding: 40px !important;
+            box-sizing: border-box;
+            text-align: left !important;
+            overflow: visible !important;
+        }
+
+        .reveal .slides {
+            text-align: left !important;
+        }
+
+        /* Centering for Title slides (h1 ONLY, h1 + h2 ONLY, or h1 + h2 + p ONLY) */
+        .reveal .slides section:not(.stack):has(> h1:only-child),
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child),
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) {
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: center !important;
+            align-items: center !important;
+            text-align: center !important;
+            height: 100% !important;
+            top: 0 !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:only-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child) h2,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h2,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) p {
+            justify-content: center !important;
+            text-align: center !important;
+            margin: 0 !important;
+            min-height: auto !important;
+            width: 100% !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h1 {
+            margin-bottom: 0.5em !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h2 {
+            margin-bottom: 0.3em !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) p {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        /* Full screen slide fix */
+        .reveal .slides section:has(.full-screen-image) {
+            padding: 0 !important;
+        }
+
+        /* Full screen slide fix - Garantindo que o fundo do Reveal fique visível e a imagem carregada */
+        .reveal:has(section.present .full-screen-image) {
+            background-image: url('../../slide_end_background.png') !important;
+            background-size: cover !important;
+            background-position: center !important;
+        }
+
+        /* Torna o slide e o container de slides transparentes para mostrar o fundo da .reveal */
+        .reveal:has(section.present .full-screen-image) .slides,
+        .reveal:has(section.present .full-screen-image) .slides section.present {
+            background: transparent !important;
+        }
+
+        .full-screen-image {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 !important;
+            /* Se houver texto, ele centraliza aqui */
+        }
+
+        /* Spacing for diagrams */
+        .reveal .svg-graph {
+            margin-top: 1em !important;
+            margin-bottom: 1em !important;
+            overflow: visible !important; /* Prevent labels from being cut off */
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* Mermaid Diagram Styles */
+        .reveal .mermaid {
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            padding: 0 !important;
+            margin: 1rem 0 !important;
+            font-family: inherit !important;
+            overflow: visible !important;
+            text-align: center;
+            display: block !important;
+            width: auto !important;
+            max-width: 100% !important;
+        }
+
+        .reveal pre.mermaid {
+            white-space: pre;
+            font-family: var(--font-code);
+            color: var(--text-muted);
+            margin: 0 !important;
+            padding: 0 !important;
+            width: auto !important;
+            line-height: 1 !important;
+            border: none !important;
+            box-shadow: none !important;
+            background: transparent !important;
+            overflow: visible !important;
+        }
+
+        .reveal .centered .mermaid {
+            display: block !important;
+            justify-content: center;
+            margin-left: auto !important;
+            margin-right: auto !important;
+        }
+
+        .reveal .mermaid svg {
+            max-width: 100% !important;
+            height: auto !important;
+            display: block !important;
+            overflow: visible !important;
+            vertical-align: top !important;
+            font-family: Inter, system-ui, sans-serif !important;
+            font-style: normal !important;
+            font-variant: normal !important;
+            font-weight: 400 !important;
+            letter-spacing: normal !important;
+            word-spacing: normal !important;
+            text-transform: none !important;
+            text-shadow: none !important;
+            line-height: normal !important;
+            text-rendering: geometricPrecision !important;
+        }
+
+        .reveal .mermaid svg * {
+            font-family: inherit !important;
+            font-style: normal !important;
+            font-variant: normal !important;
+            letter-spacing: normal !important;
+            word-spacing: normal !important;
+            text-transform: none !important;
+            text-shadow: none !important;
+            line-height: normal !important;
+        }
+
+        .reveal .mermaid svg .edgeBadge text,
+        .reveal .mermaid svg .edgeBadge tspan,
+        .reveal .mermaid svg .edgeTerm text,
+        .reveal .mermaid svg .edgeTerm tspan,
+        .reveal .mermaid svg .multiplicity text,
+        .reveal .mermaid svg .multiplicity tspan,
+        .reveal .mermaid svg text.edgeBadge,
+        .reveal .mermaid svg text.edgeTerm {
+            font-size: 18px !important;
+            font-weight: 700 !important;
+            fill: var(--heading) !important;
+        }
+
+        /* Mermaid Source Switcher */
+        .reveal .mermaid-outer-container {
+            margin: 1rem 0;
+            position: relative;
+            width: 100%;
+            max-width: 100%;
+        }
+
+        .reveal .mermaid-switcher {
+            display: flex !important;
+            justify-content: flex-end;
+            margin-bottom: 0.5rem;
+            width: 100%;
+        }
+
+        .reveal .switcher-track {
+            display: inline-flex;
+            align-items: center;
+            background: var(--code-bg);
+            padding: 3px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            position: relative;
+        }
+
+        .reveal .switcher-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            border: none;
+            background: transparent;
+            padding: 0.35rem 1rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            border-radius: calc(var(--radius) - 2px);
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            z-index: 1;
+        }
+
+        .reveal .switcher-btn svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .reveal .switcher-btn:hover {
+            color: var(--text);
+        }
+
+        .reveal .switcher-btn.active {
+            color: var(--heading);
+            background: var(--bg);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        .reveal .mermaid-content {
+            min-height: 50px;
+        }
+
+        /* Mermaid display - respect inline width */
+        .reveal .mermaid-display {
+            transition: opacity 0.2s ease;
+            display: block !important;
+            max-width: 100% !important;
+            max-height: var(--mermaid-max-height, calc(100vh - 140px)) !important;
+            border: none !important;
+            box-shadow: none !important;
+            background: transparent !important;
+            overflow: auto !important;
+        }
+
+        .reveal .mermaid-source pre {
+            margin: 0 !important;
+            background: var(--code-bg) !important;
+            border: 1px dashed var(--border) !important;
+        }
+
+        /* Ensure proper toggle behavior */
+        .reveal .mermaid-source {
+            display: none !important;
+        }
+
+        .reveal .mermaid-source[style*="display: block"],
+        .reveal .mermaid-source[style*="display:block"] {
+            display: block !important;
+        }
+
+        .reveal .mermaid-display[style*="display: none"],
+        .reveal .mermaid-display[style*="display:none"] {
+            display: none !important;
+        }
+
+        .reveal .mermaid-display.centered {
+            margin-left: auto !important;
+            margin-right: auto !important;
+            max-width: 100% !important;
+        }
+
+        .centered:not(.mermaid-display) {
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            width: 100% !important;
+            margin: 1em 0 !important;
+        }
+
+        .no-break {
+            display: block;
+            width: 100%;
+        }
+
+        .reveal blockquote {
+            display: block;
+            position: relative;
+            margin: var(--r-block-margin) auto !important;
+            padding: 5px;
+            font-style: italic;
+            background: rgba(255, 170, 73, 0.2);
+            box-shadow: 0 0 2px rgba(0,0,0,.2);
+            text-align: left !important;
+        }
+
+        .col1 {
+            width: 90%;
+            margin: 0 auto;
+        }
+
+        .col2 {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start;
+            width: 90%;
+            margin: 0 auto;
+            align-items: flex-start;
+        }
+
+        /* Callout Styles */
+        :root {
+            --callout-note: #448aff;
+            --callout-abstract: #00b0ff;
+            --callout-info: #00b8d4;
+            --callout-todo: #00bfa5;
+            --callout-tip: #00c853;
+            --callout-success: #64dd17;
+            --callout-question: #ffab00;
+            --callout-warning: #ff9100;
+            --callout-failure: #ff5252;
+            --callout-danger: #ff1744;
+            --callout-bug: #f50057;
+            --callout-example: #7c4dff;
+            --callout-quote: #9e9e9e;
+            --code-bg: #f8f8f8;
+            --border: #ddd;
+        }
+
+        .reveal .callout {
+            margin: 1rem auto !important;
+            border: 1px solid var(--border);
+            border-left: 6px solid var(--callout-note);
+            border-radius: 4px;
+            overflow: hidden;
+            text-align: left !important;
+            font-size: 0.8em;
+            width: 75% !important;
+            max-width: 100% !important;
+        }
+
+        .reveal .callout-title {
+            padding: 0.5rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            color: var(--callout-note);
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .reveal .callout-icon {
+            display: flex;
+            align-items: center;
+        }
+
+        .reveal .callout-icon svg {
+            width: 1.2em;
+            height: 1.2em;
+        }
+
+        .reveal .callout-content {
+            padding: 0.5rem 1rem;
+        }
+
+        .reveal .callout-content p {
+            margin-top: 0.5rem !important;
+        }
+
+        .reveal .callout-content p:first-child {
+            margin-top: 0 !important;
+        }
+
+        .reveal h1 { text-transform: none !important; }
+
+        .reveal .callout-abstract { border-left-color: var(--callout-abstract); }
+        .reveal .callout-abstract .callout-title { color: var(--callout-abstract); }
+        .reveal .callout-info { border-left-color: var(--callout-info); }
+        .reveal .callout-info .callout-title { color: var(--callout-info); }
+        .reveal .callout-todo { border-left-color: var(--callout-todo); }
+        .reveal .callout-todo .callout-title { color: var(--callout-todo); }
+        .reveal .callout-tip { border-left-color: var(--callout-tip); }
+        .reveal .callout-tip .callout-title { color: var(--callout-tip); }
+        .reveal .callout-success { border-left-color: var(--callout-success); }
+        .reveal .callout-success .callout-title { color: var(--callout-success); }
+        .reveal .callout-question { border-left-color: var(--callout-question); }
+        .reveal .callout-question .callout-title { color: var(--callout-question) ; }
+        .reveal .callout-warning { border-left-color: var(--callout-warning); }
+        .reveal .callout-warning .callout-title { color: var(--callout-warning); }
+        .reveal .callout-failure { border-left-color: var(--callout-failure); }
+        .reveal .callout-failure .callout-title { color: var(--callout-failure); }
+        .reveal .callout-danger { border-left-color: var(--callout-danger); }
+        .reveal .callout-danger .callout-title { color: var(--callout-danger); }
+        .reveal .callout-bug { border-left-color: var(--callout-bug); }
+        .reveal .callout-bug .callout-title { color: var(--callout-bug); }
+        .reveal .callout-example { border-left-color: var(--callout-example); }
+        .reveal .callout-example .callout-title { color: var(--callout-example); }
+        .reveal .callout-quote { border-left-color: var(--callout-quote); }
+        .reveal .callout-quote .callout-title { color: var(--callout-quote); }
+        .red-note { color: var(--callout-failure); }
+
+        .reveal .slide-number {
+            font-size: 0.8em !important;
+            padding: 5px 10px !important;
+            background: rgba(0,0,0,0.1) !important;
+            border-radius: 4px;
+            color: #000000b1 !important;
+        }
+
+        /* Print styles */
+        @media print {
+            .reveal .slides section {
+                display: block !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                position: relative !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+                page-break-after: always !important;
+                overflow: hidden !important;
+            }
+
+            .reveal .slides {
+                transform: none !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+            }
+            
+            .reveal {
+                overflow: visible !important;
+            }
+        }
+    </style>
+</body>
+
+</html>

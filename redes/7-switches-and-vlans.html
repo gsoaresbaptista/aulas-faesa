@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toposia - Redes</title>
+    <link rel="icon" href="/aulas-faesa/img/dark-favicon.svg" media="(prefers-color-scheme: light)">
+    <link rel="icon" href="/aulas-faesa/img/light-favicon.svg" media="(prefers-color-scheme: dark)">
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/fonts.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/bundles/katex-base-prism-one-light-b0347952c973.bundle.min.css">
+    
+    
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css" data-no-bundle>
+    <script src="/aulas-faesa/js/bundles/lucide-katex-auto-render-4b36e8bd8642.bundle.min.js"></script>
+</head>
+
+<body>
+    <script>
+        // Restore sidebar state instantly (before first paint) to avoid transition flash
+        (function() {
+            if (localStorage.getItem('cf_sidebar_hidden') === 'true') {
+                document.body.classList.add('sidebar-hidden', 'no-transition');
+            }
+            requestAnimationFrame(function() {
+                requestAnimationFrame(function() {
+                    document.body.classList.remove('no-transition');
+                });
+            });
+        })();
+    </script>
+    <div class="page-wrapper">
+        <nav class="sidebar">
+            <div class="sidebar-content">
+                <header class="sidebar-title-section">
+                    <a href="contents.html" class="course-title-link">
+                        <h1 class="sidebar-course-title">Redes</h1>
+                    </a>
+                    <div class="sidebar-ornament">❧</div>
+                </header>
+
+                
+                <section class="sidebar-toc-section">
+                    <h2 class="toc-header">Tabela de Conteúdos</h2>
+                    <ol class="toc-list">
+                        
+                        <li class="toc-item level-2">
+                            <a href="#introdução">7.1. Introdução</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#quando-uma-lan-única-começa-a-ficar-ruim">7.2. Quando uma LAN única começa a ficar ruim</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#do-hub-ao-switch">7.3. Do hub ao switch</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#o-que-o-switch-realmente-observa">7.4. O que o switch realmente observa</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#o-switch-não-lê-a-rede-inteira">7.4.1. O switch não lê a rede inteira</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#o-problema-da-tabela-de-encaminhamento">7.5. O problema da tabela de encaminhamento</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#aprendizado-de-mac">7.6. Aprendizado de MAC</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#intuição-do-processo">7.6.1. Intuição do processo</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#exemplo-1">7.6.2. Exemplo 1</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#exemplo-2">7.6.3. Exemplo 2</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#envelhecimento-da-tabela">7.6.4. Envelhecimento da tabela</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#flood-forward-e-filter">7.7. Flood, forward e filter</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#quando-o-destino-é-desconhecido">7.7.1. Quando o destino é desconhecido</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#quando-o-destino-é-conhecido">7.7.2. Quando o destino é conhecido</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#quando-a-origem-e-o-destino-estão-no-mesmo-segmento">7.7.3. Quando a origem e o destino estão no mesmo segmento</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#o-switch-melhora-desempenho-mas-não-resolve-tudo-sozinho">7.8. O switch melhora desempenho, mas não resolve tudo sozinho</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#o-domínio-de-broadcast-continua-existindo">7.8.1. O domínio de broadcast continua existindo</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#tráfego-excessivo-ainda-pode-gerar-filas">7.8.2. Tráfego excessivo ainda pode gerar filas</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#quando-switches-criam-loops">7.9. Quando switches criam loops</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#por-que-o-loop-é-perigoso">7.9.1. Por que o loop é perigoso</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#a-ideia-da-spanning-tree">7.9.2. A ideia da spanning tree</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#exemplo-simples">7.9.3. Exemplo simples</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#o-que-interessa-didaticamente-aqui">7.9.4. O que interessa didaticamente aqui</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#bridge-e-switch-são-a-mesma-coisa">7.10. Bridge e switch são a mesma coisa?</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#comparação-rápida">7.10.1. Comparação rápida</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#onde-as-vlans-entram">7.11. Onde as VLANs entram</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#vlan-como-segmentação-lógica">7.12. VLAN como segmentação lógica</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#o-que-muda-de-verdade">7.12.1. O que muda de verdade</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#exemplo-simples">7.12.2. Exemplo simples</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#por-que-isso-resolve-um-problema-real">7.12.3. Por que isso resolve um problema real</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#como-uma-vlan-decide-quem-pertence-a-ela">7.13. Como uma VLAN decide quem pertence a ela</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#vlan-por-porta">7.13.1. VLAN por porta</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#outros-critérios-possíveis">7.13.2. Outros critérios possíveis</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#access-e-trunk">7.14. Access e trunk</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#porta-de-acesso">7.14.1. Porta de acesso</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#porta-trunk">7.14.2. Porta trunk</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#a-tag-vlan-e-o-8021q">7.15. A tag VLAN e o 802.1Q</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#intuição-da-tag">7.15.1. Intuição da tag</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#o-que-interessa-para-a-aula">7.15.2. O que interessa para a aula</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#exemplo-intermediário">7.15.3. Exemplo intermediário</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#como-o-switch-combina-mac-e-vlan">7.16. Como o switch combina MAC e VLAN</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#exemplo-mais-rico">7.16.1. Exemplo mais rico</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#o-que-vlan-não-faz-sozinha">7.17. O que VLAN não faz sozinha</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#vlan-não-substitui-roteamento">7.17.1. VLAN não substitui roteamento</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#vlan-não-substitui-políticas-completas-de-segurança">7.17.2. VLAN não substitui políticas completas de segurança</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#comparação-final-dos-dispositivos">7.18. Comparação final dos dispositivos</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#fechando-a-ideia">7.19. Fechando a ideia</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#questões">7.20. Questões</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#próximos-passos">7.21. Próximos passos</a>
+                        </li>
+                        
+                    </ol>
+                </section>
+                
+
+                <nav class="sidebar-nav-section">
+                    
+                    <a href="6-mac-sublayer-ethernet-and-mac-addressing.html" class="sidebar-nav-link prev"><i data-lucide="chevron-left" class="nav-icon"></i> Subcamada MAC, Ethernet e Endereçamento MAC</a>
+                    
+                    
+                    <a href="javascript:void(0)" onclick="handleBackNavigation()"
+                        class="sidebar-nav-link back"><i data-lucide="arrow-left" class="nav-icon"></i> Voltar</a>
+                </nav>
+
+            </div>
+        </nav>
+
+        <button class="mobile-menu-toggle" aria-label="Menu">
+            <i data-lucide="menu"></i>
+        </button>
+
+        <button class="sidebar-toggle" onclick="CourseForgeNav.toggleSidebar()" aria-label="Alternar Barra Lateral">
+            <i data-lucide="chevron-left" class="toggle-icon" id="sidebar-toggle-icon"></i>
+        </button>
+
+        <div class="mobile-menu-overlay"></div>
+
+        <main class="main-content">
+            <article class="article">
+                <header class="article-header">
+                    <span class="chapter-number">7</span>
+                    <h1 class="article-title">
+                        <span class="title-ornament left">❧</span>
+                        <span class="title-text">Hardware de Interconexão, Switches e VLANs</span>
+                        <span class="title-ornament right">❧</span>
+                    </h1>
+                    
+                    <p class="article-date">16/04/2026</p>
+                    
+                    
+                    <nav class="breadcrumb" aria-label="Breadcrumb">
+                        
+                        
+                        
+                        <a href="contents.html" class="breadcrumb-link">Redes</a>
+                        
+                        <span class="breadcrumb-separator"><i data-lucide="chevron-right" class="breadcrumb-icon"></i></span>
+                        
+                        
+                        
+                        
+                        <a href="contents.html#part-III" class="breadcrumb-link">III - Camada de Enlace</a>
+                        
+                        <span class="breadcrumb-separator"><i data-lucide="chevron-right" class="breadcrumb-icon"></i></span>
+                        
+                        
+                        
+                        <span class="breadcrumb-current">Hardware de Interconexão, Switches e VLANs</span>
+                        
+                        
+                    </nav>
+                    
+                </header>
+                <div class="article-body">
+                    <h2 id="introdução"><span class="heading-text">Introdução</span><span class="heading-arabic">7.1</span></h2>
+<p>Na aula anterior, você viu como a subcamada MAC organiza o acesso ao meio, como a Ethernet evoluiu do barramento para a Ethernet comutada e por que o endereço MAC identifica interfaces no enlace local. Isso resolve uma parte importante do problema, mas ainda falta entender o que acontece no equipamento que fica no centro das LANs modernas.</p>
+<p>Hoje você vai ver por que o switch não é apenas uma caixa com várias portas. Ele aprende endereços MAC, decide por onde cada quadro deve sair, reduz tráfego desnecessário e muda profundamente o comportamento da rede local. Depois, avançaremos para as <strong>VLANs</strong>, que permitem dividir logicamente uma LAN física em vários domínios de broadcast distintos.</p>
+<div class="callout callout-abstract">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
+    <span class="callout-title-inner">Ideia central<br /></span>
+  </div>
+  <div class="callout-content">
+<p>O switch é a forma moderna de interligar segmentos Ethernet no nível de enlace. As VLANs expandem essa ideia ao permitir que a topologia lógica da LAN seja organizada por software, e não apenas pela fiação física.</p>
+  </div>
+</div>
+<h2 id="quando-uma-lan-única-começa-a-ficar-ruim"><span class="heading-text">Quando uma LAN única começa a ficar ruim</span><span class="heading-arabic">7.2</span></h2>
+<p>Imagine uma rede de laboratório com dezenas de computadores ligados ao mesmo equipamento central. Todos usam Ethernet, todos enviam quadros corretamente e todos possuem endereços MAC válidos. Ainda assim, à medida que a rede cresce, começam a aparecer três problemas práticos.</p>
+<ol>
+<li>Muito tráfego passa a ser entregue a lugares onde não deveria.</li>
+<li>Um defeito físico ou uma reorganização de cabos fica mais difícil de administrar.</li>
+<li>O tráfego de broadcast e de descoberta passa a atingir máquinas demais.</li>
+</ol>
+<p>Em outras palavras, uma LAN muito grande e totalmente plana é simples de imaginar, mas difícil de escalar com eficiência.</p>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Se um quadro tem um MAC de destino específico, por que a rede inteira precisaria ver esse quadro?</p>
+  </div>
+</div>
+<p>Essa pergunta conduz diretamente ao papel do switch. A ideia é simples. Se o equipamento central souber em qual porta está o destino, ele não precisa repetir o quadro para todos. Ele pode encaminhá-lo apenas pela porta correta.</p>
+<h2 id="do-hub-ao-switch"><span class="heading-text">Do hub ao switch</span><span class="heading-arabic">7.3</span></h2>
+<p>Na aula passada, você viu que hub e switch não fazem a mesma coisa. Agora vamos aprofundar essa diferença do ponto de vista do encaminhamento.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Equipamento</th>
+  <th style="text-align:left">O que faz com o sinal ou quadro</th>
+  <th style="text-align:left">Consequência prática</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><strong>Hub</strong></td>
+  <td style="text-align:left">Repete o que recebe para todas as portas</td>
+  <td style="text-align:left">Todo mundo vê tudo e o meio continua logicamente compartilhado</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Switch</strong></td>
+  <td style="text-align:left">Examina o quadro e decide a porta de saída</td>
+  <td style="text-align:left">O tráfego passa a ser mais seletivo e a rede ganha desempenho</td>
+</tr>
+</tbody>
+</table>
+<p>O hub trabalha de forma parecida com um repetidor multiporta. O switch trabalha como uma <strong>bridge multiporta</strong>, isto é, como um equipamento da camada de enlace capaz de observar os endereços MAC e tomar decisões de encaminhamento.</p>
+<img src="static/fig4_43_fiacao_centralizada_hubs_switch.png" width="80%">
+
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Erro comum<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Dizer que o switch é apenas um hub mais rápido está errado. O switch não só acelera enlaces. Ele muda a lógica de encaminhamento dentro da LAN.</p>
+  </div>
+</div>
+<h2 id="o-que-o-switch-realmente-observa"><span class="heading-text">O que o switch realmente observa</span><span class="heading-arabic">7.4</span></h2>
+<p>Um switch Ethernet opera na camada de enlace. Isso significa que ele toma decisões olhando, antes de tudo, para o <strong>cabeçalho MAC</strong> do quadro.</p>
+<p>Em termos conceituais, ele usa principalmente estes campos.</p>
+<ol>
+<li>Endereço MAC de origem.</li>
+<li>Endereço MAC de destino.</li>
+<li>Em redes com VLAN, possivelmente a tag VLAN.</li>
+</ol>
+<p>O ponto mais importante aqui é o seguinte. O switch não precisa abrir o pacote IP para decidir a porta de saída em um switch de camada 2 tradicional. Para o encaminhamento local, basta saber quem enviou, quem deve receber e por qual porta esse destino pode ser alcançado.</p>
+<h3 id="o-switch-não-lê-a-rede-inteira"><span class="heading-text">O switch não lê a rede inteira</span><span class="heading-arabic">7.4.1</span></h3>
+<p>Isso ajuda a separar duas ideias que costumam ser confundidas.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Dispositivo</th>
+  <th style="text-align:left">Decide com base em</th>
+  <th style="text-align:left">Escopo da decisão</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><strong>Switch de camada 2</strong></td>
+  <td style="text-align:left">Endereço MAC</td>
+  <td style="text-align:left">Entrega local no enlace</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Roteador</strong></td>
+  <td style="text-align:left">Endereço IP</td>
+  <td style="text-align:left">Entrega entre redes</td>
+</tr>
+</tbody>
+</table>
+<p>O switch organiza a comunicação dentro da LAN. O roteador conecta redes diferentes.</p>
+<h2 id="o-problema-da-tabela-de-encaminhamento"><span class="heading-text">O problema da tabela de encaminhamento</span><span class="heading-arabic">7.5</span></h2>
+<p>Agora surge a pergunta central da aula.</p>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Se um switch deve encaminhar um quadro apenas para a porta correta, como ele descobre qual MAC está em qual porta?</p>
+  </div>
+</div>
+<p>Há duas respostas possíveis.</p>
+<ol>
+<li>Alguém configura tudo manualmente.</li>
+<li>O próprio switch aprende observando o tráfego.</li>
+</ol>
+<p>A segunda opção é a que tornou as bridges transparentes e os switches tão práticos. Em vez de exigir configuração manual para cada estação, o equipamento aprende dinamicamente.</p>
+<h2 id="aprendizado-de-mac"><span class="heading-text">Aprendizado de MAC</span><span class="heading-arabic">7.6</span></h2>
+<p>O mecanismo central de um switch moderno é o <strong>aprendizado reverso</strong>. A lógica é muito elegante. Sempre que um quadro entra por uma porta, o switch observa o <strong>MAC de origem</strong> e registra que aquele endereço pode ser alcançado por aquela porta.</p>
+<p>Se o switch recebe um quadro cujo MAC de origem é <code>AA:AA:AA:AA:AA:AA</code> pela porta 3, ele aprende o seguinte.</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">AA:AA:AA:AA:AA:AA -&gt; porta 3
+</code></pre>
+<p>Com o tempo, essa tabela vai sendo preenchida dinamicamente.</p>
+<h3 id="intuição-do-processo"><span class="heading-text">Intuição do processo</span><span class="heading-arabic">7.6.1</span></h3>
+<p>Repare na lógica. O MAC de origem é confiável para aprendizado local porque o quadro veio fisicamente por uma porta específica. Portanto, o switch pode concluir que, pelo menos naquele momento, aquele emissor está atrás daquela porta.</p>
+<p>Esse processo não depende de uma grande configuração inicial. O switch aprende observando quem fala e de onde fala.</p>
+<img src="static/fig15_6_bridge_aprendizado.png" width="80%">
+
+<h3 id="exemplo-1"><span class="heading-text">Exemplo 1</span><span class="heading-arabic">7.6.2</span></h3>
+<p>Suponha um switch com quatro portas.</p>
+<ol>
+<li>O host A, na porta 1, envia um quadro para o host D.</li>
+<li>O switch observa o MAC de origem de A e registra <code>A -&gt; porta 1</code>.</li>
+<li>Como ele ainda não sabe onde está D, ele precisa tratar o destino como desconhecido.</li>
+</ol>
+<p>Nesse momento, o switch já aprendeu algo sobre A, mas ainda não sabe onde fica D.</p>
+<h3 id="exemplo-2"><span class="heading-text">Exemplo 2</span><span class="heading-arabic">7.6.3</span></h3>
+<p>Agora imagine a sequência abaixo.</p>
+<ol>
+<li>A envia para D e o switch aprende <code>A -&gt; porta 1</code>.</li>
+<li>Depois, D responde a A pela porta 4.</li>
+<li>O switch aprende <code>D -&gt; porta 4</code>.</li>
+<li>A partir daí, quadros entre A e D podem ser encaminhados apenas entre as portas 1 e 4.</li>
+</ol>
+<p>O ponto importante é que a rede não precisou de uma configuração manual. O próprio tráfego ensinou o caminho ao switch.</p>
+<h3 id="envelhecimento-da-tabela"><span class="heading-text">Envelhecimento da tabela</span><span class="heading-arabic">7.6.4</span></h3>
+<p>As tabelas não podem ser permanentes para sempre. Máquinas podem ser desligadas, movidas de porta, substituídas ou conectadas por outro caminho. Por isso, as entradas da tabela MAC costumam ter um tempo de expiração.</p>
+<p>Se um endereço ficar muito tempo sem aparecer, sua entrada pode ser removida. Assim, se a topologia mudar, o switch volta a aprender o novo caminho naturalmente.</p>
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">Observação<br /></span>
+  </div>
+  <div class="callout-content">
+<p>O aprendizado de MAC não é um cadastro eterno. Ele é dinâmico justamente para manter a rede adaptável a mudanças.</p>
+  </div>
+</div>
+<h2 id="flood-forward-e-filter"><span class="heading-text">Flood, forward e filter</span><span class="heading-arabic">7.7</span></h2>
+<p>Uma boa forma de entender o switch é observar que ele toma três decisões básicas para cada quadro.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Ação</th>
+  <th style="text-align:left">Quando acontece</th>
+  <th style="text-align:left">Efeito</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><strong>Flood</strong></td>
+  <td style="text-align:left">O destino é desconhecido ou o quadro é broadcast</td>
+  <td style="text-align:left">O switch replica para várias portas relevantes</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Forward</strong></td>
+  <td style="text-align:left">O destino é conhecido e está em outra porta</td>
+  <td style="text-align:left">O quadro é enviado só para a porta correta</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Filter</strong></td>
+  <td style="text-align:left">O destino conhecido está na mesma porta de entrada</td>
+  <td style="text-align:left">O quadro é descartado localmente</td>
+</tr>
+</tbody>
+</table>
+<p>Essas três ações resumem boa parte do comportamento de um switch de camada 2.</p>
+<h3 id="quando-o-destino-é-desconhecido"><span class="heading-text">Quando o destino é desconhecido</span><span class="heading-arabic">7.7.1</span></h3>
+<p>Se o switch ainda não sabe em qual porta está o MAC de destino, ele não pode adivinhar. A solução é <strong>inundar</strong> o quadro, isto é, enviar cópias por todas as portas relevantes, exceto a porta de entrada.</p>
+<p>Isso não significa bagunça total. Significa apenas que, na falta de informação suficiente, o switch escolhe uma estratégia segura para aumentar a chance de que o destino receba o quadro.</p>
+<h3 id="quando-o-destino-é-conhecido"><span class="heading-text">Quando o destino é conhecido</span><span class="heading-arabic">7.7.2</span></h3>
+<p>Se a tabela MAC já diz que o destino está na porta 5, o switch encaminha apenas pela porta 5. Esse é o comportamento que reduz tráfego desnecessário e melhora o aproveitamento da LAN.</p>
+<h3 id="quando-a-origem-e-o-destino-estão-no-mesmo-segmento"><span class="heading-text">Quando a origem e o destino estão no mesmo segmento</span><span class="heading-arabic">7.7.3</span></h3>
+<p>Se um quadro entra por uma porta e o switch já sabe que o destino também está naquela mesma porta, ele não precisa reenviar o quadro por nenhuma outra interface. Nesse caso, ele apenas filtra o quadro.</p>
+<ol>
+<li>A envia para X, ainda desconhecido. O switch faz flood.</li>
+<li>X responde a A. O switch aprende <code>X -&gt; porta correspondente</code>.</li>
+<li>No próximo quadro de A para X, o switch faz forward.</li>
+<li>Se dois hosts estiverem atrás do mesmo hub ligado a uma única porta do switch, quadros entre eles podem levar o switch a concluir que não é necessário reenviar para outras portas da LAN.</li>
+</ol>
+<h2 id="o-switch-melhora-desempenho-mas-não-resolve-tudo-sozinho"><span class="heading-text">O switch melhora desempenho, mas não resolve tudo sozinho</span><span class="heading-arabic">7.8</span></h2>
+<p>À primeira vista, parece que o switch resolve qualquer problema de LAN local. Isso não é verdade. Ele melhora muito o comportamento da rede, mas ainda existem limites importantes.</p>
+<h3 id="o-domínio-de-broadcast-continua-existindo"><span class="heading-text">O domínio de broadcast continua existindo</span><span class="heading-arabic">7.8.1</span></h3>
+<p>Mesmo quando o switch encaminha unicast de forma seletiva, quadros de broadcast ainda precisam alcançar todos os membros do mesmo domínio de broadcast.</p>
+<p>Exemplos típicos.</p>
+<ol>
+<li>ARP em redes IPv4.</li>
+<li>Descobertas e anúncios locais.</li>
+<li>Alguns protocolos de gerenciamento e inicialização.</li>
+</ol>
+<p>Se a LAN cresce demais, o broadcast passa a consumir recursos de máquinas que talvez nem tenham relação entre si.</p>
+<h3 id="tráfego-excessivo-ainda-pode-gerar-filas"><span class="heading-text">Tráfego excessivo ainda pode gerar filas</span><span class="heading-arabic">7.8.2</span></h3>
+<p>Se muitos quadros precisarem sair pela mesma porta ao mesmo tempo, o switch precisa usar buffers. Isso significa que, mesmo sem colisões típicas de hubs antigos, ainda pode haver fila, atraso e descarte por excesso de carga.</p>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Cuidado conceitual<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Switch elimina a lógica de colisão típica do meio compartilhado clássico, mas não elimina gargalos, filas e sobrecarga por excesso de tráfego.</p>
+  </div>
+</div>
+<h2 id="quando-switches-criam-loops"><span class="heading-text">Quando switches criam loops</span><span class="heading-arabic">7.9</span></h2>
+<p>Até aqui, o switch parece perfeito. Mas surge um novo problema quando conectamos switches com enlaces redundantes.</p>
+<p>Redundância é desejável porque aumenta a tolerância a falhas. Se um cabo se rompe, pode existir outro caminho. O problema é que, na camada de enlace, redundância mal controlada pode criar <strong>loops</strong>.</p>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Se um quadro de broadcast entra em uma malha com dois caminhos alternativos entre switches, o que impede que ele fique circulando indefinidamente?</p>
+  </div>
+</div>
+<p>Essa é exatamente a razão de existir do mecanismo de <strong>spanning tree</strong>.</p>
+<h3 id="por-que-o-loop-é-perigoso"><span class="heading-text">Por que o loop é perigoso</span><span class="heading-arabic">7.9.1</span></h3>
+<p>Em uma rede com loop de camada 2, um quadro inundado pode circular repetidamente. Isso produz vários efeitos ruins.</p>
+<ol>
+<li>O mesmo quadro pode aparecer muitas vezes.</li>
+<li>O tráfego pode crescer rapidamente e congestionar a LAN.</li>
+<li>As tabelas MAC podem ficar instáveis porque o mesmo endereço parece surgir por portas diferentes.</li>
+</ol>
+<p>Em outras palavras, o problema não é apenas “existir mais de um caminho”. O problema é existir mais de um caminho ativo sem um mecanismo de controle.</p>
+<img src="static/fig15_7_loop_bridge_aprendizado.png" width="75%">
+
+<h3 id="a-ideia-da-spanning-tree"><span class="heading-text">A ideia da spanning tree</span><span class="heading-arabic">7.9.2</span></h3>
+<p>O objetivo da spanning tree não é destruir a redundância física. O objetivo é usar a redundância física sem deixar loops ativos na topologia lógica de encaminhamento.</p>
+<p>Em termos intuitivos, o algoritmo faz o seguinte.</p>
+<ol>
+<li>Os switches trocam mensagens de controle.</li>
+<li>Escolhem uma bridge raiz.</li>
+<li>Determinam quais portas participarão da árvore ativa.</li>
+<li>Bloqueiam algumas portas redundantes para impedir ciclos.</li>
+</ol>
+<p>Assim, a malha física pode continuar existindo, mas a malha lógica usada para encaminhamento de quadros passa a ser uma árvore.</p>
+<h3 id="exemplo-simples"><span class="heading-text">Exemplo simples</span><span class="heading-arabic">7.9.3</span></h3>
+<p>Imagine três switches formando um triângulo.</p>
+<ol>
+<li>Fisicamente, há três enlaces.</li>
+<li>Logicamente, a spanning tree mantém apenas dois enlaces ativos para encaminhamento.</li>
+<li>O terceiro enlace fica em estado de bloqueio.</li>
+</ol>
+<p>Se um enlace ativo falhar, a topologia pode ser recalculada e o enlace antes bloqueado pode assumir o caminho.</p>
+<h3 id="o-que-interessa-didaticamente-aqui"><span class="heading-text">O que interessa didaticamente aqui</span><span class="heading-arabic">7.9.4</span></h3>
+<p>Para esta aula, você não precisa decorar todos os estados e temporizadores do protocolo. O que realmente importa é compreender três ideias.</p>
+<ol>
+<li>Loops de camada 2 são perigosos.</li>
+<li>Redundância física continua desejável.</li>
+<li>A spanning tree transforma uma malha física em uma árvore lógica de encaminhamento.</li>
+</ol>
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">Observação<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Em redes reais modernas existem variantes e otimizações do spanning tree. Para a base conceitual da disciplina, basta entender por que a árvore é necessária e o que ela impede.</p>
+  </div>
+</div>
+<h2 id="bridge-e-switch-são-a-mesma-coisa"><span class="heading-text">Bridge e switch são a mesma coisa?</span><span class="heading-arabic">7.10</span></h2>
+<p>Nos livros, você verá os dois termos aparecerem com frequência.</p>
+<p>Historicamente, <strong>bridge</strong> era o nome usado para o equipamento de enlace que conectava segmentos de LAN. Com o tempo, o termo <strong>switch</strong> se tornou dominante no mercado, especialmente em Ethernet moderna. Conceitualmente, um switch de camada 2 pode ser entendido como uma <strong>bridge multiporta</strong>.</p>
+<p>Isso explica por que os livros transitam entre esses nomes. O fenômeno de encaminhamento por MAC, aprendizado e filtragem é o mesmo.</p>
+<h3 id="comparação-rápida"><span class="heading-text">Comparação rápida</span><span class="heading-arabic">7.10.1</span></h3>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Termo</th>
+  <th style="text-align:left">Ênfase histórica ou prática</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><strong>Bridge</strong></td>
+  <td style="text-align:left">Nome mais clássico, muito usado em explicações conceituais</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Switch</strong></td>
+  <td style="text-align:left">Nome dominante em Ethernet moderna e no mercado</td>
+</tr>
+</tbody>
+</table>
+<p>Em resumo, para a lógica desta aula, você pode pensar assim.</p>
+<p>$$
+\text{switch de camada 2} \approx \text{bridge multiporta}
+$$</p>
+<h2 id="onde-as-vlans-entram"><span class="heading-text">Onde as VLANs entram</span><span class="heading-arabic">7.11</span></h2>
+<p>Até aqui, a rede ainda está em uma única LAN lógica. Mesmo com switches, todos os hosts podem continuar dentro do mesmo domínio de broadcast, salvo separações físicas específicas.</p>
+<p>Agora aparece outro problema de projeto. Em muitos ambientes, a rede física não coincide com a organização lógica desejada.</p>
+<p>Por exemplo, imagine uma empresa com três grupos.</p>
+<ol>
+<li>Financeiro.</li>
+<li>Desenvolvimento.</li>
+<li>Laboratório.</li>
+</ol>
+<p>Essas pessoas podem estar distribuídas por salas diferentes, andares diferentes ou até switches diferentes. Se a rede depender apenas da posição física de cada cabo, qualquer reorganização exigirá recabeamento ou mudança manual de portas entre equipamentos.</p>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>E se fosse possível manter a mesma infraestrutura física, mas separar logicamente quem participa de cada LAN?</p>
+  </div>
+</div>
+<p>Essa é a ideia da <strong>VLAN</strong>, sigla de <em>Virtual LAN</em>.</p>
+<h2 id="vlan-como-segmentação-lógica"><span class="heading-text">VLAN como segmentação lógica</span><span class="heading-arabic">7.12</span></h2>
+<p>Uma VLAN é uma forma de dividir uma infraestrutura Ethernet em <strong>LANs lógicas</strong> distintas. Em vez de a pertença a uma LAN depender apenas do cabo ou da sala, ela passa a depender de uma configuração lógica no switch.</p>
+<h3 id="o-que-muda-de-verdade"><span class="heading-text">O que muda de verdade</span><span class="heading-arabic">7.12.1</span></h3>
+<p>O efeito principal é este.</p>
+<p>Cada VLAN cria seu próprio <strong>domínio de broadcast</strong>.</p>
+<p>Isso significa que uma máquina na VLAN 10 não recebe automaticamente broadcasts da VLAN 20, mesmo que ambas estejam fisicamente ligadas ao mesmo switch.</p>
+<h3 id="exemplo-simples"><span class="heading-text">Exemplo simples</span><span class="heading-arabic">7.12.2</span></h3>
+<div class="example">
+  <div class="example-title">Duas LANs lógicas no mesmo switch</div>
+  <p>Suponha um switch com oito portas.</p>
+<ol>
+<li>As portas 1 a 4 pertencem à VLAN 10.</li>
+<li>As portas 5 a 8 pertencem à VLAN 20.</li>
+</ol>
+<p>Se um host da porta 2 envia um broadcast, ele será distribuído apenas às portas da VLAN 10. Os hosts da VLAN 20 não devem receber esse quadro como membros do mesmo domínio lógico.</p>
+</div>
+<h3 id="por-que-isso-resolve-um-problema-real"><span class="heading-text">Por que isso resolve um problema real</span><span class="heading-arabic">7.12.3</span></h3>
+<p>As VLANs permitem separar tráfego por função, departamento, política ou projeto sem exigir que cada grupo esteja preso a um conjunto fixo de cabos ou a um switch completamente isolado.</p>
+<p>Com isso, a rede ganha.</p>
+<ol>
+<li>Melhor organização lógica.</li>
+<li>Redução de broadcast desnecessário.</li>
+<li>Mais facilidade de administração.</li>
+<li>Uma camada extra de separação entre grupos.</li>
+</ol>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Cuidado conceitual<br /></span>
+  </div>
+  <div class="callout-content">
+<p>VLAN não é sinônimo de segurança completa. Ela ajuda a segmentar e isolar tráfego em camada 2, mas não substitui políticas de firewall, autenticação e controle de acesso em outras camadas.</p>
+  </div>
+</div>
+<h2 id="como-uma-vlan-decide-quem-pertence-a-ela"><span class="heading-text">Como uma VLAN decide quem pertence a ela</span><span class="heading-arabic">7.13</span></h2>
+<p>Os livros destacam que a participação em VLAN pode ser definida por diferentes critérios. Em prática introdutória, o mais comum é pensar em <strong>VLAN por porta</strong>.</p>
+<h3 id="vlan-por-porta"><span class="heading-text">VLAN por porta</span><span class="heading-arabic">7.13.1</span></h3>
+<p>Cada porta do switch é associada a uma VLAN.</p>
+<p>Por exemplo.</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">Porta 1 -&gt; VLAN 10
+Porta 2 -&gt; VLAN 10
+Porta 3 -&gt; VLAN 20
+Porta 4 -&gt; VLAN 20
+</code></pre>
+<p>Essa é a forma mais intuitiva de começar, porque conecta diretamente a ideia lógica a uma configuração concreta de portas.</p>
+<h3 id="outros-critérios-possíveis"><span class="heading-text">Outros critérios possíveis</span><span class="heading-arabic">7.13.2</span></h3>
+<p>Dependendo da tecnologia e da política de rede, a pertença também pode considerar.</p>
+<ol>
+<li>Endereço MAC.</li>
+<li>Endereço IP.</li>
+<li>Regras definidas por software de administração.</li>
+</ol>
+<p>Didaticamente, o importante é perceber o princípio geral. A VLAN desloca a decisão de agrupamento da fiação física para uma política lógica configurável.</p>
+<h2 id="access-e-trunk"><span class="heading-text">Access e trunk</span><span class="heading-arabic">7.14</span></h2>
+<p>Se as VLANs existirem apenas dentro de um único switch, a ideia já é útil. Mas a situação mais interessante aparece quando a mesma VLAN precisa atravessar vários switches.</p>
+<p>Por exemplo, parte da VLAN 10 pode estar em um switch do laboratório A, e outra parte da mesma VLAN 10 em um switch do laboratório B.</p>
+<p>Nesse caso, o enlace entre switches precisa carregar quadros de mais de uma VLAN. É aqui que entram os conceitos de <strong>porta de acesso</strong> e <strong>porta trunk</strong>.</p>
+<h3 id="porta-de-acesso"><span class="heading-text">Porta de acesso</span><span class="heading-arabic">7.14.1</span></h3>
+<p>A porta de acesso liga normalmente um host final a uma única VLAN. O dispositivo final costuma enxergar uma rede Ethernet comum. Em termos conceituais, aquela porta pertence a uma única VLAN local.</p>
+<h3 id="porta-trunk"><span class="heading-text">Porta trunk</span><span class="heading-arabic">7.14.2</span></h3>
+<p>A porta trunk liga switches entre si, ou liga um switch a outro equipamento capaz de entender várias VLANs. Nesse enlace, quadros de múltiplas VLANs podem trafegar juntos.</p>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Se quadros de VLANs diferentes passam pelo mesmo enlace entre switches, como o equipamento receptor sabe a qual VLAN cada quadro pertence?</p>
+  </div>
+</div>
+<p>A resposta está na <strong>tag VLAN</strong>, padronizada pelo IEEE 802.1Q.</p>
+<h2 id="a-tag-vlan-e-o-8021q"><span class="heading-text">A tag VLAN e o 802.1Q</span><span class="heading-arabic">7.15</span></h2>
+<p>O padrão <strong>IEEE 802.1Q</strong> introduz uma marcação no quadro Ethernet para identificar a qual VLAN aquele quadro pertence quando ele trafega em enlaces que precisam carregar múltiplas VLANs.</p>
+<h3 id="intuição-da-tag"><span class="heading-text">Intuição da tag</span><span class="heading-arabic">7.15.1</span></h3>
+<p>Sem algum identificador, o switch de destino não teria como saber se um quadro que chegou por um enlace tronco pertence à VLAN 10, 20 ou 30.</p>
+<p>Com a tag, o quadro passa a carregar explicitamente essa informação.</p>
+<img src="static/fig4_46_ethernet_8021q.png" width="85%">
+
+<h3 id="o-que-interessa-para-a-aula"><span class="heading-text">O que interessa para a aula</span><span class="heading-arabic">7.15.2</span></h3>
+<p>Para a base conceitual, basta guardar estas ideias.</p>
+<ol>
+<li>O <code>802.1Q</code> marca quadros com um identificador de VLAN.</li>
+<li>Essa marcação é especialmente importante em enlaces trunk.</li>
+<li>Os switches usam a identificação da VLAN para decidir por quais portas aquele quadro pode seguir.</li>
+</ol>
+<p>O campo tecnicamente mais importante para nós aqui é o <strong>VLAN ID</strong>, que identifica a VLAN à qual o quadro pertence.</p>
+<h3 id="exemplo-intermediário"><span class="heading-text">Exemplo intermediário</span><span class="heading-arabic">7.15.3</span></h3>
+<div class="example">
+  <div class="example-title">Mesma VLAN em dois switches</div>
+  <p>Imagine dois switches conectados por um trunk.</p>
+<ol>
+<li>No switch A, a porta 2 pertence à VLAN 10.</li>
+<li>No switch B, a porta 7 também pertence à VLAN 10.</li>
+<li>Um host da porta 2 envia um broadcast da VLAN 10.</li>
+<li>O quadro atravessa o trunk identificado como pertencente à VLAN 10.</li>
+<li>O switch B só replica esse broadcast nas portas que pertencem à VLAN 10, e não nas portas de outras VLANs.</li>
+</ol>
+<p>Isso mostra que a VLAN atravessa a infraestrutura física sem virar uma LAN plana única.</p>
+</div>
+<h2 id="como-o-switch-combina-mac-e-vlan"><span class="heading-text">Como o switch combina MAC e VLAN</span><span class="heading-arabic">7.16</span></h2>
+<p>Até aqui, você viu duas ideias separadas.</p>
+<ol>
+<li>O switch aprende endereços MAC.</li>
+<li>O switch separa domínios lógicos com VLANs.</li>
+</ol>
+<p>Na prática, essas duas ideias trabalham juntas.</p>
+<p>Um mesmo endereço MAC não é interpretado isoladamente de todo o contexto. Em redes com VLAN, o encaminhamento relevante passa a considerar a associação entre <strong>MAC e VLAN</strong>. Em termos intuitivos, o switch precisa saber não apenas por qual porta um endereço pode ser alcançado, mas em qual domínio lógico aquela decisão faz sentido.</p>
+<p>Isso evita, por exemplo, que um quadro aprendido em uma VLAN seja tratado como destino válido em outra VLAN como se toda a LAN fosse única.</p>
+<h3 id="exemplo-mais-rico"><span class="heading-text">Exemplo mais rico</span><span class="heading-arabic">7.16.1</span></h3>
+<p>Considere um switch com duas VLANs.</p>
+<ol>
+<li>A porta 1 está na VLAN 10.</li>
+<li>A porta 5 está na VLAN 20.</li>
+<li>Um broadcast vindo da porta 1 deve alcançar apenas a VLAN 10.</li>
+<li>Mesmo que existam muitas portas livres ou máquinas ativas na VLAN 20, elas não participam desse broadcast.</li>
+</ol>
+<p>Agora suponha que o switch conheça um MAC de destino na porta 5, mas dentro da VLAN 20. Esse conhecimento não autoriza encaminhar para a porta 5 um quadro pertencente à VLAN 10. A segmentação lógica precisa ser preservada.</p>
+<h2 id="o-que-vlan-não-faz-sozinha"><span class="heading-text">O que VLAN não faz sozinha</span><span class="heading-arabic">7.17</span></h2>
+<p>As VLANs resolvem um problema importante, mas não todos os problemas de rede.</p>
+<h3 id="vlan-não-substitui-roteamento"><span class="heading-text">VLAN não substitui roteamento</span><span class="heading-arabic">7.17.1</span></h3>
+<p>Máquinas em VLANs diferentes pertencem, em geral, a domínios de camada 2 distintos. Se elas precisarem se comunicar entre si, é necessário algum mecanismo de <strong>roteamento entre VLANs</strong>.</p>
+<p>Em outras palavras, VLAN separa. Para comunicar domínios separados de maneira controlada, você precisa de camada 3.</p>
+<h3 id="vlan-não-substitui-políticas-completas-de-segurança"><span class="heading-text">VLAN não substitui políticas completas de segurança</span><span class="heading-arabic">7.17.2</span></h3>
+<p>Separar o broadcast e restringir o encaminhamento local já ajuda bastante, mas não basta para toda necessidade de segurança. É comum combinar VLANs com ACLs, firewalls, autenticação de portas e políticas de rede mais amplas.</p>
+<h2 id="comparação-final-dos-dispositivos"><span class="heading-text">Comparação final dos dispositivos</span><span class="heading-arabic">7.18</span></h2>
+<p>Neste ponto, vale fechar o mapa conceitual dos equipamentos mais importantes vistos até aqui.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Dispositivo</th>
+  <th style="text-align:left">Camada principal</th>
+  <th style="text-align:left">Unidade observada</th>
+  <th style="text-align:left">Função central</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><strong>Repetidor</strong></td>
+  <td style="text-align:left">Física</td>
+  <td style="text-align:left">sinal</td>
+  <td style="text-align:left">Regenera e prolonga sinal</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Hub</strong></td>
+  <td style="text-align:left">Física</td>
+  <td style="text-align:left">bits ou sinal repetido</td>
+  <td style="text-align:left">Replica para todas as portas</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Bridge / Switch L2</strong></td>
+  <td style="text-align:left">Enlace</td>
+  <td style="text-align:left">quadro MAC</td>
+  <td style="text-align:left">Filtra, aprende e encaminha localmente</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Roteador</strong></td>
+  <td style="text-align:left">Rede</td>
+  <td style="text-align:left">pacote IP</td>
+  <td style="text-align:left">Encaminha entre redes</td>
+</tr>
+</tbody>
+</table>
+<p>Perceba a progressão. Quanto mais alto o dispositivo opera na pilha, mais rica é a informação usada na decisão. Ao mesmo tempo, maior tende a ser a complexidade da decisão.</p>
+<h2 id="fechando-a-ideia"><span class="heading-text">Fechando a ideia</span><span class="heading-arabic">7.19</span></h2>
+<p>O switch moderno tornou a Ethernet local muito mais eficiente do que o antigo meio compartilhado. Ele aprende endereços MAC, encaminha apenas quando necessário e reduz tráfego irrelevante em muitas situações. As VLANs levam esse avanço um passo adiante ao permitir que a mesma infraestrutura física sustente várias LANs lógicas independentes.</p>
+<div class="callout callout-success">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></span>
+    <span class="callout-title-inner">Conclusão prática<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Switches organizam o encaminhamento local por endereço MAC. VLANs organizam quem pertence a qual LAN lógica. Juntos, eles explicam como redes Ethernet modernas conseguem ser ao mesmo tempo escaláveis, administráveis e mais seletivas no tráfego que distribuem.</p>
+  </div>
+</div>
+<h2 id="questões"><span class="heading-text">Questões</span><span class="heading-arabic">7.20</span></h2>
+<div class="questions">
+  <p><strong>1.</strong> Explique, com suas palavras, por que um switch não pode ser tratado apenas como um hub mais rápido.</p>
+<p><strong>2.</strong> Qual é a ideia central do aprendizado de MAC em um switch?</p>
+<p><strong>3.</strong> Considere a situação abaixo.</p>
+<ol>
+<li>O host A envia um quadro para o host D.</li>
+<li>O switch ainda não sabe em qual porta está D.</li>
+</ol>
+<p>Que decisão o switch toma em relação ao destino e por quê?</p>
+<p><strong>4.</strong> Diferencie as ações abaixo no contexto de um switch:</p>
+<ul>
+<li>flood</li>
+<li>forward</li>
+<li>filter</li>
+</ul>
+<p><strong>5.</strong> Por que entradas da tabela MAC não devem ser permanentes para sempre?</p>
+<p><strong>6.</strong> Explique por que enlaces redundantes entre switches podem causar problemas na camada de enlace.</p>
+<p><strong>7.</strong> Qual é o objetivo conceitual do spanning tree?</p>
+<p><strong>8.</strong> Dizer que bridge e switch são conceitos totalmente diferentes está correto? Explique.</p>
+<p><strong>9.</strong> O que é uma VLAN e qual problema ela resolve?</p>
+<p><strong>10.</strong> Explique por que se diz que cada VLAN forma um domínio de broadcast próprio.</p>
+<p><strong>11.</strong> Diferencie porta de acesso e porta trunk.</p>
+<p><strong>12.</strong> Para que serve a tag definida pelo padrão IEEE 802.1Q?</p>
+<p><strong>13.</strong> Uma máquina da VLAN 10 pode se comunicar diretamente com uma máquina da VLAN 20 apenas porque ambas estão ligadas ao mesmo switch físico? Explique.</p>
+<p><strong>14.</strong> Marque <strong>V</strong> ou <strong>F</strong>.</p>
+<ul>
+<li><strong>( )</strong> Um switch de camada 2 toma decisões de encaminhamento local observando endereços MAC.</li>
+<li><strong>( )</strong> Em uma rede com VLANs, broadcasts de uma VLAN devem atingir todas as portas do switch, independentemente da VLAN.</li>
+<li><strong>( )</strong> O spanning tree procura manter todos os enlaces redundantes ativos ao mesmo tempo para aumentar a velocidade.</li>
+<li><strong>( )</strong> VLAN ajuda a segmentar logicamente a rede mesmo quando a infraestrutura física é compartilhada.</li>
+</ul>
+<p><strong>15.</strong> Relacione os itens abaixo com sua função principal.</p>
+<ul>
+<li>hub</li>
+<li>switch</li>
+<li>VLAN</li>
+<li>802.1Q</li>
+</ul>
+</div>
+<div class="example">
+  <div class="example-title">Gabarito</div>
+  <p><strong>1.</strong> Porque o hub apenas repete sinais para todas as portas, enquanto o switch observa quadros, aprende endereços MAC e decide por qual porta encaminhar cada tráfego.</p>
+<p><strong>2.</strong> O switch observa o MAC de origem dos quadros recebidos e associa esse endereço à porta de entrada, construindo dinamicamente sua tabela de encaminhamento.</p>
+<p><strong>3.</strong> Ele faz flood para as portas relevantes, exceto a porta de entrada, porque ainda não conhece a localização do MAC de destino.</p>
+<p><strong>4.</strong> Flood ocorre quando o destino é desconhecido ou quando o quadro é broadcast. Forward ocorre quando o destino é conhecido e está em outra porta. Filter ocorre quando o destino conhecido está na mesma porta de entrada e não precisa ser reenviado.</p>
+<p><strong>5.</strong> Porque máquinas podem ser movidas, desligadas ou reconectadas em outra porta. Sem envelhecimento, a tabela poderia manter informações incorretas.</p>
+<p><strong>6.</strong> Porque quadros inundados podem circular repetidamente, gerando cópias múltiplas, instabilidade de aprendizado MAC e excesso de tráfego.</p>
+<p><strong>7.</strong> Criar uma topologia lógica sem loops a partir de uma topologia física que pode ter enlaces redundantes.</p>
+<p><strong>8.</strong> Não. Conceitualmente, um switch de camada 2 pode ser entendido como uma bridge multiporta. A diferença é mais histórica e de uso prático do termo.</p>
+<p><strong>9.</strong> VLAN é uma LAN virtual. Ela segmenta logicamente a rede e permite separar grupos e domínios de broadcast sem depender apenas da fiação física.</p>
+<p><strong>10.</strong> Porque broadcasts gerados em uma VLAN devem ser distribuídos apenas aos membros daquela VLAN, e não às estações de outras VLANs.</p>
+<p><strong>11.</strong> A porta de acesso normalmente liga um host final a uma única VLAN. A porta trunk transporta quadros de múltiplas VLANs entre switches ou equipamentos compatíveis.</p>
+<p><strong>12.</strong> Serve para identificar a qual VLAN um quadro pertence, especialmente em enlaces trunk que carregam múltiplas VLANs.</p>
+<p><strong>13.</strong> Não diretamente. Estando em VLANs diferentes, elas pertencem a domínios de camada 2 distintos. Para comunicação controlada entre elas, é necessário roteamento entre VLANs.</p>
+<p><strong>14.</strong></p>
+<ul>
+<li><strong>( V )</strong> Um switch de camada 2 toma decisões de encaminhamento local observando endereços MAC.</li>
+<li><strong>( F )</strong> Em uma rede com VLANs, broadcasts de uma VLAN devem atingir todas as portas do switch, independentemente da VLAN.</li>
+<li><strong>( F )</strong> O spanning tree procura manter todos os enlaces redundantes ativos ao mesmo tempo para aumentar a velocidade.</li>
+<li><strong>( V )</strong> VLAN ajuda a segmentar logicamente a rede mesmo quando a infraestrutura física é compartilhada.</li>
+</ul>
+<p><strong>15.</strong> Hub replica sinais para todas as portas. Switch aprende MACs e encaminha quadros seletivamente. VLAN segmenta a LAN em domínios lógicos. 802.1Q identifica a VLAN de um quadro em enlaces apropriados.</p>
+</div>
+<h2 id="próximos-passos"><span class="heading-text">Próximos passos</span><span class="heading-arabic">7.21</span></h2>
+<p>Na próxima aula, o passo natural é sair do enlace local e entrar na lógica de comunicação entre redes.</p>
+<p>Você verá como o endereçamento IP organiza hosts e redes, por que MAC e IP coexistem sem disputar função e como a camada de rede passa a decidir o caminho além da LAN local.</p>
+
+                </div>
+            </article>
+            <footer class="footer">
+                <p>© 2025 · <a href="#">Gabriel Soares Baptista</a></p>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        const toggle = document.querySelector('.mobile-menu-toggle');
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.querySelector('.mobile-menu-overlay');
+
+        function openMenu() {
+            sidebar.classList.add('open');
+            overlay.classList.add('open');
+            toggle.classList.add('open');
+            toggle.innerHTML = '<i data-lucide="x"></i>';
+            CourseForgeUI.initIcons();
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMenu() {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('open');
+            toggle.classList.remove('open');
+            toggle.innerHTML = '<i data-lucide="menu"></i>';
+            CourseForgeUI.initIcons();
+            document.body.style.overflow = '';
+        }
+
+        toggle.addEventListener('click', () => {
+            if (sidebar.classList.contains('open')) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        overlay.addEventListener('click', closeMenu);
+    </script>
+
+    
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            renderMathInElement(document.body, {
+                output: 'html',
+                delimiters: [
+                    { left: "$$", right: "$$", display: true },
+                    { left: "$", right: "$", display: false },
+                    { left: "\\(", right: "\\)", display: false },
+                    { left: "\\[", right: "\\]", display: true }
+                ],
+                throwOnError: false,
+                strict: false
+            });
+        });
+    </script>
+    
+    
+    <script src="/aulas-faesa/js/vendor/prism/prism.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-c.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-cpp.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-python.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-clike.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-perl.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-java.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-mermaid.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-php.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js" data-no-bundle></script>
+    
+    
+    
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            mermaid.initialize({
+                startOnLoad: true,
+                theme: 'default',
+                securityLevel: 'loose',
+                fontFamily: 'Inter, system-ui, sans-serif',
+                themeVariables: {
+                    fontSize: '16px',
+                    edgeLabelFontSize: '16px',
+                    multiplicityFontSize: '18px'
+                }
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const isSubcourse = false;
+        const courseName = "Redes";
+        CourseForgeNav.applyDynamicBreadcrumbs('.breadcrumb', isSubcourse);
+        CourseForgeNav.initScrollSpy();
+        CourseForgeUI.initCopyButtons();
+        CourseForgeUI.initExamples();
+        });
+
+        function handleBackNavigation() {
+            const isSubcourse = false;
+        const dynamic = CourseForgeNav.getBackLink('contents.html', 'Voltar', isSubcourse);
+        window.location.href = dynamic.url;
+        }
+    </script>
+</body>
+
+</html>
