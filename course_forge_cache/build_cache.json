@@ -264,7 +264,7 @@
   "../obsidian-vault/6. Teaching/Sistemas Operacionais/static/fig1_20_layout_memoria.png": "a2dd4e83db428fcb15d9f73c39df9b9f",
   "../obsidian-vault/6. Teaching/Sistemas Operacionais/3 - concepts and structures of os.md": "322815f763184eeb1bc6e6548c0b58b1",
   "../obsidian-vault/6. Teaching/Sistemas Operacionais/static/fig1_21_ligacao_diretorios.png": "ce728efb8142285cd3f58d7ba11a474c",
-  "../obsidian-vault/6. Teaching/Sistemas Operacionais/7 - deadlocks.md": "2afa40f257fa0387121ea57f268755db",
+  "../obsidian-vault/6. Teaching/Sistemas Operacionais/7 - deadlocks.md": "9264b1f42e330ca0f46c64f60f2efae3",
   "../obsidian-vault/6. Teaching/Sistemas Operacionais/static/fig1_15_montagem_sistema_arquivos.png": "008a0e509a48f8b61d1c8c41cd07ee16",
   "../obsidian-vault/6. Teaching/Sistemas Operacionais/6 - scheduling.md": "54ad2b59df55c166a4ead40cab6d3cda",
   "../obsidian-vault/6. Teaching/Sistemas Digitais e Microprocessados/slides/10 - algebraic minimization.md": "f143ef95a30b6209589ce9d813411b68",
@@ -413,7 +413,7 @@
   "../obsidian-vault/6. Teaching/T\u00f3picos de Programa\u00e7\u00e3o II/slides/5 - libraries in c.md": "eee8b7630c9447fc7bdf4d6a0642490a",
   "../obsidian-vault/6. Teaching/T\u00f3picos de Programa\u00e7\u00e3o II/slides/6 - abstract data types.md": "9b041cfaec858198b54112723df9ff44",
   "../obsidian-vault/6. Teaching/Sistemas Operacionais/static/fig_dining_philosophers.png": "7bdd4c6686f2e0534c44f8096fb53067",
-  "../obsidian-vault/6. Teaching/.course_forge_cache/build_cache.json": "de5a8682395321f38e033cc6e1765c4c",
+  "../obsidian-vault/6. Teaching/.course_forge_cache/build_cache.json": "65fafec113016e72979aac77c7226d35",
   "../obsidian-vault/6. Teaching/Redes/6 - mac sublayer, ethernet and mac addressing.md": "6c07c69cbad857bdba2ec8e1933b60b6",
   "../obsidian-vault/6. Teaching/Compiladores/bin/tests/lexer/expected/01_delimiters.txt": "7eee78b2a963b2b5582b4959d31eb53c",
   "../obsidian-vault/6. Teaching/Compiladores/bin/tests/lexer/expected/08_strings.txt": "3a48f84a1c1c66feb1064c6c970613b6",
@@ -512,5 +512,6 @@
   "../obsidian-vault/6. Teaching/Redes/static/fig15_7_loop_bridge_aprendizado.png": "63964b94a95a2a25dd302762c2ef91dc",
   "../obsidian-vault/6. Teaching/Redes/static/fig4_43_fiacao_centralizada_hubs_switch.png": "2840030a9d8e2359b13928bc63ae97dd",
   "../obsidian-vault/6. Teaching/Redes/static/fig4_46_ethernet_8021q.png": "4d44c92a8d82af73ba9646feb5789828",
-  "../obsidian-vault/6. Teaching/Redes/slides/7 - switches and vlans.md": "92679a5ebba70be9c36235fbf82de7cb"
+  "../obsidian-vault/6. Teaching/Redes/slides/7 - switches and vlans.md": "92679a5ebba70be9c36235fbf82de7cb",
+  "../obsidian-vault/6. Teaching/Sistemas Operacionais/static/deadlock_meme.jpg": "9c5cd7cf7b56854e154fc170ed6ae8ec"
 }

@@ -49,103 +49,79 @@
                         </li>
                         
                         <li class="toc-item level-2">
-                            <a href="#recursos-o-objeto-do-desejo">7.2. Recursos: O Objeto do Desejo</a>
+                            <a href="#o-que-está-em-disputa-recursos">7.2. O que está em disputa: recursos</a>
                         </li>
                         
                         <li class="toc-item level-3">
                             <a href="#deadlock-vs-starvation-vs-livelock">7.2.1. Deadlock vs. Starvation vs. Livelock</a>
                         </li>
                         
+                        <li class="toc-item level-3">
+                            <a href="#seguro-inseguro-e-em-deadlock">7.2.2. Seguro, inseguro e em deadlock</a>
+                        </li>
+                        
                         <li class="toc-item level-2">
                             <a href="#as-quatro-condições-de-coffman">7.3. As Quatro Condições de Coffman</a>
                         </li>
                         
-                        <li class="toc-item level-4">
-                            <a href="#exemplo-1-deadlock-na-prática-c">7.3.0.1. Exemplo 1: Deadlock na Prática (C)</a>
-                        </li>
-                        
                         <li class="toc-item level-2">
-                            <a href="#modelagem-com-grafos-de-recursos">7.4. Modelagem com Grafos de Recursos</a>
-                        </li>
-                        
-                        <li class="toc-item level-2">
-                            <a href="#estratégias-para-lidar-com-impasses">7.5. Estratégias para Lidar com Impasses</a>
-                        </li>
-                        
-                        <li class="toc-item level-3">
-                            <a href="#o-algoritmo-do-avestruz">7.5.1. . O Algoritmo do Avestruz</a>
-                        </li>
-                        
-                        <li class="toc-item level-3">
-                            <a href="#detecção-e-recuperação">7.5.2. . Detecção e Recuperação</a>
+                            <a href="#exemplo-prático-duas-threads-que-travam-para-sempre">7.4. Exemplo prático: duas threads que travam para sempre</a>
                         </li>
                         
                         <li class="toc-item level-4">
-                            <a href="#detecção-matricial-múltiplos-recursos">7.5.2.1. Detecção Matricial (Múltiplos Recursos)</a>
+                            <a href="#exemplo-1-deadlock-em-c-com-codepthread-mutex-tcode">7.5. Modelagem com grafos</a>
                         </li>
                         
-                        <li class="toc-item level-5">
-                            <a href="#exemplo-passo-a-passo">7.5.2.1.1. Exemplo Passo a Passo:</a>
+                        <li class="toc-item level-2">
+                            <a href="#estratégias-para-lidar-com-deadlocks">7.6. Estratégias para lidar com deadlocks</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#algoritmo-do-avestruz">7.6.1. Algoritmo do Avestruz</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#detecção-e-recuperação">7.6.2. Detecção e recuperação</a>
                         </li>
                         
                         <li class="toc-item level-4">
-                            <a href="#recuperação">7.5.2.2. Recuperação</a>
-                        </li>
-                        
-                        <li class="toc-item level-3">
-                            <a href="#evitação-avoidance-o-algoritmo-do-banqueiro">7.5.3. . Evitação (Avoidance): O Algoritmo do Banqueiro</a>
-                        </li>
-                        
-                        <li class="toc-item level-3">
-                            <a href="#prevenção-prevention">7.5.4. . Prevenção (Prevention)</a>
+                            <a href="#detecção-matricial-para-múltiplos-recursos">7.6.2.1. Detecção matricial para múltiplos recursos</a>
                         </li>
                         
                         <li class="toc-item level-4">
-                            <a href="#exemplo-quebrando-a-espera-circular">7.5.4.1. Exemplo: Quebrando a Espera Circular</a>
-                        </li>
-                        
-                        <li class="toc-item level-3">
-                            <a href="#comparativo-das-estratégias">7.5.5. Comparativo das Estratégias</a>
-                        </li>
-                        
-                        <li class="toc-item level-2">
-                            <a href="#resumo-e-fluxo-de-decisão">7.6. Resumo e Fluxo de Decisão</a>
+                            <a href="#exemplo-passo-a-passo">7.6.2.2. Exemplo passo a passo</a>
                         </li>
                         
                         <li class="toc-item level-4">
-                            <a href="#qual-estratégia-escolher">7.6.0.1. Qual estratégia escolher?</a>
+                            <a href="#recuperação">7.6.2.3. Recuperação</a>
                         </li>
                         
-                        <li class="toc-item level-2">
-                            <a href="#tópicos-avançados">7.7. Tópicos Avançados</a>
-                        </li>
-                        
-                        <li class="toc-item level-3">
-                            <a href="#travamento-em-duas-fases-two-phase-locking">7.7.1. Travamento em Duas Fases (Two-Phase Locking)</a>
+                        <li class="toc-item level-4">
+                            <a href="#como-escolher-a-vítima">7.6.2.4. Como escolher a vítima?</a>
                         </li>
                         
                         <li class="toc-item level-3">
-                            <a href="#impasses-de-comunicação">7.7.2. Impasses de Comunicação</a>
+                            <a href="#evitação-o-algoritmo-do-banqueiro">7.6.3. Evitação: o Algoritmo do Banqueiro</a>
                         </li>
                         
                         <li class="toc-item level-3">
-                            <a href="#inversão-de-prioridade-priority-inversion">7.7.3. Inversão de Prioridade (Priority Inversion)</a>
+                            <a href="#como-pensar-no-algoritmo">7.6.4. Como pensar no algoritmo</a>
                         </li>
                         
-                        <li class="toc-item level-3">
-                            <a href="#deadlocks-no-mundo-real">7.7.4. Deadlocks no Mundo Real</a>
+                        <li class="toc-item level-4">
+                            <a href="#receita-operacional">7.6.4.1. Receita operacional</a>
                         </li>
                         
-                        <li class="toc-item level-2">
-                            <a href="#quando-usar-cada-estratégia">7.8. Quando usar cada estratégia?</a>
-                        </li>
-                        
-                        <li class="toc-item level-2">
-                            <a href="#questões">7.9. Questões</a>
+                        <li class="toc-item level-4">
+                            <a href="#exemplo-intuitivo-do-banqueiro">7.6.4.2. Exemplo intuitivo do banqueiro</a>
                         </li>
                         
                         <li class="toc-item level-2">
-                            <a href="#próximos-passos">7.10. Próximos passos</a>
+                            <a href="#questões">7.7. Questões</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#próximos-passos">7.8. Próximos passos</a>
                         </li>
                         
                     </ol>
@@ -154,8 +130,8 @@
 
                 <nav class="sidebar-nav-section">
                     
+                    <a href="6-scheduling.html" class="sidebar-nav-link prev"><i data-lucide="chevron-left" class="nav-icon"></i> Escalonamento</a>
                     
-                    <a href="2-what-is-an-os.html" class="sidebar-nav-link next">O que é um sistema operacional? <i data-lucide="chevron-right" class="nav-icon"></i></a>
                     
                     <a href="javascript:void(0)" onclick="handleBackNavigation()"
                         class="sidebar-nav-link back"><i data-lucide="arrow-left" class="nav-icon"></i> Voltar</a>
@@ -177,7 +153,7 @@
         <main class="main-content">
             <article class="article">
                 <header class="article-header">
-                    <span class="chapter-number">1</span>
+                    <span class="chapter-number">7</span>
                     <h1 class="article-title">
                         <span class="title-ornament left">❧</span>
                         <span class="title-text">Impasses (Deadlocks)</span>
@@ -197,6 +173,13 @@
                         
                         
                         
+                        
+                        <a href="contents.html#part-II" class="breadcrumb-link">II - Processos e Threads</a>
+                        
+                        <span class="breadcrumb-separator"><i data-lucide="chevron-right" class="breadcrumb-icon"></i></span>
+                        
+                        
+                        
                         <span class="breadcrumb-current">Impasses (Deadlocks)</span>
                         
                         
@@ -205,309 +188,506 @@
                 </header>
                 <div class="article-body">
                     <h2 id="introdução"><span class="heading-text">Introdução</span><span class="heading-arabic">7.1</span></h2>
-<p>Imagine uma estrada de pista única onde dois carros, vindo em direções opostas, se encontram no meio de uma ponte estreita. Nenhum dos motoristas está disposto a dar ré, pois acreditam que têm a preferência. Como resultado, ambos ficam parados, incapazes de progredir, bloqueando a ponte indefinidamente. Este cenário clássico de &quot;quem cede primeiro?&quot; ilustra perfeitamente o fenômeno que, em Computação, chamamos de <strong>Impasse</strong> ou <strong>Deadlock</strong>.</p>
-<p>Em sistemas operacionais, um impasse ocorre quando um conjunto de processos fica permanentemente bloqueado porque cada processo no conjunto está aguardando por um recurso que está sendo mantido por outro processo do mesmo conjunto. É o derradeiro &quot;nó cego&quot; da tecnologia: sem intervenção externa, esses processos jamais terminarão sua execução.</p>
-<p>Nas aulas anteriores, estudamos como processos competem por CPU (<a href="6%20-%20escalonamento.html">6 - escalonamento</a>) e como se sincronizam usando Mutexes e Semáforos (<a href="5-ipc-and-mutual-exclusion.html">5 - ipc and mutual exclusion.md</a>). De fato, você já conheceu um deadlock clássico na aula 5: o <strong>Problema dos Filósofos Comensais</strong>, onde cada um segura um garfo e espera eternamente pelo outro. Nesta aula, entenderemos a mecânica por trás desses travamentos e como o S.O. pode evitá-los.</p>
+<p>Imagine uma ponte estreita de mão única. Um carro entra pela esquerda, outro pela direita, e os dois se encontram no meio. Cada motorista já ocupa um pedaço da ponte e precisa que o outro recue para terminar a travessia. Nenhum cede. O resultado não é lentidão: é <strong>paralisação estrutural</strong>.</p>
+<p>Em Computação, esse tipo de bloqueio permanente recebe o nome de <strong>impasse</strong> ou <strong>deadlock</strong>. Ele ocorre quando um conjunto de processos ou threads fica preso porque cada membro do grupo espera por um evento que apenas outro membro do mesmo grupo pode produzir.</p>
+<p>Nas aulas anteriores, estudamos como processos competem por CPU e como coordenam o acesso a recursos compartilhados usando mutexes e semáforos. Agora veremos o lado sombrio dessa sincronização: quando o controle de acesso está correto do ponto de vista da exclusão mútua, mas o sistema mesmo assim para de progredir.</p>
 <div class="callout callout-important">
   <div class="callout-title">
     <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
-    <span class="callout-title-inner">Conexão com Aula 5: Sincronização<br /></span>
+    <span class="callout-title-inner">Conexão com as aulas anteriores<br /></span>
   </div>
   <div class="callout-content">
-<p>Enquanto na Aula 5 focamos em <strong>Condições de Corrida</strong> (onde o problema é a falta de atomicidade), aqui focamos no <strong>Deadlock</strong> (onde o problema é o excesso de bloqueio ou retenção). Eles são os dois lados da moeda da concorrência: um é o erro de <em>agilidade</em>, o outro é o erro de <em>imobilidade</em>.</p>
+<p>Na Aula 5, o foco era evitar <strong>condições de corrida</strong>. Aqui, o foco é evitar <strong>esperas circulares permanentes</strong>. Na Aula 6, vimos que a CPU é naturalmente preemptível; em deadlocks, o problema quase sempre envolve recursos <strong>não preemptíveis</strong>, como locks, dispositivos de I/O e registros transacionais.</p>
   </div>
 </div>
-<div class="callout callout-important">
-  <div class="callout-title">
-    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
-    <span class="callout-title-inner">Conexão com Aula 6: Escalonamento<br /></span>
-  </div>
-  <div class="callout-content">
-<p>Na Aula 6, vimos que a CPU é um recurso <strong>preemptível</strong> por natureza; o escalonador pode retirá-la a qualquer momento. Por isso, a CPU raramente entra em deadlock sozinha. O problema surge com recursos <strong>não-preemptíveis</strong> (disco, impressoras, mutexes), onde o SO não tem autoridade para &quot;confiscar&quot; o recurso sem quebrar a lógica do programa.</p>
-  </div>
-</div>
-<p>Sistemas Operacionais Modernos (Tanenbaum) nos fornece a definição formal e elegante:</p>
+<p>Sistemas Operacionais Modernos, de Tanenbaum, nos fornece a formulação clássica:</p>
 <div class="callout callout-note">
   <div class="callout-title">
     <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
-    <span class="callout-title-inner">Definição Formal de Impasse<br /></span>
+    <span class="callout-title-inner">Definição Formal<br /></span>
   </div>
   <div class="callout-content">
-<p>&quot;Um conjunto de processos estará em situação de impasse se cada processo no conjunto estiver esperando por um evento que apenas outro processo no conjunto pode causar.&quot;</p>
+<p>&quot;Um conjunto de processos está em impasse se cada processo do conjunto está esperando por um evento que apenas outro processo do mesmo conjunto pode causar.&quot;</p>
   </div>
 </div>
-<div class="mermaid-outer-container">  <div class="mermaid-switcher">    <div class="switcher-track">      <button class="switcher-btn active" onclick="CourseForgeUI.switchMermaidView(this, 'diagram')"><i data-lucide="eye"></i> Diagrama</button>      <button class="switcher-btn" onclick="CourseForgeUI.switchMermaidView(this, 'code')"><i data-lucide="code"></i> Código</button>      <div class="switcher-slider"></div>    </div>  </div>  <div class="mermaid-content">    <div class="mermaid-display">      <pre class="mermaid">graph TD
-    P1((Processo A))
-    P2((Processo B))
-    R1[Impressora]
-    R2[Scanner]
-    P1 --&gt;|Aguarda| R2
-    R2 --&gt;|Alocado para| P2
-    P2 --&gt;|Aguarda| R1
-    R1 --&gt;|Alocado para| P1
-    style P1 fill:#f96,stroke:#333
-    style P2 fill:#f96,stroke:#333
-    style R1 fill:#6cf,stroke:#333
-    style R2 fill:#6cf,stroke:#333</pre>    </div>    <div class="mermaid-source" style="display: none;">      <pre class="language-mermaid"><code>graph TD
-    P1((Processo A))
-    P2((Processo B))
-    R1[Impressora]
-    R2[Scanner]
-    P1 --&gt;|Aguarda| R2
-    R2 --&gt;|Alocado para| P2
-    P2 --&gt;|Aguarda| R1
-    R1 --&gt;|Alocado para| P1
-    style P1 fill:#f96,stroke:#333
-    style P2 fill:#f96,stroke:#333
-    style R1 fill:#6cf,stroke:#333
-    style R2 fill:#6cf,stroke:#333</code></pre>    </div>  </div></div>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="760" viewBox="0.00 0.00 805.18 223.59" class="svg-graph graphviz-img"><g id="svg-graphviz-d53a67a4e5ac-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 219.59)"><title>DeadlockIntro</title><polygon fill="white" stroke="transparent" points="-4,4 -4,-219.59 801.18,-219.59 801.18,4 -4,4" /><g id="svg-graphviz-d53a67a4e5ac-node1" class="node"><title>P1</title><ellipse fill="#ffe3c2" stroke="black" cx="59.79" cy="-59.79" rx="59.59" ry="59.59" /><text text-anchor="middle" x="59.79" y="-56.09" font-family="Helvetica,sans-Serif" font-size="14.00">Processo A</text></g><g id="svg-graphviz-d53a67a4e5ac-node4" class="node"><title>R2</title><path fill="#d9ecff" stroke="black" d="M312.59,-152.79C312.59,-152.79 262.59,-152.79 262.59,-152.79 256.59,-152.79 250.59,-146.79 250.59,-140.79 250.59,-140.79 250.59,-128.79 250.59,-128.79 250.59,-122.79 256.59,-116.79 262.59,-116.79 262.59,-116.79 312.59,-116.79 312.59,-116.79 318.59,-116.79 324.59,-122.79 324.59,-128.79 324.59,-128.79 324.59,-140.79 324.59,-140.79 324.59,-146.79 318.59,-152.79 312.59,-152.79" /><text text-anchor="middle" x="287.59" y="-131.09" font-family="Helvetica,sans-Serif" font-size="14.00">Scanner</text></g><g id="svg-graphviz-d53a67a4e5ac-edge2" class="edge"><title>P1-&gt;R2</title><path fill="none" stroke="firebrick" d="M97.51,-106.4C162.38,-106.4 288.18,-106.4 288.18,-106.4 288.18,-106.4 288.18,-107.42 288.18,-107.42" /><polygon fill="firebrick" stroke="firebrick" points="284.68,-106.65 288.18,-116.65 291.68,-106.65 284.68,-106.65" /><text text-anchor="middle" x="185.09" y="-110.59" font-family="Times,serif" font-size="14.00">aguarda</text></g><g id="svg-graphviz-d53a67a4e5ac-node2" class="node"><title>P2</title><ellipse fill="#ffe3c2" stroke="black" cx="511.38" cy="-155.79" rx="59.59" ry="59.59" /><text text-anchor="middle" x="511.38" y="-152.09" font-family="Helvetica,sans-Serif" font-size="14.00">Processo B</text></g><g id="svg-graphviz-d53a67a4e5ac-node3" class="node"><title>R1</title><path fill="#d9ecff" stroke="black" d="M785.18,-77.79C785.18,-77.79 714.18,-77.79 714.18,-77.79 708.18,-77.79 702.18,-71.79 702.18,-65.79 702.18,-65.79 702.18,-53.79 702.18,-53.79 702.18,-47.79 708.18,-41.79 714.18,-41.79 714.18,-41.79 785.18,-41.79 785.18,-41.79 791.18,-41.79 797.18,-47.79 797.18,-53.79 797.18,-53.79 797.18,-65.79 797.18,-65.79 797.18,-71.79 791.18,-77.79 785.18,-77.79" /><text text-anchor="middle" x="749.68" y="-56.09" font-family="Helvetica,sans-Serif" font-size="14.00">Impressora</text></g><g id="svg-graphviz-d53a67a4e5ac-edge4" class="edge"><title>P2-&gt;R1</title><path fill="none" stroke="firebrick" d="M512.18,-95.76C512.18,-79.25 512.18,-65.79 512.18,-65.79 512.18,-65.79 691.9,-65.79 691.9,-65.79" /><polygon fill="firebrick" stroke="firebrick" points="691.9,-69.29 701.9,-65.79 691.9,-62.29 691.9,-69.29" /><text text-anchor="middle" x="636.68" y="-131.59" font-family="Times,serif" font-size="14.00">aguarda</text></g><g id="svg-graphviz-d53a67a4e5ac-edge1" class="edge"><title>R1-&gt;P1</title><path fill="none" stroke="black" d="M701.99,-53.79C701.99,-53.79 129.51,-53.79 129.51,-53.79" /><polygon fill="black" stroke="black" points="129.51,-50.29 119.51,-53.79 129.51,-57.29 129.51,-50.29" /><text text-anchor="middle" x="388.09" y="-23.59" font-family="Times,serif" font-size="14.00">alocado</text></g><g id="svg-graphviz-d53a67a4e5ac-edge3" class="edge"><title>R2-&gt;P2</title><path fill="none" stroke="black" d="M324.8,-134.79C324.8,-134.79 445.19,-134.79 445.19,-134.79" /><polygon fill="black" stroke="black" points="445.19,-138.29 455.19,-134.79 445.19,-131.29 445.19,-138.29" /><text text-anchor="middle" x="388.09" y="-148.59" font-family="Times,serif" font-size="14.00">alocado</text></g></g></svg></div></div>
 
-<p><em>Figura: O ciclo da morte. O Processo A tem a Impressora e quer o Scanner. O Processo B tem o Scanner e quer a Impressora.</em></p>
-<div class="callout callout-question">
-  <div class="callout-title">
-    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
-    <span class="callout-title-inner">Reflita<br /></span>
-  </div>
-  <div class="callout-content">
-<p>Por que simplesmente adicionar mais memória ou uma CPU mais rápida não resolve um problema de deadlock? O que diferencia um deadlock de um sistema que está apenas &quot;muito lento&quot;?</p>
-  </div>
-</div>
-<h2 id="recursos-o-objeto-do-desejo"><span class="heading-text">Recursos: O Objeto do Desejo</span><span class="heading-arabic">7.2</span></h2>
-<p>Para entender impasses, primeiro precisamos entender o que os processos disputam: os <strong>recursos</strong>. Um recurso pode ser um dispositivo de hardware (gravador de Blu-ray, fita magnética, GPU) ou uma estrutura de dados de software (um semáforo, um registro em um banco de dados).</p>
-<p>Os recursos são classificados em duas grandes categorias:</p>
+<p><em>Figura: A tem a impressora e quer o scanner; B tem o scanner e quer a impressora. Sem intervenção externa, ninguém termina.</em></p>
+<p>Outra imagem que representa bem nosso problema é:<br />
+<img src="static/deadlock_meme.jpg" width="75%"></p>
+<h2 id="o-que-está-em-disputa-recursos"><span class="heading-text">O que está em disputa: recursos</span><span class="heading-arabic">7.2</span></h2>
+<p>Deadlocks existem porque processos disputam <strong>recursos</strong>. Um recurso pode ser físico, como impressora, disco ou GPU, ou lógico, como mutexes, semáforos, conexões, páginas, buffers ou linhas de uma tabela em um banco de dados.</p>
 <table>
 <thead>
 <tr>
   <th style="text-align:left">Tipo</th>
   <th style="text-align:left">Descrição</th>
-  <th style="text-align:left">Exemplo</th>
+  <th style="text-align:left">Exemplos</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-  <td style="text-align:left"><strong>Preemptíveis</strong></td>
-  <td style="text-align:left">Podem ser retirados de um processo sem causar falha (o estado é salvo e restaurado depois).</td>
-  <td style="text-align:left">Memória RAM, CPU.</td>
+  <td style="text-align:left"><strong>Preemptível</strong></td>
+  <td style="text-align:left">Pode ser retirado e devolvido depois sem corromper o trabalho.</td>
+  <td style="text-align:left">CPU, páginas de memória em muitos cenários.</td>
 </tr>
 <tr>
-  <td style="text-align:left"><strong>Não-Preemptíveis</strong></td>
-  <td style="text-align:left">Uma vez alocados, não podem ser retirados sem que o resultado do processo seja perdido.</td>
-  <td style="text-align:left">Gravador de Blu-ray, impressora.</td>
+  <td style="text-align:left"><strong>Não preemptível</strong></td>
+  <td style="text-align:left">Não pode ser tomado à força sem quebrar a lógica da execução.</td>
+  <td style="text-align:left">Impressora, drive de gravação, mutex, lock de banco.</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Impasses envolvem quase exclusivamente recursos não-preemptíveis.</strong> Se pudéssemos simplesmente tirar um recurso de um processo e dá-lo a outro, o &quot;nó&quot; seria desatado facilmente.</p>
-<p>O ciclo de vida de um recurso segue uma sequência lógica obrigatória. Primeiro, o processo deve <strong>solicitar</strong> o recurso ao sistema, podendo ficar bloqueado caso ele não esteja disponível. Uma vez concedido, o processo entra na fase de <strong>uso</strong>, operando sobre o recurso conforme sua necessidade. Por fim, o processo deve <strong>liberar</strong> o recurso, devolvendo-o ao controle do sistema operacional para que outros interessados possam utilizá-lo.</p>
+<p>Deadlocks aparecem quase sempre com recursos <strong>não preemptíveis</strong>, porque o sistema operacional não pode simplesmente arrancar o recurso do processo e seguir como se nada tivesse acontecido.</p>
+<p>O uso de um recurso costuma seguir três passos:</p>
+<ol>
+<li>O processo <strong>solicita</strong> o recurso.</li>
+<li>O processo <strong>usa</strong> o recurso enquanto ele está alocado.</li>
+<li>O processo <strong>libera</strong> o recurso para o restante do sistema.</li>
+</ol>
+<p>O problema nasce quando diferentes processos fazem esse ciclo em ordens incompatíveis.</p>
 <h3 id="deadlock-vs-starvation-vs-livelock"><span class="heading-text">Deadlock vs. Starvation vs. Livelock</span><span class="heading-arabic">7.2.1</span></h3>
-<p>Antes de mergulhar nas causas, é vital distinguir o <strong>Deadlock</strong> de outros estados de espera. O <strong>Deadlock</strong> caracteriza-se por um bloqueio circular e permanente, onde ninguém progride porque todos dependem de alguém que também está parado. Já a <strong>Starvation</strong> (Inanição) ocorre quando um processo nunca é atendido por falta de sorte ou prioridade, embora o sistema continue funcionando para os demais; um exemplo comum é o escalonamento por prioridades, onde tarefas menos urgentes podem ser eternamente &quot;esquecidas&quot;. Por fim, o <strong>Livelock</strong> é um estado em que os processos não estão bloqueados em repouso, mas sim ativos e consumindo CPU enquanto tentam, sem sucesso, desviar um do outro, como duas pessoas em um corredor que tentam dar passagem simultaneamente para o mesmo lado.</p>
+<p>Esses termos aparecem juntos, mas não significam a mesma coisa.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Fenômeno</th>
+  <th style="text-align:left">O que acontece</th>
+  <th style="text-align:left">Há progresso no sistema?</th>
+  <th style="text-align:left">Sintoma típico</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><strong>Deadlock</strong></td>
+  <td style="text-align:left">Há espera circular permanente.</td>
+  <td style="text-align:left">Não para os envolvidos.</td>
+  <td style="text-align:left">Threads bloqueadas para sempre.</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Starvation</strong></td>
+  <td style="text-align:left">Um processo é continuamente preterido.</td>
+  <td style="text-align:left">Sim, para outros processos.</td>
+  <td style="text-align:left">Uma thread nunca consegue executar ou obter lock.</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Livelock</strong></td>
+  <td style="text-align:left">Todos reagem, mas ninguém avança.</td>
+  <td style="text-align:left">Há atividade, mas sem progresso útil.</td>
+  <td style="text-align:left">Uso de CPU alto com trabalho zero.</td>
+</tr>
+</tbody>
+</table>
 <div class="callout callout-tip">
   <div class="callout-title">
     <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .5 2.2 1.5 3.1.7.7 1.3 1.5 1.5 2.4"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span>
-    <span class="callout-title-inner">Diferença Chave<br /></span>
+    <span class="callout-title-inner">Diferença curta<br /></span>
   </div>
   <div class="callout-content">
-<p>No <strong>Deadlock</strong>, os processos estão parados (esperando um evento). No <strong>Livelock</strong>, eles estão ativos e consumindo CPU, mas sem progresso útil.</p>
+<p>No deadlock, os processos ficam parados. No livelock, continuam ativos. Na starvation, o sistema anda, mas alguém fica eternamente para trás.</p>
   </div>
 </div>
-<h2 id="as-quatro-condições-de-coffman"><span class="heading-text">As Quatro Condições de Coffman</span><span class="heading-arabic">7.3</span></h2>
-<p>Em 1971, Edward G. Coffman formalizou que, para que um impasse ocorra, <strong>quatro condições devem ser verdadeiras simultaneamente</strong>. Se você conseguir quebrar apenas uma delas, o sistema estará livre de deadlocks.</p>
-<ol>
-<li><strong>Exclusão Mútua</strong>: Cada recurso está alocado a exatamente um processo por vez ou está disponível.</li>
-<li><strong>Posse e Espera</strong>: Processos que possuem recursos podem solicitar novos recursos e ficar bloqueados esperando por eles.</li>
-<li><strong>Não Preempção</strong>: Recursos não podem ser tomados à força; devem ser liberados voluntariamente pelo processo que os detém.</li>
-<li><strong>Espera Circular</strong>: Deve existir um ciclo de dois ou mais processos, onde cada um espera por um recurso possuído pelo próximo membro da cadeia.</li>
-</ol>
+<h3 id="seguro-inseguro-e-em-deadlock"><span class="heading-text">Seguro, inseguro e em deadlock</span><span class="heading-arabic">7.2.2</span></h3>
+<p>Essa distinção é central para entender o Algoritmo do Banqueiro.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Estado</th>
+  <th style="text-align:left">Significado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><strong>Seguro</strong></td>
+  <td style="text-align:left">Existe pelo menos uma sequência de execução que permite que todos terminem.</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Inseguro</strong></td>
+  <td style="text-align:left">Não há garantia de que todos consigam terminar; o deadlock ainda pode não ter ocorrido.</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Deadlock</strong></td>
+  <td style="text-align:left">Ninguém do conjunto consegue prosseguir com os recursos disponíveis.</td>
+</tr>
+</tbody>
+</table>
 <div class="callout callout-important">
   <div class="callout-title">
     <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
-    <span class="callout-title-inner">A Regra de Ouro<br /></span>
+    <span class="callout-title-inner">Estado inseguro não significa deadlock imediato<br /></span>
   </div>
   <div class="callout-content">
-<p>Todas as quatro condições <strong>precisam</strong> estar presentes. Se houver exclusão mútua, posse e espera e não preempção, mas não houver um ciclo (espera circular), não há deadlock.</p>
+<p>Um estado inseguro é um estado de risco. O sistema ainda pode escapar dele se as próximas requisições forem favoráveis, mas perdeu a garantia formal de conclusão para todos.</p>
   </div>
 </div>
+<h2 id="as-quatro-condições-de-coffman"><span class="heading-text">As Quatro Condições de Coffman</span><span class="heading-arabic">7.3</span></h2>
+<p>Em 1971, Coffman mostrou que um impasse só pode existir se <strong>quatro condições forem verdadeiras ao mesmo tempo</strong>. Se quebrarmos qualquer uma delas, não há deadlock.</p>
+<ol>
+<li><strong>Exclusão Mútua</strong>: um recurso só pode ser usado por um processo por vez.</li>
+<li><strong>Posse e Espera</strong>: um processo retém recursos já obtidos enquanto espera por novos.</li>
+<li><strong>Não Preempção</strong>: o recurso não pode ser retirado à força.</li>
+<li><strong>Espera Circular</strong>: existe um ciclo de dependência entre processos e recursos.</li>
+</ol>
+<div class="mermaid-outer-container">  <div class="mermaid-switcher">    <div class="switcher-track">      <button class="switcher-btn active" onclick="CourseForgeUI.switchMermaidView(this, 'diagram')"><i data-lucide="eye"></i> Diagrama</button>      <button class="switcher-btn" onclick="CourseForgeUI.switchMermaidView(this, 'code')"><i data-lucide="code"></i> Código</button>      <div class="switcher-slider"></div>    </div>  </div>  <div class="mermaid-content">    <div class="mermaid-display">      <pre class="mermaid">graph TD
+    A[Exclusao Mutua] --&gt; D[Deadlock]
+    B[Posse e Espera] --&gt; D
+    C[Nao Preempcao] --&gt; D
+    E[Espera Circular] --&gt; D</pre>    </div>    <div class="mermaid-source" style="display: none;">      <pre class="language-mermaid"><code>graph TD
+    A[Exclusao Mutua] --&gt; D[Deadlock]
+    B[Posse e Espera] --&gt; D
+    C[Nao Preempcao] --&gt; D
+    E[Espera Circular] --&gt; D</code></pre>    </div>  </div></div>
+
+<p>Deadlock não é &quot;qualquer espera longa&quot;. Ele exige a presença simultânea das quatro condições.</p>
 <div class="callout callout-question">
   <div class="callout-title">
     <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
     <span class="callout-title-inner">Reflita<br /></span>
   </div>
   <div class="callout-content">
-<p>Considere um sistema com 10 impressoras compartilhadas via <em>spooler</em> de impressão. O processo escreve seu trabalho em um arquivo no disco e o SO gerencia a fila. Qual das 4 condições acima o <em>spooling</em> tenta atacar para reduzir deadlocks?</p>
+<p>Se o sistema usa <em>spooling</em> de impressão, o processo apenas coloca um arquivo em uma fila de impressão. Qual condição de Coffman o <em>spooling</em> enfraquece?</p>
   </div>
 </div>
-<h4 id="exemplo-1-deadlock-na-prática-c"><span class="heading-text">Exemplo 1: Deadlock na Prática (C)</span><span class="heading-arabic">7.3.0.1</span></h4>
-<p>Abaixo, vemos como um erro simples na ordem de aquisição de Mutexes (aprendidos na <a href="5-ipc-and-mutual-exclusion.html">Aula 5</a>) pode travar um programa. Note que a Thread A pede o <code>lock1</code> e depois o <code>lock2</code>, enquanto a Thread B faz o inverso. Se o escalonador trocar o contexto no momento exato, o programa para.</p>
+<h2 id="exemplo-prático-duas-threads-que-travam-para-sempre"><span class="heading-text">Exemplo prático: duas threads que travam para sempre</span><span class="heading-arabic">7.4</span></h2>
+<p>O exemplo mais importante para os alunos é o erro clássico de adquirir locks em ordens opostas.</p>
+<h4 id="exemplo-1-deadlock-em-c-com-codepthread-mutex-tcode"><span class="heading-text">Exemplo 1: Deadlock em C com <code>pthread_mutex_t</code></span><span class="heading-arabic">7.4.0.1</span></h4>
 <pre class="line-numbers language-c" data-lang="C"><code class="language-c">#include &lt;pthread.h&gt;
 #include &lt;stdio.h&gt;
 #include &lt;unistd.h&gt;
 
-pthread_mutex_t lock1, lock2;
+pthread_mutex_t lock1 = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t lock2 = PTHREAD_MUTEX_INITIALIZER;
 
 void* threadA(void* arg) {
     pthread_mutex_lock(&amp;lock1);
-    printf(&quot;Thread A: Pegou lock 1, esperando lock 2...\n&quot;);
-    sleep(1); // Força a janela para o deadlock
+    printf(&quot;A: pegou lock1\n&quot;);
+    sleep(1); // aumenta a chance de interleaving ruim
+
+    printf(&quot;A: tentando pegar lock2\n&quot;);
     pthread_mutex_lock(&amp;lock2);
-    printf(&quot;Thread A: Pegou ambos!\n&quot;);
+
+    printf(&quot;A: pegou lock2\n&quot;);
     pthread_mutex_unlock(&amp;lock2);
     pthread_mutex_unlock(&amp;lock1);
     return NULL;
 }
 
 void* threadB(void* arg) {
-    pthread_mutex_lock(&amp;lock2); // ORDEM INVERSA!
-    printf(&quot;Thread B: Pegou lock 2, esperando lock 1...\n&quot;);
+    pthread_mutex_lock(&amp;lock2);
+    printf(&quot;B: pegou lock2\n&quot;);
     sleep(1);
+
+    printf(&quot;B: tentando pegar lock1\n&quot;);
     pthread_mutex_lock(&amp;lock1);
-    printf(&quot;Thread B: Pegou ambos!\n&quot;);
+
+    printf(&quot;B: pegou lock1\n&quot;);
     pthread_mutex_unlock(&amp;lock1);
     pthread_mutex_unlock(&amp;lock2);
     return NULL;
 }
 
-int main() {
+int main(void) {
     pthread_t t1, t2;
-    pthread_mutex_init(&amp;lock1, NULL);
-    pthread_mutex_init(&amp;lock2, NULL);
+
     pthread_create(&amp;t1, NULL, threadA, NULL);
     pthread_create(&amp;t2, NULL, threadB, NULL);
+
     pthread_join(t1, NULL);
     pthread_join(t2, NULL);
     return 0;
 }
 </code></pre>
-<div class="callout callout-caution">
-  <div class="callout-title">
-    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
-    <span class="callout-title-inner">Teste você mesmo<br /></span>
-  </div>
-  <div class="callout-content">
-<p>No código acima, as quatro condições de Coffman estão presentes:</p>
+<div class="mermaid-outer-container">  <div class="mermaid-switcher">    <div class="switcher-track">      <button class="switcher-btn active" onclick="CourseForgeUI.switchMermaidView(this, 'diagram')"><i data-lucide="eye"></i> Diagrama</button>      <button class="switcher-btn" onclick="CourseForgeUI.switchMermaidView(this, 'code')"><i data-lucide="code"></i> Código</button>      <div class="switcher-slider"></div>    </div>  </div>  <div class="mermaid-content">    <div class="mermaid-display">      <pre class="mermaid">sequenceDiagram
+    participant A as Thread A
+    participant L1 as lock1
+    participant B as Thread B
+    participant L2 as lock2
+    A-&gt;&gt;L1: lock(lock1)
+    B-&gt;&gt;L2: lock(lock2)
+    A-&gt;&gt;L2: espera por lock2
+    B-&gt;&gt;L1: espera por lock1
+    Note over A,L2: Espera circular permanente</pre>    </div>    <div class="mermaid-source" style="display: none;">      <pre class="language-mermaid"><code>sequenceDiagram
+    participant A as Thread A
+    participant L1 as lock1
+    participant B as Thread B
+    participant L2 as lock2
+    A-&gt;&gt;L1: lock(lock1)
+    B-&gt;&gt;L2: lock(lock2)
+    A-&gt;&gt;L2: espera por lock2
+    B-&gt;&gt;L1: espera por lock1
+    Note over A,L2: Espera circular permanente</code></pre>    </div>  </div></div>
+
+<p>As quatro condições de Coffman aparecem nitidamente:</p>
 <ol>
-<li><strong>Exclusão Mútua</strong>: Mutexes são exclusivos.</li>
-<li><strong>Posse e Espera</strong>: A Thread A segura o <code>lock1</code> e pede o <code>lock2</code>.</li>
-<li><strong>Não Preempção</strong>: O SO não tira o mutex da thread à força.</li>
-<li><strong>Espera Circular</strong>: A -&gt; lock2 (de B) -&gt; lock1 (de A).</li>
-</ol></p>
-  </div>
-</div>
-<h2 id="modelagem-com-grafos-de-recursos"><span class="heading-text">Modelagem com Grafos de Recursos</span><span class="heading-arabic">7.4</span></h2>
-<p>Richard Holt (1972) demonstrou que as condições de impasse podem ser modeladas com precisão usando <strong>Grafos de Alocação de Recursos</strong>.<br />
-Richard Holt (1972) demonstrou que as condições de impasse podem ser modeladas com precisão através de Grafos de Alocação de Recursos. Nesses diagramas, os <strong>círculos</strong> representam os processos e os <strong>quadrados</strong> os recursos. Uma seta partindo de um processo em direção a um recurso indica uma <strong>solicitação</strong> (o processo está bloqueado), enquanto uma seta do recurso para o processo significa que o recurso está <strong>alocado</strong> e sendo utilizado por ele.</p>
-<img src="static/figura6_3_grafos_alocacao.png" width="80%">
-*Figura: Os três estados fundamentais: (a) posse, (b) solicitação e (c) ciclo de impasse.*
-
-<div class="no-break"><div class=""><svg xmlns="http://www.w3.org/2000/svg" viewBox="0.00 0.00 398.79 83.90" class="svg-graph graphviz-img"><g id="svg-graphviz-458c0cac4291-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 79.9)"><title>G</title><polygon fill="white" stroke="transparent" points="-4,4 -4,-79.9 394.79,-79.9 394.79,4 -4,4" /><g id="svg-graphviz-458c0cac4291-node1" class="node"><title>P1</title><ellipse fill="#f9f9f9" stroke="black" cx="21.45" cy="-21.45" rx="21.4" ry="21.4" /><text text-anchor="middle" x="21.45" y="-17.75" font-family="Arial" font-size="14.00">P1</text></g><g id="svg-graphviz-458c0cac4291-node4" class="node"><title>R2</title><polygon fill="#d1eaff" stroke="black" points="149.9,-70.45 113.9,-70.45 113.9,-34.45 149.9,-34.45 149.9,-70.45" /><text text-anchor="middle" x="131.9" y="-48.75" font-family="Arial" font-size="14.00">R2</text></g><g id="svg-graphviz-458c0cac4291-edge1" class="edge"><title>P1-&gt;R2</title><path fill="none" stroke="red" d="M42.34,-27.13C59.65,-32.08 84.9,-39.3 104.01,-44.76" /><polygon fill="red" stroke="red" points="103.06,-48.13 113.63,-47.51 104.98,-41.4 103.06,-48.13" /><text text-anchor="middle" x="78.4" y="-45.25" font-family="Times,serif" font-size="14.00">pede</text></g><g id="svg-graphviz-458c0cac4291-node2" class="node"><title>P2</title><ellipse fill="#f9f9f9" stroke="black" cx="262.34" cy="-54.45" rx="21.4" ry="21.4" /><text text-anchor="middle" x="262.34" y="-50.75" font-family="Arial" font-size="14.00">P2</text></g><g id="svg-graphviz-458c0cac4291-node3" class="node"><title>R1</title><polygon fill="#d1eaff" stroke="black" points="390.79,-39.45 354.79,-39.45 354.79,-3.45 390.79,-3.45 390.79,-39.45" /><text text-anchor="middle" x="372.79" y="-17.75" font-family="Arial" font-size="14.00">R1</text></g><g id="svg-graphviz-458c0cac4291-edge3" class="edge"><title>P2-&gt;R1</title><path fill="none" stroke="red" d="M282.98,-48.47C300.26,-43.21 325.59,-35.51 344.78,-29.67" /><polygon fill="red" stroke="red" points="345.9,-32.99 354.45,-26.73 343.86,-26.29 345.9,-32.99" /><text text-anchor="middle" x="319.29" y="-45.25" font-family="Times,serif" font-size="14.00">pede</text></g><g id="svg-graphviz-458c0cac4291-edge4" class="edge"><title>R1-&gt;P1</title><path fill="none" stroke="blue" d="M354.44,-21.45C298.79,-21.45 124.27,-21.45 53.11,-21.45" /><polygon fill="blue" stroke="blue" points="53,-17.95 43,-21.45 53,-24.95 53,-17.95" /><text text-anchor="middle" x="195.4" y="-25.25" font-family="Times,serif" font-size="14.00">alocado</text></g><g id="svg-graphviz-458c0cac4291-edge2" class="edge"><title>R2-&gt;P2</title><path fill="none" stroke="blue" d="M149.95,-52.71C170.49,-53.03 205.38,-53.58 230.65,-53.97" /><polygon fill="blue" stroke="blue" points="230.76,-57.47 240.82,-54.13 230.87,-50.47 230.76,-57.47" /><text text-anchor="middle" x="195.4" y="-57.25" font-family="Times,serif" font-size="14.00">alocado</text></g></g></svg></div></div>
-
-<p>Neste grafo, há um ciclo claro: $P1 \to R2 \to P2 \to R1 \to P1$.</p>
+<li><code>lock1</code> e <code>lock2</code> são exclusivos.</li>
+<li>A segura <code>lock1</code> e espera <code>lock2</code>; B faz o inverso.</li>
+<li>O sistema não rouba o mutex à força.</li>
+<li>A espera B, e B espera A.</li>
+</ol>
 <div class="callout callout-caution">
   <div class="callout-title">
     <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
-    <span class="callout-title-inner">Nota Técnica: Ciclo nem sempre é Deadlock<br /></span>
+    <span class="callout-title-inner">Observação importante<br /></span>
   </div>
   <div class="callout-content">
-<p>Se cada recurso tiver apenas <strong>uma instância</strong> (como uma impressora única), então <strong>um ciclo é prova de deadlock</strong>. Contudo, se houver múltiplas instâncias (ex: o sistema tem 2 Scanners), um ciclo é uma condição <em>necessária</em>, mas não suficiente.</p>
+<p>O <code>sleep(1)</code> não causa o deadlock. Ele apenas aumenta a probabilidade de o escalonamento revelar o bug.</p>
   </div>
 </div>
-<div class="no-break"><div class=""><svg xmlns="http://www.w3.org/2000/svg" viewBox="0.00 0.00 605.00 185.45" class="svg-graph graphviz-img"><g id="svg-graphviz-c0fb0bdbc831-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 181.45)"><title>G</title><polygon fill="white" stroke="transparent" points="-4,4 -4,-181.45 601,-181.45 601,4 -4,4" /><text text-anchor="middle" x="298.5" y="-7.8" font-family="Times,serif" font-size="14.00">Se P3 liberar R1, P1 pode prosseguir, mesmo havendo um 'ciclo de dependência'.</text><g id="svg-graphviz-c0fb0bdbc831-node1" class="node"><title>P1</title><ellipse fill="none" stroke="black" cx="137.05" cy="-47.45" rx="21.4" ry="21.4" /><text text-anchor="middle" x="137.05" y="-43.75" font-family="Arial" font-size="14.00">P1</text></g><g id="svg-graphviz-c0fb0bdbc831-node4" class="node"><title>R1</title><polygon fill="#d1eaff" stroke="black" points="347.5,-177.45 229.5,-177.45 229.5,-59.45 347.5,-59.45 347.5,-177.45" /><text text-anchor="middle" x="288.5" y="-114.75" font-family="Arial" font-size="14.00">R1 (2 instâncias)</text></g><g id="svg-graphviz-c0fb0bdbc831-edge1" class="edge"><title>P1-&gt;R1</title><path fill="none" stroke="red" d="M156.68,-56.3C172.7,-63.91 196.84,-75.38 220.04,-86.4" /><polygon fill="red" stroke="red" points="218.67,-89.62 229.2,-90.75 221.67,-83.3 218.67,-89.62" /><text text-anchor="middle" x="194" y="-84.25" font-family="Times,serif" font-size="14.00">pede</text></g><g id="svg-graphviz-c0fb0bdbc831-node2" class="node"><title>P2</title><ellipse fill="none" stroke="black" cx="459.95" cy="-44.45" rx="21.4" ry="21.4" /><text text-anchor="middle" x="459.95" y="-40.75" font-family="Arial" font-size="14.00">P2</text></g><g id="svg-graphviz-c0fb0bdbc831-node3" class="node"><title>P3</title><ellipse fill="none" stroke="black" cx="459.95" cy="-118.45" rx="21.4" ry="21.4" /><text text-anchor="middle" x="459.95" y="-114.75" font-family="Arial" font-size="14.00">P3</text></g><g id="svg-graphviz-c0fb0bdbc831-edge2" class="edge"><title>R1-&gt;P2</title><path fill="none" stroke="blue" d="M347.81,-92.98C375.83,-80.74 408.14,-66.64 430.67,-56.8" /><polygon fill="blue" stroke="blue" points="432.22,-59.94 439.98,-52.73 429.42,-53.53 432.22,-59.94" /><text text-anchor="middle" x="393" y="-87.25" font-family="Times,serif" font-size="14.00">alocado</text></g><g id="svg-graphviz-c0fb0bdbc831-edge3" class="edge"><title>R1-&gt;P3</title><path fill="none" stroke="blue" d="M347.81,-118.45C374.8,-118.45 405.76,-118.45 428.13,-118.45" /><polygon fill="blue" stroke="blue" points="428.37,-121.95 438.37,-118.45 428.37,-114.95 428.37,-121.95" /><text text-anchor="middle" x="393" y="-122.25" font-family="Times,serif" font-size="14.00">alocado</text></g></g></svg></div></div>
+<h2 id="modelagem-com-grafos"><span class="heading-text">Modelagem com grafos</span><span class="heading-arabic">7.5</span></h2>
+<p>Grafos ajudam a enxergar dependências que, no código, ficam espalhadas por várias funções.</p>
+<p>No <strong>Resource Allocation Graph</strong>:</p>
+<ul>
+<li>processos são círculos,</li>
+<li>recursos são quadrados,</li>
+</ul>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="780" viewBox="0.00 0.00 579.39 175.72" class="svg-graph graphviz-img"><g id="svg-graphviz-736ad6209dba-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 171.72)"><title>RAG</title><polygon fill="white" stroke="transparent" points="-4,4 -4,-171.72 575.39,-171.72 575.39,4 -4,4" /><g id="svg-graphviz-736ad6209dba-node1" class="node"><title>P1</title><ellipse fill="#fff2cc" stroke="black" cx="22.1" cy="-78.57" rx="22.2" ry="22.2" /><text text-anchor="middle" x="22.1" y="-74.87" font-family="Helvetica,sans-Serif" font-size="14.00">P1</text></g><g id="svg-graphviz-736ad6209dba-node4" class="node"><title>R2</title><path fill="#d9ecff" stroke="black" d="M210.2,-157.57C210.2,-157.57 180.2,-157.57 180.2,-157.57 174.2,-157.57 168.2,-151.57 168.2,-145.57 168.2,-145.57 168.2,-133.57 168.2,-133.57 168.2,-127.57 174.2,-121.57 180.2,-121.57 180.2,-121.57 210.2,-121.57 210.2,-121.57 216.2,-121.57 222.2,-127.57 222.2,-133.57 222.2,-133.57 222.2,-145.57 222.2,-145.57 222.2,-151.57 216.2,-157.57 210.2,-157.57" /><text text-anchor="middle" x="195.2" y="-135.87" font-family="Helvetica,sans-Serif" font-size="14.00">R2</text></g><g id="svg-graphviz-736ad6209dba-edge1" class="edge"><title>P1-&gt;R2</title><path fill="none" stroke="firebrick" d="M41.11,-90.01C70.11,-106.98 85.42,-112.07 157.97,-130.29" /><polygon fill="firebrick" stroke="firebrick" points="157.54,-133.79 168.09,-132.82 159.24,-127 157.54,-133.79" /><text text-anchor="middle" x="106.2" y="-135.37" font-family="Times,serif" font-size="14.00">solicita</text></g><g id="svg-graphviz-736ad6209dba-node2" class="node"><title>P2</title><ellipse fill="#fff2cc" stroke="black" cx="371.29" cy="-142.57" rx="22.2" ry="22.2" /><text text-anchor="middle" x="371.29" y="-138.87" font-family="Helvetica,sans-Serif" font-size="14.00">P2</text></g><g id="svg-graphviz-736ad6209dba-node3" class="node"><title>R1</title><path fill="#d9ecff" stroke="black" d="M559.39,-96.57C559.39,-96.57 529.39,-96.57 529.39,-96.57 523.39,-96.57 517.39,-90.57 517.39,-84.57 517.39,-84.57 517.39,-72.57 517.39,-72.57 517.39,-66.57 523.39,-60.57 529.39,-60.57 529.39,-60.57 559.39,-60.57 559.39,-60.57 565.39,-60.57 571.39,-66.57 571.39,-72.57 571.39,-72.57 571.39,-84.57 571.39,-84.57 571.39,-90.57 565.39,-96.57 559.39,-96.57" /><text text-anchor="middle" x="544.39" y="-74.87" font-family="Helvetica,sans-Serif" font-size="14.00">R1</text></g><g id="svg-graphviz-736ad6209dba-edge3" class="edge"><title>P2-&gt;R1</title><path fill="none" stroke="firebrick" d="M392.72,-137.04C461.81,-119.18 485.51,-112.54 508,-100.79" /><polygon fill="firebrick" stroke="firebrick" points="509.95,-103.71 517,-95.81 506.56,-97.59 509.95,-103.71" /><text text-anchor="middle" x="455.39" y="-137.37" font-family="Times,serif" font-size="14.00">solicita</text></g><g id="svg-graphviz-736ad6209dba-edge4" class="edge"><title>R1-&gt;P1</title><path fill="none" stroke="steelblue" d="M42.91,-70.25C271.23,20.93 289.07,23.06 507.54,-63.86" /><polygon fill="steelblue" stroke="steelblue" points="506.5,-67.21 517.08,-67.66 509.09,-60.71 506.5,-67.21" /><text text-anchor="middle" x="285.7" y="-36.37" font-family="Times,serif" font-size="14.00">alocado</text></g><g id="svg-graphviz-736ad6209dba-edge2" class="edge"><title>R2-&gt;P2</title><path fill="none" stroke="steelblue" d="M222.4,-150.81C275.19,-172.12 289.55,-172.8 340.7,-154.13" /><polygon fill="steelblue" stroke="steelblue" points="342.17,-157.32 350.33,-150.56 339.74,-150.75 342.17,-157.32" /><text text-anchor="middle" x="285.7" y="-145.37" font-family="Times,serif" font-size="14.00">alocado</text></g></g></svg></div></div>
 
-<h2 id="estratégias-para-lidar-com-impasses"><span class="heading-text">Estratégias para Lidar com Impasses</span><span class="heading-arabic">7.5</span></h2>
-<p>Existem quatro abordagens principais que os projetistas de sistemas utilizam:</p>
-<h3 id="o-algoritmo-do-avestruz"><span class="heading-text">. O Algoritmo do Avestruz</span><span class="heading-arabic">7.5.1</span></h3>
-<p>A estratégia mais simples consiste em ignorar o problema, como se estivesse com a cabeça na areia. Se os deadlocks ocorrem raramente e o custo para evitá-los é proibitivo, pode ser mais econômico simplesmente reiniciar a máquina do que sacrificar o desempenho geral. Essa abordagem é o padrão em sistemas de propósito geral como o Windows, Linux e macOS para a maioria dos recursos do núcleo.</p>
-<div class="callout callout-tip">
-  <div class="callout-title">
-    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .5 2.2 1.5 3.1.7.7 1.3 1.5 1.5 2.4"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span>
-    <span class="callout-title-inner">Curiosidade Didática<br /></span>
-  </div>
-  <div class="callout-content">
-<p>Na realidade, a ideia de que avestruzes enterram a cabeça na areia por medo é um mito. Elas são aves poderosas que podem matar um leão com um único coice! No design de software, porém, o &quot;Algoritmo do Avestruz&quot; continua sendo uma analogia útil para o trade-off entre custo e segurança.</p>
-  </div>
-</div>
-<img src="static/figura6_4_sequencia_impasse.png" width="90%">
-*Figura: Exemplo de como uma sequência azarada de requisições leva ao impasse, enquanto uma mudança no escalonamento o evitaria.*
+<p>Se cada recurso tiver <strong>uma única instância</strong>, um ciclo no grafo é prova de deadlock.</p>
+<p>Quando queremos focar apenas em processos, convertemos o grafo para um <strong>wait-for graph</strong>: removemos os nós de recurso e ligamos diretamente um processo ao outro.</p>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="620" viewBox="0.00 0.00 315.39 108.71" class="svg-graph graphviz-img"><g id="svg-graphviz-e3f0a9d6a3fa-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 104.71)"><title>WFG</title><polygon fill="white" stroke="transparent" points="-4,4 -4,-104.71 311.39,-104.71 311.39,4 -4,4" /><g id="svg-graphviz-e3f0a9d6a3fa-node1" class="node"><title>P1</title><ellipse fill="#ffe3c2" stroke="black" cx="22.1" cy="-39.61" rx="22.2" ry="22.2" /><text text-anchor="middle" x="22.1" y="-35.91" font-family="Helvetica,sans-Serif" font-size="14.00">P1</text></g><g id="svg-graphviz-e3f0a9d6a3fa-node2" class="node"><title>P2</title><ellipse fill="#ffe3c2" stroke="black" cx="153.7" cy="-78.61" rx="22.2" ry="22.2" /><text text-anchor="middle" x="153.7" y="-74.91" font-family="Helvetica,sans-Serif" font-size="14.00">P2</text></g><g id="svg-graphviz-e3f0a9d6a3fa-edge1" class="edge"><title>P1-&gt;P2</title><path fill="none" stroke="black" d="M41.56,-50.54C60.57,-60.53 74.07,-64.03 121.66,-72.79" /><polygon fill="black" stroke="black" points="121.18,-76.26 131.65,-74.62 122.44,-69.38 121.18,-76.26" /><text text-anchor="middle" x="86.7" y="-71.41" font-family="Times,serif" font-size="14.00">espera</text></g><g id="svg-graphviz-e3f0a9d6a3fa-node3" class="node"><title>P3</title><ellipse fill="#ffe3c2" stroke="black" cx="285.29" cy="-39.61" rx="22.2" ry="22.2" /><text text-anchor="middle" x="285.29" y="-35.91" font-family="Helvetica,sans-Serif" font-size="14.00">P3</text></g><g id="svg-graphviz-e3f0a9d6a3fa-edge2" class="edge"><title>P2-&gt;P3</title><path fill="none" stroke="black" d="M175.72,-74.62C222.77,-66.07 240.12,-62.39 256.56,-55.07" /><polygon fill="black" stroke="black" points="258.32,-58.1 265.77,-50.57 255.25,-51.81 258.32,-58.1" /><text text-anchor="middle" x="220.7" y="-71.41" font-family="Times,serif" font-size="14.00">espera</text></g><g id="svg-graphviz-e3f0a9d6a3fa-edge3" class="edge"><title>P3-&gt;P1</title><path fill="none" stroke="black" d="M42.78,-31.35C144.27,8.96 158.95,10.24 254.95,-27.53" /><polygon fill="black" stroke="black" points="253.91,-30.88 264.5,-31.31 256.48,-24.37 253.91,-30.88" /><text text-anchor="middle" x="153.7" y="-27.41" font-family="Times,serif" font-size="14.00">espera</text></g></g></svg></div></div>
 
-<h3 id="detecção-e-recuperação"><span class="heading-text">. Detecção e Recuperação</span><span class="heading-arabic">7.5.2</span></h3>
-<p>O sistema permite que o deadlock ocorra, mas o monitora constantemente. Ao detectar um ciclo, ele toma uma ação corretiva.</p>
-<h4 id="detecção-matricial-múltiplos-recursos"><span class="heading-text">Detecção Matricial (Múltiplos Recursos)</span><span class="heading-arabic">7.5.2.1</span></h4>
-<p>Para sistemas complexos, utilizamos o modelo matricial baseado em quatro componentes: o vetor <strong>E</strong> (Existing) para os recursos totais, o vetor <strong>A</strong> (Available) para os recursos livres, a matriz <strong>C</strong> (Current) que detalha a alocação atual e a matriz <strong>R</strong> (Request) com as requisições pendentes.</p>
-<p>A lógica é: tentar encontrar um processo cujas requisições possam ser atendidas pelos recursos disponíveis ($A$). Se encontrar, &quot;executamos&quot; esse processo virtualmente, pegamos os recursos que ele tinha e os devolvemos para $A$. Repetimos até que todos terminem. Se sobrarem processos não marcados, eles estão em deadlock.</p>
-<pre class="line-numbers language-python" data-lang="PYTHON"><code class="language-python"># Algoritmo Simplificado de Detecção
-def detectar_deadlock(E, A, C, R):
-    n_procs = len(C)
-    finalizados = [False] * n_procs
-    
-    while True:
-        encontrou = False
-        for i in range(n_procs):
-            if not finalizados[i] and all(R[i][j] &lt;= A[j] for j in range(len(A))):
-                # Processo i pode terminar! Devolve recursos ao banco.
-                for j in range(len(A)):
-                    A[j] += C[i][j]
-                finalizados[i] = True
-                encontrou = True
-        if not encontrou: break
-        
-    return [i for i, f in enumerate(finalizados) if not f]
-</code></pre>
-<h5 id="exemplo-passo-a-passo"><span class="heading-text">Exemplo Passo a Passo:</span><span class="heading-arabic">7.5.2.1.1</span></h5>
-<p>Considere $E = (4, 2, 3, 1)$ e $A = (2, 1, 0, 0)$.</p>
+<p>Esse formato aparece muito em bancos de dados e ferramentas de diagnóstico.</p>
+<p>Note que, um ciclo nem sempre significa deadlock. Com múltiplas instâncias de um recurso, ciclo deixa de ser prova suficiente.</p>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="760" viewBox="0.00 0.00 399.39 114.20" class="svg-graph graphviz-img"><g id="svg-graphviz-e3d1bce5884c-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 110.2)"><title>MultiInstance</title><polygon fill="white" stroke="transparent" points="-4,4 -4,-110.2 395.39,-110.2 395.39,4 -4,4" /><g id="svg-graphviz-e3d1bce5884c-node1" class="node"><title>P1</title><ellipse fill="#fff2cc" stroke="black" cx="22.1" cy="-53.1" rx="22.2" ry="22.2" /><text text-anchor="middle" x="22.1" y="-49.4" font-family="Helvetica,sans-Serif" font-size="14.00">P1</text></g><g id="svg-graphviz-e3d1bce5884c-node4" class="node"><title>R</title><path fill="#d9ecff" stroke="black" d="M220.2,-72.1C220.2,-72.1 144.2,-72.1 144.2,-72.1 138.2,-72.1 132.2,-66.1 132.2,-60.1 132.2,-60.1 132.2,-46.1 132.2,-46.1 132.2,-40.1 138.2,-34.1 144.2,-34.1 144.2,-34.1 220.2,-34.1 220.2,-34.1 226.2,-34.1 232.2,-40.1 232.2,-46.1 232.2,-46.1 232.2,-60.1 232.2,-60.1 232.2,-66.1 226.2,-72.1 220.2,-72.1" /><text text-anchor="middle" x="182.2" y="-56.9" font-family="Helvetica,sans-Serif" font-size="14.00">R</text><text text-anchor="middle" x="182.2" y="-41.9" font-family="Helvetica,sans-Serif" font-size="14.00">2 instancias</text></g><g id="svg-graphviz-e3d1bce5884c-edge3" class="edge"><title>P1-&gt;R</title><path fill="none" stroke="firebrick" d="M44.27,-53.1C65.69,-53.1 80.26,-53.1 121.9,-53.1" /><polygon fill="firebrick" stroke="firebrick" points="122.14,-56.6 132.14,-53.1 122.14,-49.6 122.14,-56.6" /><text text-anchor="middle" x="88.2" y="-56.9" font-family="Times,serif" font-size="14.00">solicita</text></g><g id="svg-graphviz-e3d1bce5884c-node2" class="node"><title>P2</title><ellipse fill="#fff2cc" stroke="black" cx="369.29" cy="-84.1" rx="22.2" ry="22.2" /><text text-anchor="middle" x="369.29" y="-80.4" font-family="Helvetica,sans-Serif" font-size="14.00">P2</text></g><g id="svg-graphviz-e3d1bce5884c-node3" class="node"><title>P3</title><ellipse fill="#fff2cc" stroke="black" cx="369.29" cy="-22.1" rx="22.2" ry="22.2" /><text text-anchor="middle" x="369.29" y="-18.4" font-family="Helvetica,sans-Serif" font-size="14.00">P3</text></g><g id="svg-graphviz-e3d1bce5884c-edge1" class="edge"><title>R-&gt;P2</title><path fill="none" stroke="black" d="M232.4,-61.81C292.2,-72.17 312.1,-75.52 337.2,-79.33" /><polygon fill="black" stroke="black" points="336.76,-82.8 347.16,-80.83 337.8,-75.88 336.76,-82.8" /><text text-anchor="middle" x="289.7" y="-87.9" font-family="Times,serif" font-size="14.00">instancia 1</text></g><g id="svg-graphviz-e3d1bce5884c-edge2" class="edge"><title>R-&gt;P3</title><path fill="none" stroke="black" d="M232.4,-44.38C292.2,-34.02 312.1,-30.67 337.2,-26.86" /><polygon fill="black" stroke="black" points="337.8,-30.31 347.16,-25.37 336.76,-23.39 337.8,-30.31" /><text text-anchor="middle" x="289.7" y="-25.9" font-family="Times,serif" font-size="14.00">instancia 2</text></g></g></svg></div></div>
+
+<p>Se <code>P3</code> terminar e liberar sua instância, <code>P1</code> prossegue. Portanto, há espera, mas não necessariamente impasse.</p>
+<h2 id="estratégias-para-lidar-com-deadlocks"><span class="heading-text">Estratégias para lidar com deadlocks</span><span class="heading-arabic">7.6</span></h2>
+<p>Quatro famílias de abordagem aparecem na literatura e na prática.</p>
 <table>
 <thead>
 <tr>
-  <th style="text-align:left">Proc</th>
-  <th style="text-align:left">Alocado (C)</th>
-  <th style="text-align:left">Requisição (R)</th>
-  <th style="text-align:left">Status</th>
+  <th style="text-align:left">Estratégia</th>
+  <th style="text-align:left">Ideia</th>
+  <th style="text-align:left">Vantagem</th>
+  <th style="text-align:left">Custo</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-  <td style="text-align:left">P1</td>
-  <td style="text-align:left">(0,0,1,0)</td>
-  <td style="text-align:left">(2,0,0,1)</td>
-  <td style="text-align:left">Esperando</td>
+  <td style="text-align:left"><strong>Avestruz</strong></td>
+  <td style="text-align:left">Ignorar o problema.</td>
+  <td style="text-align:left">Simples, zero overhead.</td>
+  <td style="text-align:left">Deadlock vira bug fatal quando acontece.</td>
 </tr>
 <tr>
-  <td style="text-align:left">P2</td>
-  <td style="text-align:left">(2,0,0,1)</td>
-  <td style="text-align:left">(1,0,1,0)</td>
-  <td style="text-align:left">Pode rodar!</td>
+  <td style="text-align:left"><strong>Detecção e recuperação</strong></td>
+  <td style="text-align:left">Deixar acontecer e depois detectar ciclos.</td>
+  <td style="text-align:left">Flexível.</td>
+  <td style="text-align:left">Exige monitoramento e desfazer trabalho.</td>
 </tr>
 <tr>
-  <td style="text-align:left">P3</td>
-  <td style="text-align:left">(0,1,2,0)</td>
-  <td style="text-align:left">(2,1,0,0)</td>
-  <td style="text-align:left">Esperando</td>
+  <td style="text-align:left"><strong>Evitação</strong></td>
+  <td style="text-align:left">Só conceder recurso se o estado continuar seguro.</td>
+  <td style="text-align:left">Garantia formal.</td>
+  <td style="text-align:left">Alto custo e exige demanda máxima conhecida.</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Prevenção</strong></td>
+  <td style="text-align:left">Quebrar uma condição de Coffman por projeto.</td>
+  <td style="text-align:left">Forte e previsível.</td>
+  <td style="text-align:left">Pode desperdiçar recursos e engessar o código.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="algoritmo-do-avestruz"><span class="heading-text">Algoritmo do Avestruz</span><span class="heading-arabic">7.6.1</span></h3>
+<p>Em muitos sistemas gerais, o kernel não tenta resolver genericamente todo deadlock possível. Em vez disso, trata deadlocks como bugs de implementação de locks internos ou como falhas raras demais para justificar o custo de uma política universal de prevenção.</p>
+<div class="mermaid-outer-container">  <div class="mermaid-switcher">    <div class="switcher-track">      <button class="switcher-btn active" onclick="CourseForgeUI.switchMermaidView(this, 'diagram')"><i data-lucide="eye"></i> Diagrama</button>      <button class="switcher-btn" onclick="CourseForgeUI.switchMermaidView(this, 'code')"><i data-lucide="code"></i> Código</button>      <div class="switcher-slider"></div>    </div>  </div>  <div class="mermaid-content">    <div class="mermaid-display">      <pre class="mermaid">flowchart LR
+    A[Requisicao de recurso] --&gt; B{Vale monitorar formalmente?}
+    B -- Nao --&gt; C[Concede e segue]
+    C --&gt; D{Travou?}
+    D -- Nao --&gt; E[Execucao normal]
+    D -- Sim --&gt; F[Bug, reinicio, rollback ou correcao de codigo]</pre>    </div>    <div class="mermaid-source" style="display: none;">      <pre class="language-mermaid"><code>flowchart LR
+    A[Requisicao de recurso] --&gt; B{Vale monitorar formalmente?}
+    B -- Nao --&gt; C[Concede e segue]
+    C --&gt; D{Travou?}
+    D -- Nao --&gt; E[Execucao normal]
+    D -- Sim --&gt; F[Bug, reinicio, rollback ou correcao de codigo]</code></pre>    </div>  </div></div>
+
+<p>Essa estratégia parece irresponsável, mas faz sentido quando:</p>
+<ol>
+<li>deadlocks são muito raros,</li>
+<li>o custo de evitar todos eles é alto,</li>
+<li>a política universal prejudicaria o desempenho de todo o sistema.</li>
+</ol>
+<h3 id="detecção-e-recuperação"><span class="heading-text">Detecção e recuperação</span><span class="heading-arabic">7.6.2</span></h3>
+<p>Aqui o sistema permite a alocação normal, mas periodicamente verifica se surgiu um ciclo.</p>
+<h4 id="detecção-matricial-para-múltiplos-recursos"><span class="heading-text">Detecção matricial para múltiplos recursos</span><span class="heading-arabic">7.6.2.1</span></h4>
+<p>Usamos quatro estruturas:</p>
+<ul>
+<li>$E$: vetor de recursos existentes.</li>
+<li>$A$: vetor de recursos disponíveis.</li>
+<li>$C$: matriz de alocação atual.</li>
+<li>$R$: matriz de requisição pendente.</li>
+</ul>
+<p>A lógica é procurar um processo cuja requisição seja compatível com os recursos disponíveis. Se ele puder terminar, devolvemos o que ele segura e repetimos. Se sobrar alguém que nunca consegue terminar, esse conjunto está em deadlock.</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;stdbool.h&gt;
+
+#define N 3  // quantidade de processos
+#define M 4  // quantidade de tipos de recurso
+
+void detectar_deadlock(int available[M], int current[N][M], int request[N][M]) {
+    int work[M];
+    bool finish[N] = {false};
+
+    for (int j = 0; j &lt; M; j++) {
+        work[j] = available[j];
+    }
+
+    bool mudou = true;
+    while (mudou) {
+        mudou = false;
+
+        for (int i = 0; i &lt; N; i++) {
+            if (finish[i]) {
+                continue;
+            }
+
+            bool pode_terminar = true;
+            for (int j = 0; j &lt; M; j++) {
+                if (request[i][j] &gt; work[j]) {
+                    pode_terminar = false;
+                    break;
+                }
+            }
+
+            if (pode_terminar) {
+                for (int j = 0; j &lt; M; j++) {
+                    work[j] += current[i][j];
+                }
+                finish[i] = true;
+                mudou = true;
+            }
+        }
+    }
+
+    printf(&quot;Processos em deadlock: &quot;);
+    for (int i = 0; i &lt; N; i++) {
+        if (!finish[i]) {
+            printf(&quot;P%d &quot;, i + 1);
+        }
+    }
+    printf(&quot;\n&quot;);
+}
+
+int main(void) {
+    int available[M] = {2, 1, 0, 0};
+    int current[N][M] = {
+        {0, 0, 1, 0},
+        {2, 0, 0, 1},
+        {0, 1, 2, 0}
+    };
+    int request[N][M] = {
+        {2, 0, 0, 1},
+        {1, 0, 1, 0},
+        {2, 1, 0, 0}
+    };
+
+    detectar_deadlock(available, current, request);
+    return 0;
+}
+</code></pre>
+<h4 id="exemplo-passo-a-passo"><span class="heading-text">Exemplo passo a passo</span><span class="heading-arabic">7.6.2.2</span></h4>
+<p>Considere:</p>
+<p>$$
+A = (2, 1, 0, 0)
+$$</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Processo</th>
+  <th style="text-align:left">Alocado $C$</th>
+  <th style="text-align:left">Requisição $R$</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">$P_1$</td>
+  <td style="text-align:left">$(0,0,1,0)$</td>
+  <td style="text-align:left">$(2,0,0,1)$</td>
+</tr>
+<tr>
+  <td style="text-align:left">$P_2$</td>
+  <td style="text-align:left">$(2,0,0,1)$</td>
+  <td style="text-align:left">$(1,0,1,0)$</td>
+</tr>
+<tr>
+  <td style="text-align:left">$P_3$</td>
+  <td style="text-align:left">$(0,1,2,0)$</td>
+  <td style="text-align:left">$(2,1,0,0)$</td>
 </tr>
 </tbody>
 </table>
 <ol>
-<li><strong>Rodada 1</strong>: Apenas <strong>P2</strong> tem sua requisição $(1,0,1,0)$ atendida pelo que há em $A (2,1,0,0)$.</li>
-<li>P2 termina e devolve o que tinha: $A$ vira $A + C2 \to (2,1,0,0) + (2,0,0,1) = (4,1,0,1)$.</li>
-<li><strong>Rodada 2</strong>: Agora, <strong>P1</strong> pode ser atendido por $(4,1,0,1)$.</li>
-<li>P1 termina e devolve: $A$ vira $(4,1,0,1) + (0,0,1,0) = (4,1,1,1)$.</li>
-<li><strong>Rodada 3</strong>: Com $(4,1,1,1)$, <strong>P3</strong> finalmente roda.</li>
-<li><strong>Resultado</strong>: Todos marcados, <strong>zero deadlocks</strong>. Se no passo 1 ninguém pudesse rodar, teríamos um impasse imediato.</li>
+<li>Com $A=(2,1,0,0)$, quem pode terminar primeiro é <strong>$P_3$</strong>, pois sua requisição é $(2,1,0,0)$, exatamente compatível com os recursos disponíveis.</li>
+<li>Ao terminar, $P_3$ devolve $(0,1,2,0)$.</li>
+<li>Agora $A=(2,2,2,0)$ e <strong>$P_2$</strong> pode terminar, pois pede apenas $(1,0,1,0)$.</li>
+<li>$P_2$ devolve $(2,0,0,1)$.</li>
+<li>Agora $A=(4,2,2,1)$ e <strong>$P_1$</strong> também consegue terminar.</li>
+<li>Por fim, $P_1$ devolve $(0,0,1,0)$, ficando $A=(4,2,3,1)$.</li>
 </ol>
-<h4 id="recuperação"><span class="heading-text">Recuperação</span><span class="heading-arabic">7.5.2.2</span></h4>
-<p>Uma vez detectado o impasse, o sistema deve agir para resolvê-lo. Isso pode ser feito através da <strong>preempção</strong>, tomando o recurso de um processo, pelo <strong>rollback</strong>, que retorna o processo a um estado anterior seguro, ou pela <strong>eliminação</strong>, terminando forçadamente um ou mais processos envolvidos no ciclo.</p>
-<div class="callout callout-important">
+<p>Como todos conseguem terminar, <strong>não há deadlock</strong>.</p>
+<h4 id="recuperação"><span class="heading-text">Recuperação</span><span class="heading-arabic">7.6.2.3</span></h4>
+<p>Depois de detectar, o sistema precisa decidir como sair do ciclo. As opções clássicas são:</p>
+<ol>
+<li><strong>Preempção</strong> de algum recurso, quando isso for tecnicamente possível.</li>
+<li><strong>Rollback</strong> de um processo para um ponto seguro anterior.</li>
+<li><strong>Abortar</strong> uma ou mais vítimas.</li>
+</ol>
+<h4 id="como-escolher-a-vítima"><span class="heading-text">Como escolher a vítima?</span><span class="heading-arabic">7.6.2.4</span></h4>
+<p>Na prática, não se mata um processo aleatoriamente. Alguns critérios comuns são:</p>
+<ol>
+<li>menor custo de rollback,</li>
+<li>menor prioridade,</li>
+<li>menor tempo de execução já investido,</li>
+<li>menor quantidade de recursos segurados,</li>
+<li>menor impacto para o usuário.</li>
+</ol>
+<h3 id="evitação-o-algoritmo-do-banqueiro"><span class="heading-text">Evitação: o Algoritmo do Banqueiro</span><span class="heading-arabic">7.6.3</span></h3>
+<p>Dijkstra propôs um método mais rigoroso: um recurso só é concedido se, depois da concessão, o sistema <strong>continuar em estado seguro</strong>.</p>
+<p>A ideia é a de um gerente de banco conservador. O banco pode até ter dinheiro em caixa agora, mas isso não basta. Antes de emprestar, ele se pergunta:</p>
+<p><strong>Se eu entregar este recurso agora, ainda existirá alguma ordem possível em que todos os processos possam terminar e, ao terminar, devolver os recursos que já possuem?</strong></p>
+<p>Se a resposta for <strong>sim</strong>, a concessão é feita. Se a resposta for <strong>não</strong>, o pedido é adiado, mesmo que o recurso esteja livre naquele instante.</p>
+<div class="callout callout-tip">
   <div class="callout-title">
-    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
-    <span class="callout-title-inner">A Regra de Ouro<br /></span>
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .5 2.2 1.5 3.1.7.7 1.3 1.5 1.5 2.4"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span>
+    <span class="callout-title-inner">Intuição correta<br /></span>
   </div>
   <div class="callout-content">
-<p>Todas as quatro condições precisam estar presentes simultaneamente para que ocorra um impasse. Se conseguirmos quebrar a exclusão mútua, a posse e espera, a não preempção ou a espera circular, garantimos que o sistema estará livre de deadlocks.</p>
+<p>O Banqueiro não pergunta apenas &quot;tenho recurso disponível agora?&quot;. Ele pergunta: &quot;se eu conceder agora, ainda consigo garantir uma sequência segura para todos depois?&quot;</p>
   </div>
 </div>
-<h3 id="evitação-avoidance-o-algoritmo-do-banqueiro"><span class="heading-text">. Evitação (Avoidance): O Algoritmo do Banqueiro</span><span class="heading-arabic">7.5.3</span></h3>
-<p>Dijkstra propôs que o sistema só conceda um recurso se houver a garantia de que ainda existirá uma sequência segura de execução, mesmo em um cenário de demanda máxima. Esse é o pilar do Algoritmo do Banqueiro. Embora o conceito seja elegante, sua aplicação prática é limitada pelo fato de que o sistema operacional raramente conhece as necessidades máximas de cada processo antecipadamente, informação que quase nenhum programa fornece no seu código-fonte.</p>
+<p>O modelo usa:</p>
+<ul>
+<li><code>Max</code>: demanda máxima declarada de cada processo,</li>
+<li><code>Allocation</code>: o que cada processo já recebeu,</li>
+<li><code>Need = Max - Allocation</code>,</li>
+<li><code>Available</code>: o que ainda está livre.</li>
+</ul>
+<h3 id="como-pensar-no-algoritmo"><span class="heading-text">Como pensar no algoritmo</span><span class="heading-arabic">7.6.4</span></h3>
+<p>Sempre que um processo faz uma nova requisição, o sistema executa mentalmente três passos:</p>
+<ol>
+<li><strong>Simula</strong> a concessão do recurso.</li>
+<li><strong>Recalcula</strong> <code>Available</code>, <code>Allocation</code> e <code>Need</code>.</li>
+<li><strong>Testa</strong> se, nesse novo estado, ainda existe uma sequência de processos que pode terminar até esvaziar o sistema.</li>
+</ol>
+<p>Se existir essa sequência, o estado é seguro. Se não existir, o estado é inseguro e o pedido deve esperar.</p>
+<h4 id="receita-operacional"><span class="heading-text">Receita operacional</span><span class="heading-arabic">7.6.4.1</span></h4>
+<ol>
+<li>Veja quanto está livre em <code>Available</code>.</li>
+<li>Procure algum processo cujo <code>Need</code> caiba inteiro dentro de <code>Available</code>.</li>
+<li>Se encontrar, imagine que ele termina e devolve tudo o que está em <code>Allocation</code>.</li>
+<li>Atualize <code>Available</code> com essa devolução.</li>
+<li>Repita.</li>
+<li>Se todos conseguem terminar, o estado é seguro.</li>
+<li>Se em algum momento ninguém mais consegue terminar, o estado é inseguro.</li>
+</ol>
+<h4 id="exemplo-intuitivo-do-banqueiro"><span class="heading-text">Exemplo intuitivo do banqueiro</span><span class="heading-arabic">7.6.4.2</span></h4>
 <table>
 <thead>
 <tr>
   <th style="text-align:left">Cliente</th>
-  <th style="text-align:left">Limite (Máx)</th>
+  <th style="text-align:left">Máximo</th>
   <th style="text-align:left">Já tem</th>
   <th style="text-align:left">Necessidade</th>
 </tr>
@@ -539,211 +719,16 @@ def detectar_deadlock(E, A, C, R):
 </tr>
 </tbody>
 </table>
-<p><strong>Dinheiro no caixa: 5</strong>. O estado é seguro?<br />
-Sim! Pois com 5, o banco pode atender C (que precisa de 2). C termina e devolve tudo (4). Com 9 em caixa, podemos atender qualquer outro.</p>
-<img src="static/figura6_11_estados_banqueiro.png" width="70%">
-*Figura: Três estados de alocação: (a) e (b) são seguros, (c) é inseguro.*
-
-<div class="callout callout-question">
-  <div class="callout-title">
-    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
-    <span class="callout-title-inner">Reflita<br /></span>
-  </div>
-  <div class="callout-content">
-<p>Se o cliente A de repente pedisse mais 2 e o banco desse, o caixa cairia para 3. O estado continuaria seguro? (Dica: tente simular se alguém ainda consegue terminar).</p>
-  </div>
-</div>
-<div class="no-break"><div class=""><svg xmlns="http://www.w3.org/2000/svg" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:ns2="http://creativecommons.org/ns#" xmlns:ns4="http://www.w3.org/1999/xlink" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" viewBox="0 0 386.805625 392.994375" version="1.1" class="svg-graph matplotlib-plot-img"> <metadata>  <rdf:RDF>   <ns2:Work>    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage" />    <dc:date>2026-04-06T17:52:19.495463</dc:date>    <dc:format>image/svg+xml</dc:format>    <dc:creator>     <ns2:Agent>      <dc:title>Matplotlib v3.10.8, https://matplotlib.org/</dc:title>     </ns2:Agent>    </dc:creator>   </ns2:Work>  </rdf:RDF> </metadata> <defs>  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style> </defs> <g id="svg-matplotlib-6aabbb40bc04-figure_1">  <g id="svg-matplotlib-6aabbb40bc04-patch_1">   <path d="M 0 392.994375 L 386.805625 392.994375 L 386.805625 0 L 0 0 L 0 392.994375 z" style="fill: none" />  </g>  <g id="svg-matplotlib-6aabbb40bc04-axes_1">   <g id="svg-matplotlib-6aabbb40bc04-patch_2">    <path d="M 40.603125 355.438125 L 373.243125 355.438125 L 373.243125 22.798125 L 40.603125 22.798125 L 40.603125 355.438125 z" style="fill: none" />   </g>   <g clip-path="url(#svg-matplotlib-6aabbb40bc04-p0ada35ed08)">    <image ns4:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAc4AAAHOCAYAAAAR5umwAAAHB0lEQVR4nO3XsQ3CQAAEQYzIaIGSXIhLokAKcPKxaYEN0OulmQouW912jXO/AQA/uc8eAAArEU4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIDgMXsA/NvxfM2ewALe4zN7AovwOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEg2K5x7rNHAMAqPE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAALhBIBAOAEgEE4ACIQTAIIvCNoM/ZRpUvgAAAAASUVORK5CYII=" id="svg-matplotlib-6aabbb40bc04-image7ac3141a8c" transform="scale(1 -1) translate(0 -332.64)" x="40.603125" y="-22.798125" width="332.64" height="332.64" />   </g>   <g id="svg-matplotlib-6aabbb40bc04-matplotlib.axis_1">    <g id="svg-matplotlib-6aabbb40bc04-xtick_1">     <g id="svg-matplotlib-6aabbb40bc04-line2d_1">      <path d="M 40.603125 355.438125 L 40.603125 22.798125 " clip-path="url(#svg-matplotlib-6aabbb40bc04-p0ada35ed08)" style="fill: none; stroke-dasharray: 0.8,1.32; stroke-dashoffset: 0; stroke: #b0b0b0; stroke-opacity: 0.6; stroke-width: 0.8" />     </g>     <g id="svg-matplotlib-6aabbb40bc04-line2d_2">      <defs>       <path id="svg-matplotlib-6aabbb40bc04-m170cfa68c1" d="M 0 0 L 0 3.5 " style="stroke: #000000; stroke-width: 0.8" />      </defs>      <g>       <use ns4:href="#svg-matplotlib-6aabbb40bc04-m170cfa68c1" x="40.603125" y="355.438125" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-6aabbb40bc04-text_1">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle" x="40.603125" y="370.036562" transform="rotate(-0 40.603125 370.036562)">0</text>     </g>    </g>    <g id="svg-matplotlib-6aabbb40bc04-xtick_2">     <g id="svg-matplotlib-6aabbb40bc04-line2d_3">      <path d="M 107.131125 355.438125 L 107.131125 22.798125 " clip-path="url(#svg-matplotlib-6aabbb40bc04-p0ada35ed08)" style="fill: none; stroke-dasharray: 0.8,1.32; stroke-dashoffset: 0; stroke: #b0b0b0; stroke-opacity: 0.6; stroke-width: 0.8" />     </g>     <g id="svg-matplotlib-6aabbb40bc04-line2d_4">      <g>       <use ns4:href="#svg-matplotlib-6aabbb40bc04-m170cfa68c1" x="107.131125" y="355.438125" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-6aabbb40bc04-text_2">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle" x="107.131125" y="370.036562" transform="rotate(-0 107.131125 370.036562)">2</text>     </g>    </g>    <g id="svg-matplotlib-6aabbb40bc04-xtick_3">     <g id="svg-matplotlib-6aabbb40bc04-line2d_5">      <path d="M 173.659125 355.438125 L 173.659125 22.798125 " clip-path="url(#svg-matplotlib-6aabbb40bc04-p0ada35ed08)" style="fill: none; stroke-dasharray: 0.8,1.32; stroke-dashoffset: 0; stroke: #b0b0b0; stroke-opacity: 0.6; stroke-width: 0.8" />     </g>     <g id="svg-matplotlib-6aabbb40bc04-line2d_6">      <g>       <use ns4:href="#svg-matplotlib-6aabbb40bc04-m170cfa68c1" x="173.659125" y="355.438125" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-6aabbb40bc04-text_3">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle" x="173.659125" y="370.036562" transform="rotate(-0 173.659125 370.036562)">4</text>     </g>    </g>    <g id="svg-matplotlib-6aabbb40bc04-xtick_4">     <g id="svg-matplotlib-6aabbb40bc04-line2d_7">      <path d="M 240.187125 355.438125 L 240.187125 22.798125 " clip-path="url(#svg-matplotlib-6aabbb40bc04-p0ada35ed08)" style="fill: none; stroke-dasharray: 0.8,1.32; stroke-dashoffset: 0; stroke: #b0b0b0; stroke-opacity: 0.6; stroke-width: 0.8" />     </g>     <g id="svg-matplotlib-6aabbb40bc04-line2d_8">      <g>       <use ns4:href="#svg-matplotlib-6aabbb40bc04-m170cfa68c1" x="240.187125" y="355.438125" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-6aabbb40bc04-text_4">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle" x="240.187125" y="370.036562" transform="rotate(-0 240.187125 370.036562)">6</text>     </g>    </g>    <g id="svg-matplotlib-6aabbb40bc04-xtick_5">     <g id="svg-matplotlib-6aabbb40bc04-line2d_9">      <path d="M 306.715125 355.438125 L 306.715125 22.798125 " clip-path="url(#svg-matplotlib-6aabbb40bc04-p0ada35ed08)" style="fill: none; stroke-dasharray: 0.8,1.32; stroke-dashoffset: 0; stroke: #b0b0b0; stroke-opacity: 0.6; stroke-width: 0.8" />     </g>     <g id="svg-matplotlib-6aabbb40bc04-line2d_10">      <g>       <use ns4:href="#svg-matplotlib-6aabbb40bc04-m170cfa68c1" x="306.715125" y="355.438125" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-6aabbb40bc04-text_5">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle" x="306.715125" y="370.036562" transform="rotate(-0 306.715125 370.036562)">8</text>     </g>    </g>    <g id="svg-matplotlib-6aabbb40bc04-xtick_6">     <g id="svg-matplotlib-6aabbb40bc04-line2d_11">      <path d="M 373.243125 355.438125 L 373.243125 22.798125 " clip-path="url(#svg-matplotlib-6aabbb40bc04-p0ada35ed08)" style="fill: none; stroke-dasharray: 0.8,1.32; stroke-dashoffset: 0; stroke: #b0b0b0; stroke-opacity: 0.6; stroke-width: 0.8" />     </g>     <g id="svg-matplotlib-6aabbb40bc04-line2d_12">      <g>       <use ns4:href="#svg-matplotlib-6aabbb40bc04-m170cfa68c1" x="373.243125" y="355.438125" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-6aabbb40bc04-text_6">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle" x="373.243125" y="370.036562" transform="rotate(-0 373.243125 370.036562)">10</text>     </g>    </g>    <g id="svg-matplotlib-6aabbb40bc04-text_7">     <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle" x="206.923125" y="383.714687" transform="rotate(-0 206.923125 383.714687)">Progresso do Processo 1</text>    </g>   </g>   <g id="svg-matplotlib-6aabbb40bc04-matplotlib.axis_2">    <g id="svg-matplotlib-6aabbb40bc04-ytick_1">     <g id="svg-matplotlib-6aabbb40bc04-line2d_13">      <path d="M 40.603125 355.438125 L 373.243125 355.438125 " clip-path="url(#svg-matplotlib-6aabbb40bc04-p0ada35ed08)" style="fill: none; stroke-dasharray: 0.8,1.32; stroke-dashoffset: 0; stroke: #b0b0b0; stroke-opacity: 0.6; stroke-width: 0.8" />     </g>     <g id="svg-matplotlib-6aabbb40bc04-line2d_14">      <defs>       <path id="svg-matplotlib-6aabbb40bc04-m81f24efa72" d="M 0 0 L -3.5 0 " style="stroke: #000000; stroke-width: 0.8" />      </defs>      <g>       <use ns4:href="#svg-matplotlib-6aabbb40bc04-m81f24efa72" x="40.603125" y="355.438125" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-6aabbb40bc04-text_8">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end" x="33.603125" y="359.237344" transform="rotate(-0 33.603125 359.237344)">0</text>     </g>    </g>    <g id="svg-matplotlib-6aabbb40bc04-ytick_2">     <g id="svg-matplotlib-6aabbb40bc04-line2d_15">      <path d="M 40.603125 288.910125 L 373.243125 288.910125 " clip-path="url(#svg-matplotlib-6aabbb40bc04-p0ada35ed08)" style="fill: none; stroke-dasharray: 0.8,1.32; stroke-dashoffset: 0; stroke: #b0b0b0; stroke-opacity: 0.6; stroke-width: 0.8" />     </g>     <g id="svg-matplotlib-6aabbb40bc04-line2d_16">      <g>       <use ns4:href="#svg-matplotlib-6aabbb40bc04-m81f24efa72" x="40.603125" y="288.910125" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-6aabbb40bc04-text_9">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end" x="33.603125" y="292.709344" transform="rotate(-0 33.603125 292.709344)">2</text>     </g>    </g>    <g id="svg-matplotlib-6aabbb40bc04-ytick_3">     <g id="svg-matplotlib-6aabbb40bc04-line2d_17">      <path d="M 40.603125 222.382125 L 373.243125 222.382125 " clip-path="url(#svg-matplotlib-6aabbb40bc04-p0ada35ed08)" style="fill: none; stroke-dasharray: 0.8,1.32; stroke-dashoffset: 0; stroke: #b0b0b0; stroke-opacity: 0.6; stroke-width: 0.8" />     </g>     <g id="svg-matplotlib-6aabbb40bc04-line2d_18">      <g>       <use ns4:href="#svg-matplotlib-6aabbb40bc04-m81f24efa72" x="40.603125" y="222.382125" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-6aabbb40bc04-text_10">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end" x="33.603125" y="226.181344" transform="rotate(-0 33.603125 226.181344)">4</text>     </g>    </g>    <g id="svg-matplotlib-6aabbb40bc04-ytick_4">     <g id="svg-matplotlib-6aabbb40bc04-line2d_19">      <path d="M 40.603125 155.854125 L 373.243125 155.854125 " clip-path="url(#svg-matplotlib-6aabbb40bc04-p0ada35ed08)" style="fill: none; stroke-dasharray: 0.8,1.32; stroke-dashoffset: 0; stroke: #b0b0b0; stroke-opacity: 0.6; stroke-width: 0.8" />     </g>     <g id="svg-matplotlib-6aabbb40bc04-line2d_20">      <g>       <use ns4:href="#svg-matplotlib-6aabbb40bc04-m81f24efa72" x="40.603125" y="155.854125" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-6aabbb40bc04-text_11">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end" x="33.603125" y="159.653344" transform="rotate(-0 33.603125 159.653344)">6</text>     </g>    </g>    <g id="svg-matplotlib-6aabbb40bc04-ytick_5">     <g id="svg-matplotlib-6aabbb40bc04-line2d_21">      <path d="M 40.603125 89.326125 L 373.243125 89.326125 " clip-path="url(#svg-matplotlib-6aabbb40bc04-p0ada35ed08)" style="fill: none; stroke-dasharray: 0.8,1.32; stroke-dashoffset: 0; stroke: #b0b0b0; stroke-opacity: 0.6; stroke-width: 0.8" />     </g>     <g id="svg-matplotlib-6aabbb40bc04-line2d_22">      <g>       <use ns4:href="#svg-matplotlib-6aabbb40bc04-m81f24efa72" x="40.603125" y="89.326125" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-6aabbb40bc04-text_12">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end" x="33.603125" y="93.125344" transform="rotate(-0 33.603125 93.125344)">8</text>     </g>    </g>    <g id="svg-matplotlib-6aabbb40bc04-ytick_6">     <g id="svg-matplotlib-6aabbb40bc04-line2d_23">      <path d="M 40.603125 22.798125 L 373.243125 22.798125 " clip-path="url(#svg-matplotlib-6aabbb40bc04-p0ada35ed08)" style="fill: none; stroke-dasharray: 0.8,1.32; stroke-dashoffset: 0; stroke: #b0b0b0; stroke-opacity: 0.6; stroke-width: 0.8" />     </g>     <g id="svg-matplotlib-6aabbb40bc04-line2d_24">      <g>       <use ns4:href="#svg-matplotlib-6aabbb40bc04-m81f24efa72" x="40.603125" y="22.798125" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-6aabbb40bc04-text_13">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end" x="33.603125" y="26.597344" transform="rotate(-0 33.603125 26.597344)">10</text>     </g>    </g>    <g id="svg-matplotlib-6aabbb40bc04-text_14">     <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle" x="14.798438" y="189.118125" transform="rotate(-90 14.798438 189.118125)">Progresso do Processo 2</text>    </g>   </g>   <g id="svg-matplotlib-6aabbb40bc04-line2d_25">    <path d="M 40.603125 355.438125 L 173.659125 288.910125 L 190.291125 205.750125 L 290.083125 89.326125 L 373.243125 22.798125 " clip-path="url(#svg-matplotlib-6aabbb40bc04-p0ada35ed08)" style="fill: none; stroke: #0000ff; stroke-width: 2; stroke-linecap: square" />   </g>   <g id="svg-matplotlib-6aabbb40bc04-line2d_26">    <path d="M 40.603125 355.438125 L 173.659125 255.646125 L 223.555125 172.486125 " clip-path="url(#svg-matplotlib-6aabbb40bc04-p0ada35ed08)" style="fill: none; stroke-dasharray: 7.4,3.2; stroke-dashoffset: 0; stroke: #ff0000; stroke-width: 2" />   </g>   <g id="svg-matplotlib-6aabbb40bc04-patch_3">    <path d="M 40.603125 355.438125 L 40.603125 22.798125 " style="fill: none; stroke: #000000; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square" />   </g>   <g id="svg-matplotlib-6aabbb40bc04-patch_4">    <path d="M 373.243125 355.438125 L 373.243125 22.798125 " style="fill: none; stroke: #000000; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square" />   </g>   <g id="svg-matplotlib-6aabbb40bc04-patch_5">    <path d="M 40.603125 355.438125 L 373.243125 355.438125 " style="fill: none; stroke: #000000; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square" />   </g>   <g id="svg-matplotlib-6aabbb40bc04-patch_6">    <path d="M 40.603125 22.798125 L 373.243125 22.798125 " style="fill: none; stroke: #000000; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square" />   </g>   <g id="svg-matplotlib-6aabbb40bc04-text_15">    <text style="font-weight: 700; font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle; fill: #8b0000" x="223.555125" y="172.486125" transform="rotate(-0 223.555125 172.486125)">ZONA DE IMPASSE</text>   </g>   <g id="svg-matplotlib-6aabbb40bc04-text_16">    <text style="font-size: 12px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle" x="206.923125" y="16.798125" transform="rotate(-0 206.923125 16.798125)">Diagrama de Trajetória de Recursos</text>   </g>   <g id="svg-matplotlib-6aabbb40bc04-legend_1">    <g id="svg-matplotlib-6aabbb40bc04-patch_7">     <path d="M 47.603125 60.954375 L 278.010938 60.954375 Q 280.010938 60.954375 280.010938 58.954375 L 280.010938 29.798125 Q 280.010938 27.798125 278.010938 27.798125 L 47.603125 27.798125 Q 45.603125 27.798125 45.603125 29.798125 L 45.603125 58.954375 Q 45.603125 60.954375 47.603125 60.954375 z" style="fill: #ffffff; opacity: 0.8; stroke: #cccccc; stroke-linejoin: miter" />    </g>    <g id="svg-matplotlib-6aabbb40bc04-line2d_27">     <path d="M 49.603125 36.296562 L 59.603125 36.296562 L 69.603125 36.296562 " style="fill: none; stroke: #0000ff; stroke-width: 2; stroke-linecap: square" />    </g>    <g id="svg-matplotlib-6aabbb40bc04-text_17">     <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start" x="77.603125" y="39.796562" transform="rotate(-0 77.603125 39.796562)">Trajetória Segura</text>    </g>    <g id="svg-matplotlib-6aabbb40bc04-line2d_28">     <path d="M 49.603125 51.374687 L 59.603125 51.374687 L 69.603125 51.374687 " style="fill: none; stroke-dasharray: 7.4,3.2; stroke-dashoffset: 0; stroke: #ff0000; stroke-width: 2" />    </g>    <g id="svg-matplotlib-6aabbb40bc04-text_18">     <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start" x="77.603125" y="54.874687" transform="rotate(-0 77.603125 54.874687)">Trajetória Insegura (Rumo ao Deadlock)</text>    </g>   </g>  </g> </g> <defs>  <clipPath id="svg-matplotlib-6aabbb40bc04-p0ada35ed08">   <rect x="40.603125" y="22.798125" width="332.64" height="332.64" />  </clipPath> </defs></svg></div></div>
-
-<h3 id="prevenção-prevention"><span class="heading-text">. Prevenção (Prevention)</span><span class="heading-arabic">7.5.4</span></h3>
-<p>Atacar diretamente as condições de Coffman para que o impasse seja fisicamente impossível.</p>
-<table>
-<thead>
-<tr>
-  <th style="text-align:left">Condição</th>
-  <th style="text-align:left">Estratégia de Ataque</th>
-  <th style="text-align:left">Problema/Custo</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-  <td style="text-align:left"><strong>Exclusão Mútua</strong></td>
-  <td style="text-align:left">Evitar recursos dedicados (usar <em>spooling</em>).</td>
-  <td style="text-align:left">Nem tudo pode ser virtualizado.</td>
-</tr>
-<tr>
-  <td style="text-align:left"><strong>Posse e Espera</strong></td>
-  <td style="text-align:left">Exigir que o processo peça todos os recursos no início.</td>
-  <td style="text-align:left">Subutilização; o processo pode não saber o que precisará.</td>
-</tr>
-<tr>
-  <td style="text-align:left"><strong>Não Preempção</strong></td>
-  <td style="text-align:left">Se pedir um recurso e não levar, libera tudo o que já tem.</td>
-  <td style="text-align:left">Impossível para recursos físicos indivisíveis.</td>
-</tr>
-</tbody>
-</table>
-<div class="callout callout-tip">
-  <div class="callout-title">
-    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .5 2.2 1.5 3.1.7.7 1.3 1.5 1.5 2.4"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span>
-    <span class="callout-title-inner">Conexão com Escalonamento<br /></span>
-  </div>
-  <div class="callout-content">
-<p>Lembre-se da <a href="6%20-%20escalonamento.html">Aula 6</a>: algoritmos preemptivos (como Round-Robin) quebram a &quot;posse&quot; da CPU para garantir fluidez. No entanto, para recursos de I/O, a preempção é muito mais difícil: você não pode &quot;suspender&quot; uma gravação de CD no meio e retomá-la depois sem corromper o disco.</p>
-  </div>
-</div>
-<p>| <strong>Espera Circular</strong> | <strong>Hierarquia de Recursos</strong>: Numerar recursos e exigir aquisição em ordem crescente. | Muito rígido; dificulta a programação. |</p>
-<h4 id="exemplo-quebrando-a-espera-circular"><span class="heading-text">Exemplo: Quebrando a Espera Circular</span><span class="heading-arabic">7.5.4.1</span></h4>
-<p>Se definirmos que SEMPRE devemos pedir o Recurso 1 antes do Recurso 2, um processo nunca terá o 2 esperando pelo 1, enquanto outro tem o 1 esperando pelo 2. Essa é exatamente a solução que vimos para os <strong>Filósofos Comensais</strong> na <a href="5-ipc-and-mutual-exclusion.html">Aula 5</a>, onde impusemos uma ordem para pegar os garfos.</p>
-<pre class="line-numbers language-c" data-lang="C"><code class="language-c">// Código C: Prevenção via Hierarquia
-void worker_A() {
-    pthread_mutex_lock(&amp;lock1); // Sempre o 1 primeiro
-    pthread_mutex_lock(&amp;lock2);
-    // ...
-}
-
-void worker_B() {
-    pthread_mutex_lock(&amp;lock1); // Mesmo processo B, deve seguir a ordem!
-    pthread_mutex_lock(&amp;lock2);
-    // ...
-}
-</code></pre>
-<h3 id="comparativo-das-estratégias"><span class="heading-text">Comparativo das Estratégias</span><span class="heading-arabic">7.5.5</span></h3>
-<p>Seguindo o padrão das aulas anteriores, aqui está o resumo das ferramentas que o S.O. tem em mãos:</p>
-<table>
-<thead>
-<tr>
-  <th style="text-align:left">Estratégia</th>
-  <th style="text-align:left">Objetivo</th>
-  <th style="text-align:left">Custo de CPU</th>
-  <th style="text-align:left">Uso Real</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-  <td style="text-align:left"><strong>Avestruz</strong></td>
-  <td style="text-align:left">Ignorar</td>
-  <td style="text-align:left">Zero</td>
-  <td style="text-align:left">Unix, Windows, Android (Padrão)</td>
-</tr>
-<tr>
-  <td style="text-align:left"><strong>Detecção</strong></td>
-  <td style="text-align:left">Monitorar ciclos</td>
-  <td style="text-align:left">Médio (verificação periódica)</td>
-  <td style="text-align:left">Bancos de Dados (SQL Server, Oracle)</td>
-</tr>
-<tr>
-  <td style="text-align:left"><strong>Evitação</strong></td>
-  <td style="text-align:left">Negar estados inseguros</td>
-  <td style="text-align:left">Alto (cada requisição é testada)</td>
-  <td style="text-align:left">Sistemas Críticos (Aviônica, Nuclear)</td>
-</tr>
-<tr>
-  <td style="text-align:left"><strong>Prevenção</strong></td>
-  <td style="text-align:left">Impedir fisicamente</td>
-  <td style="text-align:left">Baixo (estático)</td>
-  <td style="text-align:left">Sistemas Embarcados e Tempo Real</td>
-</tr>
-</tbody>
-</table>
-<h2 id="resumo-e-fluxo-de-decisão"><span class="heading-text">Resumo e Fluxo de Decisão</span><span class="heading-arabic">7.6</span></h2>
-<p>Para fechar o tópico, entenda a diferença fundamental entre os problemas de concorrência:</p>
-<table>
-<thead>
-<tr>
-  <th style="text-align:left">Problema</th>
-  <th style="text-align:left">Causa</th>
-  <th style="text-align:left">Remédio</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-  <td style="text-align:left"><strong>Deadlock</strong></td>
-  <td style="text-align:left">Espera Circular</td>
-  <td style="text-align:left">Prevenção ou Evitação</td>
-</tr>
-<tr>
-  <td style="text-align:left"><strong>Starvation</strong></td>
-  <td style="text-align:left">Prioridade Injusta</td>
-  <td style="text-align:left">Aging (Envelhecimento)</td>
-</tr>
-<tr>
-  <td style="text-align:left"><strong>Livelock</strong></td>
-  <td style="text-align:left">Reatividade Excessiva</td>
-  <td style="text-align:left">Randomização de espera</td>
-</tr>
-</tbody>
-</table>
-<h4 id="qual-estratégia-escolher"><span class="heading-text">Qual estratégia escolher?</span><span class="heading-arabic">7.6.0.1</span></h4>
-<pre class="line-numbers language-mermaid" data-lang="MERMAID"><code class="language-mermaid">graph TD
-    Start{O sistema é crítico?}
-    Start -- Sim --&gt; Critical{O custo de falha é uma vida?}
-    Critical -- Sim --&gt; Prevention[Uso de Prevenção Estrita]
-    Critical -- Não --&gt; Avoidance[Algoritmo do Banqueiro]
-    Start -- Não --&gt; Rare{Impasses são raros?}
-    Rare -- Sim --&gt; Ostrich[Algoritmo do Avestruz]
-    Rare -- Não --&gt; Detection[Detecção e Recuperação]
-</code></pre>
-<h2 id="tópicos-avançados"><span class="heading-text">Tópicos Avançados</span><span class="heading-arabic">7.7</span></h2>
-<h3 id="travamento-em-duas-fases-two-phase-locking"><span class="heading-text">Travamento em Duas Fases (Two-Phase Locking)</span><span class="heading-arabic">7.7.1</span></h3>
-<p>Embora o Algoritmo do Banqueiro seja bonito na teoria, ele é raramente usado em sistemas reais porque exige que o S.O. saiba antecipadamente o máximo de recursos que um processo vai pedir — informação que quase nenhum programa fornece.</p>
-<p>Em vez disso, os sistemas de banco de dados implementam o <strong>Travamento em Duas Fases</strong>. Durante a fase de crescimento, o processo tenta adquirir todas as travas necessárias individualmente. Ao concluir a operação, entra na fase de liberação, devolvendo os recursos ao sistema. Se o processo encontra uma trava ocupada no meio do caminho, ele deve liberar todas as conquistas anteriores para recomeçar o ciclo, evitando a posse e espera de forma dinâmica.</p>
-<div class="callout callout-tip">
-  <div class="callout-title">
-    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .5 2.2 1.5 3.1.7.7 1.3 1.5 1.5 2.4"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span>
-    <span class="callout-title-inner">SQL Real<br /></span>
-  </div>
-  <div class="callout-content">
-<p>Bancos de dados modernos (como PostgreSQL e SQL Server) trabalham com o <strong>Nível de Isolamento Serializable</strong>. Eles detectam deadlocks automaticamente monitorando grafos de espera internos e &quot;sacrificando&quot; a transação mais jovem (rollback) para deixar a mais antiga terminar.</p>
-  </div>
-</div>
-<h3 id="impasses-de-comunicação"><span class="heading-text">Impasses de Comunicação</span><span class="heading-arabic">7.7.2</span></h3>
-<p>Nem todo deadlock envolve hardware ou locks; em sistemas distribuídos, o recurso em disputa pode ser uma simples mensagem. Imagine que o processo A envia uma mensagem para B e fica bloqueado aguardando resposta, mas a mensagem se perde. Como B também está bloqueado esperando uma instrução de A, ambos ficam paralisados para sempre. A solução padrão para esses casos é o uso de <strong>Timeouts</strong>, forçando o processo a abortar ou reenviar o dado após um período limite.</p>
-<h3 id="inversão-de-prioridade-priority-inversion"><span class="heading-text">Inversão de Prioridade (Priority Inversion)</span><span class="heading-arabic">7.7.3</span></h3>
-<p>Este fenômeno atua como um deadlock virtual que conecta diretamente com a Aula 6. Considere o cenário em que uma tarefa de baixa prioridade retém um recurso necessário por uma de alta. Se uma tarefa de média prioridade surgir e ocupar a CPU, a de alta prioridade ficará bloqueada indiretamente por uma tarefa menos urgente. A solução clássica é o <strong>Protocolo de Herança de Prioridade</strong>, onde a tarefa que detém o recurso herda temporariamente a prioridade da tarefa que ela está bloqueando, garantindo uma liberação rápida.</p>
-<h3 id="deadlocks-no-mundo-real"><span class="heading-text">Deadlocks no Mundo Real</span><span class="heading-arabic">7.7.4</span></h3>
-<p>No desenvolvimento do Kernel Linux, utiliza-se o <code>lockdep</code>, um validador de hierarquia que detecta ordens inconsistentes de aquisição de travas antes que um impasse real aconteça. Já em ecossistemas de microserviços, chamadas circulares entre serviços podem esgotar os threads de execução, gerando deadlocks de rede catastróficos.</p>
-<h2 id="quando-usar-cada-estratégia"><span class="heading-text">Quando usar cada estratégia?</span><span class="heading-arabic">7.8</span></h2>
-<table>
-<thead>
-<tr>
-  <th style="text-align:left">Cenário</th>
-  <th style="text-align:left">Estratégia Recomendada</th>
-  <th style="text-align:left">Por quê?</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-  <td style="text-align:left"><strong>Kernel de SO Geral</strong></td>
-  <td style="text-align:left">Avestruz / Prevenção</td>
-  <td style="text-align:left">Performance é tudo; deadlocks são tratados como bugs de código.</td>
-</tr>
-<tr>
-  <td style="text-align:left"><strong>Bancos de Dados</strong></td>
-  <td style="text-align:left">Detecção e Recuperação</td>
-  <td style="text-align:left">Transações são dinâmicas e imprevisíveis; o rollback é barato.</td>
-</tr>
-<tr>
-  <td style="text-align:left"><strong>Sistemas Médicos/Espaciais</strong></td>
-  <td style="text-align:left">Prevenção Estrita</td>
-  <td style="text-align:left">Falha não é uma opção; o sistema deve ser provado livre de ciclos.</td>
-</tr>
-<tr>
-  <td style="text-align:left"><strong>Sistemas de Redes</strong></td>
-  <td style="text-align:left">Impasse de Comunicação (Timeouts)</td>
-  <td style="text-align:left">A rede é instável; não se pode confiar que a &quot;liberação&quot; virá.</td>
-</tr>
-</tbody>
-</table>
-<h2 id="questões"><span class="heading-text">Questões</span><span class="heading-arabic">7.9</span></h2>
-<p><strong>1.</strong> O que define um estado como &quot;inseguro&quot; no Algoritmo do Banqueiro?</p>
+<p>Se o caixa tem <code>5</code>, o estado é seguro porque o banco consegue atender <code>C</code>, que precisa de <code>2</code>. Quando <code>C</code> termina, devolve tudo e o caixa sobe, permitindo uma sequência segura para os demais.</p>
+<h2 id="questões"><span class="heading-text">Questões</span><span class="heading-arabic">7.7</span></h2>
+<p><strong>1.</strong> O que define um estado como <strong>inseguro</strong> no Algoritmo do Banqueiro?</p>
 <ul>
 <li>A) O sistema já está em deadlock.</li>
-<li>B) Um processo solicitou mais recursos do que o sistema possui no total.</li>
-<li>C) Não existe uma sequência de execução que garanta que todos os processos terminem, mesmo que o deadlock ainda não tenha ocorrido.</li>
-<li>D) Todos os recursos foram alocados e o caixa está vazio.</li>
+<li>B) Um processo solicitou mais recursos do que o total existente.</li>
+<li>C) Não existe garantia de uma sequência segura para todos, embora o deadlock ainda possa não ter ocorrido.</li>
+<li>D) Todos os recursos foram alocados e o vetor <code>Available</code> está zerado.</li>
 </ul>
-<p><strong>2.</strong> Relacione as Condições de Coffman com as suas descrições:</p>
+<p><strong>2.</strong> Relacione as condições de Coffman com suas descrições:</p>
 <table>
 <thead>
 <tr>
@@ -756,57 +741,53 @@ void worker_B() {
 <tr>
   <td style="text-align:left">(A)</td>
   <td style="text-align:left">Exclusão Mútua</td>
-  <td style="text-align:left">( ) Um processo não pode ter seus recursos retirados à força pelo SO.</td>
+  <td style="text-align:left">( ) Um recurso só pode ser usado por um processo por vez.</td>
 </tr>
 <tr>
   <td style="text-align:left">(B)</td>
   <td style="text-align:left">Posse e Espera</td>
-  <td style="text-align:left">( ) Um recurso só pode ser usado por um processo de cada vez.</td>
+  <td style="text-align:left">( ) Um processo retém recursos enquanto pede novos.</td>
 </tr>
 <tr>
   <td style="text-align:left">(C)</td>
   <td style="text-align:left">Não Preempção</td>
-  <td style="text-align:left">( ) Existe uma cadeia fechada de processos onde cada um aguarda o próximo.</td>
+  <td style="text-align:left">( ) O sistema não pode tomar o recurso à força.</td>
 </tr>
 <tr>
   <td style="text-align:left">(D)</td>
   <td style="text-align:left">Espera Circular</td>
-  <td style="text-align:left">( ) Um processo retém recursos enquanto aguarda por novos.</td>
+  <td style="text-align:left">( ) Existe uma cadeia fechada de dependências.</td>
 </tr>
 </tbody>
 </table>
-<p><strong>3.</strong> Analise o grafo de recursos abaixo. Existe um impasse? Justifique rastreando o ciclo (se houver).</p>
-<div class="no-break"><div class=""><svg xmlns="http://www.w3.org/2000/svg" viewBox="0.00 0.00 89.00 332.00" class="svg-graph graphviz-img"><g id="svg-graphviz-4b773bbde612-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 328)"><title>Q3</title><polygon fill="white" stroke="transparent" points="-4,4 -4,-328 85,-328 85,4 -4,4" /><g id="svg-graphviz-4b773bbde612-node1" class="node"><title>P1</title><ellipse fill="none" stroke="black" cx="54" cy="-306" rx="27" ry="18" /><text text-anchor="middle" x="54" y="-302.3" font-family="Times,serif" font-size="14.00">P1</text></g><g id="svg-graphviz-4b773bbde612-node2" class="node"><title>R1</title><ellipse fill="none" stroke="black" cx="54" cy="-234" rx="27" ry="18" /><text text-anchor="middle" x="54" y="-230.3" font-family="Times,serif" font-size="14.00">R1</text></g><g id="svg-graphviz-4b773bbde612-edge1" class="edge"><title>P1-&gt;R1</title><path fill="none" stroke="black" d="M54,-287.7C54,-279.98 54,-270.71 54,-262.11" /><polygon fill="black" stroke="black" points="57.5,-262.1 54,-252.1 50.5,-262.1 57.5,-262.1" /></g><g id="svg-graphviz-4b773bbde612-node3" class="node"><title>P2</title><ellipse fill="none" stroke="black" cx="27" cy="-162" rx="27" ry="18" /><text text-anchor="middle" x="27" y="-158.3" font-family="Times,serif" font-size="14.00">P2</text></g><g id="svg-graphviz-4b773bbde612-edge2" class="edge"><title>R1-&gt;P2</title><path fill="none" stroke="black" d="M47.6,-216.41C44.49,-208.34 40.67,-198.43 37.17,-189.35" /><polygon fill="black" stroke="black" points="40.4,-188.03 33.54,-179.96 33.87,-190.55 40.4,-188.03" /></g><g id="svg-graphviz-4b773bbde612-node4" class="node"><title>R2</title><ellipse fill="none" stroke="black" cx="27" cy="-90" rx="27" ry="18" /><text text-anchor="middle" x="27" y="-86.3" font-family="Times,serif" font-size="14.00">R2</text></g><g id="svg-graphviz-4b773bbde612-edge3" class="edge"><title>P2-&gt;R2</title><path fill="none" stroke="black" d="M27,-143.7C27,-135.98 27,-126.71 27,-118.11" /><polygon fill="black" stroke="black" points="30.5,-118.1 27,-108.1 23.5,-118.1 30.5,-118.1" /></g><g id="svg-graphviz-4b773bbde612-node5" class="node"><title>P3</title><ellipse fill="none" stroke="black" cx="54" cy="-18" rx="27" ry="18" /><text text-anchor="middle" x="54" y="-14.3" font-family="Times,serif" font-size="14.00">P3</text></g><g id="svg-graphviz-4b773bbde612-edge4" class="edge"><title>R2-&gt;P3</title><path fill="none" stroke="black" d="M33.4,-72.41C36.51,-64.34 40.33,-54.43 43.83,-45.35" /><polygon fill="black" stroke="black" points="47.13,-46.55 47.46,-35.96 40.6,-44.03 47.13,-46.55" /></g><g id="svg-graphviz-4b773bbde612-edge5" class="edge"><title>P3-&gt;R1</title><path fill="none" stroke="black" d="M57.65,-36.09C59.68,-46.43 61.98,-59.91 63,-72 67.03,-119.83 67.03,-132.17 63,-180 62.28,-188.5 60.93,-197.69 59.49,-205.99" /><polygon fill="black" stroke="black" points="56.03,-205.44 57.65,-215.91 62.91,-206.71 56.03,-205.44" /></g></g></svg></div></div>
+<p><strong>3.</strong> No código com <code>threadA</code> e <code>threadB</code>, qual linha de raciocínio mostra formalmente a presença das quatro condições de Coffman?</p>
+<p><strong>4.</strong> Analise o grafo abaixo. Se cada recurso tiver apenas uma instância, existe impasse?</p>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="520" viewBox="0.00 0.00 312.39 79.20" class="svg-graph graphviz-img"><g id="svg-graphviz-44d595dc4a5a-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 75.2)"><title>Q4</title><polygon fill="white" stroke="transparent" points="-4,4 -4,-75.2 308.39,-75.2 308.39,4 -4,4" /><g id="svg-graphviz-44d595dc4a5a-node1" class="node"><title>P1</title><ellipse fill="none" stroke="black" cx="22.1" cy="-22.1" rx="22.2" ry="22.2" /><text text-anchor="middle" x="22.1" y="-18.4" font-family="Helvetica,sans-Serif" font-size="14.00">P1</text></g><g id="svg-graphviz-44d595dc4a5a-node4" class="node"><title>R2</title><polygon fill="none" stroke="black" points="134.2,-65.1 80.2,-65.1 80.2,-29.1 134.2,-29.1 134.2,-65.1" /><text text-anchor="middle" x="107.2" y="-43.4" font-family="Helvetica,sans-Serif" font-size="14.00">R2</text></g><g id="svg-graphviz-44d595dc4a5a-edge2" class="edge"><title>P1-&gt;R2</title><path fill="none" stroke="black" d="M43.64,-28.28C51.69,-30.7 61.16,-33.55 70.27,-36.29" /><polygon fill="black" stroke="black" points="69.34,-39.66 79.92,-39.19 71.35,-32.96 69.34,-39.66" /></g><g id="svg-graphviz-44d595dc4a5a-node2" class="node"><title>P2</title><ellipse fill="none" stroke="black" cx="192.29" cy="-49.1" rx="22.2" ry="22.2" /><text text-anchor="middle" x="192.29" y="-45.4" font-family="Helvetica,sans-Serif" font-size="14.00">P2</text></g><g id="svg-graphviz-44d595dc4a5a-node3" class="node"><title>R1</title><polygon fill="none" stroke="black" points="304.39,-42.1 250.39,-42.1 250.39,-6.1 304.39,-6.1 304.39,-42.1" /><text text-anchor="middle" x="277.39" y="-20.4" font-family="Helvetica,sans-Serif" font-size="14.00">R1</text></g><g id="svg-graphviz-44d595dc4a5a-edge4" class="edge"><title>P2-&gt;R1</title><path fill="none" stroke="black" d="M213.84,-42.92C221.88,-40.5 231.36,-37.65 240.46,-34.91" /><polygon fill="black" stroke="black" points="241.55,-38.24 250.12,-32 239.53,-31.53 241.55,-38.24" /></g><g id="svg-graphviz-44d595dc4a5a-edge1" class="edge"><title>R1-&gt;P1</title><path fill="none" stroke="black" d="M250.19,-21C239.15,-19.84 226.17,-18.67 214.39,-18.1 154.81,-15.22 139.82,-18.39 80.2,-20.1 71.83,-20.34 62.78,-20.64 54.4,-20.93" /><polygon fill="black" stroke="black" points="54.11,-17.44 44.25,-21.29 54.37,-24.43 54.11,-17.44" /></g><g id="svg-graphviz-44d595dc4a5a-edge3" class="edge"><title>R2-&gt;P2</title><path fill="none" stroke="black" d="M134.49,-47.73C142.58,-47.93 151.57,-48.14 159.96,-48.34" /><polygon fill="black" stroke="black" points="160.08,-51.85 170.16,-48.59 160.25,-44.85 160.08,-51.85" /></g></g></svg></div></div>
 
-<p><strong>4.</strong> O &quot;Algoritmo do Avestruz&quot; é frequentemente criticado por não resolver o problema. Por que, então, ele é o padrão em sistemas operacionais modernos como o Linux e o Windows?</p>
-<p><strong>5.</strong> Considere um sistema com os seguintes vetores e matrizes (Algoritmo de Detecção):</p>
+<p><strong>5.</strong> Um sistema possui três instâncias do recurso <code>R</code>:</p>
 <ul>
-<li>$E = (7, 2, 6)$ (Recursos Totais)</li>
-<li>$A = (0, 0, 0)$ (Disponíveis agora)</li>
-<li>Matriz Alocação (C): $P1=(0,1,0), P2=(2,0,0), P3=(3,0,3)$</li>
-<li>Matriz Requisição (R): $P1=(0,0,0), P2=(1,0,1), P3=(0,0,0)$<br />
-Execute o algoritmo. Quais processos estão em deadlock? Mostre o passo a passo da devolução ao vetor $A$.</li>
+<li><code>P1</code> possui 1 e pede mais 1.</li>
+<li><code>P2</code> possui 1 e pede mais 1.</li>
+<li><code>P3</code> possui 1 e não pede nada.</li>
 </ul>
-<p><strong>6.</strong> A técnica de <strong>Hierarquia de Recursos</strong> é uma forma de prevenir impasses atacando qual condição de Coffman? Como ela funciona na prática em um sistema com Mutexes?</p>
-<p><strong>7.</strong> Diferencie <strong>Deadlock</strong> de <strong>Starvation</strong> (Inanição). É possível ter inanição sem ter um deadlock? Dê um exemplo baseado em prioridades de escalonamento.</p>
-<p><strong>8. (Cenário Real)</strong> Um administrador de banco de dados percebe que seu sistema trava toda vez que dois usuários tentam atualizar o saldo de suas contas simultaneamente através de uma transferência mútua (A transfere para B e B transfere para A ao mesmo tempo). Explique tecnicamente por que isso ocorre e sugira uma solução baseada em <strong>Prevenção</strong>.</p>
-<p><strong>9.</strong> Por que a memória RAM é considerada um recurso <strong>preemptível</strong>, enquanto uma impressora é <strong>não-preemptível</strong>? O que aconteceria se o SO tentasse &quot;preemptar&quot; uma impressora no meio de um trabalho?</p>
-<p><strong>10.</strong> No Algoritmo do Banqueiro, se um sistema está em um estado seguro e recebe uma solicitação de recurso, ele deve sempre atendê-la imediatamente? Justifique.</p>
-<p><strong>11. (Desafio de Identificação)</strong> Identifique qual condição de Coffman está sendo violada ou evitada nos seguintes casos:</p>
-<ul>
-<li>A) Um programador decide carregar todos os arquivos de dados necessários para a memória logo no início do programa.</li>
-<li>B) O SO utiliza um sistema de <em>spooling</em> para que processos não acessem a impressora diretamente.</li>
-<li>C) Um desenvolvedor de kernel define que o lock do Sistema de Arquivos deve ser sempre adquirido antes do lock da Rede.</li>
-</ul>
-<p><strong>12. (Simulação Guiada)</strong> Um sistema tem 3 instâncias do Recurso R.</p>
-<ul>
-<li>P1 possui 1 e pede mais 1.</li>
-<li>P2 possui 1 e pede mais 1.</li>
-<li>P3 possui 1 e não pede nada.<br />
-Existe um ciclo? Existe um deadlock? O que acontece se P3 terminar?</li>
-</ul>
-<h2 id="próximos-passos"><span class="heading-text">Próximos passos</span><span class="heading-arabic">7.10</span></h2>
-<p>Agora que sabemos como gerenciar a execução e os conflitos, precisamos entender como o sistema operacional organiza o palco principal onde tudo isso acontece: a Memória. Na próxima aula, exploraremos a <a href="8%20-%20gerencia%20de%20memoria.html">8 - gerência de memória</a>, estudando desde partições simples até a mágica da Memória Virtual.</p>
+<p>Há deadlock? O que acontece quando <code>P3</code> termina?</p>
+<p><strong>6.</strong> Explique por que a técnica de <strong>ordem global de aquisição de locks</strong> quebra a condição de espera circular.</p>
+<p><strong>7.</strong> Diferencie <strong>deadlock</strong>, <strong>starvation</strong> e <strong>livelock</strong> em um parágrafo curto para cada um.</p>
+<p><strong>8.</strong> No contexto de banco de dados, por que duas transferências simultâneas entre contas podem gerar deadlock? Dê uma solução baseada em prevenção.</p>
+<p><strong>9.</strong> Por que memória RAM é tipicamente tratada como recurso preemptível, enquanto uma impressora não é? O que daria errado se o sistema interrompesse uma impressão na metade?</p>
+<p><strong>10.</strong> Em um sistema que detecta deadlocks, como você escolheria a vítima de rollback? Cite pelo menos três critérios plausíveis.</p>
+<p><strong>11.</strong> Analise o código abaixo e explique por que ele pode entrar em livelock em vez de deadlock:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">while (1) {
+    pthread_mutex_lock(&amp;lock1);
+    if (pthread_mutex_trylock(&amp;lock2) == 0) {
+        break;
+    }
+    pthread_mutex_unlock(&amp;lock1);
+}
+</code></pre>
+<p><strong>12.</strong> Um sistema está em estado seguro. Isso significa que toda requisição futura deve ser aceita imediatamente? Justifique com base no Algoritmo do Banqueiro.</p>
+<h2 id="próximos-passos"><span class="heading-text">Próximos passos</span><span class="heading-arabic">7.8</span></h2>
+<p>Agora que sabemos como processos podem travar uns aos outros ao disputar recursos, o próximo passo é estudar o espaço onde esses processos vivem: a memória. Na próxima aula, exploraremos a <a href="8%20-%20gerencia%20de%20memoria.html">8 - gerencia de memoria</a>, saindo da concorrência para a organização do espaço de endereçamento.</p>
 
                 </div>
             </article>
