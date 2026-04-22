@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toposia - Engenharia de Software</title>
+    <link rel="icon" href="/aulas-faesa/img/dark-favicon.svg" media="(prefers-color-scheme: light)">
+    <link rel="icon" href="/aulas-faesa/img/light-favicon.svg" media="(prefers-color-scheme: dark)">
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/fonts.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/bundles/katex-base-prism-one-light-b0347952c973.bundle.min.css">
+    
+    
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css" data-no-bundle>
+    <script src="/aulas-faesa/js/bundles/lucide-katex-auto-render-4b36e8bd8642.bundle.min.js"></script>
+</head>
+
+<body>
+    <script>
+        // Restore sidebar state instantly (before first paint) to avoid transition flash
+        (function() {
+            if (localStorage.getItem('cf_sidebar_hidden') === 'true') {
+                document.body.classList.add('sidebar-hidden', 'no-transition');
+            }
+            requestAnimationFrame(function() {
+                requestAnimationFrame(function() {
+                    document.body.classList.remove('no-transition');
+                });
+            });
+        })();
+    </script>
+    <div class="page-wrapper">
+        <nav class="sidebar">
+            <div class="sidebar-content">
+                <header class="sidebar-title-section">
+                    <a href="contents.html" class="course-title-link">
+                        <h1 class="sidebar-course-title">Engenharia de Software</h1>
+                    </a>
+                    <div class="sidebar-ornament">❧</div>
+                </header>
+
+                
+                <section class="sidebar-toc-section">
+                    <h2 class="toc-header">Tabela de Conteúdos</h2>
+                    <ol class="toc-list">
+                        
+                        <li class="toc-item level-2">
+                            <a href="#introdução">8.1. Introdução</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#o-que-os-testes-realmente-respondem">8.2. O que os testes realmente respondem</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#testes-de-desenvolvimento-e-o-lugar-do-teste-unitário">8.3. Testes de desenvolvimento e o lugar do teste unitário</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#o-que-um-bom-teste-unitário-tenta-fazer">8.3.1. O que um bom teste unitário tenta fazer</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#estrutura-básica-de-um-teste-automatizado">8.3.2. Estrutura básica de um teste automatizado</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#como-executar-em-python-com-codeuvcode-e-codepytestcode">8.4. Como escolher casos de teste unitário</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#e-os-mocks">8.4.1. E os mocks?</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#tdd-escrever-o-teste-antes-do-código">8.5. TDD: escrever o teste antes do código</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#o-ciclo-vermelho-verde-e-azul">8.5.1. O ciclo vermelho, verde e azul</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#passo-a-passo-do-tdd">8.5.2. Passo a passo do TDD</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#por-que-tdd-ajuda">8.5.3. Por que TDD ajuda</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#passo-1-vermelho">8.0.1. Passo 1. Vermelho</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#passo-2-verde">8.0.2. Passo 2. Verde</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#passo-3-novo-vermelho">8.0.3. Passo 3. Novo vermelho</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#passo-4-novo-verde">8.0.4. Passo 4. Novo verde</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#passo-5-azul">8.0.5. Passo 5. Azul</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#passo-6-continuar-o-ciclo">8.0.6. Passo 6. Continuar o ciclo</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#o-que-esse-ciclo-ensina">8.5.4. O que esse ciclo ensina</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#quando-tdd-ajuda-menos">8.5.5. Quando TDD ajuda menos</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#testes-de-release-e-o-caminho-até-a-aceitação">8.6. Testes de release e o caminho até a aceitação</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#testes-baseados-em-requisitos">8.6.1. Testes baseados em requisitos</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#testes-de-cenário">8.6.2. Testes de cenário</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#teste-de-aceitação-o-sistema-está-bom-o-suficiente-para-uso">8.7. Teste de aceitação: o sistema está bom o suficiente para uso?</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#os-seis-estágios-do-teste-de-aceitação">8.7.1. Os seis estágios do teste de aceitação</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#um-exemplo-simples-de-critério-de-aceitação">8.7.2. Um exemplo simples de critério de aceitação</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#aceitação-não-é-sempre-tudo-ou-nada">8.7.3. Aceitação não é sempre tudo ou nada</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#o-que-cada-tipo-de-teste-resolve">8.8. O que cada tipo de teste resolve</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#a-ideia-central-que-organiza-tudo">8.9. A ideia central que organiza tudo</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#questões">8.10. Questões</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#próximos-passos">8.11. Próximos passos</a>
+                        </li>
+                        
+                    </ol>
+                </section>
+                
+
+                <nav class="sidebar-nav-section">
+                    
+                    <a href="7-software-architecture-styles.html" class="sidebar-nav-link prev"><i data-lucide="chevron-left" class="nav-icon"></i> Estilos Arquiteturais de Software</a>
+                    
+                    
+                    <a href="javascript:void(0)" onclick="handleBackNavigation()"
+                        class="sidebar-nav-link back"><i data-lucide="arrow-left" class="nav-icon"></i> Voltar</a>
+                </nav>
+
+            </div>
+        </nav>
+
+        <button class="mobile-menu-toggle" aria-label="Menu">
+            <i data-lucide="menu"></i>
+        </button>
+
+        <button class="sidebar-toggle" onclick="CourseForgeNav.toggleSidebar()" aria-label="Alternar Barra Lateral">
+            <i data-lucide="chevron-left" class="toggle-icon" id="sidebar-toggle-icon"></i>
+        </button>
+
+        <div class="mobile-menu-overlay"></div>
+
+        <main class="main-content">
+            <article class="article">
+                <header class="article-header">
+                    <span class="chapter-number">8</span>
+                    <h1 class="article-title">
+                        <span class="title-ornament left">❧</span>
+                        <span class="title-text">Testes de Software</span>
+                        <span class="title-ornament right">❧</span>
+                    </h1>
+                    
+                    <p class="article-date">22/04/2026</p>
+                    
+                    
+                    <nav class="breadcrumb" aria-label="Breadcrumb">
+                        
+                        
+                        
+                        <a href="contents.html" class="breadcrumb-link">Engenharia de Software</a>
+                        
+                        <span class="breadcrumb-separator"><i data-lucide="chevron-right" class="breadcrumb-icon"></i></span>
+                        
+                        
+                        
+                        
+                        <a href="contents.html#part-III" class="breadcrumb-link">III - Gerenciamento de Software</a>
+                        
+                        <span class="breadcrumb-separator"><i data-lucide="chevron-right" class="breadcrumb-icon"></i></span>
+                        
+                        
+                        
+                        <span class="breadcrumb-current">Testes de Software</span>
+                        
+                        
+                    </nav>
+                    
+                </header>
+                <div class="article-body">
+                    <h2 id="introdução"><span class="heading-text">Introdução</span><span class="heading-arabic">8.1</span></h2>
+<p>Hoje você vai ver por que testar não é uma etapa final de conferência, mas parte da própria construção do software.</p>
+<p>Quando uma equipe deixa os testes para o fim, quase sempre descobre os problemas tarde demais. O código já cresceu, várias partes dependem umas das outras, a correção fica mais cara e, pior, ninguém sabe ao certo se a falha está na lógica de negócio, na integração entre módulos, nos dados de entrada ou no entendimento do requisito. É exatamente para reduzir esse risco que a engenharia de software trata testes como uma atividade sistemática.</p>
+<p>Segundo Sommerville, o teste tem dois objetivos diferentes e igualmente importantes. O primeiro é mostrar que o software faz o que deveria fazer. O segundo é revelar situações em que ele se comporta de forma incorreta, indesejada ou diferente do especificado. Em outras palavras, parte dos testes serve para validar comportamento esperado, e outra parte serve para tentar expor defeitos.</p>
+<p>Nesta aula, vamos focar em três ideias centrais:</p>
+<ol>
+<li>onde os <strong>testes unitários</strong> entram no processo de desenvolvimento;</li>
+<li>como funciona o <strong>TDD</strong> ou desenvolvimento dirigido por testes;</li>
+<li>como os <strong>testes de aceitação</strong> verificam se o sistema está pronto para uso do ponto de vista do cliente.</li>
+</ol>
+<p>Também vamos deixar muito claro um ponto que costuma gerar confusão. <strong>Teste unitário não é &quot;o teste do sistema inteiro&quot;</strong>. Ele é apenas um dos níveis de teste. Você ainda pode ter testes de componente, integração, sistema, release e aceitação.</p>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Se uma função isolada passa em todos os testes unitários, isso já prova que o sistema completo está pronto para entrega?</p>
+  </div>
+</div>
+<p>Não. Isso prova apenas que aquela unidade, dentro dos cenários cobertos, se comportou como esperado. Ainda faltam as interações entre partes, o comportamento do sistema como um todo, os requisitos não funcionais e, por fim, a verificação de que o cliente realmente considera o software aceitável.</p>
+<h2 id="o-que-os-testes-realmente-respondem"><span class="heading-text">O que os testes realmente respondem</span><span class="heading-arabic">8.2</span></h2>
+<p>Uma maneira simples de entender testes é pensar que cada nível responde a uma pergunta diferente.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Nível de teste</th>
+  <th style="text-align:left">Pergunta principal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><strong>Unitário</strong></td>
+  <td style="text-align:left">Esta função, método ou classe pequena faz o que deveria fazer?</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Integração / componente</strong></td>
+  <td style="text-align:left">Essas partes funcionam corretamente quando trabalham juntas?</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Sistema</strong></td>
+  <td style="text-align:left">O sistema completo se comporta como esperado?</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Release</strong></td>
+  <td style="text-align:left">Esta versão está boa o suficiente para sair da equipe de desenvolvimento?</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Aceitação</strong></td>
+  <td style="text-align:left">O cliente considera que o sistema está pronto para uso real?</td>
+</tr>
+</tbody>
+</table>
+<p>Sommerville organiza esse assunto mostrando que os testes de desenvolvimento cobrem unidades, componentes e sistema, enquanto testes de release e testes de usuário acontecem em outro contexto e com outro objetivo.</p>
+<p>Isso importa porque muita gente aprende <code>pytest</code>, escreve alguns testes e conclui que &quot;o sistema está testado&quot;. Não está. Na prática, o que normalmente acontece é o seguinte:</p>
+<ol>
+<li>você valida unidades pequenas com rapidez;</li>
+<li>depois precisa verificar a comunicação entre partes;</li>
+<li>depois precisa validar o comportamento do sistema inteiro;</li>
+<li>por fim, ainda precisa confirmar que aquilo atende ao uso real e aos critérios do cliente.</li>
+</ol>
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner"><br /></span>
+  </div>
+  <div class="callout-content">
+<p>Nesta aula, o foco técnico será em <strong>teste unitário</strong>, <strong>TDD</strong> e <strong>aceitação</strong>. Sempre que eu disser que uma função passou no teste, entenda isso como &quot;passou no nível de teste que está sendo executado&quot;, não como garantia absoluta sobre o sistema inteiro.</p>
+  </div>
+</div>
+<h2 id="testes-de-desenvolvimento-e-o-lugar-do-teste-unitário"><span class="heading-text">Testes de desenvolvimento e o lugar do teste unitário</span><span class="heading-arabic">8.3</span></h2>
+<p>No capítulo 8, Sommerville trata os testes de desenvolvimento como aqueles realizados pela própria equipe de desenvolvimento. O objetivo aqui é, principalmente, encontrar defeitos cedo.</p>
+<p>Durante o desenvolvimento, o teste pode acontecer em três níveis:</p>
+<ol>
+<li><strong>teste unitário</strong>, quando testamos uma unidade pequena, como uma função, um método ou uma classe;</li>
+<li><strong>teste de componente</strong> ou <strong>integração</strong>, quando juntamos unidades e verificamos suas interfaces;</li>
+<li><strong>teste de sistema</strong>, quando o sistema inteiro ou uma parte grande integrada é testada como um todo.</li>
+</ol>
+<p>O teste unitário é o mais barato para começar e o mais rápido para executar. Ele é útil porque isola uma regra pequena e permite descobrir defeitos antes que eles se espalhem. Se você tem uma função que calcula juros, aplica desconto ou valida uma entrada, faz muito sentido testá-la de forma independente.</p>
+<p>Mas o teste unitário tem limite. Ele não garante, por exemplo:</p>
+<ol>
+<li>que a API conversa corretamente com o banco;</li>
+<li>que duas classes integradas trocaram dados do jeito certo;</li>
+<li>que a interface mostra o resultado correto para o usuário;</li>
+<li>que o sistema está pronto para aceite contratual.</li>
+</ol>
+<h3 id="o-que-um-bom-teste-unitário-tenta-fazer"><span class="heading-text">O que um bom teste unitário tenta fazer</span><span class="heading-arabic">8.3.1</span></h3>
+<p>Um bom teste unitário normalmente tenta verificar três coisas:</p>
+<ol>
+<li>o comportamento normal esperado;</li>
+<li>casos de borda;</li>
+<li>entradas inválidas ou situações excepcionais.</li>
+</ol>
+<p>Essa ideia conversa diretamente com Sommerville quando ele discute a escolha de casos de teste. Não basta testar apenas o caminho feliz. Você precisa escolher casos que confirmem o funcionamento esperado e também casos que tenham chance de revelar defeitos.</p>
+<h3 id="estrutura-básica-de-um-teste-automatizado"><span class="heading-text">Estrutura básica de um teste automatizado</span><span class="heading-arabic">8.3.2</span></h3>
+<p>Sommerville resume um teste automatizado em três partes:</p>
+<ol>
+<li><strong>configuração</strong>, em que você prepara o estado inicial e as entradas;</li>
+<li><strong>chamada</strong>, em que executa a unidade sob teste;</li>
+<li><strong>afirmação</strong>, em que compara o resultado obtido com o esperado.</li>
+</ol>
+<p>Em <code>pytest</code>, isso aparece de forma muito natural.</p>
+<div class="example">
+  <div class="example-title">Exemplo 1</div>
+  <p>Vamos começar com uma função simples de desconto.</p>
+<pre class="line-numbers language-python" data-lang="PYTHON"><code class="language-python">def calcular_desconto(valor: float, percentual: float) -&gt; float:
+    if valor &lt; 0:
+        raise ValueError(&quot;valor nao pode ser negativo&quot;)
+    if percentual &lt; 0 or percentual &gt; 100:
+        raise ValueError(&quot;percentual invalido&quot;)
+
+    return valor * (percentual / 100)
+</code></pre>
+<p>Agora os testes com <code>pytest</code>.</p>
+<pre class="line-numbers language-python" data-lang="PYTHON"><code class="language-python">import pytest
+
+from desconto import calcular_desconto
+
+
+def test_calcula_desconto_de_10_porcento():
+    resultado = calcular_desconto(200.0, 10.0)
+    assert resultado == 20.0
+
+
+def test_desconto_zero_retorna_zero():
+    resultado = calcular_desconto(200.0, 0.0)
+    assert resultado == 0.0
+
+
+def test_lanca_erro_para_valor_negativo():
+    with pytest.raises(ValueError):
+        calcular_desconto(-50.0, 10.0)
+
+
+def test_lanca_erro_para_percentual_maior_que_100():
+    with pytest.raises(ValueError):
+        calcular_desconto(100.0, 120.0)
+</code></pre>
+<p>O que esse conjunto de testes está cobrindo?</p>
+<ol>
+<li>um caso normal de uso;</li>
+<li>um caso de borda simples, com desconto zero;</li>
+<li>erro em valor inválido;</li>
+<li>erro em percentual inválido.</li>
+</ol>
+<p>Repare que o teste não está preocupado com banco de dados, interface ou API. Isso é intencional. Aqui, queremos isolar a regra da função.</p>
+</div>
+<h3 id="como-executar-em-python-com-codeuvcode-e-codepytestcode"><span class="heading-text">Como executar em Python com <code>uv</code> e <code>pytest</code></span><span class="heading-arabic">8.3.3</span></h3>
+<p>Se você quiser um fluxo moderno e simples, pode usar <code>uv</code> para criar o ambiente e instalar o <code>pytest</code>.</p>
+<pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">uv venv
+source .venv/bin/activate
+uv pip install pytest
+pytest
+</code></pre>
+<p>Uma estrutura mínima de projeto pode ficar assim:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">projeto/
+├── desconto.py
+└── tests/
+    └── test_desconto.py
+</code></pre>
+<p>E o comando para rodar os testes pode ser simplesmente:</p>
+<pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">pytest -q
+</code></pre>
+<p>Se quiser executar um arquivo específico:</p>
+<pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">pytest tests/test_desconto.py -q
+</code></pre>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner"><br /></span>
+  </div>
+  <div class="callout-content">
+<p>Passar em testes unitários não significa que o software inteiro está validado. Significa apenas que as unidades cobertas se comportaram bem nos cenários testados.</p>
+  </div>
+</div>
+<h2 id="como-escolher-casos-de-teste-unitário"><span class="heading-text">Como escolher casos de teste unitário</span><span class="heading-arabic">8.4</span></h2>
+<p>Sommerville destaca que testar é caro, então escolher bons casos de teste importa muito. Uma estratégia útil é pensar em partições de entrada e limites.</p>
+<p>Considere uma função que calcula frete grátis quando o valor do pedido é maior ou igual a R$ 200,00. Há pelo menos quatro grupos interessantes de teste:</p>
+<ol>
+<li>pedidos claramente abaixo do limite;</li>
+<li>pedido exatamente no limite;</li>
+<li>pedidos acima do limite;</li>
+<li>entradas inválidas.</li>
+</ol>
+<p>Esse raciocínio é melhor do que sair escolhendo números aleatórios. Você está tentando cobrir comportamentos diferentes do sistema, não apenas &quot;rodar alguma coisa&quot;.</p>
+<div class="example">
+  <div class="example-title">Exemplo 2</div>
+  <p>Agora vamos usar <code>parametrize</code>, que ajuda muito quando a ideia é a mesma e apenas os dados mudam.</p>
+<pre class="line-numbers language-python" data-lang="PYTHON"><code class="language-python">import pytest
+
+
+def calcular_frete(total_pedido: float) -&gt; float:
+    if total_pedido &lt; 0:
+        raise ValueError(&quot;total invalido&quot;)
+
+    if total_pedido &gt;= 200:
+        return 0.0
+
+    return 15.0
+
+
+@pytest.mark.parametrize(
+    &quot;total, frete_esperado&quot;,
+    [
+        (50.0, 15.0),
+        (199.99, 15.0),
+        (200.0, 0.0),
+        (350.0, 0.0),
+    ],
+)
+def test_calcular_frete(total, frete_esperado):
+    assert calcular_frete(total) == frete_esperado
+
+
+def test_nao_aceita_total_negativo():
+    with pytest.raises(ValueError):
+        calcular_frete(-1.0)
+</code></pre>
+<p>Esse exemplo é pequeno, mas didaticamente muito bom porque mostra um tipo de caso que aparece direto em prova, em entrevista e em projeto real. O defeito mais comum aqui costuma acontecer no limite, quando o programador escreve <code>&gt;</code> em vez de <code>&gt;=</code>.</p>
+</div>
+<h3 id="e-os-mocks"><span class="heading-text">E os mocks?</span><span class="heading-arabic">8.4.1</span></h3>
+<p>Sommerville também comenta que, às vezes, a unidade sob teste depende de algo externo, como banco de dados, relógio do sistema ou um serviço remoto. Nesses casos, usar o objeto real pode tornar o teste lento, difícil de preparar ou instável.</p>
+<p>Por isso, é comum substituir essa dependência por um objeto controlado para o teste. Em termos modernos, isso é frequentemente chamado de <strong>mock</strong>, <strong>stub</strong> ou <strong>fake</strong>, dependendo do papel que ele exerce.</p>
+<p>Se a sua função depende do horário atual, por exemplo, você pode injetar uma função de relógio. Se depende de um repositório, pode passar um objeto falso que retorna dados previsíveis. A ideia é simples: no teste unitário, você quer isolar a unidade.</p>
+<h2 id="tdd-escrever-o-teste-antes-do-código"><span class="heading-text">TDD: escrever o teste antes do código</span><span class="heading-arabic">8.5</span></h2>
+<p>Sommerville dedica a seção 8.2 ao <strong>desenvolvimento dirigido a testes</strong>, ou <strong>TDD</strong>. A ideia central é intercalar incrementos pequenos de código com testes automatizados.</p>
+<p>Em vez de pensar assim:</p>
+<ol>
+<li>implementar bastante coisa;</li>
+<li>testar depois;</li>
+</ol>
+<p>no TDD você pensa assim:</p>
+<ol>
+<li>escolher um comportamento pequeno;</li>
+<li>escrever um teste para ele;</li>
+<li>ver o teste falhar;</li>
+<li>escrever o mínimo de código para fazê-lo passar;</li>
+<li>refatorar com segurança;</li>
+<li>repetir.</li>
+</ol>
+<h3 id="o-ciclo-vermelho-verde-e-azul"><span class="heading-text">O ciclo vermelho, verde e azul</span><span class="heading-arabic">8.5.1</span></h3>
+<p>Na formulação clássica, você costuma ouvir falar em <strong>vermelho, verde e refatoração</strong>. Em muitas equipes e materiais didáticos, essa terceira etapa é representada pela cor <strong>azul</strong>, que passa a indicar o momento de limpar, reorganizar e melhorar o código sem mudar seu comportamento.</p>
+<p>Nesta aula, vamos usar essa convenção visual:</p>
+<ol>
+<li><strong>Vermelho</strong>: o teste novo falha, porque a funcionalidade ainda não existe ou ainda está errada.</li>
+<li><strong>Verde</strong>: você implementa o mínimo necessário para o teste passar.</li>
+<li><strong>Azul</strong>: você refatora, melhora nomes, remove duplicação e reorganiza o código, mantendo todos os testes verdes.</li>
+</ol>
+<p>Essa imagem ajuda muito porque deixa o processo concreto. No TDD, um teste falhando no começo não é fracasso. É parte esperada do processo.</p>
+<h3 id="passo-a-passo-do-tdd"><span class="heading-text">Passo a passo do TDD</span><span class="heading-arabic">8.5.2</span></h3>
+<p>Com base no Sommerville, o fluxo fica assim:</p>
+<ol>
+<li>identificar um incremento pequeno de funcionalidade;</li>
+<li>escrever o teste automatizado desse incremento;</li>
+<li>executar os testes e observar a falha do teste novo;</li>
+<li>implementar a funcionalidade;</li>
+<li>executar novamente os testes;</li>
+<li>refatorar;</li>
+<li>avançar para o próximo incremento.</li>
+</ol>
+<p>O ponto mais importante aqui é o tamanho do passo. TDD funciona melhor quando o incremento é pequeno o bastante para caber na sua cabeça sem esforço excessivo.</p>
+<h3 id="por-que-tdd-ajuda"><span class="heading-text">Por que TDD ajuda</span><span class="heading-arabic">8.5.3</span></h3>
+<p>Sommerville destaca benefícios importantes do TDD:</p>
+<ol>
+<li>melhora a clareza sobre o que o código deveria fazer;</li>
+<li>aumenta a cobertura de código, porque cada incremento nasce junto com teste;</li>
+<li>torna o teste de regressão muito mais barato;</li>
+<li>simplifica a depuração, porque o defeito tende a estar no último incremento;</li>
+<li>faz os testes servirem também como documentação executável.</li>
+</ol>
+<p>Mas também há um cuidado importante. TDD <strong>não substitui</strong> testes de sistema, desempenho, integração ou aceitação. Ele ajuda muito na construção incremental, mas não resolve sozinho a validação do software inteiro.</p>
+<div class="example">
+  <div class="example-title">Exemplo 3</div>
+  <p>Vamos fazer TDD para uma regra simples de checkout.</p>
+<p><strong>Requisito pequeno:</strong> se o pedido tiver valor igual ou maior que R$ 200,00, o frete deve ser zero.</p>
+<h3 id="passo-1-vermelho"><span class="heading-text">Passo 1. Vermelho</span><span class="heading-arabic">8.0.1</span></h3>
+<p>Primeiro escrevemos o teste antes da implementação.</p>
+<p>Arquivo <code>tests/test_checkout.py</code>:</p>
+<pre class="line-numbers language-python" data-lang="PYTHON"><code class="language-python">from checkout import calcular_frete
+
+
+def test_pedido_com_200_reais_ou_mais_tem_frete_gratis():
+    assert calcular_frete(200.0) == 0.0
+</code></pre>
+<p>Se executarmos agora:</p>
+<pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">pytest -q
+</code></pre>
+<p>O resultado esperado é falha. Talvez o módulo nem exista ainda. Isso é o <strong>vermelho</strong>.</p>
+<h3 id="passo-2-verde"><span class="heading-text">Passo 2. Verde</span><span class="heading-arabic">8.0.2</span></h3>
+<p>Agora criamos o mínimo para fazer esse teste passar.</p>
+<p>Arquivo <code>checkout.py</code>:</p>
+<pre class="line-numbers language-python" data-lang="PYTHON"><code class="language-python">def calcular_frete(total_pedido: float) -&gt; float:
+    return 0.0
+</code></pre>
+<p>Esse código é claramente incompleto, mas faz o primeiro teste passar. Isso é importante no TDD. Você ainda não está tentando resolver tudo. Está resolvendo apenas o necessário para o comportamento atual.</p>
+<h3 id="passo-3-novo-vermelho"><span class="heading-text">Passo 3. Novo vermelho</span><span class="heading-arabic">8.0.3</span></h3>
+<p>Agora escrevemos mais um teste.</p>
+<pre class="line-numbers language-python" data-lang="PYTHON"><code class="language-python">from checkout import calcular_frete
+
+
+def test_pedido_com_200_reais_ou_mais_tem_frete_gratis():
+    assert calcular_frete(200.0) == 0.0
+
+
+def test_pedido_abaixo_de_200_reais_paga_frete_padrao():
+    assert calcular_frete(150.0) == 15.0
+</code></pre>
+<p>Ao rodar de novo, o segundo teste falha. Voltamos ao <strong>vermelho</strong>.</p>
+<h3 id="passo-4-novo-verde"><span class="heading-text">Passo 4. Novo verde</span><span class="heading-arabic">8.0.4</span></h3>
+<p>Implementamos o mínimo para atender os dois testes.</p>
+<pre class="line-numbers language-python" data-lang="PYTHON"><code class="language-python">def calcular_frete(total_pedido: float) -&gt; float:
+    if total_pedido &gt;= 200.0:
+        return 0.0
+    return 15.0
+</code></pre>
+<p>Agora os dois passam. Estamos no <strong>verde</strong> novamente.</p>
+<h3 id="passo-5-azul"><span class="heading-text">Passo 5. Azul</span><span class="heading-arabic">8.0.5</span></h3>
+<p>Neste ponto, podemos melhorar o código sem mudar o comportamento. Suponha que você queira explicitar o valor do frete padrão.</p>
+<pre class="line-numbers language-python" data-lang="PYTHON"><code class="language-python">FRETE_PADRAO = 15.0
+LIMITE_FRETE_GRATIS = 200.0
+
+
+def calcular_frete(total_pedido: float) -&gt; float:
+    if total_pedido &gt;= LIMITE_FRETE_GRATIS:
+        return 0.0
+    return FRETE_PADRAO
+</code></pre>
+<p>Depois da refatoração, você roda a suíte novamente. Se tudo continuar passando, o <strong>azul</strong> foi seguro.</p>
+<h3 id="passo-6-continuar-o-ciclo"><span class="heading-text">Passo 6. Continuar o ciclo</span><span class="heading-arabic">8.0.6</span></h3>
+<p>O próximo passo natural seria testar entrada inválida:</p>
+<pre class="line-numbers language-python" data-lang="PYTHON"><code class="language-python">import pytest
+
+from checkout import calcular_frete
+
+
+def test_total_negativo_dispara_erro():
+    with pytest.raises(ValueError):
+        calcular_frete(-10.0)
+</code></pre>
+<p>Falhou? Vermelho.</p>
+<p>Implemente:</p>
+<pre class="line-numbers language-python" data-lang="PYTHON"><code class="language-python">FRETE_PADRAO = 15.0
+LIMITE_FRETE_GRATIS = 200.0
+
+
+def calcular_frete(total_pedido: float) -&gt; float:
+    if total_pedido &lt; 0:
+        raise ValueError(&quot;total invalido&quot;)
+
+    if total_pedido &gt;= LIMITE_FRETE_GRATIS:
+        return 0.0
+
+    return FRETE_PADRAO
+</code></pre>
+<p>Passou? Verde.</p>
+<p>Se quiser reorganizar nomes ou estrutura, azul.</p>
+</div>
+<h3 id="o-que-esse-ciclo-ensina"><span class="heading-text">O que esse ciclo ensina</span><span class="heading-arabic">8.5.4</span></h3>
+<p>Repare na diferença de mentalidade. Em vez de tentar imaginar a implementação inteira de uma vez, você caminha em passos pequenos e verificáveis. Isso diminui ambiguidade e reduz o risco de escrever muito código sem saber se ele atende ao requisito.</p>
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner"><br /></span>
+  </div>
+  <div class="callout-content">
+<p>No TDD, a falha inicial do teste é desejada. Ela mostra que o teste realmente está exercitando algo novo. Se o teste novo já nasce verde sem motivo claro, ou ele está mal escrito ou não está verificando nada útil.</p>
+  </div>
+</div>
+<h3 id="quando-tdd-ajuda-menos"><span class="heading-text">Quando TDD ajuda menos</span><span class="heading-arabic">8.5.5</span></h3>
+<p>Sommerville também chama atenção para limites do TDD. Ele tende a ser mais útil quando:</p>
+<ol>
+<li>você está construindo software novo;</li>
+<li>a funcionalidade cabe em incrementos pequenos;</li>
+<li>há automação de testes rápida;</li>
+<li>a unidade pode ser isolada com facilidade.</li>
+</ol>
+<p>Ele tende a ser menos direto quando:</p>
+<ol>
+<li>há forte dependência de sistemas legados grandes;</li>
+<li>há concorrência complexa com múltiplas threads;</li>
+<li>a funcionalidade depende fortemente de interação visual complexa;</li>
+<li>o problema ainda está mal entendido a ponto de você nem conseguir escrever bons testes.</li>
+</ol>
+<h2 id="testes-de-release-e-o-caminho-até-a-aceitação"><span class="heading-text">Testes de release e o caminho até a aceitação</span><span class="heading-arabic">8.6</span></h2>
+<p>Depois dos testes de desenvolvimento, Sommerville separa o <strong>teste de release</strong> como um processo voltado a verificar se uma versão está boa o suficiente para sair da equipe de desenvolvimento.</p>
+<p>Aqui há duas diferenças importantes em relação aos testes de desenvolvimento:</p>
+<ol>
+<li>idealmente, outra equipe deve ser responsável por esse teste;</li>
+<li>o foco sai da descoberta local de bugs e vai para a validação da versão diante dos requisitos.</li>
+</ol>
+<p>É por isso que o teste de release é frequentemente descrito como um teste mais <strong>caixa-preta</strong>. O testador não está olhando tanto para a implementação interna. Ele está olhando para entradas, saídas, requisitos, cenários e comportamento esperado da versão.</p>
+<h3 id="testes-baseados-em-requisitos"><span class="heading-text">Testes baseados em requisitos</span><span class="heading-arabic">8.6.1</span></h3>
+<p>Um dos pontos mais úteis do capítulo 8.3 é a ideia de <strong>testes baseados em requisitos</strong>. A lógica é simples e poderosa:</p>
+<ol>
+<li>você pega um requisito;</li>
+<li>deriva um ou mais testes a partir dele;</li>
+<li>mantém rastreabilidade entre requisito e testes.</li>
+</ol>
+<p>Isso é importante porque um requisito raramente é coberto por um único teste. Em geral, você precisa de vários casos para demonstrar cobertura razoável.</p>
+<h3 id="testes-de-cenário"><span class="heading-text">Testes de cenário</span><span class="heading-arabic">8.6.2</span></h3>
+<p>Sommerville também destaca os <strong>testes de cenário</strong>, que partem de uma história realista de uso. Eles são muito úteis porque aproximam o teste da prática do usuário.</p>
+<p>Em vez de testar apenas uma função isolada, você descreve algo como:</p>
+<ol>
+<li>cliente monta carrinho;</li>
+<li>totaliza R$ 230,00;</li>
+<li>informa CEP válido;</li>
+<li>confirma compra;</li>
+<li>sistema aplica frete grátis;</li>
+<li>resumo final mostra total correto.</li>
+</ol>
+<p>Esse tipo de cenário serve como ponte entre requisitos, release e aceitação.</p>
+<h2 id="teste-de-aceitação-o-sistema-está-bom-o-suficiente-para-uso"><span class="heading-text">Teste de aceitação: o sistema está bom o suficiente para uso?</span><span class="heading-arabic">8.7</span></h2>
+<p>O teste de aceitação, para Sommerville, é parte dos testes de usuário. Ele acontece quando o cliente avalia se o sistema deve ou não ser aceito para uso operacional.</p>
+<p>Esse ponto é essencial. Enquanto o teste unitário pergunta se uma pequena parte funciona, o teste de aceitação pergunta algo muito mais próximo do negócio:</p>
+<p><strong>&quot;isso está bom o suficiente para ser usado no ambiente real?&quot;</strong></p>
+<p>Essa pergunta envolve funcionalidade, mas também pode envolver desempenho, usabilidade, fluxo operacional e adequação ao trabalho real.</p>
+<h3 id="os-seis-estágios-do-teste-de-aceitação"><span class="heading-text">Os seis estágios do teste de aceitação</span><span class="heading-arabic">8.7.1</span></h3>
+<p>Sommerville descreve seis estágios para o processo de aceitação:</p>
+<ol>
+<li><strong>definir critérios de aceitação</strong>;</li>
+<li><strong>planejar os testes de aceitação</strong>;</li>
+<li><strong>derivar os testes de aceitação</strong>;</li>
+<li><strong>executar os testes de aceitação</strong>;</li>
+<li><strong>negociar os resultados</strong>;</li>
+<li><strong>aceitar ou rejeitar o sistema</strong>.</li>
+</ol>
+<p>Isso mostra por que aceitação não é apenas &quot;rodar uns testes no final&quot;. É um processo com critério, planejamento e decisão.</p>
+<h3 id="um-exemplo-simples-de-critério-de-aceitação"><span class="heading-text">Um exemplo simples de critério de aceitação</span><span class="heading-arabic">8.7.2</span></h3>
+<p>Suponha o seguinte requisito de negócio para um checkout:</p>
+<p>&quot;Pedidos com total igual ou superior a R$ 200,00 devem receber frete grátis no resumo final da compra.&quot;</p>
+<p>Um possível critério de aceitação poderia ser:</p>
+<p>&quot;Quando o cliente finalizar um pedido com total de R$ 200,00 ou mais, o sistema deve exibir frete igual a R$ 0,00 e total final sem cobrança adicional de frete.&quot;</p>
+<p>Perceba a diferença:</p>
+<ol>
+<li>no teste unitário, você pode testar apenas a função <code>calcular_frete</code>;</li>
+<li>na aceitação, você quer confirmar que o comportamento aparece corretamente para o uso final.</li>
+</ol>
+<div class="example">
+  <div class="example-title">Exemplo 4</div>
+  <p>Vamos transformar o requisito acima em um cenário de aceitação simples.</p>
+<p><strong>Cenário</strong></p>
+<ol>
+<li>O cliente adiciona produtos ao carrinho.</li>
+<li>O subtotal chega a R$ 230,00.</li>
+<li>O cliente avança para o checkout.</li>
+<li>O sistema calcula o frete.</li>
+<li>O resumo final deve mostrar frete R$ 0,00.</li>
+<li>O total final deve permanecer R$ 230,00.</li>
+</ol>
+<p>Uma implementação simplificada para demonstração poderia ser esta:</p>
+<pre class="line-numbers language-python" data-lang="PYTHON"><code class="language-python">def resumo_do_pedido(subtotal: float) -&gt; dict:
+    if subtotal &lt; 0:
+        raise ValueError(&quot;subtotal invalido&quot;)
+
+    frete = 0.0 if subtotal &gt;= 200.0 else 15.0
+    total = subtotal + frete
+
+    return {
+        &quot;subtotal&quot;: subtotal,
+        &quot;frete&quot;: frete,
+        &quot;total&quot;: total,
+    }
+</code></pre>
+<p>E um teste automatizado de aceitação simplificado poderia ficar assim:</p>
+<pre class="line-numbers language-python" data-lang="PYTHON"><code class="language-python">from checkout import resumo_do_pedido
+
+
+def test_aceitacao_frete_gratis_para_pedido_acima_do_limite():
+    resumo = resumo_do_pedido(230.0)
+
+    assert resumo[&quot;subtotal&quot;] == 230.0
+    assert resumo[&quot;frete&quot;] == 0.0
+    assert resumo[&quot;total&quot;] == 230.0
+</code></pre>
+<p>Este teste está automatizado, mas a ideia central dele não é mais apenas verificar uma unidade interna. Ele está verificando uma regra de negócio mais próxima do uso observado pelo cliente.</p>
+<p>Em um sistema real, a aceitação pode envolver interface, dados reais, usuários reais, ambiente operacional e discussão formal com o cliente. O exemplo acima é apenas uma versão didática e simplificada.</p>
+</div>
+<h3 id="aceitação-não-é-sempre-tudo-ou-nada"><span class="heading-text">Aceitação não é sempre tudo ou nada</span><span class="heading-arabic">8.7.3</span></h3>
+<p>Um ponto interessante do Sommerville é que, na prática, aceitação nem sempre funciona como um corte totalmente rígido. Muitas vezes, o cliente quer começar a usar o sistema logo porque já treinou a equipe, já alterou processo interno ou já comprou infraestrutura.</p>
+<p>Nesses casos, pode acontecer uma <strong>aceitação condicional</strong>:</p>
+<ol>
+<li>o cliente aceita começar a implantação;</li>
+<li>o fornecedor se compromete a corrigir problemas urgentes rapidamente;</li>
+<li>a decisão é negociada com base em risco e impacto.</li>
+</ol>
+<p>Isso ajuda a entender que engenharia de software não é apenas técnica. Há também contexto organizacional, custo, prazo e decisão de negócio.</p>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner"><br /></span>
+  </div>
+  <div class="callout-content">
+<p>Um software pode passar em muitos testes técnicos e ainda assim falhar em aceitação se não atender ao uso real, ao fluxo de trabalho ou ao nível de qualidade esperado pelo cliente.</p>
+  </div>
+</div>
+<h2 id="o-que-cada-tipo-de-teste-resolve"><span class="heading-text">O que cada tipo de teste resolve</span><span class="heading-arabic">8.8</span></h2>
+<p>Vamos fechar a lógica da aula com uma comparação direta.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Tipo de teste</th>
+  <th style="text-align:left">Foco principal</th>
+  <th style="text-align:left">Exemplo de pergunta</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><strong>Unitário</strong></td>
+  <td style="text-align:left">Regra pequena isolada</td>
+  <td style="text-align:left"><code>calcular_frete(200)</code> retorna <code>0.0</code>?</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Integração / componente</strong></td>
+  <td style="text-align:left">Comunicação entre partes</td>
+  <td style="text-align:left">O serviço grava o pedido corretamente no repositório?</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Sistema</strong></td>
+  <td style="text-align:left">Comportamento do sistema inteiro</td>
+  <td style="text-align:left">O checkout completo funciona do carrinho ao pagamento?</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Release</strong></td>
+  <td style="text-align:left">Validação da versão para sair da equipe</td>
+  <td style="text-align:left">Esta versão atende aos requisitos definidos?</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Aceitação</strong></td>
+  <td style="text-align:left">Prontidão para uso pelo cliente</td>
+  <td style="text-align:left">O cliente considera essa versão adequada para operar?</td>
+</tr>
+</tbody>
+</table>
+<p>Se você guardar essa tabela, já evita uma série de confusões comuns.</p>
+<h2 id="a-ideia-central-que-organiza-tudo"><span class="heading-text">A ideia central que organiza tudo</span><span class="heading-arabic">8.9</span></h2>
+<p>O grande aprendizado deste tópico é que <strong>testar não é uma atividade única, mas um conjunto de verificações em níveis diferentes</strong>.</p>
+<p>Você usa testes unitários para ganhar rapidez e precisão sobre regras pequenas. Usa TDD para construir essas regras de forma incremental e verificável. Usa testes de aceitação para responder a pergunta que realmente fecha a entrega: se o sistema está bom o suficiente para o cliente usar.</p>
+<div class="callout callout-success">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></span>
+    <span class="callout-title-inner"><br /></span>
+  </div>
+  <div class="callout-content">
+<p>Teste unitário ajuda você a construir corretamente partes pequenas. TDD ajuda você a construir essas partes em passos seguros. Teste de aceitação ajuda a verificar se o sistema, como solução, realmente atende ao uso esperado.</p>
+  </div>
+</div>
+<h2 id="questões"><span class="heading-text">Questões</span><span class="heading-arabic">8.10</span></h2>
+<div class="questions">
+  <p><strong>1.</strong> Explique a diferença entre teste unitário, teste de integração, teste de sistema e teste de aceitação. Qual pergunta principal cada um deles tenta responder?</p>
+<p><strong>2.</strong> Por que passar em testes unitários não é suficiente para concluir que o sistema inteiro está pronto para entrega?</p>
+<p><strong>3.</strong> Descreva o ciclo do TDD usando as cores <strong>vermelho</strong>, <strong>verde</strong> e <strong>azul</strong>. O que acontece em cada etapa?</p>
+<p><strong>4.</strong> Em um processo de TDD, por que a falha inicial de um teste novo não deve ser interpretada como problema do processo?</p>
+<p><strong>5.</strong> Considere a regra a seguir: pedidos com subtotal maior ou igual a R$ 200,00 recebem frete grátis. Proponha pelo menos quatro casos de teste unitário relevantes para essa regra.</p>
+<p><strong>6.</strong> Qual é a diferença entre um teste baseado em requisito e um teste de cenário? Por que ambos são úteis em testes de release?</p>
+<p><strong>7.</strong> Explique por que TDD ajuda a reduzir o custo do teste de regressão.</p>
+<p><strong>8.</strong> Em que situações o uso de mocks ou objetos falsos pode ser útil em testes unitários?</p>
+<p><strong>9.</strong> Segundo Sommerville, quais são os estágios do teste de aceitação? Explique resumidamente a função de cada um.</p>
+<p><strong>10.</strong> O que significa uma aceitação condicional de sistema? Por que ela pode acontecer mesmo quando ainda existem problemas conhecidos?</p>
+</div>
+<div class="example">
+  <div class="example-title">Gabarito</div>
+  <p><strong>1.</strong> Teste unitário verifica unidades pequenas isoladas. Integração verifica comunicação entre partes. Sistema verifica o comportamento do sistema completo. Aceitação verifica se o cliente considera o sistema adequado para uso real.</p>
+<p><strong>2.</strong> Porque testes unitários não cobrem necessariamente integração entre módulos, comportamento do sistema completo, ambiente real de uso, requisitos não funcionais nem critérios de aceitação do cliente.</p>
+<p><strong>3.</strong> Vermelho significa escrever um teste novo e vê-lo falhar. Verde significa implementar o mínimo para fazê-lo passar. Azul significa refatorar e melhorar o código sem mudar o comportamento, mantendo todos os testes passando.</p>
+<p><strong>4.</strong> Porque no TDD o teste novo é escrito antes da funcionalidade existir. A falha inicial mostra justamente que o teste está exercitando um comportamento ainda não implementado.</p>
+<p><strong>5.</strong> Exemplos: subtotal <code>150.0</code> deve cobrar frete padrão; subtotal <code>199.99</code> deve cobrar frete padrão; subtotal <code>200.0</code> deve dar frete grátis; subtotal <code>350.0</code> deve dar frete grátis; subtotal negativo deve disparar erro.</p>
+<p><strong>6.</strong> Teste baseado em requisito deriva casos a partir de requisitos explícitos. Teste de cenário deriva casos a partir de histórias realistas de uso. O primeiro ajuda na cobertura formal dos requisitos. O segundo aproxima o teste do uso prático do sistema.</p>
+<p><strong>7.</strong> Porque o conjunto de testes automatizados cresce junto com o código. Sempre que o sistema muda, os testes antigos podem ser reexecutados rapidamente para verificar se a mudança não introduziu regressões.</p>
+<p><strong>8.</strong> Quando a unidade depende de banco de dados, serviço remoto, relógio do sistema, fila, API externa ou qualquer dependência que torne o teste lento, instável ou difícil de controlar. O mock ajuda a isolar a unidade testada.</p>
+<p><strong>9.</strong> Definir critérios de aceitação, planejar testes, derivar testes, executar testes, negociar resultados e aceitar ou rejeitar o sistema. Em conjunto, esses estágios estruturam a decisão formal sobre a prontidão do sistema para uso.</p>
+<p><strong>10.</strong> Significa que o cliente aceita iniciar uso ou implantação mesmo com problemas conhecidos, desde que haja acordo sobre correções e riscos. Isso pode ocorrer porque o custo de não usar o sistema naquele momento é maior que o custo de corrigir os problemas remanescentes.</p>
+</div>
+<h2 id="próximos-passos"><span class="heading-text">Próximos passos</span><span class="heading-arabic">8.11</span></h2>
+<p>Na próxima aula, avançaremos para <strong>Evolução de Software</strong>. Depois de entender como validar e testar um sistema, o próximo passo é estudar por que o software continua mudando mesmo depois da entrega, como essas mudanças afetam custo e manutenção e por que evoluir bem é parte central da engenharia de software profissional.</p>
+
+                </div>
+            </article>
+            <footer class="footer">
+                <p>© 2025 · <a href="#">Gabriel Soares Baptista</a></p>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        const toggle = document.querySelector('.mobile-menu-toggle');
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.querySelector('.mobile-menu-overlay');
+
+        function openMenu() {
+            sidebar.classList.add('open');
+            overlay.classList.add('open');
+            toggle.classList.add('open');
+            toggle.innerHTML = '<i data-lucide="x"></i>';
+            CourseForgeUI.initIcons();
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMenu() {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('open');
+            toggle.classList.remove('open');
+            toggle.innerHTML = '<i data-lucide="menu"></i>';
+            CourseForgeUI.initIcons();
+            document.body.style.overflow = '';
+        }
+
+        toggle.addEventListener('click', () => {
+            if (sidebar.classList.contains('open')) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        overlay.addEventListener('click', closeMenu);
+    </script>
+
+    
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            renderMathInElement(document.body, {
+                output: 'html',
+                delimiters: [
+                    { left: "$$", right: "$$", display: true },
+                    { left: "$", right: "$", display: false },
+                    { left: "\\(", right: "\\)", display: false },
+                    { left: "\\[", right: "\\]", display: true }
+                ],
+                throwOnError: false,
+                strict: false
+            });
+        });
+    </script>
+    
+    
+    <script src="/aulas-faesa/js/vendor/prism/prism.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-c.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-cpp.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-python.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-clike.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-perl.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-java.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-mermaid.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-php.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js" data-no-bundle></script>
+    
+    
+    
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            mermaid.initialize({
+                startOnLoad: true,
+                theme: 'default',
+                securityLevel: 'loose',
+                fontFamily: 'Inter, system-ui, sans-serif',
+                themeVariables: {
+                    fontSize: '16px',
+                    edgeLabelFontSize: '16px',
+                    multiplicityFontSize: '18px'
+                }
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const isSubcourse = false;
+        const courseName = "Engenharia de Software";
+        CourseForgeNav.applyDynamicBreadcrumbs('.breadcrumb', isSubcourse);
+        CourseForgeNav.initScrollSpy();
+        CourseForgeUI.initCopyButtons();
+        CourseForgeUI.initExamples();
+        });
+
+        function handleBackNavigation() {
+            const isSubcourse = false;
+        const dynamic = CourseForgeNav.getBackLink('contents.html', 'Voltar', isSubcourse);
+        window.location.href = dynamic.url;
+        }
+    </script>
+</body>
+
+</html>

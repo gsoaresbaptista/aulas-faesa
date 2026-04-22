@@ -413,7 +413,7 @@
   "../obsidian-vault/6. Teaching/T\u00f3picos de Programa\u00e7\u00e3o II/slides/5 - libraries in c.md": "eee8b7630c9447fc7bdf4d6a0642490a",
   "../obsidian-vault/6. Teaching/T\u00f3picos de Programa\u00e7\u00e3o II/slides/6 - abstract data types.md": "9b041cfaec858198b54112723df9ff44",
   "../obsidian-vault/6. Teaching/Sistemas Operacionais/static/fig_dining_philosophers.png": "7bdd4c6686f2e0534c44f8096fb53067",
-  "../obsidian-vault/6. Teaching/.course_forge_cache/build_cache.json": "65fafec113016e72979aac77c7226d35",
+  "../obsidian-vault/6. Teaching/.course_forge_cache/build_cache.json": "4d9783a9f9333191c7181162c8bc3a36",
   "../obsidian-vault/6. Teaching/Redes/6 - mac sublayer, ethernet and mac addressing.md": "6c07c69cbad857bdba2ec8e1933b60b6",
   "../obsidian-vault/6. Teaching/Compiladores/bin/tests/lexer/expected/01_delimiters.txt": "7eee78b2a963b2b5582b4959d31eb53c",
   "../obsidian-vault/6. Teaching/Compiladores/bin/tests/lexer/expected/08_strings.txt": "3a48f84a1c1c66feb1064c6c970613b6",
@@ -486,8 +486,8 @@
   "../obsidian-vault/6. Teaching/redes-de-computadores-tanenbaum-5a-edicao.pdf": "49edc6435978807383a48eeab44d02df",
   "../obsidian-vault/6. Teaching/T\u00f3picos de Programa\u00e7\u00e3o II/12 - pointers.md": "f4bfe576e80872a27533392553d91200",
   "../obsidian-vault/6. Teaching/Processamento Digital de Sinais/appendix - tabela da transformada de fourier.md": "0686f37501a617254feb42b6beb1b807",
-  "../obsidian-vault/6. Teaching/Processamento Digital de Sinais/8 - modulacao em amplitude e comunicacoes.md": "22b19ca881205480f9f49f5e2a8cc740",
-  "../obsidian-vault/6. Teaching/Processamento Digital de Sinais/7 - transformada de fourier continua.md": "88bc881b7087cfc0ebcea06fd38db852",
+  "../obsidian-vault/6. Teaching/Processamento Digital de Sinais/8 - modulacao em amplitude e comunicacoes.md": "97c7bd6780db3a67d2c76791476145d6",
+  "../obsidian-vault/6. Teaching/Processamento Digital de Sinais/7 - transformada de fourier continua.md": "6af897ffd7ba4f8642c9bbde1081f47b",
   "../obsidian-vault/6. Teaching/Processamento Digital de Sinais/tables/appendix - tabela da transformada de fourier.md": "2b39a22e264be647a1cf1a030ae9dc73",
   "../obsidian-vault/6. Teaching/Processamento Digital de Sinais/static/figura-7-5-analogia-carga-espectro.png": "1867d6f773b1891bd1ebfd41dcaf0b23",
   "../obsidian-vault/6. Teaching/Processamento Digital de Sinais/static/figura-7-10-pulso-retangular-e-espectro.png": "b1420dd0dd9d8f538787b0e6a5893366",
@@ -513,5 +513,11 @@
   "../obsidian-vault/6. Teaching/Redes/static/fig4_43_fiacao_centralizada_hubs_switch.png": "2840030a9d8e2359b13928bc63ae97dd",
   "../obsidian-vault/6. Teaching/Redes/static/fig4_46_ethernet_8021q.png": "4d44c92a8d82af73ba9646feb5789828",
   "../obsidian-vault/6. Teaching/Redes/slides/7 - switches and vlans.md": "92679a5ebba70be9c36235fbf82de7cb",
-  "../obsidian-vault/6. Teaching/Sistemas Operacionais/static/deadlock_meme.jpg": "9c5cd7cf7b56854e154fc170ed6ae8ec"
+  "../obsidian-vault/6. Teaching/Sistemas Operacionais/static/deadlock_meme.jpg": "9c5cd7cf7b56854e154fc170ed6ae8ec",
+  "../obsidian-vault/6. Teaching/Sistemas Operacionais/slides/7 - deadlocks.md": "d78de28b2fab91575ea99cbdec0143a9",
+  "../obsidian-vault/6. Teaching/Processamento Digital de Sinais/9 - fourier and modulation in communications.md": "db50fa00c3d102286d7a1d87e0ecb774",
+  "../obsidian-vault/6. Teaching/Processamento Digital de Sinais/static/figura-8-soma-de-frequencias.svg": "bf4ac5a4be6afd8ffaa925721271ccb2",
+  "../obsidian-vault/6. Teaching/Engenharia de Software/8 - software testing.md": "27c3c0b1f961348c1d72ca0161a7ef92",
+  "../obsidian-vault/6. Teaching/Engenharia de Software/slides/9 - software testing.md": "c832dd038e25f5930a1c0e370e113744",
+  "../obsidian-vault/6. Teaching/Processamento Digital de Sinais/slides/8 - practice with continuous fourier transform.md": "92b42f2b22d7e420f4323ea8fece101a"
 }

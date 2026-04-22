@@ -1,0 +1,1184 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <title>Prática com Transformada de Fourier Contínua</title>
+    <link rel="icon" href="/aulas-faesa/img/dark-favicon.svg" media="(prefers-color-scheme: light)">
+    <link rel="icon" href="/aulas-faesa/img/light-favicon.svg" media="(prefers-color-scheme: dark)">
+
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/reset.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/reveal.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/theme/white.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/aulas-faesa/css/prism-one-light.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/fonts.css" data-no-bundle>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+            <section><h1>Prática com Transformada de Fourier Contínua</h1>
+<h2>Revisão Geral, Tabela e Propriedades</h2>
+<p>Professor: Gabriel Soares Baptista</p>
+</section>
+<section><h1>Introdução</h1>
+<ul>
+<li>Esta aula funciona como revisão da Transformada de Fourier contínua.</li>
+<li>O foco é reforçar conceitos, consolidar a leitura espectral e praticar o uso da tabela.</li>
+<li>Em vez de introduzir um novo bloco de conteúdo, a meta é reconhecer estratégias de resolução.</li>
+<li>Em muitos exercícios, o passo decisivo é reescrever o sinal corretamente antes de aplicar a tabela.</li>
+</ul>
+<div class="callout callout-tip">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .5 2.2 1.5 3.1.7.7 1.3 1.5 1.5 2.4"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span>
+    <span class="callout-title-inner">Material de consulta<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Usaremos novamente o apêndice <a href="../tables/appendix-tabela-da-transformada-de-fourier.html">Tabela da Transformada de Fourier</a>.</p>
+  </div>
+</div>
+</section>
+<section><h1>Qual Estratégia Escolher</h1>
+<p>Antes de calcular, vale classificar o problema:</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Situação</th>
+  <th style="text-align:left">Estratégia</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">sinal já está no apêndice</td>
+  <td style="text-align:left">usar a regra diretamente</td>
+</tr>
+<tr>
+  <td style="text-align:left">soma de blocos conhecidos</td>
+  <td style="text-align:left">aplicar <code>P1</code></td>
+</tr>
+<tr>
+  <td style="text-align:left">atraso ou escalamento</td>
+  <td style="text-align:left">aplicar <code>P4</code> ou <code>P3</code></td>
+</tr>
+<tr>
+  <td style="text-align:left">forma diferente, mas reescrevível</td>
+  <td style="text-align:left">manipular antes</td>
+</tr>
+<tr>
+  <td style="text-align:left">nada disso funciona bem</td>
+  <td style="text-align:left">considerar a definição</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Fourier contínuo não é só cálculo.</li>
+<li>É também reconhecimento de forma e escolha de rota.</li>
+</ul>
+</section>
+<section><h1>Pares Mais Usados</h1>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Regra</th>
+  <th style="text-align:left">$x(t)$</th>
+  <th style="text-align:left">$X(\omega)$</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">1</td>
+  <td style="text-align:left">$\delta(t)$</td>
+  <td style="text-align:left">$1$</td>
+</tr>
+<tr>
+  <td style="text-align:left">2</td>
+  <td style="text-align:left">$1$</td>
+  <td style="text-align:left">$2\pi\delta(\omega)$</td>
+</tr>
+<tr>
+  <td style="text-align:left">5a</td>
+  <td style="text-align:left">$\cos(\omega_0 t)$</td>
+  <td style="text-align:left">$\pi[\delta(\omega-\omega_0)+\delta(\omega+\omega_0)]$</td>
+</tr>
+<tr>
+  <td style="text-align:left">6</td>
+  <td style="text-align:left">$e^{-at}u(t)$</td>
+  <td style="text-align:left">$\dfrac{1}{a+j\omega}$</td>
+</tr>
+<tr>
+  <td style="text-align:left">7</td>
+  <td style="text-align:left">$e^{at}u(-t)$</td>
+  <td style="text-align:left">$\dfrac{1}{a-j\omega}$</td>
+</tr>
+<tr>
+  <td style="text-align:left">8</td>
+  <td style="text-align:left">$e^{-a|t|}$</td>
+  <td style="text-align:left">$\dfrac{2a}{a^2+\omega^2}$</td>
+</tr>
+<tr>
+  <td style="text-align:left">9</td>
+  <td style="text-align:left">$\operatorname{ret}(t/\tau)$</td>
+  <td style="text-align:left">$\tau\operatorname{sinc}(\omega\tau/2)$</td>
+</tr>
+<tr>
+  <td style="text-align:left">11</td>
+  <td style="text-align:left">$\dfrac{\sin(Wt)}{\pi t}$</td>
+  <td style="text-align:left">$\operatorname{ret}(\omega/2W)$</td>
+</tr>
+<tr>
+  <td style="text-align:left">12</td>
+  <td style="text-align:left">$\dfrac{W}{\pi}\operatorname{sinc}(Wt)$</td>
+  <td style="text-align:left">$\operatorname{ret}(\omega/2W)$</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section><h1>Propriedades Mais Usadas</h1>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Propriedade</th>
+  <th style="text-align:left">Operação no tempo</th>
+  <th style="text-align:left">Resultado em frequência</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">P1</td>
+  <td style="text-align:left">$a_1x_1(t)+a_2x_2(t)$</td>
+  <td style="text-align:left">$a_1X_1(\omega)+a_2X_2(\omega)$</td>
+</tr>
+<tr>
+  <td style="text-align:left">P3</td>
+  <td style="text-align:left">$x(at)$</td>
+  <td style="text-align:left">$\dfrac{1}{|a|}X(\omega/a)$</td>
+</tr>
+<tr>
+  <td style="text-align:left">P4</td>
+  <td style="text-align:left">$x(t-t_0)$</td>
+  <td style="text-align:left">$e^{-j\omega t_0}X(\omega)$</td>
+</tr>
+<tr>
+  <td style="text-align:left">P13</td>
+  <td style="text-align:left">se $x(t)\iff X(\omega)$</td>
+  <td style="text-align:left">então $X(t)\iff 2\pi x(-\omega)$</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>O objetivo não é decorar respostas prontas.</li>
+<li>O objetivo é reconhecer um bloco básico e transformá-lo com propriedades.</li>
+</ul>
+</section>
+<section><h1>Verificações Qualitativas</h1>
+<p>Antes de resolver, vale prever o tipo de espectro esperado:</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Tipo de sinal no tempo</th>
+  <th style="text-align:left">O que esperar em frequência</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">real</td>
+  <td style="text-align:left">$X(-\omega)=X^*(\omega)$</td>
+</tr>
+<tr>
+  <td style="text-align:left">real e par</td>
+  <td style="text-align:left">espectro real e par</td>
+</tr>
+<tr>
+  <td style="text-align:left">real e ímpar</td>
+  <td style="text-align:left">espectro imaginário puro e ímpar</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Essas previsões funcionam como checagem de consistência.</li>
+<li>Se a paridade final estiver errada, há grande chance de erro algébrico.</li>
+</ul>
+</section>
+<section><h1>Exemplo 1</h1>
+<p>Qual a melhor estratégia para $x(t)=e^{-a|t|}$?</p>
+<p><strong>Ideia central:</strong> não começar pela integral.</p>
+<p>Reescrita útil:</p>
+<p>$$
+e^{-a|t|}=e^{-at}u(t)+e^{at}u(-t)
+$$</p>
+<ul>
+<li>A forma com módulo parece difícil.</li>
+<li>A decomposição leva diretamente às <strong>Regras 6 e 7</strong>.</li>
+</ul>
+</section>
+<section><h1>Exemplo 2</h1>
+<p>Sem calcular tudo, o que já sabemos sobre o espectro de $e^{-a|t|}$?</p>
+<ul>
+<li>O sinal é real e par.</li>
+<li>Logo, o espectro deve ser real e par.</li>
+<li>Essa previsão ajuda a verificar o resultado antes mesmo da conta final.</li>
+</ul>
+</section>
+<section><h1>Exemplo 3</h1>
+<p>Determine a transformada de Fourier de $x(t)=\cos(\omega_0 t)$.</p>
+<p><strong>1. Reescrita:</strong></p>
+<p>$$
+\cos(\omega_0 t)=\frac{1}{2}e^{j\omega_0 t}+\frac{1}{2}e^{-j\omega_0 t}
+$$</p>
+<p><strong>2. Tabela + linearidade:</strong> regras 3 e 4 com <code>P1</code></p>
+<p>$$
+\boxed{\cos(\omega_0 t)\iff \pi[\delta(\omega-\omega_0)+\delta(\omega+\omega_0)]}
+$$</p>
+</section>
+<section><h1>Exemplo 4</h1>
+<p>Determine a transformada de Fourier de</p>
+<p>$$
+x(t)=3e^{-at}u(t)-2e^{at}u(-t), \quad a>0
+$$</p>
+<p><strong>1. Reconhecimento dos blocos:</strong> regras 6 e 7</p>
+<p>$$
+e^{-at}u(t)\iff \frac{1}{a+j\omega}
+\qquad
+e^{at}u(-t)\iff \frac{1}{a-j\omega}
+$$</p>
+<p><strong>2. Linearidade:</strong></p>
+<p>$$
+X(\omega)=3\left(\frac{1}{a+j\omega}\right)-2\left(\frac{1}{a-j\omega}\right)
+$$</p>
+<p><strong>3. Forma simplificada:</strong></p>
+<p>$$
+\boxed{X(\omega)=\frac{a-5j\omega}{a^2+\omega^2}}
+$$</p>
+</section>
+<section><h1>Exemplo 5</h1>
+<p>Determine a transformada de Fourier de</p>
+<p>$$
+x(t)=\operatorname{ret}((t-t_0)/\tau)
+$$</p>
+<p><strong>1. Sinal-base:</strong> regra 9</p>
+<p>$$
+\operatorname{ret}(t/\tau)\iff \tau\operatorname{sinc}(\omega\tau/2)
+$$</p>
+<p><strong>2. Atraso temporal:</strong> <code>P4</code></p>
+<p>$$
+\boxed{\operatorname{ret}((t-t_0)/\tau)\iff e^{-j\omega t_0}\tau\operatorname{sinc}(\omega\tau/2)}
+$$</p>
+<ul>
+<li>O módulo não muda.</li>
+<li>A fase recebe um termo linear em $\omega$.</li>
+</ul>
+</section>
+<section><h1>Exemplo 6</h1>
+<p>Use dualidade a partir de</p>
+<p>$$
+\frac{\sin(Wt)}{\pi t}\iff \operatorname{ret}(\omega/2W)
+$$</p>
+<p>Aplicando <code>P13</code>:</p>
+<p>$$
+\operatorname{ret}(t/2W)\iff 2\pi\frac{\sin(W\omega)}{\pi\omega}
+$$</p>
+<ul>
+<li>Um novo par nasce de um par conhecido.</li>
+<li>O valor didático está no raciocínio estrutural, não em recalcular a integral.</li>
+</ul>
+</section>
+<section><h1>Questões - 1 / 2</h1>
+<p><strong>1.</strong> Explique a diferença conceitual entre espectro discreto e espectro contínuo.</p>
+<p><strong>2.</strong> Quando Fourier pode ser obtida de Laplace fazendo $s=j\omega$?</p>
+<p><strong>3.</strong> Complete a tabela abaixo.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Operação no tempo</th>
+  <th style="text-align:left">Efeito em frequência</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">$a_1x_1(t)+a_2x_2(t)$</td>
+  <td style="text-align:left"></td>
+</tr>
+<tr>
+  <td style="text-align:left">$x(at)$</td>
+  <td style="text-align:left"></td>
+</tr>
+<tr>
+  <td style="text-align:left">$x(t-t_0)$</td>
+  <td style="text-align:left"></td>
+</tr>
+<tr>
+  <td style="text-align:left">se $x(t)\iff X(\omega)$</td>
+  <td style="text-align:left"></td>
+</tr>
+</tbody>
+</table>
+<p><strong>4.</strong> O que você espera para o espectro de um sinal real e par?</p>
+<p><strong>5.</strong> Determine a transformada de Fourier de $\cos(\omega_0 t)$ usando a tabela.</p>
+<p><strong>6.</strong> Reescreva $e^{-a|t|}$ para usar diretamente a tabela.</p>
+</section>
+<section><h1>Questões - 2 / 2</h1>
+<p><strong>7.</strong> Determine a transformada de Fourier de $3e^{-at}u(t)-2e^{at}u(-t)$.</p>
+<p><strong>8.</strong> Determine a transformada de Fourier de $\operatorname{ret}((t-t_0)/\tau)$.</p>
+<p><strong>9.</strong> Um atraso temporal desloca o módulo do espectro em frequência? Justifique.</p>
+<p><strong>10.</strong> Determine a transformada de Fourier de $\operatorname{ret}(t/4)$ e diga como muda para $x(2t)$.</p>
+<p><strong>11.</strong> Determine a transformada de Fourier de $e^{-a|t|}+e^{-at}u(t)$.</p>
+<p><strong>12.</strong> Explique como a dualidade permite gerar um novo par sem refazer a integral.</p>
+</section>
+<section><h1>Questões - 3 / 3</h1>
+<p><strong>13.</strong> Para cada sinal abaixo, indique o melhor primeiro passo:</p>
+<ul>
+<li>$e^{-a|t|}$</li>
+<li>$\operatorname{ret}((t-t_0)/\tau)$</li>
+<li>$\dfrac{\sin(Wt)}{\pi t}$</li>
+<li>$e^{-at}u(t)$</li>
+</ul>
+<p><strong>14.</strong> Complete a tabela abaixo.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Situação no tempo</th>
+  <th style="text-align:left">Expectativa em frequência</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">sinal real</td>
+  <td style="text-align:left"></td>
+</tr>
+<tr>
+  <td style="text-align:left">sinal real e par</td>
+  <td style="text-align:left"></td>
+</tr>
+<tr>
+  <td style="text-align:left">sinal real e ímpar</td>
+  <td style="text-align:left"></td>
+</tr>
+</tbody>
+</table>
+<p><strong>15.</strong> Determine a transformada de Fourier de $e^{-a|t|}+\operatorname{ret}(t/2)$.</p>
+<p><strong>16.</strong> Como uma checagem qualitativa pode mostrar rapidamente que uma resposta está errada?</p>
+<p><strong>17.</strong> Marque V ou F sobre paridade, escalamento, dualidade e atraso temporal.</p>
+</section>
+<section><h1>Próximos Passos</h1>
+<ul>
+<li>Esta revisão organiza Fourier contínuo como ferramenta de resolução.</li>
+<li>Na próxima aula, essa base permitirá avançar com mais segurança para novos contextos de análise.</li>
+</ul>
+</section>
+        </div>
+    </div>
+
+    <script src="/aulas-faesa/js/vendor/reveal/reveal.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/notes/notes.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/markdown/markdown.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/math/math.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/zoom/zoom.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/prism.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-c.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-python.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-clike.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-cpp.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-perl.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-java.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-php.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/toolbar/prism-toolbar.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/show-language/prism-show-language.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/prism-slang.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/mermaid.min.js" data-no-bundle></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            mermaid.initialize({
+                startOnLoad: false,
+                theme: 'default',
+                securityLevel: 'loose',
+                htmlLabels: false,
+                fontFamily: 'Inter, system-ui, sans-serif',
+            });
+        });
+    </script>
+    <script src="/aulas-faesa/js/rough.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/apply_sketch.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/lucide.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/ui.js" data-no-bundle></script>
+    <script>
+        const waitForNextFrame = () => new Promise(resolve => requestAnimationFrame(resolve));
+
+        const initSlideUI = () => {
+            if (!window.CourseForgeUI) {
+                return;
+            }
+
+            window.CourseForgeUI.initCopyButtons();
+            window.CourseForgeUI.initIcons();
+        };
+
+        const renderMermaidsInSlide = async (slide) => {
+            if (!slide) {
+                return;
+            }
+
+            const mermaids = slide.querySelectorAll('.mermaid');
+            if (!mermaids.length) {
+                return;
+            }
+
+            try {
+                if (document.fonts?.ready) {
+                    await document.fonts.ready;
+                }
+
+                await waitForNextFrame();
+                await waitForNextFrame();
+
+                for (const element of mermaids) {
+                    if (element.dataset.mermaidRendered === 'true') {
+                        continue;
+                    }
+
+                    await mermaid.run({
+                        nodes: [element],
+                    });
+                    element.dataset.mermaidRendered = 'true';
+                }
+            } catch (err) {
+                console.warn('Mermaid render failed', err);
+            }
+        };
+
+        const updateMermaidDisplayBounds = (slide) => {
+            const scope = slide || document;
+            const displays = scope.querySelectorAll('.mermaid-display');
+
+            for (const display of displays) {
+                const rect = display.getBoundingClientRect();
+                const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+                const bottomGap = 24;
+                const availableHeight = Math.max(160, Math.floor(viewportHeight - rect.top - bottomGap));
+                display.style.setProperty('--mermaid-max-height', `${availableHeight}px`);
+            }
+        };
+
+        const resetNativeLineNumbers = (pre) => {
+            if (!pre?.classList.contains('line-numbers')) {
+                return;
+            }
+
+            const existingRows = pre.querySelector('.line-numbers-rows');
+            if (existingRows) {
+                existingRows.remove();
+            }
+        };
+
+        const highlightCodeInSlide = (slide) => {
+            const scope = slide || document;
+            const codeBlocks = scope.querySelectorAll('pre[class*="language-"] > code[class*="language-"]');
+
+            for (const code of codeBlocks) {
+                const pre = code.parentElement;
+                resetNativeLineNumbers(pre);
+                Prism.highlightElement(code);
+
+                if (pre?.classList.contains('line-numbers') && Prism.plugins?.lineNumbers?.resize) {
+                    Prism.plugins.lineNumbers.resize(pre);
+                }
+            }
+        };
+
+        const enhanceCurrentSlide = async (slide) => {
+            highlightCodeInSlide(slide);
+            await renderMermaidsInSlide(slide);
+            updateMermaidDisplayBounds(slide);
+            initSlideUI();
+        };
+
+        Reveal.initialize({
+            hash: true,
+            slideNumber: 'c/t',
+            center: false,
+            controls: false,
+            plugins: [RevealMarkdown, RevealNotes, RevealMath.KaTeX, RevealZoom],
+            katex: {
+                local: '/aulas-faesa/js/vendor/katex',
+                output: 'html',
+                throwOnError: false,
+                strict: false,
+            },
+            width: 960,
+            height: 800,
+            margin: 0.15,
+            maxScale: 2.0,
+        });
+
+        Reveal.on('ready', event => {
+            enhanceCurrentSlide(event.currentSlide);
+        });
+
+        Reveal.on('slideready', event => {
+            enhanceCurrentSlide(event.currentSlide);
+        });
+
+        Reveal.on('slidechanged', event => {
+            enhanceCurrentSlide(event.currentSlide);
+        });
+
+        window.addEventListener('resize', () => {
+            updateMermaidDisplayBounds(Reveal.getCurrentSlide());
+        });
+    </script>
+    <style>
+        /* Modern base styles */
+        :root {
+            --callout-note: #448aff;
+            --callout-abstract: #00b0ff;
+            --callout-info: #00b8d4;
+            --callout-todo: #00bfa5;
+            --callout-tip: #00c853;
+            --callout-success: #64dd17;
+            --callout-question: #ffab00;
+            --callout-warning: #ff9100;
+            --callout-failure: #ff5252;
+            --callout-danger: #ff1744;
+            --callout-bug: #f50057;
+            --callout-example: #7c4dff;
+            --callout-quote: #9e9e9e;
+            --code-bg: #f1f5f9;
+            --border: #e2e8f0;
+            --radius: 6px;
+            --radius-sm: 4px;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --text-muted: #64748b;
+            --text: #334155;
+            --bg: #ffffff;
+            --heading: #0f172a;
+            --link: #3b82f6;
+            --font-code: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+        }
+
+        .reveal {
+            font-size: 20px;
+            text-align: left !important;
+        }
+
+        .reveal code:not(pre code) {
+            font-family: var(--font-code) !important;
+            background-color: var(--code-bg) !important;
+            padding: 0.1em 0.35em !important;
+            border-radius: var(--radius-sm) !important;
+            font-size: 0.9em !important;
+            color: var(--link) !important;
+            border: 1px dashed var(--border) !important;
+            white-space: pre-wrap !important;
+            word-break: break-word !important;
+            font-variant-ligatures: none;
+            font-feature-settings: "liga" 0, "calt" 0;
+        }
+
+        .reveal h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px !important;
+            margin-left: 0 !important;
+            /* min-height: 2.3em; */
+            display: flex;
+            align-items: center;
+            justify-content: flex-start !important;
+            text-align: left !important;
+            width: 100% !important;
+            text-shadow: none !important;
+        }
+
+        /* Prism overrides for Reveal.js */
+        .reveal div.code-toolbar {
+            position: relative;
+            width: 100% !important;
+            margin: 1.5rem 0 !important;
+        }
+
+        .reveal pre[class*="language-"] {
+            background: hsl(230, 1%, 98%) !important;
+            margin: 1.5rem 0 !important;
+            padding: 1rem !important;
+            border: 1px solid var(--border) !important;
+            border-radius: var(--radius) !important;
+            box-shadow: var(--shadow-sm) !important;
+            font-family: var(--font-code) !important;
+            font-size: 0.85em !important;
+            position: relative;
+            overflow-x: auto;
+            box-sizing: border-box !important;
+            max-width: 100% !important;
+            font-variant-ligatures: none;
+            font-feature-settings: "liga" 0, "calt" 0;
+        }
+
+        .reveal pre[class*="language-"] > code {
+            background: 0 0 !important;
+            text-shadow: none !important;
+            color: hsl(230, 8%, 24%) !important;
+            position: relative !important;
+            display: block !important;
+        }
+
+        .reveal .line-numbers .line-numbers-rows {
+            border-right: 1px solid #444 !important;
+            padding-right: .5rem !important;
+            margin-bottom: 1.5rem;
+        }
+
+        .reveal .line-numbers-rows>span:before {
+            color: #666 !important;
+        }
+
+        .reveal pre[class*="language-"].line-numbers,
+        .reveal pre[class*="language-"]:has(.line-numbers-rows) {
+            padding-left: 3.8em !important;
+            overflow-y: hidden !important;
+        }
+
+        .reveal .copy-button,
+        .reveal pre[data-lang]::before {
+            position: absolute;
+            top: .5rem;
+            height: 26px;
+            background: hsl(230, 1%, 92%);
+            border: 1px solid hsl(230, 1%, 85%);
+            border-radius: var(--radius-sm);
+            box-sizing: border-box;
+        }
+
+        .reveal .copy-button {
+            right: .5rem;
+            width: 26px;
+            padding: 0;
+            color: hsl(230, 6%, 44%);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all .2s ease;
+            z-index: 20;
+            opacity: .8;
+        }
+
+        .reveal .copy-button:hover {
+            background: hsl(230, 1%, 85%);
+            color: hsl(230, 8%, 24%);
+            opacity: 1;
+        }
+
+        .reveal .copy-button svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Language label styling - hide all Prism toolbar plugins, keep only data-lang label */
+        .reveal div.toolbar,
+        .reveal div.toolbar-item,
+        .reveal button.toolbar-item,
+        .reveal span.toolbar-item {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            height: 0 !important;
+            width: 0 !important;
+            overflow: hidden !important;
+            position: absolute !important;
+            pointer-events: none !important;
+        }
+
+        /* Use the pseudo-element data-lang label only */
+        .reveal pre[data-lang]::before {
+            content: attr(data-lang);
+            right: 2.35rem;
+            padding: 0 .5rem;
+            font-size: .65rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: hsl(230, 6%, 50%);
+            pointer-events: none;
+            z-index: 10;
+            display: inline-flex !important;
+            align-items: center !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            height: 26px !important;
+            width: auto !important;
+            position: absolute !important;
+            overflow: visible !important;
+            line-height: 26px !important;
+        }
+
+        .reveal h2 {
+            font-size: 1.6em;
+            margin-top: 30px !important;
+            margin-bottom: 20px !important;
+            text-align: left !important;
+        }
+
+        .reveal h3 {
+            font-size: 1.3em;
+            margin-top: 20px !important;
+            margin-bottom: 15px !important;
+            text-align: left !important;
+        }
+
+        .reveal p {
+            line-height: 1.5;
+            margin-top: 20px !important;
+            margin-left: 0 !important;
+            text-align: left !important;
+        }
+
+        .reveal ul,
+        .reveal ol,
+        .reveal li {
+            line-height: 1.5;
+            text-align: left !important;
+            margin-left: 0 !important;
+        }
+        
+        .reveal ul, .reveal ol {
+            display: block !important;
+            padding-left: 1.2em !important;
+        }
+
+        /* Slide padding and layout */
+        .reveal .slides section {
+            padding: 40px !important;
+            box-sizing: border-box;
+            text-align: left !important;
+            overflow: visible !important;
+        }
+
+        .reveal .slides {
+            text-align: left !important;
+        }
+
+        /* Centering for Title slides (h1 ONLY, h1 + h2 ONLY, or h1 + h2 + p ONLY) */
+        .reveal .slides section:not(.stack):has(> h1:only-child),
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child),
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) {
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: center !important;
+            align-items: center !important;
+            text-align: center !important;
+            height: 100% !important;
+            top: 0 !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:only-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child) h2,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h2,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) p {
+            justify-content: center !important;
+            text-align: center !important;
+            margin: 0 !important;
+            min-height: auto !important;
+            width: 100% !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h1 {
+            margin-bottom: 0.5em !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h2 {
+            margin-bottom: 0.3em !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) p {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        /* Full screen slide fix */
+        .reveal .slides section:has(.full-screen-image) {
+            padding: 0 !important;
+        }
+
+        /* Full screen slide fix - Garantindo que o fundo do Reveal fique visível e a imagem carregada */
+        .reveal:has(section.present .full-screen-image) {
+            background-image: url('../../slide_end_background.png') !important;
+            background-size: cover !important;
+            background-position: center !important;
+        }
+
+        /* Torna o slide e o container de slides transparentes para mostrar o fundo da .reveal */
+        .reveal:has(section.present .full-screen-image) .slides,
+        .reveal:has(section.present .full-screen-image) .slides section.present {
+            background: transparent !important;
+        }
+
+        .full-screen-image {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 !important;
+            /* Se houver texto, ele centraliza aqui */
+        }
+
+        /* Spacing for diagrams */
+        .reveal .svg-graph {
+            margin-top: 1em !important;
+            margin-bottom: 1em !important;
+            overflow: visible !important; /* Prevent labels from being cut off */
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* Mermaid Diagram Styles */
+        .reveal .mermaid {
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            padding: 0 !important;
+            margin: 1rem 0 !important;
+            font-family: inherit !important;
+            overflow: visible !important;
+            text-align: center;
+            display: block !important;
+            width: auto !important;
+            max-width: 100% !important;
+        }
+
+        .reveal pre.mermaid {
+            white-space: pre;
+            font-family: var(--font-code);
+            color: var(--text-muted);
+            margin: 0 !important;
+            padding: 0 !important;
+            width: auto !important;
+            line-height: 1 !important;
+            border: none !important;
+            box-shadow: none !important;
+            background: transparent !important;
+            overflow: visible !important;
+        }
+
+        .reveal .centered .mermaid {
+            display: block !important;
+            justify-content: center;
+            margin-left: auto !important;
+            margin-right: auto !important;
+        }
+
+        .reveal .mermaid svg {
+            max-width: 100% !important;
+            height: auto !important;
+            display: block !important;
+            overflow: visible !important;
+            vertical-align: top !important;
+            font-family: Inter, system-ui, sans-serif !important;
+            font-style: normal !important;
+            font-variant: normal !important;
+            font-weight: 400 !important;
+            letter-spacing: normal !important;
+            word-spacing: normal !important;
+            text-transform: none !important;
+            text-shadow: none !important;
+            line-height: normal !important;
+            text-rendering: geometricPrecision !important;
+        }
+
+        .reveal .mermaid svg * {
+            font-family: inherit !important;
+            font-style: normal !important;
+            font-variant: normal !important;
+            letter-spacing: normal !important;
+            word-spacing: normal !important;
+            text-transform: none !important;
+            text-shadow: none !important;
+            line-height: normal !important;
+        }
+
+        .reveal .mermaid svg .edgeBadge text,
+        .reveal .mermaid svg .edgeBadge tspan,
+        .reveal .mermaid svg .edgeTerm text,
+        .reveal .mermaid svg .edgeTerm tspan,
+        .reveal .mermaid svg .multiplicity text,
+        .reveal .mermaid svg .multiplicity tspan,
+        .reveal .mermaid svg text.edgeBadge,
+        .reveal .mermaid svg text.edgeTerm {
+            font-size: 18px !important;
+            font-weight: 700 !important;
+            fill: var(--heading) !important;
+        }
+
+        /* Mermaid Source Switcher */
+        .reveal .mermaid-outer-container {
+            margin: 1rem 0;
+            position: relative;
+            width: 100%;
+            max-width: 100%;
+        }
+
+        .reveal .mermaid-switcher {
+            display: flex !important;
+            justify-content: flex-end;
+            margin-bottom: 0.5rem;
+            width: 100%;
+        }
+
+        .reveal .switcher-track {
+            display: inline-flex;
+            align-items: center;
+            background: var(--code-bg);
+            padding: 3px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            position: relative;
+        }
+
+        .reveal .switcher-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            border: none;
+            background: transparent;
+            padding: 0.35rem 1rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            border-radius: calc(var(--radius) - 2px);
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            z-index: 1;
+        }
+
+        .reveal .switcher-btn svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .reveal .switcher-btn:hover {
+            color: var(--text);
+        }
+
+        .reveal .switcher-btn.active {
+            color: var(--heading);
+            background: var(--bg);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        .reveal .mermaid-content {
+            min-height: 50px;
+        }
+
+        /* Mermaid display - respect inline width */
+        .reveal .mermaid-display {
+            transition: opacity 0.2s ease;
+            display: block !important;
+            max-width: 100% !important;
+            max-height: var(--mermaid-max-height, calc(100vh - 140px)) !important;
+            border: none !important;
+            box-shadow: none !important;
+            background: transparent !important;
+            overflow: auto !important;
+        }
+
+        .reveal .mermaid-source pre {
+            margin: 0 !important;
+            background: var(--code-bg) !important;
+            border: 1px dashed var(--border) !important;
+        }
+
+        /* Ensure proper toggle behavior */
+        .reveal .mermaid-source {
+            display: none !important;
+        }
+
+        .reveal .mermaid-source[style*="display: block"],
+        .reveal .mermaid-source[style*="display:block"] {
+            display: block !important;
+        }
+
+        .reveal .mermaid-display[style*="display: none"],
+        .reveal .mermaid-display[style*="display:none"] {
+            display: none !important;
+        }
+
+        .reveal .mermaid-display.centered {
+            margin-left: auto !important;
+            margin-right: auto !important;
+            max-width: 100% !important;
+        }
+
+        .centered:not(.mermaid-display) {
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            width: 100% !important;
+            margin: 1em 0 !important;
+        }
+
+        .no-break {
+            display: block;
+            width: 100%;
+        }
+
+        .reveal blockquote {
+            display: block;
+            position: relative;
+            margin: var(--r-block-margin) auto !important;
+            padding: 5px;
+            font-style: italic;
+            background: rgba(255, 170, 73, 0.2);
+            box-shadow: 0 0 2px rgba(0,0,0,.2);
+            text-align: left !important;
+        }
+
+        .col1 {
+            width: 90%;
+            margin: 0 auto;
+        }
+
+        .col2 {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start;
+            width: 90%;
+            margin: 0 auto;
+            align-items: flex-start;
+        }
+
+        /* Callout Styles */
+        :root {
+            --callout-note: #448aff;
+            --callout-abstract: #00b0ff;
+            --callout-info: #00b8d4;
+            --callout-todo: #00bfa5;
+            --callout-tip: #00c853;
+            --callout-success: #64dd17;
+            --callout-question: #ffab00;
+            --callout-warning: #ff9100;
+            --callout-failure: #ff5252;
+            --callout-danger: #ff1744;
+            --callout-bug: #f50057;
+            --callout-example: #7c4dff;
+            --callout-quote: #9e9e9e;
+            --code-bg: #f8f8f8;
+            --border: #ddd;
+        }
+
+        .reveal .callout {
+            margin: 1rem auto !important;
+            border: 1px solid var(--border);
+            border-left: 6px solid var(--callout-note);
+            border-radius: 4px;
+            overflow: hidden;
+            text-align: left !important;
+            font-size: 0.8em;
+            width: 75% !important;
+            max-width: 100% !important;
+        }
+
+        .reveal .callout-title {
+            padding: 0.5rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            color: var(--callout-note);
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .reveal .callout-icon {
+            display: flex;
+            align-items: center;
+        }
+
+        .reveal .callout-icon svg {
+            width: 1.2em;
+            height: 1.2em;
+        }
+
+        .reveal .callout-content {
+            padding: 0.5rem 1rem;
+        }
+
+        .reveal .callout-content p {
+            margin-top: 0.5rem !important;
+        }
+
+        .reveal .callout-content p:first-child {
+            margin-top: 0 !important;
+        }
+
+        .reveal h1 { text-transform: none !important; }
+
+        .reveal .callout-abstract { border-left-color: var(--callout-abstract); }
+        .reveal .callout-abstract .callout-title { color: var(--callout-abstract); }
+        .reveal .callout-info { border-left-color: var(--callout-info); }
+        .reveal .callout-info .callout-title { color: var(--callout-info); }
+        .reveal .callout-todo { border-left-color: var(--callout-todo); }
+        .reveal .callout-todo .callout-title { color: var(--callout-todo); }
+        .reveal .callout-tip { border-left-color: var(--callout-tip); }
+        .reveal .callout-tip .callout-title { color: var(--callout-tip); }
+        .reveal .callout-success { border-left-color: var(--callout-success); }
+        .reveal .callout-success .callout-title { color: var(--callout-success); }
+        .reveal .callout-question { border-left-color: var(--callout-question); }
+        .reveal .callout-question .callout-title { color: var(--callout-question) ; }
+        .reveal .callout-warning { border-left-color: var(--callout-warning); }
+        .reveal .callout-warning .callout-title { color: var(--callout-warning); }
+        .reveal .callout-failure { border-left-color: var(--callout-failure); }
+        .reveal .callout-failure .callout-title { color: var(--callout-failure); }
+        .reveal .callout-danger { border-left-color: var(--callout-danger); }
+        .reveal .callout-danger .callout-title { color: var(--callout-danger); }
+        .reveal .callout-bug { border-left-color: var(--callout-bug); }
+        .reveal .callout-bug .callout-title { color: var(--callout-bug); }
+        .reveal .callout-example { border-left-color: var(--callout-example); }
+        .reveal .callout-example .callout-title { color: var(--callout-example); }
+        .reveal .callout-quote { border-left-color: var(--callout-quote); }
+        .reveal .callout-quote .callout-title { color: var(--callout-quote); }
+        .red-note { color: var(--callout-failure); }
+
+        .reveal .slide-number {
+            font-size: 0.8em !important;
+            padding: 5px 10px !important;
+            background: rgba(0,0,0,0.1) !important;
+            border-radius: 4px;
+            color: #000000b1 !important;
+        }
+
+        /* Print styles */
+        @media print {
+            .reveal .slides section {
+                display: block !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                position: relative !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+                page-break-after: always !important;
+                overflow: hidden !important;
+            }
+
+            .reveal .slides {
+                transform: none !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+            }
+            
+            .reveal {
+                overflow: visible !important;
+            }
+        }
+    </style>
+</body>
+
+</html>
