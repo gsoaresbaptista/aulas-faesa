@@ -1,0 +1,1777 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <title>Revisão de Parsing, AST e LL(1)</title>
+    <link rel="icon" href="/aulas-faesa/img/dark-favicon.svg" media="(prefers-color-scheme: light)">
+    <link rel="icon" href="/aulas-faesa/img/light-favicon.svg" media="(prefers-color-scheme: dark)">
+
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/reset.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/reveal.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/theme/white.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/aulas-faesa/css/prism-one-light.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/fonts.css" data-no-bundle>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+            <section><h1>Compiladores</h1>
+<h2>Revisão de Parsing, AST e LL(1)</h2>
+<p>Professor: Gabriel Soares Baptista</p>
+</section>
+<section><h1>O problema central</h1>
+<p>Considere a entrada:</p>
+<pre class="line-numbers language-slang" data-lang="SLANG"><code class="language-slang">x + 3 * y
+</code></pre>
+<p>O lexer responde bem a perguntas como estas:</p>
+<ul>
+<li>quais tokens aparecem</li>
+<li>qual lexema pertence a cada token</li>
+</ul>
+<p>Mas ele não responde a perguntas como estas:</p>
+<ul>
+<li>o operador principal é <code>+</code> ou <code>*</code></li>
+<li><code>3 * y</code> precisa ser resolvido antes da soma</li>
+<li>os parênteses e agrupamentos estão corretos</li>
+</ul>
+</section>
+<section><h1>Do fluxo linear à estrutura</h1>
+<p>O lexer vê algo como:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">IDENT  PLUS  NUMBER  STAR  IDENT
+</code></pre>
+<p>O parser precisa reconstruir a hierarquia implícita nessa sequência.</p>
+<p>Leitura incorreta:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">(x + 3) * y
+</code></pre>
+<p>Leitura correta:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">x + (3 * y)
+</code></pre>
+</section>
+<section><h1>Gramática Livre de Contexto</h1>
+<p>Toda gramática será lida como:</p>
+<p>$$
+G = (N, T, P, S)
+$$</p>
+<ul>
+<li>$N$: conjunto dos não terminais</li>
+<li>$T$: conjunto dos terminais</li>
+<li>$P$: conjunto das produções</li>
+<li>$S$: símbolo inicial</li>
+</ul>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Se a derivação sempre começa em algum lugar, qual símbolo da gramática precisa estar fixado antes de qualquer análise?</p>
+  </div>
+</div>
+</section>
+<section><h1>Exemplo mínimo</h1>
+<p>Considere:</p>
+<p>$$
+G = (N, T, P, S)
+$$</p>
+<p>$$
+\begin{split}
+N &= \{S\} \\
+T &= \{0, 1\} \\
+S &= S
+\end{split}
+\hspace{1cm}
+\begin{split}
+P = S &\to 0S \mid 1
+\end{split}
+$$</p>
+<p>Essa gramática gera cadeias com zero ou mais <code>0</code> seguidos de um <code>1</code> final.</p>
+</section>
+<section><h1>Derivação completa</h1>
+<p>Para gerar <code>0001</code>:</p>
+<p>$$
+\begin{split}
+S &\Rightarrow 0S \\
+  &\Rightarrow 00S \\
+  &\Rightarrow 000S \\
+  &\Rightarrow 0001
+\end{split}
+$$</p>
+<p>A derivação começa em $S$ e termina apenas quando restam terminais.</p>
+</section>
+<section><h1>Derivação parcial</h1>
+<p>Uma derivação também pode parar no meio.</p>
+<p>$$
+S \Rightarrow 0S \Rightarrow 00S
+$$</p>
+<p>Isso ainda não é uma cadeia final da linguagem.</p>
+<p>O motivo é simples:</p>
+<ul>
+<li>ainda sobra o não terminal $S$</li>
+<li>portanto a forma obtida é apenas intermediária</li>
+</ul>
+</section>
+<section><h1>Problemas de gramática</h1>
+<p>Em compiladores, não basta a gramática gerar cadeias válidas.</p>
+<p>Ela também precisa:</p>
+<ul>
+<li>impor uma estrutura correta</li>
+<li>permitir uma análise sintática viável</li>
+<li>deixar a decisão do parser bem definida</li>
+</ul>
+<p>Três problemas aparecem com frequência:</p>
+<ul>
+<li>ambiguidade</li>
+<li>recursão à esquerda</li>
+<li>fatoração à esquerda</li>
+</ul>
+</section>
+<section><h1>Ambiguidade</h1>
+<p>Uma gramática é ambígua quando a mesma cadeia admite mais de uma árvore sintática válida.</p>
+<p>Isso muda a estrutura da expressão e pode mudar também o significado.</p>
+</section>
+<section><h1>Exemplo de ambiguidade</h1>
+<p>Considere:</p>
+<p>$$
+E \to E + E \mid E * E \mid id
+$$</p>
+<p>Para a cadeia:</p>
+<p>$$
+id + id * id
+$$</p>
+<p>as duas leituras abaixo continuam possíveis:</p>
+<ul>
+<li>$(id + id) * id$</li>
+<li>$id + (id * id)$</li>
+</ul>
+</section>
+<section><h1>Resolvendo a ambiguidade</h1>
+<p>Uma solução clássica é separar os operadores por níveis de precedência.</p>
+<p>$$
+\begin{split}
+E &\to E + T \mid T \\
+T &\to T * F \mid F \\
+F &\to (E) \mid id
+\end{split}
+$$</p>
+<p>Agora <code>*</code> fica em um nível mais profundo do que <code>+</code>.</p>
+</section>
+<section><h1>Exercício</h1>
+<p>Considere:</p>
+<p>$$
+E \to E + E \mid id
+$$</p>
+<p>A cadeia <code>id + id + id</code> admite mais de uma leitura?</p>
+</section>
+<section><h1>Resolução</h1>
+<p>Sim.</p>
+<p>As leituras clássicas são:</p>
+<ul>
+<li>$(id + id) + id$</li>
+<li>$id + (id + id)$</li>
+</ul>
+<p>Logo a gramática é ambígua.</p>
+</section>
+<section><h1>Recursão à esquerda</h1>
+<p>Uma gramática tem recursão à esquerda quando existe uma derivação do tipo $A \Rightarrow^+ A\alpha$, isto é, quando um não terminal volta para si mesmo no começo da derivação, antes de consumir terminais.</p>
+<p>Exemplo:</p>
+<p>$$
+\begin{split}
+E &\to E + T \mid T \\
+T &\to id
+\end{split}
+$$</p>
+<p>Esse formato é ruim para parser top-down porque a análise retorna ao mesmo não terminal antes de consumir entrada.</p>
+</section>
+<section><h1>Exemplo de recursão à esquerda</h1>
+<p>Se a regra for implementada literalmente, o comportamento conceitual é:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">void E() {
+    E();
+    match('+');
+    T();
+}
+</code></pre>
+<p>O parser entra em loop recursivo e não avança na entrada.</p>
+</section>
+<section><h1>Eliminando a recursão à esquerda</h1>
+<p>Uma forma completa e simples fica assim:</p>
+<p>$$
+\begin{split}
+E &\to T E' \\
+E' &\to + T E' \mid \epsilon \\
+T &\to id
+\end{split}
+$$</p>
+<p>Agora a expansão começa por um pedaço que pode consumir entrada.</p>
+<p>O papel de <code>T</code> aqui é só deixar a gramática fechada e mostrar um terminal concreto entrando na derivação.</p>
+</section>
+<section><h1>Exercício</h1>
+<p>Considere:</p>
+<p>$$
+A \to A a \mid b
+$$</p>
+<p>Reescreva a gramática sem recursão à esquerda.</p>
+</section>
+<section><h1>Resolução</h1>
+<p>$$
+\begin{split}
+A &\to b A' \\
+A' &\to a A' \mid \epsilon
+\end{split}
+$$</p>
+<p>Agora o parser reconhece primeiro <code>b</code> e depois continua a repetição por <code>A'</code>.</p>
+</section>
+<section><h1>Fatoração à esquerda</h1>
+<p>Esse problema aparece quando duas produções começam com o mesmo prefixo.</p>
+<p>Exemplo:</p>
+<p>$$
+A \to ab \mid ac
+$$</p>
+<p>Com lookahead em apenas <code>a</code>, o parser ainda não sabe qual produção escolher.</p>
+</section>
+<section><h1>Fatorando o prefixo comum</h1>
+<p>Retiramos o prefixo compartilhado e adiamos a decisão:</p>
+<p>$$
+\begin{split}
+A &\to a A' \\
+A' &\to b \mid c
+\end{split}
+$$</p>
+<p>Agora o parser consome <code>a</code> primeiro e decide depois.</p>
+</section>
+<section><h1>Exercício</h1>
+<p>Considere:</p>
+<p>$$
+\begin{split}
+Stmt &\to if\ Expr\ then\ Stmt\ else\ Stmt \\
+     &\mid if\ Expr\ then\ Stmt
+\end{split}
+$$</p>
+<p>Fatore a gramática pelo prefixo comum.</p>
+</section>
+<section><h1>Resolução</h1>
+<p>O prefixo comum é:</p>
+<p>$$
+if\ Expr\ then\ Stmt
+$$</p>
+<p>Uma fatoração possível é:</p>
+<p>$$
+\begin{split}
+Stmt &\to if\ Expr\ then\ Stmt\ S' \\
+S' &\to else\ Stmt \mid \epsilon
+\end{split}
+$$</p>
+</section>
+<section><h1>Exercício de classificação</h1>
+<p>Classifique o problema principal de cada gramática.</p>
+<ol>
+<li></li>
+</ol>
+<p>$$
+E \to E + E \mid id
+$$</p>
+<ol start="2">
+<li></li>
+</ol>
+<p>$$
+A \to A a \mid b
+$$</p>
+<ol start="3">
+<li></li>
+</ol>
+<p>$$
+S \to aB \mid aC
+$$</p>
+</section>
+<section><h1>Resolução</h1>
+<ol>
+<li>$E \to E + E \mid id$</li>
+</ol>
+<p>Ambiguidade.</p>
+<ol start="2">
+<li>$A \to A a \mid b$</li>
+</ol>
+<p>Recursão à esquerda.</p>
+<ol start="3">
+<li>$S \to aB \mid aC$</li>
+</ol>
+<p>Fatoração à esquerda.</p>
+</section>
+<section><h1>Parse tree e AST</h1>
+<p>As duas são árvores, mas servem a papéis diferentes.</p>
+<ul>
+<li><strong>Parse tree</strong> preserva a gramática e seus não terminais</li>
+<li><strong>AST</strong> preserva a estrutura relevante para o compilador</li>
+</ul>
+<p>Se a sua pergunta é “como a gramática derivou a cadeia”, a parse tree ajuda.</p>
+<p>Se a sua pergunta é “qual é a estrutura útil para verificar, otimizar ou gerar código”, a AST é a resposta.</p>
+</section>
+<section><h1>Parse tree de <code>a + b * c</code></h1>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="520" viewBox="0.00 0.00 321.84 260.00" class="svg-graph graphviz-img"><g id="svg-graphviz-342966b8ea72-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 256)"><title>ParseTree</title><polygon fill="white" stroke="transparent" points="-4,4 -4,-256 317.84,-256 317.84,4 -4,4" /><g id="svg-graphviz-342966b8ea72-node1" class="node"><title>E0</title><ellipse fill="none" stroke="black" cx="113.5" cy="-234" rx="31.7" ry="18" /><text text-anchor="middle" x="113.5" y="-230.3" font-family="Helvetica,sans-Serif" font-size="14.00">Expr</text></g><g id="svg-graphviz-342966b8ea72-node2" class="node"><title>E1</title><ellipse fill="none" stroke="black" cx="35.5" cy="-162" rx="31.7" ry="18" /><text text-anchor="middle" x="35.5" y="-158.3" font-family="Helvetica,sans-Serif" font-size="14.00">Expr</text></g><g id="svg-graphviz-342966b8ea72-edge1" class="edge"><title>E0-&gt;E1</title><path fill="none" stroke="black" d="M96.96,-218.15C86.02,-208.34 71.52,-195.33 59.35,-184.41" /><polygon fill="black" stroke="black" points="61.53,-181.66 51.75,-177.58 56.85,-186.87 61.53,-181.66" /></g><g id="svg-graphviz-342966b8ea72-node3" class="node"><title>plus</title><ellipse fill="none" stroke="black" cx="113.5" cy="-162" rx="27" ry="18" /><text text-anchor="middle" x="113.5" y="-158.3" font-family="Helvetica,sans-Serif" font-size="14.00">+</text></g><g id="svg-graphviz-342966b8ea72-edge2" class="edge"><title>E0-&gt;plus</title><path fill="none" stroke="black" d="M113.5,-215.7C113.5,-207.98 113.5,-198.71 113.5,-190.11" /><polygon fill="black" stroke="black" points="117,-190.1 113.5,-180.1 110,-190.1 117,-190.1" /></g><g id="svg-graphviz-342966b8ea72-node4" class="node"><title>T0</title><ellipse fill="none" stroke="black" cx="191.5" cy="-162" rx="32.49" ry="18" /><text text-anchor="middle" x="191.5" y="-158.3" font-family="Helvetica,sans-Serif" font-size="14.00">Term</text></g><g id="svg-graphviz-342966b8ea72-edge3" class="edge"><title>E0-&gt;T0</title><path fill="none" stroke="black" d="M130.04,-218.15C140.9,-208.41 155.28,-195.5 167.4,-184.63" /><polygon fill="black" stroke="black" points="169.87,-187.11 174.98,-177.82 165.2,-181.9 169.87,-187.11" /></g><g id="svg-graphviz-342966b8ea72-node5" class="node"><title>T1</title><ellipse fill="none" stroke="black" cx="32.5" cy="-90" rx="32.49" ry="18" /><text text-anchor="middle" x="32.5" y="-86.3" font-family="Helvetica,sans-Serif" font-size="14.00">Term</text></g><g id="svg-graphviz-342966b8ea72-edge4" class="edge"><title>E1-&gt;T1</title><path fill="none" stroke="black" d="M34.76,-143.7C34.42,-135.98 34.03,-126.71 33.66,-118.11" /><polygon fill="black" stroke="black" points="37.16,-117.95 33.23,-108.1 30.16,-118.25 37.16,-117.95" /></g><g id="svg-graphviz-342966b8ea72-node7" class="node"><title>T2</title><ellipse fill="none" stroke="black" cx="115.5" cy="-90" rx="32.49" ry="18" /><text text-anchor="middle" x="115.5" y="-86.3" font-family="Helvetica,sans-Serif" font-size="14.00">Term</text></g><g id="svg-graphviz-342966b8ea72-edge6" class="edge"><title>T0-&gt;T2</title><path fill="none" stroke="black" d="M175.38,-146.15C164.8,-136.41 150.79,-123.5 138.98,-112.63" /><polygon fill="black" stroke="black" points="141.32,-110.02 131.59,-105.82 136.58,-115.17 141.32,-110.02" /></g><g id="svg-graphviz-342966b8ea72-node8" class="node"><title>star</title><ellipse fill="none" stroke="black" cx="192.5" cy="-90" rx="27" ry="18" /><text text-anchor="middle" x="192.5" y="-86.3" font-family="Helvetica,sans-Serif" font-size="14.00">*</text></g><g id="svg-graphviz-342966b8ea72-edge7" class="edge"><title>T0-&gt;star</title><path fill="none" stroke="black" d="M191.74,-143.7C191.85,-135.98 191.99,-126.71 192.11,-118.11" /><polygon fill="black" stroke="black" points="195.61,-118.15 192.25,-108.1 188.61,-118.05 195.61,-118.15" /></g><g id="svg-graphviz-342966b8ea72-node9" class="node"><title>F2</title><ellipse fill="none" stroke="black" cx="275.5" cy="-90" rx="38.19" ry="18" /><text text-anchor="middle" x="275.5" y="-86.3" font-family="Helvetica,sans-Serif" font-size="14.00">Factor</text></g><g id="svg-graphviz-342966b8ea72-edge8" class="edge"><title>T0-&gt;F2</title><path fill="none" stroke="black" d="M208.9,-146.5C220.68,-136.68 236.45,-123.54 249.68,-112.51" /><polygon fill="black" stroke="black" points="252.09,-115.06 257.53,-105.97 247.61,-109.68 252.09,-115.06" /></g><g id="svg-graphviz-342966b8ea72-node6" class="node"><title>ida</title><ellipse fill="none" stroke="black" cx="32.5" cy="-18" rx="31.4" ry="18" /><text text-anchor="middle" x="32.5" y="-14.3" font-family="Helvetica,sans-Serif" font-size="14.00">id(a)</text></g><g id="svg-graphviz-342966b8ea72-edge5" class="edge"><title>T1-&gt;ida</title><path fill="none" stroke="black" d="M32.5,-71.7C32.5,-63.98 32.5,-54.71 32.5,-46.11" /><polygon fill="black" stroke="black" points="36,-46.1 32.5,-36.1 29,-46.1 36,-46.1" /></g><g id="svg-graphviz-342966b8ea72-node10" class="node"><title>idb</title><ellipse fill="none" stroke="black" cx="115.5" cy="-18" rx="31.7" ry="18" /><text text-anchor="middle" x="115.5" y="-14.3" font-family="Helvetica,sans-Serif" font-size="14.00">id(b)</text></g><g id="svg-graphviz-342966b8ea72-edge9" class="edge"><title>T2-&gt;idb</title><path fill="none" stroke="black" d="M115.5,-71.7C115.5,-63.98 115.5,-54.71 115.5,-46.11" /><polygon fill="black" stroke="black" points="119,-46.1 115.5,-36.1 112,-46.1 119,-46.1" /></g><g id="svg-graphviz-342966b8ea72-node11" class="node"><title>idc</title><ellipse fill="none" stroke="black" cx="275.5" cy="-18" rx="30.59" ry="18" /><text text-anchor="middle" x="275.5" y="-14.3" font-family="Helvetica,sans-Serif" font-size="14.00">id(c)</text></g><g id="svg-graphviz-342966b8ea72-edge10" class="edge"><title>F2-&gt;idc</title><path fill="none" stroke="black" d="M275.5,-71.7C275.5,-63.98 275.5,-54.71 275.5,-46.11" /><polygon fill="black" stroke="black" points="279,-46.1 275.5,-36.1 272,-46.1 279,-46.1" /></g></g></svg></div></div>
+
+<p>Essa árvore ainda carrega muita estrutura da gramática.</p>
+</section>
+<section><h1>AST de <code>a + b * c</code></h1>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="450" viewBox="0.00 0.00 170.00 188.00" class="svg-graph graphviz-img"><g id="svg-graphviz-5f5ef67dc6e8-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 184)"><title>AST</title><polygon fill="white" stroke="transparent" points="-4,4 -4,-184 166,-184 166,4 -4,4" /><g id="svg-graphviz-5f5ef67dc6e8-node1" class="node"><title>plus</title><path fill="#f5f5e8" stroke="black" d="M78,-180C78,-180 48,-180 48,-180 42,-180 36,-174 36,-168 36,-168 36,-156 36,-156 36,-150 42,-144 48,-144 48,-144 78,-144 78,-144 84,-144 90,-150 90,-156 90,-156 90,-168 90,-168 90,-174 84,-180 78,-180" /><text text-anchor="middle" x="63" y="-158.3" font-family="Helvetica,sans-Serif" font-size="14.00">+</text></g><g id="svg-graphviz-5f5ef67dc6e8-node2" class="node"><title>a</title><path fill="#f5f5e8" stroke="black" d="M42,-108C42,-108 12,-108 12,-108 6,-108 0,-102 0,-96 0,-96 0,-84 0,-84 0,-78 6,-72 12,-72 12,-72 42,-72 42,-72 48,-72 54,-78 54,-84 54,-84 54,-96 54,-96 54,-102 48,-108 42,-108" /><text text-anchor="middle" x="27" y="-86.3" font-family="Helvetica,sans-Serif" font-size="14.00">id(a)</text></g><g id="svg-graphviz-5f5ef67dc6e8-edge1" class="edge"><title>plus-&gt;a</title><path fill="none" stroke="black" d="M54.1,-143.7C50,-135.73 45.05,-126.1 40.51,-117.26" /><polygon fill="black" stroke="black" points="43.48,-115.4 35.8,-108.1 37.26,-118.6 43.48,-115.4" /></g><g id="svg-graphviz-5f5ef67dc6e8-node3" class="node"><title>star</title><path fill="#f5f5e8" stroke="black" d="M114,-108C114,-108 84,-108 84,-108 78,-108 72,-102 72,-96 72,-96 72,-84 72,-84 72,-78 78,-72 84,-72 84,-72 114,-72 114,-72 120,-72 126,-78 126,-84 126,-84 126,-96 126,-96 126,-102 120,-108 114,-108" /><text text-anchor="middle" x="99" y="-86.3" font-family="Helvetica,sans-Serif" font-size="14.00">*</text></g><g id="svg-graphviz-5f5ef67dc6e8-edge2" class="edge"><title>plus-&gt;star</title><path fill="none" stroke="black" d="M71.9,-143.7C76,-135.73 80.95,-126.1 85.49,-117.26" /><polygon fill="black" stroke="black" points="88.74,-118.6 90.2,-108.1 82.52,-115.4 88.74,-118.6" /></g><g id="svg-graphviz-5f5ef67dc6e8-node4" class="node"><title>b</title><path fill="#f5f5e8" stroke="black" d="M78,-36C78,-36 48,-36 48,-36 42,-36 36,-30 36,-24 36,-24 36,-12 36,-12 36,-6 42,0 48,0 48,0 78,0 78,0 84,0 90,-6 90,-12 90,-12 90,-24 90,-24 90,-30 84,-36 78,-36" /><text text-anchor="middle" x="63" y="-14.3" font-family="Helvetica,sans-Serif" font-size="14.00">id(b)</text></g><g id="svg-graphviz-5f5ef67dc6e8-edge3" class="edge"><title>star-&gt;b</title><path fill="none" stroke="black" d="M90.1,-71.7C86,-63.73 81.05,-54.1 76.51,-45.26" /><polygon fill="black" stroke="black" points="79.48,-43.4 71.8,-36.1 73.26,-46.6 79.48,-43.4" /></g><g id="svg-graphviz-5f5ef67dc6e8-node5" class="node"><title>c</title><path fill="#f5f5e8" stroke="black" d="M150,-36C150,-36 120,-36 120,-36 114,-36 108,-30 108,-24 108,-24 108,-12 108,-12 108,-6 114,0 120,0 120,0 150,0 150,0 156,0 162,-6 162,-12 162,-12 162,-24 162,-24 162,-30 156,-36 150,-36" /><text text-anchor="middle" x="135" y="-14.3" font-family="Helvetica,sans-Serif" font-size="14.00">id(c)</text></g><g id="svg-graphviz-5f5ef67dc6e8-edge4" class="edge"><title>star-&gt;c</title><path fill="none" stroke="black" d="M107.9,-71.7C112,-63.73 116.95,-54.1 121.49,-45.26" /><polygon fill="black" stroke="black" points="124.74,-46.6 126.2,-36.1 118.52,-43.4 124.74,-46.6" /></g></g></svg></div></div>
+
+<p>Agora a árvore mostra apenas o que importa para a semântica da expressão.</p>
+</section>
+<section><h1>Comparação</h1>
+<p>Quando esses dois papéis se misturam, normalmente três coisas se confundem:</p>
+<ul>
+<li>a gramática que gera a cadeia</li>
+<li>a estrutura que o parser reconhece</li>
+<li>a estrutura que o compilador usa depois</li>
+</ul>
+<p>Resumo:</p>
+<ul>
+<li>a parse tree explica a derivação</li>
+<li>a AST explica a estrutura útil do programa</li>
+</ul>
+</section>
+<section><h1>A gramática ingênua das expressões</h1>
+<p>Uma primeira tentativa costuma ser:</p>
+<p>$$
+E \to E + T \mid T
+$$</p>
+<p>Ela parece natural, mas é ruim para parser top-down.</p>
+<p>O problema é a recursão à esquerda.</p>
+</section>
+<section><h1>Por que ela quebra</h1>
+<p>Se a implementação seguir a gramática literalmente, teremos algo conceitualmente assim:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">void E() {
+    E();
+    match('+');
+    T();
+}
+</code></pre>
+<p>O parser volta para <code>E()</code> antes de consumir qualquer token.</p>
+<p>Resultado:</p>
+<ul>
+<li>loop recursivo</li>
+<li>estouro de pilha</li>
+<li>nenhuma leitura real da entrada</li>
+</ul>
+</section>
+<section><h1>Gramática adequada para parser descendente</h1>
+<p>Uma forma clássica para expressões é:</p>
+<p>$$
+\begin{split}
+E &\to T\ E' \\
+E' &\to +\ T\ E' \mid \epsilon \\
+T &\to F\ T' \\
+T' &\to *\ F\ T' \mid \epsilon \\
+F &\to (E) \mid id
+\end{split}
+$$</p>
+<p>Essa reescrita faz duas coisas ao mesmo tempo:</p>
+<ul>
+<li>elimina a recursão à esquerda</li>
+<li>embute precedência na estrutura das funções</li>
+</ul>
+</section>
+<section><h1>Regra de implementação</h1>
+<p>No parser recursivo descendente:</p>
+<ul>
+<li>cada não terminal vira uma função</li>
+<li>o símbolo inicial vira a primeira chamada</li>
+<li><code>match</code> consome terminais esperados</li>
+<li>produções com $\epsilon$ viram retorno sem consumo</li>
+</ul>
+<p>Mapa direto:</p>
+<ul>
+<li><code>E</code> vira <code>parse_expression</code></li>
+<li><code>T</code> vira <code>parse_term</code></li>
+<li><code>F</code> vira <code>parse_factor</code> ou <code>parse_primary</code></li>
+</ul>
+</section>
+<section><h1>Esqueleto do algoritmo</h1>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">AstNode *parse_expression(Parser *parser) {
+    AstNode *left = parse_term(parser);
+
+    while (match(parser, TOK_PLUS)) {
+        Token op = previous(parser);
+        AstNode *right = parse_term(parser);
+        left = make_binary(op, left, right);
+    }
+
+    return left;
+}
+</code></pre>
+<p>O parser não apenas reconhece a estrutura.</p>
+<p>Ele constrói a AST enquanto reconhece.</p>
+</section>
+<section><h1>AST no laboratório</h1>
+<p>No laboratório do compilador, a AST guarda:</p>
+<ul>
+<li>o tipo do nó em <code>kind</code></li>
+<li>o token principal em <code>token</code></li>
+<li>relações fixas em <code>first</code>, <code>second</code> e <code>third</code></li>
+<li>filhos variáveis em <code>children</code></li>
+</ul>
+<p>Essa escolha simplifica o parser porque evita muito código cerimonial.</p>
+</section>
+<section><h1>Execução guiada</h1>
+<p>Vamos acompanhar a entrada:</p>
+<pre class="line-numbers language-slang" data-lang="SLANG"><code class="language-slang">x + 3 * y
+</code></pre>
+<p>Usaremos a ideia geral:</p>
+<p>$$
+E \to T\ E' \qquad T \to F\ T' \qquad F \to id \mid num \mid (E)
+$$</p>
+<p>Queremos observar duas coisas ao mesmo tempo:</p>
+<ul>
+<li>a pilha de chamadas</li>
+<li>a AST que vai nascendo</li>
+</ul>
+</section>
+<section><h1>Passo 1 da execução</h1>
+<p>Entrada atual:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">x + 3 * y $
+^
+</code></pre>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="150" viewBox="0.00 0.00 156.00 334.00" class="svg-graph graphviz-img"><g id="svg-graphviz-af3bcde216ba-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 330)"><title>CallStack1</title><polygon fill="white" stroke="transparent" points="-4,4 -4,-330 152,-330 152,4 -4,4" /><g id="svg-graphviz-af3bcde216ba-node1" class="node"><title>main</title><path fill="#f5f5e8" stroke="black" d="M89,-326C89,-326 59,-326 59,-326 53,-326 47,-320 47,-314 47,-314 47,-302 47,-302 47,-296 53,-290 59,-290 59,-290 89,-290 89,-290 95,-290 101,-296 101,-302 101,-302 101,-314 101,-314 101,-320 95,-326 89,-326" /><text text-anchor="middle" x="74" y="-304.3" font-family="Helvetica,sans-Serif" font-size="14.00">main</text></g><g id="svg-graphviz-af3bcde216ba-node2" class="node"><title>e</title><path fill="#f5f5e8" stroke="black" d="M136,-254C136,-254 12,-254 12,-254 6,-254 0,-248 0,-242 0,-242 0,-230 0,-230 0,-224 6,-218 12,-218 12,-218 136,-218 136,-218 142,-218 148,-224 148,-230 148,-230 148,-242 148,-242 148,-248 142,-254 136,-254" /><text text-anchor="middle" x="74" y="-232.3" font-family="Helvetica,sans-Serif" font-size="14.00">parse_expression()</text></g><g id="svg-graphviz-af3bcde216ba-edge1" class="edge"><title>main-&gt;e</title><path fill="none" stroke="black" d="M74,-289.7C74,-281.98 74,-272.71 74,-264.11" /><polygon fill="black" stroke="black" points="77.5,-264.1 74,-254.1 70.5,-264.1 77.5,-264.1" /></g><g id="svg-graphviz-af3bcde216ba-node3" class="node"><title>t</title><path fill="#f5f5e8" stroke="black" d="M114.5,-182C114.5,-182 33.5,-182 33.5,-182 27.5,-182 21.5,-176 21.5,-170 21.5,-170 21.5,-158 21.5,-158 21.5,-152 27.5,-146 33.5,-146 33.5,-146 114.5,-146 114.5,-146 120.5,-146 126.5,-152 126.5,-158 126.5,-158 126.5,-170 126.5,-170 126.5,-176 120.5,-182 114.5,-182" /><text text-anchor="middle" x="74" y="-160.3" font-family="Helvetica,sans-Serif" font-size="14.00">parse_term()</text></g><g id="svg-graphviz-af3bcde216ba-edge2" class="edge"><title>e-&gt;t</title><path fill="none" stroke="black" d="M74,-217.7C74,-209.98 74,-200.71 74,-192.11" /><polygon fill="black" stroke="black" points="77.5,-192.1 74,-182.1 70.5,-192.1 77.5,-192.1" /></g><g id="svg-graphviz-af3bcde216ba-node4" class="node"><title>f</title><path fill="#f5f5e8" stroke="black" d="M118.5,-110C118.5,-110 29.5,-110 29.5,-110 23.5,-110 17.5,-104 17.5,-98 17.5,-98 17.5,-86 17.5,-86 17.5,-80 23.5,-74 29.5,-74 29.5,-74 118.5,-74 118.5,-74 124.5,-74 130.5,-80 130.5,-86 130.5,-86 130.5,-98 130.5,-98 130.5,-104 124.5,-110 118.5,-110" /><text text-anchor="middle" x="74" y="-88.3" font-family="Helvetica,sans-Serif" font-size="14.00">parse_factor()</text></g><g id="svg-graphviz-af3bcde216ba-edge3" class="edge"><title>t-&gt;f</title><path fill="none" stroke="black" d="M74,-145.7C74,-137.98 74,-128.71 74,-120.11" /><polygon fill="black" stroke="black" points="77.5,-120.1 74,-110.1 70.5,-120.1 77.5,-120.1" /></g><g id="svg-graphviz-af3bcde216ba-node5" class="node"><title>p</title><path fill="#f5f5e8" stroke="black" d="M132,-38C132,-38 16,-38 16,-38 10,-38 4,-32 4,-26 4,-26 4,-12 4,-12 4,-6 10,0 16,0 16,0 132,0 132,0 138,0 144,-6 144,-12 144,-12 144,-26 144,-26 144,-32 138,-38 132,-38" /><text text-anchor="middle" x="74" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">parse_primary()</text><text text-anchor="middle" x="74" y="-7.8" font-family="Helvetica,sans-Serif" font-size="14.00">lookahead = id(x)</text></g><g id="svg-graphviz-af3bcde216ba-edge4" class="edge"><title>f-&gt;p</title><path fill="none" stroke="black" d="M74,-73.81C74,-66.11 74,-56.82 74,-48.15" /><polygon fill="black" stroke="black" points="77.5,-48.02 74,-38.02 70.5,-48.02 77.5,-48.02" /></g></g></svg></div></div>
+
+<p>Neste ponto, <code>parse_primary()</code> reconhece <code>x</code> e devolve um nó <code>id(x)</code>.</p>
+</section>
+<section><h1>Passo 2 da execução</h1>
+<p>Depois de reconhecer <code>x</code>, o parser sobe um nível e olha o próximo token.</p>
+<p>Entrada atual:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">x + 3 * y $
+  ^
+</code></pre>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="720" viewBox="0.00 0.00 314.00 118.00" class="svg-graph graphviz-img"><g id="svg-graphviz-c51f5bb1f6cc-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 114)"><title>CallStack2</title><polygon fill="white" stroke="transparent" points="-4,4 -4,-114 310,-114 310,4 -4,4" /><g id="svg-graphviz-c51f5bb1f6cc-node1" class="node"><title>e</title><path fill="#f5f5e8" stroke="black" d="M227,-110C227,-110 103,-110 103,-110 97,-110 91,-104 91,-98 91,-98 91,-84 91,-84 91,-78 97,-72 103,-72 103,-72 227,-72 227,-72 233,-72 239,-78 239,-84 239,-84 239,-98 239,-98 239,-104 233,-110 227,-110" /><text text-anchor="middle" x="165" y="-94.8" font-family="Helvetica,sans-Serif" font-size="14.00">parse_expression()</text><text text-anchor="middle" x="165" y="-79.8" font-family="Helvetica,sans-Serif" font-size="14.00">left = id(x)</text></g><g id="svg-graphviz-c51f5bb1f6cc-node2" class="node"><title>t</title><path fill="#f5f5e8" stroke="black" d="M156,-36C156,-36 12,-36 12,-36 6,-36 0,-30 0,-24 0,-24 0,-12 0,-12 0,-6 6,0 12,0 12,0 156,0 156,0 162,0 168,-6 168,-12 168,-12 168,-24 168,-24 168,-30 162,-36 156,-36" /><text text-anchor="middle" x="84" y="-14.3" font-family="Helvetica,sans-Serif" font-size="14.00">parse_term() retornou</text></g><g id="svg-graphviz-c51f5bb1f6cc-edge1" class="edge"><title>e-&gt;t</title><path fill="none" stroke="black" d="M144.14,-71.72C134.03,-62.85 121.77,-52.11 110.96,-42.63" /><polygon fill="black" stroke="black" points="113.23,-39.96 103.4,-36 108.61,-45.23 113.23,-39.96" /></g><g id="svg-graphviz-c51f5bb1f6cc-node3" class="node"><title>plus</title><path fill="#f5f5e8" stroke="black" d="M294,-36C294,-36 198,-36 198,-36 192,-36 186,-30 186,-24 186,-24 186,-12 186,-12 186,-6 192,0 198,0 198,0 294,0 294,0 300,0 306,-6 306,-12 306,-12 306,-24 306,-24 306,-30 300,-36 294,-36" /><text text-anchor="middle" x="246" y="-14.3" font-family="Helvetica,sans-Serif" font-size="14.00">lookahead = +</text></g><g id="svg-graphviz-c51f5bb1f6cc-edge2" class="edge"><title>e-&gt;plus</title><path fill="none" stroke="black" stroke-dasharray="5,2" d="M185.86,-71.72C195.97,-62.85 208.23,-52.11 219.04,-42.63" /><polygon fill="black" stroke="black" points="221.39,-45.23 226.6,-36 216.77,-39.96 221.39,-45.23" /></g></g></svg></div></div>
+
+<p>Como <code>+</code> pertence ao nível de <code>E'</code>, o parser decide continuar nesse nível e parsear o operando da direita.</p>
+</section>
+<section><h1>Passo 3 da execução</h1>
+<p>Agora o lado direito começa em <code>3 * y</code>.</p>
+<p>Entrada atual:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">x + 3 * y $
+    ^
+</code></pre>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="250" viewBox="0.00 0.00 265.50 266.00" class="svg-graph graphviz-img"><g id="svg-graphviz-5662b5b13396-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 262)"><title>CallStack3</title><polygon fill="white" stroke="transparent" points="-4,4 -4,-262 261.5,-262 261.5,4 -4,4" /><g id="svg-graphviz-5662b5b13396-node1" class="node"><title>e</title><path fill="#f5f5e8" stroke="black" d="M188.5,-258C188.5,-258 64.5,-258 64.5,-258 58.5,-258 52.5,-252 52.5,-246 52.5,-246 52.5,-234 52.5,-234 52.5,-228 58.5,-222 64.5,-222 64.5,-222 188.5,-222 188.5,-222 194.5,-222 200.5,-228 200.5,-234 200.5,-234 200.5,-246 200.5,-246 200.5,-252 194.5,-258 188.5,-258" /><text text-anchor="middle" x="126.5" y="-236.3" font-family="Helvetica,sans-Serif" font-size="14.00">parse_expression()</text></g><g id="svg-graphviz-5662b5b13396-node2" class="node"><title>t</title><path fill="#f5f5e8" stroke="black" d="M186,-186C186,-186 67,-186 67,-186 61,-186 55,-180 55,-174 55,-174 55,-160 55,-160 55,-154 61,-148 67,-148 67,-148 186,-148 186,-148 192,-148 198,-154 198,-160 198,-160 198,-174 198,-174 198,-180 192,-186 186,-186" /><text text-anchor="middle" x="126.5" y="-170.8" font-family="Helvetica,sans-Serif" font-size="14.00">parse_term()</text><text text-anchor="middle" x="126.5" y="-155.8" font-family="Helvetica,sans-Serif" font-size="14.00">para o lado direito</text></g><g id="svg-graphviz-5662b5b13396-edge1" class="edge"><title>e-&gt;t</title><path fill="none" stroke="black" d="M126.5,-221.81C126.5,-214.11 126.5,-204.82 126.5,-196.15" /><polygon fill="black" stroke="black" points="130,-196.02 126.5,-186.02 123,-196.02 130,-196.02" /></g><g id="svg-graphviz-5662b5b13396-node3" class="node"><title>f1</title><path fill="#f5f5e8" stroke="black" d="M171,-112C171,-112 82,-112 82,-112 76,-112 70,-106 70,-100 70,-100 70,-86 70,-86 70,-80 76,-74 82,-74 82,-74 171,-74 171,-74 177,-74 183,-80 183,-86 183,-86 183,-100 183,-100 183,-106 177,-112 171,-112" /><text text-anchor="middle" x="126.5" y="-96.8" font-family="Helvetica,sans-Serif" font-size="14.00">parse_factor()</text><text text-anchor="middle" x="126.5" y="-81.8" font-family="Helvetica,sans-Serif" font-size="14.00">left = num(3)</text></g><g id="svg-graphviz-5662b5b13396-edge2" class="edge"><title>t-&gt;f1</title><path fill="none" stroke="black" d="M126.5,-147.83C126.5,-140.13 126.5,-130.97 126.5,-122.42" /><polygon fill="black" stroke="black" points="130,-122.41 126.5,-112.41 123,-122.41 130,-122.41" /></g><g id="svg-graphviz-5662b5b13396-node4" class="node"><title>star</title><path fill="#f5f5e8" stroke="black" d="M103,-37C103,-37 12,-37 12,-37 6,-37 0,-31 0,-25 0,-25 0,-13 0,-13 0,-7 6,-1 12,-1 12,-1 103,-1 103,-1 109,-1 115,-7 115,-13 115,-13 115,-25 115,-25 115,-31 109,-37 103,-37" /><text text-anchor="middle" x="57.5" y="-15.3" font-family="Helvetica,sans-Serif" font-size="14.00">lookahead = *</text></g><g id="svg-graphviz-5662b5b13396-edge3" class="edge"><title>f1-&gt;star</title><path fill="none" stroke="black" stroke-dasharray="5,2" d="M109.09,-73.83C100.65,-65.02 90.38,-54.31 81.23,-44.76" /><polygon fill="black" stroke="black" points="83.64,-42.22 74.19,-37.42 78.58,-47.06 83.64,-42.22" /></g><g id="svg-graphviz-5662b5b13396-node5" class="node"><title>f2</title><path fill="#f5f5e8" stroke="black" d="M245.5,-38C245.5,-38 145.5,-38 145.5,-38 139.5,-38 133.5,-32 133.5,-26 133.5,-26 133.5,-12 133.5,-12 133.5,-6 139.5,0 145.5,0 145.5,0 245.5,0 245.5,0 251.5,0 257.5,-6 257.5,-12 257.5,-12 257.5,-26 257.5,-26 257.5,-32 251.5,-38 245.5,-38" /><text text-anchor="middle" x="195.5" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">parse_factor()</text><text text-anchor="middle" x="195.5" y="-7.8" font-family="Helvetica,sans-Serif" font-size="14.00">reconhece id(y)</text></g><g id="svg-graphviz-5662b5b13396-edge4" class="edge"><title>f1-&gt;f2</title><path fill="none" stroke="black" d="M143.91,-73.83C152.02,-65.37 161.82,-55.15 170.68,-45.9" /><polygon fill="black" stroke="black" points="173.46,-48.05 177.85,-38.41 168.41,-43.21 173.46,-48.05" /></g></g></svg></div></div>
+
+<p>Aqui o parser resolve <code>3 * y</code> antes de voltar ao nível da soma.</p>
+</section>
+<section><h1>AST ao final da execução</h1>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="560" viewBox="0.00 0.00 377.00 218.00" class="svg-graph graphviz-img"><g id="svg-graphviz-413977a3d6e4-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 214)"><title>FinalAst</title><polygon fill="white" stroke="transparent" points="-4,4 -4,-214 373,-214 373,4 -4,4" /><g id="svg-graphviz-413977a3d6e4-node1" class="node"><title>plus</title><path fill="#f5f5e8" stroke="black" d="M147.5,-210C147.5,-210 42.5,-210 42.5,-210 36.5,-210 30.5,-204 30.5,-198 30.5,-198 30.5,-186 30.5,-186 30.5,-180 36.5,-174 42.5,-174 42.5,-174 147.5,-174 147.5,-174 153.5,-174 159.5,-180 159.5,-186 159.5,-186 159.5,-198 159.5,-198 159.5,-204 153.5,-210 147.5,-210" /><text text-anchor="middle" x="95" y="-188.3" font-family="Helvetica,sans-Serif" font-size="14.00">AST_BINARY (+)</text></g><g id="svg-graphviz-413977a3d6e4-node2" class="node"><title>x</title><path fill="#f5f5e8" stroke="black" d="M130,-123C130,-123 12,-123 12,-123 6,-123 0,-117 0,-111 0,-111 0,-99 0,-99 0,-93 6,-87 12,-87 12,-87 130,-87 130,-87 136,-87 142,-93 142,-99 142,-99 142,-111 142,-111 142,-117 136,-123 130,-123" /><text text-anchor="middle" x="71" y="-101.3" font-family="Helvetica,sans-Serif" font-size="14.00">AST_IDENTIFIER x</text></g><g id="svg-graphviz-413977a3d6e4-edge1" class="edge"><title>plus-&gt;x</title><path fill="none" stroke="black" d="M90.14,-173.8C86.83,-162.05 82.36,-146.24 78.58,-132.84" /><polygon fill="black" stroke="black" points="81.94,-131.85 75.85,-123.18 75.2,-133.75 81.94,-131.85" /><text text-anchor="middle" x="97.5" y="-144.8" font-family="Times,serif" font-size="14.00">left</text></g><g id="svg-graphviz-413977a3d6e4-node3" class="node"><title>star</title><path fill="#f5f5e8" stroke="black" d="M272,-123C272,-123 172,-123 172,-123 166,-123 160,-117 160,-111 160,-111 160,-99 160,-99 160,-93 166,-87 172,-87 172,-87 272,-87 272,-87 278,-87 284,-93 284,-99 284,-99 284,-111 284,-111 284,-117 278,-123 272,-123" /><text text-anchor="middle" x="222" y="-101.3" font-family="Helvetica,sans-Serif" font-size="14.00">AST_BINARY (*)</text></g><g id="svg-graphviz-413977a3d6e4-edge2" class="edge"><title>plus-&gt;star</title><path fill="none" stroke="black" d="M120.7,-173.8C140.07,-160.84 166.81,-142.94 187.95,-128.79" /><polygon fill="black" stroke="black" points="189.97,-131.65 196.34,-123.18 186.08,-125.83 189.97,-131.65" /><text text-anchor="middle" x="185" y="-144.8" font-family="Times,serif" font-size="14.00">right</text></g><g id="svg-graphviz-413977a3d6e4-node4" class="node"><title>n3</title><path fill="#f5f5e8" stroke="black" d="M196.5,-36C196.5,-36 95.5,-36 95.5,-36 89.5,-36 83.5,-30 83.5,-24 83.5,-24 83.5,-12 83.5,-12 83.5,-6 89.5,0 95.5,0 95.5,0 196.5,0 196.5,0 202.5,0 208.5,-6 208.5,-12 208.5,-12 208.5,-24 208.5,-24 208.5,-30 202.5,-36 196.5,-36" /><text text-anchor="middle" x="146" y="-14.3" font-family="Helvetica,sans-Serif" font-size="14.00">AST_NUMBER 3</text></g><g id="svg-graphviz-413977a3d6e4-edge3" class="edge"><title>star-&gt;n3</title><path fill="none" stroke="black" d="M206.62,-86.8C195.6,-74.47 180.58,-57.68 168.25,-43.89" /><polygon fill="black" stroke="black" points="170.63,-41.3 161.36,-36.18 165.41,-45.96 170.63,-41.3" /><text text-anchor="middle" x="201.5" y="-57.8" font-family="Times,serif" font-size="14.00">left</text></g><g id="svg-graphviz-413977a3d6e4-node5" class="node"><title>y</title><path fill="#f5f5e8" stroke="black" d="M357,-36C357,-36 239,-36 239,-36 233,-36 227,-30 227,-24 227,-24 227,-12 227,-12 227,-6 233,0 239,0 239,0 357,0 357,0 363,0 369,-6 369,-12 369,-12 369,-24 369,-24 369,-30 363,-36 357,-36" /><text text-anchor="middle" x="298" y="-14.3" font-family="Helvetica,sans-Serif" font-size="14.00">AST_IDENTIFIER y</text></g><g id="svg-graphviz-413977a3d6e4-edge4" class="edge"><title>star-&gt;y</title><path fill="none" stroke="black" d="M237.38,-86.8C248.4,-74.47 263.42,-57.68 275.75,-43.89" /><polygon fill="black" stroke="black" points="278.59,-45.96 282.64,-36.18 273.37,-41.3 278.59,-45.96" /><text text-anchor="middle" x="282" y="-57.8" font-family="Times,serif" font-size="14.00">right</text></g></g></svg></div></div>
+
+<p>Essa árvore codifica a precedência sem exigir uma regra extra no algoritmo.</p>
+</section>
+<section><h1>Resumo da execução</h1>
+<ul>
+<li>a pilha de chamadas espelha a gramática</li>
+<li>a precedência aparece no nível em que cada função opera</li>
+<li>o parser constrói a AST durante a leitura</li>
+<li>o retorno das chamadas faz a estrutura subir pronta</li>
+</ul>
+<p>Em outras palavras, a forma da gramática controla a forma da árvore.</p>
+</section>
+<section><h1>Onde entram os erros sintáticos</h1>
+<p>Considere a entrada inválida:</p>
+<pre class="line-numbers language-slang" data-lang="SLANG"><code class="language-slang">x +
+</code></pre>
+<p>O parser reconhece <code>x</code>, consome <code>+</code> e então precisa de outro operando.</p>
+<p>Nesse momento, a função responsável pelo nível seguinte falha porque a entrada acabou antes do esperado.</p>
+<p>Mensagem conceitual:</p>
+<ul>
+<li>reconhecer um prefixo correto não basta</li>
+<li>a análise só tem sucesso se a estrutura inteira for consumida corretamente</li>
+</ul>
+</section>
+<section><h1>Parser top-down e parser bottom-up</h1>
+<p>Para fechar a revisão do módulo, vale lembrar a diferença de direção:</p>
+<ul>
+<li><strong>Top-down</strong> parte do símbolo inicial e tenta derivar a entrada</li>
+<li><strong>Bottom-up</strong> parte da entrada e tenta reduzir até o símbolo inicial</li>
+</ul>
+<p>Nesta revisão, o foco é top-down porque ele conecta diretamente:</p>
+<ul>
+<li>gramática</li>
+<li>funções recursivas</li>
+<li>decisão local</li>
+</ul>
+<h1>A pergunta central do LL(1)</h1>
+<p>Como o parser escolhe a produção certa sem voltar atrás?</p>
+<p>O LL(1) organiza essa decisão por meio de três elementos:</p>
+<ul>
+<li>buffer de entrada</li>
+<li>pilha de análise</li>
+<li>tabela de análise</li>
+</ul>
+</section>
+<section><h1>O que significa LL(1)</h1>
+<ul>
+<li>primeiro <strong>L</strong>: leitura da esquerda para a direita</li>
+<li>segundo <strong>L</strong>: derivação mais à esquerda</li>
+<li><strong>1</strong>: um símbolo de lookahead</li>
+</ul>
+<p>Não é apenas uma sigla.</p>
+<p>Ela resume exatamente a estratégia operacional do parser.</p>
+</section>
+<section><h1>Visão operacional do LL(1)</h1>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="500" viewBox="0.00 0.00 328.50 325.00" class="svg-graph graphviz-img"><g id="svg-graphviz-2a0c1317150d-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 321)"><title>LL1Flow</title><polygon fill="white" stroke="transparent" points="-4,4 -4,-321 324.5,-321 324.5,4 -4,4" /><g id="svg-graphviz-2a0c1317150d-node1" class="node"><title>entrada</title><path fill="#f5f5e8" stroke="black" d="M128,-317C128,-317 12,-317 12,-317 6,-317 0,-311 0,-305 0,-305 0,-291 0,-291 0,-285 6,-279 12,-279 12,-279 128,-279 128,-279 134,-279 140,-285 140,-291 140,-291 140,-305 140,-305 140,-311 134,-317 128,-317" /><text text-anchor="middle" x="70" y="-301.8" font-family="Helvetica,sans-Serif" font-size="14.00">Buffer de entrada</text><text text-anchor="middle" x="70" y="-286.8" font-family="Helvetica,sans-Serif" font-size="14.00">... a b c $</text></g><g id="svg-graphviz-2a0c1317150d-node5" class="node"><title>lookahead</title><path fill="#f5f5e8" stroke="black" d="M127.5,-229C127.5,-229 40.5,-229 40.5,-229 34.5,-229 28.5,-223 28.5,-217 28.5,-217 28.5,-188 28.5,-188 28.5,-182 34.5,-176 40.5,-176 40.5,-176 127.5,-176 127.5,-176 133.5,-176 139.5,-182 139.5,-188 139.5,-188 139.5,-217 139.5,-217 139.5,-223 133.5,-229 127.5,-229" /><text text-anchor="middle" x="84" y="-213.8" font-family="Helvetica,sans-Serif" font-size="14.00">Símbolo atual</text><text text-anchor="middle" x="84" y="-198.8" font-family="Helvetica,sans-Serif" font-size="14.00">da entrada</text><text text-anchor="middle" x="84" y="-183.8" font-family="Helvetica,sans-Serif" font-size="14.00">a</text></g><g id="svg-graphviz-2a0c1317150d-edge1" class="edge"><title>entrada-&gt;lookahead</title><path fill="none" stroke="black" d="M72.7,-278.97C74.38,-267.72 76.61,-252.85 78.64,-239.29" /><polygon fill="black" stroke="black" points="82.12,-239.66 80.14,-229.25 75.2,-238.62 82.12,-239.66" /></g><g id="svg-graphviz-2a0c1317150d-node2" class="node"><title>pilha</title><path fill="#f5f5e8" stroke="black" d="M308.5,-317C308.5,-317 195.5,-317 195.5,-317 189.5,-317 183.5,-311 183.5,-305 183.5,-305 183.5,-291 183.5,-291 183.5,-285 189.5,-279 195.5,-279 195.5,-279 308.5,-279 308.5,-279 314.5,-279 320.5,-285 320.5,-291 320.5,-291 320.5,-305 320.5,-305 320.5,-311 314.5,-317 308.5,-317" /><text text-anchor="middle" x="252" y="-301.8" font-family="Helvetica,sans-Serif" font-size="14.00">Pilha de análise</text><text text-anchor="middle" x="252" y="-286.8" font-family="Helvetica,sans-Serif" font-size="14.00">$ / símbolo inicial</text></g><g id="svg-graphviz-2a0c1317150d-node4" class="node"><title>topo</title><path fill="#f5f5e8" stroke="black" d="M286,-221.5C286,-221.5 202,-221.5 202,-221.5 196,-221.5 190,-215.5 190,-209.5 190,-209.5 190,-195.5 190,-195.5 190,-189.5 196,-183.5 202,-183.5 202,-183.5 286,-183.5 286,-183.5 292,-183.5 298,-189.5 298,-195.5 298,-195.5 298,-209.5 298,-209.5 298,-215.5 292,-221.5 286,-221.5" /><text text-anchor="middle" x="244" y="-206.3" font-family="Helvetica,sans-Serif" font-size="14.00">Topo da pilha</text><text text-anchor="middle" x="244" y="-191.3" font-family="Helvetica,sans-Serif" font-size="14.00">X</text></g><g id="svg-graphviz-2a0c1317150d-edge2" class="edge"><title>pilha-&gt;topo</title><path fill="none" stroke="black" d="M250.46,-278.97C249.31,-265.61 247.73,-247.13 246.42,-231.8" /><polygon fill="black" stroke="black" points="249.9,-231.46 245.57,-221.79 242.93,-232.05 249.9,-231.46" /></g><g id="svg-graphviz-2a0c1317150d-node3" class="node"><title>tabela</title><path fill="#f5f5e8" stroke="black" d="M197.5,-126C197.5,-126 122.5,-126 122.5,-126 116.5,-126 110.5,-120 110.5,-114 110.5,-114 110.5,-100 110.5,-100 110.5,-94 116.5,-88 122.5,-88 122.5,-88 197.5,-88 197.5,-88 203.5,-88 209.5,-94 209.5,-100 209.5,-100 209.5,-114 209.5,-114 209.5,-120 203.5,-126 197.5,-126" /><text text-anchor="middle" x="160" y="-110.8" font-family="Helvetica,sans-Serif" font-size="14.00">Tabela LL(1)</text><text text-anchor="middle" x="160" y="-95.8" font-family="Helvetica,sans-Serif" font-size="14.00">M[A, a]</text></g><g id="svg-graphviz-2a0c1317150d-node6" class="node"><title>decisao</title><path fill="#f5f5e8" stroke="black" d="M210.5,-38C210.5,-38 109.5,-38 109.5,-38 103.5,-38 97.5,-32 97.5,-26 97.5,-26 97.5,-12 97.5,-12 97.5,-6 103.5,0 109.5,0 109.5,0 210.5,0 210.5,0 216.5,0 222.5,-6 222.5,-12 222.5,-12 222.5,-26 222.5,-26 222.5,-32 216.5,-38 210.5,-38" /><text text-anchor="middle" x="160" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">Expandir, casar</text><text text-anchor="middle" x="160" y="-7.8" font-family="Helvetica,sans-Serif" font-size="14.00">ou erro</text></g><g id="svg-graphviz-2a0c1317150d-edge5" class="edge"><title>tabela-&gt;decisao</title><path fill="none" stroke="black" d="M160,-87.76C160,-76.36 160,-61.43 160,-48.49" /><polygon fill="black" stroke="black" points="163.5,-48.21 160,-38.21 156.5,-48.21 163.5,-48.21" /></g><g id="svg-graphviz-2a0c1317150d-edge3" class="edge"><title>topo-&gt;tabela</title><path fill="none" stroke="black" d="M227.8,-183.47C215.22,-169.46 197.59,-149.84 183.46,-134.11" /><polygon fill="black" stroke="black" points="185.72,-131.39 176.43,-126.29 180.51,-136.07 185.72,-131.39" /></g><g id="svg-graphviz-2a0c1317150d-edge4" class="edge"><title>lookahead-&gt;tabela</title><path fill="none" stroke="black" d="M104.77,-175.95C115.39,-162.88 128.3,-146.99 138.97,-133.87" /><polygon fill="black" stroke="black" points="141.69,-136.08 145.28,-126.11 136.26,-131.66 141.69,-136.08" /></g></g></svg></div></div>
+
+</section>
+<section><h1>FIRST</h1>
+<p>O conjunto $FIRST(A)$ responde:</p>
+<ul>
+<li>com que terminal uma derivação de $A$ pode começar</li>
+<li>se $A$ pode desaparecer por $\epsilon$</li>
+</ul>
+<p>Exemplo mínimo:</p>
+<p>$$
+A \to b \mid \epsilon
+$$</p>
+<p>$$
+FIRST(A) = \{b, \epsilon\}
+$$</p>
+</section>
+<section><h1>FOLLOW</h1>
+<p>O conjunto $FOLLOW(A)$ responde:</p>
+<ul>
+<li>o que pode aparecer imediatamente à direita de $A$</li>
+<li>qual contexto assume o lugar se $A$ desaparecer</li>
+</ul>
+<p>Lembretes importantes:</p>
+<ul>
+<li>$\epsilon$ não entra em <code>FOLLOW</code></li>
+<li><code>$</code> sempre entra em $FOLLOW(S)$, onde $S$ é o símbolo inicial</li>
+</ul>
+</section>
+<section><h1>Exemplo novo de FIRST e FOLLOW</h1>
+<p>Considere:</p>
+<p>$$
+\begin{split}
+S &\to A d \\
+A &\to bA \mid \epsilon
+\end{split}
+$$</p>
+<p>Primeiro o <code>FIRST</code>.</p>
+<p>$$
+FIRST(A) = \{b, \epsilon\}
+$$</p>
+<p>Como $A$ pode sumir, o começo de $S$ pode ser <code>b</code> ou <code>d</code>.</p>
+<p>$$
+FIRST(S) = \{b, d\}
+$$</p>
+</section>
+<section><h1>Fechando o FOLLOW do exemplo</h1>
+<p>Ainda na gramática:</p>
+<p>$$
+\begin{split}
+S &\to A d \\
+A &\to bA \mid \epsilon
+\end{split}
+$$</p>
+<p>Depois de $A$ vem <code>d</code>, então:</p>
+<p>$$
+FOLLOW(A) = \{d\}
+$$</p>
+<p>Como $S$ é o símbolo inicial:</p>
+<p>$$
+FOLLOW(S) = \{\$\}
+$$</p>
+</section>
+<section><h1>Como preencher a tabela LL(1)</h1>
+<p>Para cada produção $A \to \alpha$:</p>
+<ol>
+<li>coloque a produção em todas as colunas de $FIRST(\alpha)$, exceto $\epsilon$</li>
+<li>se $\epsilon \in FIRST(\alpha)$, coloque a produção nas colunas de $FOLLOW(A)$</li>
+</ol>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Regra crucial<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Não existe coluna de vazio. O papel do $\epsilon$ é mandar a produção para o contexto de <code>FOLLOW</code>.</p>
+  </div>
+</div>
+</section>
+<section><h1>Exemplo curto de tabela</h1>
+<p>Considere:</p>
+<p>$$
+\begin{split}
+S &\to aB \mid c \\
+B &\to b \mid \epsilon
+\end{split}
+$$</p>
+<p>Conjuntos:</p>
+<p>$$
+FIRST(S)=\{a,c\}, \qquad FIRST(B)=\{b,\epsilon\}
+$$</p>
+<p>$$
+FOLLOW(S)=\{\$\}, \qquad FOLLOW(B)=\{\$\}
+$$</p>
+</section>
+<section><h1>Tabela LL(1) do exemplo curto</h1>
+<p>$$
+\begin{array}{c|cccc}
+ & a & b & c & \$ \\
+\hline
+S & S \to aB &  & S \to c & \\
+B &  & B \to b &  & B \to \epsilon
+\end{array}
+$$</p>
+<p>Cada célula preenchida representa uma decisão local única.</p>
+<p>Se alguma célula recebesse duas produções, a gramática deixaria de ser LL(1).</p>
+</section>
+<section><h1>Exemplo clássico de expressões</h1>
+<p>Gramática:</p>
+<p>$$
+\begin{split}
+E &\to T E' \\
+E' &\to + T E' \mid \epsilon \\
+T &\to F T' \\
+T' &\to * F T' \mid \epsilon \\
+F &\to (E) \mid id
+\end{split}
+$$</p>
+<p>Conjuntos principais:</p>
+<p>$$
+FIRST(E)=FIRST(T)=\{(, id\}, \qquad FIRST(E')=\{+,\epsilon\}
+$$</p>
+<p>$$
+FOLLOW(E)=\{\$, )\}, \qquad FOLLOW(T)=\{+,\$, )\}
+$$</p>
+</section>
+<section><h1>Tabela central das expressões</h1>
+<p>$$
+\begin{array}{c|cccccc}
+ & id & + & * & ( & ) & \$ \\
+\hline
+E  & E \to T E' &  &  & E \to T E' &  &  \\
+E' &  & E' \to + T E' &  &  & E' \to \epsilon & E' \to \epsilon \\
+T  & T \to F T' &  &  & T \to F T' &  &  \\
+T' &  & T' \to \epsilon & T' \to * F T' &  & T' \to \epsilon & T' \to \epsilon \\
+F  & F \to id &  &  & F \to (E) &  &
+\end{array}
+$$</p>
+</section>
+<section><h1>Traço LL(1) com pilha</h1>
+<p>Agora vamos observar a execução para a entrada:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">id + id * id $
+</code></pre>
+<p>A ordem da pilha será mostrada com o topo na parte superior.</p>
+</section>
+<section><h1>Passo 1 do LL(1)</h1>
+<p>Estado inicial:</p>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="250" viewBox="0.00 0.00 251.00 506.00" class="svg-graph graphviz-img"><g id="svg-graphviz-781ba0ade066-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 502)"><title>LL1Step1</title><polygon fill="white" stroke="transparent" points="-4,4 -4,-502 247,-502 247,4 -4,4" /><g id="svg-graphviz-781ba0ade066-clust1" class="cluster"><title>cluster_stack</title><polygon fill="none" stroke="#999999" points="8,-361 8,-490 78,-490 78,-361 8,-361" /><text text-anchor="middle" x="43" y="-474.8" font-family="Times,serif" font-size="14.00">Pilha</text></g><g id="svg-graphviz-781ba0ade066-clust2" class="cluster"><title>cluster_input</title><polygon fill="none" stroke="#999999" points="6,-8 6,-353 80,-353 80,-8 6,-8" /><text text-anchor="middle" x="43" y="-337.8" font-family="Times,serif" font-size="14.00">Entrada</text></g><g id="svg-graphviz-781ba0ade066-node1" class="node"><title>s1</title><path fill="#f5f5e8" stroke="black" d="M58,-459C58,-459 28,-459 28,-459 22,-459 16,-453 16,-447 16,-447 16,-435 16,-435 16,-429 22,-423 28,-423 28,-423 58,-423 58,-423 64,-423 70,-429 70,-435 70,-435 70,-447 70,-447 70,-453 64,-459 58,-459" /><text text-anchor="middle" x="43" y="-437.3" font-family="Helvetica,sans-Serif" font-size="14.00">E</text></g><g id="svg-graphviz-781ba0ade066-node9" class="node"><title>tabela</title><path fill="#f5f5e8" stroke="black" d="M231,-391C231,-391 120,-391 120,-391 114,-391 108,-385 108,-379 108,-379 108,-365 108,-365 108,-359 114,-353 120,-353 120,-353 231,-353 231,-353 237,-353 243,-359 243,-365 243,-365 243,-379 243,-379 243,-385 237,-391 231,-391" /><text text-anchor="middle" x="175.5" y="-375.8" font-family="Helvetica,sans-Serif" font-size="14.00">Consulta M[E, id]</text><text text-anchor="middle" x="175.5" y="-360.8" font-family="Helvetica,sans-Serif" font-size="14.00">usa E -&gt; T E'</text></g><g id="svg-graphviz-781ba0ade066-edge1" class="edge"><title>s1-&gt;tabela</title><path fill="none" stroke="black" stroke-dasharray="5,2" d="M70.09,-427.2C87.12,-418.2 109.8,-406.21 129.67,-395.71" /><polygon fill="black" stroke="black" points="131.36,-398.77 138.57,-391 128.09,-392.58 131.36,-398.77" /></g><g id="svg-graphviz-781ba0ade066-node2" class="node"><title>s2</title><path fill="#f5f5e8" stroke="black" d="M58,-405C58,-405 28,-405 28,-405 22,-405 16,-399 16,-393 16,-393 16,-381 16,-381 16,-375 22,-369 28,-369 28,-369 58,-369 58,-369 64,-369 70,-375 70,-381 70,-381 70,-393 70,-393 70,-399 64,-405 58,-405" /><text text-anchor="middle" x="43" y="-383.3" font-family="Helvetica,sans-Serif" font-size="14.00">$</text></g><g id="svg-graphviz-781ba0ade066-node3" class="node"><title>i1</title><path fill="#f5f5e8" stroke="black" d="M58,-322C58,-322 28,-322 28,-322 22,-322 16,-316 16,-310 16,-310 16,-298 16,-298 16,-292 22,-286 28,-286 28,-286 58,-286 58,-286 64,-286 70,-292 70,-298 70,-298 70,-310 70,-310 70,-316 64,-322 58,-322" /><text text-anchor="middle" x="43" y="-300.3" font-family="Helvetica,sans-Serif" font-size="14.00">id</text></g><g id="svg-graphviz-781ba0ade066-edge2" class="edge"><title>i1-&gt;tabela</title><path fill="none" stroke="black" stroke-dasharray="5,2" d="M70.09,-317.6C86.79,-326.3 108.91,-337.82 128.49,-348.03" /><polygon fill="black" stroke="black" points="127.09,-351.24 137.58,-352.76 130.32,-345.03 127.09,-351.24" /></g><g id="svg-graphviz-781ba0ade066-node4" class="node"><title>i2</title><path fill="#f5f5e8" stroke="black" d="M58,-268C58,-268 28,-268 28,-268 22,-268 16,-262 16,-256 16,-256 16,-244 16,-244 16,-238 22,-232 28,-232 28,-232 58,-232 58,-232 64,-232 70,-238 70,-244 70,-244 70,-256 70,-256 70,-262 64,-268 58,-268" /><text text-anchor="middle" x="43" y="-246.3" font-family="Helvetica,sans-Serif" font-size="14.00">+</text></g><g id="svg-graphviz-781ba0ade066-node5" class="node"><title>i3</title><path fill="#f5f5e8" stroke="black" d="M58,-214C58,-214 28,-214 28,-214 22,-214 16,-208 16,-202 16,-202 16,-190 16,-190 16,-184 22,-178 28,-178 28,-178 58,-178 58,-178 64,-178 70,-184 70,-190 70,-190 70,-202 70,-202 70,-208 64,-214 58,-214" /><text text-anchor="middle" x="43" y="-192.3" font-family="Helvetica,sans-Serif" font-size="14.00">id</text></g><g id="svg-graphviz-781ba0ade066-node6" class="node"><title>i4</title><path fill="#f5f5e8" stroke="black" d="M58,-160C58,-160 28,-160 28,-160 22,-160 16,-154 16,-148 16,-148 16,-136 16,-136 16,-130 22,-124 28,-124 28,-124 58,-124 58,-124 64,-124 70,-130 70,-136 70,-136 70,-148 70,-148 70,-154 64,-160 58,-160" /><text text-anchor="middle" x="43" y="-138.3" font-family="Helvetica,sans-Serif" font-size="14.00">*</text></g><g id="svg-graphviz-781ba0ade066-node7" class="node"><title>i5</title><path fill="#f5f5e8" stroke="black" d="M58,-106C58,-106 28,-106 28,-106 22,-106 16,-100 16,-94 16,-94 16,-82 16,-82 16,-76 22,-70 28,-70 28,-70 58,-70 58,-70 64,-70 70,-76 70,-82 70,-82 70,-94 70,-94 70,-100 64,-106 58,-106" /><text text-anchor="middle" x="43" y="-84.3" font-family="Helvetica,sans-Serif" font-size="14.00">id</text></g><g id="svg-graphviz-781ba0ade066-node8" class="node"><title>i6</title><path fill="#f5f5e8" stroke="black" d="M58,-52C58,-52 28,-52 28,-52 22,-52 16,-46 16,-40 16,-40 16,-28 16,-28 16,-22 22,-16 28,-16 28,-16 58,-16 58,-16 64,-16 70,-22 70,-28 70,-28 70,-40 70,-40 70,-46 64,-52 58,-52" /><text text-anchor="middle" x="43" y="-30.3" font-family="Helvetica,sans-Serif" font-size="14.00">$</text></g></g></svg></div></div>
+
+<p>O parser expande <code>E</code> em <code>T E'</code>.</p>
+</section>
+<section><h1>Passo 2 do LL(1)</h1>
+<p>Após expandir <code>E</code>:</p>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="250" viewBox="0.00 0.00 250.00 560.00" class="svg-graph graphviz-img"><g id="svg-graphviz-5e3397288f6e-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 556)"><title>LL1Step2</title><polygon fill="white" stroke="transparent" points="-4,4 -4,-556 246,-556 246,4 -4,4" /><g id="svg-graphviz-5e3397288f6e-clust1" class="cluster"><title>cluster_stack</title><polygon fill="none" stroke="#999999" points="8,-361 8,-544 78,-544 78,-361 8,-361" /><text text-anchor="middle" x="43" y="-528.8" font-family="Times,serif" font-size="14.00">Pilha</text></g><g id="svg-graphviz-5e3397288f6e-clust2" class="cluster"><title>cluster_input</title><polygon fill="none" stroke="#999999" points="6,-8 6,-353 80,-353 80,-8 6,-8" /><text text-anchor="middle" x="43" y="-337.8" font-family="Times,serif" font-size="14.00">Entrada</text></g><g id="svg-graphviz-5e3397288f6e-node1" class="node"><title>s1</title><path fill="#f5f5e8" stroke="black" d="M58,-513C58,-513 28,-513 28,-513 22,-513 16,-507 16,-501 16,-501 16,-489 16,-489 16,-483 22,-477 28,-477 28,-477 58,-477 58,-477 64,-477 70,-483 70,-489 70,-489 70,-501 70,-501 70,-507 64,-513 58,-513" /><text text-anchor="middle" x="43" y="-491.3" font-family="Helvetica,sans-Serif" font-size="14.00">T</text></g><g id="svg-graphviz-5e3397288f6e-node10" class="node"><title>tabela</title><path fill="#f5f5e8" stroke="black" d="M230,-418C230,-418 120,-418 120,-418 114,-418 108,-412 108,-406 108,-406 108,-392 108,-392 108,-386 114,-380 120,-380 120,-380 230,-380 230,-380 236,-380 242,-386 242,-392 242,-392 242,-406 242,-406 242,-412 236,-418 230,-418" /><text text-anchor="middle" x="175" y="-402.8" font-family="Helvetica,sans-Serif" font-size="14.00">Consulta M[T, id]</text><text text-anchor="middle" x="175" y="-387.8" font-family="Helvetica,sans-Serif" font-size="14.00">usa T -&gt; F T'</text></g><g id="svg-graphviz-5e3397288f6e-edge1" class="edge"><title>s1-&gt;tabela</title><path fill="none" stroke="black" stroke-dasharray="5,2" d="M68.45,-476.94C88.54,-462.11 117.23,-440.92 139.63,-424.38" /><polygon fill="black" stroke="black" points="141.91,-427.05 147.87,-418.29 137.75,-421.42 141.91,-427.05" /></g><g id="svg-graphviz-5e3397288f6e-node2" class="node"><title>s2</title><path fill="#f5f5e8" stroke="black" d="M58,-459C58,-459 28,-459 28,-459 22,-459 16,-453 16,-447 16,-447 16,-435 16,-435 16,-429 22,-423 28,-423 28,-423 58,-423 58,-423 64,-423 70,-429 70,-435 70,-435 70,-447 70,-447 70,-453 64,-459 58,-459" /><text text-anchor="middle" x="43" y="-437.3" font-family="Helvetica,sans-Serif" font-size="14.00">E'</text></g><g id="svg-graphviz-5e3397288f6e-node3" class="node"><title>s3</title><path fill="#f5f5e8" stroke="black" d="M58,-405C58,-405 28,-405 28,-405 22,-405 16,-399 16,-393 16,-393 16,-381 16,-381 16,-375 22,-369 28,-369 28,-369 58,-369 58,-369 64,-369 70,-375 70,-381 70,-381 70,-393 70,-393 70,-399 64,-405 58,-405" /><text text-anchor="middle" x="43" y="-383.3" font-family="Helvetica,sans-Serif" font-size="14.00">$</text></g><g id="svg-graphviz-5e3397288f6e-node4" class="node"><title>i1</title><path fill="#f5f5e8" stroke="black" d="M58,-322C58,-322 28,-322 28,-322 22,-322 16,-316 16,-310 16,-310 16,-298 16,-298 16,-292 22,-286 28,-286 28,-286 58,-286 58,-286 64,-286 70,-292 70,-298 70,-298 70,-310 70,-310 70,-316 64,-322 58,-322" /><text text-anchor="middle" x="43" y="-300.3" font-family="Helvetica,sans-Serif" font-size="14.00">id</text></g><g id="svg-graphviz-5e3397288f6e-edge2" class="edge"><title>i1-&gt;tabela</title><path fill="none" stroke="black" stroke-dasharray="5,2" d="M68.76,-322.09C88.88,-336.8 117.48,-357.7 139.79,-374" /><polygon fill="black" stroke="black" points="137.86,-376.92 148,-380 141.99,-371.27 137.86,-376.92" /></g><g id="svg-graphviz-5e3397288f6e-node5" class="node"><title>i2</title><path fill="#f5f5e8" stroke="black" d="M58,-268C58,-268 28,-268 28,-268 22,-268 16,-262 16,-256 16,-256 16,-244 16,-244 16,-238 22,-232 28,-232 28,-232 58,-232 58,-232 64,-232 70,-238 70,-244 70,-244 70,-256 70,-256 70,-262 64,-268 58,-268" /><text text-anchor="middle" x="43" y="-246.3" font-family="Helvetica,sans-Serif" font-size="14.00">+</text></g><g id="svg-graphviz-5e3397288f6e-node6" class="node"><title>i3</title><path fill="#f5f5e8" stroke="black" d="M58,-214C58,-214 28,-214 28,-214 22,-214 16,-208 16,-202 16,-202 16,-190 16,-190 16,-184 22,-178 28,-178 28,-178 58,-178 58,-178 64,-178 70,-184 70,-190 70,-190 70,-202 70,-202 70,-208 64,-214 58,-214" /><text text-anchor="middle" x="43" y="-192.3" font-family="Helvetica,sans-Serif" font-size="14.00">id</text></g><g id="svg-graphviz-5e3397288f6e-node7" class="node"><title>i4</title><path fill="#f5f5e8" stroke="black" d="M58,-160C58,-160 28,-160 28,-160 22,-160 16,-154 16,-148 16,-148 16,-136 16,-136 16,-130 22,-124 28,-124 28,-124 58,-124 58,-124 64,-124 70,-130 70,-136 70,-136 70,-148 70,-148 70,-154 64,-160 58,-160" /><text text-anchor="middle" x="43" y="-138.3" font-family="Helvetica,sans-Serif" font-size="14.00">*</text></g><g id="svg-graphviz-5e3397288f6e-node8" class="node"><title>i5</title><path fill="#f5f5e8" stroke="black" d="M58,-106C58,-106 28,-106 28,-106 22,-106 16,-100 16,-94 16,-94 16,-82 16,-82 16,-76 22,-70 28,-70 28,-70 58,-70 58,-70 64,-70 70,-76 70,-82 70,-82 70,-94 70,-94 70,-100 64,-106 58,-106" /><text text-anchor="middle" x="43" y="-84.3" font-family="Helvetica,sans-Serif" font-size="14.00">id</text></g><g id="svg-graphviz-5e3397288f6e-node9" class="node"><title>i6</title><path fill="#f5f5e8" stroke="black" d="M58,-52C58,-52 28,-52 28,-52 22,-52 16,-46 16,-40 16,-40 16,-28 16,-28 16,-22 22,-16 28,-16 28,-16 58,-16 58,-16 64,-16 70,-22 70,-28 70,-28 70,-40 70,-40 70,-46 64,-52 58,-52" /><text text-anchor="middle" x="43" y="-30.3" font-family="Helvetica,sans-Serif" font-size="14.00">$</text></g></g></svg></div></div>
+
+<p>O topo da pilha sempre guia a próxima decisão.</p>
+</section>
+<section><h1>Passo 3 do LL(1)</h1>
+<p>Depois de expandir <code>F</code> e casar o primeiro <code>id</code>:</p>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="250" viewBox="0.00 0.00 253.00 506.00" class="svg-graph graphviz-img"><g id="svg-graphviz-af92c64c1099-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 502)"><title>LL1Step3</title><polygon fill="white" stroke="transparent" points="-4,4 -4,-502 249,-502 249,4 -4,4" /><g id="svg-graphviz-af92c64c1099-clust1" class="cluster"><title>cluster_stack</title><polygon fill="none" stroke="#999999" points="8,-307 8,-490 78,-490 78,-307 8,-307" /><text text-anchor="middle" x="43" y="-474.8" font-family="Times,serif" font-size="14.00">Pilha</text></g><g id="svg-graphviz-af92c64c1099-clust2" class="cluster"><title>cluster_input</title><polygon fill="none" stroke="#999999" points="6,-8 6,-299 80,-299 80,-8 6,-8" /><text text-anchor="middle" x="43" y="-283.8" font-family="Times,serif" font-size="14.00">Entrada</text></g><g id="svg-graphviz-af92c64c1099-node1" class="node"><title>s1</title><path fill="#f5f5e8" stroke="black" d="M58,-459C58,-459 28,-459 28,-459 22,-459 16,-453 16,-447 16,-447 16,-435 16,-435 16,-429 22,-423 28,-423 28,-423 58,-423 58,-423 64,-423 70,-429 70,-435 70,-435 70,-447 70,-447 70,-453 64,-459 58,-459" /><text text-anchor="middle" x="43" y="-437.3" font-family="Helvetica,sans-Serif" font-size="14.00">T'</text></g><g id="svg-graphviz-af92c64c1099-node9" class="node"><title>tabela</title><path fill="#f5f5e8" stroke="black" d="M233,-364C233,-364 120,-364 120,-364 114,-364 108,-358 108,-352 108,-352 108,-338 108,-338 108,-332 114,-326 120,-326 120,-326 233,-326 233,-326 239,-326 245,-332 245,-338 245,-338 245,-352 245,-352 245,-358 239,-364 233,-364" /><text text-anchor="middle" x="176.5" y="-348.8" font-family="Helvetica,sans-Serif" font-size="14.00">Consulta M[T', +]</text><text text-anchor="middle" x="176.5" y="-333.8" font-family="Helvetica,sans-Serif" font-size="14.00">usa T' -&gt; epsilon</text></g><g id="svg-graphviz-af92c64c1099-edge1" class="edge"><title>s1-&gt;tabela</title><path fill="none" stroke="black" stroke-dasharray="5,2" d="M68.73,-422.94C89.05,-408.11 118.07,-386.92 140.73,-370.38" /><polygon fill="black" stroke="black" points="143.06,-373.02 149.07,-364.29 138.93,-367.36 143.06,-373.02" /></g><g id="svg-graphviz-af92c64c1099-node2" class="node"><title>s2</title><path fill="#f5f5e8" stroke="black" d="M58,-405C58,-405 28,-405 28,-405 22,-405 16,-399 16,-393 16,-393 16,-381 16,-381 16,-375 22,-369 28,-369 28,-369 58,-369 58,-369 64,-369 70,-375 70,-381 70,-381 70,-393 70,-393 70,-399 64,-405 58,-405" /><text text-anchor="middle" x="43" y="-383.3" font-family="Helvetica,sans-Serif" font-size="14.00">E'</text></g><g id="svg-graphviz-af92c64c1099-node3" class="node"><title>s3</title><path fill="#f5f5e8" stroke="black" d="M58,-351C58,-351 28,-351 28,-351 22,-351 16,-345 16,-339 16,-339 16,-327 16,-327 16,-321 22,-315 28,-315 28,-315 58,-315 58,-315 64,-315 70,-321 70,-327 70,-327 70,-339 70,-339 70,-345 64,-351 58,-351" /><text text-anchor="middle" x="43" y="-329.3" font-family="Helvetica,sans-Serif" font-size="14.00">$</text></g><g id="svg-graphviz-af92c64c1099-node4" class="node"><title>i1</title><path fill="#f5f5e8" stroke="black" d="M58,-268C58,-268 28,-268 28,-268 22,-268 16,-262 16,-256 16,-256 16,-244 16,-244 16,-238 22,-232 28,-232 28,-232 58,-232 58,-232 64,-232 70,-238 70,-244 70,-244 70,-256 70,-256 70,-262 64,-268 58,-268" /><text text-anchor="middle" x="43" y="-246.3" font-family="Helvetica,sans-Serif" font-size="14.00">+</text></g><g id="svg-graphviz-af92c64c1099-edge2" class="edge"><title>i1-&gt;tabela</title><path fill="none" stroke="black" stroke-dasharray="5,2" d="M69.04,-268.09C89.4,-282.8 118.33,-303.7 140.89,-320" /><polygon fill="black" stroke="black" points="139.04,-322.98 149.2,-326 143.14,-317.31 139.04,-322.98" /></g><g id="svg-graphviz-af92c64c1099-node5" class="node"><title>i2</title><path fill="#f5f5e8" stroke="black" d="M58,-214C58,-214 28,-214 28,-214 22,-214 16,-208 16,-202 16,-202 16,-190 16,-190 16,-184 22,-178 28,-178 28,-178 58,-178 58,-178 64,-178 70,-184 70,-190 70,-190 70,-202 70,-202 70,-208 64,-214 58,-214" /><text text-anchor="middle" x="43" y="-192.3" font-family="Helvetica,sans-Serif" font-size="14.00">id</text></g><g id="svg-graphviz-af92c64c1099-node6" class="node"><title>i3</title><path fill="#f5f5e8" stroke="black" d="M58,-160C58,-160 28,-160 28,-160 22,-160 16,-154 16,-148 16,-148 16,-136 16,-136 16,-130 22,-124 28,-124 28,-124 58,-124 58,-124 64,-124 70,-130 70,-136 70,-136 70,-148 70,-148 70,-154 64,-160 58,-160" /><text text-anchor="middle" x="43" y="-138.3" font-family="Helvetica,sans-Serif" font-size="14.00">*</text></g><g id="svg-graphviz-af92c64c1099-node7" class="node"><title>i4</title><path fill="#f5f5e8" stroke="black" d="M58,-106C58,-106 28,-106 28,-106 22,-106 16,-100 16,-94 16,-94 16,-82 16,-82 16,-76 22,-70 28,-70 28,-70 58,-70 58,-70 64,-70 70,-76 70,-82 70,-82 70,-94 70,-94 70,-100 64,-106 58,-106" /><text text-anchor="middle" x="43" y="-84.3" font-family="Helvetica,sans-Serif" font-size="14.00">id</text></g><g id="svg-graphviz-af92c64c1099-node8" class="node"><title>i5</title><path fill="#f5f5e8" stroke="black" d="M58,-52C58,-52 28,-52 28,-52 22,-52 16,-46 16,-40 16,-40 16,-28 16,-28 16,-22 22,-16 28,-16 28,-16 58,-16 58,-16 64,-16 70,-22 70,-28 70,-28 70,-40 70,-40 70,-46 64,-52 58,-52" /><text text-anchor="middle" x="43" y="-30.3" font-family="Helvetica,sans-Serif" font-size="14.00">$</text></g></g></svg></div></div>
+
+<p>Como <code>+</code> está em <code>FOLLOW(T')</code>, a produção vazia é a decisão correta.</p>
+</section>
+<section><h1>Passo 4 do LL(1)</h1>
+<p>Agora o topo é <code>E'</code> e a entrada continua em <code>+</code>.</p>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="250" viewBox="0.00 0.00 254.00 452.00" class="svg-graph graphviz-img"><g id="svg-graphviz-db352d3efb80-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 448)"><title>LL1Step4</title><polygon fill="white" stroke="transparent" points="-4,4 -4,-448 250,-448 250,4 -4,4" /><g id="svg-graphviz-db352d3efb80-clust1" class="cluster"><title>cluster_stack</title><polygon fill="none" stroke="#999999" points="8,-307 8,-436 78,-436 78,-307 8,-307" /><text text-anchor="middle" x="43" y="-420.8" font-family="Times,serif" font-size="14.00">Pilha</text></g><g id="svg-graphviz-db352d3efb80-clust2" class="cluster"><title>cluster_input</title><polygon fill="none" stroke="#999999" points="6,-8 6,-299 80,-299 80,-8 6,-8" /><text text-anchor="middle" x="43" y="-283.8" font-family="Times,serif" font-size="14.00">Entrada</text></g><g id="svg-graphviz-db352d3efb80-node1" class="node"><title>s1</title><path fill="#f5f5e8" stroke="black" d="M58,-405C58,-405 28,-405 28,-405 22,-405 16,-399 16,-393 16,-393 16,-381 16,-381 16,-375 22,-369 28,-369 28,-369 58,-369 58,-369 64,-369 70,-375 70,-381 70,-381 70,-393 70,-393 70,-399 64,-405 58,-405" /><text text-anchor="middle" x="43" y="-383.3" font-family="Helvetica,sans-Serif" font-size="14.00">E'</text></g><g id="svg-graphviz-db352d3efb80-node8" class="node"><title>tabela</title><path fill="#f5f5e8" stroke="black" d="M234,-337C234,-337 120,-337 120,-337 114,-337 108,-331 108,-325 108,-325 108,-311 108,-311 108,-305 114,-299 120,-299 120,-299 234,-299 234,-299 240,-299 246,-305 246,-311 246,-311 246,-325 246,-325 246,-331 240,-337 234,-337" /><text text-anchor="middle" x="177" y="-321.8" font-family="Helvetica,sans-Serif" font-size="14.00">Consulta M[E', +]</text><text text-anchor="middle" x="177" y="-306.8" font-family="Helvetica,sans-Serif" font-size="14.00">usa E' -&gt; + T E'</text></g><g id="svg-graphviz-db352d3efb80-edge1" class="edge"><title>s1-&gt;tabela</title><path fill="none" stroke="black" stroke-dasharray="5,2" d="M70.08,-373.37C87.28,-364.38 110.28,-352.36 130.45,-341.81" /><polygon fill="black" stroke="black" points="132.24,-344.82 139.48,-337.09 129,-338.62 132.24,-344.82" /></g><g id="svg-graphviz-db352d3efb80-node2" class="node"><title>s2</title><path fill="#f5f5e8" stroke="black" d="M58,-351C58,-351 28,-351 28,-351 22,-351 16,-345 16,-339 16,-339 16,-327 16,-327 16,-321 22,-315 28,-315 28,-315 58,-315 58,-315 64,-315 70,-321 70,-327 70,-327 70,-339 70,-339 70,-345 64,-351 58,-351" /><text text-anchor="middle" x="43" y="-329.3" font-family="Helvetica,sans-Serif" font-size="14.00">$</text></g><g id="svg-graphviz-db352d3efb80-node3" class="node"><title>i1</title><path fill="#f5f5e8" stroke="black" d="M58,-268C58,-268 28,-268 28,-268 22,-268 16,-262 16,-256 16,-256 16,-244 16,-244 16,-238 22,-232 28,-232 28,-232 58,-232 58,-232 64,-232 70,-238 70,-244 70,-244 70,-256 70,-256 70,-262 64,-268 58,-268" /><text text-anchor="middle" x="43" y="-246.3" font-family="Helvetica,sans-Serif" font-size="14.00">+</text></g><g id="svg-graphviz-db352d3efb80-edge2" class="edge"><title>i1-&gt;tabela</title><path fill="none" stroke="black" stroke-dasharray="5,2" d="M70.08,-263.43C87.15,-272.23 109.93,-283.96 129.99,-294.3" /><polygon fill="black" stroke="black" points="128.49,-297.46 138.98,-298.93 131.69,-291.24 128.49,-297.46" /></g><g id="svg-graphviz-db352d3efb80-node4" class="node"><title>i2</title><path fill="#f5f5e8" stroke="black" d="M58,-214C58,-214 28,-214 28,-214 22,-214 16,-208 16,-202 16,-202 16,-190 16,-190 16,-184 22,-178 28,-178 28,-178 58,-178 58,-178 64,-178 70,-184 70,-190 70,-190 70,-202 70,-202 70,-208 64,-214 58,-214" /><text text-anchor="middle" x="43" y="-192.3" font-family="Helvetica,sans-Serif" font-size="14.00">id</text></g><g id="svg-graphviz-db352d3efb80-node5" class="node"><title>i3</title><path fill="#f5f5e8" stroke="black" d="M58,-160C58,-160 28,-160 28,-160 22,-160 16,-154 16,-148 16,-148 16,-136 16,-136 16,-130 22,-124 28,-124 28,-124 58,-124 58,-124 64,-124 70,-130 70,-136 70,-136 70,-148 70,-148 70,-154 64,-160 58,-160" /><text text-anchor="middle" x="43" y="-138.3" font-family="Helvetica,sans-Serif" font-size="14.00">*</text></g><g id="svg-graphviz-db352d3efb80-node6" class="node"><title>i4</title><path fill="#f5f5e8" stroke="black" d="M58,-106C58,-106 28,-106 28,-106 22,-106 16,-100 16,-94 16,-94 16,-82 16,-82 16,-76 22,-70 28,-70 28,-70 58,-70 58,-70 64,-70 70,-76 70,-82 70,-82 70,-94 70,-94 70,-100 64,-106 58,-106" /><text text-anchor="middle" x="43" y="-84.3" font-family="Helvetica,sans-Serif" font-size="14.00">id</text></g><g id="svg-graphviz-db352d3efb80-node7" class="node"><title>i5</title><path fill="#f5f5e8" stroke="black" d="M58,-52C58,-52 28,-52 28,-52 22,-52 16,-46 16,-40 16,-40 16,-28 16,-28 16,-22 22,-16 28,-16 28,-16 58,-16 58,-16 64,-16 70,-22 70,-28 70,-28 70,-40 70,-40 70,-46 64,-52 58,-52" /><text text-anchor="middle" x="43" y="-30.3" font-family="Helvetica,sans-Serif" font-size="14.00">$</text></g></g></svg></div></div>
+
+<p>O parser continua a expressão porque ainda existe soma pendente.</p>
+</section>
+<section><h1>Traço resumido da execução inteira</h1>
+<table>
+<thead>
+<tr>
+  <th>Passo</th>
+  <th>Pilha</th>
+  <th>Entrada</th>
+  <th>Ação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>1</td>
+  <td>[<span>$</span>, E]</td>
+  <td><code>id + id * id $</code></td>
+  <td>usa <code>E -&gt; T E'</code></td>
+</tr>
+<tr>
+  <td>2</td>
+  <td>[<span>$</span>, E', T]</td>
+  <td><code>id + id * id $</code></td>
+  <td>usa <code>T -&gt; F T'</code></td>
+</tr>
+<tr>
+  <td>3</td>
+  <td>[<span>$</span>, E', T', F]</td>
+  <td><code>id + id * id $</code></td>
+  <td>usa <code>F -&gt; id</code></td>
+</tr>
+<tr>
+  <td>4</td>
+  <td>[<span>$</span>, E', T', id]</td>
+  <td><code>id + id * id $</code></td>
+  <td>faz match de <code>id</code></td>
+</tr>
+<tr>
+  <td>5</td>
+  <td>[<span>$</span>, E', T']</td>
+  <td><code>+ id * id $</code></td>
+  <td>usa <code>T' -&gt; epsilon</code></td>
+</tr>
+<tr>
+  <td>6</td>
+  <td>[<span>$</span>, E']</td>
+  <td><code>+ id * id $</code></td>
+  <td>usa <code>E' -&gt; + T E'</code></td>
+</tr>
+<tr>
+  <td>7</td>
+  <td>[<span>$</span>, E', T, +]</td>
+  <td><code>+ id * id $</code></td>
+  <td>faz match de <code>+</code></td>
+</tr>
+<tr>
+  <td>8</td>
+  <td>[<span>$</span>, E', T]</td>
+  <td><code>id * id $</code></td>
+  <td>usa <code>T -&gt; F T'</code></td>
+</tr>
+<tr>
+  <td>9</td>
+  <td>[<span>$</span>, E', T', F]</td>
+  <td><code>id * id $</code></td>
+  <td>usa <code>F -&gt; id</code></td>
+</tr>
+<tr>
+  <td>10</td>
+  <td>[<span>$</span>, E', T', id]</td>
+  <td><code>id * id $</code></td>
+  <td>faz match de <code>id</code></td>
+</tr>
+<tr>
+  <td>11</td>
+  <td>[<span>$</span>, E', T']</td>
+  <td><code>* id $</code></td>
+  <td>usa <code>T' -&gt; * F T'</code></td>
+</tr>
+<tr>
+  <td>12</td>
+  <td>[<span>$</span>, E', T', F, *]</td>
+  <td><code>* id $</code></td>
+  <td>faz match de <code>*</code></td>
+</tr>
+<tr>
+  <td>13</td>
+  <td>[<span>$</span>, E', T', F]</td>
+  <td><code>id $</code></td>
+  <td>usa <code>F -&gt; id</code></td>
+</tr>
+<tr>
+  <td>14</td>
+  <td>[<span>$</span>, E', T', id]</td>
+  <td><code>id $</code></td>
+  <td>faz match de <code>id</code></td>
+</tr>
+<tr>
+  <td>15</td>
+  <td>[<span>$</span>, E', T']</td>
+  <td><code>$</code></td>
+  <td>usa <code>T' -&gt; epsilon</code></td>
+</tr>
+<tr>
+  <td>16</td>
+  <td>[<span>$</span>, E']</td>
+  <td><code>$</code></td>
+  <td>usa <code>E' -&gt; epsilon</code></td>
+</tr>
+<tr>
+  <td>17</td>
+  <td>[<span>$</span>]</td>
+  <td><code>$</code></td>
+  <td>sucesso</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section><h1>Resumo do traço LL(1)</h1>
+<ul>
+<li>a pilha substitui a pilha de chamadas do parser manual</li>
+<li>a tabela substitui a decisão “adivinhada”</li>
+<li><code>FIRST</code> escolhe por onde a produção entra</li>
+<li><code>FOLLOW</code> resolve o momento em que uma variável pode desaparecer</li>
+</ul>
+<p>O parser LL(1) é top-down, mas a decisão fica mecanizada.</p>
+</section>
+<section><h1>Exercício 1</h1>
+<p>Considere:</p>
+<p>$$
+\begin{split}
+S &\to 0S \mid 1
+\end{split}
+$$</p>
+<p>Derive a cadeia <code>001</code> e mostre também uma derivação parcial.</p>
+</section>
+<section><h1>Exercício 1 - Resolução</h1>
+<p>Derivação completa:</p>
+<p>$$
+\begin{split}
+S &\Rightarrow 0S \\
+  &\Rightarrow 00S \\
+  &\Rightarrow 001
+\end{split}
+$$</p>
+<p>Derivação parcial possível:</p>
+<p>$$
+S \Rightarrow 0S \Rightarrow 00S
+$$</p>
+<p>Ela é parcial porque ainda resta o não terminal $S$.</p>
+</section>
+<section><h1>Exercício 2</h1>
+<p>Para a expressão <code>a + b * c</code>, explique por que a AST correta não é:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">*
+├── +
+│   ├── a
+│   └── b
+└── c
+</code></pre>
+</section>
+<section><h1>Exercício 2 - Resolução</h1>
+<p>Essa árvore representaria:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">(a + b) * c
+</code></pre>
+<p>Mas a precedência usual da linguagem exige:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">a + (b * c)
+</code></pre>
+<p>Logo a AST correta é:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">+
+├── a
+└── *
+    ├── b
+    └── c
+</code></pre>
+</section>
+<section><h1>Exercício 3</h1>
+<p>Considere a gramática:</p>
+<p>$$
+E \to E - T \mid T
+$$</p>
+<p>Explique por que ela não deve ser implementada diretamente por parser recursivo descendente.</p>
+</section>
+<section><h1>Exercício 3 - Resolução</h1>
+<p>Ela possui recursão à esquerda direta.</p>
+<p>Na implementação literal, <code>E()</code> chamaria <code>E()</code> novamente antes de consumir qualquer token.</p>
+<p>Consequências:</p>
+<ul>
+<li>loop recursivo</li>
+<li>nenhuma redução real da entrada</li>
+<li>falha do parser top-down direto</li>
+</ul>
+<p>Forma adequada:</p>
+<p>$$
+\begin{split}
+E &\to T E' \\
+E' &\to - T E' \mid \epsilon
+\end{split}
+$$</p>
+</section>
+<section><h1>Exercício 4</h1>
+<p>Considere:</p>
+<p>$$
+\begin{split}
+S &\to A d \\
+A &\to bA \mid \epsilon
+\end{split}
+$$</p>
+<p>Calcule <code>FIRST(A)</code>, <code>FIRST(S)</code> e <code>FOLLOW(A)</code>.</p>
+</section>
+<section><h1>Exercício 4 - Resolução</h1>
+<p>Como $A \to bA \mid \epsilon$:</p>
+<p>$$
+FIRST(A) = \{b, \epsilon\}
+$$</p>
+<p>Como $S \to A d$ e $A$ pode sumir:</p>
+<p>$$
+FIRST(S) = \{b, d\}
+$$</p>
+<p>Como depois de $A$ vem <code>d</code>:</p>
+<p>$$
+FOLLOW(A) = \{d\}
+$$</p>
+</section>
+<section><h1>Exercício 5</h1>
+<p>Monte a tabela LL(1) para:</p>
+<p>$$
+\begin{split}
+S &\to aB \mid c \\
+B &\to b \mid \epsilon
+\end{split}
+$$</p>
+</section>
+<section><h1>Exercício 5 - Resolução</h1>
+<p>Primeiro os conjuntos:</p>
+<p>$$
+FIRST(S)=\{a,c\}, \qquad FIRST(B)=\{b,\epsilon\}
+$$</p>
+<p>$$
+FOLLOW(S)=\{\$\}, \qquad FOLLOW(B)=\{\$\}
+$$</p>
+<p>Tabela:</p>
+<p>$$
+\begin{array}{c|cccc}
+ & a & b & c & \$ \\
+\hline
+S & S \to aB &  & S \to c & \\
+B &  & B \to b &  & B \to \epsilon
+\end{array}
+$$</p>
+</section>
+<section><h1>Exercício 6</h1>
+<p>Considere:</p>
+<p>$$
+A \to aB \mid aC
+$$</p>
+<p>Explique por que essa gramática não é LL(1) e indique a transformação adequada.</p>
+</section>
+<section><h1>Exercício 6 - Resolução</h1>
+<p>As duas produções começam com o mesmo terminal <code>a</code>.</p>
+<p>Então a célula correspondente a <code>M[A, a]</code> receberia mais de uma produção.</p>
+<p>Isso produz conflito na tabela.</p>
+<p>Transformação por fatoração:</p>
+<p>$$
+\begin{split}
+A &\to aA' \\
+A' &\to B \mid C
+\end{split}
+$$</p>
+<p>Agora a decisão inicial fica única.</p>
+</section>
+<section><h1>Pergunta de encerramento</h1>
+<p>Quando uma linguagem parece correta mas o parser LL(1) falha, o problema pode estar em três níveis diferentes:</p>
+<ul>
+<li>na ambiguidade da gramática</li>
+<li>na forma da gramática para top-down</li>
+<li>no limite da própria estratégia com um lookahead</li>
+</ul>
+<p>Essa distinção é exatamente o que a revisão de hoje queria consolidar.</p>
+</section>
+        </div>
+    </div>
+
+    <script src="/aulas-faesa/js/vendor/reveal/reveal.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/notes/notes.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/markdown/markdown.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/math/math.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/zoom/zoom.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/prism.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-c.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-python.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-clike.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-cpp.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-perl.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-java.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-php.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/toolbar/prism-toolbar.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/show-language/prism-show-language.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/prism-slang.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/mermaid.min.js" data-no-bundle></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            mermaid.initialize({
+                startOnLoad: false,
+                theme: 'default',
+                securityLevel: 'loose',
+                htmlLabels: false,
+                fontFamily: 'Inter, system-ui, sans-serif',
+            });
+        });
+    </script>
+    <script src="/aulas-faesa/js/rough.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/apply_sketch.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/lucide.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/ui.js" data-no-bundle></script>
+    <script>
+        const waitForNextFrame = () => new Promise(resolve => requestAnimationFrame(resolve));
+
+        const initSlideUI = () => {
+            if (!window.CourseForgeUI) {
+                return;
+            }
+
+            window.CourseForgeUI.initCopyButtons();
+            window.CourseForgeUI.initIcons();
+        };
+
+        const renderMermaidsInSlide = async (slide) => {
+            if (!slide) {
+                return;
+            }
+
+            const mermaids = slide.querySelectorAll('.mermaid');
+            if (!mermaids.length) {
+                return;
+            }
+
+            try {
+                if (document.fonts?.ready) {
+                    await document.fonts.ready;
+                }
+
+                await waitForNextFrame();
+                await waitForNextFrame();
+
+                for (const element of mermaids) {
+                    if (element.dataset.mermaidRendered === 'true') {
+                        continue;
+                    }
+
+                    await mermaid.run({
+                        nodes: [element],
+                    });
+                    element.dataset.mermaidRendered = 'true';
+                }
+            } catch (err) {
+                console.warn('Mermaid render failed', err);
+            }
+        };
+
+        const updateMermaidDisplayBounds = (slide) => {
+            const scope = slide || document;
+            const displays = scope.querySelectorAll('.mermaid-display');
+
+            for (const display of displays) {
+                const rect = display.getBoundingClientRect();
+                const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+                const bottomGap = 24;
+                const availableHeight = Math.max(160, Math.floor(viewportHeight - rect.top - bottomGap));
+                display.style.setProperty('--mermaid-max-height', `${availableHeight}px`);
+            }
+        };
+
+        const resetNativeLineNumbers = (pre) => {
+            if (!pre?.classList.contains('line-numbers')) {
+                return;
+            }
+
+            const existingRows = pre.querySelector('.line-numbers-rows');
+            if (existingRows) {
+                existingRows.remove();
+            }
+        };
+
+        const highlightCodeInSlide = (slide) => {
+            const scope = slide || document;
+            const codeBlocks = scope.querySelectorAll('pre[class*="language-"] > code[class*="language-"]');
+
+            for (const code of codeBlocks) {
+                const pre = code.parentElement;
+                resetNativeLineNumbers(pre);
+                Prism.highlightElement(code);
+
+                if (pre?.classList.contains('line-numbers') && Prism.plugins?.lineNumbers?.resize) {
+                    Prism.plugins.lineNumbers.resize(pre);
+                }
+            }
+        };
+
+        const enhanceCurrentSlide = async (slide) => {
+            highlightCodeInSlide(slide);
+            await renderMermaidsInSlide(slide);
+            updateMermaidDisplayBounds(slide);
+            initSlideUI();
+        };
+
+        Reveal.initialize({
+            hash: true,
+            slideNumber: 'c/t',
+            center: false,
+            controls: false,
+            plugins: [RevealMarkdown, RevealNotes, RevealMath.KaTeX, RevealZoom],
+            katex: {
+                local: '/aulas-faesa/js/vendor/katex',
+                output: 'html',
+                throwOnError: false,
+                strict: false,
+            },
+            width: 960,
+            height: 800,
+            margin: 0.15,
+            maxScale: 2.0,
+        });
+
+        Reveal.on('ready', event => {
+            enhanceCurrentSlide(event.currentSlide);
+        });
+
+        Reveal.on('slideready', event => {
+            enhanceCurrentSlide(event.currentSlide);
+        });
+
+        Reveal.on('slidechanged', event => {
+            enhanceCurrentSlide(event.currentSlide);
+        });
+
+        window.addEventListener('resize', () => {
+            updateMermaidDisplayBounds(Reveal.getCurrentSlide());
+        });
+    </script>
+    <style>
+        /* Modern base styles */
+        :root {
+            --callout-note: #448aff;
+            --callout-abstract: #00b0ff;
+            --callout-info: #00b8d4;
+            --callout-todo: #00bfa5;
+            --callout-tip: #00c853;
+            --callout-success: #64dd17;
+            --callout-question: #ffab00;
+            --callout-warning: #ff9100;
+            --callout-failure: #ff5252;
+            --callout-danger: #ff1744;
+            --callout-bug: #f50057;
+            --callout-example: #7c4dff;
+            --callout-quote: #9e9e9e;
+            --code-bg: #f1f5f9;
+            --border: #e2e8f0;
+            --radius: 6px;
+            --radius-sm: 4px;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --text-muted: #64748b;
+            --text: #334155;
+            --bg: #ffffff;
+            --heading: #0f172a;
+            --link: #3b82f6;
+            --font-code: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+        }
+
+        .reveal {
+            font-size: 20px;
+            text-align: left !important;
+        }
+
+        .reveal code:not(pre code) {
+            font-family: var(--font-code) !important;
+            background-color: var(--code-bg) !important;
+            padding: 0.1em 0.35em !important;
+            border-radius: var(--radius-sm) !important;
+            font-size: 0.9em !important;
+            color: var(--link) !important;
+            border: 1px dashed var(--border) !important;
+            white-space: pre-wrap !important;
+            word-break: break-word !important;
+            font-variant-ligatures: none;
+            font-feature-settings: "liga" 0, "calt" 0;
+        }
+
+        .reveal h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px !important;
+            margin-left: 0 !important;
+            /* min-height: 2.3em; */
+            display: flex;
+            align-items: center;
+            justify-content: flex-start !important;
+            text-align: left !important;
+            width: 100% !important;
+            text-shadow: none !important;
+        }
+
+        /* Prism overrides for Reveal.js */
+        .reveal div.code-toolbar {
+            position: relative;
+            width: 100% !important;
+            margin: 1.5rem 0 !important;
+        }
+
+        .reveal pre[class*="language-"] {
+            background: hsl(230, 1%, 98%) !important;
+            margin: 1.5rem 0 !important;
+            padding: 1rem !important;
+            border: 1px solid var(--border) !important;
+            border-radius: var(--radius) !important;
+            box-shadow: var(--shadow-sm) !important;
+            font-family: var(--font-code) !important;
+            font-size: 0.85em !important;
+            position: relative;
+            overflow-x: auto;
+            box-sizing: border-box !important;
+            max-width: 100% !important;
+            font-variant-ligatures: none;
+            font-feature-settings: "liga" 0, "calt" 0;
+        }
+
+        .reveal pre[class*="language-"] > code {
+            background: 0 0 !important;
+            text-shadow: none !important;
+            color: hsl(230, 8%, 24%) !important;
+            position: relative !important;
+            display: block !important;
+        }
+
+        .reveal .line-numbers .line-numbers-rows {
+            border-right: 1px solid #444 !important;
+            padding-right: .5rem !important;
+            margin-bottom: 1.5rem;
+        }
+
+        .reveal .line-numbers-rows>span:before {
+            color: #666 !important;
+        }
+
+        .reveal pre[class*="language-"].line-numbers,
+        .reveal pre[class*="language-"]:has(.line-numbers-rows) {
+            padding-left: 3.8em !important;
+            overflow-y: hidden !important;
+        }
+
+        .reveal .copy-button,
+        .reveal pre[data-lang]::before {
+            position: absolute;
+            top: .5rem;
+            height: 26px;
+            background: hsl(230, 1%, 92%);
+            border: 1px solid hsl(230, 1%, 85%);
+            border-radius: var(--radius-sm);
+            box-sizing: border-box;
+        }
+
+        .reveal .copy-button {
+            right: .5rem;
+            width: 26px;
+            padding: 0;
+            color: hsl(230, 6%, 44%);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all .2s ease;
+            z-index: 20;
+            opacity: .8;
+        }
+
+        .reveal .copy-button:hover {
+            background: hsl(230, 1%, 85%);
+            color: hsl(230, 8%, 24%);
+            opacity: 1;
+        }
+
+        .reveal .copy-button svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Language label styling - hide all Prism toolbar plugins, keep only data-lang label */
+        .reveal div.toolbar,
+        .reveal div.toolbar-item,
+        .reveal button.toolbar-item,
+        .reveal span.toolbar-item {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            height: 0 !important;
+            width: 0 !important;
+            overflow: hidden !important;
+            position: absolute !important;
+            pointer-events: none !important;
+        }
+
+        /* Use the pseudo-element data-lang label only */
+        .reveal pre[data-lang]::before {
+            content: attr(data-lang);
+            right: 2.35rem;
+            padding: 0 .5rem;
+            font-size: .65rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: hsl(230, 6%, 50%);
+            pointer-events: none;
+            z-index: 10;
+            display: inline-flex !important;
+            align-items: center !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            height: 26px !important;
+            width: auto !important;
+            position: absolute !important;
+            overflow: visible !important;
+            line-height: 26px !important;
+        }
+
+        .reveal h2 {
+            font-size: 1.6em;
+            margin-top: 30px !important;
+            margin-bottom: 20px !important;
+            text-align: left !important;
+        }
+
+        .reveal h3 {
+            font-size: 1.3em;
+            margin-top: 20px !important;
+            margin-bottom: 15px !important;
+            text-align: left !important;
+        }
+
+        .reveal p {
+            line-height: 1.5;
+            margin-top: 20px !important;
+            margin-left: 0 !important;
+            text-align: left !important;
+        }
+
+        .reveal ul,
+        .reveal ol,
+        .reveal li {
+            line-height: 1.5;
+            text-align: left !important;
+            margin-left: 0 !important;
+        }
+        
+        .reveal ul, .reveal ol {
+            display: block !important;
+            padding-left: 1.2em !important;
+        }
+
+        /* Slide padding and layout */
+        .reveal .slides section {
+            padding: 40px !important;
+            box-sizing: border-box;
+            text-align: left !important;
+            overflow: visible !important;
+        }
+
+        .reveal .slides {
+            text-align: left !important;
+        }
+
+        /* Centering for Title slides (h1 ONLY, h1 + h2 ONLY, or h1 + h2 + p ONLY) */
+        .reveal .slides section:not(.stack):has(> h1:only-child),
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child),
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) {
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: center !important;
+            align-items: center !important;
+            text-align: center !important;
+            height: 100% !important;
+            top: 0 !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:only-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child) h2,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h2,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) p {
+            justify-content: center !important;
+            text-align: center !important;
+            margin: 0 !important;
+            min-height: auto !important;
+            width: 100% !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h1 {
+            margin-bottom: 0.5em !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h2 {
+            margin-bottom: 0.3em !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) p {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        /* Full screen slide fix */
+        .reveal .slides section:has(.full-screen-image) {
+            padding: 0 !important;
+        }
+
+        /* Full screen slide fix - Garantindo que o fundo do Reveal fique visível e a imagem carregada */
+        .reveal:has(section.present .full-screen-image) {
+            background-image: url('../../slide_end_background.png') !important;
+            background-size: cover !important;
+            background-position: center !important;
+        }
+
+        /* Torna o slide e o container de slides transparentes para mostrar o fundo da .reveal */
+        .reveal:has(section.present .full-screen-image) .slides,
+        .reveal:has(section.present .full-screen-image) .slides section.present {
+            background: transparent !important;
+        }
+
+        .full-screen-image {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 !important;
+            /* Se houver texto, ele centraliza aqui */
+        }
+
+        /* Spacing for diagrams */
+        .reveal .svg-graph {
+            margin-top: 1em !important;
+            margin-bottom: 1em !important;
+            overflow: visible !important; /* Prevent labels from being cut off */
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* Mermaid Diagram Styles */
+        .reveal .mermaid {
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            padding: 0 !important;
+            margin: 1rem 0 !important;
+            font-family: inherit !important;
+            overflow: visible !important;
+            text-align: center;
+            display: block !important;
+            width: auto !important;
+            max-width: 100% !important;
+        }
+
+        .reveal pre.mermaid {
+            white-space: pre;
+            font-family: var(--font-code);
+            color: var(--text-muted);
+            margin: 0 !important;
+            padding: 0 !important;
+            width: auto !important;
+            line-height: 1 !important;
+            border: none !important;
+            box-shadow: none !important;
+            background: transparent !important;
+            overflow: visible !important;
+        }
+
+        .reveal .centered .mermaid {
+            display: block !important;
+            justify-content: center;
+            margin-left: auto !important;
+            margin-right: auto !important;
+        }
+
+        .reveal .mermaid svg {
+            max-width: 100% !important;
+            height: auto !important;
+            display: block !important;
+            overflow: visible !important;
+            vertical-align: top !important;
+            font-family: Inter, system-ui, sans-serif !important;
+            font-style: normal !important;
+            font-variant: normal !important;
+            font-weight: 400 !important;
+            letter-spacing: normal !important;
+            word-spacing: normal !important;
+            text-transform: none !important;
+            text-shadow: none !important;
+            line-height: normal !important;
+            text-rendering: geometricPrecision !important;
+        }
+
+        .reveal .mermaid svg * {
+            font-family: inherit !important;
+            font-style: normal !important;
+            font-variant: normal !important;
+            letter-spacing: normal !important;
+            word-spacing: normal !important;
+            text-transform: none !important;
+            text-shadow: none !important;
+            line-height: normal !important;
+        }
+
+        .reveal .mermaid svg .edgeBadge text,
+        .reveal .mermaid svg .edgeBadge tspan,
+        .reveal .mermaid svg .edgeTerm text,
+        .reveal .mermaid svg .edgeTerm tspan,
+        .reveal .mermaid svg .multiplicity text,
+        .reveal .mermaid svg .multiplicity tspan,
+        .reveal .mermaid svg text.edgeBadge,
+        .reveal .mermaid svg text.edgeTerm {
+            font-size: 18px !important;
+            font-weight: 700 !important;
+            fill: var(--heading) !important;
+        }
+
+        /* Mermaid Source Switcher */
+        .reveal .mermaid-outer-container {
+            margin: 1rem 0;
+            position: relative;
+            width: 100%;
+            max-width: 100%;
+        }
+
+        .reveal .mermaid-switcher {
+            display: flex !important;
+            justify-content: flex-end;
+            margin-bottom: 0.5rem;
+            width: 100%;
+        }
+
+        .reveal .switcher-track {
+            display: inline-flex;
+            align-items: center;
+            background: var(--code-bg);
+            padding: 3px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            position: relative;
+        }
+
+        .reveal .switcher-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            border: none;
+            background: transparent;
+            padding: 0.35rem 1rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            border-radius: calc(var(--radius) - 2px);
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            z-index: 1;
+        }
+
+        .reveal .switcher-btn svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .reveal .switcher-btn:hover {
+            color: var(--text);
+        }
+
+        .reveal .switcher-btn.active {
+            color: var(--heading);
+            background: var(--bg);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        .reveal .mermaid-content {
+            min-height: 50px;
+        }
+
+        /* Mermaid display - respect inline width */
+        .reveal .mermaid-display {
+            transition: opacity 0.2s ease;
+            display: block !important;
+            max-width: 100% !important;
+            max-height: var(--mermaid-max-height, calc(100vh - 140px)) !important;
+            border: none !important;
+            box-shadow: none !important;
+            background: transparent !important;
+            overflow: auto !important;
+        }
+
+        .reveal .mermaid-source pre {
+            margin: 0 !important;
+            background: var(--code-bg) !important;
+            border: 1px dashed var(--border) !important;
+        }
+
+        /* Ensure proper toggle behavior */
+        .reveal .mermaid-source {
+            display: none !important;
+        }
+
+        .reveal .mermaid-source[style*="display: block"],
+        .reveal .mermaid-source[style*="display:block"] {
+            display: block !important;
+        }
+
+        .reveal .mermaid-display[style*="display: none"],
+        .reveal .mermaid-display[style*="display:none"] {
+            display: none !important;
+        }
+
+        .reveal .mermaid-display.centered {
+            margin-left: auto !important;
+            margin-right: auto !important;
+            max-width: 100% !important;
+        }
+
+        .centered:not(.mermaid-display) {
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            width: 100% !important;
+            margin: 1em 0 !important;
+        }
+
+        .no-break {
+            display: block;
+            width: 100%;
+        }
+
+        .reveal blockquote {
+            display: block;
+            position: relative;
+            margin: var(--r-block-margin) auto !important;
+            padding: 5px;
+            font-style: italic;
+            background: rgba(255, 170, 73, 0.2);
+            box-shadow: 0 0 2px rgba(0,0,0,.2);
+            text-align: left !important;
+        }
+
+        .col1 {
+            width: 90%;
+            margin: 0 auto;
+        }
+
+        .col2 {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start;
+            width: 90%;
+            margin: 0 auto;
+            align-items: flex-start;
+        }
+
+        /* Callout Styles */
+        :root {
+            --callout-note: #448aff;
+            --callout-abstract: #00b0ff;
+            --callout-info: #00b8d4;
+            --callout-todo: #00bfa5;
+            --callout-tip: #00c853;
+            --callout-success: #64dd17;
+            --callout-question: #ffab00;
+            --callout-warning: #ff9100;
+            --callout-failure: #ff5252;
+            --callout-danger: #ff1744;
+            --callout-bug: #f50057;
+            --callout-example: #7c4dff;
+            --callout-quote: #9e9e9e;
+            --code-bg: #f8f8f8;
+            --border: #ddd;
+        }
+
+        .reveal .callout {
+            margin: 1rem auto !important;
+            border: 1px solid var(--border);
+            border-left: 6px solid var(--callout-note);
+            border-radius: 4px;
+            overflow: hidden;
+            text-align: left !important;
+            font-size: 0.8em;
+            width: 75% !important;
+            max-width: 100% !important;
+        }
+
+        .reveal .callout-title {
+            padding: 0.5rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            color: var(--callout-note);
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .reveal .callout-icon {
+            display: flex;
+            align-items: center;
+        }
+
+        .reveal .callout-icon svg {
+            width: 1.2em;
+            height: 1.2em;
+        }
+
+        .reveal .callout-content {
+            padding: 0.5rem 1rem;
+        }
+
+        .reveal .callout-content p {
+            margin-top: 0.5rem !important;
+        }
+
+        .reveal .callout-content p:first-child {
+            margin-top: 0 !important;
+        }
+
+        .reveal h1 { text-transform: none !important; }
+
+        .reveal .callout-abstract { border-left-color: var(--callout-abstract); }
+        .reveal .callout-abstract .callout-title { color: var(--callout-abstract); }
+        .reveal .callout-info { border-left-color: var(--callout-info); }
+        .reveal .callout-info .callout-title { color: var(--callout-info); }
+        .reveal .callout-todo { border-left-color: var(--callout-todo); }
+        .reveal .callout-todo .callout-title { color: var(--callout-todo); }
+        .reveal .callout-tip { border-left-color: var(--callout-tip); }
+        .reveal .callout-tip .callout-title { color: var(--callout-tip); }
+        .reveal .callout-success { border-left-color: var(--callout-success); }
+        .reveal .callout-success .callout-title { color: var(--callout-success); }
+        .reveal .callout-question { border-left-color: var(--callout-question); }
+        .reveal .callout-question .callout-title { color: var(--callout-question) ; }
+        .reveal .callout-warning { border-left-color: var(--callout-warning); }
+        .reveal .callout-warning .callout-title { color: var(--callout-warning); }
+        .reveal .callout-failure { border-left-color: var(--callout-failure); }
+        .reveal .callout-failure .callout-title { color: var(--callout-failure); }
+        .reveal .callout-danger { border-left-color: var(--callout-danger); }
+        .reveal .callout-danger .callout-title { color: var(--callout-danger); }
+        .reveal .callout-bug { border-left-color: var(--callout-bug); }
+        .reveal .callout-bug .callout-title { color: var(--callout-bug); }
+        .reveal .callout-example { border-left-color: var(--callout-example); }
+        .reveal .callout-example .callout-title { color: var(--callout-example); }
+        .reveal .callout-quote { border-left-color: var(--callout-quote); }
+        .reveal .callout-quote .callout-title { color: var(--callout-quote); }
+        .red-note { color: var(--callout-failure); }
+
+        .reveal .slide-number {
+            font-size: 0.8em !important;
+            padding: 5px 10px !important;
+            background: rgba(0,0,0,0.1) !important;
+            border-radius: 4px;
+            color: #000000b1 !important;
+        }
+
+        /* Print styles */
+        @media print {
+            .reveal .slides section {
+                display: block !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                position: relative !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+                page-break-after: always !important;
+                overflow: hidden !important;
+            }
+
+            .reveal .slides {
+                transform: none !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+            }
+            
+            .reveal {
+                overflow: visible !important;
+            }
+        }
+    </style>
+</body>
+
+</html>

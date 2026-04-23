@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toposia - Redes</title>
+    <link rel="icon" href="/aulas-faesa/img/dark-favicon.svg" media="(prefers-color-scheme: light)">
+    <link rel="icon" href="/aulas-faesa/img/light-favicon.svg" media="(prefers-color-scheme: dark)">
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/fonts.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/bundles/katex-base-prism-one-light-b0347952c973.bundle.min.css">
+    
+    
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css" data-no-bundle>
+    <script src="/aulas-faesa/js/bundles/lucide-katex-auto-render-4b36e8bd8642.bundle.min.js"></script>
+</head>
+
+<body>
+    <script>
+        // Restore sidebar state instantly (before first paint) to avoid transition flash
+        (function() {
+            if (localStorage.getItem('cf_sidebar_hidden') === 'true') {
+                document.body.classList.add('sidebar-hidden', 'no-transition');
+            }
+            requestAnimationFrame(function() {
+                requestAnimationFrame(function() {
+                    document.body.classList.remove('no-transition');
+                });
+            });
+        })();
+    </script>
+    <div class="page-wrapper">
+        <nav class="sidebar">
+            <div class="sidebar-content">
+                <header class="sidebar-title-section">
+                    <a href="contents.html" class="course-title-link">
+                        <h1 class="sidebar-course-title">Redes</h1>
+                    </a>
+                    <div class="sidebar-ornament">❧</div>
+                </header>
+
+                
+                <section class="sidebar-toc-section">
+                    <h2 class="toc-header">Tabela de Conteúdos</h2>
+                    <ol class="toc-list">
+                        
+                        <li class="toc-item level-2">
+                            <a href="#introdução">8.1. Introdução</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#quando-o-problema-deixa-de-ser-local">8.2. Quando o problema deixa de ser local</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#o-ambiente-da-camada-de-rede">8.3. O ambiente da camada de rede</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#por-que-armazenar-antes-de-encaminhar">8.3.1. Por que armazenar antes de encaminhar</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#que-serviço-a-camada-de-rede-oferece">8.4. Que serviço a camada de rede oferece</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#serviço-não-orientado-a-conexões">8.4.1. Serviço não orientado a conexões</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#serviço-orientado-a-conexões">8.4.2. Serviço orientado a conexões</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#a-diferença-de-ideia-entre-os-dois-modelos">8.4.3. A diferença de ideia entre os dois modelos</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#datagramas-e-circuitos-virtuais-por-dentro">8.5. Datagramas e circuitos virtuais por dentro</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#rede-de-datagramas">8.5.1. Rede de datagramas</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#rede-de-circuitos-virtuais">8.5.2. Rede de circuitos virtuais</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#comparação-direta">8.5.3. Comparação direta</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#o-problema-do-roteamento">8.6. O problema do roteamento</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#o-princípio-de-otimização">8.7. O princípio de otimização</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#por-que-essa-ideia-ajuda">8.7.1. Por que essa ideia ajuda</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#roteamento-pelo-caminho-mais-curto">8.8. Roteamento pelo caminho mais curto</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#o-que-significa-mais-curto">8.8.1. O que significa “mais curto”</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#como-o-algoritmo-de-dijkstra-funciona">8.8.2. Como o algoritmo de Dijkstra funciona</a>
+                        </li>
+                        
+                        <li class="toc-item level-4">
+                            <a href="#passo-0-inicialização">8.0.0.1. Passo 0: inicialização</a>
+                        </li>
+                        
+                        <li class="toc-item level-4">
+                            <a href="#passo-1-escolher-o-menor-provisório">8.0.0.2. Passo 1: escolher o menor provisório</a>
+                        </li>
+                        
+                        <li class="toc-item level-4">
+                            <a href="#passo-2-novo-menor-provisório">8.0.0.3. Passo 2: novo menor provisório</a>
+                        </li>
+                        
+                        <li class="toc-item level-4">
+                            <a href="#passo-3-destino-resolvido">8.0.0.4. Passo 3: destino resolvido</a>
+                        </li>
+                        
+                        <li class="toc-item level-4">
+                            <a href="#passo-1">8.0.0.1. Passo 1</a>
+                        </li>
+                        
+                        <li class="toc-item level-4">
+                            <a href="#passo-2">8.0.0.2. Passo 2</a>
+                        </li>
+                        
+                        <li class="toc-item level-4">
+                            <a href="#passo-3">8.0.0.3. Passo 3</a>
+                        </li>
+                        
+                        <li class="toc-item level-4">
+                            <a href="#passo-4">8.0.0.4. Passo 4</a>
+                        </li>
+                        
+                        <li class="toc-item level-4">
+                            <a href="#passo-5">8.0.0.5. Passo 5</a>
+                        </li>
+                        
+                        <li class="toc-item level-4">
+                            <a href="#passo-6">8.0.0.6. Passo 6</a>
+                        </li>
+                        
+                        <li class="toc-item level-4">
+                            <a href="#passo-7">8.0.0.7. Passo 7</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#flooding">8.9. Flooding</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#por-que-o-flooding-funciona">8.9.1. Por que o flooding funciona</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#o-que-precisa-impedir-o-caos">8.9.2. O que precisa impedir o caos</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#roteamento-por-vetor-de-distância">8.10. Roteamento por vetor de distância</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#a-lógica-básica">8.10.1. A lógica básica</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#o-problema-da-contagem-ao-infinito">8.10.2. O problema da contagem ao infinito</a>
+                        </li>
+                        
+                        <li class="toc-item level-4">
+                            <a href="#primeira-reação">8.0.0.1. Primeira reação</a>
+                        </li>
+                        
+                        <li class="toc-item level-4">
+                            <a href="#próxima-rodada">8.0.0.2. Próxima rodada</a>
+                        </li>
+                        
+                        <li class="toc-item level-4">
+                            <a href="#rodadas-seguintes">8.0.0.3. Rodadas seguintes</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#questões">8.11. Questões</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#próximos-passos">8.12. Próximos passos</a>
+                        </li>
+                        
+                    </ol>
+                </section>
+                
+
+                <nav class="sidebar-nav-section">
+                    
+                    <a href="7-switches-and-vlans.html" class="sidebar-nav-link prev"><i data-lucide="chevron-left" class="nav-icon"></i> Hardware de Interconexão, Switches e VLANs</a>
+                    
+                    
+                    <a href="javascript:void(0)" onclick="handleBackNavigation()"
+                        class="sidebar-nav-link back"><i data-lucide="arrow-left" class="nav-icon"></i> Voltar</a>
+                </nav>
+
+            </div>
+        </nav>
+
+        <button class="mobile-menu-toggle" aria-label="Menu">
+            <i data-lucide="menu"></i>
+        </button>
+
+        <button class="sidebar-toggle" onclick="CourseForgeNav.toggleSidebar()" aria-label="Alternar Barra Lateral">
+            <i data-lucide="chevron-left" class="toggle-icon" id="sidebar-toggle-icon"></i>
+        </button>
+
+        <div class="mobile-menu-overlay"></div>
+
+        <main class="main-content">
+            <article class="article">
+                <header class="article-header">
+                    <span class="chapter-number">8</span>
+                    <h1 class="article-title">
+                        <span class="title-ornament left">❧</span>
+                        <span class="title-text">Camada de Rede e Algoritmos de Roteamento</span>
+                        <span class="title-ornament right">❧</span>
+                    </h1>
+                    
+                    <p class="article-date">23/04/2026</p>
+                    
+                    
+                    <nav class="breadcrumb" aria-label="Breadcrumb">
+                        
+                        
+                        
+                        <a href="contents.html" class="breadcrumb-link">Redes</a>
+                        
+                        <span class="breadcrumb-separator"><i data-lucide="chevron-right" class="breadcrumb-icon"></i></span>
+                        
+                        
+                        
+                        
+                        <a href="contents.html#part-IV" class="breadcrumb-link">IV - Camada de Rede</a>
+                        
+                        <span class="breadcrumb-separator"><i data-lucide="chevron-right" class="breadcrumb-icon"></i></span>
+                        
+                        
+                        
+                        <span class="breadcrumb-current">Camada de Rede e Algoritmos de Roteamento</span>
+                        
+                        
+                    </nav>
+                    
+                </header>
+                <div class="article-body">
+                    <h2 id="introdução"><span class="heading-text">Introdução</span><span class="heading-arabic">8.1</span></h2>
+<p>Hoje você vai ver o que acontece quando a comunicação precisa sair de uma LAN e atravessar vários roteadores até chegar ao destino. Até aqui, estudamos como bits viram quadros, como o meio compartilhado é organizado e como switches encaminham tráfego dentro do enlace local. Agora o problema muda de escala. Já não basta decidir para qual porta um quadro sai. É preciso decidir por quais redes um pacote deve passar.</p>
+<p>A camada de rede existe exatamente para isso. Ela cuida da entrega entre redes e precisa resolver duas perguntas centrais. Que serviço ela oferece para as camadas superiores e como ela escolhe o caminho até o destino.</p>
+<div class="callout callout-abstract">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
+    <span class="callout-title-inner">Ideia central<br /></span>
+  </div>
+  <div class="callout-content">
+<p>A camada de rede transforma uma coleção de enlaces locais em uma comunicação fim a fim entre redes, e faz isso combinando encaminhamento de pacotes com algoritmos de roteamento.</p>
+  </div>
+</div>
+<h2 id="quando-o-problema-deixa-de-ser-local"><span class="heading-text">Quando o problema deixa de ser local</span><span class="heading-arabic">8.2</span></h2>
+<p>Imagine dois computadores em redes diferentes. O host de origem pode estar em um laboratório, o destino pode estar em outro prédio ou até em outra cidade. Entre eles, há vários roteadores intermediários.</p>
+<p>Nesse cenário, o switch local já não resolve o problema completo. Ele sabe encaminhar quadros dentro da LAN observando endereços MAC. Mas o destino final pode estar fora daquela rede local. Alguém precisa olhar para a rede como um todo e decidir qual próximo salto aproxima o pacote do destino. Esse alguém é a camada de rede.</p>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Se o endereço MAC resolve a entrega local no enlace atual, qual informação falta para continuar a viagem quando o destino está em outra rede?</p>
+  </div>
+</div>
+<p>Falta uma visão de caminho entre redes. É por isso que a unidade central desta camada deixa de ser o quadro Ethernet e passa a ser o <strong>pacote</strong>, que pode atravessar vários enlaces diferentes até chegar ao host correto.</p>
+<h2 id="o-ambiente-da-camada-de-rede"><span class="heading-text">O ambiente da camada de rede</span><span class="heading-arabic">8.3</span></h2>
+<p>O Tanenbaum descreve a camada de rede como a primeira camada que realmente trata da transmissão de origem até destino. No meio do caminho podem existir vários roteadores, e cada um deles precisa receber um pacote, analisá-lo e encaminhá-lo adiante.</p>
+<p>Esse funcionamento é chamado de <strong>store-and-forward</strong>. O pacote chega a um roteador, é armazenado temporariamente, verificado e só então é reenviado para o próximo salto.</p>
+<h3 id="por-que-armazenar-antes-de-encaminhar"><span class="heading-text">Por que armazenar antes de encaminhar</span><span class="heading-arabic">8.3.1</span></h3>
+<p>Esse detalhe parece pequeno, mas ele é importante. O roteador não age como um fio transparente que simplesmente repete sinais. Ele precisa receber o pacote de forma suficiente para verificar sua integridade e descobrir o que fazer com ele.</p>
+<p>Isso também explica por que a camada de rede trabalha com filas, atrasos e decisões locais de encaminhamento. Cada roteador recebe pacotes de várias entradas, precisa decidir prioridades e então enviá-los pelas saídas adequadas.</p>
+<div class="example">
+  <div class="example-title">Exemplo 1</div>
+  <p>Considere o caminho abaixo:</p>
+<p>$$
+Host\ A \rightarrow R_1 \rightarrow R_2 \rightarrow R_3 \rightarrow Host\ B
+$$</p>
+<p>O pacote não sai de <code>Host A</code> e aparece instantaneamente em <code>Host B</code>. O que acontece é uma sequência de etapas locais.</p>
+<ol>
+<li><code>Host A</code> entrega o pacote ao roteador <code>R_1</code>.</li>
+<li><code>R_1</code> recebe o pacote, identifica o destino e decide que o próximo salto é <code>R_2</code>.</li>
+<li><code>R_2</code> repete o processo e encaminha para <code>R_3</code>.</li>
+<li><code>R_3</code> reconhece que a rede de destino está diretamente acessível e entrega o pacote ao host final.</li>
+</ol>
+<p>O ponto importante é que cada roteador toma uma decisão local, mas o efeito combinado dessas decisões produz o caminho completo.</p>
+</div>
+<h2 id="que-serviço-a-camada-de-rede-oferece"><span class="heading-text">Que serviço a camada de rede oferece</span><span class="heading-arabic">8.4</span></h2>
+<p>Antes de perguntar como rotear, precisamos perguntar o que exatamente a camada de rede promete à camada de transporte. O livro apresenta essa discussão como uma questão de projeto, e ela é importante porque define o comportamento esperado da rede.</p>
+<p>O serviço ideal deve isolar a camada de transporte da tecnologia dos roteadores, da quantidade de roteadores existentes e da topologia interna da rede. Em outras palavras, a camada superior não deveria precisar saber se o caminho tem três ou quinze roteadores, nem se a rede usa um fabricante ou outro.</p>
+<p>É aqui que surge a divisão clássica entre duas abordagens. Em uma delas, a rede trata cada pacote de forma independente. Na outra, ela estabelece um caminho lógico antes de começar a transferir os dados. Essas escolhas parecem próximas, mas levam a comportamentos internos bem diferentes.</p>
+<h3 id="serviço-não-orientado-a-conexões"><span class="heading-text">Serviço não orientado a conexões</span><span class="heading-arabic">8.4.1</span></h3>
+<p>Nessa abordagem, cada pacote é tratado independentemente. Ele carrega o endereço de destino e os roteadores decidem, pacote a pacote, por onde encaminhá-lo.</p>
+<p>Essa é a lógica dos <strong>datagramas</strong>. A comparação mais comum é com o sistema postal. Cada carta tem o endereço completo e pode seguir um caminho diferente das cartas anteriores.</p>
+<h3 id="serviço-orientado-a-conexões"><span class="heading-text">Serviço orientado a conexões</span><span class="heading-arabic">8.4.2</span></h3>
+<p>Aqui, a rede estabelece previamente um caminho antes de os dados começarem a fluir. Depois disso, os pacotes seguem o circuito virtual criado.</p>
+<p>A comparação clássica é com o sistema telefônico. Primeiro a conexão é estabelecida. Depois o tráfego flui por aquele caminho lógico. Quando a comunicação termina, a conexão é liberada.</p>
+<h3 id="a-diferença-de-ideia-entre-os-dois-modelos"><span class="heading-text">A diferença de ideia entre os dois modelos</span><span class="heading-arabic">8.4.3</span></h3>
+<p>Em vez de decorar nomes, vale observar a mudança de filosofia. No modelo de datagramas, a rede tenta ser simples e flexível. No modelo de circuitos virtuais, a rede assume mais responsabilidade sobre o caminho e o estado da comunicação.</p>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="760" viewBox="0.00 0.00 818.00 134.00" class="svg-graph graphviz-img"><g id="svg-graphviz-a1152823dbfd-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 130)"><title>ServicosRede</title><g id="svg-graphviz-a1152823dbfd-node1" class="node"><title>origem</title><path fill="#eef4ff" stroke="#5b7bbb" d="M111,-81C111,-81 12,-81 12,-81 6,-81 0,-75 0,-69 0,-69 0,-57 0,-57 0,-51 6,-45 12,-45 12,-45 111,-45 111,-45 117,-45 123,-51 123,-57 123,-57 123,-69 123,-69 123,-75 117,-81 111,-81" /><text text-anchor="middle" x="61.5" y="-59.3" font-family="Helvetica,sans-Serif" font-size="14.00">Host de origem</text></g><g id="svg-graphviz-a1152823dbfd-node2" class="node"><title>rede</title><path fill="#eef4ff" stroke="#5b7bbb" d="M300,-81C300,-81 193,-81 193,-81 187,-81 181,-75 181,-69 181,-69 181,-57 181,-57 181,-51 187,-45 193,-45 193,-45 300,-45 300,-45 306,-45 312,-51 312,-57 312,-57 312,-69 312,-69 312,-75 306,-81 300,-81" /><text text-anchor="middle" x="246.5" y="-59.3" font-family="Helvetica,sans-Serif" font-size="14.00">Camada de rede</text></g><g id="svg-graphviz-a1152823dbfd-edge1" class="edge"><title>origem-&gt;rede</title><path fill="none" stroke="black" d="M123.1,-63C123.1,-63 170.72,-63 170.72,-63" /><polygon fill="black" stroke="black" points="170.72,-66.5 180.72,-63 170.72,-59.5 170.72,-66.5" /></g><g id="svg-graphviz-a1152823dbfd-node3" class="node"><title>datagrama</title><path fill="#eef4ff" stroke="#5b7bbb" d="M601.5,-126C601.5,-126 395.5,-126 395.5,-126 389.5,-126 383.5,-120 383.5,-114 383.5,-114 383.5,-100 383.5,-100 383.5,-94 389.5,-88 395.5,-88 395.5,-88 601.5,-88 601.5,-88 607.5,-88 613.5,-94 613.5,-100 613.5,-100 613.5,-114 613.5,-114 613.5,-120 607.5,-126 601.5,-126" /><text text-anchor="middle" x="498.5" y="-110.8" font-family="Helvetica,sans-Serif" font-size="14.00">Datagramas</text><text text-anchor="middle" x="498.5" y="-95.8" font-family="Helvetica,sans-Serif" font-size="14.00">Cada pacote decide o caminho</text></g><g id="svg-graphviz-a1152823dbfd-edge2" class="edge"><title>rede-&gt;datagrama</title><path fill="none" stroke="black" d="M247,-81.15C247,-93.27 247,-107 247,-107 247,-107 373.42,-107 373.42,-107" /><polygon fill="black" stroke="black" points="373.42,-110.5 383.42,-107 373.42,-103.5 373.42,-110.5" /></g><g id="svg-graphviz-a1152823dbfd-node4" class="node"><title>circuito</title><path fill="#eef4ff" stroke="#5b7bbb" d="M615,-38C615,-38 382,-38 382,-38 376,-38 370,-32 370,-26 370,-26 370,-12 370,-12 370,-6 376,0 382,0 382,0 615,0 615,0 621,0 627,-6 627,-12 627,-12 627,-26 627,-26 627,-32 621,-38 615,-38" /><text text-anchor="middle" x="498.5" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">Circuito virtual</text><text text-anchor="middle" x="498.5" y="-7.8" font-family="Helvetica,sans-Serif" font-size="14.00">Caminho lógico estabelecido antes</text></g><g id="svg-graphviz-a1152823dbfd-edge3" class="edge"><title>rede-&gt;circuito</title><path fill="none" stroke="black" d="M312.13,-57C344.63,-57 377,-57 377,-57 377,-57 377,-48.45 377,-48.45" /><polygon fill="black" stroke="black" points="380.5,-48.45 377,-38.45 373.5,-48.45 380.5,-48.45" /></g><g id="svg-graphviz-a1152823dbfd-node5" class="node"><title>destino</title><path fill="#eef4ff" stroke="#5b7bbb" d="M798,-81C798,-81 697,-81 697,-81 691,-81 685,-75 685,-69 685,-69 685,-57 685,-57 685,-51 691,-45 697,-45 697,-45 798,-45 798,-45 804,-45 810,-51 810,-57 810,-57 810,-69 810,-69 810,-75 804,-81 798,-81" /><text text-anchor="middle" x="747.5" y="-59.3" font-family="Helvetica,sans-Serif" font-size="14.00">Host de destino</text></g><g id="svg-graphviz-a1152823dbfd-edge4" class="edge"><title>datagrama-&gt;destino</title><path fill="none" stroke="black" d="M613.76,-107C679.13,-107 748,-107 748,-107 748,-107 748,-91.15 748,-91.15" /><polygon fill="black" stroke="black" points="751.5,-91.15 748,-81.15 744.5,-91.15 751.5,-91.15" /></g><g id="svg-graphviz-a1152823dbfd-edge5" class="edge"><title>circuito-&gt;destino</title><path fill="none" stroke="black" d="M621,-38.19C621,-52.29 621,-69 621,-69 621,-69 674.99,-69 674.99,-69" /><polygon fill="black" stroke="black" points="674.99,-72.5 684.99,-69 674.99,-65.5 674.99,-72.5" /></g></g></svg></div></div>
+
+<h2 id="datagramas-e-circuitos-virtuais-por-dentro"><span class="heading-text">Datagramas e circuitos virtuais por dentro</span><span class="heading-arabic">8.5</span></h2>
+<p>Agora podemos olhar para a implementação interna dessas duas escolhas.</p>
+<h3 id="rede-de-datagramas"><span class="heading-text">Rede de datagramas</span><span class="heading-arabic">8.5.1</span></h3>
+<p>Em uma rede de datagramas, os pacotes são injetados individualmente e roteados de forma independente. Não há configuração antecipada obrigatória. Isso significa que dois pacotes da mesma comunicação podem, em princípio, seguir rotas diferentes.</p>
+<p>Esse detalhe é mais importante do que parece. Ele significa que a rede pode reagir a mudanças de topologia ou congestionamento no meio da comunicação.</p>
+<div class="example">
+  <div class="example-title">Exemplo 2</div>
+  <p>Imagine que <code>H1</code> envie quatro pacotes para <code>H2</code>.</p>
+<ol>
+<li>Os pacotes 1, 2 e 3 chegam ao roteador <code>A</code>.</li>
+<li>A tabela de roteamento de <code>A</code> diz que o melhor próximo salto é <code>C</code>.</li>
+<li>Esses três pacotes seguem por $A \rightarrow C \rightarrow E \rightarrow F$.</li>
+<li>Antes de o pacote 4 chegar, <code>A</code> detecta uma condição diferente na rede e atualiza sua tabela.</li>
+<li>Agora <code>A</code> decide enviar o pacote 4 por <code>B</code>.</li>
+</ol>
+<p>Resultado: os quatro pacotes pertencem à mesma comunicação, mas não necessariamente atravessam a mesma rota.</p>
+<p>Isso é natural em uma rede de datagramas.</p>
+</div>
+<h3 id="rede-de-circuitos-virtuais"><span class="heading-text">Rede de circuitos virtuais</span><span class="heading-arabic">8.5.2</span></h3>
+<p>Em uma rede orientada a conexões, o caminho é estabelecido antes do envio dos dados. Cada roteador mantém uma entrada associando o identificador local do circuito à interface de saída correspondente.</p>
+<p>Nesse caso, os pacotes não carregam o endereço completo a cada salto da mesma forma que em uma rede de datagramas. Em vez disso, eles carregam um identificador de circuito virtual, e os roteadores usam suas tabelas para trocar esse identificador e encaminhar o pacote corretamente.</p>
+<div class="example">
+  <div class="example-title">Exemplo 3</div>
+  <p>Suponha que <code>H1</code> estabeleça uma conexão com <code>H2</code>.</p>
+<ol>
+<li>O caminho lógico escolhido é $A \rightarrow C \rightarrow E \rightarrow F$.</li>
+<li>O roteador <code>A</code> registra que pacotes da conexão 1 devem sair por <code>C</code>.</li>
+<li>O roteador <code>C</code> registra que pacotes dessa conexão devem sair por <code>E</code>.</li>
+<li>O roteador <code>E</code> registra que eles devem sair por <code>F</code>.</li>
+<li>Enquanto a conexão existir, os pacotes seguem essa mesma rota lógica.</li>
+</ol>
+<p>O ganho aqui é previsibilidade. O custo é que a rede precisa manter estado sobre a conexão.</p>
+</div>
+<h3 id="comparação-direta"><span class="heading-text">Comparação direta</span><span class="heading-arabic">8.5.3</span></h3>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Aspecto</th>
+  <th style="text-align:left">Datagramas</th>
+  <th style="text-align:left">Circuitos virtuais</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Preparação inicial</td>
+  <td style="text-align:left">Não exige configuração prévia</td>
+  <td style="text-align:left">Exige estabelecimento prévio</td>
+</tr>
+<tr>
+  <td style="text-align:left">Estado na rede</td>
+  <td style="text-align:left">Menor</td>
+  <td style="text-align:left">Maior</td>
+</tr>
+<tr>
+  <td style="text-align:left">Caminho</td>
+  <td style="text-align:left">Pode variar por pacote</td>
+  <td style="text-align:left">Tende a ficar fixo durante a conexão</td>
+</tr>
+<tr>
+  <td style="text-align:left">Reação a mudanças</td>
+  <td style="text-align:left">Mais flexível</td>
+  <td style="text-align:left">Mais dependente do circuito criado</td>
+</tr>
+<tr>
+  <td style="text-align:left">Qualidade de serviço</td>
+  <td style="text-align:left">Mais difícil de garantir</td>
+  <td style="text-align:left">Mais fácil de planejar</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Cuidado conceitual<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Não confunda circuito virtual com circuito físico dedicado. O circuito virtual é lógico. Ele não significa, necessariamente, um fio exclusivo reservado entre origem e destino.</p>
+  </div>
+</div>
+<h2 id="o-problema-do-roteamento"><span class="heading-text">O problema do roteamento</span><span class="heading-arabic">8.6</span></h2>
+<p>Depois de entender o serviço oferecido pela camada de rede, chega a pergunta principal da aula. Como os roteadores escolhem o caminho?</p>
+<p>Essa pergunta é o centro dos <strong>algoritmos de roteamento</strong>. O objetivo deles é preencher e atualizar as tabelas de roteamento de modo que, quando um pacote chegue, o roteador saiba qual interface de saída usar.</p>
+<p>Aqui vale separar duas ideias próximas.</p>
+<ol>
+<li><strong>Encaminhamento</strong> é o ato de receber um pacote e enviá-lo para a interface correta.</li>
+<li><strong>Roteamento</strong> é o processo de descobrir e manter as rotas que tornam esse encaminhamento possível.</li>
+</ol>
+<p>O encaminhamento é a decisão operacional do momento. O roteamento é o cálculo que prepara essa decisão.</p>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Se um roteador só conhece seus vizinhos diretos, como ele pode contribuir para uma rota que depende da topologia inteira da rede?</p>
+  </div>
+</div>
+<h2 id="o-princípio-de-otimização"><span class="heading-text">O princípio de otimização</span><span class="heading-arabic">8.7</span></h2>
+<p>Antes de estudar algoritmos específicos, o Tanenbaum apresenta uma ideia muito importante chamada <strong>princípio de otimização</strong>. Ela diz o seguinte.</p>
+<p>Se o roteador $J$ está no melhor caminho entre $I$ e $K$, então o melhor caminho de $J$ até $K$ também faz parte dessa mesma rota ótima.</p>
+<p>Essa afirmação parece abstrata, mas ela tem uma consequência prática decisiva. Os melhores caminhos até um destino formam uma estrutura em árvore, com raiz no destino. Essa estrutura é chamada <strong>árvore de escoamento</strong>.</p>
+<h3 id="por-que-essa-ideia-ajuda"><span class="heading-text">Por que essa ideia ajuda</span><span class="heading-arabic">8.7.1</span></h3>
+<p>Ela ajuda porque mostra que os caminhos ótimos não são um conjunto aleatório de decisões sem relação entre si. Existe uma estrutura por trás. Os algoritmos de roteamento tentam justamente descobrir essa estrutura.</p>
+<h2 id="roteamento-pelo-caminho-mais-curto"><span class="heading-text">Roteamento pelo caminho mais curto</span><span class="heading-arabic">8.8</span></h2>
+<p>O primeiro algoritmo concreto da aula é o roteamento pelo caminho mais curto. A ideia é representar a rede como um grafo. Cada roteador vira um nó, cada enlace vira uma aresta e cada aresta recebe um custo. Esse custo pode representar número de hops, atraso, distância física ou alguma combinação desses fatores. Depois disso, o problema de roteamento vira um problema de grafo: encontrar o caminho de menor custo entre dois nós.</p>
+<h3 id="o-que-significa-mais-curto"><span class="heading-text">O que significa “mais curto”</span><span class="heading-arabic">8.8.1</span></h3>
+<p>Mais curto não significa necessariamente “menos quilômetros”. Também não significa sempre “menos roteadores”. Depende da métrica adotada.</p>
+<p>Se o custo for o número de hops, o algoritmo favorece caminhos com menos saltos. Se o custo representar atraso, ele pode preferir um caminho com mais saltos, mas mais rápido.</p>
+<h3 id="como-o-algoritmo-de-dijkstra-funciona"><span class="heading-text">Como o algoritmo de Dijkstra funciona</span><span class="heading-arabic">8.8.2</span></h3>
+<p>Antes de acompanhar um exemplo maior, vale explicar a mecânica do algoritmo com calma. O Dijkstra não tenta adivinhar a rota final de uma vez. Ele vai construindo a resposta aos poucos, sempre a partir do que já é garantido.</p>
+<p>Em cada instante, ele mantém dois grupos de nós. O primeiro grupo contém os nós cujo menor custo já foi confirmado. O segundo grupo contém os nós que ainda têm apenas um custo provisório. Vamos chamar o conjunto dos nós confirmados de $P$.</p>
+<p>No início, a origem entra em $P$ com custo zero. Todos os demais começam com custo infinito. A partir daí, o algoritmo segue um ciclo muito regular. Ele olha para todos os nós provisórios, escolhe o de menor custo conhecido, torna esse nó permanente e usa esse novo nó permanente para tentar melhorar os custos dos seus vizinhos.</p>
+<p>Essa tentativa de melhorar um caminho é o que normalmente se chama <strong>relaxar</strong> uma aresta. Relaxar significa comparar o custo que já tínhamos para chegar a um nó com o custo de chegar a ele passando pelo nó recém-fixado. Se o novo caminho for melhor, atualizamos a distância e também o predecessor.</p>
+<p>O predecessor é importante porque o algoritmo não quer apenas saber o custo final. Ele também precisa guardar por onde o melhor caminho foi montado. No fim, é seguindo os predecessores de trás para frente que reconstruímos a rota completa.</p>
+<p>O coração do algoritmo é este.</p>
+<ol>
+<li>Inicializar a origem com custo zero.</li>
+<li>Marcar todos os demais nós com custo infinito.</li>
+<li>Escolher o nó provisório de menor custo.</li>
+<li>Torná-lo permanente.</li>
+<li>Relaxar as arestas que saem dele.</li>
+<li>Repetir até alcançar o destino ou esgotar os nós.</li>
+</ol>
+<p>O motivo de isso funcionar é sutil, mas importante. Quando um nó provisório é o de menor custo entre todos os provisórios, qualquer caminho alternativo até ele necessariamente passaria por um custo que não é menor. Por isso, naquele instante, seu valor pode ser fixado como definitivo.</p>
+<div class="example">
+  <div class="example-title">Exemplo 4</div>
+  <p>Vamos começar com um caso pequeno para enxergar os conjuntos sendo preenchidos com clareza.</p>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="420" viewBox="0.00 0.00 154.01 132.01" class="svg-graph graphviz-img"><g id="svg-graphviz-b8edf5db1705-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 128.01)"><title>DijkstraSmall</title><g id="svg-graphviz-b8edf5db1705-node1" class="node"><title>A</title><ellipse fill="#fff4e8" stroke="#b8792f" cx="18" cy="-62" rx="18" ry="18" /><text text-anchor="middle" x="18" y="-58.3" font-family="Helvetica,sans-Serif" font-size="14.00">A</text></g><g id="svg-graphviz-b8edf5db1705-node2" class="node"><title>B</title><ellipse fill="#fff4e8" stroke="#b8792f" cx="62" cy="-106.01" rx="18" ry="18" /><text text-anchor="middle" x="62" y="-102.31" font-family="Helvetica,sans-Serif" font-size="14.00">B</text></g><g id="svg-graphviz-b8edf5db1705-edge1" class="edge"><title>A--B</title><path fill="none" stroke="black" d="M30.96,-74.97C36.64,-80.65 43.29,-87.3 48.98,-92.98" /><text text-anchor="middle" x="34.97" y="-87.77" font-family="Times,serif" font-size="14.00">2</text></g><g id="svg-graphviz-b8edf5db1705-node3" class="node"><title>C</title><ellipse fill="#fff4e8" stroke="#b8792f" cx="62" cy="-18" rx="18" ry="18" /><text text-anchor="middle" x="62" y="-14.3" font-family="Helvetica,sans-Serif" font-size="14.00">C</text></g><g id="svg-graphviz-b8edf5db1705-edge2" class="edge"><title>A--C</title><path fill="none" stroke="black" d="M30.96,-49.04C36.64,-43.36 43.29,-36.71 48.98,-31.02" /><text text-anchor="middle" x="34.97" y="-28.83" font-family="Times,serif" font-size="14.00">1</text></g><g id="svg-graphviz-b8edf5db1705-node4" class="node"><title>D</title><ellipse fill="#fff4e8" stroke="#b8792f" cx="128.01" cy="-106.01" rx="18" ry="18" /><text text-anchor="middle" x="128.01" y="-102.31" font-family="Helvetica,sans-Serif" font-size="14.00">D</text></g><g id="svg-graphviz-b8edf5db1705-edge3" class="edge"><title>B--D</title><path fill="none" stroke="black" d="M80.04,-106.01C89.35,-106.01 100.69,-106.01 110,-106.01" /><text text-anchor="middle" x="90.02" y="-109.81" font-family="Times,serif" font-size="14.00">3</text></g><g id="svg-graphviz-b8edf5db1705-edge4" class="edge"><title>C--D</title><path fill="none" stroke="black" d="M72.9,-32.53C85.13,-48.84 104.86,-75.14 117.1,-91.45" /><text text-anchor="middle" x="90" y="-65.79" font-family="Times,serif" font-size="14.00">5</text></g><g id="svg-graphviz-b8edf5db1705-node5" class="node"><title>E</title><ellipse fill="#fff4e8" stroke="#b8792f" cx="128.01" cy="-18" rx="18" ry="18" /><text text-anchor="middle" x="128.01" y="-14.3" font-family="Helvetica,sans-Serif" font-size="14.00">E</text></g><g id="svg-graphviz-b8edf5db1705-edge5" class="edge"><title>C--E</title><path fill="none" stroke="black" d="M80.04,-18C89.35,-18 100.69,-18 110,-18" /><text text-anchor="middle" x="90.02" y="-21.8" font-family="Times,serif" font-size="14.00">2</text></g><g id="svg-graphviz-b8edf5db1705-edge6" class="edge"><title>D--E</title><path fill="none" stroke="black" d="M128.01,-87.77C128.01,-72.67 128.01,-51.31 128.01,-36.21" /><text text-anchor="middle" x="123.01" y="-65.79" font-family="Times,serif" font-size="14.00">1</text></g></g></svg></div></div>
+
+<p>Queremos sair de $A$ e chegar a $E$.</p>
+<h4 id="passo-0-inicialização"><span class="heading-text">Passo 0: inicialização</span><span class="heading-arabic">8.0.0.1</span></h4>
+<p>Começamos pela origem.</p>
+<p>$$
+P = \{A\}
+$$</p>
+<p>As distâncias ficam assim:</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Nó</th>
+  <th style="text-align:left">Distância</th>
+  <th style="text-align:left">Predecessor</th>
+  <th style="text-align:left">Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">$A$</td>
+  <td style="text-align:left">$0$</td>
+  <td style="text-align:left">—</td>
+  <td style="text-align:left">permanente</td>
+</tr>
+<tr>
+  <td style="text-align:left">$B$</td>
+  <td style="text-align:left">$\infty$</td>
+  <td style="text-align:left">—</td>
+  <td style="text-align:left">provisório</td>
+</tr>
+<tr>
+  <td style="text-align:left">$C$</td>
+  <td style="text-align:left">$\infty$</td>
+  <td style="text-align:left">—</td>
+  <td style="text-align:left">provisório</td>
+</tr>
+<tr>
+  <td style="text-align:left">$D$</td>
+  <td style="text-align:left">$\infty$</td>
+  <td style="text-align:left">—</td>
+  <td style="text-align:left">provisório</td>
+</tr>
+<tr>
+  <td style="text-align:left">$E$</td>
+  <td style="text-align:left">$\infty$</td>
+  <td style="text-align:left">—</td>
+  <td style="text-align:left">provisório</td>
+</tr>
+</tbody>
+</table>
+<p>Agora relaxamos as arestas que saem de $A$.</p>
+<p>$$
+\begin{aligned}
+d(B) &= 2 \\
+d(C) &= 1
+\end{aligned}
+$$</p>
+<p>Isso produz:</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Nó</th>
+  <th style="text-align:left">Distância</th>
+  <th style="text-align:left">Predecessor</th>
+  <th style="text-align:left">Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">$A$</td>
+  <td style="text-align:left">$0$</td>
+  <td style="text-align:left">—</td>
+  <td style="text-align:left">permanente</td>
+</tr>
+<tr>
+  <td style="text-align:left">$B$</td>
+  <td style="text-align:left">$2$</td>
+  <td style="text-align:left">$A$</td>
+  <td style="text-align:left">provisório</td>
+</tr>
+<tr>
+  <td style="text-align:left">$C$</td>
+  <td style="text-align:left">$1$</td>
+  <td style="text-align:left">$A$</td>
+  <td style="text-align:left">provisório</td>
+</tr>
+<tr>
+  <td style="text-align:left">$D$</td>
+  <td style="text-align:left">$\infty$</td>
+  <td style="text-align:left">—</td>
+  <td style="text-align:left">provisório</td>
+</tr>
+<tr>
+  <td style="text-align:left">$E$</td>
+  <td style="text-align:left">$\infty$</td>
+  <td style="text-align:left">—</td>
+  <td style="text-align:left">provisório</td>
+</tr>
+</tbody>
+</table>
+<h4 id="passo-1-escolher-o-menor-provisório"><span class="heading-text">Passo 1: escolher o menor provisório</span><span class="heading-arabic">8.0.0.2</span></h4>
+<p>Entre os provisórios, $C$ tem o menor custo conhecido. Então ele entra no conjunto permanente.</p>
+<p>$$
+P = \{A, C\}
+$$</p>
+<p>Agora relaxamos as arestas que saem de $C$.</p>
+<p>$$
+\begin{aligned}
+d(D) &= \min(\infty, 1 + 5) = 6 \\
+d(E) &= \min(\infty, 1 + 2) = 3
+\end{aligned}
+$$</p>
+<p>O estado passa a ser:</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Nó</th>
+  <th style="text-align:left">Distância</th>
+  <th style="text-align:left">Predecessor</th>
+  <th style="text-align:left">Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">$A$</td>
+  <td style="text-align:left">$0$</td>
+  <td style="text-align:left">—</td>
+  <td style="text-align:left">permanente</td>
+</tr>
+<tr>
+  <td style="text-align:left">$B$</td>
+  <td style="text-align:left">$2$</td>
+  <td style="text-align:left">$A$</td>
+  <td style="text-align:left">provisório</td>
+</tr>
+<tr>
+  <td style="text-align:left">$C$</td>
+  <td style="text-align:left">$1$</td>
+  <td style="text-align:left">$A$</td>
+  <td style="text-align:left">permanente</td>
+</tr>
+<tr>
+  <td style="text-align:left">$D$</td>
+  <td style="text-align:left">$6$</td>
+  <td style="text-align:left">$C$</td>
+  <td style="text-align:left">provisório</td>
+</tr>
+<tr>
+  <td style="text-align:left">$E$</td>
+  <td style="text-align:left">$3$</td>
+  <td style="text-align:left">$C$</td>
+  <td style="text-align:left">provisório</td>
+</tr>
+</tbody>
+</table>
+<h4 id="passo-2-novo-menor-provisório"><span class="heading-text">Passo 2: novo menor provisório</span><span class="heading-arabic">8.0.0.3</span></h4>
+<p>Agora o menor provisório é $B$, com custo 2. Então:</p>
+<p>$$
+P = \{A, C, B\}
+$$</p>
+<p>Relaxamos a aresta de $B$ para $D$.</p>
+<p>$$
+d(D) = \min(6, 2 + 3) = 5
+$$</p>
+<p>O caminho até $D$ melhora, e seu predecessor passa a ser $B$.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Nó</th>
+  <th style="text-align:left">Distância</th>
+  <th style="text-align:left">Predecessor</th>
+  <th style="text-align:left">Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">$A$</td>
+  <td style="text-align:left">$0$</td>
+  <td style="text-align:left">—</td>
+  <td style="text-align:left">permanente</td>
+</tr>
+<tr>
+  <td style="text-align:left">$B$</td>
+  <td style="text-align:left">$2$</td>
+  <td style="text-align:left">$A$</td>
+  <td style="text-align:left">permanente</td>
+</tr>
+<tr>
+  <td style="text-align:left">$C$</td>
+  <td style="text-align:left">$1$</td>
+  <td style="text-align:left">$A$</td>
+  <td style="text-align:left">permanente</td>
+</tr>
+<tr>
+  <td style="text-align:left">$D$</td>
+  <td style="text-align:left">$5$</td>
+  <td style="text-align:left">$B$</td>
+  <td style="text-align:left">provisório</td>
+</tr>
+<tr>
+  <td style="text-align:left">$E$</td>
+  <td style="text-align:left">$3$</td>
+  <td style="text-align:left">$C$</td>
+  <td style="text-align:left">provisório</td>
+</tr>
+</tbody>
+</table>
+<h4 id="passo-3-destino-resolvido"><span class="heading-text">Passo 3: destino resolvido</span><span class="heading-arabic">8.0.0.4</span></h4>
+<p>O próximo menor provisório é $E$, com custo 3.</p>
+<p>$$
+P = \{A, C, B, E\}
+$$</p>
+<p>Como o destino entrou em $P$, o menor custo até ele está confirmado. Para reconstruir a rota, seguimos os predecessores de trás para frente.</p>
+<p>$$
+E \leftarrow C \leftarrow A
+$$</p>
+<p>Invertendo a ordem, obtemos:</p>
+<p>$$
+A \rightarrow C \rightarrow E
+$$</p>
+<p>com custo total:</p>
+<p>$$
+1 + 2 = 3
+$$</p>
+<p>Esse exemplo pequeno mostra exatamente o que o algoritmo faz. O conjunto $P$ cresce passo a passo, as distâncias provisórias vão sendo refinadas e os predecessores guardam como o melhor caminho foi construído.</p>
+</div>
+<div class="example">
+  <div class="example-title">Exemplo 5</div>
+  <p>Agora que a mecânica ficou clara em um caso pequeno, vamos aplicar a mesma lógica em um grafo maior.</p>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="620" viewBox="0.00 0.00 220.02 198.02" class="svg-graph graphviz-img"><g id="svg-graphviz-377e35d7e908-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 194.02)"><title>DijkstraExample</title><g id="svg-graphviz-377e35d7e908-node1" class="node"><title>A</title><ellipse fill="#eef6ea" stroke="#5d8a57" cx="18" cy="-128.01" rx="18" ry="18" /><text text-anchor="middle" x="18" y="-124.31" font-family="Helvetica,sans-Serif" font-size="14.00">A</text></g><g id="svg-graphviz-377e35d7e908-node2" class="node"><title>B</title><ellipse fill="#eef6ea" stroke="#5d8a57" cx="62" cy="-172.02" rx="18" ry="18" /><text text-anchor="middle" x="62" y="-168.32" font-family="Helvetica,sans-Serif" font-size="14.00">B</text></g><g id="svg-graphviz-377e35d7e908-edge1" class="edge"><title>A--B</title><path fill="none" stroke="black" d="M30.96,-140.98C36.64,-146.65 43.29,-153.31 48.98,-158.99" /><text text-anchor="middle" x="34.97" y="-153.78" font-family="Times,serif" font-size="14.00">2</text></g><g id="svg-graphviz-377e35d7e908-node3" class="node"><title>E</title><ellipse fill="#eef6ea" stroke="#5d8a57" cx="62" cy="-84.01" rx="18" ry="18" /><text text-anchor="middle" x="62" y="-80.31" font-family="Helvetica,sans-Serif" font-size="14.00">E</text></g><g id="svg-graphviz-377e35d7e908-edge2" class="edge"><title>A--E</title><path fill="none" stroke="black" d="M30.96,-115.05C36.64,-109.37 43.29,-102.72 48.98,-97.03" /><text text-anchor="middle" x="34.97" y="-94.84" font-family="Times,serif" font-size="14.00">1</text></g><g id="svg-graphviz-377e35d7e908-node4" class="node"><title>C</title><ellipse fill="#eef6ea" stroke="#5d8a57" cx="128.01" cy="-172.02" rx="18" ry="18" /><text text-anchor="middle" x="128.01" y="-168.32" font-family="Helvetica,sans-Serif" font-size="14.00">C</text></g><g id="svg-graphviz-377e35d7e908-edge3" class="edge"><title>B--C</title><path fill="none" stroke="black" d="M80.04,-172.02C89.35,-172.02 100.69,-172.02 110,-172.02" /><text text-anchor="middle" x="90.02" y="-175.82" font-family="Times,serif" font-size="14.00">7</text></g><g id="svg-graphviz-377e35d7e908-node5" class="node"><title>F</title><ellipse fill="#eef6ea" stroke="#5d8a57" cx="128.01" cy="-84.01" rx="18" ry="18" /><text text-anchor="middle" x="128.01" y="-80.31" font-family="Helvetica,sans-Serif" font-size="14.00">F</text></g><g id="svg-graphviz-377e35d7e908-edge4" class="edge"><title>B--F</title><path fill="none" stroke="black" d="M72.9,-157.48C85.13,-141.18 104.86,-114.88 117.1,-98.56" /><text text-anchor="middle" x="90" y="-131.83" font-family="Times,serif" font-size="14.00">3</text></g><g id="svg-graphviz-377e35d7e908-edge5" class="edge"><title>E--F</title><path fill="none" stroke="black" d="M80.04,-84.01C89.35,-84.01 100.69,-84.01 110,-84.01" /><text text-anchor="middle" x="90.02" y="-87.81" font-family="Times,serif" font-size="14.00">2</text></g><g id="svg-graphviz-377e35d7e908-node7" class="node"><title>G</title><ellipse fill="#eef6ea" stroke="#5d8a57" cx="106.01" cy="-18" rx="18" ry="18" /><text text-anchor="middle" x="106.01" y="-14.3" font-family="Helvetica,sans-Serif" font-size="14.00">G</text></g><g id="svg-graphviz-377e35d7e908-edge6" class="edge"><title>E--G</title><path fill="none" stroke="black" d="M71.99,-69.03C79.09,-58.38 88.6,-44.12 95.76,-33.38" /><text text-anchor="middle" x="78.85" y="-55.04" font-family="Times,serif" font-size="14.00">6</text></g><g id="svg-graphviz-377e35d7e908-node6" class="node"><title>D</title><ellipse fill="#eef6ea" stroke="#5d8a57" cx="194.02" cy="-128.01" rx="18" ry="18" /><text text-anchor="middle" x="194.02" y="-124.31" font-family="Helvetica,sans-Serif" font-size="14.00">D</text></g><g id="svg-graphviz-377e35d7e908-edge9" class="edge"><title>C--D</title><path fill="none" stroke="black" d="M142.99,-162.03C153.64,-154.93 167.9,-145.42 178.64,-138.26" /><text text-anchor="middle" x="155.78" y="-153.97" font-family="Times,serif" font-size="14.00">3</text></g><g id="svg-graphviz-377e35d7e908-edge7" class="edge"><title>F--C</title><path fill="none" stroke="black" d="M128.01,-102.24C128.01,-117.35 128.01,-138.71 128.01,-153.8" /><text text-anchor="middle" x="123.01" y="-131.83" font-family="Times,serif" font-size="14.00">4</text></g><g id="svg-graphviz-377e35d7e908-node8" class="node"><title>H</title><ellipse fill="#eef6ea" stroke="#5d8a57" cx="194.02" cy="-18" rx="18" ry="18" /><text text-anchor="middle" x="194.02" y="-14.3" font-family="Helvetica,sans-Serif" font-size="14.00">H</text></g><g id="svg-graphviz-377e35d7e908-edge8" class="edge"><title>F--H</title><path fill="none" stroke="black" d="M141.05,-70.97C152.62,-59.39 169.44,-42.58 181,-31.01" /><text text-anchor="middle" x="156.03" y="-54.79" font-family="Times,serif" font-size="14.00">2</text></g><g id="svg-graphviz-377e35d7e908-edge11" class="edge"><title>G--H</title><path fill="none" stroke="black" d="M124.24,-18C139.35,-18 160.71,-18 175.81,-18" /><text text-anchor="middle" x="145.03" y="-21.8" font-family="Times,serif" font-size="14.00">1</text></g><g id="svg-graphviz-377e35d7e908-edge10" class="edge"><title>H--D</title><path fill="none" stroke="black" d="M194.02,-36.17C194.02,-56.55 194.02,-89.42 194.02,-109.82" /><text text-anchor="middle" x="189.02" y="-76.79" font-family="Times,serif" font-size="14.00">2</text></g></g></svg></div></div>
+
+<p>Queremos sair de $A$ e chegar a $D$.</p>
+<h4 id="passo-1"><span class="heading-text">Passo 1</span><span class="heading-arabic">8.0.0.1</span></h4>
+<p>Começamos marcando $A$ com distância 0.</p>
+<p>$$
+d(A) = 0
+$$</p>
+<p>Os demais nós começam com distância infinita.</p>
+<p>$$
+d(B)=d(C)=d(D)=d(E)=d(F)=d(G)=d(H)=\infty
+$$</p>
+<p>Neste instante,</p>
+<p>$$
+P = \{A\}
+$$</p>
+<h4 id="passo-2"><span class="heading-text">Passo 2</span><span class="heading-arabic">8.0.0.2</span></h4>
+<p>Observamos os vizinhos imediatos de $A$.</p>
+<p>$$
+\begin{aligned}
+d(B) &= 0 + 2 = 2 \\
+d(E) &= 0 + 1 = 1
+\end{aligned}
+$$</p>
+<p>Os predecessores registrados aqui são $pred(B)=A$ e $pred(E)=A$. Entre todos os nós provisórios, o menor valor agora é o de $E$. Por isso, ele se torna permanente.</p>
+<p>$$
+P = \{A, E\}
+$$</p>
+<h4 id="passo-3"><span class="heading-text">Passo 3</span><span class="heading-arabic">8.0.0.3</span></h4>
+<p>Expandimos a partir de $E$.</p>
+<p>$$
+\begin{aligned}
+d(F) &= d(E) + 2 = 1 + 2 = 3 \\
+d(G) &= d(E) + 6 = 1 + 6 = 7
+\end{aligned}
+$$</p>
+<p>Surgem dois novos caminhos provisórios. O valor de $B$ continua 2 e ainda é o menor entre os provisórios. Por isso, o próximo nó permanente é $B$.</p>
+<p>$$
+P = \{A, E, B\}
+$$</p>
+<h4 id="passo-4"><span class="heading-text">Passo 4</span><span class="heading-arabic">8.0.0.4</span></h4>
+<p>Expandimos a partir de $B$.</p>
+<p>$$
+\begin{aligned}
+d(C) &= d(B) + 7 = 2 + 7 = 9 \\
+d(F) &= \min(3, 2 + 3) = 3
+\end{aligned}
+$$</p>
+<p>Perceba o ponto importante. Já existia um caminho até $F$ com custo 3 e predecessor $E$. O caminho passando por $B$ daria 5, então $F$ não é atualizado. Já para $C$, aparece um primeiro caminho viável com custo 9 e predecessor $B$.</p>
+<h4 id="passo-5"><span class="heading-text">Passo 5</span><span class="heading-arabic">8.0.0.5</span></h4>
+<p>O próximo menor valor provisório é o de $F$, com custo 3. Agora expandimos a partir dele.</p>
+<p>$$
+\begin{aligned}
+d(C) &= \min(9, 3 + 4) = 7 \\
+d(H) &= 3 + 2 = 5
+\end{aligned}
+$$</p>
+<p>Agora já temos um caminho melhor para $C$, que troca de predecessor e passa a depender de $F$. Além disso, surge um primeiro caminho para $H$, também com predecessor $F$.</p>
+<p>$$
+P = \{A, E, B, F\}
+$$</p>
+<h4 id="passo-6"><span class="heading-text">Passo 6</span><span class="heading-arabic">8.0.0.6</span></h4>
+<p>O próximo menor valor provisório é o de $H$, com custo 5. Expandimos a partir dele.</p>
+<p>$$
+\begin{aligned}
+d(D) &= 5 + 2 = 7 \\
+d(G) &= \min(7, 5 + 1) = 6
+\end{aligned}
+$$</p>
+<p>Neste ponto, o destino $D$ aparece com custo 7 e predecessor $H$. Ao mesmo tempo, $G$ melhora de 7 para 6 e passa a depender de $H$.</p>
+<p>$$
+P = \{A, E, B, F, H\}
+$$</p>
+<h4 id="passo-7"><span class="heading-text">Passo 7</span><span class="heading-arabic">8.0.0.7</span></h4>
+<p>Como não existe nenhum caminho provisório menor que 7 para chegar a $D$, o custo ótimo foi encontrado.</p>
+<p>Reconstruindo os predecessores, obtemos:</p>
+<p>$$
+A \rightarrow E \rightarrow F \rightarrow H \rightarrow D
+$$</p>
+<p>com custo total:</p>
+<p>$$
+1 + 2 + 2 + 2 = 7
+$$</p>
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">Leitura do exemplo<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Neste caso maior, a lógica é a mesma do exemplo pequeno. O conjunto permanente cresce, os custos provisórios são revisados e os predecessores guardam a trilha do melhor caminho até o destino.</p>
+  </div>
+</div>
+</div>
+<h2 id="flooding"><span class="heading-text">Flooding</span><span class="heading-arabic">8.9</span></h2>
+<p>O próximo algoritmo parece, à primeira vista, exagerado. No <strong>flooding</strong>, cada pacote recebido é reenviado por todas as interfaces de saída, exceto por aquela de onde ele veio.</p>
+<p>Essa técnica não é eficiente para o tráfego comum porque gera muitas cópias. Mesmo assim, ela é importante didaticamente por dois motivos. Primeiro, porque mostra uma forma extremamente robusta de espalhar informação. Segundo, porque ajuda a entender a necessidade de mecanismos para conter duplicação.</p>
+<h3 id="por-que-o-flooding-funciona"><span class="heading-text">Por que o flooding funciona</span><span class="heading-arabic">8.9.1</span></h3>
+<p>Ele funciona porque não depende de uma visão sofisticada da topologia. Se existir caminho até o destino, a inundação tende a alcançá-lo.</p>
+<h3 id="o-que-precisa-impedir-o-caos"><span class="heading-text">O que precisa impedir o caos</span><span class="heading-arabic">8.9.2</span></h3>
+<p>Se não houver controle, o flooding produz cópias sem fim. Por isso, normalmente se combinam duas ideias. A primeira é limitar a vida útil do pacote com um contador de hops ou um campo TTL. A segunda é identificar o pacote com informações como origem e número de sequência. Assim, o roteador consegue reconhecer cópias repetidas e impedir que a inundação se transforme em circulação infinita.</p>
+<div class="example">
+  <div class="example-title">Exemplo 6</div>
+  <p>Suponha que <code>A</code> envie um pacote para <code>D</code> e que a rede tenha três caminhos possíveis.</p>
+<ol>
+<li><code>A</code> envia o pacote aos seus vizinhos.</li>
+<li>Cada vizinho o reenviará aos próximos, exceto para a interface de entrada.</li>
+<li>O destino <code>D</code> pode receber várias cópias.</li>
+<li>O roteador ou host precisa aceitar uma cópia válida e ignorar as demais.</li>
+</ol>
+<p>O flooding é ruim como rotina de tráfego normal, mas é excelente para perceber a diferença entre robustez e eficiência.</p>
+</div>
+<h2 id="roteamento-por-vetor-de-distância"><span class="heading-text">Roteamento por vetor de distância</span><span class="heading-arabic">8.10</span></h2>
+<p>Agora entramos no primeiro algoritmo distribuído importante da aula. No <strong>roteamento por vetor de distância</strong>, cada roteador mantém uma tabela dizendo qual é a melhor distância conhecida até cada destino e por qual vizinho esse destino deve ser alcançado.</p>
+<p>Em vez de cada roteador conhecer a topologia completa, ele troca estimativas com seus vizinhos. A partir dessas trocas, vai refinando sua própria tabela.</p>
+<h3 id="a-lógica-básica"><span class="heading-text">A lógica básica</span><span class="heading-arabic">8.10.1</span></h3>
+<p>Se o roteador $J$ quer saber a melhor rota até um destino $X$, ele não enxerga a rede inteira. Então ele olha para os vizinhos imediatos e usa as estimativas que cada um anuncia. Em outras palavras, $J$ pergunta assim: &quot;se eu entregar o pacote para este vizinho, quanto ele acha que ainda falta para chegar ao destino?&quot;.</p>
+<p>Se um vizinho $V$ diz que chega a $X$ com custo 5, e $J$ sabe que o custo até $V$ é 2, então passar por $V$ gera um custo total 7.</p>
+<p>Formalmente, a atualização segue a ideia:</p>
+<p>$$
+d_J(X) = \min_V \{ c(J,V) + d_V(X) \}
+$$</p>
+<p>Essa fórmula pode ser lida assim:</p>
+<ul>
+<li>$d_J(X)$ é a melhor distância que o roteador $J$ conhece até o destino $X$</li>
+<li>$V$ representa um vizinho possível de $J$</li>
+<li>$c(J,V)$ é o custo para sair de $J$ e chegar ao vizinho $V$</li>
+<li>$d_V(X)$ é a distância que o vizinho $V$ anuncia até o destino $X$</li>
+<li>$\min_V$ significa que $J$ testa todos os vizinhos e fica com o menor valor encontrado</li>
+</ul>
+<p>Portanto, o vetor de distância funciona somando duas partes.</p>
+<ol>
+<li>quanto custa sair de $J$ até um vizinho $V$</li>
+<li>quanto esse vizinho diz que ainda falta para chegar em $X$</li>
+</ol>
+<p>Depois, $J$ compara os resultados e escolhe a menor soma.</p>
+<div class="example">
+  <div class="example-title">Exemplo 7</div>
+  <p>Considere que o roteador $J$ tenha três vizinhos e queira calcular a melhor rota até o destino $G$.</p>
+<p>Os custos locais são:</p>
+<p>$$
+\begin{aligned}
+c(J,A) &= 8 \\
+c(J,I) &= 10 \\
+c(J,H) &= 12
+\end{aligned}
+$$</p>
+<p>Os vizinhos anunciam as seguintes distâncias até $G$:</p>
+<p>$$
+\begin{aligned}
+d_A(G) &= 18 \\
+d_I(G) &= 31 \\
+d_H(G) &= 6
+\end{aligned}
+$$</p>
+<p>Então $J$ calcula:</p>
+<p>$$
+\begin{aligned}
+\text{via } A &: 8 + 18 = 26 \\
+\text{via } I &: 10 + 31 = 41 \\
+\text{via } H &: 12 + 6 = 18
+\end{aligned}
+$$</p>
+<p>O menor valor é 18. Logo, $J$ registra que o melhor caminho até $G$ passa por $H$.</p>
+</div>
+<h3 id="o-problema-da-contagem-ao-infinito"><span class="heading-text">O problema da contagem ao infinito</span><span class="heading-arabic">8.10.2</span></h3>
+<p>O grande problema do vetor de distância aparece quando uma rota deixa de existir. As boas notícias se espalham rápido. As más notícias podem se espalhar muito devagar.</p>
+<div class="example">
+  <div class="example-title">Exemplo 8</div>
+  <p>Considere novamente a linha:</p>
+<p>$$
+A - B - C - D
+$$</p>
+<p>Inicialmente, todos sabem chegar a <code>A</code>.</p>
+<p>$$
+\begin{aligned}
+d_B(A) &= 1 \\
+d_C(A) &= 2 \\
+d_D(A) &= 3
+\end{aligned}
+$$</p>
+<p>Agora o enlace entre <code>A</code> e <code>B</code> falha.</p>
+<h4 id="primeira-reação"><span class="heading-text">Primeira reação</span><span class="heading-arabic">8.0.0.1</span></h4>
+<p><code>B</code> deixa de ver <code>A</code>, mas ouve <code>C</code> dizendo que ainda alcança <code>A</code> em 2 hops. Então <code>B</code> conclui:</p>
+<p>$$
+d_B(A) = 3
+$$</p>
+<h4 id="próxima-rodada"><span class="heading-text">Próxima rodada</span><span class="heading-arabic">8.0.0.2</span></h4>
+<p><code>C</code> ouve <code>B</code> dizendo que chega a <code>A</code> em 3 hops e conclui:</p>
+<p>$$
+d_C(A) = 4
+$$</p>
+<h4 id="rodadas-seguintes"><span class="heading-text">Rodadas seguintes</span><span class="heading-arabic">8.0.0.3</span></h4>
+<p>Os valores continuam aumentando.</p>
+<p>$$
+3, 4, 5, 6, \dots
+$$</p>
+<p>Cada roteador acredita que o outro tem um caminho válido, e o erro vai crescendo até atingir o valor considerado infinito.</p>
+<p>Esse é o problema da <strong>contagem ao infinito</strong>.</p>
+</div>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Erro comum<br /></span>
+  </div>
+  <div class="callout-content">
+<p>O problema do vetor de distância não é “fazer conta errada”. O problema é de informação incompleta. Cada roteador só enxerga o que os vizinhos anunciam e, por isso, pode acreditar em uma rota que na prática já não existe mais.</p>
+  </div>
+</div>
+<h2 id="questões"><span class="heading-text">Questões</span><span class="heading-arabic">8.11</span></h2>
+<div class="questions">
+  <p><strong>1.</strong> Explique, com suas palavras, por que a camada de rede se torna necessária quando a comunicação precisa atravessar vários roteadores.</p>
+<p><strong>2.</strong> O que significa dizer que a transmissão na camada de rede é do tipo <em>store-and-forward</em>?</p>
+<p><strong>3.</strong> Diferencie encaminhamento e roteamento.</p>
+<p><strong>4.</strong> Diferencie serviço não orientado a conexões e serviço orientado a conexões na camada de rede.</p>
+<p><strong>5.</strong> Explique a diferença entre rede de datagramas e rede de circuitos virtuais.</p>
+<p><strong>6.</strong> Por que se diz que, em uma rede de datagramas, dois pacotes da mesma comunicação podem seguir rotas diferentes?</p>
+<p><strong>7.</strong> O que afirma o princípio de otimização e por que ele é útil no estudo de roteamento?</p>
+<p><strong>8.</strong> Em um algoritmo de caminho mais curto, o que significa dizer que um nó se tornou permanente?</p>
+<p><strong>9.</strong> Considere o trecho abaixo e calcule o custo total do caminho:</p>
+<p>$$
+A \rightarrow E \rightarrow F \rightarrow H \rightarrow D
+$$</p>
+<p>com custos:</p>
+<p>$$
+AE = 1,\ EF = 2,\ FH = 2,\ HD = 2
+$$</p>
+<p><strong>10.</strong> Explique por que o flooding é robusto, mas ineficiente.</p>
+<p><strong>11.</strong> Para que servem o contador de hops ou o TTL em um esquema de flooding?</p>
+<p><strong>12.</strong> No roteamento por vetor de distância, o que cada roteador mantém em sua tabela sobre cada destino?</p>
+<p><strong>13.</strong> No vetor de distância, se o custo até o vizinho $V$ é 3 e $V$ anuncia distância 4 até o destino $X$, qual custo total o roteador calculará para chegar a $X$ por $V$?</p>
+<p><strong>14.</strong> Explique o problema da contagem ao infinito.</p>
+<p><strong>15.</strong> Liste, na ordem correta, as cinco etapas do roteamento de estado de enlace.</p>
+<p><strong>16.</strong> Por que o estado de enlace costuma convergir melhor do que o vetor de distância?</p>
+<p><strong>17.</strong> Marque <strong>V</strong> ou <strong>F</strong>.</p>
+<ul>
+<li><strong>( )</strong> Em circuitos virtuais, a rede precisa manter algum estado sobre a conexão.</li>
+<li><strong>( )</strong> No flooding, um pacote deve ser reenviado também pela mesma interface por onde entrou.</li>
+<li><strong>( )</strong> No vetor de distância, o roteador precisa conhecer a topologia completa da rede.</li>
+<li><strong>( )</strong> No estado de enlace, cada roteador pode reconstruir o grafo da rede e depois executar Dijkstra localmente.</li>
+</ul>
+</div>
+<div class="example">
+  <div class="example-title">Gabarito</div>
+  <p><strong>1.</strong> Porque a entrega deixa de ser apenas local. Quando o destino está em outra rede, é preciso decidir por quais roteadores e enlaces o pacote seguirá.</p>
+<p><strong>2.</strong> Significa que cada roteador recebe e armazena temporariamente o pacote, verifica o que precisa e só então o encaminha ao próximo salto.</p>
+<p><strong>3.</strong> Encaminhamento é a decisão operacional de enviar um pacote pela interface correta. Roteamento é o processo de calcular e manter as rotas que permitem esse encaminhamento.</p>
+<p><strong>4.</strong> No serviço não orientado a conexões, cada pacote é tratado independentemente. No orientado a conexões, um caminho lógico é estabelecido antes do envio dos dados.</p>
+<p><strong>5.</strong> Em datagramas, os pacotes são roteados independentemente e podem seguir caminhos diferentes. Em circuitos virtuais, a rede estabelece uma rota lógica e mantém estado para a conexão.</p>
+<p><strong>6.</strong> Porque a decisão de rota pode ser tomada pacote a pacote, de acordo com a tabela vigente no instante em que cada pacote chega ao roteador.</p>
+<p><strong>7.</strong> Ele afirma que, se um roteador está no melhor caminho entre dois outros, então o melhor caminho a partir dele até o destino também pertence a essa rota ótima. Isso ajuda a justificar a ideia de árvore de escoamento.</p>
+<p><strong>8.</strong> Significa que o menor custo até esse nó já foi determinado de forma definitiva dentro da execução do algoritmo.</p>
+<p><strong>9.</strong></p>
+<p>$$
+1 + 2 + 2 + 2 = 7
+$$</p>
+<p><strong>10.</strong> Porque ele espalha o pacote por muitos caminhos e tende a alcançar o destino se houver caminho disponível, mas gera muitas cópias e desperdiça largura de banda.</p>
+<p><strong>11.</strong> Eles limitam a propagação das cópias e evitam que o flooding continue indefinidamente.</p>
+<p><strong>12.</strong> A melhor distância conhecida até o destino e o vizinho ou enlace preferido para alcançá-lo.</p>
+<p><strong>13.</strong></p>
+<p>$$
+3 + 4 = 7
+$$</p>
+<p><strong>14.</strong> É o problema em que más notícias sobre a perda de uma rota se propagam lentamente, fazendo os roteadores aumentarem gradualmente os custos anunciados até chegar ao valor considerado infinito.</p>
+<p><strong>15.</strong> Descobrir os vizinhos, medir o custo até cada vizinho, montar o pacote de estado de enlace, distribuir esse pacote para todos os roteadores e calcular os menores caminhos.</p>
+<p><strong>16.</strong> Porque cada roteador passa a reconstruir a topologia da rede e calcular localmente as rotas, em vez de depender apenas das estimativas anunciadas pelos vizinhos.</p>
+<p><strong>17.</strong></p>
+<ul>
+<li><strong>( V )</strong> Em circuitos virtuais, a rede precisa manter algum estado sobre a conexão.</li>
+<li><strong>( F )</strong> No flooding, um pacote deve ser reenviado também pela mesma interface por onde entrou.</li>
+<li><strong>( F )</strong> No vetor de distância, o roteador precisa conhecer a topologia completa da rede.</li>
+<li><strong>( V )</strong> No estado de enlace, cada roteador pode reconstruir o grafo da rede e depois executar Dijkstra localmente.</li>
+</ul>
+</div>
+<h2 id="próximos-passos"><span class="heading-text">Próximos passos</span><span class="heading-arabic">8.12</span></h2>
+<p>Na próxima aula, o passo natural é sair da lógica geral da camada de rede e entrar no protocolo que domina a Internet.</p>
+<p>Você verá como o IP organiza endereçamento, formato de pacotes e interligação de redes, e como essas ideias concretizam na prática a camada de rede estudada hoje.</p>
+
+                </div>
+            </article>
+            <footer class="footer">
+                <p>© 2025 · <a href="#">Gabriel Soares Baptista</a></p>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        const toggle = document.querySelector('.mobile-menu-toggle');
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.querySelector('.mobile-menu-overlay');
+
+        function openMenu() {
+            sidebar.classList.add('open');
+            overlay.classList.add('open');
+            toggle.classList.add('open');
+            toggle.innerHTML = '<i data-lucide="x"></i>';
+            CourseForgeUI.initIcons();
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMenu() {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('open');
+            toggle.classList.remove('open');
+            toggle.innerHTML = '<i data-lucide="menu"></i>';
+            CourseForgeUI.initIcons();
+            document.body.style.overflow = '';
+        }
+
+        toggle.addEventListener('click', () => {
+            if (sidebar.classList.contains('open')) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        overlay.addEventListener('click', closeMenu);
+    </script>
+
+    
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            renderMathInElement(document.body, {
+                output: 'html',
+                delimiters: [
+                    { left: "$$", right: "$$", display: true },
+                    { left: "$", right: "$", display: false },
+                    { left: "\\(", right: "\\)", display: false },
+                    { left: "\\[", right: "\\]", display: true }
+                ],
+                throwOnError: false,
+                strict: false
+            });
+        });
+    </script>
+    
+    
+    <script src="/aulas-faesa/js/vendor/prism/prism.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-c.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-cpp.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-python.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-clike.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-perl.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-java.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-mermaid.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-php.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js" data-no-bundle></script>
+    
+    
+    
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            mermaid.initialize({
+                startOnLoad: true,
+                theme: 'default',
+                securityLevel: 'loose',
+                fontFamily: 'Inter, system-ui, sans-serif',
+                themeVariables: {
+                    fontSize: '16px',
+                    edgeLabelFontSize: '16px',
+                    multiplicityFontSize: '18px'
+                }
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const isSubcourse = false;
+        const courseName = "Redes";
+        CourseForgeNav.applyDynamicBreadcrumbs('.breadcrumb', isSubcourse);
+        CourseForgeNav.initScrollSpy();
+        CourseForgeUI.initCopyButtons();
+        CourseForgeUI.initExamples();
+        });
+
+        function handleBackNavigation() {
+            const isSubcourse = false;
+        const dynamic = CourseForgeNav.getBackLink('contents.html', 'Voltar', isSubcourse);
+        window.location.href = dynamic.url;
+        }
+    </script>
+</body>
+
+</html>
