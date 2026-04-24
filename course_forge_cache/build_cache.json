@@ -413,7 +413,7 @@
   "../obsidian-vault/6. Teaching/T\u00f3picos de Programa\u00e7\u00e3o II/slides/5 - libraries in c.md": "eee8b7630c9447fc7bdf4d6a0642490a",
   "../obsidian-vault/6. Teaching/T\u00f3picos de Programa\u00e7\u00e3o II/slides/6 - abstract data types.md": "9b041cfaec858198b54112723df9ff44",
   "../obsidian-vault/6. Teaching/Sistemas Operacionais/static/fig_dining_philosophers.png": "7bdd4c6686f2e0534c44f8096fb53067",
-  "../obsidian-vault/6. Teaching/.course_forge_cache/build_cache.json": "0ac80632f5a67e9e24873b2283bd4a23",
+  "../obsidian-vault/6. Teaching/.course_forge_cache/build_cache.json": "8fa3a28246ba278ed4a283db38bd5c6b",
   "../obsidian-vault/6. Teaching/Redes/6 - mac sublayer, ethernet and mac addressing.md": "6c07c69cbad857bdba2ec8e1933b60b6",
   "../obsidian-vault/6. Teaching/Compiladores/bin/tests/lexer/expected/01_delimiters.txt": "7eee78b2a963b2b5582b4959d31eb53c",
   "../obsidian-vault/6. Teaching/Compiladores/bin/tests/lexer/expected/08_strings.txt": "3a48f84a1c1c66feb1064c6c970613b6",
@@ -524,5 +524,6 @@
   "../obsidian-vault/6. Teaching/Compiladores/slides/8 - parsing review ast and ll1.md": "7d854152ab56079a34395966cfbf9023",
   "../obsidian-vault/6. Teaching/Redes/slides/8 - network layer and routing algorithms.md": "8a95835720661357fc866cc26c1d8685",
   "../obsidian-vault/6. Teaching/Redes/8 - network layer and routing algorithms - slides.md": "3b3da5c7f60d0cd3f54c4088efe4fb47",
-  "../obsidian-vault/6. Teaching/Redes/slides/8 - network layer and routing algorithms - slides.md": "3b3da5c7f60d0cd3f54c4088efe4fb47"
+  "../obsidian-vault/6. Teaching/Redes/slides/8 - network layer and routing algorithms - slides.md": "3b3da5c7f60d0cd3f54c4088efe4fb47",
+  "../obsidian-vault/6. Teaching/Sistemas Operacionais/slides/revisao-2-avaliacao.md": "ea48fa1c88e1018f91ef87fd44870ac7"
 }
