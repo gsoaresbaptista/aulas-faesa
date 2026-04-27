@@ -253,7 +253,7 @@
   "../obsidian-vault/6. Teaching/Sistemas Digitais e Microprocessados/static/logisim_lab1_pos_sop.png": "fdec8bbe49663de73306d447ae9ffb8c",
   "../obsidian-vault/6. Teaching/Sistemas Digitais e Microprocessados/11 - visual minimization.md": "a9f47f22f0ab2dc46db966908ac02ebb",
   "../obsidian-vault/6. Teaching/Sistemas Operacionais/bin/codes_aula_5_so/6_dining_philosophers.c": "89647431ec9eaa7b41553bd8f0d10eba",
-  "../obsidian-vault/6. Teaching/Sistemas Digitais e Microprocessados/12 - digital arithmetic i.md": "412f29050f397e381a8ed4b678cef8c0",
+  "../obsidian-vault/6. Teaching/Sistemas Digitais e Microprocessados/12 - digital arithmetic i.md": "8319dbcfce384b75ebbb62273da20c38",
   "../obsidian-vault/6. Teaching/Sistemas Operacionais/bin/codes_aula_5_so/4_mutex_counter.c": "b4c589fd87dca8a59c6d3e0b57d583e5",
   "../obsidian-vault/6. Teaching/Sistemas Operacionais/assignments/substitutive exam.md": "401a719a9b6ded5ae26ac05d231dc622",
   "../obsidian-vault/6. Teaching/Sistemas Operacionais/bin/codes_aula_5_so/5_producer_consumer.c": "65d07d10ff3708ca64278fe4ec51602f",
@@ -413,7 +413,7 @@
   "../obsidian-vault/6. Teaching/T\u00f3picos de Programa\u00e7\u00e3o II/slides/5 - libraries in c.md": "eee8b7630c9447fc7bdf4d6a0642490a",
   "../obsidian-vault/6. Teaching/T\u00f3picos de Programa\u00e7\u00e3o II/slides/6 - abstract data types.md": "9b041cfaec858198b54112723df9ff44",
   "../obsidian-vault/6. Teaching/Sistemas Operacionais/static/fig_dining_philosophers.png": "7bdd4c6686f2e0534c44f8096fb53067",
-  "../obsidian-vault/6. Teaching/.course_forge_cache/build_cache.json": "8fa3a28246ba278ed4a283db38bd5c6b",
+  "../obsidian-vault/6. Teaching/.course_forge_cache/build_cache.json": "7eaa89c942beee2a7346185633019eaa",
   "../obsidian-vault/6. Teaching/Redes/6 - mac sublayer, ethernet and mac addressing.md": "6c07c69cbad857bdba2ec8e1933b60b6",
   "../obsidian-vault/6. Teaching/Compiladores/bin/tests/lexer/expected/01_delimiters.txt": "7eee78b2a963b2b5582b4959d31eb53c",
   "../obsidian-vault/6. Teaching/Compiladores/bin/tests/lexer/expected/08_strings.txt": "3a48f84a1c1c66feb1064c6c970613b6",
@@ -525,5 +525,6 @@
   "../obsidian-vault/6. Teaching/Redes/slides/8 - network layer and routing algorithms.md": "8a95835720661357fc866cc26c1d8685",
   "../obsidian-vault/6. Teaching/Redes/8 - network layer and routing algorithms - slides.md": "3b3da5c7f60d0cd3f54c4088efe4fb47",
   "../obsidian-vault/6. Teaching/Redes/slides/8 - network layer and routing algorithms - slides.md": "3b3da5c7f60d0cd3f54c4088efe4fb47",
-  "../obsidian-vault/6. Teaching/Sistemas Operacionais/slides/revisao-2-avaliacao.md": "ea48fa1c88e1018f91ef87fd44870ac7"
+  "../obsidian-vault/6. Teaching/Sistemas Operacionais/slides/revisao-2-avaliacao.md": "ea48fa1c88e1018f91ef87fd44870ac7",
+  "../obsidian-vault/6. Teaching/Sistemas Digitais e Microprocessados/slides/12 - digital arithmetic i.md": "3c65888e01db179fb8afbaf0fd69347d"
 }
