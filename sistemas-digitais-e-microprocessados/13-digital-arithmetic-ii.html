@@ -69,43 +69,27 @@
                         </li>
                         
                         <li class="toc-item level-3">
-                            <a href="#bloco-funcional-do-multiplicador-2-x-2">13.4.3. Bloco Funcional do Multiplicador 2 x 2</a>
+                            <a href="#circuito-do-multiplicador-2-x-2">13.4.3. Circuito do Multiplicador 2 x 2</a>
                         </li>
                         
                         <li class="toc-item level-3">
                             <a href="#como-a-ideia-escala-para-mais-bits">13.4.4. Como a Ideia Escala para Mais Bits</a>
                         </li>
                         
-                        <li class="toc-item level-2">
-                            <a href="#divisão-binária-por-comparação-e-subtração">13.5. Divisão Binária por Comparação e Subtração</a>
-                        </li>
-                        
-                        <li class="toc-item level-2">
-                            <a href="#como-nasce-um-divisor-simples">13.6. Como Nasce um Divisor Simples</a>
+                        <li class="toc-item level-3">
+                            <a href="#multiplicador-4-x-4-usando-blocos-2-x-2">13.4.5. Multiplicador 4 x 4 Usando Blocos 2 x 2</a>
                         </li>
                         
                         <li class="toc-item level-3">
-                            <a href="#circuito-funcional-de-um-estágio-do-divisor">13.6.1. Circuito Funcional de Um Estágio do Divisor</a>
-                        </li>
-                        
-                        <li class="toc-item level-3">
-                            <a href="#encadeando-estágios-para-formar-o-divisor">13.6.2. Encadeando Estágios para Formar o Divisor</a>
-                        </li>
-                        
-                        <li class="toc-item level-3">
-                            <a href="#uma-implementação-didática-pequena">13.6.3. Uma Implementação Didática Pequena</a>
+                            <a href="#multiplicador-8-x-8-usando-blocos-4-x-4">13.4.6. Multiplicador 8 x 8 Usando Blocos 4 x 4</a>
                         </li>
                         
                         <li class="toc-item level-2">
-                            <a href="#comparando-multiplicador-e-divisor">13.7. Comparando Multiplicador e Divisor</a>
+                            <a href="#questões">13.5. Questões</a>
                         </li>
                         
                         <li class="toc-item level-2">
-                            <a href="#questões">13.8. Questões</a>
-                        </li>
-                        
-                        <li class="toc-item level-2">
-                            <a href="#próximos-passos">13.9. Próximos passos</a>
+                            <a href="#próximos-passos">13.6. Próximos passos</a>
                         </li>
                         
                     </ol>
@@ -172,33 +156,20 @@
                 </header>
                 <div class="article-body">
                     <h2 id="introdução"><span class="heading-text">Introdução</span><span class="heading-arabic">13.1</span></h2>
-<p>Na aula de hoje vamos avançar de soma e subtração para duas operações maiores, multiplicação e divisão. Isso importa porque esses circuitos parecem mais complexos à primeira vista, mas na prática nascem da combinação organizada de blocos que você já conhece, como portas lógicas, somadores, subtratores, comparadores e deslocamentos.</p>
-<p>Na aula anterior, cada coluna resolvia uma soma ou subtração local e repassava carry ou borrow para a próxima posição. Agora a ideia fica mais rica. Na multiplicação, várias colunas são geradas ao mesmo tempo na forma de produtos parciais. Na divisão, cada etapa precisa decidir se ainda é possível subtrair o divisor e, a partir disso, construir o quociente.</p>
+<p>Na aula de hoje vamos avançar de soma e subtração para uma operação maior: a multiplicação binária. Isso importa porque esse circuito parece mais complexo à primeira vista, mas na prática nasce da combinação organizada de blocos que você já conhece, como portas lógicas, somadores, splitters, extensores, deslocadores e barramentos.</p>
+<p>Na aula anterior, cada coluna resolvia uma soma ou subtração local e repassava carry ou borrow para a próxima posição. Agora a ideia cresce em outra direção: na multiplicação, várias linhas de produtos parciais são geradas, deslocadas e depois somadas para formar o resultado final.</p>
 <div class="callout callout-abstract">
   <div class="callout-title">
     <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
     <span class="callout-title-inner">Ideia central<br /></span>
   </div>
   <div class="callout-content">
-<p>Um multiplicador digital simples pode ser entendido como uma rede de portas AND que gera produtos parciais e de somadores que combinam essas linhas. Um divisor digital simples pode ser entendido como uma sequência de etapas que comparam, subtraem e decidem os bits do quociente a partir do resto parcial.</p>
+<p>Um multiplicador digital simples pode ser entendido como uma rede de portas AND que gera produtos parciais e de somadores que combinam essas linhas. Multiplicadores maiores podem ser construídos de forma hierárquica, reutilizando multiplicadores menores, extensores, deslocadores e somadores.</p>
   </div>
 </div>
 <h2 id="revisão-rápida-de-álgebra-booleana"><span class="heading-text">Revisão Rápida de Álgebra Booleana</span><span class="heading-arabic">13.2</span></h2>
 <p>Antes de formalizar os novos circuitos, vale recuperar algumas identidades muito simples de álgebra booleana. O objetivo aqui não é repetir a aula de simplificação, mas lembrar exatamente as propriedades que ajudam a enxergar por que um bit pode copiar, zerar, selecionar ou combinar sinais dentro de um circuito aritmético.</p>
-<div class="callout callout-question">
-  <div class="callout-title">
-    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
-    <span class="callout-title-inner">Reflita<br /></span>
-  </div>
-  <div class="callout-content">
-<p>Se um bit de controle vale $0$ em uma porta AND, o que acontece com o sinal que está do outro lado? E se esse mesmo bit vale $1$?</p>
-  </div>
-</div>
-<div class="example">
-  <div class="example-title">Revisão - Questão 1</div>
-  <p>Por que as identidades $A \cdot 0 = 0$ e $A \cdot 1 = A$ são tão úteis para entender multiplicação digital?</p>
-<hr />
-<p>Essas duas igualdades dizem como um bit pode apagar ou deixar passar um sinal.</p>
+<p>As identidades $A \cdot 0 = 0$ e $A \cdot 1 = A$ são fundamentais para a multiplicação digital porque dizem como um bit pode apagar ou deixar passar um sinal.</p>
 <p>Se uma entrada de uma AND vale $0$, a saída obrigatoriamente vale $0$.</p>
 <p>$$
 A \cdot 0 = 0
@@ -213,12 +184,7 @@ $$</p>
 <li>se o bit do multiplicador for $1$, aquele produto parcial copia o bit de $A$</li>
 </ul>
 <p>É exatamente por isso que a geração de produtos parciais em um multiplicador é feita com portas AND.</p>
-</div>
-<div class="example">
-  <div class="example-title">Revisão - Questão 2</div>
-  <p>Como a distributiva ajuda a ler a combinação de sinais em circuitos aritméticos?</p>
-<hr />
-<p>A distributiva em álgebra booleana é:</p>
+<p>A distributiva também aparece com frequência quando lemos a combinação de sinais em circuitos aritméticos:</p>
 <p>$$
 A(B + C) = AB + AC
 $$</p>
@@ -229,12 +195,7 @@ AB + AC = A(B + C)
 $$</p>
 <p>Essas duas leituras aparecem com frequência quando reorganizamos a lógica de controle ou quando queremos enxergar um padrão comum em vários termos da expressão.</p>
 <p>Por exemplo, se um mesmo bit $A$ participa de dois produtos possíveis, como $AB$ e $AC$, a fatoração deixa claro que $A$ está selecionando uma entre duas condições agrupadas.</p>
-</div>
-<div class="example">
-  <div class="example-title">Revisão - Questão 3</div>
-  <p>O que as igualdades $A + 0 = A$ e $A + A = A$ lembram sobre a combinação de resultados?</p>
-<hr />
-<p>A primeira igualdade diz que somar logicamente com $0$ não altera a informação.</p>
+<p>Por fim, as igualdades $A + 0 = A$ e $A + A = A$ ajudam a lembrar como resultados lógicos são combinados. A primeira diz que somar logicamente com $0$ não altera a informação.</p>
 <p>$$
 A + 0 = A
 $$</p>
@@ -243,25 +204,11 @@ $$</p>
 A + A = A
 $$</p>
 <p>Essas identidades ajudam quando reorganizamos expressões e percebemos que algumas partes não acrescentam informação nova. Em circuitos maiores, isso evita duplicação desnecessária de portas e ajuda a ler a lógica de forma mais limpa.</p>
-</div>
-<p>Essas continhas parecem pequenas, mas elas voltam imediatamente na aula de hoje. Na multiplicação, um bit do multiplicador ora zera uma linha parcial, ora copia o operando. Na divisão, comparações e decisões de controle também se apoiam em combinações lógicas simples. A ideia continua a mesma da aula anterior. Primeiro entendemos o comportamento. Depois transformamos isso em bloco funcional.</p>
+<p>Essas continhas parecem pequenas, mas elas voltam imediatamente na aula de hoje. Na multiplicação, um bit do multiplicador ora zera uma linha parcial, ora copia o operando. A ideia continua a mesma da aula anterior. Primeiro entendemos o comportamento. Depois transformamos isso em circuito.</p>
 <h2 id="multiplicação-binária-por-produtos-parciais"><span class="heading-text">Multiplicação Binária por Produtos Parciais</span><span class="heading-arabic">13.3</span></h2>
 <p>Quando você multiplica números decimais no papel, costuma gerar linhas parciais e depois somá-las. Em binário a lógica é a mesma, mas fica ainda mais clara porque cada dígito só pode ser $0$ ou $1$. Isso faz com que cada linha parcial seja extremamente simples de interpretar.</p>
 <p>Se um bit do multiplicador vale $0$, ele não contribui com nada. Se vale $1$, ele copia o multiplicando naquela posição de deslocamento. Portanto, a multiplicação binária pode ser lida como soma de cópias deslocadas do operando.</p>
-<div class="callout callout-question">
-  <div class="callout-title">
-    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
-    <span class="callout-title-inner">Reflita<br /></span>
-  </div>
-  <div class="callout-content">
-<p>Se cada bit do multiplicador só pode valer $0$ ou $1$, quantas possibilidades reais existem para cada linha parcial da multiplicação?</p>
-  </div>
-</div>
-<div class="example">
-  <div class="example-title">Multiplicação - Questão 1</div>
-  <p>Como ler a conta $101_2 \times 11_2$ sem tratar a multiplicação como uma operação misteriosa?</p>
-<hr />
-<p>Vamos escrever a conta como soma de produtos parciais.</p>
+<p>Para ver isso sem tratar a multiplicação como uma operação misteriosa, considere a conta $101_2 \times 11_2$. Podemos escrevê-la como soma de produtos parciais.</p>
 <p>$$
 \begin{array}{r}
 \phantom{+}101 \\
@@ -286,7 +233,6 @@ $$</p>
 1111_2 = 15_{10}
 $$</p>
 <p>O ponto importante não é apenas o resultado. O mais importante é a estrutura. A multiplicação apareceu como soma de linhas simples, e não como um bloco mágico que resolve tudo de uma vez.</p>
-</div>
 <p>Essa leitura permite escrever a regra geral. Se o multiplicando for $A$ e o multiplicador for $B$, cada bit $B_j$ do multiplicador gera uma linha parcial. Essa linha é composta pelos produtos:</p>
 <p>$$
 p_{ij} = A_i \cdot B_j
@@ -297,11 +243,7 @@ $$</p>
 <li>se $B_j = 1$, então $p_{ij} = A_i$</li>
 </ul>
 <p>Portanto, cada bit do multiplicador funciona como um seletor que decide se uma certa cópia do multiplicando entra ou não na soma final.</p>
-<div class="example">
-  <div class="example-title">Multiplicação - Questão 2</div>
-  <p>Por que a porta AND representa exatamente a geração de um produto parcial?</p>
-<hr />
-<p>Considere um único bit $A_i$ do multiplicando e um único bit $B_j$ do multiplicador. O produto parcial elementar será:</p>
+<p>Para entender por que a porta AND representa exatamente essa geração, considere um único bit $A_i$ do multiplicando e um único bit $B_j$ do multiplicador. O produto parcial elementar será:</p>
 <p>$$
 p_{ij} = A_i \cdot B_j
 $$</p>
@@ -318,7 +260,6 @@ A_i & B_j & p_{ij} \\
 $$</p>
 <p>Essa é exatamente a tabela de uma AND. Isso significa que o produto parcial de dois bits em multiplicação binária não exige nenhuma nova porta especial. Ele é a própria operação AND.</p>
 <p>O que torna um multiplicador maior não é a complexidade do produto de dois bits isolados. É a necessidade de gerar muitos desses produtos e depois somá-los nas colunas corretas.</p>
-</div>
 <p>Agora já podemos responder de forma precisa como nasce um multiplicador simples. Primeiro, portas AND geram os produtos parciais bit a bit. Depois, somadores organizam essas contribuições por coluna, exatamente como fizemos na aula anterior ao tratar carry entre posições vizinhas.</p>
 <h2 id="como-nasce-um-multiplicador-simples"><span class="heading-text">Como Nasce um Multiplicador Simples</span><span class="heading-arabic">13.4</span></h2>
 <p>Vamos escolher uma implementação pequena o suficiente para ser totalmente legível e grande o suficiente para realmente merecer o nome de multiplicador. O caso mais didático é o multiplicador de $2 \times 2$ bits.</p>
@@ -346,22 +287,17 @@ $$</p>
 <div class="no-break"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:ns2="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" width="180" viewBox="0 0 109.872 45.36" version="1.1" class="svg-graph"> <metadata>  <rdf:RDF>   <ns2:Work>    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage" />    <dc:date>2026-04-06T17:52:19.316231</dc:date>    <dc:format>image/svg+xml</dc:format>    <dc:creator>     <ns2:Agent>      <dc:title>Matplotlib v3.10.8, https://matplotlib.org/</dc:title>     </ns2:Agent>    </dc:creator>   </ns2:Work>  </rdf:RDF> </metadata> <defs>  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style> </defs> <g id="figure_1">  <g id="patch_1">   <path d="M 0 45.36  L 109.872 45.36  L 109.872 0  L 0 0  L 0 45.36  z " style="fill: none" />  </g>  <g id="axes_1">   <g id="line2d_1">    <path d="M 56.796 40.68  L 57.949264 40.643017  L 59.097789 40.53222  L 60.236855 40.348065  L 61.361783 40.091308  L 62.467948 39.763003  L 63.550806 39.364502  L 64.605907 38.89744  L 65.628916 38.363737  L 66.615628 37.765586  L 67.56199 37.105445  L 68.464111 36.386027  L 69.318286 35.610288  L 70.121004 34.781416  L 70.868967 33.902816  L 71.559101 32.9781  L 72.18857 32.011066  L 72.754788 31.005689  L 73.255427 29.9661  L 73.688432 28.896571  L 74.052021 27.801497  L 74.344702 26.685377  L 74.565272 25.552798  L 74.712824 24.408414  L 74.786752 23.256928  L 74.786752 22.103072  L 74.712824 20.951586  L 74.565272 19.807202  L 74.344702 18.674623  L 74.052021 17.558503  L 73.688432 16.463429  L 73.255427 15.3939  L 72.754788 14.354311  L 72.18857 13.348934  L 71.559101 12.3819  L 70.868967 11.457184  L 70.121004 10.578584  L 69.318286 9.749712  L 68.464111 8.973973  L 67.56199 8.254555  L 66.615628 7.594414  L 65.628916 6.996263  L 64.605907 6.46256  L 63.550806 5.995498  L 62.467948 5.596997  L 61.361783 5.268692  L 60.236855 5.011935  L 59.097789 4.82778  L 57.949264 4.716983  L 56.796 4.68  L 56.796 4.68  L 33.396 4.68  L 33.396 22.68  L 33.396 40.68  L 56.796 40.68  " clip-path="url(#pdf28be8599)" style="fill: none; stroke: #333333; stroke-width: 2; stroke-linecap: round" />   </g>   <g id="line2d_2">    <path d="M 20.796 31.68  L 33.396 31.68  " clip-path="url(#pdf28be8599)" style="fill: none; stroke: #333333; stroke-width: 2; stroke-linecap: round" />   </g>   <g id="line2d_3">    <path d="M 20.796 13.68  L 33.396 13.68  " clip-path="url(#pdf28be8599)" style="fill: none; stroke: #333333; stroke-width: 2; stroke-linecap: round" />   </g>   <g id="line2d_4">    <path d="M 74.796 22.68  L 87.396 22.68  " clip-path="url(#pdf28be8599)" style="fill: none; stroke: #333333; stroke-width: 2; stroke-linecap: round" />   </g>   <g id="text_1">    <text style="font-size: 14px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #333333" x="90.996" y="26.543125" transform="rotate(-0 90.996 26.543125)">pij</text>   </g>   <g id="text_2">    <text style="font-size: 14px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end; fill: #333333" x="17.196" y="17.543125" transform="rotate(-0 17.196 17.543125)">Ai</text>   </g>   <g id="text_3">    <text style="font-size: 14px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end; fill: #333333" x="17.196" y="35.543125" transform="rotate(-0 17.196 35.543125)">Bj</text>   </g>  </g> </g> <defs>  <clipPath id="pdf28be8599">   <rect x="0" y="0" width="109.872" height="45.36" />  </clipPath> </defs></svg></div></div>
 
 <p>Esse desenho representa apenas a célula mais básica do multiplicador. O circuito completo aparece quando colocamos esses produtos nas colunas corretas do resultado.</p>
-<div class="example">
-  <div class="example-title">Multiplicador 2 x 2 - Questão 1</div>
-  <p>Como os quatro produtos parciais são distribuídos nas colunas do resultado?</p>
-<hr />
-<p>Escrevendo a multiplicação por linhas parciais, temos:</p>
+<p>Para entender como os quatro produtos parciais são distribuídos nas colunas do resultado é melhor organizar os termos já alinhados às colunas do resultado $P_3P_2P_1P_0$:</p>
 <p>$$
-\begin{array}{r}
-\phantom{+}A_1A_0 \\
-\times\ B_1B_0 \\
+\begin{array}{c|c|c|c|l}
+P_3 & P_2 & P_1 & P_0 & \text{linha parcial} \\
 \hline
-\phantom{+}A_1A_0B_0 \\
-+A_1A_0B_1\,0 \\
-\hline
-P_3P_2P_1P_0
+0 & 0 & A_1B_0 & A_0B_0 & \text{multiplicação por } B_0 \\
+0 & A_1B_1 & A_0B_1 & 0 & \text{multiplicação por } B_1 \text{, deslocada uma posição}
 \end{array}
 $$</p>
+<p>A primeira linha parcial vem do bit $B_0$. Como $B_0$ está na posição menos significativa, seus produtos caem nas colunas mais à direita: $A_0B_0$ em $P_0$ e $A_1B_0$ em $P_1$.</p>
+<p>A segunda linha parcial vem do bit $B_1$. Como $B_1$ representa a próxima posição binária, essa linha entra deslocada uma casa para a esquerda: $A_0B_1$ cai em $P_1$ e $A_1B_1$ cai em $P_2$.</p>
 <p>Se lermos por coluna, obtemos:</p>
 <ul>
 <li>coluna 0: apenas $A_0B_0$</li>
@@ -370,7 +306,6 @@ $$</p>
 <li>coluna 3: apenas o carry final</li>
 </ul>
 <p>Essa leitura é crucial porque ela mostra exatamente onde o Meio Somador entra. A coluna intermediária precisa somar dois produtos parciais, e essa soma pode gerar carry para a coluna seguinte.</p>
-</div>
 <h3 id="derivação-das-saídas"><span class="heading-text">Derivação das Saídas</span><span class="heading-arabic">13.4.2</span></h3>
 <p>Agora podemos escrever cada saída do produto final.</p>
 <p>A primeira coluna é imediata:</p>
@@ -397,8 +332,6 @@ $$</p>
 <li>uma coluna soma os termos que caem nela</li>
 <li>o carry dessa coluna alimenta a seguinte</li>
 </ul>
-<div class="col2"><div>
-
 <p><strong>Leitura algébrica final</strong></p>
 <p>$$
 \begin{aligned}
@@ -412,241 +345,214 @@ $$</p>
 <p>$$
 C_1 = (A_1B_0)(A_0B_1)
 $$</p>
-</div><div>
+<h3 id="circuito-do-multiplicador-2-x-2"><span class="heading-text">Circuito do Multiplicador 2 x 2</span><span class="heading-arabic">13.4.3</span></h3>
+<p>Agora podemos montar o circuito diretamente com portas lógicas. As quatro primeiras portas AND geram os produtos parciais. Depois, duas estruturas de Meio Somador combinam as colunas que possuem mais de um termo.</p>
+<div class="no-break"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:ns2="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" width="250" viewBox="0 0 117.936 45.36" version="1.1" class="svg-graph"> <metadata>  <rdf:RDF>   <ns2:Work>    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage" />    <dc:date>2026-04-28T13:01:18.287959</dc:date>    <dc:format>image/svg+xml</dc:format>    <dc:creator>     <ns2:Agent>      <dc:title>Matplotlib v3.10.8, https://matplotlib.org/</dc:title>     </ns2:Agent>    </dc:creator>   </ns2:Work>  </rdf:RDF> </metadata> <defs>  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style> </defs> <g id="figure_1">  <g id="patch_1">   <path d="M 0 45.36  L 117.936 45.36  L 117.936 0  L 0 0  L 0 45.36  z " style="fill: none" />  </g>  <g id="axes_1">   <g id="line2d_1">    <path d="M 61.668 40.68  L 62.821264 40.643017  L 63.969789 40.53222  L 65.108855 40.348065  L 66.233783 40.091308  L 67.339948 39.763003  L 68.422806 39.364502  L 69.477907 38.89744  L 70.500916 38.363737  L 71.487628 37.765586  L 72.43399 37.105445  L 73.336111 36.386027  L 74.190286 35.610288  L 74.993004 34.781416  L 75.740967 33.902816  L 76.431101 32.9781  L 77.06057 32.011066  L 77.626788 31.005689  L 78.127427 29.9661  L 78.560432 28.896571  L 78.924021 27.801497  L 79.216702 26.685377  L 79.437272 25.552798  L 79.584824 24.408414  L 79.658752 23.256928  L 79.658752 22.103072  L 79.584824 20.951586  L 79.437272 19.807202  L 79.216702 18.674623  L 78.924021 17.558503  L 78.560432 16.463429  L 78.127427 15.3939  L 77.626788 14.354311  L 77.06057 13.348934  L 76.431101 12.3819  L 75.740967 11.457184  L 74.993004 10.578584  L 74.190286 9.749712  L 73.336111 8.973973  L 72.43399 8.254555  L 71.487628 7.594414  L 70.500916 6.996263  L 69.477907 6.46256  L 68.422806 5.995498  L 67.339948 5.596997  L 66.233783 5.268692  L 65.108855 5.011935  L 63.969789 4.82778  L 62.821264 4.716983  L 61.668 4.68  L 61.668 4.68  L 38.268 4.68  L 38.268 22.68  L 38.268 40.68  L 61.668 40.68  " clip-path="url(#p9c95c2ce7d)" style="fill: none; stroke: #333333; stroke-width: 2; stroke-linecap: round" />   </g>   <g id="line2d_2">    <path d="M 25.668 31.68  L 38.268 31.68  " clip-path="url(#p9c95c2ce7d)" style="fill: none; stroke: #333333; stroke-width: 2; stroke-linecap: round" />   </g>   <g id="line2d_3">    <path d="M 25.668 13.68  L 38.268 13.68  " clip-path="url(#p9c95c2ce7d)" style="fill: none; stroke: #333333; stroke-width: 2; stroke-linecap: round" />   </g>   <g id="line2d_4">    <path d="M 79.668 22.68  L 92.268 22.68  " clip-path="url(#p9c95c2ce7d)" style="fill: none; stroke: #333333; stroke-width: 2; stroke-linecap: round" />   </g>   <g id="text_1">    <text style="font-size: 14px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #333333" x="95.868" y="26.543125" transform="rotate(-0 95.868 26.543125)">P0</text>   </g>   <g id="text_2">    <text style="font-size: 14px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end; fill: #333333" x="22.068" y="17.543125" transform="rotate(-0 22.068 17.543125)">A0</text>   </g>   <g id="text_3">    <text style="font-size: 14px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end; fill: #333333" x="22.068" y="35.543125" transform="rotate(-0 22.068 35.543125)">B0</text>   </g>  </g> </g> <defs>  <clipPath id="p9c95c2ce7d">   <rect x="0" y="0" width="117.936" height="45.36" />  </clipPath> </defs></svg></div></div>
+<div class="no-break"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:ns2="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" width="250" viewBox="0 0 125.916 45.36" version="1.1" class="svg-graph"> <metadata>  <rdf:RDF>   <ns2:Work>    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage" />    <dc:date>2026-04-28T13:01:18.313345</dc:date>    <dc:format>image/svg+xml</dc:format>    <dc:creator>     <ns2:Agent>      <dc:title>Matplotlib v3.10.8, https://matplotlib.org/</dc:title>     </ns2:Agent>    </dc:creator>   </ns2:Work>  </rdf:RDF> </metadata> <defs>  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style> </defs> <g id="figure_1">  <g id="patch_1">   <path d="M 0 45.36  L 125.916 45.36  L 125.916 0  L 0 0  L 0 45.36  z " style="fill: none" />  </g>  <g id="axes_1">   <g id="line2d_1">    <path d="M 61.668 40.68  L 62.821264 40.643017  L 63.969789 40.53222  L 65.108855 40.348065  L 66.233783 40.091308  L 67.339948 39.763003  L 68.422806 39.364502  L 69.477907 38.89744  L 70.500916 38.363737  L 71.487628 37.765586  L 72.43399 37.105445  L 73.336111 36.386027  L 74.190286 35.610288  L 74.993004 34.781416  L 75.740967 33.902816  L 76.431101 32.9781  L 77.06057 32.011066  L 77.626788 31.005689  L 78.127427 29.9661  L 78.560432 28.896571  L 78.924021 27.801497  L 79.216702 26.685377  L 79.437272 25.552798  L 79.584824 24.408414  L 79.658752 23.256928  L 79.658752 22.103072  L 79.584824 20.951586  L 79.437272 19.807202  L 79.216702 18.674623  L 78.924021 17.558503  L 78.560432 16.463429  L 78.127427 15.3939  L 77.626788 14.354311  L 77.06057 13.348934  L 76.431101 12.3819  L 75.740967 11.457184  L 74.993004 10.578584  L 74.190286 9.749712  L 73.336111 8.973973  L 72.43399 8.254555  L 71.487628 7.594414  L 70.500916 6.996263  L 69.477907 6.46256  L 68.422806 5.995498  L 67.339948 5.596997  L 66.233783 5.268692  L 65.108855 5.011935  L 63.969789 4.82778  L 62.821264 4.716983  L 61.668 4.68  L 61.668 4.68  L 38.268 4.68  L 38.268 22.68  L 38.268 40.68  L 61.668 40.68  " clip-path="url(#p23d0770d48)" style="fill: none; stroke: #333333; stroke-width: 2; stroke-linecap: round" />   </g>   <g id="line2d_2">    <path d="M 25.668 31.68  L 38.268 31.68  " clip-path="url(#p23d0770d48)" style="fill: none; stroke: #333333; stroke-width: 2; stroke-linecap: round" />   </g>   <g id="line2d_3">    <path d="M 25.668 13.68  L 38.268 13.68  " clip-path="url(#p23d0770d48)" style="fill: none; stroke: #333333; stroke-width: 2; stroke-linecap: round" />   </g>   <g id="line2d_4">    <path d="M 79.668 22.68  L 92.268 22.68  " clip-path="url(#p23d0770d48)" style="fill: none; stroke: #333333; stroke-width: 2; stroke-linecap: round" />   </g>   <g id="text_1">    <text style="font-size: 14px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #333333" x="95.868" y="26.543125" transform="rotate(-0 95.868 26.543125)">X10</text>   </g>   <g id="text_2">    <text style="font-size: 14px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end; fill: #333333" x="22.068" y="17.543125" transform="rotate(-0 22.068 17.543125)">A1</text>   </g>   <g id="text_3">    <text style="font-size: 14px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end; fill: #333333" x="22.068" y="35.543125" transform="rotate(-0 22.068 35.543125)">B0</text>   </g>  </g> </g> <defs>  <clipPath id="p23d0770d48">   <rect x="0" y="0" width="125.916" height="45.36" />  </clipPath> </defs></svg></div></div>
+<div class="no-break"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:ns2="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" width="250" viewBox="0 0 125.916 45.36" version="1.1" class="svg-graph"> <metadata>  <rdf:RDF>   <ns2:Work>    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage" />    <dc:date>2026-04-28T13:01:18.332524</dc:date>    <dc:format>image/svg+xml</dc:format>    <dc:creator>     <ns2:Agent>      <dc:title>Matplotlib v3.10.8, https://matplotlib.org/</dc:title>     </ns2:Agent>    </dc:creator>   </ns2:Work>  </rdf:RDF> </metadata> <defs>  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style> </defs> <g id="figure_1">  <g id="patch_1">   <path d="M 0 45.36  L 125.916 45.36  L 125.916 0  L 0 0  L 0 45.36  z " style="fill: none" />  </g>  <g id="axes_1">   <g id="line2d_1">    <path d="M 61.668 40.68  L 62.821264 40.643017  L 63.969789 40.53222  L 65.108855 40.348065  L 66.233783 40.091308  L 67.339948 39.763003  L 68.422806 39.364502  L 69.477907 38.89744  L 70.500916 38.363737  L 71.487628 37.765586  L 72.43399 37.105445  L 73.336111 36.386027  L 74.190286 35.610288  L 74.993004 34.781416  L 75.740967 33.902816  L 76.431101 32.9781  L 77.06057 32.011066  L 77.626788 31.005689  L 78.127427 29.9661  L 78.560432 28.896571  L 78.924021 27.801497  L 79.216702 26.685377  L 79.437272 25.552798  L 79.584824 24.408414  L 79.658752 23.256928  L 79.658752 22.103072  L 79.584824 20.951586  L 79.437272 19.807202  L 79.216702 18.674623  L 78.924021 17.558503  L 78.560432 16.463429  L 78.127427 15.3939  L 77.626788 14.354311  L 77.06057 13.348934  L 76.431101 12.3819  L 75.740967 11.457184  L 74.993004 10.578584  L 74.190286 9.749712  L 73.336111 8.973973  L 72.43399 8.254555  L 71.487628 7.594414  L 70.500916 6.996263  L 69.477907 6.46256  L 68.422806 5.995498  L 67.339948 5.596997  L 66.233783 5.268692  L 65.108855 5.011935  L 63.969789 4.82778  L 62.821264 4.716983  L 61.668 4.68  L 61.668 4.68  L 38.268 4.68  L 38.268 22.68  L 38.268 40.68  L 61.668 40.68  " clip-path="url(#p3da8e0500d)" style="fill: none; stroke: #333333; stroke-width: 2; stroke-linecap: round" />   </g>   <g id="line2d_2">    <path d="M 25.668 31.68  L 38.268 31.68  " clip-path="url(#p3da8e0500d)" style="fill: none; stroke: #333333; stroke-width: 2; stroke-linecap: round" />   </g>   <g id="line2d_3">    <path d="M 25.668 13.68  L 38.268 13.68  " clip-path="url(#p3da8e0500d)" style="fill: none; stroke: #333333; stroke-width: 2; stroke-linecap: round" />   </g>   <g id="line2d_4">    <path d="M 79.668 22.68  L 92.268 22.68  " clip-path="url(#p3da8e0500d)" style="fill: none; stroke: #333333; stroke-width: 2; stroke-linecap: round" />   </g>   <g id="text_1">    <text style="font-size: 14px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #333333" x="95.868" y="26.543125" transform="rotate(-0 95.868 26.543125)">X01</text>   </g>   <g id="text_2">    <text style="font-size: 14px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end; fill: #333333" x="22.068" y="17.543125" transform="rotate(-0 22.068 17.543125)">A0</text>   </g>   <g id="text_3">    <text style="font-size: 14px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end; fill: #333333" x="22.068" y="35.543125" transform="rotate(-0 22.068 35.543125)">B1</text>   </g>  </g> </g> <defs>  <clipPath id="p3da8e0500d">   <rect x="0" y="0" width="125.916" height="45.36" />  </clipPath> </defs></svg></div></div>
+<div class="no-break"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:ns2="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" width="250" viewBox="0 0 125.916 45.36" version="1.1" class="svg-graph"> <metadata>  <rdf:RDF>   <ns2:Work>    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage" />    <dc:date>2026-04-28T13:01:18.344344</dc:date>    <dc:format>image/svg+xml</dc:format>    <dc:creator>     <ns2:Agent>      <dc:title>Matplotlib v3.10.8, https://matplotlib.org/</dc:title>     </ns2:Agent>    </dc:creator>   </ns2:Work>  </rdf:RDF> </metadata> <defs>  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style> </defs> <g id="figure_1">  <g id="patch_1">   <path d="M 0 45.36  L 125.916 45.36  L 125.916 0  L 0 0  L 0 45.36  z " style="fill: none" />  </g>  <g id="axes_1">   <g id="line2d_1">    <path d="M 61.668 40.68  L 62.821264 40.643017  L 63.969789 40.53222  L 65.108855 40.348065  L 66.233783 40.091308  L 67.339948 39.763003  L 68.422806 39.364502  L 69.477907 38.89744  L 70.500916 38.363737  L 71.487628 37.765586  L 72.43399 37.105445  L 73.336111 36.386027  L 74.190286 35.610288  L 74.993004 34.781416  L 75.740967 33.902816  L 76.431101 32.9781  L 77.06057 32.011066  L 77.626788 31.005689  L 78.127427 29.9661  L 78.560432 28.896571  L 78.924021 27.801497  L 79.216702 26.685377  L 79.437272 25.552798  L 79.584824 24.408414  L 79.658752 23.256928  L 79.658752 22.103072  L 79.584824 20.951586  L 79.437272 19.807202  L 79.216702 18.674623  L 78.924021 17.558503  L 78.560432 16.463429  L 78.127427 15.3939  L 77.626788 14.354311  L 77.06057 13.348934  L 76.431101 12.3819  L 75.740967 11.457184  L 74.993004 10.578584  L 74.190286 9.749712  L 73.336111 8.973973  L 72.43399 8.254555  L 71.487628 7.594414  L 70.500916 6.996263  L 69.477907 6.46256  L 68.422806 5.995498  L 67.339948 5.596997  L 66.233783 5.268692  L 65.108855 5.011935  L 63.969789 4.82778  L 62.821264 4.716983  L 61.668 4.68  L 61.668 4.68  L 38.268 4.68  L 38.268 22.68  L 38.268 40.68  L 61.668 40.68  " clip-path="url(#p3d993ae76c)" style="fill: none; stroke: #333333; stroke-width: 2; stroke-linecap: round" />   </g>   <g id="line2d_2">    <path d="M 25.668 31.68  L 38.268 31.68  " clip-path="url(#p3d993ae76c)" style="fill: none; stroke: #333333; stroke-width: 2; stroke-linecap: round" />   </g>   <g id="line2d_3">    <path d="M 25.668 13.68  L 38.268 13.68  " clip-path="url(#p3d993ae76c)" style="fill: none; stroke: #333333; stroke-width: 2; stroke-linecap: round" />   </g>   <g id="line2d_4">    <path d="M 79.668 22.68  L 92.268 22.68  " clip-path="url(#p3d993ae76c)" style="fill: none; stroke: #333333; stroke-width: 2; stroke-linecap: round" />   </g>   <g id="text_1">    <text style="font-size: 14px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #333333" x="95.868" y="26.543125" transform="rotate(-0 95.868 26.543125)">X11</text>   </g>   <g id="text_2">    <text style="font-size: 14px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end; fill: #333333" x="22.068" y="17.543125" transform="rotate(-0 22.068 17.543125)">A1</text>   </g>   <g id="text_3">    <text style="font-size: 14px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end; fill: #333333" x="22.068" y="35.543125" transform="rotate(-0 22.068 35.543125)">B1</text>   </g>  </g> </g> <defs>  <clipPath id="p3d993ae76c">   <rect x="0" y="0" width="125.916" height="45.36" />  </clipPath> </defs></svg></div></div>
+<div class="no-break"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:ns2="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" width="250" viewBox="0 0 127.716 44.64" version="1.1" class="svg-graph"> <metadata>  <rdf:RDF>   <ns2:Work>    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage" />    <dc:date>2026-04-28T13:01:18.362050</dc:date>    <dc:format>image/svg+xml</dc:format>    <dc:creator>     <ns2:Agent>      <dc:title>Matplotlib v3.10.8, https://matplotlib.org/</dc:title>     </ns2:Agent>    </dc:creator>   </ns2:Work>  </rdf:RDF> </metadata> <defs>  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style> </defs> <g id="figure_1">  <g id="patch_1">   <path d="M 0 44.64  L 127.716 44.64  L 127.716 0  L 0 0  L 0 44.64  z " style="fill: none" />  </g>  <g id="axes_1">   <g id="line2d_1">    <path d="M 46.248 39.96  L 65.790857 39.893878  L 67.848 39.6  L 69.905143 39.07102  L 71.962286 38.306939  L 74.019429 37.307755  L 76.076571 36.073469  L 78.133714 34.604082  L 80.190857 32.899592  L 82.762286 30.438367  L 85.333714 27.609796  L 87.905143 24.413878  L 89.448 22.32  L 89.448 22.32  L 86.876571 18.903673  L 84.305143 15.854694  L 81.733714 13.173061  L 79.162286 10.858776  L 77.105143 9.271837  L 75.048 7.92  L 72.990857 6.803265  L 70.933714 5.921633  L 68.876571 5.275102  L 66.819429 4.863673  L 64.762286 4.687347  L 64.248 4.68  L 46.248 4.68  L 46.248 4.68  L 48.2352 6.84  L 49.9632 9  L 51.432 11.16  L 52.6416 13.32  L 53.592 15.48  L 54.2832 17.64  L 54.7152 19.8  L 54.888 21.96  L 54.8016 24.12  L 54.456 26.28  L 53.8512 28.44  L 52.9872 30.6  L 51.864 32.76  L 50.4816 34.92  L 48.84 37.08  L 46.9392 39.24  L 46.248 39.96  L 46.248 39.96  " clip-path="url(#pf335c85779)" style="fill: none; stroke: #333333; stroke-width: 2; stroke-linecap: round" />   </g>   <g id="line2d_2">    <path d="M 40.848 39.96  L 41.5392 39.24  L 42.2016 38.52  L 42.8352 37.8  L 43.44 37.08  L 44.016 36.36  L 44.5632 35.64  L 45.0816 34.92  L 45.5712 34.2  L 46.032 33.48  L 46.464 32.76  L 46.8672 32.04  L 47.2416 31.32  L 47.5872 30.6  L 47.904 29.88  L 48.192 29.16  L 48.4512 28.44  L 48.6816 27.72  L 48.8832 27  L 49.056 26.28  L 49.2 25.56  L 49.3152 24.84  L 49.4016 24.12  L 49.4592 23.4  L 49.488 22.68  L 49.488 21.96  L 49.4592 21.24  L 49.4016 20.52  L 49.3152 19.8  L 49.2 19.08  L 49.056 18.36  L 48.8832 17.64  L 48.6816 16.92  L 48.4512 16.2  L 48.192 15.48  L 47.904 14.76  L 47.5872 14.04  L 47.2416 13.32  L 46.8672 12.6  L 46.464 11.88  L 46.032 11.16  L 45.5712 10.44  L 45.0816 9.72  L 44.5632 9  L 44.016 8.28  L 43.44 7.56  L 42.8352 6.84  L 42.2016 6.12  L 41.5392 5.4  L 40.848 4.68  " clip-path="url(#pf335c85779)" style="fill: none; stroke: #333333; stroke-width: 2; stroke-linecap: round" />   </g>   <g id="line2d_3">    <path d="M 33.648 31.32  L 47.2416 31.32  " clip-path="url(#pf335c85779)" style="fill: none; stroke: #333333; stroke-width: 2; stroke-linecap: round" />   </g>   <g id="line2d_4">    <path d="M 33.648 13.32  L 47.2416 13.32  " clip-path="url(#pf335c85779)" style="fill: none; stroke: #333333; stroke-width: 2; stroke-linecap: round" />   </g>   <g id="line2d_5">    <path d="M 89.448 22.32  L 102.048 22.32  " clip-path="url(#pf335c85779)" style="fill: none; stroke: #333333; stroke-width: 2; stroke-linecap: round" />   </g>   <g id="text_1">    <text style="font-size: 14px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #333333" x="105.648" y="26.183125" transform="rotate(-0 105.648 26.183125)">P1</text>   </g>   <g id="text_2">    <text style="font-size: 14px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end; fill: #333333" x="30.048" y="17.183125" transform="rotate(-0 30.048 17.183125)">X10</text>   </g>   <g id="text_3">    <text style="font-size: 14px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end; fill: #333333" x="30.048" y="35.183125" transform="rotate(-0 30.048 35.183125)">X01</text>   </g>  </g> </g> <defs>  <clipPath id="pf335c85779">   <rect x="0" y="0" width="127.716" height="44.64" />  </clipPath> </defs></svg></div></div>
+<div class="no-break"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:ns2="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" width="250" viewBox="0 0 125.916 45.36" version="1.1" class="svg-graph"> <metadata>  <rdf:RDF>   <ns2:Work>    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage" />    <dc:date>2026-04-28T13:01:18.373946</dc:date>    <dc:format>image/svg+xml</dc:format>    <dc:creator>     <ns2:Agent>      <dc:title>Matplotlib v3.10.8, https://matplotlib.org/</dc:title>     </ns2:Agent>    </dc:creator>   </ns2:Work>  </rdf:RDF> </metadata> <defs>  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style> </defs> <g id="figure_1">  <g id="patch_1">   <path d="M 0 45.36  L 125.916 45.36  L 125.916 0  L 0 0  L 0 45.36  z " style="fill: none" />  </g>  <g id="axes_1">   <g id="line2d_1">    <path d="M 69.648 40.68  L 70.801264 40.643017  L 71.949789 40.53222  L 73.088855 40.348065  L 74.213783 40.091308  L 75.319948 39.763003  L 76.402806 39.364502  L 77.457907 38.89744  L 78.480916 38.363737  L 79.467628 37.765586  L 80.41399 37.105445  L 81.316111 36.386027  L 82.170286 35.610288  L 82.973004 34.781416  L 83.720967 33.902816  L 84.411101 32.9781  L 85.04057 32.011066  L 85.606788 31.005689  L 86.107427 29.9661  L 86.540432 28.896571  L 86.904021 27.801497  L 87.196702 26.685377  L 87.417272 25.552798  L 87.564824 24.408414  L 87.638752 23.256928  L 87.638752 22.103072  L 87.564824 20.951586  L 87.417272 19.807202  L 87.196702 18.674623  L 86.904021 17.558503  L 86.540432 16.463429  L 86.107427 15.3939  L 85.606788 14.354311  L 85.04057 13.348934  L 84.411101 12.3819  L 83.720967 11.457184  L 82.973004 10.578584  L 82.170286 9.749712  L 81.316111 8.973973  L 80.41399 8.254555  L 79.467628 7.594414  L 78.480916 6.996263  L 77.457907 6.46256  L 76.402806 5.995498  L 75.319948 5.596997  L 74.213783 5.268692  L 73.088855 5.011935  L 71.949789 4.82778  L 70.801264 4.716983  L 69.648 4.68  L 69.648 4.68  L 46.248 4.68  L 46.248 22.68  L 46.248 40.68  L 69.648 40.68  " clip-path="url(#pa14bba5b86)" style="fill: none; stroke: #333333; stroke-width: 2; stroke-linecap: round" />   </g>   <g id="line2d_2">    <path d="M 33.648 31.68  L 46.248 31.68  " clip-path="url(#pa14bba5b86)" style="fill: none; stroke: #333333; stroke-width: 2; stroke-linecap: round" />   </g>   <g id="line2d_3">    <path d="M 33.648 13.68  L 46.248 13.68  " clip-path="url(#pa14bba5b86)" style="fill: none; stroke: #333333; stroke-width: 2; stroke-linecap: round" />   </g>   <g id="line2d_4">    <path d="M 87.648 22.68  L 100.248 22.68  " clip-path="url(#pa14bba5b86)" style="fill: none; stroke: #333333; stroke-width: 2; stroke-linecap: round" />   </g>   <g id="text_1">    <text style="font-size: 14px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #333333" x="103.848" y="26.543125" transform="rotate(-0 103.848 26.543125)">C1</text>   </g>   <g id="text_2">    <text style="font-size: 14px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end; fill: #333333" x="30.048" y="17.543125" transform="rotate(-0 30.048 17.543125)">X10</text>   </g>   <g id="text_3">    <text style="font-size: 14px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end; fill: #333333" x="30.048" y="35.543125" transform="rotate(-0 30.048 35.543125)">X01</text>   </g>  </g> </g> <defs>  <clipPath id="pa14bba5b86">   <rect x="0" y="0" width="125.916" height="45.36" />  </clipPath> </defs></svg></div></div>
+<div class="no-break"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:ns2="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" width="250" viewBox="0 0 127.716 44.64" version="1.1" class="svg-graph"> <metadata>  <rdf:RDF>   <ns2:Work>    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage" />    <dc:date>2026-04-28T13:01:18.388368</dc:date>    <dc:format>image/svg+xml</dc:format>    <dc:creator>     <ns2:Agent>      <dc:title>Matplotlib v3.10.8, https://matplotlib.org/</dc:title>     </ns2:Agent>    </dc:creator>   </ns2:Work>  </rdf:RDF> </metadata> <defs>  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style> </defs> <g id="figure_1">  <g id="patch_1">   <path d="M 0 44.64  L 127.716 44.64  L 127.716 0  L 0 0  L 0 44.64  z " style="fill: none" />  </g>  <g id="axes_1">   <g id="line2d_1">    <path d="M 46.248 39.96  L 65.790857 39.893878  L 67.848 39.6  L 69.905143 39.07102  L 71.962286 38.306939  L 74.019429 37.307755  L 76.076571 36.073469  L 78.133714 34.604082  L 80.190857 32.899592  L 82.762286 30.438367  L 85.333714 27.609796  L 87.905143 24.413878  L 89.448 22.32  L 89.448 22.32  L 86.876571 18.903673  L 84.305143 15.854694  L 81.733714 13.173061  L 79.162286 10.858776  L 77.105143 9.271837  L 75.048 7.92  L 72.990857 6.803265  L 70.933714 5.921633  L 68.876571 5.275102  L 66.819429 4.863673  L 64.762286 4.687347  L 64.248 4.68  L 46.248 4.68  L 46.248 4.68  L 48.2352 6.84  L 49.9632 9  L 51.432 11.16  L 52.6416 13.32  L 53.592 15.48  L 54.2832 17.64  L 54.7152 19.8  L 54.888 21.96  L 54.8016 24.12  L 54.456 26.28  L 53.8512 28.44  L 52.9872 30.6  L 51.864 32.76  L 50.4816 34.92  L 48.84 37.08  L 46.9392 39.24  L 46.248 39.96  L 46.248 39.96  " clip-path="url(#pffac2e69d5)" style="fill: none; stroke: #333333; stroke-width: 2; stroke-linecap: round" />   </g>   <g id="line2d_2">    <path d="M 40.848 39.96  L 41.5392 39.24  L 42.2016 38.52  L 42.8352 37.8  L 43.44 37.08  L 44.016 36.36  L 44.5632 35.64  L 45.0816 34.92  L 45.5712 34.2  L 46.032 33.48  L 46.464 32.76  L 46.8672 32.04  L 47.2416 31.32  L 47.5872 30.6  L 47.904 29.88  L 48.192 29.16  L 48.4512 28.44  L 48.6816 27.72  L 48.8832 27  L 49.056 26.28  L 49.2 25.56  L 49.3152 24.84  L 49.4016 24.12  L 49.4592 23.4  L 49.488 22.68  L 49.488 21.96  L 49.4592 21.24  L 49.4016 20.52  L 49.3152 19.8  L 49.2 19.08  L 49.056 18.36  L 48.8832 17.64  L 48.6816 16.92  L 48.4512 16.2  L 48.192 15.48  L 47.904 14.76  L 47.5872 14.04  L 47.2416 13.32  L 46.8672 12.6  L 46.464 11.88  L 46.032 11.16  L 45.5712 10.44  L 45.0816 9.72  L 44.5632 9  L 44.016 8.28  L 43.44 7.56  L 42.8352 6.84  L 42.2016 6.12  L 41.5392 5.4  L 40.848 4.68  " clip-path="url(#pffac2e69d5)" style="fill: none; stroke: #333333; stroke-width: 2; stroke-linecap: round" />   </g>   <g id="line2d_3">    <path d="M 33.648 31.32  L 47.2416 31.32  " clip-path="url(#pffac2e69d5)" style="fill: none; stroke: #333333; stroke-width: 2; stroke-linecap: round" />   </g>   <g id="line2d_4">    <path d="M 33.648 13.32  L 47.2416 13.32  " clip-path="url(#pffac2e69d5)" style="fill: none; stroke: #333333; stroke-width: 2; stroke-linecap: round" />   </g>   <g id="line2d_5">    <path d="M 89.448 22.32  L 102.048 22.32  " clip-path="url(#pffac2e69d5)" style="fill: none; stroke: #333333; stroke-width: 2; stroke-linecap: round" />   </g>   <g id="text_1">    <text style="font-size: 14px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #333333" x="105.648" y="26.183125" transform="rotate(-0 105.648 26.183125)">P2</text>   </g>   <g id="text_2">    <text style="font-size: 14px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end; fill: #333333" x="30.048" y="17.183125" transform="rotate(-0 30.048 17.183125)">X11</text>   </g>   <g id="text_3">    <text style="font-size: 14px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end; fill: #333333" x="30.048" y="35.183125" transform="rotate(-0 30.048 35.183125)">C1</text>   </g>  </g> </g> <defs>  <clipPath id="pffac2e69d5">   <rect x="0" y="0" width="127.716" height="44.64" />  </clipPath> </defs></svg></div></div>
+<div class="no-break"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:ns2="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" width="250" viewBox="0 0 125.916 45.36" version="1.1" class="svg-graph"> <metadata>  <rdf:RDF>   <ns2:Work>    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage" />    <dc:date>2026-04-28T13:01:18.400611</dc:date>    <dc:format>image/svg+xml</dc:format>    <dc:creator>     <ns2:Agent>      <dc:title>Matplotlib v3.10.8, https://matplotlib.org/</dc:title>     </ns2:Agent>    </dc:creator>   </ns2:Work>  </rdf:RDF> </metadata> <defs>  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style> </defs> <g id="figure_1">  <g id="patch_1">   <path d="M 0 45.36  L 125.916 45.36  L 125.916 0  L 0 0  L 0 45.36  z " style="fill: none" />  </g>  <g id="axes_1">   <g id="line2d_1">    <path d="M 69.648 40.68  L 70.801264 40.643017  L 71.949789 40.53222  L 73.088855 40.348065  L 74.213783 40.091308  L 75.319948 39.763003  L 76.402806 39.364502  L 77.457907 38.89744  L 78.480916 38.363737  L 79.467628 37.765586  L 80.41399 37.105445  L 81.316111 36.386027  L 82.170286 35.610288  L 82.973004 34.781416  L 83.720967 33.902816  L 84.411101 32.9781  L 85.04057 32.011066  L 85.606788 31.005689  L 86.107427 29.9661  L 86.540432 28.896571  L 86.904021 27.801497  L 87.196702 26.685377  L 87.417272 25.552798  L 87.564824 24.408414  L 87.638752 23.256928  L 87.638752 22.103072  L 87.564824 20.951586  L 87.417272 19.807202  L 87.196702 18.674623  L 86.904021 17.558503  L 86.540432 16.463429  L 86.107427 15.3939  L 85.606788 14.354311  L 85.04057 13.348934  L 84.411101 12.3819  L 83.720967 11.457184  L 82.973004 10.578584  L 82.170286 9.749712  L 81.316111 8.973973  L 80.41399 8.254555  L 79.467628 7.594414  L 78.480916 6.996263  L 77.457907 6.46256  L 76.402806 5.995498  L 75.319948 5.596997  L 74.213783 5.268692  L 73.088855 5.011935  L 71.949789 4.82778  L 70.801264 4.716983  L 69.648 4.68  L 69.648 4.68  L 46.248 4.68  L 46.248 22.68  L 46.248 40.68  L 69.648 40.68  " clip-path="url(#p5ef9ab3267)" style="fill: none; stroke: #333333; stroke-width: 2; stroke-linecap: round" />   </g>   <g id="line2d_2">    <path d="M 33.648 31.68  L 46.248 31.68  " clip-path="url(#p5ef9ab3267)" style="fill: none; stroke: #333333; stroke-width: 2; stroke-linecap: round" />   </g>   <g id="line2d_3">    <path d="M 33.648 13.68  L 46.248 13.68  " clip-path="url(#p5ef9ab3267)" style="fill: none; stroke: #333333; stroke-width: 2; stroke-linecap: round" />   </g>   <g id="line2d_4">    <path d="M 87.648 22.68  L 100.248 22.68  " clip-path="url(#p5ef9ab3267)" style="fill: none; stroke: #333333; stroke-width: 2; stroke-linecap: round" />   </g>   <g id="text_1">    <text style="font-size: 14px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #333333" x="103.848" y="26.543125" transform="rotate(-0 103.848 26.543125)">P3</text>   </g>   <g id="text_2">    <text style="font-size: 14px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end; fill: #333333" x="30.048" y="17.543125" transform="rotate(-0 30.048 17.543125)">X11</text>   </g>   <g id="text_3">    <text style="font-size: 14px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end; fill: #333333" x="30.048" y="35.543125" transform="rotate(-0 30.048 35.543125)">C1</text>   </g>  </g> </g> <defs>  <clipPath id="p5ef9ab3267">   <rect x="0" y="0" width="125.916" height="45.36" />  </clipPath> </defs></svg></div></div>
 
-<p><strong>Leitura conceitual</strong></p>
-<ol>
-<li>O bit menos significativo sai diretamente do primeiro produto parcial.</li>
-<li>A coluna do meio soma dois produtos e pode gerar carry.</li>
-<li>A coluna seguinte soma o produto parcial mais significativo com esse carry.</li>
-<li>O bit final aparece apenas se ainda houver carry sobrando.</li>
-</ol>
-</div></div>
+<p>Leia o circuito por etapas. Primeiro, $A_0B_0$ sai diretamente como $P_0$. Em seguida, $A_1B_0$ e $A_0B_1$ são somados por uma XOR, gerando $P_1$, e por uma AND, gerando o carry $C_1$. Por fim, $A_1B_1$ é somado com esse carry para produzir $P_2$ e $P_3$.</p>
+<p>A montagem equivalente no Logisim-evolution aparece abaixo. Repare que ela segue exatamente essa organização: quatro portas AND geram os produtos parciais, e duas pequenas somas combinam as colunas internas do resultado.</p>
+<img src="static/multiplicador_2x2.png" width="90%" style="display: block; margin: 0 auto;" alt="Multiplicador 2 por 2 bits montado no Logisim-evolution.">
 
-<h3 id="bloco-funcional-do-multiplicador-2-x-2"><span class="heading-text">Bloco Funcional do Multiplicador 2 x 2</span><span class="heading-arabic">13.4.3</span></h3>
-<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="420" viewBox="0.00 0.00 668.00 98.52" class="svg-graph graphviz-img"><g id="svg-graphviz-2609efcbb433-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 94.52)"><title>Mult2x2</title><polygon fill="white" stroke="transparent" points="-4,4 -4,-94.52 664,-94.52 664,4 -4,4" /><g id="svg-graphviz-2609efcbb433-node1" class="node"><title>A</title><text text-anchor="middle" x="21.5" y="-39.82" font-family="Helvetica,sans-Serif" font-size="14.00">A1 A0</text></g><g id="svg-graphviz-2609efcbb433-node3" class="node"><title>ANDS</title><path fill="none" stroke="black" d="M214,-45.52C214,-45.52 92,-45.52 92,-45.52 86,-45.52 80,-39.52 80,-33.52 80,-33.52 80,-19.52 80,-19.52 80,-13.52 86,-7.52 92,-7.52 92,-7.52 214,-7.52 214,-7.52 220,-7.52 226,-13.52 226,-19.52 226,-19.52 226,-33.52 226,-33.52 226,-39.52 220,-45.52 214,-45.52" /><text text-anchor="middle" x="153" y="-30.32" font-family="Helvetica,sans-Serif" font-size="14.00">4 portas AND</text><text text-anchor="middle" x="153" y="-15.32" font-family="Helvetica,sans-Serif" font-size="14.00">(produtos parciais)</text></g><g id="svg-graphviz-2609efcbb433-edge1" class="edge"><title>A-&gt;ANDS</title><path fill="none" stroke="black" d="M43.02,-40.83C50.72,-39.82 60.02,-38.6 69.91,-37.3" /><polygon fill="black" stroke="black" points="70.49,-40.75 79.95,-35.98 69.58,-33.81 70.49,-40.75" /></g><g id="svg-graphviz-2609efcbb433-node2" class="node"><title>B</title><text text-anchor="middle" x="21.5" y="-6.82" font-family="Helvetica,sans-Serif" font-size="14.00">B1 B0</text></g><g id="svg-graphviz-2609efcbb433-edge2" class="edge"><title>B-&gt;ANDS</title><path fill="none" stroke="black" d="M43.02,-13.06C50.72,-14.01 60.02,-15.16 69.91,-16.38" /><polygon fill="black" stroke="black" points="69.59,-19.87 79.95,-17.62 70.45,-12.92 69.59,-19.87" /></g><g id="svg-graphviz-2609efcbb433-node4" class="node"><title>HA1</title><path fill="none" stroke="black" d="M341,-90.52C341,-90.52 275,-90.52 275,-90.52 269,-90.52 263,-84.52 263,-78.52 263,-78.52 263,-66.52 263,-66.52 263,-60.52 269,-54.52 275,-54.52 275,-54.52 341,-54.52 341,-54.52 347,-54.52 353,-60.52 353,-66.52 353,-66.52 353,-78.52 353,-78.52 353,-84.52 347,-90.52 341,-90.52" /><text text-anchor="middle" x="308" y="-68.82" font-family="Helvetica,sans-Serif" font-size="14.00">Half Adder</text></g><g id="svg-graphviz-2609efcbb433-edge3" class="edge"><title>ANDS-&gt;HA1</title><path fill="none" stroke="black" d="M217.56,-45.63C229.37,-49.18 241.6,-52.86 253.09,-56.31" /><polygon fill="black" stroke="black" points="252.38,-59.76 262.97,-59.28 254.4,-53.05 252.38,-59.76" /></g><g id="svg-graphviz-2609efcbb433-node5" class="node"><title>HA2</title><path fill="none" stroke="black" d="M486,-49.52C486,-49.52 420,-49.52 420,-49.52 414,-49.52 408,-43.52 408,-37.52 408,-37.52 408,-25.52 408,-25.52 408,-19.52 414,-13.52 420,-13.52 420,-13.52 486,-13.52 486,-13.52 492,-13.52 498,-19.52 498,-25.52 498,-25.52 498,-37.52 498,-37.52 498,-43.52 492,-49.52 486,-49.52" /><text text-anchor="middle" x="453" y="-27.82" font-family="Helvetica,sans-Serif" font-size="14.00">Half Adder</text></g><g id="svg-graphviz-2609efcbb433-edge4" class="edge"><title>ANDS-&gt;HA2</title><path fill="none" stroke="black" d="M226.14,-27.73C278.93,-28.62 349.46,-29.8 397.57,-30.61" /><polygon fill="black" stroke="black" points="397.73,-34.11 407.78,-30.78 397.84,-27.11 397.73,-34.11" /></g><g id="svg-graphviz-2609efcbb433-node6" class="node"><title>P</title><text text-anchor="middle" x="618.5" y="-27.82" font-family="Helvetica,sans-Serif" font-size="14.00">P3 P2 P1 P0</text></g><g id="svg-graphviz-2609efcbb433-edge6" class="edge"><title>ANDS-&gt;P</title><path fill="none" stroke="black" d="M226.32,-14.57C296.05,-4.77 404.48,5.91 498,-4.52 526.54,-7.71 558.22,-15.04 581.78,-21.26" /><polygon fill="black" stroke="black" points="581.11,-24.71 591.67,-23.94 582.93,-17.95 581.11,-24.71" /><text text-anchor="middle" x="380.5" y="-5.32" font-family="Times,serif" font-size="14.00">P0</text></g><g id="svg-graphviz-2609efcbb433-edge5" class="edge"><title>HA1-&gt;HA2</title><path fill="none" stroke="black" d="M353.07,-59.89C367.21,-55.83 383.03,-51.3 397.8,-47.06" /><polygon fill="black" stroke="black" points="399.18,-50.31 407.83,-44.19 397.25,-43.58 399.18,-50.31" /></g><g id="svg-graphviz-2609efcbb433-edge7" class="edge"><title>HA1-&gt;P</title><path fill="none" stroke="black" d="M353.36,-72.2C403.77,-71.01 488.24,-66.51 559,-50.52 568.56,-48.36 578.79,-45.31 587.97,-42.28" /><polygon fill="black" stroke="black" points="589.12,-45.59 597.45,-39.04 586.86,-38.96 589.12,-45.59" /><text text-anchor="middle" x="453" y="-73.32" font-family="Times,serif" font-size="14.00">P1</text></g><g id="svg-graphviz-2609efcbb433-edge8" class="edge"><title>HA2-&gt;P</title><path fill="none" stroke="black" d="M498.25,-31.52C519.39,-31.52 544.81,-31.52 566.74,-31.52" /><polygon fill="black" stroke="black" points="566.86,-35.02 576.86,-31.52 566.86,-28.02 566.86,-35.02" /><text text-anchor="middle" x="537.5" y="-35.32" font-family="Times,serif" font-size="14.00">P2,P3</text></g></g></svg></div></div>
-
-<p>Esse diagrama não desenha cada fio interno, mas mostra o arranjo essencial do circuito. Primeiro, as ANDs produzem os termos elementares. Depois, os somadores combinam as colunas que têm mais de um termo. Assim nasce um multiplicador combinacional pequeno.</p>
-<div class="example">
-  <div class="example-title">Multiplicador 2 x 2 - Questão 2</div>
-  <p>Como o circuito responde ao exemplo $10_2 \times 11_2$?</p>
-<hr />
-<p>Temos:</p>
-<p>$$
-A_1A_0 = 10
-\qquad \text{e} \qquad
-B_1B_0 = 11
-$$</p>
-<p>Logo:</p>
-<p>$$
-\begin{aligned}
-p_{00} &= A_0B_0 = 0 \cdot 1 = 0 \\
-p_{10} &= A_1B_0 = 1 \cdot 1 = 1 \\
-p_{01} &= A_0B_1 = 0 \cdot 1 = 0 \\
-p_{11} &= A_1B_1 = 1 \cdot 1 = 1
-\end{aligned}
-$$</p>
-<p>Agora calculamos as saídas:</p>
-<p>$$
-\begin{aligned}
-P_0 &= p_{00} = 0 \\
-P_1 &= p_{10} \oplus p_{01} = 1 \oplus 0 = 1 \\
-C_1 &= p_{10}p_{01} = 1 \cdot 0 = 0 \\
-P_2 &= p_{11} \oplus C_1 = 1 \oplus 0 = 1 \\
-P_3 &= p_{11}C_1 = 1 \cdot 0 = 0
-\end{aligned}
-$$</p>
-<p>Portanto:</p>
-<p>$$
-P = 0110_2
-$$</p>
-<p>Em decimal, isso corresponde a $2 \times 3 = 6$, então o circuito está coerente com a conta aritmética.</p>
-</div>
 <h3 id="como-a-ideia-escala-para-mais-bits"><span class="heading-text">Como a Ideia Escala para Mais Bits</span><span class="heading-arabic">13.4.4</span></h3>
-<p>O multiplicador de $2 \times 2$ bits não é um caso isolado. Ele é apenas a primeira versão completa da técnica. Se aumentarmos o número de bits, o padrão continua o mesmo.</p>
-<ul>
-<li>mais bits no multiplicando e no multiplicador geram mais produtos parciais</li>
-<li>mais colunas passam a ter vários termos ao mesmo tempo</li>
-<li>essas colunas precisam de mais somadores para combinar os resultados</li>
-</ul>
-<p>Por exemplo, em um multiplicador de $3 \times 2$ bits, ainda usamos portas AND para gerar todos os produtos elementares. A diferença é que algumas colunas já podem exigir mais de uma soma encadeada. Isso mostra por que a multiplicação cresce rapidamente em complexidade quando o número de bits aumenta.</p>
+<p>O multiplicador de $2 \times 2$ bits não é um caso isolado. Ele é a primeira célula completa de uma técnica que pode crescer por hierarquia. Em vez de desenhar todas as portas AND de um multiplicador grande, podemos montar multiplicadores maiores a partir de multiplicadores menores, deslocamentos e somadores.</p>
+<p>Essa ideia é uma aplicação direta da distributiva. Primeiro dividimos cada operando em uma parte alta e uma parte baixa. Depois multiplicamos as combinações possíveis entre essas partes e deslocamos cada resultado para a posição correta.</p>
+<h3 id="multiplicador-4-x-4-usando-blocos-2-x-2"><span class="heading-text">Multiplicador 4 x 4 Usando Blocos 2 x 2</span><span class="heading-arabic">13.4.5</span></h3>
+<p>Considere dois operandos de 4 bits:</p>
+<p>$$
+A = A_3A_2A_1A_0
+\qquad \text{e} \qquad
+B = B_3B_2B_1B_0
+$$</p>
+<p>Vamos separar cada um em dois blocos de 2 bits:</p>
+<p>$$
+A = A_H \cdot 2^2 + A_L
+\qquad \text{e} \qquad
+B = B_H \cdot 2^2 + B_L
+$$</p>
+<p>onde:</p>
+<p>$$
+A_H = A_3A_2,
+\qquad
+A_L = A_1A_0
+$$</p>
+<p>$$
+B_H = B_3B_2,
+\qquad
+B_L = B_1B_0
+$$</p>
+<p>Aplicando a distributiva:</p>
+<p>$$
+\begin{aligned}
+A \cdot B
+&= (A_H \cdot 2^2 + A_L)(B_H \cdot 2^2 + B_L) \\
+&= A_LB_L + (A_HB_L \ll 2) + (A_LB_H \ll 2) + (A_HB_H \ll 4)
+\end{aligned}
+$$</p>
+<p>O símbolo $\ll 2$ significa “deslocar 2 posições para a esquerda”, que é o mesmo que multiplicar por $2^2$. O símbolo $\ll 4$ significa deslocar 4 posições, ou multiplicar por $2^4$.</p>
+<p>Portanto, um multiplicador $4 \times 4$ pode ser montado com quatro multiplicadores $2 \times 2$:</p>
+<p>$$
+\begin{array}{c|c|c}
+\text{produto} & \text{deslocamento} & \text{papel no resultado} \\
+\hline
+A_LB_L & \ll 0 & \text{parte menos significativa} \\
+A_HB_L & \ll 2 & \text{contribuição cruzada} \\
+A_LB_H & \ll 2 & \text{contribuição cruzada} \\
+A_HB_H & \ll 4 & \text{parte mais significativa}
+\end{array}
+$$</p>
+<p>No Logisim-evolution, essa montagem pode ser feita de forma bem direta. O importante é separar a construção em etapas, porque cada componente tem uma função simples.</p>
+<p>Primeiro, as entradas <code>A</code> e <code>B</code>, ambas com 4 bits, passam por splitters. Esses splitters não fazem a multiplicação nem o deslocamento. Eles apenas separam cada barramento em dois grupos de 2 bits:</p>
+<p>$$
+A \rightarrow A_H, A_L
+\qquad \text{e} \qquad
+B \rightarrow B_H, B_L
+$$</p>
+<p>Depois ligamos essas partes em quatro multiplicadores $2 \times 2$:</p>
+<p>$$
+\begin{array}{c|c|c}
+\text{bloco} & \text{entradas} & \text{produto gerado} \\
+\hline
+0 & A_L, B_L & P_{LL} = A_LB_L \\
+1 & A_H, B_L & P_{HL} = A_HB_L \\
+2 & A_L, B_H & P_{LH} = A_LB_H \\
+3 & A_H, B_H & P_{HH} = A_HB_H
+\end{array}
+$$</p>
+<p>Cada bloco $2 \times 2$ produz um resultado de 4 bits. Mas o resultado final do multiplicador $4 \times 4$ tem 8 bits. Por isso, no circuito do Logisim, cada produto parcial passa por um <code>Bit Extender</code>, configurado para expandir de 4 bits para 8 bits com zeros.</p>
+<p>Depois da extensão, os produtos parciais são alinhados com <code>Shifter</code>:</p>
+<p>$$
+\begin{array}{c|c|c}
+\text{produto parcial} & \text{operação no Logisim} & \text{valor alinhado} \\
+\hline
+P_{LL} & \text{sem shifter} & P_{LL} \\
+P_{HL} & \text{shifter com constante } 2 & P_{HL} \ll 2 \\
+P_{LH} & \text{shifter com constante } 2 & P_{LH} \ll 2 \\
+P_{HH} & \text{shifter com constante } 4 & P_{HH} \ll 4
+\end{array}
+$$</p>
+<p>Esse detalhe é importante: no seu circuito, o splitter separa os blocos de bits, enquanto o <code>Shifter</code> faz o deslocamento. O <code>Bit Extender</code> vem antes do deslocamento para garantir que todos os produtos parciais tenham a mesma largura de 8 bits antes de serem somados.</p>
+<p>Por fim, três somadores de 8 bits combinam os quatro valores alinhados:</p>
+<p>$$
+\begin{aligned}
+S_1 &= P_{LL} + (P_{HL} \ll 2) \\
+S_2 &= S_1 + (P_{LH} \ll 2) \\
+P &= S_2 + (P_{HH} \ll 4)
+\end{aligned}
+$$</p>
+<p>O resultado final sai em um barramento de 8 bits:</p>
+<p>$$
+P = P_7P_6P_5P_4P_3P_2P_1P_0
+$$</p>
+<p>A imagem abaixo mostra essa montagem no Logisim-evolution. Observe os dois splitters no início, os quatro blocos <code>multiplicador_2x2</code>, os extensores de bits, os deslocadores e a sequência de somadores que produz o resultado final de 8 bits.</p>
+<img src="static/multiplicador_4x4.png" width="95%" style="display: block; margin: 0 auto;" alt="Multiplicador 4 por 4 bits montado no Logisim-evolution usando quatro multiplicadores 2 por 2.">
+
+<p>O ponto importante é que não criamos uma técnica nova para 4 bits. Apenas reutilizamos o multiplicador $2 \times 2$ quatro vezes, expandimos os resultados para a largura final, deslocamos cada um para a coluna correta e somamos tudo.</p>
+<h3 id="multiplicador-8-x-8-usando-blocos-4-x-4"><span class="heading-text">Multiplicador 8 x 8 Usando Blocos 4 x 4</span><span class="heading-arabic">13.4.6</span></h3>
+<p>Agora repetimos a mesma ideia em uma escala maior. Para operandos de 8 bits:</p>
+<p>$$
+A = A_7A_6A_5A_4A_3A_2A_1A_0
+\qquad \text{e} \qquad
+B = B_7B_6B_5B_4B_3B_2B_1B_0
+$$</p>
+<p>Separamos cada um em dois blocos de 4 bits:</p>
+<p>$$
+A = A_H \cdot 2^4 + A_L
+\qquad \text{e} \qquad
+B = B_H \cdot 2^4 + B_L
+$$</p>
+<p>onde:</p>
+<p>$$
+A_H = A_7A_6A_5A_4,
+\qquad
+A_L = A_3A_2A_1A_0
+$$</p>
+<p>$$
+B_H = B_7B_6B_5B_4,
+\qquad
+B_L = B_3B_2B_1B_0
+$$</p>
+<p>Aplicando novamente a distributiva:</p>
+<p>$$
+\begin{aligned}
+A \cdot B
+&= (A_H \cdot 2^4 + A_L)(B_H \cdot 2^4 + B_L) \\
+&= A_LB_L + (A_HB_L \ll 4) + (A_LB_H \ll 4) + (A_HB_H \ll 8)
+\end{aligned}
+$$</p>
+<p>Assim, um multiplicador $8 \times 8$ pode ser montado com quatro multiplicadores $4 \times 4$:</p>
+<p>$$
+\begin{array}{c|c|c}
+\text{produto} & \text{deslocamento} & \text{papel no resultado} \\
+\hline
+A_LB_L & \ll 0 & \text{parte menos significativa} \\
+A_HB_L & \ll 4 & \text{contribuição cruzada} \\
+A_LB_H & \ll 4 & \text{contribuição cruzada} \\
+A_HB_H & \ll 8 & \text{parte mais significativa}
+\end{array}
+$$</p>
+<p>No Logisim, a montagem do $8 \times 8$ repete exatamente o mesmo modelo do $4 \times 4$, apenas aumentando as larguras dos barramentos.</p>
+<p>Primeiro, os splitters separam cada entrada de 8 bits em duas partes de 4 bits:</p>
+<p>$$
+A \rightarrow A_H, A_L
+\qquad \text{e} \qquad
+B \rightarrow B_H, B_L
+$$</p>
+<p>Em seguida, usamos quatro multiplicadores $4 \times 4$:</p>
+<p>$$
+\begin{array}{c|c|c}
+\text{bloco} & \text{entradas} & \text{produto gerado} \\
+\hline
+0 & A_L, B_L & P_{LL} = A_LB_L \\
+1 & A_H, B_L & P_{HL} = A_HB_L \\
+2 & A_L, B_H & P_{LH} = A_LB_H \\
+3 & A_H, B_H & P_{HH} = A_HB_H
+\end{array}
+$$</p>
+<p>Cada multiplicador $4 \times 4$ gera 8 bits, mas o resultado final de uma multiplicação $8 \times 8$ pode ter até 16 bits. Então cada produto parcial passa por <code>Bit Extender</code>, agora expandindo para 16 bits.</p>
+<p>Depois disso, os <code>Shifters</code> alinham os produtos parciais:</p>
+<p>$$
+\begin{array}{c|c|c}
+\text{produto parcial} & \text{operação no Logisim} & \text{valor alinhado} \\
+\hline
+P_{LL} & \text{sem shifter} & P_{LL} \\
+P_{HL} & \text{shifter com constante } 4 & P_{HL} \ll 4 \\
+P_{LH} & \text{shifter com constante } 4 & P_{LH} \ll 4 \\
+P_{HH} & \text{shifter com constante } 8 & P_{HH} \ll 8
+\end{array}
+$$</p>
+<p>Por fim, três somadores de 16 bits combinam os quatro valores alinhados:</p>
+<p>$$
+\begin{aligned}
+S_1 &= P_{LL} + (P_{HL} \ll 4) \\
+S_2 &= S_1 + (P_{LH} \ll 4) \\
+P &= S_2 + (P_{HH} \ll 8)
+\end{aligned}
+$$</p>
+<p>O resultado final sai em um barramento de 16 bits:</p>
+<p>$$
+P = P_{15}P_{14}\ldots P_1P_0
+$$</p>
+<p>No Logisim-evolution, a montagem fica como na imagem abaixo. A estrutura é a mesma do multiplicador $4 \times 4$: splitters na entrada, quatro blocos menores, extensores, deslocadores e somadores. A diferença é que agora os blocos internos são multiplicadores $4 \times 4$ e a saída final tem 16 bits.</p>
+<img src="static/multiplicador_8x8.png" width="95%" style="display: block; margin: 0 auto;" alt="Multiplicador 8 por 8 bits montado no Logisim-evolution usando quatro multiplicadores 4 por 4.">
+
+<p>Essa construção mostra por que multiplicadores grandes normalmente são pensados de forma hierárquica. Um bloco $8 \times 8$ pode ser feito com quatro blocos $4 \times 4$, e cada bloco $4 \times 4$ pode ser feito com quatro blocos $2 \times 2$. O crescimento vem da repetição organizada de blocos menores, extensores, deslocadores e somadores.</p>
 <div class="callout callout-note">
   <div class="callout-title">
     <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
     <span class="callout-title-inner">O que este bloco está ensinando<br /></span>
   </div>
   <div class="callout-content">
-<p>Um multiplicador combinacional simples nada mais é do que uma rede de geração de produtos parciais seguida por uma rede de soma por colunas. A novidade não está em uma porta nova, mas na forma como ANDs e somadores são organizados.</p>
+<p>Um multiplicador combinacional pode crescer por hierarquia. Primeiro entendemos o $2 \times 2$. Depois usamos quatro desses blocos para montar um $4 \times 4$. Em seguida, quatro blocos $4 \times 4$ montam um $8 \times 8$. A lógica central continua sendo produtos parciais, deslocamento e soma.</p>
   </div>
 </div>
-<h2 id="divisão-binária-por-comparação-e-subtração"><span class="heading-text">Divisão Binária por Comparação e Subtração</span><span class="heading-arabic">13.5</span></h2>
-<p>Na multiplicação, cada bit do multiplicador decide se uma linha parcial entra ou não na conta. Na divisão, a pergunta é outra. Em cada etapa precisamos decidir se o divisor ainda cabe dentro do valor parcial atual. Se couber, subtraímos e escrevemos um bit $1$ no quociente. Se não couber, mantemos o valor parcial e escrevemos um bit $0$.</p>
-<p>Essa é a diferença conceitual mais importante entre as duas operações. A multiplicação é uma composição de cópias e somas. A divisão é uma sequência de testes, subtrações e atualizações de resto parcial.</p>
-<div class="callout callout-question">
-  <div class="callout-title">
-    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
-    <span class="callout-title-inner">Reflita<br /></span>
-  </div>
-  <div class="callout-content">
-<p>Em uma divisão binária, o que exatamente faz um bit do quociente valer $1$ em uma certa etapa?</p>
-  </div>
-</div>
-<div class="example">
-  <div class="example-title">Divisão - Questão 1</div>
-  <p>Como ler a conta $110_2 \div 10_2$ passo a passo?</p>
-<hr />
-<p>Em decimal, essa conta é $6 \div 2$, então esperamos quociente $3$, isto é, $11_2$.</p>
-<p>Vamos escrever a divisão como uma sequência de decisões.</p>
-<p>Primeiro, observamos os bits mais significativos do dividendo e formamos um valor parcial grande o suficiente para comparar com o divisor $10_2$.</p>
-<ol>
-<li>O primeiro parcial relevante é $11_2$.</li>
-<li>Como $11_2 \ge 10_2$, podemos subtrair.</li>
-<li>O bit correspondente do quociente vale $1$.</li>
-</ol>
-<p>Fazendo a subtração:</p>
-<p>$$
-11_2 - 10_2 = 01_2
-$$</p>
-<p>Agora descemos o próximo bit do dividendo, que é $0$, formando o novo parcial:</p>
-<p>$$
-10_2
-$$</p>
-<p>Mais uma vez:</p>
-<ul>
-<li>como $10_2 \ge 10_2$, podemos subtrair</li>
-<li>o próximo bit do quociente também vale $1$</li>
-</ul>
-<p>Então:</p>
-<p>$$
-10_2 - 10_2 = 00_2
-$$</p>
-<p>Logo, o resultado final é:</p>
-<p>$$
-110_2 \div 10_2 = 11_2
-$$</p>
-<p>com resto igual a $0$.</p>
-<p>O que importa aqui é a mecânica. Em cada etapa houve uma comparação, uma decisão sobre o bit do quociente e uma possível subtração.</p>
-</div>
-<p>Essa leitura sugere um bloco funcional natural para a divisão. Cada estágio precisa receber um valor parcial, comparar esse valor com o divisor, gerar um bit do quociente e produzir o novo resto parcial que seguirá para a etapa seguinte.</p>
-<h2 id="como-nasce-um-divisor-simples"><span class="heading-text">Como Nasce um Divisor Simples</span><span class="heading-arabic">13.6</span></h2>
-<p>Diferentemente do multiplicador, um divisor didático simples fica mais claro quando pensamos em estágios funcionais. Em vez de abrir toda a lógica booleana interna de cada comparação e de cada subtração, vale mais a pena enxergar a arquitetura da etapa.</p>
-<p>Um estágio de divisão precisa fazer três coisas:</p>
-<ol>
-<li>comparar o resto parcial com o divisor</li>
-<li>decidir se a subtração pode ocorrer</li>
-<li>gerar o próximo resto parcial e o bit correspondente do quociente</li>
-</ol>
-<p>Se chamarmos o resto parcial de entrada de $R_{in}$ e o divisor de $D$, o comportamento da etapa pode ser resumido assim:</p>
-<p>$$
-\text{se } R_{in} \ge D, \text{ então } q = 1 \text{ e } R_{out} = R_{in} - D
-$$</p>
-<p>$$
-\text{se } R_{in} < D, \text{ então } q = 0 \text{ e } R_{out} = R_{in}
-$$</p>
-<p>Essa regra é simples, mas já descreve um divisor funcional.</p>
-<div class="example">
-  <div class="example-title">Divisor Simples - Questão 1</div>
-  <p>Que bloco funcional implementa exatamente essa decisão?</p>
-<hr />
-<p>Precisamos de três partes:</p>
-<ul>
-<li>um <strong>comparador</strong>, que verifica se $R_{in} \ge D$</li>
-<li>um <strong>subtrator</strong>, que calcula $R_{in} - D$</li>
-<li>uma lógica de seleção, que decide se a saída será o valor subtraído ou o próprio $R_{in}$</li>
-</ul>
-<p>Se a comparação der verdadeiro, o bit do quociente dessa etapa vale $1$ e o novo resto parcial é a saída do subtrator.</p>
-<p>Se a comparação der falso, o bit do quociente vale $0$ e o resto parcial segue inalterado.</p>
-<p>Em outras palavras, o comparador não é um acessório externo. Ele é a peça que diz se a subtração faz sentido naquela etapa.</p>
-</div>
-<h3 id="circuito-funcional-de-um-estágio-do-divisor"><span class="heading-text">Circuito Funcional de Um Estágio do Divisor</span><span class="heading-arabic">13.6.1</span></h3>
-<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="500" viewBox="0.00 0.00 577.00 115.88" class="svg-graph graphviz-img"><g id="svg-graphviz-e1d10a9c658b-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 111.88)"><title>DivStage</title><polygon fill="white" stroke="transparent" points="-4,4 -4,-111.88 573,-111.88 573,4 -4,4" /><g id="svg-graphviz-e1d10a9c658b-node1" class="node"><title>Rin</title><text text-anchor="middle" x="58" y="-71.3" font-family="Helvetica,sans-Serif" font-size="14.00">Resto parcial Rin</text></g><g id="svg-graphviz-e1d10a9c658b-node3" class="node"><title>CMP</title><path fill="none" stroke="black" d="M243,-38C243,-38 164,-38 164,-38 158,-38 152,-32 152,-26 152,-26 152,-12 152,-12 152,-6 158,0 164,0 164,0 243,0 243,0 249,0 255,-6 255,-12 255,-12 255,-26 255,-26 255,-32 249,-38 243,-38" /><text text-anchor="middle" x="203.5" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">Comparador</text><text text-anchor="middle" x="203.5" y="-7.8" font-family="Helvetica,sans-Serif" font-size="14.00">Rin &gt;= D ?</text></g><g id="svg-graphviz-e1d10a9c658b-edge1" class="edge"><title>Rin-&gt;CMP</title><path fill="none" stroke="black" d="M78.35,-67.45C95.23,-60.86 120.61,-50.96 144.03,-41.82" /><polygon fill="black" stroke="black" points="145.53,-44.99 153.58,-38.09 142.99,-38.47 145.53,-44.99" /></g><g id="svg-graphviz-e1d10a9c658b-node4" class="node"><title>SUB</title><path fill="none" stroke="black" d="M233,-94C233,-94 174,-94 174,-94 168,-94 162,-88 162,-82 162,-82 162,-68 162,-68 162,-62 168,-56 174,-56 174,-56 233,-56 233,-56 239,-56 245,-62 245,-68 245,-68 245,-82 245,-82 245,-88 239,-94 233,-94" /><text text-anchor="middle" x="203.5" y="-78.8" font-family="Helvetica,sans-Serif" font-size="14.00">Subtrator</text><text text-anchor="middle" x="203.5" y="-63.8" font-family="Helvetica,sans-Serif" font-size="14.00">Rin - D</text></g><g id="svg-graphviz-e1d10a9c658b-edge3" class="edge"><title>Rin-&gt;SUB</title><path fill="none" stroke="black" d="M116.13,-75C127.86,-75 140.13,-75 151.62,-75" /><polygon fill="black" stroke="black" points="151.92,-78.5 161.92,-75 151.92,-71.5 151.92,-78.5" /></g><g id="svg-graphviz-e1d10a9c658b-node5" class="node"><title>SEL</title><path fill="none" stroke="black" d="M410,-93C410,-93 303,-93 303,-93 297,-93 291,-87 291,-81 291,-81 291,-69 291,-69 291,-63 297,-57 303,-57 303,-57 410,-57 410,-57 416,-57 422,-63 422,-69 422,-69 422,-81 422,-81 422,-87 416,-93 410,-93" /><text text-anchor="middle" x="356.5" y="-71.3" font-family="Helvetica,sans-Serif" font-size="14.00">Seleção do resto</text></g><g id="svg-graphviz-e1d10a9c658b-edge7" class="edge"><title>Rin-&gt;SEL</title><path fill="none" stroke="black" d="M78.22,-82.59C96.76,-89.49 125.81,-99.14 152,-103 197.29,-109.67 209.64,-109.2 255,-103 266.85,-101.38 279.27,-98.73 291.18,-95.7" /><polygon fill="black" stroke="black" points="292.28,-99.03 301.04,-93.07 290.47,-92.26 292.28,-99.03" /></g><g id="svg-graphviz-e1d10a9c658b-node2" class="node"><title>D</title><text text-anchor="middle" x="58" y="-27.3" font-family="Helvetica,sans-Serif" font-size="14.00">Divisor D</text></g><g id="svg-graphviz-e1d10a9c658b-edge2" class="edge"><title>D-&gt;CMP</title><path fill="none" stroke="black" d="M90.14,-28.4C105.23,-27.13 123.89,-25.57 141.65,-24.09" /><polygon fill="black" stroke="black" points="142.29,-27.55 151.96,-23.23 141.7,-20.57 142.29,-27.55" /></g><g id="svg-graphviz-e1d10a9c658b-edge4" class="edge"><title>D-&gt;SUB</title><path fill="none" stroke="black" d="M83.67,-38.56C102.46,-44.33 128.97,-52.45 152.18,-59.57" /><polygon fill="black" stroke="black" points="151.3,-62.96 161.89,-62.55 153.36,-56.27 151.3,-62.96" /></g><g id="svg-graphviz-e1d10a9c658b-edge6" class="edge"><title>CMP-&gt;SEL</title><path fill="none" stroke="black" d="M255.2,-37.8C268.71,-42.81 283.4,-48.26 297.28,-53.41" /><polygon fill="black" stroke="black" points="296.13,-56.72 306.72,-56.91 298.56,-50.15 296.13,-56.72" /></g><g id="svg-graphviz-e1d10a9c658b-node6" class="node"><title>q</title><text text-anchor="middle" x="356.5" y="-15.3" font-family="Helvetica,sans-Serif" font-size="14.00">Bit do quociente q</text></g><g id="svg-graphviz-e1d10a9c658b-edge5" class="edge"><title>CMP-&gt;q</title><path fill="none" stroke="black" d="M255.2,-19C264.07,-19 273.46,-19 282.79,-19" /><polygon fill="black" stroke="black" points="282.86,-22.5 292.86,-19 282.86,-15.5 282.86,-22.5" /></g><g id="svg-graphviz-e1d10a9c658b-edge8" class="edge"><title>SUB-&gt;SEL</title><path fill="none" stroke="black" d="M245.36,-75C256.28,-75 268.43,-75 280.56,-75" /><polygon fill="black" stroke="black" points="280.72,-78.5 290.72,-75 280.72,-71.5 280.72,-78.5" /></g><g id="svg-graphviz-e1d10a9c658b-node7" class="node"><title>Rout</title><text text-anchor="middle" x="513.5" y="-71.3" font-family="Helvetica,sans-Serif" font-size="14.00">Novo resto Rout</text></g><g id="svg-graphviz-e1d10a9c658b-edge9" class="edge"><title>SEL-&gt;Rout</title><path fill="none" stroke="black" d="M422.34,-75C430.71,-75 439.29,-75 447.66,-75" /><polygon fill="black" stroke="black" points="447.75,-78.5 457.75,-75 447.75,-71.5 447.75,-78.5" /></g></g></svg></div></div>
-
-<p>Esse diagrama já é suficiente para mostrar a implementação simples da etapa. O comparador toma a decisão. O subtrator prepara a alternativa caso a subtração seja permitida. O seletor escolhe qual resultado deve seguir adiante.</p>
-<h3 id="encadeando-estágios-para-formar-o-divisor"><span class="heading-text">Encadeando Estágios para Formar o Divisor</span><span class="heading-arabic">13.6.2</span></h3>
-<p>Assim como vários Somadores Completos eram encadeados para formar um somador maior, vários estágios de divisão podem ser encadeados para construir o quociente bit a bit.</p>
-<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="760" viewBox="0.00 0.00 290.00 44.00" class="svg-graph graphviz-img"><g id="svg-graphviz-9f3a0c431642-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 40)"><title>DividerChain</title><polygon fill="white" stroke="transparent" points="-4,4 -4,-40 286,-40 286,4 -4,4" /><g id="svg-graphviz-9f3a0c431642-node1" class="node"><title>s0</title><path fill="none" stroke="black" d="M58,-36C58,-36 12,-36 12,-36 6,-36 0,-30 0,-24 0,-24 0,-12 0,-12 0,-6 6,0 12,0 12,0 58,0 58,0 64,0 70,-6 70,-12 70,-12 70,-24 70,-24 70,-30 64,-36 58,-36" /><text text-anchor="middle" x="35" y="-14.3" font-family="Helvetica,sans-Serif" font-size="14.00">Etapa 0</text></g><g id="svg-graphviz-9f3a0c431642-node2" class="node"><title>s1</title><path fill="none" stroke="black" d="M164,-36C164,-36 118,-36 118,-36 112,-36 106,-30 106,-24 106,-24 106,-12 106,-12 106,-6 112,0 118,0 118,0 164,0 164,0 170,0 176,-6 176,-12 176,-12 176,-24 176,-24 176,-30 170,-36 164,-36" /><text text-anchor="middle" x="141" y="-14.3" font-family="Helvetica,sans-Serif" font-size="14.00">Etapa 1</text></g><g id="svg-graphviz-9f3a0c431642-edge1" class="edge"><title>s0-&gt;s1</title><path fill="none" stroke="black" d="M70.05,-18C78.22,-18 87.07,-18 95.63,-18" /><polygon fill="black" stroke="black" points="95.87,-21.5 105.87,-18 95.87,-14.5 95.87,-21.5" /></g><g id="svg-graphviz-9f3a0c431642-node3" class="node"><title>s2</title><path fill="none" stroke="black" d="M270,-36C270,-36 224,-36 224,-36 218,-36 212,-30 212,-24 212,-24 212,-12 212,-12 212,-6 218,0 224,0 224,0 270,0 270,0 276,0 282,-6 282,-12 282,-12 282,-24 282,-24 282,-30 276,-36 270,-36" /><text text-anchor="middle" x="247" y="-14.3" font-family="Helvetica,sans-Serif" font-size="14.00">Etapa 2</text></g><g id="svg-graphviz-9f3a0c431642-edge2" class="edge"><title>s1-&gt;s2</title><path fill="none" stroke="black" d="M176.05,-18C184.22,-18 193.07,-18 201.63,-18" /><polygon fill="black" stroke="black" points="201.87,-21.5 211.87,-18 201.87,-14.5 201.87,-21.5" /></g></g></svg></div></div>
-
-<p>Cada etapa recebe um resto parcial, decide um bit do quociente e entrega um novo resto para a próxima. O quociente completo aparece como a sequência dos bits produzidos por essas etapas.</p>
-<p>Esse arranjo é didático porque deixa clara a ideia central sem exigir ainda uma arquitetura sequencial completa com registradores, clock e unidade de controle. O foco aqui é a lógica da operação, não o refinamento microarquitetural.</p>
-<div class="example">
-  <div class="example-title">Divisor Simples - Questão 2</div>
-  <p>Como uma etapa decide entre escrever $0$ ou $1$ no quociente?</p>
-<hr />
-<p>Suponha que o divisor seja $D = 11_2$ e que um certo resto parcial de entrada seja $R_{in} = 10_2$.</p>
-<p>Como:</p>
-<p>$$
-10_2 < 11_2
-$$</p>
-<p>não podemos subtrair. Portanto:</p>
-<p>$$
-q = 0
-\qquad \text{e} \qquad
-R_{out} = R_{in} = 10_2
-$$</p>
-<p>Agora suponha que em outra etapa tenhamos:</p>
-<p>$$
-R_{in} = 11_2
-\qquad \text{e} \qquad
-D = 10_2
-$$</p>
-<p>Como:</p>
-<p>$$
-11_2 \ge 10_2
-$$</p>
-<p>podemos subtrair. Então:</p>
-<p>$$
-q = 1
-\qquad \text{e} \qquad
-R_{out} = 11_2 - 10_2 = 01_2
-$$</p>
-<p>Esse contraste resume a decisão inteira da etapa. O bit do quociente vale $1$ exatamente quando o resto parcial é suficiente para suportar a subtração do divisor.</p>
-</div>
-<h3 id="uma-implementação-didática-pequena"><span class="heading-text">Uma Implementação Didática Pequena</span><span class="heading-arabic">13.6.3</span></h3>
-<p>Para manter a aula proporcional à anterior, vamos fixar uma leitura simples de implementação. Em vez de abrir um divisor completo bit a bit com todas as expressões booleanas internas, vamos tratá-lo como uma cascata de blocos conhecidos.</p>
-<p>Cada estágio pode ser lido assim:</p>
-<ul>
-<li>entrada de resto parcial</li>
-<li>comparador com o divisor</li>
-<li>subtrator candidato</li>
-<li>seleção entre manter o resto ou usar a subtração</li>
-<li>geração de um bit do quociente</li>
-</ul>
-<p>Essa abordagem é importante por dois motivos.</p>
-<p>Primeiro, ela já é uma implementação concreta. O circuito não está apenas sendo descrito em palavras. Ele está organizado em blocos funcionais reais.</p>
-<p>Segundo, ela preserva a continuidade didática com a aula 12. Lá vimos como subtratores podiam ser encadeados. Aqui vemos que a divisão reutiliza a subtração, mas agora subordinada a uma decisão de comparação em cada etapa.</p>
-<div class="callout callout-note">
-  <div class="callout-title">
-    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
-    <span class="callout-title-inner">O que este bloco está ensinando<br /></span>
-  </div>
-  <div class="callout-content">
-<p>Um divisor simples pode ser implementado como uma cascata de estágios de comparação e subtração. A novidade não é uma porta lógica exótica, mas a regra de decisão que define quando a subtração realmente acontece.</p>
-  </div>
-</div>
-<h2 id="comparando-multiplicador-e-divisor"><span class="heading-text">Comparando Multiplicador e Divisor</span><span class="heading-arabic">13.7</span></h2>
-<p>Agora vale consolidar a diferença entre as duas arquiteturas, porque isso evita uma confusão comum. Tanto multiplicação quanto divisão reutilizam blocos menores, mas não organizam esses blocos da mesma forma.</p>
-<div class="col2"><div>
-
-<p><strong>Multiplicador</strong></p>
-<ul>
-<li>gera produtos parciais com AND</li>
-<li>organiza esses termos por colunas</li>
-<li>soma as colunas com somadores</li>
-<li>o deslocamento define onde cada linha parcial entra</li>
-</ul>
-</div><div>
-
-<p><strong>Divisor</strong></p>
-<ul>
-<li>forma um resto parcial em cada etapa</li>
-<li>compara esse valor com o divisor</li>
-<li>decide se pode subtrair</li>
-<li>o bit do quociente nasce dessa decisão</li>
-</ul>
-</div></div>
-
-<p>No multiplicador, a pergunta central é “quais linhas parciais devem existir e em que colunas devem ser somadas?”. No divisor, a pergunta central é “o divisor cabe neste resto parcial ou não?”. Esse contraste ajuda a entender por que um circuito cresce por produtos e carries, enquanto o outro cresce por decisões condicionais sobre o resto.</p>
-<h2 id="questões"><span class="heading-text">Questões</span><span class="heading-arabic">13.8</span></h2>
+<h2 id="questões"><span class="heading-text">Questões</span><span class="heading-arabic">13.5</span></h2>
 <div class="questions">
   <p><strong>1.</strong> Explique, com suas palavras, por que as identidades $A \cdot 0 = 0$ e $A \cdot 1 = A$ são fundamentais para entender produtos parciais em multiplicação binária.</p>
 <p><strong>2.</strong> Mostre como a distributiva $A(B + C) = AB + AC$ ajuda a reorganizar expressões lógicas em circuitos aritméticos.</p>
@@ -656,12 +562,8 @@ $$</p>
 <p><strong>6.</strong> Derive as expressões de $P_0$, $P_1$, $P_2$ e $P_3$ para o multiplicador de $2 \times 2$ bits estudado na aula.</p>
 <p><strong>7.</strong> Explique por que a coluna intermediária de um multiplicador de $2 \times 2$ bits pode ser tratada como um problema de Meio Somador.</p>
 <p><strong>8.</strong> Mostre como o circuito do multiplicador responde à entrada $A = 11_2$ e $B = 10_2$.</p>
-<p><strong>9.</strong> Explique, com suas palavras, por que a divisão binária precisa de comparação antes da subtração.</p>
-<p><strong>10.</strong> Reproduza o passo a passo de $110_2 \div 10_2$ indicando, em cada etapa, o resto parcial, a decisão do bit do quociente e o novo resto.</p>
-<p><strong>11.</strong> Descreva o papel de cada bloco funcional em um estágio do divisor simples, indicando a função do comparador, do subtrator e do seletor.</p>
-<p><strong>12.</strong> Em uma etapa de divisão, suponha $R_{in} = 10_2$ e $D = 11_2$. Determine o bit do quociente da etapa e o valor de $R_{out}$.</p>
-<p><strong>13.</strong> Em uma etapa de divisão, suponha $R_{in} = 11_2$ e $D = 10_2$. Determine o bit do quociente da etapa e o valor de $R_{out}$.</p>
-<p><strong>14.</strong> Compare, em termos funcionais, o modo como um multiplicador e um divisor reutilizam os blocos estudados na aula 12.</p>
+<p><strong>9.</strong> Explique como montar um multiplicador $4 \times 4$ no Logisim usando splitters, quatro multiplicadores $2 \times 2$, bit extenders, shifters e somadores.</p>
+<p><strong>10.</strong> Explique como montar um multiplicador $8 \times 8$ no mesmo modelo, agora usando quatro multiplicadores $4 \times 4$.</p>
 </div>
 <div class="example">
   <div class="example-title">Gabarito</div>
@@ -705,15 +607,11 @@ P_3 &= (A_1B_1)C_1
 $$</p>
 <p><strong>7.</strong> Porque nessa coluna existem exatamente dois termos a serem somados, $A_1B_0$ e $A_0B_1$. Isso é precisamente o caso resolvido por um Meio Somador, que produz soma local e carry.</p>
 <p><strong>8.</strong> Para $A = 11_2$ e $B = 10_2$, temos $p_{00}=0$, $p_{10}=0$, $p_{01}=1$ e $p_{11}=1$. Assim, $P_0=0$, $P_1=1$, $C_1=0$, $P_2=1$ e $P_3=0$. Logo, o produto é $0110_2$.</p>
-<p><strong>9.</strong> Porque a subtração só faz sentido quando o resto parcial é pelo menos tão grande quanto o divisor. Sem essa verificação, o circuito não saberia se deve escrever $1$ ou $0$ naquele bit do quociente.</p>
-<p><strong>10.</strong> Primeiro, $11_2 \ge 10_2$, então o primeiro bit do quociente vale $1$ e o novo resto é $01_2$. Depois descemos o próximo bit e formamos $10_2$. Como $10_2 \ge 10_2$, o próximo bit do quociente vale $1$ e o novo resto é $00_2$. O quociente final é $11_2$.</p>
-<p><strong>11.</strong> O comparador verifica se o resto parcial suporta a subtração. O subtrator calcula o valor candidato $R_{in} - D$. O seletor decide se a saída será esse valor subtraído ou o próprio resto parcial, conforme o resultado da comparação.</p>
-<p><strong>12.</strong> Como $10_2 < 11_2$, não há subtração. Portanto, $q = 0$ e $R_{out} = 10_2$.</p>
-<p><strong>13.</strong> Como $11_2 \ge 10_2$, a subtração é permitida. Portanto, $q = 1$ e $R_{out} = 01_2$.</p>
-<p><strong>14.</strong> O multiplicador reutiliza principalmente portas AND e somadores para gerar e combinar produtos parciais. O divisor reutiliza comparador e subtrator em etapas que decidem o bit do quociente e atualizam o resto parcial.</p>
+<p><strong>9.</strong> Os splitters separam $A$ e $B$ em partes alta e baixa de 2 bits. Depois usamos quatro multiplicadores $2 \times 2$: $A_LB_L$, $A_HB_L$, $A_LB_H$ e $A_HB_H$. Cada saída de 4 bits passa por <code>Bit Extender</code> para virar 8 bits. Em seguida, os <code>Shifters</code> alinham os produtos: $A_LB_L$ sem deslocamento, $A_HB_L$ deslocado 2 bits, $A_LB_H$ deslocado 2 bits e $A_HB_H$ deslocado 4 bits. Por fim, três somadores de 8 bits combinam tudo.</p>
+<p><strong>10.</strong> Os splitters separam $A$ e $B$ em partes alta e baixa de 4 bits. Depois usamos quatro multiplicadores $4 \times 4$: $A_LB_L$, $A_HB_L$, $A_LB_H$ e $A_HB_H$. Cada saída de 8 bits é expandida para 16 bits com <code>Bit Extender</code>. Os <code>Shifters</code> alinham os produtos: deslocamentos de 0, 4, 4 e 8 bits. Três somadores de 16 bits produzem o resultado final.</p>
 </div>
-<h2 id="próximos-passos"><span class="heading-text">Próximos passos</span><span class="heading-arabic">13.9</span></h2>
-<p>No próximo capítulo, <a href="14%20-%20msi%20combinational%20modules.html">Módulos MSI Combinacionais: Decodificadores, Encoders, Mux e Demux (Cap. 9)</a>, vamos estudar como os blocos funcionais prontos para uso em sistemas maiores, como seletores de dados e decodificadores de códigos, facilitam o projeto de circuitos mais complexos.</p>
+<h2 id="próximos-passos"><span class="heading-text">Próximos passos</span><span class="heading-arabic">13.6</span></h2>
+<p>Nesta aula, vimos como a multiplicação binária pode ser construída com produtos parciais, deslocamentos e somadores. A divisão binária também pode ser implementada em hardware, mas ela exige uma lógica de decisão: comparar valores, escolher entre manter ou subtrair, e encadear restos parciais. Por isso, vamos deixar a divisão para depois de estudar blocos de seleção e comparação. No próximo capítulo, <a href="14%20-%20msi%20combinational%20modules.html">Módulos MSI Combinacionais: Decodificadores, Encoders, Mux e Demux (Cap. 9)</a>, vamos estudar alguns desses blocos funcionais prontos para uso em sistemas maiores.</p>
 
                 </div>
             </article>

@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toposia - Engenharia de Software</title>
+    <link rel="icon" href="/aulas-faesa/img/dark-favicon.svg" media="(prefers-color-scheme: light)">
+    <link rel="icon" href="/aulas-faesa/img/light-favicon.svg" media="(prefers-color-scheme: dark)">
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/fonts.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/bundles/katex-base-prism-one-light-b0347952c973.bundle.min.css">
+    
+    
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css" data-no-bundle>
+    <script src="/aulas-faesa/js/bundles/lucide-katex-auto-render-4b36e8bd8642.bundle.min.js"></script>
+</head>
+
+<body>
+    <script>
+        // Restore sidebar state instantly (before first paint) to avoid transition flash
+        (function() {
+            if (localStorage.getItem('cf_sidebar_hidden') === 'true') {
+                document.body.classList.add('sidebar-hidden', 'no-transition');
+            }
+            requestAnimationFrame(function() {
+                requestAnimationFrame(function() {
+                    document.body.classList.remove('no-transition');
+                });
+            });
+        })();
+    </script>
+    <div class="page-wrapper">
+        <nav class="sidebar">
+            <div class="sidebar-content">
+                <header class="sidebar-title-section">
+                    <a href="contents.html" class="course-title-link">
+                        <h1 class="sidebar-course-title">Engenharia de Software</h1>
+                    </a>
+                    <div class="sidebar-ornament">❧</div>
+                </header>
+
+                
+                <section class="sidebar-toc-section">
+                    <h2 class="toc-header">Tabela de Conteúdos</h2>
+                    <ol class="toc-list">
+                        
+                        <li class="toc-item level-2">
+                            <a href="#introdução">9.1. Introdução</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#software-útil-precisa-mudar">9.2. Software útil precisa mudar</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#o-ambiente-força-a-evolução">9.2.1. O ambiente força a evolução</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#do-desenvolvimento-para-a-evolução">9.3. Do desenvolvimento para a evolução</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#evolução-e-serviço">9.3.1. Evolução e serviço</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#o-processo-de-evolução">9.4. O processo de evolução</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#análise-de-impacto">9.4.1. Análise de impacto</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#correções-emergenciais">9.4.2. Correções emergenciais</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#as-leis-de-lehman-e-a-dinâmica-da-evolução">9.5. As leis de Lehman e a dinâmica da evolução</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#tipos-de-manutenção-de-software">9.6. Tipos de manutenção de software</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#por-que-manutenção-custa-caro">9.6.1. Por que manutenção custa caro</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#previsão-de-manutenção">9.7. Previsão de manutenção</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#reengenharia-de-software">9.8. Reengenharia de software</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#reengenharia-não-é-reescrita-total">9.8.1. Reengenharia não é reescrita total</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#refatoração-como-manutenção-preventiva">9.9. Refatoração como manutenção preventiva</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#reengenharia-e-refatoração-não-são-a-mesma-coisa">9.9.1. Reengenharia e refatoração não são a mesma coisa</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#maus-cheiros-de-código">9.9.2. Maus cheiros de código</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#sistemas-legados-e-decisões-estratégicas">9.10. Sistemas legados e decisões estratégicas</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#o-que-avaliar-em-um-legado">9.10.1. O que avaliar em um legado</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#o-papel-profissional-da-manutenibilidade">9.11. O papel profissional da manutenibilidade</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#questões">9.12. Questões</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#próximos-passos">9.13. Próximos passos</a>
+                        </li>
+                        
+                    </ol>
+                </section>
+                
+
+                <nav class="sidebar-nav-section">
+                    
+                    <a href="8-software-testing.html" class="sidebar-nav-link prev"><i data-lucide="chevron-left" class="nav-icon"></i> Testes de Software</a>
+                    
+                    
+                    <a href="javascript:void(0)" onclick="handleBackNavigation()"
+                        class="sidebar-nav-link back"><i data-lucide="arrow-left" class="nav-icon"></i> Voltar</a>
+                </nav>
+
+            </div>
+        </nav>
+
+        <button class="mobile-menu-toggle" aria-label="Menu">
+            <i data-lucide="menu"></i>
+        </button>
+
+        <button class="sidebar-toggle" onclick="CourseForgeNav.toggleSidebar()" aria-label="Alternar Barra Lateral">
+            <i data-lucide="chevron-left" class="toggle-icon" id="sidebar-toggle-icon"></i>
+        </button>
+
+        <div class="mobile-menu-overlay"></div>
+
+        <main class="main-content">
+            <article class="article">
+                <header class="article-header">
+                    <span class="chapter-number">9</span>
+                    <h1 class="article-title">
+                        <span class="title-ornament left">❧</span>
+                        <span class="title-text">Evolução, Manutenção e Refatoração de Software</span>
+                        <span class="title-ornament right">❧</span>
+                    </h1>
+                    
+                    <p class="article-date">29/04/2026</p>
+                    
+                    
+                    <nav class="breadcrumb" aria-label="Breadcrumb">
+                        
+                        
+                        
+                        <a href="contents.html" class="breadcrumb-link">Engenharia de Software</a>
+                        
+                        <span class="breadcrumb-separator"><i data-lucide="chevron-right" class="breadcrumb-icon"></i></span>
+                        
+                        
+                        
+                        
+                        <a href="contents.html#part-III" class="breadcrumb-link">III - Gerenciamento de Software</a>
+                        
+                        <span class="breadcrumb-separator"><i data-lucide="chevron-right" class="breadcrumb-icon"></i></span>
+                        
+                        
+                        
+                        <span class="breadcrumb-current">Evolução, Manutenção e Refatoração de Software</span>
+                        
+                        
+                    </nav>
+                    
+                </header>
+                <div class="article-body">
+                    <h2 id="introdução"><span class="heading-text">Introdução</span><span class="heading-arabic">9.1</span></h2>
+<p>Hoje você vai ver por que entregar um sistema não encerra o trabalho de engenharia de software. Na prática, a entrega apenas muda o tipo de problema que a equipe passa a enfrentar.</p>
+<p>Até aqui, estudamos processos, requisitos, modelos, arquitetura, implementação e testes. Todos esses temas aparecem antes da primeira entrega, mas continuam importando depois dela. O motivo é simples: um software útil entra em contato com um ambiente real, e esse ambiente muda. A organização muda suas regras, usuários descobrem novas necessidades, plataformas são atualizadas, defeitos aparecem em produção e outros sistemas passam a exigir integração.</p>
+<p>Segundo Sommerville, essa é a razão para tratarmos <strong>desenvolvimento</strong> e <strong>evolução</strong> como partes de um mesmo ciclo de vida. Um sistema profissional raramente é construído, entregue e abandonado. Ele continua sendo modificado enquanto ainda tiver valor para a organização.</p>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Se um sistema acadêmico foi entregue funcionando em 2024, ele continuará adequado em 2026 se mudarem o calendário institucional, as regras de matrícula, a forma de autenticação e a integração com sistemas do governo?</p>
+  </div>
+</div>
+<p>Provavelmente não. Mesmo que o código original estivesse correto, o sistema pode ficar progressivamente menos útil se não acompanhar o ambiente. Essa é a ideia central da evolução de software.</p>
+<h2 id="software-útil-precisa-mudar"><span class="heading-text">Software útil precisa mudar</span><span class="heading-arabic">9.2</span></h2>
+<p>Um erro comum é imaginar manutenção como uma atividade menor, feita apenas para corrigir bugs. Isso reduz demais o problema. Em sistemas reais, manutenção também inclui adaptação a novos ambientes, incorporação de novos requisitos, melhoria de estrutura e preparação para mudanças futuras.</p>
+<p>Sommerville destaca que sistemas de software são ativos críticos de negócio. Uma organização pode depender deles para vender, atender clientes, controlar estoque, operar infraestrutura ou cumprir obrigações legais. Por isso, preservar o valor desses sistemas costuma consumir uma parte enorme do orçamento de TI.</p>
+<img src="static/figura-9-1-modelo-espiral-desenvolvimento-e-evolucao.png" width="85%">
+
+<p>A Figura 9.1 ajuda a enxergar a ideia de ciclo. O sistema passa por especificação, implementação, validação e operação, mas isso não acontece uma única vez. Depois do primeiro release, novas mudanças alimentam outro ciclo, que produz outro release, e assim por diante.</p>
+<h3 id="o-ambiente-força-a-evolução"><span class="heading-text">O ambiente força a evolução</span><span class="heading-arabic">9.2.1</span></h3>
+<p>A mudança pode vir de muitos lugares:</p>
+<ol>
+<li>novas regras de negócio;</li>
+<li>mudanças legais ou regulatórias;</li>
+<li>defeitos encontrados em operação;</li>
+<li>atualização de sistema operacional, banco de dados ou hardware;</li>
+<li>integração com outros sistemas;</li>
+<li>novas expectativas dos usuários;</li>
+<li>pressão competitiva do mercado.</li>
+</ol>
+<p>Essa variedade importa porque mostra que a manutenção não é apenas um problema técnico. Ela é também uma resposta a mudanças organizacionais, econômicas e sociais.</p>
+<div class="example">
+  <div class="example-title">Exemplo 1</div>
+  <p>Imagine um sistema de controle de biblioteca que registra empréstimos, devoluções e multas.</p>
+<p>No primeiro ano, ele funciona bem. No segundo ano, a instituição decide aceitar renovação pelo aplicativo. No terceiro, muda a regra de multa. No quarto, a autenticação passa a usar login institucional único. No quinto, a biblioteca precisa exportar relatórios para um sistema nacional.</p>
+<p>Nenhuma dessas mudanças significa que o sistema original era inútil. Elas significam que o ambiente continuou se movendo. Se o software não evoluir, ele deixa de sustentar o processo real da organização.</p>
+</div>
+<div class="example">
+  <div class="example-title">Exemplo 2</div>
+  <p>Agora pense em um sistema de vendas que depende de uma API de pagamento externa.</p>
+<p>A API muda o formato de autenticação e descontinua um endpoint antigo. Mesmo que nenhuma regra interna da loja tenha mudado, o sistema precisa ser alterado para continuar vendendo.</p>
+<p>Esse é um caso de evolução provocada pelo ambiente técnico. O software não está isolado. Ele vive dentro de uma rede de dependências.</p>
+</div>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner"><br /></span>
+  </div>
+  <div class="callout-content">
+<p>Um sistema pode ficar obsoleto sem ter um único bug novo. Basta que o mundo ao redor dele mude e ele não acompanhe essa mudança.</p>
+  </div>
+</div>
+<h2 id="do-desenvolvimento-para-a-evolução"><span class="heading-text">Do desenvolvimento para a evolução</span><span class="heading-arabic">9.3</span></h2>
+<p>Sommerville propõe pensar o software como um processo contínuo. Em vez de separar rigidamente &quot;desenvolvimento&quot; e &quot;manutenção&quot;, faz mais sentido enxergar ambos como ciclos de mudança.</p>
+<p>Essa mudança de visão é importante porque combate uma ideia perigosa: a de que a equipe pode economizar durante o desenvolvimento e deixar a manutenibilidade para depois. Na prática, depois costuma ser mais caro. Quando o sistema já está em produção, a equipe precisa entender o código existente, avaliar impactos, preservar dados, evitar regressões e negociar mudanças com usuários reais.</p>
+<h3 id="evolução-e-serviço"><span class="heading-text">Evolução e serviço</span><span class="heading-arabic">9.3.1</span></h3>
+<p>Rajlich e Bennett, citados por Sommerville, distinguem fases diferentes na vida de um sistema:</p>
+<ol>
+<li><strong>desenvolvimento inicial</strong>, quando o sistema é criado;</li>
+<li><strong>evolução</strong>, quando mudanças significativas ainda são feitas;</li>
+<li><strong>em serviço</strong>, quando apenas mudanças pequenas e essenciais são aceitas;</li>
+<li><strong>interrupção gradual</strong>, quando o sistema ainda pode ser usado, mas deixa de receber novas mudanças relevantes.</li>
+</ol>
+<p>Essa distinção mostra que nem todo sistema em uso está igualmente saudável. Alguns sistemas continuam evoluindo com relativa segurança. Outros ainda são usados, mas já estão tão rígidos ou arriscados que a organização apenas evita mexer neles.</p>
+<div class="example">
+  <div class="example-title">Exemplo 3</div>
+  <p>Um sistema de folha de pagamento ainda recebe ajustes anuais de regras trabalhistas, relatórios e integrações. Ele está em fase de evolução, porque a organização ainda investe em mudanças significativas.</p>
+<p>Já um sistema antigo de consulta histórica, usado apenas para verificar registros de anos anteriores, pode estar em serviço. Ele ainda é necessário, mas ninguém quer adicionar grandes funcionalidades. A prioridade é mantê-lo funcionando até que os dados sejam migrados ou deixem de ser necessários.</p>
+</div>
+<div class="example">
+  <div class="example-title">Exemplo 4</div>
+  <p>Considere uma aplicação desktop antiga escrita em uma linguagem pouco usada. Ela controla equipamentos de laboratório e ainda funciona em uma máquina específica.</p>
+<p>Se a organização evita qualquer alteração porque ninguém entende bem o código e porque o ambiente de compilação é frágil, esse sistema provavelmente não está mais em evolução saudável. Ele pode estar apenas em serviço, aguardando substituição ou reengenharia.</p>
+</div>
+<h2 id="o-processo-de-evolução"><span class="heading-text">O processo de evolução</span><span class="heading-arabic">9.4</span></h2>
+<p>Toda evolução começa com alguma proposta de mudança. Essa proposta pode vir de um bug, de um novo requisito, de uma necessidade operacional ou de uma melhoria sugerida pela equipe. O ponto essencial é que a mudança não deve ser simplesmente implementada sem análise.</p>
+<img src="static/figura-9-4-processo-evolucao-software.png" width="90%">
+
+<p>A Figura 9.4 mostra um fluxo típico. Uma solicitação de mudança passa por análise de impacto, planejamento de release, implementação e liberação do sistema. Esse processo tenta responder quatro perguntas práticas:</p>
+<ol>
+<li>o que precisa mudar?</li>
+<li>que partes do sistema serão afetadas?</li>
+<li>quanto custará implementar e testar essa mudança?</li>
+<li>em qual release ela deve entrar?</li>
+</ol>
+<h3 id="análise-de-impacto"><span class="heading-text">Análise de impacto</span><span class="heading-arabic">9.4.1</span></h3>
+<p>A <strong>análise de impacto</strong> é a tentativa de entender as consequências de uma mudança antes de implementá-la. Ela exige examinar código, requisitos, arquitetura, testes, dados, interfaces e integrações.</p>
+<p>Essa etapa é decisiva porque uma mudança pequena na tela pode esconder uma alteração grande no domínio. Uma mudança aparentemente localizada pode afetar banco de dados, regras de validação, relatórios e APIs externas.</p>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Quando um cliente pede &quot;só adicionar um campo obrigatório no cadastro&quot;, que partes do sistema podem ser afetadas além da tela de cadastro?</p>
+  </div>
+</div>
+<p>Podem ser afetados o banco de dados, validações, importações, exportações, relatórios, testes automatizados, documentação, integrações, permissões e até regras de negócio que usam aquele cadastro.</p>
+<div class="example">
+  <div class="example-title">Exemplo 5</div>
+  <p>Solicitação: tornar obrigatório o CPF do responsável financeiro no sistema acadêmico.</p>
+<p>A mudança parece pequena, mas a análise de impacto pode revelar vários pontos:</p>
+<ol>
+<li>a tabela de responsáveis precisa aceitar e validar CPF;</li>
+<li>registros antigos podem não ter esse dado;</li>
+<li>a tela de cadastro precisa mudar;</li>
+<li>a API precisa rejeitar dados inválidos;</li>
+<li>relatórios financeiros podem passar a exibir o CPF;</li>
+<li>testes de cadastro e matrícula precisam ser atualizados;</li>
+<li>integrações externas podem depender do formato antigo.</li>
+</ol>
+<p>O exemplo mostra por que manutenção profissional não é apenas &quot;abrir o código e mexer&quot;. Primeiro é preciso entender o alcance da mudança.</p>
+</div>
+<div class="example">
+  <div class="example-title">Exemplo 6</div>
+  <p>Solicitação: corrigir cálculo de desconto em um sistema de e-commerce.</p>
+<p>Se o desconto aparece no carrinho, no checkout, na nota fiscal, no relatório financeiro e na API de pedidos, corrigir apenas a primeira função encontrada pode deixar o sistema inconsistente.</p>
+<p>A análise de impacto deve identificar onde a regra é aplicada, onde é duplicada e quais testes podem revelar regressões.</p>
+</div>
+<h3 id="correções-emergenciais"><span class="heading-text">Correções emergenciais</span><span class="heading-arabic">9.4.2</span></h3>
+<p>Sommerville também chama atenção para um caso perigoso: a correção emergencial. Às vezes, um defeito grave em produção precisa ser corrigido rapidamente. Nessa situação, a equipe pode pular parte do fluxo formal e aplicar uma solução viável no código.</p>
+<p>Isso pode ser necessário, mas tem custo. Se a documentação, os requisitos e os testes não forem realinhados depois, o sistema envelhece mais rápido. A solução emergencial vira uma decisão permanente sem análise adequada.</p>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner"><br /></span>
+  </div>
+  <div class="callout-content">
+<p>Uma correção emergencial deve resolver o incidente, mas não deveria encerrar a mudança. Depois da emergência, a equipe precisa revisar a solução, atualizar documentação e reforçar testes.</p>
+  </div>
+</div>
+<h2 id="as-leis-de-lehman-e-a-dinâmica-da-evolução"><span class="heading-text">As leis de Lehman e a dinâmica da evolução</span><span class="heading-arabic">9.5</span></h2>
+<p>Lehman e Belady estudaram a evolução de sistemas de software de grande porte e propuseram leis que descrevem padrões observados ao longo do tempo. A ideia mais importante para esta aula é que sistemas usados no mundo real não ficam parados.</p>
+<p>Sommerville destaca algumas leis particularmente úteis para raciocinar sobre manutenção:</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Lei</th>
+  <th style="text-align:left">Ideia central</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><strong>Mudança contínua</strong></td>
+  <td style="text-align:left">Um programa usado em ambiente real precisa mudar ou se torna menos útil.</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Aumento da complexidade</strong></td>
+  <td style="text-align:left">Ao mudar, a estrutura tende a ficar mais complexa se não houver cuidado preventivo.</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Conservação da familiaridade</strong></td>
+  <td style="text-align:left">Mudanças incrementais tendem a permanecer limitadas para que a equipe consiga entender o sistema.</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Crescimento contínuo</strong></td>
+  <td style="text-align:left">A funcionalidade precisa crescer para manter a satisfação dos usuários.</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Declínio de qualidade</strong></td>
+  <td style="text-align:left">A qualidade cai se o sistema não for adaptado ao ambiente operacional.</td>
+</tr>
+</tbody>
+</table>
+<p>Essas leis não devem ser lidas como fórmulas matemáticas rígidas. Elas funcionam melhor como alertas gerenciais e técnicos. Se uma equipe adiciona funcionalidade continuamente sem refatorar, testar e reorganizar, a complexidade tende a crescer.</p>
+<div class="example">
+  <div class="example-title">Exemplo 7</div>
+  <p>Um sistema de atendimento começa simples. Depois recebe chat, histórico de contato, integração com WhatsApp, relatórios, automações e permissões especiais por setor.</p>
+<p>Se cada mudança for adicionada no lugar mais rápido, sem reorganização, o sistema passa a ter regras duplicadas, condicionais espalhadas e dependências difíceis de entender. A funcionalidade cresceu, mas a manutenibilidade caiu.</p>
+</div>
+<div class="example">
+  <div class="example-title">Exemplo 8</div>
+  <p>Uma empresa decide lançar uma grande versão com muitas funcionalidades novas em um único release. Logo depois, aparecem vários defeitos, porque as mudanças interagiram de formas difíceis de prever.</p>
+<p>Esse caso conversa com a ideia de que grandes incrementos aumentam risco. Muitas vezes, um release grande precisa ser seguido por releases menores focados em correção e estabilização.</p>
+</div>
+<h2 id="tipos-de-manutenção-de-software"><span class="heading-text">Tipos de manutenção de software</span><span class="heading-arabic">9.6</span></h2>
+<p>Sommerville organiza a manutenção em três tipos principais. A distinção é útil, mesmo que na prática os casos se misturem.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Tipo de manutenção</th>
+  <th style="text-align:left">Quando acontece</th>
+  <th style="text-align:left">Exemplo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><strong>Correção de defeitos</strong></td>
+  <td style="text-align:left">Quando o sistema precisa ser alterado para corrigir erros encontrados em operação.</td>
+  <td style="text-align:left">Corrigir um cálculo de desconto que gera total incorreto no pedido.</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Adaptação ao ambiente</strong></td>
+  <td style="text-align:left">Quando o ambiente técnico muda e o sistema precisa continuar funcionando nele.</td>
+  <td style="text-align:left">Ajustar o sistema para uma nova versão do banco de dados, sistema operacional, biblioteca ou API externa.</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Adição ou modificação de funcionalidade</strong></td>
+  <td style="text-align:left">Quando os requisitos mudam por causa de novas necessidades do negócio ou dos usuários.</td>
+  <td style="text-align:left">Incluir renovação on-line em um sistema de biblioteca ou mudar regras de matrícula em um sistema acadêmico.</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner"><br /></span>
+  </div>
+  <div class="callout-content">
+<p>A manutenção não é apenas correção de bugs. No capítulo, Sommerville destaca que uma parte muito grande do esforço de manutenção vem de adaptar o sistema e adicionar ou modificar funcionalidades depois que ele já está em uso.</p>
+  </div>
+</div>
+<img src="static/figura-9-7-distribuicao-esforco-manutencao.png" width="75%">
+
+<p>A Figura 9.7 é especialmente importante para desfazer um mito. A maior parte do esforço de manutenção não costuma estar na correção de defeitos. No exemplo apresentado por Sommerville, a maior fatia está na adição ou modificação de funcionalidade.</p>
+<h3 id="por-que-manutenção-custa-caro"><span class="heading-text">Por que manutenção custa caro</span><span class="heading-arabic">9.6.1</span></h3>
+<p>Adicionar uma funcionalidade depois que o sistema está em operação costuma ser mais caro do que adicioná-la durante o desenvolvimento inicial. Isso acontece por vários motivos:</p>
+<ol>
+<li>a equipe original pode ter sido desmobilizada;</li>
+<li>a nova equipe precisa entender decisões antigas;</li>
+<li>a documentação pode estar incompleta ou desatualizada;</li>
+<li>o sistema pode ter estrutura degradada;</li>
+<li>os testes precisam proteger funcionalidades já existentes;</li>
+<li>dados reais precisam ser preservados;</li>
+<li>integrações externas podem ser afetadas.</li>
+</ol>
+<p>Sommerville também destaca um problema organizacional: contratos de desenvolvimento e manutenção muitas vezes são separados. Isso reduz o incentivo para a equipe inicial investir em manutenibilidade, porque o custo da má estrutura será pago por outra equipe ou por outro orçamento.</p>
+<div class="example">
+  <div class="example-title">Exemplo 9</div>
+  <p>Durante o desenvolvimento inicial, uma equipe copia a mesma regra de cálculo de mensalidade em três módulos para entregar mais rápido.</p>
+<p>Meses depois, a regra muda. A equipe de manutenção precisa descobrir todas as cópias, alterar cada uma, testar cada fluxo e torcer para não ter esquecido nenhuma variação.</p>
+<p>O custo não veio apenas da regra nova. Ele veio da estrutura anterior, que dificultou a mudança.</p>
+</div>
+<div class="example">
+  <div class="example-title">Exemplo 10</div>
+  <p>Um sistema legado foi escrito para uma versão antiga de banco de dados. A organização precisa atualizar o servidor por razões de segurança.</p>
+<p>Mesmo sem novos requisitos de negócio, a equipe precisa adaptar queries, drivers, scripts de implantação e testes. Esse é um caso típico de manutenção por adaptação ambiental.</p>
+</div>
+<h2 id="previsão-de-manutenção"><span class="heading-text">Previsão de manutenção</span><span class="heading-arabic">9.7</span></h2>
+<p>Gerentes tentam prever manutenção porque mudanças inesperadas podem consumir orçamento e atrasar entregas. A previsão envolve estimar quais partes do sistema provavelmente mudarão, quais serão caras de manter e quanto esforço será necessário em determinado período.</p>
+<p>Sommerville sugere observar tanto o ambiente quanto o próprio sistema. Partes mais expostas a mudança tendem a ter mais interfaces, requisitos voláteis ou forte dependência de processos de negócio instáveis.</p>
+<p>Algumas métricas úteis são:</p>
+<ol>
+<li>número de solicitações de manutenção corretiva;</li>
+<li>tempo médio de análise de impacto;</li>
+<li>tempo médio para implementar uma solicitação de mudança;</li>
+<li>número de solicitações de mudança pendentes;</li>
+<li>complexidade de componentes críticos.</li>
+</ol>
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner"><br /></span>
+  </div>
+  <div class="callout-content">
+<p>Métrica não substitui julgamento técnico. Ela ajuda a enxergar tendência. Se o tempo médio de análise de impacto aumenta, talvez o sistema esteja ficando mais acoplado e difícil de compreender.</p>
+  </div>
+</div>
+<div class="example">
+  <div class="example-title">Exemplo 11</div>
+  <p>Uma equipe percebe que mudanças simples no módulo financeiro levavam dois dias no ano passado e agora levam duas semanas.</p>
+<p>Ao investigar, descobre que o módulo acumulou regras especiais, integrações sem testes e dependências diretas com relatórios. A métrica não explicou tudo sozinha, mas apontou que a manutenibilidade estava piorando.</p>
+</div>
+<div class="example">
+  <div class="example-title">Exemplo 12</div>
+  <p>Outro sistema recebe poucas solicitações de mudança, mas cada solicitação afeta muitas telas e serviços.</p>
+<p>Nesse caso, o problema não é volume de demandas. O problema pode ser acoplamento. Uma mudança pequena no domínio se espalha porque as responsabilidades estão mal separadas.</p>
+</div>
+<h2 id="reengenharia-de-software"><span class="heading-text">Reengenharia de software</span><span class="heading-arabic">9.8</span></h2>
+<p>Quando um sistema legado ainda tem valor, mas se tornou difícil de entender e modificar, uma opção é aplicar <strong>reengenharia</strong>. O objetivo é melhorar sua estrutura, documentação e inteligibilidade sem mudar sua funcionalidade essencial.</p>
+<img src="static/figura-9-10-processo-reengenharia.png" width="90%">
+
+<p>A Figura 9.10 apresenta um processo geral de reengenharia. Ele pode envolver tradução de código-fonte, engenharia reversa, melhoria da estrutura do programa, modularização e reengenharia de dados.</p>
+<h3 id="reengenharia-não-é-reescrita-total"><span class="heading-text">Reengenharia não é reescrita total</span><span class="heading-arabic">9.8.1</span></h3>
+<p>Reengenharia e substituição completa são decisões diferentes. Reescrever um sistema crítico do zero pode parecer atraente, mas envolve alto risco. A equipe pode não entender todas as regras implícitas do sistema antigo, pode repetir erros de especificação e pode atrasar a entrega do novo sistema.</p>
+<p>Sommerville destaca dois benefícios da reengenharia em relação à substituição:</p>
+<ol>
+<li><strong>risco reduzido</strong>, porque o sistema existente já incorpora conhecimento operacional;</li>
+<li><strong>custo reduzido</strong>, porque melhorar o sistema pode ser mais barato do que reconstruí-lo completamente.</li>
+</ol>
+<p>Mas há limites. Reengenharia não transforma magicamente um sistema antigo em um sistema moderno perfeito. Grandes mudanças arquiteturais e reorganizações profundas de dados continuam sendo caras e difíceis.</p>
+<div class="example">
+  <div class="example-title">Exemplo 13</div>
+  <p>Uma empresa tem um sistema COBOL que calcula benefícios com regras acumuladas por décadas.</p>
+<p>Reescrever tudo em uma linguagem moderna pode parecer o caminho ideal, mas o risco é enorme se as regras reais não estiverem completamente documentadas. Uma estratégia de reengenharia pode começar pela engenharia reversa, documentação das regras, criação de testes de regressão e modularização gradual.</p>
+</div>
+<div class="example">
+  <div class="example-title">Exemplo 14</div>
+  <p>Um sistema antigo usa vários arquivos duplicados para armazenar dados de clientes. Antes de criar novas integrações, a equipe decide fazer reengenharia de dados.</p>
+<p>Ela identifica duplicidades, corrige inconsistências, define um modelo de dados mais claro e cria scripts de migração. A funcionalidade visível pode mudar pouco, mas a capacidade de evolução aumenta.</p>
+</div>
+<h2 id="refatoração-como-manutenção-preventiva"><span class="heading-text">Refatoração como manutenção preventiva</span><span class="heading-arabic">9.9</span></h2>
+<p>Refatoração é o processo de melhorar a estrutura interna do código sem alterar seu comportamento observável. Ela não adiciona funcionalidade. Ela torna o código mais claro, menos duplicado, menos acoplado ou mais fácil de modificar.</p>
+<p>Sommerville apresenta a refatoração como uma forma de <strong>manutenção preventiva</strong>. A ideia é simples: se a estrutura degrada com mudanças sucessivas, então a equipe precisa investir continuamente em pequenas melhorias estruturais para evitar que o custo futuro exploda.</p>
+<p>Essa ideia conversa diretamente com a aula de testes. Refatorar com segurança depende de testes de regressão. Se os testes antes passavam e continuam passando depois da refatoração, a equipe ganha confiança de que melhorou a estrutura sem mudar o comportamento.</p>
+<h3 id="reengenharia-e-refatoração-não-são-a-mesma-coisa"><span class="heading-text">Reengenharia e refatoração não são a mesma coisa</span><span class="heading-arabic">9.9.1</span></h3>
+<div class="col2">
+
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Refatoração</th>
+  <th style="text-align:left">Reengenharia</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Processo contínuo e incremental.</td>
+  <td style="text-align:left">Processo mais amplo, geralmente aplicado a sistemas legados.</td>
+</tr>
+<tr>
+  <td style="text-align:left">Atua em pequenas melhorias de estrutura.</td>
+  <td style="text-align:left">Pode envolver código, dados, documentação, linguagem e arquitetura.</td>
+</tr>
+<tr>
+  <td style="text-align:left">Normalmente ocorre durante desenvolvimento e evolução.</td>
+  <td style="text-align:left">Normalmente ocorre quando a manutenção já ficou cara ou arriscada.</td>
+</tr>
+<tr>
+  <td style="text-align:left">Depende fortemente de testes de regressão.</td>
+  <td style="text-align:left">Pode exigir engenharia reversa, migração e ferramentas especializadas.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Pergunta típica</th>
+  <th style="text-align:left">Exemplo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">&quot;Como deixo este código mais fácil de mudar sem alterar comportamento?&quot;</td>
+  <td style="text-align:left">Refatoração.</td>
+</tr>
+<tr>
+  <td style="text-align:left">&quot;Como modernizo este sistema legado para que ele volte a ser mantível?&quot;</td>
+  <td style="text-align:left">Reengenharia.</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<h3 id="maus-cheiros-de-código"><span class="heading-text">Maus cheiros de código</span><span class="heading-arabic">9.9.2</span></h3>
+<p>Fowler, citado por Sommerville, usa a expressão <strong>maus cheiros</strong> para indicar sinais de que o código pode precisar de refatoração. Alguns exemplos são:</p>
+<ol>
+<li>código duplicado;</li>
+<li>métodos longos;</li>
+<li>condicionais complexas ou repetidas;</li>
+<li>grupos de dados que aparecem juntos em vários lugares;</li>
+<li>generalidade especulativa, quando a equipe cria abstrações para um futuro que talvez nunca chegue.</li>
+</ol>
+<div class="example">
+  <div class="example-title">Exemplo 15</div>
+  <p>Antes da refatoração, duas funções duplicam a mesma regra de frete.</p>
+<pre class="line-numbers language-python" data-lang="PYTHON"><code class="language-python">def calcular_total_carrinho(valor):
+    if valor &gt;= 200:
+        frete = 0
+    else:
+        frete = 15
+    return valor + frete
+
+
+def simular_pagamento(valor):
+    if valor &gt;= 200:
+        frete = 0
+    else:
+        frete = 15
+    return {&quot;total&quot;: valor + frete}
+</code></pre>
+<p>Depois da refatoração, a regra fica em um único lugar.</p>
+<pre class="line-numbers language-python" data-lang="PYTHON"><code class="language-python">def calcular_frete(valor):
+    if valor &gt;= 200:
+        return 0
+    return 15
+
+
+def calcular_total_carrinho(valor):
+    return valor + calcular_frete(valor)
+
+
+def simular_pagamento(valor):
+    return {&quot;total&quot;: valor + calcular_frete(valor)}
+</code></pre>
+<p>O comportamento esperado permanece o mesmo. O ganho está na manutenção futura. Se a regra mudar, há um lugar principal para alterar.</p>
+</div>
+<div class="example">
+  <div class="example-title">Exemplo 16</div>
+  <p>Antes da refatoração, um método acumula validação, cálculo e montagem de resposta.</p>
+<pre class="line-numbers language-python" data-lang="PYTHON"><code class="language-python">def fechar_pedido(cliente, itens):
+    if cliente is None:
+        raise ValueError(&quot;cliente obrigatorio&quot;)
+    if len(itens) == 0:
+        raise ValueError(&quot;pedido vazio&quot;)
+
+    total = 0
+    for item in itens:
+        total += item[&quot;preco&quot;] * item[&quot;quantidade&quot;]
+
+    if total &gt;= 200:
+        frete = 0
+    else:
+        frete = 15
+
+    return {
+        &quot;cliente&quot;: cliente[&quot;nome&quot;],
+        &quot;total&quot;: total + frete,
+        &quot;frete&quot;: frete,
+    }
+</code></pre>
+<p>Depois, a estrutura separa responsabilidades.</p>
+<pre class="line-numbers language-python" data-lang="PYTHON"><code class="language-python">def validar_pedido(cliente, itens):
+    if cliente is None:
+        raise ValueError(&quot;cliente obrigatorio&quot;)
+    if len(itens) == 0:
+        raise ValueError(&quot;pedido vazio&quot;)
+
+
+def calcular_subtotal(itens):
+    total = 0
+    for item in itens:
+        total += item[&quot;preco&quot;] * item[&quot;quantidade&quot;]
+    return total
+
+
+def calcular_frete(total):
+    if total &gt;= 200:
+        return 0
+    return 15
+
+
+def fechar_pedido(cliente, itens):
+    validar_pedido(cliente, itens)
+    subtotal = calcular_subtotal(itens)
+    frete = calcular_frete(subtotal)
+
+    return {
+        &quot;cliente&quot;: cliente[&quot;nome&quot;],
+        &quot;total&quot;: subtotal + frete,
+        &quot;frete&quot;: frete,
+    }
+</code></pre>
+<p>Esse exemplo mostra um ponto importante. Refatorar não é &quot;embelezar&quot; código. É reduzir o custo mental de entender e alterar o sistema.</p>
+</div>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner"><br /></span>
+  </div>
+  <div class="callout-content">
+<p>Refatoração sem testes aumenta risco. Se você não consegue verificar o comportamento antes e depois, pode estar mudando a estrutura e introduzindo defeitos sem perceber.</p>
+  </div>
+</div>
+<h2 id="sistemas-legados-e-decisões-estratégicas"><span class="heading-text">Sistemas legados e decisões estratégicas</span><span class="heading-arabic">9.10</span></h2>
+<p>Sistemas legados são sistemas antigos que continuam importantes para a organização. O problema não é simplesmente a idade. Um sistema antigo pode ser estável, bem documentado e barato de manter. O problema aparece quando ele tem alto valor de negócio, mas baixa qualidade técnica, dependências obsoletas ou manutenção cara.</p>
+<p>Sommerville propõe avaliar sistemas legados por duas perspectivas:</p>
+<ol>
+<li><strong>valor de negócio</strong>, que indica quanto o sistema contribui para processos importantes;</li>
+<li><strong>qualidade do sistema</strong>, que inclui qualidade da aplicação e do ambiente técnico.</li>
+</ol>
+<img src="static/figura-9-12-avaliacao-sistema-legado.png" width="85%">
+
+<p>A Figura 9.12 organiza a decisão em uma matriz. O cruzamento entre valor de negócio e qualidade técnica ajuda a escolher a estratégia.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Situação</th>
+  <th style="text-align:left">Estratégia provável</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Baixo valor e baixa qualidade</td>
+  <td style="text-align:left">Descartar.</td>
+</tr>
+<tr>
+  <td style="text-align:left">Alto valor e baixa qualidade</td>
+  <td style="text-align:left">Reestruturar, fazer reengenharia ou substituir se houver alternativa viável.</td>
+</tr>
+<tr>
+  <td style="text-align:left">Baixo valor e alta qualidade</td>
+  <td style="text-align:left">Manter apenas se o custo for baixo. Descartar se mudanças ficarem caras.</td>
+</tr>
+<tr>
+  <td style="text-align:left">Alto valor e alta qualidade</td>
+  <td style="text-align:left">Continuar manutenção normal.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="o-que-avaliar-em-um-legado"><span class="heading-text">O que avaliar em um legado</span><span class="heading-arabic">9.10.1</span></h3>
+<p>Para avaliar o valor de negócio, algumas perguntas são fundamentais:</p>
+<ol>
+<li>o sistema é usado por muitas pessoas ou em momentos críticos?</li>
+<li>ele apoia processos centrais do negócio?</li>
+<li>suas saídas são importantes para decisões ou operações?</li>
+<li>falhas nele afetam clientes, receita, segurança ou obrigações legais?</li>
+</ol>
+<p>Para avaliar a qualidade técnica, observe fatores como:</p>
+<ol>
+<li>inteligibilidade do código;</li>
+<li>documentação disponível;</li>
+<li>qualidade e consistência dos dados;</li>
+<li>desempenho;</li>
+<li>linguagem de programação e ferramentas disponíveis;</li>
+<li>gerenciamento de configuração;</li>
+<li>dados de teste e testes de regressão;</li>
+<li>disponibilidade de pessoas com conhecimento no sistema.</li>
+</ol>
+<div class="example">
+  <div class="example-title">Exemplo 17</div>
+  <p>Um sistema antigo de emissão de boletos é usado diariamente e qualquer falha afeta diretamente o caixa da empresa. Porém, o código é difícil de entender e depende de uma biblioteca sem suporte.</p>
+<p>Esse sistema tem alto valor de negócio e baixa qualidade técnica. A decisão provável é investir em reestruturação, reengenharia ou substituição gradual, não simplesmente descartá-lo.</p>
+</div>
+<div class="example">
+  <div class="example-title">Exemplo 18</div>
+  <p>Um sistema antigo de relatórios gerenciais ainda funciona bem, mas quase ninguém usa seus relatórios porque a empresa adotou uma plataforma de BI.</p>
+<p>Mesmo com boa qualidade técnica, seu valor de negócio pode ser baixo. Nesse caso, talvez a melhor decisão seja manter apenas enquanto o custo for mínimo ou planejar descarte.</p>
+</div>
+<h2 id="o-papel-profissional-da-manutenibilidade"><span class="heading-text">O papel profissional da manutenibilidade</span><span class="heading-arabic">9.11</span></h2>
+<p>O capítulo termina com uma provocação ética importante. Engenheiros de software têm responsabilidade profissional de produzir código que possa ser mantido e alterado, mesmo quando isso não aparece explicitamente como requisito do cliente.</p>
+<p>Essa responsabilidade existe porque decisões internas de projeto afetam custos futuros, riscos operacionais e a capacidade da organização de responder a mudanças. Código difícil de manter pode funcionar hoje, mas criar uma dívida que outra equipe, outro orçamento ou os próprios usuários pagarão depois.</p>
+<div class="callout callout-success">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></span>
+    <span class="callout-title-inner"><br /></span>
+  </div>
+  <div class="callout-content">
+<p>Manutenção não é a fase menos nobre da engenharia de software. Ela é a prova de que o software entrou no mundo real e precisa continuar útil apesar da mudança.</p>
+  </div>
+</div>
+<h2 id="questões"><span class="heading-text">Questões</span><span class="heading-arabic">9.12</span></h2>
+<div class="questions">
+  <p><strong>1.</strong> Explique por que um sistema usado em ambiente real precisa mudar ao longo do tempo, mesmo que tenha sido entregue corretamente.</p>
+<p><strong>2.</strong> Diferencie correção de defeitos, adaptação ambiental e adição de funcionalidade. Dê um exemplo para cada tipo.</p>
+<p><strong>3.</strong> Uma equipe recebeu a solicitação &quot;adicionar CPF obrigatório ao cadastro de responsável financeiro&quot;. Liste pelo menos cinco impactos possíveis que deveriam ser analisados antes da implementação.</p>
+<p><strong>4.</strong> Assinale a alternativa correta sobre refatoração.</p>
+<ul>
+<li>A) Refatoração adiciona novas funcionalidades ao sistema.</li>
+<li>B) Refatoração melhora a estrutura interna sem mudar o comportamento observável.</li>
+<li>C) Refatoração substitui completamente a necessidade de testes.</li>
+<li>D) Refatoração só pode ser feita em sistemas orientados a objetos.</li>
+</ul>
+<p><strong>5.</strong> Explique a diferença entre refatoração e reengenharia de software.</p>
+<p><strong>6.</strong> Um sistema legado tem alto valor de negócio, mas baixa qualidade técnica. Qual estratégia tende a ser mais adequada segundo a matriz discutida na aula? Justifique.</p>
+<p><strong>7.</strong> Por que uma correção emergencial pode aumentar o custo de manutenção no futuro?</p>
+<p><strong>8.</strong> Observe o código abaixo e indique um mau cheiro de código. Em seguida, proponha uma refatoração simples.</p>
+<pre class="line-numbers language-python" data-lang="PYTHON"><code class="language-python">def total_compra(valor):
+    if valor &gt;= 200:
+        frete = 0
+    else:
+        frete = 15
+    return valor + frete
+
+
+def resumo_compra(valor):
+    if valor &gt;= 200:
+        frete = 0
+    else:
+        frete = 15
+    return f&quot;Total: {valor + frete}&quot;
+</code></pre>
+</div>
+<div class="example">
+  <div class="example-title">Gabarito</div>
+  <p><strong>1.</strong> Porque o ambiente muda. Regras de negócio, usuários, plataformas, integrações, leis e defeitos encontrados em operação podem exigir mudanças. Se o sistema não acompanha essas mudanças, torna-se progressivamente menos útil.</p>
+<p><strong>2.</strong> Correção de defeitos corrige erros, como cálculo incorreto de desconto. Adaptação ambiental ajusta o sistema a mudanças de plataforma, como nova versão do banco de dados. Adição de funcionalidade incorpora ou modifica requisitos, como permitir renovação de empréstimo pelo aplicativo.</p>
+<p><strong>3.</strong> Banco de dados, validações, telas, API, relatórios, dados antigos, permissões, integrações externas, testes automatizados e documentação.</p>
+<p><strong>4.</strong> B.</p>
+<p><strong>5.</strong> Refatoração é melhoria contínua e geralmente localizada da estrutura interna do código sem alterar comportamento. Reengenharia é um processo mais amplo aplicado com frequência a sistemas legados, podendo envolver documentação, engenharia reversa, modularização, dados, linguagem e arquitetura.</p>
+<p><strong>6.</strong> A estratégia tende a ser reestruturar, aplicar reengenharia ou substituir gradualmente se houver alternativa viável. Como o valor de negócio é alto, descartar diretamente seria arriscado. Como a qualidade técnica é baixa, manter sem intervenção tende a aumentar custos e riscos.</p>
+<p><strong>7.</strong> Porque a solução rápida pode não ser a melhor estrutura, pode deixar documentação e requisitos inconsistentes e pode criar código difícil de entender. Se a mudança não for revisada depois, futuras alterações ficam mais caras.</p>
+<p><strong>8.</strong> O mau cheiro é código duplicado. Uma refatoração simples é extrair a regra de frete para uma função única.</p>
+<pre class="line-numbers language-python" data-lang="PYTHON"><code class="language-python">def calcular_frete(valor):
+    if valor &gt;= 200:
+        return 0
+    return 15
+
+
+def total_compra(valor):
+    return valor + calcular_frete(valor)
+
+
+def resumo_compra(valor):
+    return f&quot;Total: {valor + calcular_frete(valor)}&quot;
+</code></pre>
+</div>
+<h2 id="próximos-passos"><span class="heading-text">Próximos passos</span><span class="heading-arabic">9.13</span></h2>
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner"><br /></span>
+  </div>
+  <div class="callout-content">
+<p>Ainda não há próxima aula cadastrada nesta sequência.</p>
+  </div>
+</div>
+
+                </div>
+            </article>
+            <footer class="footer">
+                <p>© 2025 · <a href="#">Gabriel Soares Baptista</a></p>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        const toggle = document.querySelector('.mobile-menu-toggle');
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.querySelector('.mobile-menu-overlay');
+
+        function openMenu() {
+            sidebar.classList.add('open');
+            overlay.classList.add('open');
+            toggle.classList.add('open');
+            toggle.innerHTML = '<i data-lucide="x"></i>';
+            CourseForgeUI.initIcons();
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMenu() {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('open');
+            toggle.classList.remove('open');
+            toggle.innerHTML = '<i data-lucide="menu"></i>';
+            CourseForgeUI.initIcons();
+            document.body.style.overflow = '';
+        }
+
+        toggle.addEventListener('click', () => {
+            if (sidebar.classList.contains('open')) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        overlay.addEventListener('click', closeMenu);
+    </script>
+
+    
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            renderMathInElement(document.body, {
+                output: 'html',
+                delimiters: [
+                    { left: "$$", right: "$$", display: true },
+                    { left: "$", right: "$", display: false },
+                    { left: "\\(", right: "\\)", display: false },
+                    { left: "\\[", right: "\\]", display: true }
+                ],
+                throwOnError: false,
+                strict: false
+            });
+        });
+    </script>
+    
+    
+    <script src="/aulas-faesa/js/vendor/prism/prism.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-c.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-cpp.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-python.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-clike.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-perl.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-java.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-mermaid.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-php.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js" data-no-bundle></script>
+    
+    
+    
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            mermaid.initialize({
+                startOnLoad: true,
+                theme: 'default',
+                securityLevel: 'loose',
+                fontFamily: 'Inter, system-ui, sans-serif',
+                themeVariables: {
+                    fontSize: '16px',
+                    edgeLabelFontSize: '16px',
+                    multiplicityFontSize: '18px'
+                }
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const isSubcourse = false;
+        const courseName = "Engenharia de Software";
+        CourseForgeNav.applyDynamicBreadcrumbs('.breadcrumb', isSubcourse);
+        CourseForgeNav.initScrollSpy();
+        CourseForgeUI.initCopyButtons();
+        CourseForgeUI.initExamples();
+        });
+
+        function handleBackNavigation() {
+            const isSubcourse = false;
+        const dynamic = CourseForgeNav.getBackLink('contents.html', 'Voltar', isSubcourse);
+        window.location.href = dynamic.url;
+        }
+    </script>
+</body>
+
+</html>

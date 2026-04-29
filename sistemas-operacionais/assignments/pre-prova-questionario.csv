@@ -1,0 +1,146 @@
+// Arquivo CSV UTF-8 para importacao de questoes objetivas de Sistemas Operacionais,,,,
+// Imagens referenciadas em Image devem estar na pasta images/ do caminho de importacao do curso,,,,
+,,,,
+NewQuestion,MC,,,
+ID,SO-PRE-001,,,
+Title,Escalonamento FCFS e Round Robin,,,
+QuestionText,"Considere os processos abaixo:<br><br><table border='1' cellpadding='4'><tr><th>Processo</th><th>Chegada</th><th>Burst CPU</th></tr><tr><td>P1</td><td>0</td><td>5</td></tr><tr><td>P2</td><td>1</td><td>3</td></tr><tr><td>P3</td><td>2</td><td>4</td></tr><tr><td>P4</td><td>4</td><td>2</td></tr></table><br>Compare a execucao desses processos usando FCFS e Round Robin com quantum q = 2, ignorando tempo de troca de contexto. Qual alternativa apresenta corretamente a ordem de execucao nos dois algoritmos?",,,
+Points,1,,,
+Difficulty,4,,,
+Image,images/pre_prova_gantt_scheduling.png,,,
+Option,100,"FCFS: P1, P2, P3, P4 / RR: P1, P2, P3, P1, P4, P2, P3, P1",,"Correto. O FCFS respeita a ordem de chegada; no Round Robin cada processo executa por ate 2 unidades antes de voltar ao fim da fila se ainda tiver CPU restante."
+Option,0,"FCFS: P1, P3, P2, P4 / RR: P1, P2, P4, P3, P1, P2, P3, P1",,"Incorreto. No FCFS, P2 chega antes de P3; no RR, P4 nao executa antes de P3 receber seu primeiro quantum."
+Option,0,"FCFS: P1, P2, P4, P3 / RR: P1, P3, P2, P4, P1, P3, P2, P1",,"Incorreto. No FCFS, P3 ja aguardava antes de P4 quando P2 termina."
+Option,0,"FCFS: P2, P1, P3, P4 / RR: P2, P1, P3, P4, P1, P3, P2, P1",,"Incorreto. P1 e o unico processo disponivel no tempo 0, portanto deve iniciar nos dois algoritmos."
+Feedback,"Gabarito: FCFS = 0-5 P1 | 5-8 P2 | 8-12 P3 | 12-14 P4. Round Robin = 0-2 P1 | 2-4 P2 | 4-6 P3 | 6-8 P1 | 8-10 P4 | 10-11 P2 | 11-13 P3 | 13-14 P1.",,,
+,,,,
+NewQuestion,M,,,
+ID,SO-PRE-002,,,
+Title,Deadlock - Condicoes Necessarias,,,
+QuestionText,"Associe cada condicao necessaria para deadlock com sua definicao correta.",,,
+Points,1,,,
+Difficulty,3,,,
+Scoring,EquallyWeighted,,,
+Choice,1,Exclusao mutua,,
+Choice,2,Posse e espera,,
+Choice,3,Nao preempcao,,
+Choice,4,Espera circular,,
+Match,1,"Pelo menos um recurso so pode ser usado por um processo por vez.",,
+Match,2,"Um processo mantem um recurso enquanto espera por outro.",,
+Match,3,"Recursos nao podem ser retirados a forca de um processo.",,
+Match,4,"Existe uma cadeia circular de processos esperando recursos uns dos outros.",,
+Feedback,"Deadlock pode ocorrer quando exclusao mutua, posse e espera, nao preempcao e espera circular aparecem simultaneamente.",,,
+,,,,
+NewQuestion,MC,,,
+ID,SO-PRE-003,,,
+Title,Exclusao Mutua e Regiao Critica,,,
+QuestionText,"Em um programa com multiplas threads, duas threads precisam acessar uma mesma estrutura compartilhada, como uma lista de pedidos ou um contador global. Para evitar inconsistencias, esse acesso deve ser protegido. Qual alternativa melhor descreve o papel da exclusao mutua nesse contexto?",,,
+Points,1,,,
+Difficulty,2,,,
+Option,100,"Garantir que apenas uma thread por vez execute a regiao critica que acessa o dado compartilhado.",,"Correto. A exclusao mutua protege a regiao critica contra acessos simultaneos."
+Option,0,"Garantir que todas as threads executem exatamente ao mesmo tempo para aumentar o paralelismo.",,"Incorreto. Exclusao mutua limita o acesso simultaneo a uma regiao critica."
+Option,0,"Impedir que threads compartilhem variaveis globais entre si.",,"Incorreto. Threads podem compartilhar memoria; o problema e controlar o acesso."
+Option,0,"Substituir o escalonador do sistema operacional por uma fila FIFO fixa.",,"Incorreto. Exclusao mutua nao substitui o escalonador."
+Feedback,"Exclusao mutua serve para garantir acesso exclusivo a uma regiao critica, normalmente usando mecanismos como mutex ou semaforos.",,,
+,,,,
+NewQuestion,MC,,,
+ID,SO-PRE-004,,,
+Title,Comunicacao entre Processos - IPC,,,
+QuestionText,"Em Sistemas Operacionais, processos normalmente possuem espacos de enderecamento separados. Mesmo assim, eles podem precisar trocar dados ou coordenar suas execucoes. Qual alternativa apresenta mecanismos corretamente associados a comunicacao entre processos, isto e, IPC?",,,
+Points,1,,,
+Difficulty,2,,,
+Option,100,"Pipes, filas de mensagens, memoria compartilhada e sockets.",,"Correto. Esses sao mecanismos classicos de IPC."
+Option,0,"Registradores, ULA, cache L1 e pipeline da CPU.",,"Incorreto. Esses sao componentes internos relacionados ao processador."
+Option,0,"FCFS, Round Robin, SJF e prioridade.",,"Incorreto. Esses sao algoritmos de escalonamento."
+Option,0,"Paginacao, segmentacao, swapping e substituicao de paginas.",,"Incorreto. Esses conceitos estao relacionados a gerencia de memoria."
+Feedback,"IPC inclui mecanismos que permitem troca de dados ou sincronizacao entre processos, como pipes, filas de mensagens, sockets e memoria compartilhada.",,,
+,,,,
+NewQuestion,MC,,,
+ID,SO-PRE-005,,,
+Title,Produtor e Consumidor com Semaforos,,,
+QuestionText,"Considere o seguinte codigo simplificado para o problema do produtor/consumidor, usando um buffer de tamanho N:<br><br><pre><code>semaphore mutex = 1;
+semaphore empty = N;
+semaphore full = 0;
+
+void produtor() {
+    while (true) {
+        item = produzir_item();
+
+        wait(empty);
+        wait(mutex);
+
+        inserir_no_buffer(item);
+
+        signal(mutex);
+        signal(full);
+    }
+}
+
+void consumidor() {
+    while (true) {
+        wait(full);
+        wait(mutex);
+
+        item = remover_do_buffer();
+
+        signal(mutex);
+        signal(empty);
+
+        consumir_item(item);
+    }
+}</code></pre><br>Sobre o funcionamento desse codigo, qual alternativa esta correta?",,,
+Points,1,,,
+Difficulty,4,,,
+Option,100,"mutex garante exclusao mutua no acesso ao buffer, empty controla espacos livres e full controla itens disponiveis.",,"Correto. Cada semaforo tem uma responsabilidade diferente no controle do buffer."
+Option,0,"mutex indica quantos itens existem no buffer, enquanto full impede acesso simultaneo ao buffer.",,"Incorreto. Quem controla acesso simultaneo ao buffer e mutex; full conta itens disponiveis."
+Option,0,"empty deve comecar em 0, pois inicialmente nenhum consumidor pode remover itens.",,"Incorreto. empty representa espacos livres e deve iniciar com N. full inicia em 0."
+Option,0,"signal(full) deve ser executado antes de inserir_no_buffer(item) para avisar o consumidor antecipadamente.",,"Incorreto. Isso permitiria que o consumidor tentasse remover um item que ainda nao foi inserido."
+Feedback,"No problema produtor/consumidor, mutex protege a regiao critica do buffer; empty evita inserir em buffer cheio; full evita remover de buffer vazio.",,,
+,,,,
+NewQuestion,MC,,,
+ID,SO-PRE-006,,,
+Title,Mutex e Verificacao de Estado Compartilhado,,,
+QuestionText,"Considere o trecho abaixo, executado por varias threads:<br><br><pre><code>int saldo = 1000;
+
+void sacar(int valor) {
+    if (saldo >= valor) {
+        saldo = saldo - valor;
+    }
+}</code></pre><br>Duas threads podem chamar sacar(800) quase ao mesmo tempo. O programador decide proteger apenas a linha de atualizacao:<br><br><pre><code>void sacar(int valor) {
+    if (saldo >= valor) {
+        lock(mutex);
+        saldo = saldo - valor;
+        unlock(mutex);
+    }
+}</code></pre><br>Qual e o problema dessa solucao?",,,
+Points,1,,,
+Difficulty,4,,,
+Option,100,"A verificacao saldo >= valor tambem faz parte da regiao critica e deve ser protegida pelo mesmo mutex.",,"Correto. A decisao e a atualizacao precisam ser atomicas em relacao as outras threads."
+Option,0,"O mutex deveria ser usado apenas depois do unlock, para evitar bloqueio permanente.",,"Incorreto. O lock precisa ocorrer antes do acesso protegido."
+Option,0,"O uso de mutex impede que qualquer thread leia variaveis globais.",,"Incorreto. Mutex nao impede leitura global; ele organiza o acesso concorrente."
+Option,0,"O codigo esta correto, pois somente a operacao de subtracao precisa de exclusao mutua.",,"Incorreto. Se a verificacao ficar fora do lock, duas threads podem decidir sacar com base no mesmo saldo antigo."
+Feedback,"A regiao critica deve incluir todos os acessos compartilhados que participam da decisao: neste caso, a verificacao e a atualizacao do saldo.",,,
+,,,,
+NewQuestion,MC,,,
+ID,SO-PRE-007,,,
+Title,Deadlock e Ordem de Recursos,,,
+QuestionText,"Considere um sistema com dois recursos compartilhados, R1 e R2, e dois processos:<br><br><pre><code>Processo A:
+    lock(R1)
+    lock(R2)
+    usar R1 e R2
+    unlock(R2)
+    unlock(R1)
+
+Processo B:
+    lock(R2)
+    lock(R1)
+    usar R1 e R2
+    unlock(R1)
+    unlock(R2)</code></pre><br>Esse sistema pode entrar em deadlock se o Processo A obtiver R1 e o Processo B obtiver R2, ficando cada um esperando pelo outro recurso. Qual alteracao reduz corretamente o risco de deadlock sem eliminar a necessidade de usar os dois recursos?",,,
+Points,1,,,
+Difficulty,5,,,
+Option,100,"Impor uma ordem global de aquisicao, por exemplo: todos os processos devem adquirir primeiro R1 e depois R2.",,"Correto. Uma ordem global quebra a possibilidade de espera circular."
+Option,0,"Fazer o Processo A liberar R1 somente depois que o Processo B terminar toda a sua execucao.",,"Incorreto. Isso pode aumentar o tempo de posse do recurso e nao resolve a espera circular de forma geral."
+Option,0,"Aumentar o quantum do escalonador para que cada processo execute por mais tempo.",,"Incorreto. Mudar o quantum pode alterar a chance de ocorrer, mas nao remove a condicao estrutural de deadlock."
+Option,0,"Trocar lock(R1) por sleep(R1), evitando que o processo fique usando CPU enquanto espera.",,"Incorreto. sleep nao e mecanismo de aquisicao de recurso nem previne deadlock."
+Feedback,"A estrategia correta e impor uma ordem consistente para aquisicao de recursos. Assim, processos nao formam um ciclo de espera entre R1 e R2.",,,

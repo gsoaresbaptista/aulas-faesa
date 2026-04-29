@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toposia - Processamento Digital de Sinais</title>
+    <link rel="icon" href="/aulas-faesa/img/dark-favicon.svg" media="(prefers-color-scheme: light)">
+    <link rel="icon" href="/aulas-faesa/img/light-favicon.svg" media="(prefers-color-scheme: dark)">
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/fonts.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/bundles/katex-base-prism-one-light-b0347952c973.bundle.min.css">
+    
+    
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css" data-no-bundle>
+    <script src="/aulas-faesa/js/bundles/lucide-katex-auto-render-4b36e8bd8642.bundle.min.js"></script>
+</head>
+
+<body>
+    <script>
+        // Restore sidebar state instantly (before first paint) to avoid transition flash
+        (function() {
+            if (localStorage.getItem('cf_sidebar_hidden') === 'true') {
+                document.body.classList.add('sidebar-hidden', 'no-transition');
+            }
+            requestAnimationFrame(function() {
+                requestAnimationFrame(function() {
+                    document.body.classList.remove('no-transition');
+                });
+            });
+        })();
+    </script>
+    <div class="page-wrapper">
+        <nav class="sidebar">
+            <div class="sidebar-content">
+                <header class="sidebar-title-section">
+                    <a href="contents.html" class="course-title-link">
+                        <h1 class="sidebar-course-title">Processamento Digital de Sinais</h1>
+                    </a>
+                    <div class="sidebar-ornament">❧</div>
+                </header>
+
+                
+                <section class="sidebar-toc-section">
+                    <h2 class="toc-header">Tabela de Conteúdos</h2>
+                    <ol class="toc-list">
+                        
+                        <li class="toc-item level-2">
+                            <a href="#introdução">10.1. Introdução</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#amostrar-ainda-não-é-digitalizar">10.2. Amostrar ainda não é digitalizar</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#conversão-analógico-para-digital">10.3. Conversão Analógico para Digital</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#taxa-de-bits-em-pcm">10.4. Taxa de bits em PCM</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#por-que-sinais-digitais-são-robustos">10.5. Por que sinais digitais são robustos</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#o-dual-da-amostragem-no-tempo">10.6. O dual da amostragem no tempo</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#a-ponte-para-a-tdf">10.7. A ponte para a TDF</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#definição-da-tdf">10.8. Definição da TDF</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#escolha-de-e">10.9. Escolha de $T$, $T_0$ e $N_0$</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#aliasing-vazamento-e-efeito-de-cerca">10.10. Aliasing, vazamento e efeito de cerca</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#propriedades-básicas-da-tdf">10.11. Propriedades básicas da TDF</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#aplicações-da-tdf">10.12. Aplicações da TDF</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#fft-a-mesma-tdf-com-menos-cálculo">10.13. FFT: a mesma TDF com menos cálculo</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#como-a-fft-economiza-operações">10.14. Como a FFT economiza operações</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#o-que-esta-aula-organizou">10.15. O que esta aula organizou</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#questões">10.16. Questões</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#próximos-passos">10.17. Próximos passos</a>
+                        </li>
+                        
+                    </ol>
+                </section>
+                
+
+                <nav class="sidebar-nav-section">
+                    
+                    <a href="9-sampling-theorem-and-reconstruction.html" class="sidebar-nav-link prev"><i data-lucide="chevron-left" class="nav-icon"></i> Teorema da Amostragem e Reconstrução</a>
+                    
+                    
+                    <a href="javascript:void(0)" onclick="handleBackNavigation()"
+                        class="sidebar-nav-link back"><i data-lucide="arrow-left" class="nav-icon"></i> Voltar</a>
+                </nav>
+
+            </div>
+        </nav>
+
+        <button class="mobile-menu-toggle" aria-label="Menu">
+            <i data-lucide="menu"></i>
+        </button>
+
+        <button class="sidebar-toggle" onclick="CourseForgeNav.toggleSidebar()" aria-label="Alternar Barra Lateral">
+            <i data-lucide="chevron-left" class="toggle-icon" id="sidebar-toggle-icon"></i>
+        </button>
+
+        <div class="mobile-menu-overlay"></div>
+
+        <main class="main-content">
+            <article class="article">
+                <header class="article-header">
+                    <span class="chapter-number">10</span>
+                    <h1 class="article-title">
+                        <span class="title-ornament left">❧</span>
+                        <span class="title-text">Conversão A/D, TDF e FFT</span>
+                        <span class="title-ornament right">❧</span>
+                    </h1>
+                    
+                    <p class="article-date">06/05/2026</p>
+                    
+                    
+                    <nav class="breadcrumb" aria-label="Breadcrumb">
+                        
+                        
+                        
+                        <a href="contents.html" class="breadcrumb-link">Processamento Digital de Sinais</a>
+                        
+                        <span class="breadcrumb-separator"><i data-lucide="chevron-right" class="breadcrumb-icon"></i></span>
+                        
+                        
+                        
+                        
+                        <a href="contents.html#part-III" class="breadcrumb-link">III - Teoria de Frequência e Conversão A/D</a>
+                        
+                        <span class="breadcrumb-separator"><i data-lucide="chevron-right" class="breadcrumb-icon"></i></span>
+                        
+                        
+                        
+                        <span class="breadcrumb-current">Conversão A/D, TDF e FFT</span>
+                        
+                        
+                    </nav>
+                    
+                </header>
+                <div class="article-body">
+                    <h2 id="introdução"><span class="heading-text">Introdução</span><span class="heading-arabic">10.1</span></h2>
+<p>Hoje veremos como a amostragem se transforma em processamento digital de fato: primeiro convertendo amplitudes contínuas em códigos binários, depois relacionando amostras de $x(t)$ com amostras de $X(\omega)$.</p>
+<p>Na aula anterior, a pergunta central era quando as amostras preservam a informação do sinal. Agora a pergunta muda. Depois de amostrar, como representamos essas amostras em bits e como calculamos Fourier com uma quantidade finita de números?</p>
+<p>O roteiro desta aula segue o sumário do Capítulo 8 do Lathi nas seções restantes do capítulo:</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Seção</th>
+  <th style="text-align:left">Tema</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">8.3</td>
+  <td style="text-align:left">Conversão Analógico para Digital</td>
+</tr>
+<tr>
+  <td style="text-align:left">8.4</td>
+  <td style="text-align:left">Dual da Amostragem no Tempo: Amostragem Espectral</td>
+</tr>
+<tr>
+  <td style="text-align:left">8.5</td>
+  <td style="text-align:left">Cálculo Numérico da Transformada de Fourier: TDF</td>
+</tr>
+<tr>
+  <td style="text-align:left">8.5-1</td>
+  <td style="text-align:left">Algumas Propriedades da TDF</td>
+</tr>
+<tr>
+  <td style="text-align:left">8.5-2</td>
+  <td style="text-align:left">Algumas Aplicações da TDF</td>
+</tr>
+<tr>
+  <td style="text-align:left">8.6</td>
+  <td style="text-align:left">Transformada Rápida de Fourier</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-abstract">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
+    <span class="callout-title-inner">Ideia central<br /></span>
+  </div>
+  <div class="callout-content">
+<p>A amostragem cria uma sequência de valores no tempo. A conversão A/D transforma esses valores em palavras binárias. A TDF relaciona uma quantidade finita de amostras no tempo com uma quantidade finita de amostras em frequência, e a FFT calcula essa mesma TDF com muito menos operações.</p>
+  </div>
+</div>
+<h2 id="amostrar-ainda-não-é-digitalizar"><span class="heading-text">Amostrar ainda não é digitalizar</span><span class="heading-arabic">10.2</span></h2>
+<p>Um erro comum é dizer que um sinal se torna digital apenas porque foi amostrado. Isso não é suficiente.</p>
+<p>Depois da amostragem, o tempo passa a ser discreto, mas a amplitude de cada amostra ainda pode assumir infinitos valores em uma faixa contínua. Para obter um sinal digital, precisamos também quantizar a amplitude.</p>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Se cada amostra ainda pode assumir qualquer valor real entre $-V$ e $V$, quantos símbolos seriam necessários para transmitir essa amostra sem arredondamento?</p>
+  </div>
+</div>
+<p>Seriam infinitos símbolos. É por isso que a conversão A/D precisa de quantização. Ela troca uma amplitude contínua por um dos níveis permitidos.</p>
+<h2 id="conversão-analógico-para-digital"><span class="heading-text">Conversão Analógico para Digital</span><span class="heading-arabic">10.3</span></h2>
+<p>A conversão A/D envolve três ideias encadeadas:</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Etapa</th>
+  <th style="text-align:left">O que muda</th>
+  <th style="text-align:left">Resultado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Amostragem</td>
+  <td style="text-align:left">tempo contínuo vira instantes discretos</td>
+  <td style="text-align:left">sequência de amostras</td>
+</tr>
+<tr>
+  <td style="text-align:left">Quantização</td>
+  <td style="text-align:left">amplitude contínua vira níveis finitos</td>
+  <td style="text-align:left">amostras arredondadas</td>
+</tr>
+<tr>
+  <td style="text-align:left">Codificação</td>
+  <td style="text-align:left">cada nível vira uma palavra binária</td>
+  <td style="text-align:left">sequência de bits</td>
+</tr>
+</tbody>
+</table>
+<p>Se a amplitude do sinal está na faixa $(-V,V)$ e usamos $L$ níveis de quantização, o passo de quantização é</p>
+<p>$$
+\Delta=\frac{2V}{L}
+$$</p>
+<p>O erro máximo de quantização, no modelo de arredondamento para o nível mais próximo, é</p>
+<p>$$
+\frac{\Delta}{2}
+$$</p>
+<p>Se cada amostra quantizada deve ser representada em binário, precisamos de $b$ bits por amostra, com</p>
+<p>$$
+2^b=L
+$$</p>
+<p>ou</p>
+<p>$$
+b=\log_2 L
+$$</p>
+<div class="example">
+  <div class="example-title">Exemplo 1</div>
+  <p>Um conversor usa $L=256$ níveis de quantização. Quantos bits são necessários para representar cada amostra?</p>
+<hr />
+<p>Usamos</p>
+<p>$$
+2^b=L
+$$</p>
+<p>Logo,</p>
+<p>$$
+2^b=256=2^8
+$$</p>
+<p>Portanto,</p>
+<p>$$
+b=8\text{ bits por amostra}
+$$</p>
+<p>Esse é o mesmo número usado no exemplo de telefonia citado pelo Lathi, em que cada amostra de voz é codificada com $8$ bits.</p>
+</div>
+<h2 id="taxa-de-bits-em-pcm"><span class="heading-text">Taxa de bits em PCM</span><span class="heading-arabic">10.4</span></h2>
+<p>Na modulação por código de pulso, ou PCM, cada amostra quantizada é convertida em uma palavra binária. Se a taxa de amostragem é $f_s$ amostras por segundo e cada amostra usa $b$ bits, a taxa de bits é</p>
+<p>$$
+R_b=b f_s
+$$</p>
+<div class="example">
+  <div class="example-title">Exemplo 2</div>
+  <p>Um sinal de voz é amostrado a $8000$ amostras/s e cada amostra é codificada com $8$ bits. Determine a taxa de bits.</p>
+<hr />
+<p>Aplicamos</p>
+<p>$$
+R_b=b f_s
+$$</p>
+<p>Assim,</p>
+<p>$$
+R_b=8\cdot 8000=64000\text{ bits/s}
+$$</p>
+<p>Portanto,</p>
+<p>$$
+\boxed{R_b=64\text{ kbits/s}}
+$$</p>
+<p>Esse valor aparece no Lathi como taxa típica de digitalização telefônica.</p>
+</div>
+<div class="example">
+  <div class="example-title">Exemplo 3</div>
+  <p>Um sinal limitado em faixa a $3$ kHz é amostrado a uma taxa $33\%$ maior que a taxa de Nyquist. O erro máximo de quantização aceitável é $0{,}5\%$ do valor de pico $V$. Determine a taxa de amostragem, o número de bits por amostra e a taxa de bits.</p>
+<hr />
+<p>A taxa de Nyquist é</p>
+<p>$$
+f_{\text{Nyq}}=2\cdot 3000=6000\text{ Hz}
+$$</p>
+<p>Como a taxa real é $33\%$ maior,</p>
+<p>$$
+f_s=6000\cdot \frac{4}{3}=8000\text{ Hz}
+$$</p>
+<p>O erro máximo de quantização é $\Delta/2$. A condição dada é</p>
+<p>$$
+\frac{\Delta}{2}\le 0{,}005V
+$$</p>
+<p>Como $\Delta=2V/L$,</p>
+<p>$$
+\frac{V}{L}\le 0{,}005V
+$$</p>
+<p>Logo,</p>
+<p>$$
+L\ge 200
+$$</p>
+<p>Como usamos código binário, escolhemos a próxima potência de $2$:</p>
+<p>$$
+L=256=2^8
+$$</p>
+<p>Então são necessários $8$ bits por amostra. A taxa de bits é</p>
+<p>$$
+R_b=8\cdot 8000=64000\text{ bits/s}
+$$</p>
+<p>Portanto, o sinal PCM resultante tem taxa de $64$ kbits/s.</p>
+</div>
+<h2 id="por-que-sinais-digitais-são-robustos"><span class="heading-text">Por que sinais digitais são robustos</span><span class="heading-arabic">10.5</span></h2>
+<p>O Lathi destaca uma vantagem prática dos sinais digitais: eles podem ser regenerados. Em uma transmissão analógica, ruído e distorção se acumulam continuamente. Em uma transmissão digital, se o receptor ainda consegue decidir corretamente entre os símbolos, ele pode reconstruir pulsos limpos.</p>
+<p>Essa é a função das repetidoras regenerativas. Elas detectam os pulsos recebidos e retransmitem pulsos novos, reduzindo o acúmulo progressivo de ruído.</p>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Não confunda robustez com ausência de erro<br /></span>
+  </div>
+  <div class="callout-content">
+<p>O sinal digital também pode falhar se ruído e distorção ultrapassarem os limites de decisão. A vantagem é que, abaixo desses limites, é possível regenerar a sequência com alta confiabilidade.</p>
+  </div>
+</div>
+<h2 id="o-dual-da-amostragem-no-tempo"><span class="heading-text">O dual da amostragem no tempo</span><span class="heading-arabic">10.6</span></h2>
+<p>Na aula anterior, vimos que amostrar no tempo cria repetições do espectro. O Lathi mostra agora o resultado dual: repetir um sinal no tempo cria amostras do espectro.</p>
+<p>Se um sinal $x(t)$ é limitado no tempo a uma duração $\tau$, seu espectro $X(\omega)$ pode ser reconstruído a partir de amostras em frequência, desde que essas amostras sejam suficientemente próximas.</p>
+<p>O teorema de amostragem espectral afirma que, para um sinal de duração $\tau$ segundos, o intervalo entre amostras do espectro deve ser menor que</p>
+<p>$$
+\frac{1}{\tau}\text{ Hz}
+$$</p>
+<p>De forma equivalente, a taxa de amostragem espectral deve ser maior que $\tau$ amostras por Hz.</p>
+<div class="example">
+  <div class="example-title">Exemplo 4</div>
+  <p>Um sinal é limitado no tempo a $\tau=2$ s. Qual deve ser o maior espaçamento permitido entre amostras de $X(\omega)$ em hertz?</p>
+<hr />
+<p>Pelo teorema de amostragem espectral, o espaçamento deve ser menor que</p>
+<p>$$
+\frac{1}{\tau}=\frac{1}{2}=0{,}5\text{ Hz}
+$$</p>
+<p>Portanto, as amostras de frequência devem estar espaçadas por menos de $0{,}5$ Hz para permitir reconstrução ideal do espectro.</p>
+</div>
+<h2 id="a-ponte-para-a-tdf"><span class="heading-text">A ponte para a TDF</span><span class="heading-arabic">10.7</span></h2>
+<p>Um computador não calcula a Transformada de Fourier contínua inteira. Ele trabalha com uma quantidade finita de amostras no tempo e produz uma quantidade finita de amostras em frequência.</p>
+<p>O problema da TDF nasce exatamente daí:</p>
+<ol>
+<li>temos amostras de $x(t)$;</li>
+<li>queremos amostras de $X(\omega)$;</li>
+<li>precisamos de uma relação algébrica finita entre essas duas listas.</li>
+</ol>
+<p>O Lathi constrói essa relação usando os dois teoremas de amostragem. A ideia é amostrar o sinal no tempo e repetir periodicamente essa sequência. O espectro correspondente também fica amostrado e periódico.</p>
+<p>Se temos $N_0$ amostras em um período, a TDF relaciona duas sequências periódicas de período $N_0$.</p>
+<h2 id="definição-da-tdf"><span class="heading-text">Definição da TDF</span><span class="heading-arabic">10.8</span></h2>
+<p>A TDF direta é</p>
+<p>$$
+X_r=\sum_{n=0}^{N_0-1}x_n e^{-j\frac{2\pi}{N_0}rn}
+$$</p>
+<p>para</p>
+<p>$$
+r=0,1,\ldots,N_0-1
+$$</p>
+<p>A TDF inversa é</p>
+<p>$$
+x_n=\frac{1}{N_0}\sum_{r=0}^{N_0-1}X_r e^{j\frac{2\pi}{N_0}rn}
+$$</p>
+<p>para</p>
+<p>$$
+n=0,1,\ldots,N_0-1
+$$</p>
+<p>A TDF em si é exata para as sequências $x_n$ e $X_r$. A aproximação aparece quando interpretamos essas sequências como amostras de sinais contínuos e espectros contínuos.</p>
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">Ponto importante<br /></span>
+  </div>
+  <div class="callout-content">
+<p>A TDF não é “uma Fourier errada”. Ela é uma transformada exata entre duas sequências finitas e periódicas. O cuidado está em escolher amostragem, duração e resolução de forma coerente com o sinal contínuo que estamos tentando representar.</p>
+  </div>
+</div>
+<h2 id="escolha-de-e"><span class="heading-text">Escolha de $T$, $T_0$ e $N_0$</span><span class="heading-arabic">10.9</span></h2>
+<p>Para usar a TDF como aproximação da Transformada de Fourier contínua, precisamos escolher três grandezas.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Grandeza</th>
+  <th style="text-align:left">Significado</th>
+  <th style="text-align:left">Relação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">$T$</td>
+  <td style="text-align:left">intervalo de amostragem no tempo</td>
+  <td style="text-align:left">$T=1/f_s$</td>
+</tr>
+<tr>
+  <td style="text-align:left">$T_0$</td>
+  <td style="text-align:left">duração observada ou período efetivo</td>
+  <td style="text-align:left">$f_0=1/T_0$</td>
+</tr>
+<tr>
+  <td style="text-align:left">$N_0$</td>
+  <td style="text-align:left">número de amostras</td>
+  <td style="text-align:left">$N_0=T_0/T$</td>
+</tr>
+</tbody>
+</table>
+<p>Se a largura de faixa essencial é $B$, escolhemos</p>
+<p>$$
+f_s\ge 2B
+$$</p>
+<p>ou</p>
+<p>$$
+T\le \frac{1}{2B}
+$$</p>
+<p>Se queremos resolução em frequência $f_0$, escolhemos</p>
+<p>$$
+T_0=\frac{1}{f_0}
+$$</p>
+<div class="example">
+  <div class="example-title">Exemplo 5</div>
+  <p>Um sinal tem duração de $2$ ms e largura de faixa essencial de $10$ kHz. Deseja-se resolução em frequência de $100$ Hz. Determine um valor inicial para $N_0$.</p>
+<hr />
+<p>Para obter resolução de $100$ Hz,</p>
+<p>$$
+T_0=\frac{1}{100}=0{,}01\text{ s}=10\text{ ms}
+$$</p>
+<p>Como o sinal dura apenas $2$ ms, os $8$ ms restantes podem ser preenchidos com zeros.</p>
+<p>A taxa mínima de amostragem é</p>
+<p>$$
+f_s=2B=2\cdot 10000=20000\text{ Hz}
+$$</p>
+<p>Logo,</p>
+<p>$$
+T=\frac{1}{20000}=50\ \mu\text{s}
+$$</p>
+<p>O número de amostras é</p>
+<p>$$
+N_0=\frac{T_0}{T}=\frac{10\text{ ms}}{50\ \mu\text{s}}=200
+$$</p>
+<p>Na prática, pode-se escolher $N_0=256$ para facilitar o uso da FFT, pois $256$ é potência de $2$.</p>
+</div>
+<h2 id="aliasing-vazamento-e-efeito-de-cerca"><span class="heading-text">Aliasing, vazamento e efeito de cerca</span><span class="heading-arabic">10.10</span></h2>
+<p>O cálculo numérico de Fourier sempre envolve escolhas. O Lathi destaca três cuidados.</p>
+<p>O primeiro é o aliasing. Se $T$ não é pequeno o suficiente, componentes de alta frequência contaminam as amostras calculadas do espectro.</p>
+<p>O segundo é o vazamento. Quando truncamos um sinal para trabalhar com uma janela finita, o espectro se espalha. Esse efeito já apareceu na discussão de janelas da Transformada de Fourier.</p>
+<p>O terceiro é o efeito de cerca de postes. A TDF mostra apenas amostras do espectro. Se um pico cair entre duas amostras, ele pode ficar escondido ou parecer menor do que realmente é.</p>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Preenchimento nulo não cria informação nova<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Adicionar zeros aumenta a quantidade de amostras visualizadas do espectro, mas não corrige o erro causado por uma janela inadequada ou por amostragem temporal insuficiente.</p>
+  </div>
+</div>
+<h2 id="propriedades-básicas-da-tdf"><span class="heading-text">Propriedades básicas da TDF</span><span class="heading-arabic">10.11</span></h2>
+<p>As propriedades da TDF refletem propriedades da Transformada de Fourier, mas com uma diferença importante: as sequências são periódicas de período $N_0$.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Propriedade</th>
+  <th style="text-align:left">Forma conceitual</th>
+  <th style="text-align:left">Cuidado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Linearidade</td>
+  <td style="text-align:left">combinação no tempo vira combinação na frequência</td>
+  <td style="text-align:left">igual à intuição de Fourier</td>
+</tr>
+<tr>
+  <td style="text-align:left">Simetria de conjugado</td>
+  <td style="text-align:left">sequência real gera espectro conjugado simétrico</td>
+  <td style="text-align:left">basta calcular metade em muitos casos</td>
+</tr>
+<tr>
+  <td style="text-align:left">Deslocamento no tempo</td>
+  <td style="text-align:left">deslocamento circular gera fator de fase</td>
+  <td style="text-align:left">o deslocamento é circular</td>
+</tr>
+<tr>
+  <td style="text-align:left">Deslocamento na frequência</td>
+  <td style="text-align:left">multiplicação por exponencial desloca o espectro</td>
+  <td style="text-align:left">também circular</td>
+</tr>
+<tr>
+  <td style="text-align:left">Convolução periódica</td>
+  <td style="text-align:left">convolução circular corresponde a produto na TDF</td>
+  <td style="text-align:left">não é automaticamente convolução linear</td>
+</tr>
+</tbody>
+</table>
+<p>Essa última diferença é especialmente importante. A TDF trabalha naturalmente com convolução circular. Para usar TDF em uma convolução linear, precisamos adicionar zeros suficientes para evitar sobreposição circular.</p>
+<h2 id="aplicações-da-tdf"><span class="heading-text">Aplicações da TDF</span><span class="heading-arabic">10.12</span></h2>
+<p>O Lathi destaca três aplicações principais: cálculo numérico de Fourier, convolução e filtragem.</p>
+<p>Na convolução linear, a ideia é transformar duas sequências, multiplicar suas TDFs e aplicar a TDF inversa. Para que o resultado circular coincida com o linear, adicionamos zeros até o tamanho necessário.</p>
+<p>Na filtragem, calculamos a TDF de $x_n$, multiplicamos pelas amostras da resposta em frequência $H_r$, e depois aplicamos a TDF inversa.</p>
+<div class="example">
+  <div class="example-title">Exemplo 6</div>
+  <p>Duas sequências têm comprimentos $N_1=5$ e $N_2=4$. Qual deve ser o tamanho mínimo da TDF para calcular a convolução linear usando multiplicação em frequência?</p>
+<hr />
+<p>A convolução linear de duas sequências de comprimentos $N_1$ e $N_2$ tem comprimento</p>
+<p>$$
+N_1+N_2-1
+$$</p>
+<p>Logo,</p>
+<p>$$
+5+4-1=8
+$$</p>
+<p>Portanto, o tamanho mínimo é $8$. As sequências devem ser preenchidas com zeros até esse tamanho antes de aplicar a TDF.</p>
+</div>
+<h2 id="fft-a-mesma-tdf-com-menos-cálculo"><span class="heading-text">FFT: a mesma TDF com menos cálculo</span><span class="heading-arabic">10.13</span></h2>
+<p>A FFT não é uma transformada diferente. Ela é um algoritmo eficiente para calcular a TDF.</p>
+<p>O cálculo direto da TDF exige, em ordem de grandeza,</p>
+<p>$$
+N_0^2
+$$</p>
+<p>operações. A FFT reduz esse custo para ordem de</p>
+<p>$$
+N_0\log_2 N_0
+$$</p>
+<p>Essa redução é o que torna a análise espectral computacional viável para sequências grandes.</p>
+<div class="example">
+  <div class="example-title">Exemplo 7</div>
+  <p>Compare a ordem de grandeza do número de operações para calcular uma TDF de $N_0=1024$ pontos diretamente e por FFT.</p>
+<hr />
+<p>No cálculo direto, a ordem é</p>
+<p>$$
+N_0^2=1024^2=1.048.576
+$$</p>
+<p>Na FFT, a ordem é</p>
+<p>$$
+N_0\log_2N_0=1024\cdot 10=10.240
+$$</p>
+<p>O resultado numérico da FFT é o mesmo da TDF. A diferença está no número de operações necessárias para chegar a ele.</p>
+</div>
+<h2 id="como-a-fft-economiza-operações"><span class="heading-text">Como a FFT economiza operações</span><span class="heading-arabic">10.14</span></h2>
+<p>O algoritmo clássico de Cooley-Tukey explora a decomposição da TDF em problemas menores. No caso de decimação no tempo, a sequência é dividida em amostras de índice par e de índice ímpar.</p>
+<p>Depois, a TDF de $N_0$ pontos é montada a partir de duas TDFs de $N_0/2$ pontos. Esse processo continua até chegar a TDFs de um ponto.</p>
+<p>Quando $N_0$ é potência de $2$, a divisão é especialmente simples. Por isso, muitos exemplos escolhem valores como $128$, $256$, $512$ ou $1024$.</p>
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">Leitura prática<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Escolher $N_0$ como potência de $2$ não muda o sinal. Essa escolha facilita o cálculo pela FFT e costuma ser combinada com preenchimento nulo quando necessário.</p>
+  </div>
+</div>
+<h2 id="o-que-esta-aula-organizou"><span class="heading-text">O que esta aula organizou</span><span class="heading-arabic">10.15</span></h2>
+<p>A primeira parte do Capítulo 8 explicou quando as amostras preservam o sinal. Esta segunda parte mostra o que fazemos com elas. A conversão A/D transforma amostras em bits. A amostragem espectral mostra a simetria entre tempo e frequência. A TDF dá uma relação finita entre amostras no tempo e em frequência. A FFT torna essa relação computacionalmente eficiente.</p>
+<p>O ponto mais importante é separar os níveis de aproximação. A TDF é exata para sequências finitas periódicas. A aproximação aparece quando usamos essas sequências para representar sinais contínuos, limitados por janela, taxa de amostragem e resolução em frequência.</p>
+<h2 id="questões"><span class="heading-text">Questões</span><span class="heading-arabic">10.16</span></h2>
+<div class="questions">
+  <p><strong>1.</strong> Explique por que a amostragem de um sinal analógico não basta para torná-lo digital.</p>
+<p><strong>2.</strong> Defina quantização e explique o papel de $\Delta$.</p>
+<p><strong>3.</strong> Um conversor usa $L=1024$ níveis. Quantos bits são necessários por amostra?</p>
+<p><strong>4.</strong> Um sinal é amostrado a $44{,}1$ kHz com $16$ bits por amostra. Determine a taxa de bits de um canal.</p>
+<p><strong>5.</strong> Um sinal limitado a $4$ kHz é amostrado a $25\%$ acima da taxa de Nyquist. Determine $f_s$.</p>
+<p><strong>6.</strong> Explique por que sinais digitais podem ser transmitidos por longas distâncias com maior confiabilidade que sinais analógicos.</p>
+<p><strong>7.</strong> Enuncie o teorema de amostragem espectral em palavras.</p>
+<p><strong>8.</strong> Um sinal limitado no tempo tem duração $\tau=5$ ms. Qual deve ser o maior espaçamento entre amostras de seu espectro em Hz?</p>
+<p><strong>9.</strong> Escreva as fórmulas da TDF direta e inversa.</p>
+<p><strong>10.</strong> Explique por que a TDF é exata para sequências, mas pode ser apenas uma aproximação da Transformada de Fourier contínua.</p>
+<p><strong>11.</strong> Um sinal tem largura de faixa essencial $B=20$ kHz. Qual é o maior intervalo de amostragem $T$ recomendado pelo critério de Nyquist?</p>
+<p><strong>12.</strong> Deseja-se resolução em frequência de $50$ Hz. Qual deve ser o valor de $T_0$?</p>
+<p><strong>13.</strong> Duas sequências têm comprimentos $N_1=8$ e $N_2=6$. Qual deve ser o tamanho mínimo para calcular convolução linear por TDF?</p>
+<p><strong>14.</strong> O que é preenchimento nulo e o que ele não consegue corrigir?</p>
+<p><strong>15.</strong> Compare TDF direta e FFT. Elas produzem resultados diferentes?</p>
+<p><strong>16.</strong> Para $N_0=256$, compare $N_0^2$ com $N_0\log_2N_0$.</p>
+<p><strong>17.</strong> Marque <strong>V</strong> ou <strong>F</strong>.</p>
+<ul>
+<li><strong>( )</strong> Quantizar é arredondar a amplitude para um conjunto finito de níveis.</li>
+<li><strong>( )</strong> A taxa de bits PCM é dada por $R_b=b f_s$.</li>
+<li><strong>( )</strong> A TDF trabalha naturalmente com sequências não periódicas infinitas.</li>
+<li><strong>( )</strong> A FFT é um algoritmo para calcular a TDF com menos operações.</li>
+</ul>
+</div>
+<div class="example">
+  <div class="example-title">Gabarito</div>
+  <p><strong>1.</strong> Porque a amostragem discretiza o tempo, mas a amplitude ainda pode assumir infinitos valores. Para digitalizar, é necessário quantizar e codificar.</p>
+<p><strong>2.</strong> Quantização é o arredondamento da amplitude para um dos níveis permitidos. $\Delta$ é o espaçamento entre níveis.</p>
+<p><strong>3.</strong> Como $1024=2^{10}$, são necessários $10$ bits por amostra.</p>
+<p><strong>4.</strong> $R_b=16\cdot 44100=705600$ bits/s, ou aproximadamente $705{,}6$ kbits/s.</p>
+<p><strong>5.</strong> A taxa de Nyquist é $8$ kHz. Com $25\%$ acima, $f_s=10$ kHz.</p>
+<p><strong>6.</strong> Porque os pulsos digitais podem ser detectados e regenerados, desde que ruído e distorção permaneçam dentro dos limites de decisão.</p>
+<p><strong>7.</strong> Um sinal limitado no tempo permite reconstruir seu espectro a partir de amostras em frequência suficientemente próximas.</p>
+<p><strong>8.</strong> $1/\tau=1/0{,}005=200$ Hz. O espaçamento deve ser menor que $200$ Hz.</p>
+<p><strong>9.</strong></p>
+<p>$$
+X_r=\sum_{n=0}^{N_0-1}x_n e^{-j\frac{2\pi}{N_0}rn}
+$$</p>
+<p>e</p>
+<p>$$
+x_n=\frac{1}{N_0}\sum_{r=0}^{N_0-1}X_r e^{j\frac{2\pi}{N_0}rn}
+$$</p>
+<p><strong>10.</strong> Porque a TDF transforma exatamente uma sequência finita periódica em outra. A aproximação surge ao interpretar essa sequência como amostras de um sinal contínuo truncado e amostrado.</p>
+<p><strong>11.</strong> $T\le 1/(2B)=1/40000=25\ \mu\text{s}$.</p>
+<p><strong>12.</strong> $T_0=1/f_0=1/50=0{,}02$ s.</p>
+<p><strong>13.</strong> $N_1+N_2-1=8+6-1=13$.</p>
+<p><strong>14.</strong> Preenchimento nulo é adicionar amostras de valor zero para aumentar o número de pontos da TDF. Ele não corrige aliasing temporal nem o erro causado por truncagem inadequada.</p>
+<p><strong>15.</strong> Não. A FFT calcula a mesma TDF, mas com menos operações.</p>
+<p><strong>16.</strong> $N_0^2=256^2=65536$. Como $\log_2 256=8$, $N_0\log_2N_0=256\cdot 8=2048$.</p>
+<p><strong>17.</strong> V, V, F, V.</p>
+</div>
+<h2 id="próximos-passos"><span class="heading-text">Próximos passos</span><span class="heading-arabic">10.17</span></h2>
+<p>A partir daqui, a disciplina pode avançar para sinais e sistemas em tempo discreto com mais segurança. A conexão construída no Capítulo 8 mostra por que sequências discretas não são apenas uma abstração matemática, mas uma forma operacional de representar, processar e analisar sinais contínuos amostrados.</p>
+
+                </div>
+            </article>
+            <footer class="footer">
+                <p>© 2025 · <a href="#">Gabriel Soares Baptista</a></p>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        const toggle = document.querySelector('.mobile-menu-toggle');
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.querySelector('.mobile-menu-overlay');
+
+        function openMenu() {
+            sidebar.classList.add('open');
+            overlay.classList.add('open');
+            toggle.classList.add('open');
+            toggle.innerHTML = '<i data-lucide="x"></i>';
+            CourseForgeUI.initIcons();
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMenu() {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('open');
+            toggle.classList.remove('open');
+            toggle.innerHTML = '<i data-lucide="menu"></i>';
+            CourseForgeUI.initIcons();
+            document.body.style.overflow = '';
+        }
+
+        toggle.addEventListener('click', () => {
+            if (sidebar.classList.contains('open')) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        overlay.addEventListener('click', closeMenu);
+    </script>
+
+    
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            renderMathInElement(document.body, {
+                output: 'html',
+                delimiters: [
+                    { left: "$$", right: "$$", display: true },
+                    { left: "$", right: "$", display: false },
+                    { left: "\\(", right: "\\)", display: false },
+                    { left: "\\[", right: "\\]", display: true }
+                ],
+                throwOnError: false,
+                strict: false
+            });
+        });
+    </script>
+    
+    
+    <script src="/aulas-faesa/js/vendor/prism/prism.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-c.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-cpp.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-python.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-clike.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-perl.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-java.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-mermaid.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-php.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js" data-no-bundle></script>
+    
+    
+    
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            mermaid.initialize({
+                startOnLoad: true,
+                theme: 'default',
+                securityLevel: 'loose',
+                fontFamily: 'Inter, system-ui, sans-serif',
+                themeVariables: {
+                    fontSize: '16px',
+                    edgeLabelFontSize: '16px',
+                    multiplicityFontSize: '18px'
+                }
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const isSubcourse = false;
+        const courseName = "Processamento Digital de Sinais";
+        CourseForgeNav.applyDynamicBreadcrumbs('.breadcrumb', isSubcourse);
+        CourseForgeNav.initScrollSpy();
+        CourseForgeUI.initCopyButtons();
+        CourseForgeUI.initExamples();
+        });
+
+        function handleBackNavigation() {
+            const isSubcourse = false;
+        const dynamic = CourseForgeNav.getBackLink('contents.html', 'Voltar', isSubcourse);
+        window.location.href = dynamic.url;
+        }
+    </script>
+</body>
+
+</html>

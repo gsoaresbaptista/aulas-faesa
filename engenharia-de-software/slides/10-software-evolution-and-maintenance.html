@@ -1,0 +1,1438 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <title>Evolução, Manutenção e Refatoração de Software</title>
+    <link rel="icon" href="/aulas-faesa/img/dark-favicon.svg" media="(prefers-color-scheme: light)">
+    <link rel="icon" href="/aulas-faesa/img/light-favicon.svg" media="(prefers-color-scheme: dark)">
+
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/reset.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/reveal.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/theme/white.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/aulas-faesa/css/prism-one-light.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/fonts.css" data-no-bundle>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+            <section><h1>Engenharia de Software</h1>
+<h2>Evolução, Manutenção e Refatoração de Software</h2>
+<p>Professor: Gabriel Soares Baptista</p>
+</section>
+<section><h2>Por que essa aula importa?</h2>
+<p>Entregar um sistema não encerra o trabalho de engenharia de software.</p>
+<div class="fragment">
+  Depois da entrega, o sistema entra em contato com usuários, dados, regras e integrações reais.
+</div>
+<div class="fragment">
+  O problema muda: agora a equipe precisa manter o software útil apesar das mudanças no ambiente.
+</div>
+</section>
+<section><h2>Ideia central do Sommerville</h2>
+<p>Segundo Sommerville, <strong>desenvolvimento</strong> e <strong>evolução</strong> fazem parte do mesmo ciclo de vida.</p>
+<div class="fragment">
+  Um sistema profissional raramente é construído, entregue e abandonado.
+</div>
+<div class="fragment">
+  Ele continua sendo modificado enquanto ainda tiver valor para a organização.
+</div>
+</section>
+<section><h2>Reflita</h2>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Se um sistema acadêmico foi entregue funcionando em 2024, ele continuará adequado em 2026 se mudarem calendário, regras de matrícula, autenticação e integrações externas?</p>
+  </div>
+</div>
+<div class="fragment">
+  Provavelmente não. Mesmo correto, o sistema pode ficar progressivamente menos útil se não acompanhar o ambiente.
+</div>
+</section>
+<section><h2>Software útil precisa mudar</h2>
+<p>Manutenção não é apenas correção de bugs.</p>
+<div class="fragment">
+  Em sistemas reais, manutenção inclui adaptação a novos ambientes, novos requisitos, melhoria de estrutura e preparação para mudanças futuras.
+</div>
+<div class="fragment">
+  Como sistemas de software são ativos críticos, preservar seu valor consome grande parte do orçamento de TI.
+</div>
+</section>
+<section><h2>Evolução em espiral</h2>
+<img src="../static/figura-9-1-modelo-espiral-desenvolvimento-e-evolucao.png" width="82%">
+
+<div class="fragment">
+  O sistema passa por especificação, implementação, validação e operação várias vezes, release após release.
+</div>
+</section>
+<section><h2>O ambiente força a evolução</h2>
+<p>A mudança pode vir de:</p>
+<ul>
+<li>novas regras de negócio</li>
+<li>mudanças legais ou regulatórias</li>
+<li>defeitos encontrados em operação</li>
+<li>atualização de sistema operacional, banco ou hardware</li>
+<li>integração com outros sistemas</li>
+<li>novas expectativas dos usuários</li>
+<li>pressão competitiva do mercado</li>
+</ul>
+</section>
+<section><h2>Exemplos de ambiente mudando</h2>
+<p>Sistema de biblioteca:</p>
+<ul>
+<li>renovação pelo aplicativo</li>
+<li>nova regra de multa</li>
+<li>login institucional único</li>
+<li>relatório para sistema nacional</li>
+</ul>
+<div class="fragment">
+  <p>Sistema de vendas:</p>
+<ul>
+<li>API de pagamento muda autenticação, endpoint ou contrato de resposta</li>
+</ul>
+</div>
+<div class="fragment">
+  O sistema original não era inútil. O ambiente continuou se movendo.
+</div>
+<h2>Cuidado importante</h2>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner"><br /></span>
+  </div>
+  <div class="callout-content">
+<p>Um sistema pode ficar obsoleto sem ter um único bug novo. Basta que o mundo ao redor dele mude e ele não acompanhe essa mudança.</p>
+  </div>
+</div>
+</section>
+<section><h2>Do desenvolvimento para a evolução</h2>
+<p>Separar rigidamente desenvolvimento e manutenção pode esconder o custo real da vida do sistema.</p>
+<div class="fragment">
+  Economizar na manutenibilidade durante o desenvolvimento costuma cobrar juros depois.
+</div>
+<div class="fragment">
+  Em produção, a equipe precisa entender código existente, avaliar impactos, preservar dados reais, evitar regressões e negociar mudanças com usuários reais.
+</div>
+</section>
+<section><h2>Evolução, serviço e fim gradual</h2>
+<table>
+<thead>
+<tr>
+  <th>Fase</th>
+  <th>Ideia</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><strong>Desenvolvimento inicial</strong></td>
+  <td>O sistema é criado.</td>
+</tr>
+<tr>
+  <td><strong>Evolução</strong></td>
+  <td>Mudanças significativas ainda são feitas.</td>
+</tr>
+<tr>
+  <td><strong>Em serviço</strong></td>
+  <td>Apenas mudanças pequenas e essenciais são aceitas.</td>
+</tr>
+<tr>
+  <td><strong>Interrupção gradual</strong></td>
+  <td>O sistema ainda pode ser usado, mas deixa de receber mudanças relevantes.</td>
+</tr>
+</tbody>
+</table>
+<div class="fragment">
+  Uso contínuo não significa evolução saudável.
+</div>
+<h2>Exemplo: evolução ou serviço?</h2>
+<p>Folha de pagamento:</p>
+<ul>
+<li>recebe ajustes anuais de regras, relatórios e integrações</li>
+<li>ainda está em evolução</li>
+</ul>
+<div class="fragment">
+  <p>Consulta histórica:</p>
+<ul>
+<li>ainda é necessária</li>
+<li>quase ninguém quer adicionar funcionalidade</li>
+<li>provavelmente está apenas em serviço</li>
+</ul>
+</div>
+</section>
+<section><h2>Processo de evolução</h2>
+<p>Toda evolução começa com uma proposta de mudança.</p>
+<p>Ela pode vir de bug, novo requisito, necessidade operacional ou melhoria sugerida pela equipe.</p>
+<img src="../static/figura-9-4-processo-evolucao-software.png" width="82%">
+
+</section>
+<section><h2>Perguntas antes de mudar</h2>
+<p>Antes de implementar, a equipe deve perguntar:</p>
+<ol>
+<li>o que precisa mudar?</li>
+<li>que partes do sistema serão afetadas?</li>
+<li>quanto custará implementar e testar?</li>
+<li>em qual release a mudança deve entrar?</li>
+</ol>
+<div class="fragment">
+  Mudança profissional começa por análise, não por edição apressada do código.
+</div>
+</section>
+<section><h2>Análise de impacto</h2>
+<p>Análise de impacto é entender as consequências de uma mudança antes de implementá-la.</p>
+<div class="fragment">
+  Ela exige examinar código, requisitos, arquitetura, testes, dados, interfaces e integrações.
+</div>
+<div class="fragment">
+  Uma mudança pequena na tela pode afetar banco, validações, relatórios, APIs e permissões.
+</div>
+</section>
+<section><h2>Exemplos de análise de impacto</h2>
+<p>CPF obrigatório no responsável financeiro:</p>
+<ul>
+<li>tabela de responsáveis</li>
+<li>registros antigos sem CPF</li>
+<li>tela de cadastro</li>
+<li>validação na API</li>
+<li>relatórios financeiros</li>
+<li>testes e integrações externas</li>
+</ul>
+<div class="fragment">
+  <p>Correção de desconto no e-commerce:</p>
+<ul>
+<li>pode afetar carrinho, checkout, nota fiscal, relatório financeiro e API de pedidos</li>
+</ul>
+</div>
+</section>
+<section><h2>Correções emergenciais</h2>
+<p>Às vezes, um defeito grave em produção exige correção rápida.</p>
+<div class="fragment">
+  Isso pode ser necessário, mas se documentação, requisitos e testes não forem realinhados depois, a solução emergencial vira decisão permanente sem análise adequada.
+</div>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner"><br /></span>
+  </div>
+  <div class="callout-content">
+<p>Uma correção emergencial deve resolver o incidente, mas não deveria encerrar a mudança.</p>
+  </div>
+</div>
+<h2>Leis de Lehman</h2>
+<p>Lehman e Belady estudaram a evolução de sistemas de grande porte.</p>
+<div class="fragment">
+  A ideia central: sistemas usados no mundo real não ficam parados.
+</div>
+<table>
+<thead>
+<tr>
+  <th>Lei</th>
+  <th>Ideia central</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><strong>Mudança contínua</strong></td>
+  <td>O sistema precisa mudar ou se torna menos útil.</td>
+</tr>
+<tr>
+  <td><strong>Aumento da complexidade</strong></td>
+  <td>A estrutura tende a ficar mais complexa sem cuidado.</td>
+</tr>
+<tr>
+  <td><strong>Crescimento contínuo</strong></td>
+  <td>A funcionalidade precisa crescer para manter usuários satisfeitos.</td>
+</tr>
+<tr>
+  <td><strong>Declínio de qualidade</strong></td>
+  <td>A qualidade cai se o sistema não acompanhar o ambiente.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section><h2>O alerta das leis</h2>
+<p>As leis não são fórmulas matemáticas rígidas.</p>
+<div class="fragment">
+  Elas funcionam como alertas gerenciais e técnicos.
+</div>
+<div class="fragment">
+  Se a equipe adiciona funcionalidade continuamente sem refatorar, testar e reorganizar, a complexidade cresce.
+</div>
+<h2>Exemplos das leis em ação</h2>
+<p>Sistema de atendimento que cresce:</p>
+<ul>
+<li>chat, WhatsApp, relatórios, automações e permissões especiais</li>
+<li>se tudo entra no lugar mais rápido, surgem regras duplicadas e condicionais espalhadas</li>
+</ul>
+<div class="fragment">
+  <p>Release grande:</p>
+<ul>
+<li>muitas funcionalidades novas interagem de formas inesperadas</li>
+<li>frequentemente precisa ser seguido por releases de correção e estabilização</li>
+</ul>
+</div>
+</section>
+<section><h2>Tipos de manutenção</h2>
+<table>
+<thead>
+<tr>
+  <th>Tipo</th>
+  <th>Quando acontece</th>
+  <th>Exemplo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><strong>Correção de defeitos</strong></td>
+  <td>Corrigir erros em operação.</td>
+  <td>Desconto incorreto.</td>
+</tr>
+<tr>
+  <td><strong>Adaptação ao ambiente</strong></td>
+  <td>Ajustar a mudanças técnicas externas.</td>
+  <td>Nova versão de banco ou API.</td>
+</tr>
+<tr>
+  <td><strong>Adição ou modificação de funcionalidade</strong></td>
+  <td>Atender novas necessidades do negócio.</td>
+  <td>Renovação on-line em biblioteca.</td>
+</tr>
+</tbody>
+</table>
+<div class="fragment">
+  Na prática, esses tipos podem se misturar.
+</div>
+</section>
+<section><h2>Mito sobre manutenção</h2>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner"><br /></span>
+  </div>
+  <div class="callout-content">
+<p>Manutenção não é apenas correção de bugs. Uma parte grande do esforço vem de adaptar o sistema e adicionar ou modificar funcionalidades depois que ele já está em uso.</p>
+  </div>
+</div>
+<img src="../static/figura-9-7-distribuicao-esforco-manutencao.png" width="68%">
+
+</section>
+<section><h2>Por que manutenção custa caro?</h2>
+<p>Adicionar funcionalidade depois que o sistema está em operação costuma ser mais caro porque a equipe precisa:</p>
+<ul>
+<li>entender decisões antigas</li>
+<li>lidar com documentação incompleta</li>
+<li>trabalhar sobre estrutura possivelmente degradada</li>
+<li>preservar dados reais</li>
+<li>proteger funcionalidades existentes com testes</li>
+<li>evitar quebrar integrações externas</li>
+</ul>
+<h2>Problema organizacional</h2>
+<p>Contratos de desenvolvimento e manutenção muitas vezes são separados.</p>
+<div class="fragment">
+  Isso reduz o incentivo para investir em manutenibilidade no início.
+</div>
+<div class="fragment">
+  O custo da má estrutura pode ser pago por outra equipe, outro orçamento ou pelos usuários.
+</div>
+</section>
+<section><h2>Exemplos de custo de manutenção</h2>
+<p>Regra duplicada:</p>
+<ul>
+<li>mensalidade copiada em três módulos para entregar rápido</li>
+<li>depois, a manutenção precisa encontrar, alterar e testar todas as cópias</li>
+</ul>
+<div class="fragment">
+  <p>Banco antigo:</p>
+<ul>
+<li>atualização por segurança exige adaptar queries, drivers, scripts e testes</li>
+<li>mesmo sem novo requisito de negócio</li>
+</ul>
+</div>
+</section>
+<section><h2>Previsão de manutenção</h2>
+<p>Gerentes tentam prever manutenção para evitar surpresas de orçamento e prazo.</p>
+<div class="fragment">
+  Partes mais expostas a mudança tendem a ter muitas interfaces, requisitos voláteis ou dependência de processos instáveis.
+</div>
+<p>Métricas úteis:</p>
+<ul>
+<li>solicitações corretivas</li>
+<li>tempo médio de análise de impacto</li>
+<li>tempo médio para implementar mudança</li>
+<li>solicitações pendentes</li>
+<li>complexidade de componentes críticos</li>
+</ul>
+<h2>Métrica ajuda, mas não decide sozinha</h2>
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner"><br /></span>
+  </div>
+  <div class="callout-content">
+<p>Métrica não substitui julgamento técnico. Ela ajuda a enxergar tendência.</p>
+  </div>
+</div>
+<div class="fragment">
+  Exemplo: mudanças simples no módulo financeiro levavam dois dias e agora levam duas semanas.
+</div>
+<div class="fragment">
+  A investigação pode revelar regras acumuladas, integrações sem testes e dependências diretas com relatórios.
+</div>
+</section>
+<section><h2>Reengenharia de software</h2>
+<p>Quando um sistema legado ainda tem valor, mas se tornou difícil de mudar, uma opção é aplicar <strong>reengenharia</strong>.</p>
+<div class="fragment">
+  Objetivo: melhorar estrutura, documentação e inteligibilidade sem mudar a funcionalidade essencial.
+</div>
+<img src="../static/figura-9-10-processo-reengenharia.png" width="78%">
+
+</section>
+<section><h2>O que pode entrar na reengenharia?</h2>
+<ul>
+<li>tradução de código-fonte</li>
+<li>engenharia reversa</li>
+<li>melhoria da estrutura do programa</li>
+<li>modularização</li>
+<li>reengenharia de dados</li>
+</ul>
+<div class="fragment">
+  Nem todo projeto usa todas as etapas.
+</div>
+</section>
+<section><h2>Reengenharia não é reescrita total</h2>
+<p>Reescrever um sistema crítico do zero pode parecer atraente, mas envolve alto risco.</p>
+<div class="fragment">
+  A equipe pode não entender todas as regras implícitas do sistema antigo.
+</div>
+<p>Benefícios destacados por Sommerville:</p>
+<ul>
+<li><strong>risco reduzido</strong></li>
+<li><strong>custo reduzido</strong></li>
+</ul>
+<div class="fragment">
+  Limite: grandes mudanças arquiteturais e reorganizações profundas de dados continuam caras.
+</div>
+<h2>Exemplos de reengenharia</h2>
+<p>Sistema COBOL com regras acumuladas:</p>
+<ul>
+<li>exige engenharia reversa, documentação de regras, testes e modularização gradual</li>
+</ul>
+<div class="fragment">
+  <p>Sistema com dados duplicados:</p>
+<ul>
+<li>pode exigir limpeza, modelo de dados claro e scripts de migração</li>
+</ul>
+</div>
+<div class="fragment">
+  A funcionalidade visível pode mudar pouco, mas a capacidade de evolução aumenta.
+</div>
+</section>
+<section><h2>Refatoração como manutenção preventiva</h2>
+<p>Refatoração é melhorar a estrutura interna do código sem alterar o comportamento observável.</p>
+<div class="fragment">
+  Ela não adiciona funcionalidade.
+</div>
+<div class="fragment">
+  Ela reduz complexidade, duplicação, acoplamento e custo mental de mudança.
+</div>
+</section>
+<section><h2>Refatoração depende de testes</h2>
+<p>Refatoração conversa diretamente com a aula de testes.</p>
+<div class="fragment">
+  Testes de regressão ajudam a verificar se o comportamento antes e depois continua o mesmo.
+</div>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner"><br /></span>
+  </div>
+  <div class="callout-content">
+<p>Refatoração sem testes aumenta risco. Você pode mudar a estrutura e introduzir defeitos sem perceber.</p>
+  </div>
+</div>
+</section>
+<section><h2>Refatoração x reengenharia</h2>
+<table>
+<thead>
+<tr>
+  <th>Refatoração</th>
+  <th>Reengenharia</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Processo contínuo e incremental.</td>
+  <td>Processo mais amplo, comum em legados.</td>
+</tr>
+<tr>
+  <td>Atua em melhorias localizadas.</td>
+  <td>Pode envolver código, dados, documentação e arquitetura.</td>
+</tr>
+<tr>
+  <td>Acontece durante desenvolvimento e evolução.</td>
+  <td>Acontece quando manutenção ficou cara ou arriscada.</td>
+</tr>
+<tr>
+  <td>Depende de testes de regressão.</td>
+  <td>Pode exigir engenharia reversa e migração.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section><h2>Maus cheiros de código</h2>
+<p>Fowler, citado por Sommerville, chama de <strong>maus cheiros</strong> os sinais de que o código pode precisar de refatoração.</p>
+<p>Exemplos:</p>
+<ul>
+<li>código duplicado</li>
+<li>métodos longos</li>
+<li>condicionais complexas ou repetidas</li>
+<li>grupos de dados repetidos</li>
+<li>generalidade especulativa</li>
+</ul>
+</section>
+<section><h2>Exemplo: código duplicado</h2>
+<p>Antes:</p>
+<pre class="line-numbers language-python" data-lang="PYTHON"><code class="language-python">def calcular_total_carrinho(valor):
+    frete = 0 if valor &gt;= 200 else 15
+    return valor + frete
+
+def simular_pagamento(valor):
+    frete = 0 if valor &gt;= 200 else 15
+    return {&quot;total&quot;: valor + frete}
+</code></pre>
+<p>Depois:</p>
+<pre class="line-numbers language-python" data-lang="PYTHON"><code class="language-python">def calcular_frete(valor):
+    return 0 if valor &gt;= 200 else 15
+</code></pre>
+</section>
+<section><h2>Exemplo: método longo</h2>
+<p>Antes, uma função pode misturar validação, cálculo e montagem de resposta.</p>
+<p>Depois, a refatoração separa responsabilidades:</p>
+<pre class="line-numbers language-python" data-lang="PYTHON"><code class="language-python">def validar_pedido(cliente, itens):
+    if cliente is None or len(itens) == 0:
+        raise ValueError(&quot;pedido invalido&quot;)
+
+def calcular_subtotal(itens):
+    return sum(item[&quot;preco&quot;] * item[&quot;quantidade&quot;] for item in itens)
+
+def calcular_frete(total):
+    return 0 if total &gt;= 200 else 15
+</code></pre>
+<div class="fragment">
+  Refatorar não é enfeitar. É reduzir o custo mental de entender e alterar o sistema.
+</div>
+</section>
+<section><h2>Sistemas legados</h2>
+<p>Sistemas legados são sistemas antigos que continuam importantes para a organização.</p>
+<div class="fragment">
+  O problema não é simplesmente a idade.
+</div>
+<div class="fragment">
+  O problema aparece quando há alto valor de negócio, baixa qualidade técnica, dependências obsoletas ou manutenção cara.
+</div>
+</section>
+<section><h2>Avaliação de sistemas legados</h2>
+<p>Sommerville propõe avaliar legados por duas perspectivas:</p>
+<ol>
+<li><strong>valor de negócio</strong></li>
+<li><strong>qualidade do sistema</strong></li>
+</ol>
+<img src="../static/figura-9-12-avaliacao-sistema-legado.png" width="72%">
+
+</section>
+<section><h2>Matriz de decisão</h2>
+<table>
+<thead>
+<tr>
+  <th>Situação</th>
+  <th>Estratégia provável</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Baixo valor e baixa qualidade</td>
+  <td>Descartar.</td>
+</tr>
+<tr>
+  <td>Alto valor e baixa qualidade</td>
+  <td>Reestruturar, fazer reengenharia ou substituir.</td>
+</tr>
+<tr>
+  <td>Baixo valor e alta qualidade</td>
+  <td>Manter apenas se o custo for baixo.</td>
+</tr>
+<tr>
+  <td>Alto valor e alta qualidade</td>
+  <td>Continuar manutenção normal.</td>
+</tr>
+</tbody>
+</table>
+<h2>O que avaliar?</h2>
+<p>Valor de negócio:</p>
+<ul>
+<li>uso em momentos críticos, apoio a processos centrais, importância das saídas e impacto de falhas</li>
+</ul>
+<div class="fragment">
+  <p>Qualidade técnica:</p>
+<ul>
+<li>inteligibilidade, documentação, dados, desempenho, ferramentas, configuração, testes e conhecimento da equipe</li>
+</ul>
+</div>
+</section>
+<section><h2>Exemplos de decisão em legados</h2>
+<p>Sistema antigo de boletos:</p>
+<ul>
+<li>usado diariamente, falha afeta o caixa, código difícil e biblioteca sem suporte</li>
+<li>alto valor e baixa qualidade: reengenharia ou substituição gradual</li>
+</ul>
+<div class="fragment">
+  <p>Sistema antigo de relatórios:</p>
+<ul>
+<li>funciona bem, mas quase ninguém usa</li>
+<li>baixo valor: manter só se o custo for mínimo ou planejar descarte</li>
+</ul>
+</div>
+</section>
+<section><h2>Responsabilidade profissional</h2>
+<p>Engenheiros de software têm responsabilidade profissional de produzir código que possa ser mantido e alterado.</p>
+<div class="fragment">
+  Mesmo quando isso não aparece explicitamente como requisito do cliente.
+</div>
+<div class="fragment">
+  Decisões internas afetam custos futuros, riscos operacionais, trabalho de outras equipes e experiência dos usuários.
+</div>
+</section>
+<section><h2>Ideia final</h2>
+<div class="callout callout-success">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></span>
+    <span class="callout-title-inner"><br /></span>
+  </div>
+  <div class="callout-content">
+<p>Manutenção não é a fase menos nobre da engenharia de software. Ela é a prova de que o software entrou no mundo real e precisa continuar útil apesar da mudança.</p>
+  </div>
+</div>
+</section>
+<section><h2>Próximos passos</h2>
+<p>Avaliação!</p>
+</section>
+        </div>
+    </div>
+
+    <script src="/aulas-faesa/js/vendor/reveal/reveal.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/notes/notes.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/markdown/markdown.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/math/math.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/zoom/zoom.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/prism.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-c.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-python.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-clike.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-cpp.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-perl.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-java.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-php.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/toolbar/prism-toolbar.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/show-language/prism-show-language.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/prism-slang.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/mermaid.min.js" data-no-bundle></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            mermaid.initialize({
+                startOnLoad: false,
+                theme: 'default',
+                securityLevel: 'loose',
+                htmlLabels: false,
+                fontFamily: 'Inter, system-ui, sans-serif',
+            });
+        });
+    </script>
+    <script src="/aulas-faesa/js/rough.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/apply_sketch.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/lucide.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/ui.js" data-no-bundle></script>
+    <script>
+        const waitForNextFrame = () => new Promise(resolve => requestAnimationFrame(resolve));
+
+        const initSlideUI = () => {
+            if (!window.CourseForgeUI) {
+                return;
+            }
+
+            window.CourseForgeUI.initCopyButtons();
+            window.CourseForgeUI.initIcons();
+        };
+
+        const renderMermaidsInSlide = async (slide) => {
+            if (!slide) {
+                return;
+            }
+
+            const mermaids = slide.querySelectorAll('.mermaid');
+            if (!mermaids.length) {
+                return;
+            }
+
+            try {
+                if (document.fonts?.ready) {
+                    await document.fonts.ready;
+                }
+
+                await waitForNextFrame();
+                await waitForNextFrame();
+
+                for (const element of mermaids) {
+                    if (element.dataset.mermaidRendered === 'true') {
+                        continue;
+                    }
+
+                    await mermaid.run({
+                        nodes: [element],
+                    });
+                    element.dataset.mermaidRendered = 'true';
+                }
+            } catch (err) {
+                console.warn('Mermaid render failed', err);
+            }
+        };
+
+        const updateMermaidDisplayBounds = (slide) => {
+            const scope = slide || document;
+            const displays = scope.querySelectorAll('.mermaid-display');
+
+            for (const display of displays) {
+                const rect = display.getBoundingClientRect();
+                const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+                const bottomGap = 24;
+                const availableHeight = Math.max(160, Math.floor(viewportHeight - rect.top - bottomGap));
+                display.style.setProperty('--mermaid-max-height', `${availableHeight}px`);
+            }
+        };
+
+        const resetNativeLineNumbers = (pre) => {
+            if (!pre?.classList.contains('line-numbers')) {
+                return;
+            }
+
+            const existingRows = pre.querySelector('.line-numbers-rows');
+            if (existingRows) {
+                existingRows.remove();
+            }
+        };
+
+        const highlightCodeInSlide = (slide) => {
+            const scope = slide || document;
+            const codeBlocks = scope.querySelectorAll('pre[class*="language-"] > code[class*="language-"]');
+
+            for (const code of codeBlocks) {
+                const pre = code.parentElement;
+                resetNativeLineNumbers(pre);
+                Prism.highlightElement(code);
+
+                if (pre?.classList.contains('line-numbers') && Prism.plugins?.lineNumbers?.resize) {
+                    Prism.plugins.lineNumbers.resize(pre);
+                }
+            }
+        };
+
+        const enhanceCurrentSlide = async (slide) => {
+            highlightCodeInSlide(slide);
+            await renderMermaidsInSlide(slide);
+            updateMermaidDisplayBounds(slide);
+            initSlideUI();
+        };
+
+        Reveal.initialize({
+            hash: true,
+            slideNumber: 'c/t',
+            center: false,
+            controls: false,
+            plugins: [RevealMarkdown, RevealNotes, RevealMath.KaTeX, RevealZoom],
+            katex: {
+                local: '/aulas-faesa/js/vendor/katex',
+                output: 'html',
+                throwOnError: false,
+                strict: false,
+            },
+            width: 960,
+            height: 800,
+            margin: 0.15,
+            maxScale: 2.0,
+        });
+
+        Reveal.on('ready', event => {
+            enhanceCurrentSlide(event.currentSlide);
+        });
+
+        Reveal.on('slideready', event => {
+            enhanceCurrentSlide(event.currentSlide);
+        });
+
+        Reveal.on('slidechanged', event => {
+            enhanceCurrentSlide(event.currentSlide);
+        });
+
+        window.addEventListener('resize', () => {
+            updateMermaidDisplayBounds(Reveal.getCurrentSlide());
+        });
+    </script>
+    <style>
+        /* Modern base styles */
+        :root {
+            --callout-note: #448aff;
+            --callout-abstract: #00b0ff;
+            --callout-info: #00b8d4;
+            --callout-todo: #00bfa5;
+            --callout-tip: #00c853;
+            --callout-success: #64dd17;
+            --callout-question: #ffab00;
+            --callout-warning: #ff9100;
+            --callout-failure: #ff5252;
+            --callout-danger: #ff1744;
+            --callout-bug: #f50057;
+            --callout-example: #7c4dff;
+            --callout-quote: #9e9e9e;
+            --code-bg: #f1f5f9;
+            --border: #e2e8f0;
+            --radius: 6px;
+            --radius-sm: 4px;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --text-muted: #64748b;
+            --text: #334155;
+            --bg: #ffffff;
+            --heading: #0f172a;
+            --link: #3b82f6;
+            --font-code: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+        }
+
+        .reveal {
+            font-size: 20px;
+            text-align: left !important;
+        }
+
+        .reveal code:not(pre code) {
+            font-family: var(--font-code) !important;
+            background-color: var(--code-bg) !important;
+            padding: 0.1em 0.35em !important;
+            border-radius: var(--radius-sm) !important;
+            font-size: 0.9em !important;
+            color: var(--link) !important;
+            border: 1px dashed var(--border) !important;
+            white-space: pre-wrap !important;
+            word-break: break-word !important;
+            font-variant-ligatures: none;
+            font-feature-settings: "liga" 0, "calt" 0;
+        }
+
+        .reveal h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px !important;
+            margin-left: 0 !important;
+            /* min-height: 2.3em; */
+            display: flex;
+            align-items: center;
+            justify-content: flex-start !important;
+            text-align: left !important;
+            width: 100% !important;
+            text-shadow: none !important;
+        }
+
+        /* Prism overrides for Reveal.js */
+        .reveal div.code-toolbar {
+            position: relative;
+            width: 100% !important;
+            margin: 1.5rem 0 !important;
+        }
+
+        .reveal pre[class*="language-"] {
+            background: hsl(230, 1%, 98%) !important;
+            margin: 1.5rem 0 !important;
+            padding: 1rem !important;
+            border: 1px solid var(--border) !important;
+            border-radius: var(--radius) !important;
+            box-shadow: var(--shadow-sm) !important;
+            font-family: var(--font-code) !important;
+            font-size: 0.85em !important;
+            position: relative;
+            overflow-x: auto;
+            box-sizing: border-box !important;
+            max-width: 100% !important;
+            font-variant-ligatures: none;
+            font-feature-settings: "liga" 0, "calt" 0;
+        }
+
+        .reveal pre[class*="language-"] > code {
+            background: 0 0 !important;
+            text-shadow: none !important;
+            color: hsl(230, 8%, 24%) !important;
+            position: relative !important;
+            display: block !important;
+        }
+
+        .reveal .line-numbers .line-numbers-rows {
+            border-right: 1px solid #444 !important;
+            padding-right: .5rem !important;
+            margin-bottom: 1.5rem;
+        }
+
+        .reveal .line-numbers-rows>span:before {
+            color: #666 !important;
+        }
+
+        .reveal pre[class*="language-"].line-numbers,
+        .reveal pre[class*="language-"]:has(.line-numbers-rows) {
+            padding-left: 3.8em !important;
+            overflow-y: hidden !important;
+        }
+
+        .reveal .copy-button,
+        .reveal pre[data-lang]::before {
+            position: absolute;
+            top: .5rem;
+            height: 26px;
+            background: hsl(230, 1%, 92%);
+            border: 1px solid hsl(230, 1%, 85%);
+            border-radius: var(--radius-sm);
+            box-sizing: border-box;
+        }
+
+        .reveal .copy-button {
+            right: .5rem;
+            width: 26px;
+            padding: 0;
+            color: hsl(230, 6%, 44%);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all .2s ease;
+            z-index: 20;
+            opacity: .8;
+        }
+
+        .reveal .copy-button:hover {
+            background: hsl(230, 1%, 85%);
+            color: hsl(230, 8%, 24%);
+            opacity: 1;
+        }
+
+        .reveal .copy-button svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Language label styling - hide all Prism toolbar plugins, keep only data-lang label */
+        .reveal div.toolbar,
+        .reveal div.toolbar-item,
+        .reveal button.toolbar-item,
+        .reveal span.toolbar-item {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            height: 0 !important;
+            width: 0 !important;
+            overflow: hidden !important;
+            position: absolute !important;
+            pointer-events: none !important;
+        }
+
+        /* Use the pseudo-element data-lang label only */
+        .reveal pre[data-lang]::before {
+            content: attr(data-lang);
+            right: 2.35rem;
+            padding: 0 .5rem;
+            font-size: .65rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: hsl(230, 6%, 50%);
+            pointer-events: none;
+            z-index: 10;
+            display: inline-flex !important;
+            align-items: center !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            height: 26px !important;
+            width: auto !important;
+            position: absolute !important;
+            overflow: visible !important;
+            line-height: 26px !important;
+        }
+
+        .reveal h2 {
+            font-size: 1.6em;
+            margin-top: 30px !important;
+            margin-bottom: 20px !important;
+            text-align: left !important;
+        }
+
+        .reveal h3 {
+            font-size: 1.3em;
+            margin-top: 20px !important;
+            margin-bottom: 15px !important;
+            text-align: left !important;
+        }
+
+        .reveal p {
+            line-height: 1.5;
+            margin-top: 20px !important;
+            margin-left: 0 !important;
+            text-align: left !important;
+        }
+
+        .reveal ul,
+        .reveal ol,
+        .reveal li {
+            line-height: 1.5;
+            text-align: left !important;
+            margin-left: 0 !important;
+        }
+        
+        .reveal ul, .reveal ol {
+            display: block !important;
+            padding-left: 1.2em !important;
+        }
+
+        /* Slide padding and layout */
+        .reveal .slides section {
+            padding: 40px !important;
+            box-sizing: border-box;
+            text-align: left !important;
+            overflow: visible !important;
+        }
+
+        .reveal .slides {
+            text-align: left !important;
+        }
+
+        /* Centering for Title slides (h1 ONLY, h1 + h2 ONLY, or h1 + h2 + p ONLY) */
+        .reveal .slides section:not(.stack):has(> h1:only-child),
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child),
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) {
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: center !important;
+            align-items: center !important;
+            text-align: center !important;
+            height: 100% !important;
+            top: 0 !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:only-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child) h2,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h2,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) p {
+            justify-content: center !important;
+            text-align: center !important;
+            margin: 0 !important;
+            min-height: auto !important;
+            width: 100% !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h1 {
+            margin-bottom: 0.5em !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h2 {
+            margin-bottom: 0.3em !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) p {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        /* Full screen slide fix */
+        .reveal .slides section:has(.full-screen-image) {
+            padding: 0 !important;
+        }
+
+        /* Full screen slide fix - Garantindo que o fundo do Reveal fique visível e a imagem carregada */
+        .reveal:has(section.present .full-screen-image) {
+            background-image: url('../../slide_end_background.png') !important;
+            background-size: cover !important;
+            background-position: center !important;
+        }
+
+        /* Torna o slide e o container de slides transparentes para mostrar o fundo da .reveal */
+        .reveal:has(section.present .full-screen-image) .slides,
+        .reveal:has(section.present .full-screen-image) .slides section.present {
+            background: transparent !important;
+        }
+
+        .full-screen-image {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 !important;
+            /* Se houver texto, ele centraliza aqui */
+        }
+
+        /* Spacing for diagrams */
+        .reveal .svg-graph {
+            margin-top: 1em !important;
+            margin-bottom: 1em !important;
+            overflow: visible !important; /* Prevent labels from being cut off */
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* Mermaid Diagram Styles */
+        .reveal .mermaid {
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            padding: 0 !important;
+            margin: 1rem 0 !important;
+            font-family: inherit !important;
+            overflow: visible !important;
+            text-align: center;
+            display: block !important;
+            width: auto !important;
+            max-width: 100% !important;
+        }
+
+        .reveal pre.mermaid {
+            white-space: pre;
+            font-family: var(--font-code);
+            color: var(--text-muted);
+            margin: 0 !important;
+            padding: 0 !important;
+            width: auto !important;
+            line-height: 1 !important;
+            border: none !important;
+            box-shadow: none !important;
+            background: transparent !important;
+            overflow: visible !important;
+        }
+
+        .reveal .centered .mermaid {
+            display: block !important;
+            justify-content: center;
+            margin-left: auto !important;
+            margin-right: auto !important;
+        }
+
+        .reveal .mermaid svg {
+            max-width: 100% !important;
+            height: auto !important;
+            display: block !important;
+            overflow: visible !important;
+            vertical-align: top !important;
+            font-family: Inter, system-ui, sans-serif !important;
+            font-style: normal !important;
+            font-variant: normal !important;
+            font-weight: 400 !important;
+            letter-spacing: normal !important;
+            word-spacing: normal !important;
+            text-transform: none !important;
+            text-shadow: none !important;
+            line-height: normal !important;
+            text-rendering: geometricPrecision !important;
+        }
+
+        .reveal .mermaid svg * {
+            font-family: inherit !important;
+            font-style: normal !important;
+            font-variant: normal !important;
+            letter-spacing: normal !important;
+            word-spacing: normal !important;
+            text-transform: none !important;
+            text-shadow: none !important;
+            line-height: normal !important;
+        }
+
+        .reveal .mermaid svg .edgeBadge text,
+        .reveal .mermaid svg .edgeBadge tspan,
+        .reveal .mermaid svg .edgeTerm text,
+        .reveal .mermaid svg .edgeTerm tspan,
+        .reveal .mermaid svg .multiplicity text,
+        .reveal .mermaid svg .multiplicity tspan,
+        .reveal .mermaid svg text.edgeBadge,
+        .reveal .mermaid svg text.edgeTerm {
+            font-size: 18px !important;
+            font-weight: 700 !important;
+            fill: var(--heading) !important;
+        }
+
+        /* Mermaid Source Switcher */
+        .reveal .mermaid-outer-container {
+            margin: 1rem 0;
+            position: relative;
+            width: 100%;
+            max-width: 100%;
+        }
+
+        .reveal .mermaid-switcher {
+            display: flex !important;
+            justify-content: flex-end;
+            margin-bottom: 0.5rem;
+            width: 100%;
+        }
+
+        .reveal .switcher-track {
+            display: inline-flex;
+            align-items: center;
+            background: var(--code-bg);
+            padding: 3px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            position: relative;
+        }
+
+        .reveal .switcher-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            border: none;
+            background: transparent;
+            padding: 0.35rem 1rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            border-radius: calc(var(--radius) - 2px);
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            z-index: 1;
+        }
+
+        .reveal .switcher-btn svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .reveal .switcher-btn:hover {
+            color: var(--text);
+        }
+
+        .reveal .switcher-btn.active {
+            color: var(--heading);
+            background: var(--bg);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        .reveal .mermaid-content {
+            min-height: 50px;
+        }
+
+        /* Mermaid display - respect inline width */
+        .reveal .mermaid-display {
+            transition: opacity 0.2s ease;
+            display: block !important;
+            max-width: 100% !important;
+            max-height: var(--mermaid-max-height, calc(100vh - 140px)) !important;
+            border: none !important;
+            box-shadow: none !important;
+            background: transparent !important;
+            overflow: auto !important;
+        }
+
+        .reveal .mermaid-source pre {
+            margin: 0 !important;
+            background: var(--code-bg) !important;
+            border: 1px dashed var(--border) !important;
+        }
+
+        /* Ensure proper toggle behavior */
+        .reveal .mermaid-source {
+            display: none !important;
+        }
+
+        .reveal .mermaid-source[style*="display: block"],
+        .reveal .mermaid-source[style*="display:block"] {
+            display: block !important;
+        }
+
+        .reveal .mermaid-display[style*="display: none"],
+        .reveal .mermaid-display[style*="display:none"] {
+            display: none !important;
+        }
+
+        .reveal .mermaid-display.centered {
+            margin-left: auto !important;
+            margin-right: auto !important;
+            max-width: 100% !important;
+        }
+
+        .centered:not(.mermaid-display) {
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            width: 100% !important;
+            margin: 1em 0 !important;
+        }
+
+        .no-break {
+            display: block;
+            width: 100%;
+        }
+
+        .reveal blockquote {
+            display: block;
+            position: relative;
+            margin: var(--r-block-margin) auto !important;
+            padding: 5px;
+            font-style: italic;
+            background: rgba(255, 170, 73, 0.2);
+            box-shadow: 0 0 2px rgba(0,0,0,.2);
+            text-align: left !important;
+        }
+
+        .col1 {
+            width: 90%;
+            margin: 0 auto;
+        }
+
+        .col2 {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start;
+            width: 90%;
+            margin: 0 auto;
+            align-items: flex-start;
+        }
+
+        /* Callout Styles */
+        :root {
+            --callout-note: #448aff;
+            --callout-abstract: #00b0ff;
+            --callout-info: #00b8d4;
+            --callout-todo: #00bfa5;
+            --callout-tip: #00c853;
+            --callout-success: #64dd17;
+            --callout-question: #ffab00;
+            --callout-warning: #ff9100;
+            --callout-failure: #ff5252;
+            --callout-danger: #ff1744;
+            --callout-bug: #f50057;
+            --callout-example: #7c4dff;
+            --callout-quote: #9e9e9e;
+            --code-bg: #f8f8f8;
+            --border: #ddd;
+        }
+
+        .reveal .callout {
+            margin: 1rem auto !important;
+            border: 1px solid var(--border);
+            border-left: 6px solid var(--callout-note);
+            border-radius: 4px;
+            overflow: hidden;
+            text-align: left !important;
+            font-size: 0.8em;
+            width: 75% !important;
+            max-width: 100% !important;
+        }
+
+        .reveal .callout-title {
+            padding: 0.5rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            color: var(--callout-note);
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .reveal .callout-icon {
+            display: flex;
+            align-items: center;
+        }
+
+        .reveal .callout-icon svg {
+            width: 1.2em;
+            height: 1.2em;
+        }
+
+        .reveal .callout-content {
+            padding: 0.5rem 1rem;
+        }
+
+        .reveal .callout-content p {
+            margin-top: 0.5rem !important;
+        }
+
+        .reveal .callout-content p:first-child {
+            margin-top: 0 !important;
+        }
+
+        .reveal h1 { text-transform: none !important; }
+
+        .reveal .callout-abstract { border-left-color: var(--callout-abstract); }
+        .reveal .callout-abstract .callout-title { color: var(--callout-abstract); }
+        .reveal .callout-info { border-left-color: var(--callout-info); }
+        .reveal .callout-info .callout-title { color: var(--callout-info); }
+        .reveal .callout-todo { border-left-color: var(--callout-todo); }
+        .reveal .callout-todo .callout-title { color: var(--callout-todo); }
+        .reveal .callout-tip { border-left-color: var(--callout-tip); }
+        .reveal .callout-tip .callout-title { color: var(--callout-tip); }
+        .reveal .callout-success { border-left-color: var(--callout-success); }
+        .reveal .callout-success .callout-title { color: var(--callout-success); }
+        .reveal .callout-question { border-left-color: var(--callout-question); }
+        .reveal .callout-question .callout-title { color: var(--callout-question) ; }
+        .reveal .callout-warning { border-left-color: var(--callout-warning); }
+        .reveal .callout-warning .callout-title { color: var(--callout-warning); }
+        .reveal .callout-failure { border-left-color: var(--callout-failure); }
+        .reveal .callout-failure .callout-title { color: var(--callout-failure); }
+        .reveal .callout-danger { border-left-color: var(--callout-danger); }
+        .reveal .callout-danger .callout-title { color: var(--callout-danger); }
+        .reveal .callout-bug { border-left-color: var(--callout-bug); }
+        .reveal .callout-bug .callout-title { color: var(--callout-bug); }
+        .reveal .callout-example { border-left-color: var(--callout-example); }
+        .reveal .callout-example .callout-title { color: var(--callout-example); }
+        .reveal .callout-quote { border-left-color: var(--callout-quote); }
+        .reveal .callout-quote .callout-title { color: var(--callout-quote); }
+        .red-note { color: var(--callout-failure); }
+
+        .reveal .slide-number {
+            font-size: 0.8em !important;
+            padding: 5px 10px !important;
+            background: rgba(0,0,0,0.1) !important;
+            border-radius: 4px;
+            color: #000000b1 !important;
+        }
+
+        /* Print styles */
+        @media print {
+            .reveal .slides section {
+                display: block !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                position: relative !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+                page-break-after: always !important;
+                overflow: hidden !important;
+            }
+
+            .reveal .slides {
+                transform: none !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+            }
+            
+            .reveal {
+                overflow: visible !important;
+            }
+        }
+    </style>
+</body>
+
+</html>
