@@ -413,7 +413,7 @@
   "../obsidian-vault/6. Teaching/T\u00f3picos de Programa\u00e7\u00e3o II/slides/5 - libraries in c.md": "eee8b7630c9447fc7bdf4d6a0642490a",
   "../obsidian-vault/6. Teaching/T\u00f3picos de Programa\u00e7\u00e3o II/slides/6 - abstract data types.md": "9b041cfaec858198b54112723df9ff44",
   "../obsidian-vault/6. Teaching/Sistemas Operacionais/static/fig_dining_philosophers.png": "7bdd4c6686f2e0534c44f8096fb53067",
-  "../obsidian-vault/6. Teaching/.course_forge_cache/build_cache.json": "dbe90dfce1500c6ac4398bbeab18cda9",
+  "../obsidian-vault/6. Teaching/.course_forge_cache/build_cache.json": "019269462607e3976b00a0f08ea4000e",
   "../obsidian-vault/6. Teaching/Redes/6 - mac sublayer, ethernet and mac addressing.md": "6c07c69cbad857bdba2ec8e1933b60b6",
   "../obsidian-vault/6. Teaching/Compiladores/bin/tests/lexer/expected/01_delimiters.txt": "7eee78b2a963b2b5582b4959d31eb53c",
   "../obsidian-vault/6. Teaching/Compiladores/bin/tests/lexer/expected/08_strings.txt": "3a48f84a1c1c66feb1064c6c970613b6",
@@ -549,5 +549,11 @@
   "../obsidian-vault/6. Teaching/Engenharia de Software/static/figura-9-1-modelo-espiral-desenvolvimento-e-evolucao.png": "d3e1750ac2171792e1b4ba9420923ec2",
   "../obsidian-vault/6. Teaching/Engenharia de Software/static/figura-9-12-avaliacao-sistema-legado.png": "f862707008be118d8df562e828ab4d2d",
   "../obsidian-vault/6. Teaching/Engenharia de Software/static/figura-9-10-processo-reengenharia.png": "4c84bfc56c5286e013e0952bcf87329c",
-  "../obsidian-vault/6. Teaching/Engenharia de Software/slides/10 - software evolution and maintenance.md": "2ea5b50a3b23b7b1f7c8d1071957388e"
+  "../obsidian-vault/6. Teaching/Engenharia de Software/slides/10 - software evolution and maintenance.md": "2ea5b50a3b23b7b1f7c8d1071957388e",
+  "../obsidian-vault/6. Teaching/Compiladores/assignments/second exam.md": "65b897d35b1da416c5afa4c80d8003ed",
+  "../obsidian-vault/6. Teaching/Redes/9 - ip protocol addressing and subnetting.md": "dee3489e2fd96f19290fed351a1a0bf3",
+  "../obsidian-vault/6. Teaching/Redes/static/fig19_7_configuracao_sub_redes_forouzan.png": "9a64070e093e6d7e7deac7f7bcfee16f",
+  "../obsidian-vault/6. Teaching/Redes/static/fig5_49_cabecalho_ipv6_tanenbaum.png": "609732b60bd7683602e76771c3d8e0ba",
+  "../obsidian-vault/6. Teaching/Redes/static/fig5_41_cabecalho_ipv4_tanenbaum.png": "933ecf1ac306ccab7a2e8a537410a32a",
+  "../obsidian-vault/6. Teaching/Redes/slides/9 - ip protocol addressing and subnetting.md": "99c1123b4f5aebe4a6a96227195b44d3"
 }

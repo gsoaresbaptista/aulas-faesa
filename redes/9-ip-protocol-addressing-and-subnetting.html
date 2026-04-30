@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toposia - Redes</title>
+    <link rel="icon" href="/aulas-faesa/img/dark-favicon.svg" media="(prefers-color-scheme: light)">
+    <link rel="icon" href="/aulas-faesa/img/light-favicon.svg" media="(prefers-color-scheme: dark)">
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/fonts.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/bundles/katex-base-prism-one-light-b0347952c973.bundle.min.css">
+    
+    
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css" data-no-bundle>
+    <script src="/aulas-faesa/js/bundles/lucide-katex-auto-render-4b36e8bd8642.bundle.min.js"></script>
+</head>
+
+<body>
+    <script>
+        // Restore sidebar state instantly (before first paint) to avoid transition flash
+        (function() {
+            if (localStorage.getItem('cf_sidebar_hidden') === 'true') {
+                document.body.classList.add('sidebar-hidden', 'no-transition');
+            }
+            requestAnimationFrame(function() {
+                requestAnimationFrame(function() {
+                    document.body.classList.remove('no-transition');
+                });
+            });
+        })();
+    </script>
+    <div class="page-wrapper">
+        <nav class="sidebar">
+            <div class="sidebar-content">
+                <header class="sidebar-title-section">
+                    <a href="contents.html" class="course-title-link">
+                        <h1 class="sidebar-course-title">Redes</h1>
+                    </a>
+                    <div class="sidebar-ornament">❧</div>
+                </header>
+
+                
+                <section class="sidebar-toc-section">
+                    <h2 class="toc-header">Tabela de Conteúdos</h2>
+                    <ol class="toc-list">
+                        
+                        <li class="toc-item level-2">
+                            <a href="#introdução">9.1. Introdução</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#o-problema-que-o-ip-resolve">9.2. O problema que o IP resolve</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#o-ipv4-como-protocolo-de-datagramas">9.3. O IPv4 como protocolo de datagramas</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#o-que-significa-melhor-esforço">9.3.1. O que significa melhor esforço</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#o-cabeçalho-ipv4">9.3.2. O cabeçalho IPv4</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#por-que-o-ttl-existe">9.3.3. Por que o TTL existe</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#endereços-ipv4-como-32-bits">9.4. Endereços IPv4 como 32 bits</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#prefixo-e-máscara">9.5. Prefixo e máscara</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#como-ler-uma-máscara">9.5.1. Como ler uma máscara</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#endereçamento-com-classes-e-por-que-ele-ficou-insuficiente">9.6. Endereçamento com classes e por que ele ficou insuficiente</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#cidr-e-endereçamento-sem-classes">9.7. CIDR e endereçamento sem classes</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#sub-redes-como-divisão-interna-de-uma-rede">9.8. Sub-redes como divisão interna de uma rede</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#a-ideia-matemática-da-sub-rede">9.8.1. A ideia matemática da sub-rede</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#máscaras-comuns-em-sub-redes">9.8.2. Máscaras comuns em sub-redes</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#hierarquia-de-endereços">9.9. Hierarquia de endereços</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#encaminhamento-e-correspondência-pelo-prefixo-mais-longo">9.10. Encaminhamento e correspondência pelo prefixo mais longo</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#nat-como-resposta-parcial-ao-esgotamento-ipv4">9.11. NAT como resposta parcial ao esgotamento IPv4</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#ipv6-e-a-mudança-de-escala">9.12. IPv6 e a mudança de escala</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#o-cabeçalho-ipv6">9.12.1. O cabeçalho IPv6</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#transição-entre-ipv4-e-ipv6">9.13. Transição entre IPv4 e IPv6</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#fechando-a-ideia">9.14. Fechando a ideia</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#questões">9.15. Questões</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#próximos-passos">9.16. Próximos passos</a>
+                        </li>
+                        
+                    </ol>
+                </section>
+                
+
+                <nav class="sidebar-nav-section">
+                    
+                    <a href="8-network-layer-and-routing-algorithms.html" class="sidebar-nav-link prev"><i data-lucide="chevron-left" class="nav-icon"></i> Camada de Rede e Algoritmos de Roteamento</a>
+                    
+                    
+                    <a href="javascript:void(0)" onclick="handleBackNavigation()"
+                        class="sidebar-nav-link back"><i data-lucide="arrow-left" class="nav-icon"></i> Voltar</a>
+                </nav>
+
+            </div>
+        </nav>
+
+        <button class="mobile-menu-toggle" aria-label="Menu">
+            <i data-lucide="menu"></i>
+        </button>
+
+        <button class="sidebar-toggle" onclick="CourseForgeNav.toggleSidebar()" aria-label="Alternar Barra Lateral">
+            <i data-lucide="chevron-left" class="toggle-icon" id="sidebar-toggle-icon"></i>
+        </button>
+
+        <div class="mobile-menu-overlay"></div>
+
+        <main class="main-content">
+            <article class="article">
+                <header class="article-header">
+                    <span class="chapter-number">9</span>
+                    <h1 class="article-title">
+                        <span class="title-ornament left">❧</span>
+                        <span class="title-text">Protocolo IP, Endereçamento e Sub-redes</span>
+                        <span class="title-ornament right">❧</span>
+                    </h1>
+                    
+                    <p class="article-date">30/04/2026</p>
+                    
+                    
+                    <nav class="breadcrumb" aria-label="Breadcrumb">
+                        
+                        
+                        
+                        <a href="contents.html" class="breadcrumb-link">Redes</a>
+                        
+                        <span class="breadcrumb-separator"><i data-lucide="chevron-right" class="breadcrumb-icon"></i></span>
+                        
+                        
+                        
+                        
+                        <a href="contents.html#part-IV" class="breadcrumb-link">IV - Camada de Rede</a>
+                        
+                        <span class="breadcrumb-separator"><i data-lucide="chevron-right" class="breadcrumb-icon"></i></span>
+                        
+                        
+                        
+                        <span class="breadcrumb-current">Protocolo IP, Endereçamento e Sub-redes</span>
+                        
+                        
+                    </nav>
+                    
+                </header>
+                <div class="article-body">
+                    <h2 id="introdução"><span class="heading-text">Introdução</span><span class="heading-arabic">9.1</span></h2>
+<p>Hoje você vai ver como a Internet identifica redes e hosts, como o IP carrega pacotes entre essas redes e por que sub-redes são indispensáveis para organizar endereços na prática.</p>
+<p>Na aula anterior, a camada de rede apareceu como a camada que decide caminhos entre redes. Agora vamos aproximar essa ideia do protocolo mais importante dessa camada. O foco deixa de ser apenas “como escolher uma rota” e passa a ser “como o pacote IP é formado, como o endereço IP é interpretado e como uma rede grande é dividida em partes menores”.</p>
+<div class="callout callout-abstract">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
+    <span class="callout-title-inner">Ideia central<br /></span>
+  </div>
+  <div class="callout-content">
+<p>O IP oferece uma forma lógica de endereçar hosts e redes. O IPv4 usa endereços de 32 bits e depende fortemente de prefixos, máscaras e sub-redes. O IPv6 amplia o espaço de endereços para 128 bits e simplifica partes do cabeçalho, mas mantém a ideia de encaminhar pacotes entre redes.</p>
+  </div>
+</div>
+<p>Esta aula usa como base principal o Tanenbaum, seção 5.6, especialmente 5.6.1 a 5.6.3, e o Forouzan, capítulo 19, com apoio pontual do capítulo 22 para entrega e encaminhamento.</p>
+<h2 id="o-problema-que-o-ip-resolve"><span class="heading-text">O problema que o IP resolve</span><span class="heading-arabic">9.2</span></h2>
+<p>Imagine um computador dentro de uma LAN Ethernet. Ele tem um endereço MAC e consegue enviar quadros para outros dispositivos no mesmo enlace local. Isso é suficiente enquanto todos estão no mesmo domínio de enlace. Mas a Internet não é uma única Ethernet gigante.</p>
+<p>Na prática, a comunicação precisa atravessar várias redes diferentes. Um pacote pode sair de uma rede Wi-Fi, passar por uma Ethernet, atravessar enlaces de operadora e chegar a outra rede completamente diferente. Cada uma dessas redes pode ter tecnologia de enlace própria.</p>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Se o endereço MAC identifica uma interface no enlace local, por que ele não basta para entregar dados pela Internet inteira?</p>
+  </div>
+</div>
+<p>O problema é que o MAC não descreve uma posição lógica dentro de uma rede de redes. Ele serve para entrega local no enlace atual. Para sair de uma rede e chegar a outra, precisamos de um endereço que possa ser interpretado por roteadores em escala maior. Esse é o papel do endereço IP.</p>
+<p>Em termos simples, o IP faz três coisas importantes.</p>
+<ol>
+<li>Define o formato do pacote da camada de rede.</li>
+<li>Define endereços lógicos para origem e destino.</li>
+<li>Permite que roteadores encaminhem pacotes de uma rede para outra.</li>
+</ol>
+<div class="example">
+  <div class="example-title">Exemplo 1</div>
+  <p>Seu notebook quer acessar um servidor fora da sua casa.</p>
+<ol>
+<li>Dentro da sua LAN, ele envia um quadro Ethernet para o roteador doméstico.</li>
+<li>Esse quadro usa endereços MAC para atravessar o enlace local.</li>
+<li>Dentro do quadro existe um pacote IP com o endereço IP do servidor como destino.</li>
+<li>O roteador remove o quadro local, observa o pacote IP e encaminha o pacote para a próxima rede.</li>
+</ol>
+<p>O MAC ajudou no primeiro salto. O IP é o que permite continuar a viagem entre redes.</p>
+</div>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Erro comum<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Não pense no endereço IP como “o MAC da Internet”. O endereço MAC identifica uma interface no enlace local. O endereço IP identifica logicamente uma interface em uma rede IP e permite que roteadores tomem decisões entre redes.</p>
+  </div>
+</div>
+<h2 id="o-ipv4-como-protocolo-de-datagramas"><span class="heading-text">O IPv4 como protocolo de datagramas</span><span class="heading-arabic">9.3</span></h2>
+<p>O Tanenbaum inicia o estudo da camada de rede da Internet pelo formato do datagrama IPv4. Esse nome é importante. No IPv4, cada pacote é tratado como um datagrama, isto é, uma unidade independente que carrega as informações necessárias para ser encaminhada.</p>
+<p>O IPv4 é um protocolo <strong>sem conexão</strong> e de <strong>melhor esforço</strong>. Isso significa que ele não estabelece uma conexão antes de enviar os pacotes e também não promete entrega confiável por si só.</p>
+<h3 id="o-que-significa-melhor-esforço"><span class="heading-text">O que significa melhor esforço</span><span class="heading-arabic">9.3.1</span></h3>
+<p>Melhor esforço não significa descuido. Significa que a rede tenta entregar o pacote, mas não garante que ele chegará, nem garante ordem, nem garante ausência de duplicação.</p>
+<p>Se a confiabilidade for necessária, outro protocolo acima do IP, como o TCP, deve cuidar disso.</p>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Se o IP não garante entrega confiável, por que ele se tornou a base da Internet?</p>
+  </div>
+</div>
+<p>Porque essa simplicidade torna a rede mais flexível. Os roteadores podem encaminhar pacotes rapidamente sem manter estado de conexão para cada comunicação. A confiabilidade, quando necessária, pode ser tratada nas pontas.</p>
+<p>Essa separação é uma das ideias mais importantes da arquitetura da Internet. A rede faz encaminhamento simples. As pontas podem adicionar controle, retransmissão e ordenação quando a aplicação precisar.</p>
+<h3 id="o-cabeçalho-ipv4"><span class="heading-text">O cabeçalho IPv4</span><span class="heading-arabic">9.3.2</span></h3>
+<p>Um datagrama IPv4 possui cabeçalho e dados. O cabeçalho mínimo tem 20 bytes, mas pode ser maior se houver opções.</p>
+<img src="static/fig5_41_cabecalho_ipv4_tanenbaum.png" width="85%">
+
+<p>Os campos mais importantes para esta aula são estes.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Campo</th>
+  <th style="text-align:left">Ideia principal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><strong>Versão</strong></td>
+  <td style="text-align:left">Indica que o pacote usa IPv4</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>IHL</strong></td>
+  <td style="text-align:left">Indica o tamanho do cabeçalho</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Comprimento total</strong></td>
+  <td style="text-align:left">Indica o tamanho do datagrama completo</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Identificação, flags e deslocamento</strong></td>
+  <td style="text-align:left">Ajudam na fragmentação</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>TTL</strong></td>
+  <td style="text-align:left">Limita quantos saltos o pacote pode atravessar</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Protocolo</strong></td>
+  <td style="text-align:left">Indica o protocolo transportado, como TCP ou UDP</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Checksum do cabeçalho</strong></td>
+  <td style="text-align:left">Detecta erros no cabeçalho IPv4</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Endereço de origem</strong></td>
+  <td style="text-align:left">Endereço IPv4 de quem enviou</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Endereço de destino</strong></td>
+  <td style="text-align:left">Endereço IPv4 de quem deve receber</td>
+</tr>
+</tbody>
+</table>
+<h3 id="por-que-o-ttl-existe"><span class="heading-text">Por que o TTL existe</span><span class="heading-arabic">9.3.3</span></h3>
+<p>O campo TTL, ou <em>Time To Live</em>, evita que pacotes circulem indefinidamente. Apesar do nome sugerir tempo, na prática ele é usado como contador de saltos. Cada roteador decrementa esse valor. Quando ele chega a zero, o pacote é descartado.</p>
+<p>Um pacote que sai com TTL igual a 4 pode ser lido assim.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Etapa</th>
+  <th style="text-align:left">Valor do TTL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Origem</td>
+  <td style="text-align:left">4</td>
+</tr>
+<tr>
+  <td style="text-align:left">Depois de $R_1$</td>
+  <td style="text-align:left">3</td>
+</tr>
+<tr>
+  <td style="text-align:left">Depois de $R_2$</td>
+  <td style="text-align:left">2</td>
+</tr>
+<tr>
+  <td style="text-align:left">Depois de $R_3$</td>
+  <td style="text-align:left">1</td>
+</tr>
+<tr>
+  <td style="text-align:left">Depois de $R_4$</td>
+  <td style="text-align:left">0</td>
+</tr>
+</tbody>
+</table>
+<p>Ao chegar a zero, o pacote não deve continuar circulando. Isso protege a rede contra loops de roteamento.</p>
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">Observação<br /></span>
+  </div>
+  <div class="callout-content">
+<p>O comando <code>traceroute</code> aproveita justamente esse comportamento do TTL para descobrir os roteadores intermediários até um destino.</p>
+  </div>
+</div>
+<h2 id="endereços-ipv4-como-32-bits"><span class="heading-text">Endereços IPv4 como 32 bits</span><span class="heading-arabic">9.4</span></h2>
+<p>Um endereço IPv4 tem 32 bits. Para facilitar a leitura humana, esses 32 bits são escritos como quatro números decimais separados por pontos. Cada número representa 8 bits, ou seja, um octeto.</p>
+<p>Por exemplo, o endereço abaixo é uma forma decimal pontuada.</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">192.168.1.34
+</code></pre>
+<p>Em binário, ele corresponde a quatro octetos.</p>
+<p>$$
+192.168.1.34 = 11000000.10101000.00000001.00100010
+$$</p>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Se o endereço IPv4 tem 32 bits, como um roteador sabe qual parte identifica a rede e qual parte identifica o host?</p>
+  </div>
+</div>
+<p>Essa é a pergunta central do endereçamento IPv4. Um endereço IP sozinho não basta para separar rede e host. É preciso saber o <strong>prefixo</strong> ou a <strong>máscara</strong>.</p>
+<h2 id="prefixo-e-máscara"><span class="heading-text">Prefixo e máscara</span><span class="heading-arabic">9.5</span></h2>
+<p>O prefixo indica quantos bits à esquerda identificam a rede. A forma mais comum hoje é a notação com barra.</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">192.168.1.34/24
+</code></pre>
+<p>Esse <code>/24</code> significa que os 24 primeiros bits identificam a rede. Os 8 bits restantes identificam o host dentro dessa rede.</p>
+<p>$$
+\underbrace{192.168.1}_{24\ bits\ de\ rede}.\underbrace{34}_{8\ bits\ de\ host}
+$$</p>
+<p>Em forma de máscara decimal pontuada, <code>/24</code> equivale a:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">255.255.255.0
+</code></pre>
+<h3 id="como-ler-uma-máscara"><span class="heading-text">Como ler uma máscara</span><span class="heading-arabic">9.5.1</span></h3>
+<p>Uma máscara é um padrão de 32 bits no qual os bits 1 indicam a parte de rede e os bits 0 indicam a parte de host.</p>
+<p>Para <code>/24</code>, temos:</p>
+<p>$$
+11111111.11111111.11111111.00000000
+$$</p>
+<p>Em decimal:</p>
+<p>$$
+255.255.255.0
+$$</p>
+<div class="example">
+  <div class="example-title">Exemplo 2</div>
+  <p>Considere o endereço:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">192.168.1.34/24
+</code></pre>
+<p>Como o prefixo é <code>/24</code>, a rede é formada pelos 24 primeiros bits.</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">Rede: 192.168.1.0/24
+Host: 34
+</code></pre>
+<p>O endereço <code>192.168.1.34</code> é um host dentro da rede <code>192.168.1.0/24</code>.</p>
+</div>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Erro comum<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Não conclua que “a rede são sempre os três primeiros números”. Isso só é verdade para prefixos como <code>/24</code>. A separação real depende da máscara ou do prefixo.</p>
+  </div>
+</div>
+<h2 id="endereçamento-com-classes-e-por-que-ele-ficou-insuficiente"><span class="heading-text">Endereçamento com classes e por que ele ficou insuficiente</span><span class="heading-arabic">9.6</span></h2>
+<p>Historicamente, o IPv4 usou endereçamento com classes. Os endereços eram divididos em classes A, B, C, D e E. Para redes comuns, as classes mais importantes eram A, B e C.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Classe</th>
+  <th style="text-align:left">Prefixo padrão</th>
+  <th style="text-align:left">Uso conceitual</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><strong>A</strong></td>
+  <td style="text-align:left"><code>/8</code></td>
+  <td style="text-align:left">Poucas redes muito grandes</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>B</strong></td>
+  <td style="text-align:left"><code>/16</code></td>
+  <td style="text-align:left">Redes médias</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>C</strong></td>
+  <td style="text-align:left"><code>/24</code></td>
+  <td style="text-align:left">Muitas redes pequenas</td>
+</tr>
+</tbody>
+</table>
+<p>Esse modelo parecia simples, mas gerava desperdício. Uma organização que precisava de alguns milhares de endereços não cabia em uma classe C, mas receber uma classe B poderia entregar endereços demais.</p>
+<p>O problema não era apenas técnico. Como o espaço IPv4 tem tamanho limitado, desperdício de blocos significava acelerar o esgotamento de endereços.</p>
+<h2 id="cidr-e-endereçamento-sem-classes"><span class="heading-text">CIDR e endereçamento sem classes</span><span class="heading-arabic">9.7</span></h2>
+<p>Para resolver esse desperdício, a Internet passou a usar CIDR, sigla de <em>Classless Inter-Domain Routing</em>. A ideia é abandonar os tamanhos fixos das classes e permitir prefixos mais flexíveis, como <code>/20</code>, <code>/21</code>, <code>/27</code> ou <code>/30</code>.</p>
+<p>No CIDR, o bloco é descrito pelo endereço inicial e pelo comprimento do prefixo.</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">192.168.10.0/24
+10.40.0.0/20
+172.16.8.0/21
+</code></pre>
+<p>O Tanenbaum destaca que o CIDR permite alocar blocos mais ajustados às necessidades reais e também permite agregação de rotas.</p>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="760" viewBox="0.00 0.00 455.00 158.00" class="svg-graph graphviz-img"><g id="svg-graphviz-402602fe6f79-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 154)"><title>CIDR</title><g id="svg-graphviz-402602fe6f79-node1" class="node"><title>isp</title><path fill="#eef4ff" stroke="#5b7bbb" d="M104,-94C104,-94 12,-94 12,-94 6,-94 0,-88 0,-82 0,-82 0,-68 0,-68 0,-62 6,-56 12,-56 12,-56 104,-56 104,-56 110,-56 116,-62 116,-68 116,-68 116,-82 116,-82 116,-88 110,-94 104,-94" /><text text-anchor="middle" x="58" y="-78.8" font-family="Helvetica,sans-Serif" font-size="14.00">ISP</text><text text-anchor="middle" x="58" y="-63.8" font-family="Helvetica,sans-Serif" font-size="14.00">200.10.0.0/20</text></g><g id="svg-graphviz-402602fe6f79-node2" class="node"><title>a</title><path fill="#eef4ff" stroke="#5b7bbb" d="M256,-150C256,-150 164,-150 164,-150 158,-150 152,-144 152,-138 152,-138 152,-124 152,-124 152,-118 158,-112 164,-112 164,-112 256,-112 256,-112 262,-112 268,-118 268,-124 268,-124 268,-138 268,-138 268,-144 262,-150 256,-150" /><text text-anchor="middle" x="210" y="-134.8" font-family="Helvetica,sans-Serif" font-size="14.00">Cliente A</text><text text-anchor="middle" x="210" y="-119.8" font-family="Helvetica,sans-Serif" font-size="14.00">200.10.0.0/22</text></g><g id="svg-graphviz-402602fe6f79-edge1" class="edge"><title>isp-&gt;a</title><path fill="none" stroke="black" d="M58,-94.27C58,-110.47 58,-131 58,-131 58,-131 141.67,-131 141.67,-131" /><polygon fill="black" stroke="black" points="141.67,-134.5 151.67,-131 141.67,-127.5 141.67,-134.5" /></g><g id="svg-graphviz-402602fe6f79-node3" class="node"><title>b</title><path fill="#eef4ff" stroke="#5b7bbb" d="M256,-94C256,-94 164,-94 164,-94 158,-94 152,-88 152,-82 152,-82 152,-68 152,-68 152,-62 158,-56 164,-56 164,-56 256,-56 256,-56 262,-56 268,-62 268,-68 268,-68 268,-82 268,-82 268,-88 262,-94 256,-94" /><text text-anchor="middle" x="210" y="-78.8" font-family="Helvetica,sans-Serif" font-size="14.00">Cliente B</text><text text-anchor="middle" x="210" y="-63.8" font-family="Helvetica,sans-Serif" font-size="14.00">200.10.4.0/23</text></g><g id="svg-graphviz-402602fe6f79-edge2" class="edge"><title>isp-&gt;b</title><path fill="none" stroke="black" d="M116.33,-75C116.33,-75 141.82,-75 141.82,-75" /><polygon fill="black" stroke="black" points="141.82,-78.5 151.82,-75 141.82,-71.5 141.82,-78.5" /></g><g id="svg-graphviz-402602fe6f79-node4" class="node"><title>c</title><path fill="#eef4ff" stroke="#5b7bbb" d="M256,-38C256,-38 164,-38 164,-38 158,-38 152,-32 152,-26 152,-26 152,-12 152,-12 152,-6 158,0 164,0 164,0 256,0 256,0 262,0 268,-6 268,-12 268,-12 268,-26 268,-26 268,-32 262,-38 256,-38" /><text text-anchor="middle" x="210" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">Cliente C</text><text text-anchor="middle" x="210" y="-7.8" font-family="Helvetica,sans-Serif" font-size="14.00">200.10.6.0/24</text></g><g id="svg-graphviz-402602fe6f79-edge3" class="edge"><title>isp-&gt;c</title><path fill="none" stroke="black" d="M58,-55.73C58,-39.53 58,-19 58,-19 58,-19 141.67,-19 141.67,-19" /><polygon fill="black" stroke="black" points="141.67,-22.5 151.67,-19 141.67,-15.5 141.67,-22.5" /></g><g id="svg-graphviz-402602fe6f79-node5" class="node"><title>rota</title><path fill="#eef4ff" stroke="#5b7bbb" d="M435,-94C435,-94 316,-94 316,-94 310,-94 304,-88 304,-82 304,-82 304,-68 304,-68 304,-62 310,-56 316,-56 316,-56 435,-56 435,-56 441,-56 447,-62 447,-68 447,-68 447,-82 447,-82 447,-88 441,-94 435,-94" /><text text-anchor="middle" x="375.5" y="-78.8" font-family="Helvetica,sans-Serif" font-size="14.00">Anúncio agregado</text><text text-anchor="middle" x="375.5" y="-63.8" font-family="Helvetica,sans-Serif" font-size="14.00">200.10.0.0/20</text></g><g id="svg-graphviz-402602fe6f79-edge4" class="edge"><title>a-&gt;rota</title><path fill="none" stroke="black" stroke-dasharray="5,2" d="M268.06,-131C315.93,-131 376,-131 376,-131 376,-131 376,-104.27 376,-104.27" /><polygon fill="black" stroke="black" points="379.5,-104.27 376,-94.27 372.5,-104.27 379.5,-104.27" /></g><g id="svg-graphviz-402602fe6f79-edge5" class="edge"><title>b-&gt;rota</title><path fill="none" stroke="black" stroke-dasharray="5,2" d="M268.35,-75C268.35,-75 293.75,-75 293.75,-75" /><polygon fill="black" stroke="black" points="293.75,-78.5 303.75,-75 293.75,-71.5 293.75,-78.5" /></g><g id="svg-graphviz-402602fe6f79-edge6" class="edge"><title>c-&gt;rota</title><path fill="none" stroke="black" stroke-dasharray="5,2" d="M268.06,-19C315.93,-19 376,-19 376,-19 376,-19 376,-45.73 376,-45.73" /><polygon fill="black" stroke="black" points="372.5,-45.73 376,-55.73 379.5,-45.73 372.5,-45.73" /></g></g></svg></div></div>
+
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">Observação<br /></span>
+  </div>
+  <div class="callout-content">
+<p>CIDR não é apenas uma forma mais bonita de escrever endereços. Ele muda a lógica de alocação e roteamento ao permitir blocos com tamanhos variados.</p>
+  </div>
+</div>
+<h2 id="sub-redes-como-divisão-interna-de-uma-rede"><span class="heading-text">Sub-redes como divisão interna de uma rede</span><span class="heading-arabic">9.8</span></h2>
+<p>Agora chegamos ao ponto que costuma causar mais dificuldade. Uma organização pode receber um bloco de endereços e ainda assim precisar dividi-lo internamente.</p>
+<p>Imagine uma empresa com um bloco único.</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">192.168.10.0/24
+</code></pre>
+<p>Se todos os dispositivos ficassem em uma única rede, o gerenciamento seria simples, mas pouco organizado. A empresa talvez tenha setores, laboratórios, servidores e redes de visitantes. Faz sentido separar esses grupos em sub-redes.</p>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Se uma organização recebe um bloco único, por que ela não deveria colocar todos os hosts na mesma rede?</p>
+  </div>
+</div>
+<p>Porque redes muito grandes aumentam broadcast, dificultam administração, reduzem isolamento e tornam políticas de segurança mais difíceis. Sub-redes criam divisões lógicas menores dentro de um bloco maior.</p>
+<img src="static/fig19_7_configuracao_sub_redes_forouzan.png" width="85%">
+
+<h3 id="a-ideia-matemática-da-sub-rede"><span class="heading-text">A ideia matemática da sub-rede</span><span class="heading-arabic">9.8.1</span></h3>
+<p>Quando criamos sub-redes, pegamos alguns bits que antes pertenciam à parte de host e passamos a usá-los como parte do prefixo de sub-rede.</p>
+<p>Em uma rede <code>/24</code>, existem 8 bits de host.</p>
+<p>$$
+32 - 24 = 8
+$$</p>
+<p>Se transformarmos essa rede em quatro sub-redes, precisamos de 2 bits para identificar as sub-redes.</p>
+<p>$$
+2^2 = 4
+$$</p>
+<p>O novo prefixo passa a ser:</p>
+<p>$$
+/24 + 2 = /26
+$$</p>
+<p>Cada sub-rede <code>/26</code> tem 6 bits para hosts.</p>
+<p>$$
+32 - 26 = 6
+$$</p>
+<p>Logo, cada sub-rede tem:</p>
+<p>$$
+2^6 = 64\ endereços
+$$</p>
+<p>Em IPv4 tradicional, dois endereços costumam ser reservados dentro de cada sub-rede, o endereço da própria rede e o endereço de broadcast. Assim, sobram 62 endereços utilizáveis para hosts.</p>
+<p>$$
+64 - 2 = 62
+$$</p>
+<div class="example">
+  <div class="example-title">Exemplo 3</div>
+  <p>Divida a rede abaixo em 4 sub-redes de mesmo tamanho.</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">192.168.10.0/24
+</code></pre>
+<p>Como queremos 4 sub-redes, precisamos de 2 bits.</p>
+<p>$$
+2^2 = 4
+$$</p>
+<p>O prefixo novo será <code>/26</code>.</p>
+<p>Cada bloco terá 64 endereços. As sub-redes ficam assim.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Sub-rede</th>
+  <th style="text-align:left">Intervalo de endereços</th>
+  <th style="text-align:left">Broadcast</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><code>192.168.10.0/26</code></td>
+  <td style="text-align:left"><code>192.168.10.0</code> a <code>192.168.10.63</code></td>
+  <td style="text-align:left"><code>192.168.10.63</code></td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>192.168.10.64/26</code></td>
+  <td style="text-align:left"><code>192.168.10.64</code> a <code>192.168.10.127</code></td>
+  <td style="text-align:left"><code>192.168.10.127</code></td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>192.168.10.128/26</code></td>
+  <td style="text-align:left"><code>192.168.10.128</code> a <code>192.168.10.191</code></td>
+  <td style="text-align:left"><code>192.168.10.191</code></td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>192.168.10.192/26</code></td>
+  <td style="text-align:left"><code>192.168.10.192</code> a <code>192.168.10.255</code></td>
+  <td style="text-align:left"><code>192.168.10.255</code></td>
+</tr>
+</tbody>
+</table>
+<p>Os hosts utilizáveis ficam entre o endereço da rede e o broadcast de cada sub-rede.</p>
+<p>Agora observe um host dentro desse novo particionamento.</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">192.168.10.77/26
+</code></pre>
+<p>Qual é a sub-rede dele?</p>
+<p>Com <code>/26</code>, o tamanho do bloco no último octeto é 64. Os blocos começam em:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">0, 64, 128, 192
+</code></pre>
+<p>O número 77 cai no intervalo de 64 a 127. Portanto:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">Sub-rede: 192.168.10.64/26
+Broadcast: 192.168.10.127
+Hosts utilizáveis: 192.168.10.65 a 192.168.10.126
+</code></pre>
+<p>Esse exemplo mostra que descobrir a sub-rede é descobrir em qual bloco o endereço cai.</p>
+</div>
+<h3 id="máscaras-comuns-em-sub-redes"><span class="heading-text">Máscaras comuns em sub-redes</span><span class="heading-arabic">9.8.2</span></h3>
+<p>Esta tabela ajuda a fazer contas rápidas em redes IPv4 dentro de um <code>/24</code>.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Prefixo</th>
+  <th style="text-align:left">Máscara</th>
+  <th style="text-align:left">Tamanho do bloco</th>
+  <th style="text-align:left">Hosts utilizáveis por sub-rede</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><code>/25</code></td>
+  <td style="text-align:left"><code>255.255.255.128</code></td>
+  <td style="text-align:left">128</td>
+  <td style="text-align:left">126</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>/26</code></td>
+  <td style="text-align:left"><code>255.255.255.192</code></td>
+  <td style="text-align:left">64</td>
+  <td style="text-align:left">62</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>/27</code></td>
+  <td style="text-align:left"><code>255.255.255.224</code></td>
+  <td style="text-align:left">32</td>
+  <td style="text-align:left">30</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>/28</code></td>
+  <td style="text-align:left"><code>255.255.255.240</code></td>
+  <td style="text-align:left">16</td>
+  <td style="text-align:left">14</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>/29</code></td>
+  <td style="text-align:left"><code>255.255.255.248</code></td>
+  <td style="text-align:left">8</td>
+  <td style="text-align:left">6</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>/30</code></td>
+  <td style="text-align:left"><code>255.255.255.252</code></td>
+  <td style="text-align:left">4</td>
+  <td style="text-align:left">2</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Cuidado conceitual<br /></span>
+  </div>
+  <div class="callout-content">
+<p>A máscara maior não significa rede maior. Um prefixo maior usa mais bits para a rede e deixa menos bits para hosts. Por isso, <code>/28</code> cria blocos menores do que <code>/24</code>.</p>
+  </div>
+</div>
+<h2 id="hierarquia-de-endereços"><span class="heading-text">Hierarquia de endereços</span><span class="heading-arabic">9.9</span></h2>
+<p>O Forouzan explica a divisão em sub-redes como uma hierarquia. Sem sub-redes, há dois níveis principais.</p>
+<ol>
+<li>Prefixo de rede.</li>
+<li>Identificador de host.</li>
+</ol>
+<p>Com sub-redes, passamos a ter três níveis.</p>
+<ol>
+<li>Prefixo da rede da organização.</li>
+<li>Prefixo da sub-rede.</li>
+<li>Identificador do host.</li>
+</ol>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="760" viewBox="0.00 0.00 478.50 118.00" class="svg-graph graphviz-img"><g id="svg-graphviz-340fe04dd215-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 114)"><title>HierarquiaIPv4</title><g id="svg-graphviz-340fe04dd215-node1" class="node"><title>endereco</title><path fill="#fff4e8" stroke="#b8792f" d="M262,-110C262,-110 170,-110 170,-110 164,-110 158,-104 158,-98 158,-98 158,-86 158,-86 158,-80 164,-74 170,-74 170,-74 262,-74 262,-74 268,-74 274,-80 274,-86 274,-86 274,-98 274,-98 274,-104 268,-110 262,-110" /><text text-anchor="middle" x="216" y="-88.3" font-family="Helvetica,sans-Serif" font-size="14.00">Endereço IPv4</text></g><g id="svg-graphviz-340fe04dd215-node2" class="node"><title>rede</title><path fill="#fff4e8" stroke="#b8792f" d="M110,-38C110,-38 12,-38 12,-38 6,-38 0,-32 0,-26 0,-26 0,-12 0,-12 0,-6 6,0 12,0 12,0 110,0 110,0 116,0 122,-6 122,-12 122,-12 122,-26 122,-26 122,-32 116,-38 110,-38" /><text text-anchor="middle" x="61" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">Prefixo da rede</text><text text-anchor="middle" x="61" y="-7.8" font-family="Helvetica,sans-Serif" font-size="14.00">da organização</text></g><g id="svg-graphviz-340fe04dd215-edge1" class="edge"><title>endereco-&gt;rede</title><path fill="none" stroke="black" d="M157.84,-92C113.86,-92 61,-92 61,-92 61,-92 61,-48.18 61,-48.18" /><polygon fill="black" stroke="black" points="64.5,-48.18 61,-38.18 57.5,-48.18 64.5,-48.18" /></g><g id="svg-graphviz-340fe04dd215-node3" class="node"><title>subrede</title><path fill="#fff4e8" stroke="#b8792f" d="M279.5,-37C279.5,-37 152.5,-37 152.5,-37 146.5,-37 140.5,-31 140.5,-25 140.5,-25 140.5,-13 140.5,-13 140.5,-7 146.5,-1 152.5,-1 152.5,-1 279.5,-1 279.5,-1 285.5,-1 291.5,-7 291.5,-13 291.5,-13 291.5,-25 291.5,-25 291.5,-31 285.5,-37 279.5,-37" /><text text-anchor="middle" x="216" y="-15.3" font-family="Helvetica,sans-Serif" font-size="14.00">Prefixo da sub-rede</text></g><g id="svg-graphviz-340fe04dd215-edge2" class="edge"><title>endereco-&gt;subrede</title><path fill="none" stroke="black" d="M216,-73.96C216,-73.96 216,-47.09 216,-47.09" /><polygon fill="black" stroke="black" points="219.5,-47.09 216,-37.09 212.5,-47.09 219.5,-47.09" /></g><g id="svg-graphviz-340fe04dd215-node4" class="node"><title>host</title><path fill="#fff4e8" stroke="#b8792f" d="M458.5,-37C458.5,-37 321.5,-37 321.5,-37 315.5,-37 309.5,-31 309.5,-25 309.5,-25 309.5,-13 309.5,-13 309.5,-7 315.5,-1 321.5,-1 321.5,-1 458.5,-1 458.5,-1 464.5,-1 470.5,-7 470.5,-13 470.5,-13 470.5,-25 470.5,-25 470.5,-31 464.5,-37 458.5,-37" /><text text-anchor="middle" x="390" y="-15.3" font-family="Helvetica,sans-Serif" font-size="14.00">Identificador do host</text></g><g id="svg-graphviz-340fe04dd215-edge3" class="edge"><title>endereco-&gt;host</title><path fill="none" stroke="black" d="M274.42,-92C324.97,-92 390,-92 390,-92 390,-92 390,-47.04 390,-47.04" /><polygon fill="black" stroke="black" points="393.5,-47.04 390,-37.04 386.5,-47.04 393.5,-47.04" /></g></g></svg></div></div>
+
+<p>Essa hierarquia é o que permite ao mundo externo enxergar a organização como um bloco agregado, enquanto a organização distribui internamente esse bloco em redes menores.</p>
+<h2 id="encaminhamento-e-correspondência-pelo-prefixo-mais-longo"><span class="heading-text">Encaminhamento e correspondência pelo prefixo mais longo</span><span class="heading-arabic">9.10</span></h2>
+<p>Na aula anterior, você viu a diferença entre roteamento e encaminhamento. Agora podemos conectar essa ideia ao endereçamento.</p>
+<p>Quando um roteador recebe um pacote, ele olha o endereço IP de destino e consulta sua tabela de roteamento. Cada entrada da tabela descreve um prefixo e uma saída.</p>
+<p>O roteador deve escolher a entrada mais específica que combina com o destino. Essa regra é conhecida como <strong>correspondência pelo prefixo mais longo</strong>.</p>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="760" viewBox="0.00 0.00 486.00 158.00" class="svg-graph graphviz-img"><g id="svg-graphviz-9810875ab8d6-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 154)"><title>PrefixoMaisLongo</title><g id="svg-graphviz-9810875ab8d6-node1" class="node"><title>destino</title><path fill="#eefaf0" stroke="#4f9b63" d="M90,-94C90,-94 12,-94 12,-94 6,-94 0,-88 0,-82 0,-82 0,-68 0,-68 0,-62 6,-56 12,-56 12,-56 90,-56 90,-56 96,-56 102,-62 102,-68 102,-68 102,-82 102,-82 102,-88 96,-94 90,-94" /><text text-anchor="middle" x="51" y="-78.8" font-family="Helvetica,sans-Serif" font-size="14.00">Destino</text><text text-anchor="middle" x="51" y="-63.8" font-family="Helvetica,sans-Serif" font-size="14.00">10.20.30.45</text></g><g id="svg-graphviz-9810875ab8d6-node2" class="node"><title>p8</title><path fill="#eefaf0" stroke="#4f9b63" d="M276.5,-150C276.5,-150 211.5,-150 211.5,-150 205.5,-150 199.5,-144 199.5,-138 199.5,-138 199.5,-124 199.5,-124 199.5,-118 205.5,-112 211.5,-112 211.5,-112 276.5,-112 276.5,-112 282.5,-112 288.5,-118 288.5,-124 288.5,-124 288.5,-138 288.5,-138 288.5,-144 282.5,-150 276.5,-150" /><text text-anchor="middle" x="244" y="-134.8" font-family="Helvetica,sans-Serif" font-size="14.00">10.0.0.0/8</text><text text-anchor="middle" x="244" y="-119.8" font-family="Helvetica,sans-Serif" font-size="14.00">combina</text></g><g id="svg-graphviz-9810875ab8d6-edge1" class="edge"><title>destino-&gt;p8</title><path fill="none" stroke="black" d="M51,-94.27C51,-110.47 51,-131 51,-131 51,-131 189.24,-131 189.24,-131" /><polygon fill="black" stroke="black" points="189.24,-134.5 199.24,-131 189.24,-127.5 189.24,-134.5" /></g><g id="svg-graphviz-9810875ab8d6-node3" class="node"><title>p16</title><path fill="#eefaf0" stroke="#4f9b63" d="M285.5,-94C285.5,-94 202.5,-94 202.5,-94 196.5,-94 190.5,-88 190.5,-82 190.5,-82 190.5,-68 190.5,-68 190.5,-62 196.5,-56 202.5,-56 202.5,-56 285.5,-56 285.5,-56 291.5,-56 297.5,-62 297.5,-68 297.5,-68 297.5,-82 297.5,-82 297.5,-88 291.5,-94 285.5,-94" /><text text-anchor="middle" x="244" y="-78.8" font-family="Helvetica,sans-Serif" font-size="14.00">10.20.0.0/16</text><text text-anchor="middle" x="244" y="-63.8" font-family="Helvetica,sans-Serif" font-size="14.00">combina</text></g><g id="svg-graphviz-9810875ab8d6-edge2" class="edge"><title>destino-&gt;p16</title><path fill="none" stroke="black" d="M102.21,-81.33C102.21,-81.33 180.18,-81.33 180.18,-81.33" /><polygon fill="black" stroke="black" points="180.18,-84.83 190.18,-81.33 180.18,-77.83 180.18,-84.83" /></g><g id="svg-graphviz-9810875ab8d6-node4" class="node"><title>p24</title><path fill="#eefaf0" stroke="#2f7d46" stroke-width="2" d="M338,-38C338,-38 150,-38 150,-38 144,-38 138,-32 138,-26 138,-26 138,-12 138,-12 138,-6 144,0 150,0 150,0 338,0 338,0 344,0 350,-6 350,-12 350,-12 350,-26 350,-26 350,-32 344,-38 338,-38" /><text text-anchor="middle" x="244" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">10.20.30.0/24</text><text text-anchor="middle" x="244" y="-7.8" font-family="Helvetica,sans-Serif" font-size="14.00">combina e é mais específico</text></g><g id="svg-graphviz-9810875ab8d6-edge3" class="edge"><title>destino-&gt;p24</title><path fill="none" stroke="black" d="M102.33,-68.67C132.59,-68.67 165,-68.67 165,-68.67 165,-68.67 165,-48.06 165,-48.06" /><polygon fill="black" stroke="black" points="168.5,-48.06 165,-38.06 161.5,-48.06 168.5,-48.06" /></g><g id="svg-graphviz-9810875ab8d6-node5" class="node"><title>saida</title><path fill="#eefaf0" stroke="#4f9b63" d="M466,-38C466,-38 398,-38 398,-38 392,-38 386,-32 386,-26 386,-26 386,-12 386,-12 386,-6 392,0 398,0 398,0 466,0 466,0 472,0 478,-6 478,-12 478,-12 478,-26 478,-26 478,-32 472,-38 466,-38" /><text text-anchor="middle" x="432" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">Escolha</text><text text-anchor="middle" x="432" y="-7.8" font-family="Helvetica,sans-Serif" font-size="14.00">interface C</text></g><g id="svg-graphviz-9810875ab8d6-edge4" class="edge"><title>p24-&gt;saida</title><path fill="none" stroke="black" d="M350.09,-19C350.09,-19 375.8,-19 375.8,-19" /><polygon fill="black" stroke="black" points="375.8,-22.5 385.8,-19 375.8,-15.5 375.8,-22.5" /></g></g></svg></div></div>
+
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Se duas rotas combinam com o mesmo destino, por que escolher a rota com prefixo mais longo?</p>
+  </div>
+</div>
+<p>Porque o prefixo mais longo é mais específico. Ele descreve um bloco menor e, portanto, normalmente representa uma informação mais precisa sobre onde aquele destino está.</p>
+<div class="example">
+  <div class="example-title">Exemplo 4</div>
+  <p>Um roteador possui as entradas abaixo.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Prefixo</th>
+  <th style="text-align:left">Saída</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><code>10.0.0.0/8</code></td>
+  <td style="text-align:left">interface A</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>10.20.0.0/16</code></td>
+  <td style="text-align:left">interface B</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>10.20.30.0/24</code></td>
+  <td style="text-align:left">interface C</td>
+</tr>
+</tbody>
+</table>
+<p>Chega um pacote para:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">10.20.30.45
+</code></pre>
+<p>Esse destino combina com as três entradas. A melhor escolha é <code>10.20.30.0/24</code>, porque <code>/24</code> é o prefixo mais longo e mais específico. O pacote sai pela interface C.</p>
+</div>
+<h2 id="nat-como-resposta-parcial-ao-esgotamento-ipv4"><span class="heading-text">NAT como resposta parcial ao esgotamento IPv4</span><span class="heading-arabic">9.11</span></h2>
+<p>O espaço IPv4 tem cerca de $2^{32}$ endereços. Isso parecia enorme no início da Internet, mas se tornou pequeno diante do crescimento de hosts, celulares, servidores, redes domésticas e dispositivos conectados.</p>
+<p>Uma das soluções práticas para prolongar a vida do IPv4 foi o NAT, ou <em>Network Address Translation</em>.</p>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="760" viewBox="0.00 0.00 747.00 102.00" class="svg-graph graphviz-img"><g id="svg-graphviz-a59212017cdd-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 98)"><title>NAT</title><g id="svg-graphviz-a59212017cdd-node1" class="node"><title>host1</title><path fill="#f4efff" stroke="#8064c8" d="M99,-94C99,-94 12,-94 12,-94 6,-94 0,-88 0,-82 0,-82 0,-68 0,-68 0,-62 6,-56 12,-56 12,-56 99,-56 99,-56 105,-56 111,-62 111,-68 111,-68 111,-82 111,-82 111,-88 105,-94 99,-94" /><text text-anchor="middle" x="55.5" y="-78.8" font-family="Helvetica,sans-Serif" font-size="14.00">Host interno</text><text text-anchor="middle" x="55.5" y="-63.8" font-family="Helvetica,sans-Serif" font-size="14.00">192.168.1.34</text></g><g id="svg-graphviz-a59212017cdd-node3" class="node"><title>nat</title><path fill="#f4efff" stroke="#5f43ad" stroke-width="2" d="M282,-66C282,-66 160,-66 160,-66 154,-66 148,-60 148,-54 148,-54 148,-40 148,-40 148,-34 154,-28 160,-28 160,-28 282,-28 282,-28 288,-28 294,-34 294,-40 294,-40 294,-54 294,-54 294,-60 288,-66 282,-66" /><text text-anchor="middle" x="221" y="-50.8" font-family="Helvetica,sans-Serif" font-size="14.00">Roteador NAT</text><text text-anchor="middle" x="221" y="-35.8" font-family="Helvetica,sans-Serif" font-size="14.00">privado -&gt; público</text></g><g id="svg-graphviz-a59212017cdd-edge1" class="edge"><title>host1-&gt;nat</title><path fill="none" stroke="black" d="M111.07,-61C111.07,-61 137.94,-61 137.94,-61" /><polygon fill="black" stroke="black" points="137.94,-64.5 147.94,-61 137.94,-57.5 137.94,-64.5" /></g><g id="svg-graphviz-a59212017cdd-node2" class="node"><title>host2</title><path fill="#f4efff" stroke="#8064c8" d="M99,-38C99,-38 12,-38 12,-38 6,-38 0,-32 0,-26 0,-26 0,-12 0,-12 0,-6 6,0 12,0 12,0 99,0 99,0 105,0 111,-6 111,-12 111,-12 111,-26 111,-26 111,-32 105,-38 99,-38" /><text text-anchor="middle" x="55.5" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">Host interno</text><text text-anchor="middle" x="55.5" y="-7.8" font-family="Helvetica,sans-Serif" font-size="14.00">192.168.1.35</text></g><g id="svg-graphviz-a59212017cdd-edge2" class="edge"><title>host2-&gt;nat</title><path fill="none" stroke="black" d="M111.07,-33C111.07,-33 137.94,-33 137.94,-33" /><polygon fill="black" stroke="black" points="137.94,-36.5 147.94,-33 137.94,-29.5 137.94,-36.5" /></g><g id="svg-graphviz-a59212017cdd-node4" class="node"><title>internet</title><path fill="#f4efff" stroke="#8064c8" d="M558,-66C558,-66 464,-66 464,-66 458,-66 452,-60 452,-54 452,-54 452,-40 452,-40 452,-34 458,-28 464,-28 464,-28 558,-28 558,-28 564,-28 570,-34 570,-40 570,-40 570,-54 570,-54 570,-60 564,-66 558,-66" /><text text-anchor="middle" x="511" y="-50.8" font-family="Helvetica,sans-Serif" font-size="14.00">Internet</text><text text-anchor="middle" x="511" y="-35.8" font-family="Helvetica,sans-Serif" font-size="14.00">vê o IP público</text></g><g id="svg-graphviz-a59212017cdd-edge3" class="edge"><title>nat-&gt;internet</title><path fill="none" stroke="black" d="M294.18,-47C294.18,-47 441.98,-47 441.98,-47" /><polygon fill="black" stroke="black" points="441.98,-50.5 451.98,-47 441.98,-43.5 441.98,-50.5" /><text text-anchor="middle" x="373" y="-50.8" font-family="Times,serif" font-size="14.00">endereço público</text></g><g id="svg-graphviz-a59212017cdd-node5" class="node"><title>server</title><path fill="#f4efff" stroke="#8064c8" d="M727,-65C727,-65 619,-65 619,-65 613,-65 607,-59 607,-53 607,-53 607,-41 607,-41 607,-35 613,-29 619,-29 619,-29 727,-29 727,-29 733,-29 739,-35 739,-41 739,-41 739,-53 739,-53 739,-59 733,-65 727,-65" /><text text-anchor="middle" x="673" y="-43.3" font-family="Helvetica,sans-Serif" font-size="14.00">Servidor externo</text></g><g id="svg-graphviz-a59212017cdd-edge4" class="edge"><title>internet-&gt;server</title><path fill="none" stroke="black" d="M570.4,-47C570.4,-47 596.77,-47 596.77,-47" /><polygon fill="black" stroke="black" points="596.77,-50.5 606.77,-47 596.77,-43.5 596.77,-50.5" /></g></g></svg></div></div>
+
+<p>Com NAT, uma rede privada usa endereços internos que não são roteáveis globalmente. O roteador NAT troca os endereços privados por um endereço público ao enviar pacotes para a Internet.</p>
+<p>Faixas privadas comuns em IPv4 incluem:</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Bloco privado</th>
+  <th style="text-align:left">Uso típico</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><code>10.0.0.0/8</code></td>
+  <td style="text-align:left">Redes privadas grandes</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>172.16.0.0/12</code></td>
+  <td style="text-align:left">Redes privadas intermediárias</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>192.168.0.0/16</code></td>
+  <td style="text-align:left">Redes domésticas e pequenas redes</td>
+</tr>
+</tbody>
+</table>
+<div class="example">
+  <div class="example-title">Exemplo 5</div>
+  <p>Dentro de casa, seu computador pode ter o endereço:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">192.168.1.34
+</code></pre>
+<p>Esse endereço não é usado diretamente na Internet global. Quando você acessa um site, o roteador doméstico substitui o endereço de origem privado pelo endereço público recebido do provedor. Quando a resposta volta, o roteador usa sua tabela de tradução para entregar a resposta ao host interno correto.</p>
+</div>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Cuidado conceitual<br /></span>
+  </div>
+  <div class="callout-content">
+<p>NAT ajuda a economizar endereços IPv4, mas não é a mesma coisa que sub-rede. Sub-rede organiza um bloco em redes menores. NAT traduz endereços entre uma rede privada e o exterior.</p>
+  </div>
+</div>
+<h2 id="ipv6-e-a-mudança-de-escala"><span class="heading-text">IPv6 e a mudança de escala</span><span class="heading-arabic">9.12</span></h2>
+<p>O IPv6 surgiu como resposta de longo prazo ao esgotamento do IPv4. A diferença mais visível é o tamanho do endereço.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Versão</th>
+  <th style="text-align:left">Tamanho do endereço</th>
+  <th style="text-align:left">Forma comum de escrita</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">IPv4</td>
+  <td style="text-align:left">32 bits</td>
+  <td style="text-align:left">decimal pontuada</td>
+</tr>
+<tr>
+  <td style="text-align:left">IPv6</td>
+  <td style="text-align:left">128 bits</td>
+  <td style="text-align:left">hexadecimal com dois-pontos</td>
+</tr>
+</tbody>
+</table>
+<p>Um endereço IPv6 é escrito em grupos hexadecimais separados por dois-pontos.</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">2001:0db8:0000:0000:0000:ff00:0042:8329
+</code></pre>
+<p>Ele pode ser abreviado removendo zeros à esquerda e comprimindo uma sequência de grupos zero.</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">2001:db8::ff00:42:8329
+</code></pre>
+<h3 id="o-cabeçalho-ipv6"><span class="heading-text">O cabeçalho IPv6</span><span class="heading-arabic">9.12.1</span></h3>
+<p>O IPv6 também altera o cabeçalho. O cabeçalho principal tem tamanho fixo de 40 bytes e foi projetado para ser processado de forma mais simples pelos roteadores. Alguns campos do IPv4 foram removidos ou movidos para cabeçalhos de extensão.</p>
+<img src="static/fig5_49_cabecalho_ipv6_tanenbaum.png" width="85%">
+
+<p>Comparando com IPv4, alguns pontos merecem atenção.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Aspecto</th>
+  <th style="text-align:left">IPv4</th>
+  <th style="text-align:left">IPv6</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Tamanho do endereço</td>
+  <td style="text-align:left">32 bits</td>
+  <td style="text-align:left">128 bits</td>
+</tr>
+<tr>
+  <td style="text-align:left">Checksum no cabeçalho</td>
+  <td style="text-align:left">Existe</td>
+  <td style="text-align:left">Removido do cabeçalho base</td>
+</tr>
+<tr>
+  <td style="text-align:left">Fragmentação por roteadores</td>
+  <td style="text-align:left">Pode ocorrer</td>
+  <td style="text-align:left">Não ocorre no roteador, apenas na origem</td>
+</tr>
+<tr>
+  <td style="text-align:left">Opções</td>
+  <td style="text-align:left">Dentro do cabeçalho variável</td>
+  <td style="text-align:left">Cabeçalhos de extensão</td>
+</tr>
+<tr>
+  <td style="text-align:left">Broadcast</td>
+  <td style="text-align:left">Existe</td>
+  <td style="text-align:left">Substituído por outros mecanismos, como multicast</td>
+</tr>
+</tbody>
+</table>
+<p>Considere estes dois endereços.</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">192.168.1.10
+2001:db8:acad:1::10
+</code></pre>
+<p>O primeiro é IPv4 e tem 32 bits. O segundo é IPv6 e tem 128 bits. A diferença não é apenas estética. O IPv6 oferece um espaço de endereçamento muito maior, o que reduz a dependência de soluções como NAT para economizar endereços.</p>
+<p>Um endereço IPv6 pode ter uma parte de rede e uma parte de interface. Em muitas redes, é comum ver prefixos como:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">2001:db8:acad:1::/64
+</code></pre>
+<p>Isso significa que os 64 primeiros bits identificam o prefixo da rede. Os 64 bits restantes identificam a interface dentro daquela rede.</p>
+<p>Mesmo que os números pareçam maiores, a ideia de prefixo continua sendo fundamental.</p>
+<h2 id="transição-entre-ipv4-e-ipv6"><span class="heading-text">Transição entre IPv4 e IPv6</span><span class="heading-arabic">9.13</span></h2>
+<p>O IPv6 não substituiu o IPv4 de uma vez. A Internet é grande demais para uma troca instantânea. Por isso, a transição usa estratégias graduais.</p>
+<p>As três ideias mais importantes são estas.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Estratégia</th>
+  <th style="text-align:left">Ideia</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><strong>Pilha dupla</strong></td>
+  <td style="text-align:left">O host suporta IPv4 e IPv6 ao mesmo tempo</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Tunelamento</strong></td>
+  <td style="text-align:left">Um pacote IPv6 atravessa uma região IPv4 encapsulado</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Tradução</strong></td>
+  <td style="text-align:left">Cabeçalhos ou endereços são traduzidos entre versões</td>
+</tr>
+</tbody>
+</table>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="760" viewBox="0.00 0.00 778.00 46.00" class="svg-graph graphviz-img"><g id="svg-graphviz-1ae21f2837a3-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 42)"><title>TransicaoIPv6</title><g id="svg-graphviz-1ae21f2837a3-node1" class="node"><title>ipv6a</title><path fill="#eef4ff" stroke="#5b7bbb" d="M74,-37C74,-37 12,-37 12,-37 6,-37 0,-31 0,-25 0,-25 0,-13 0,-13 0,-7 6,-1 12,-1 12,-1 74,-1 74,-1 80,-1 86,-7 86,-13 86,-13 86,-25 86,-25 86,-31 80,-37 74,-37" /><text text-anchor="middle" x="43" y="-15.3" font-family="Helvetica,sans-Serif" font-size="14.00">Rede IPv6</text></g><g id="svg-graphviz-1ae21f2837a3-node2" class="node"><title>r1</title><path fill="#eef4ff" stroke="#5b7bbb" d="M205,-38C205,-38 135,-38 135,-38 129,-38 123,-32 123,-26 123,-26 123,-12 123,-12 123,-6 129,0 135,0 135,0 205,0 205,0 211,0 217,-6 217,-12 217,-12 217,-26 217,-26 217,-32 211,-38 205,-38" /><text text-anchor="middle" x="170" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">Roteador</text><text text-anchor="middle" x="170" y="-7.8" font-family="Helvetica,sans-Serif" font-size="14.00">pilha dupla</text></g><g id="svg-graphviz-1ae21f2837a3-edge1" class="edge"><title>ipv6a-&gt;r1</title><path fill="none" stroke="black" d="M86.35,-19C86.35,-19 112.93,-19 112.93,-19" /><polygon fill="black" stroke="black" points="112.93,-22.5 122.93,-19 112.93,-15.5 112.93,-22.5" /></g><g id="svg-graphviz-1ae21f2837a3-node3" class="node"><title>ipv4</title><path fill="#fff4e8" stroke="#b8792f" d="M468,-38C468,-38 302,-38 302,-38 296,-38 290,-32 290,-26 290,-26 290,-12 290,-12 290,-6 296,0 302,0 302,0 468,0 468,0 474,0 480,-6 480,-12 480,-12 480,-26 480,-26 480,-32 474,-38 468,-38" /><text text-anchor="middle" x="385" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">Região IPv4</text><text text-anchor="middle" x="385" y="-7.8" font-family="Helvetica,sans-Serif" font-size="14.00">pacote IPv6 encapsulado</text></g><g id="svg-graphviz-1ae21f2837a3-edge2" class="edge"><title>r1-&gt;ipv4</title><path fill="none" stroke="black" d="M217.18,-19C217.18,-19 279.84,-19 279.84,-19" /><polygon fill="black" stroke="black" points="279.84,-22.5 289.84,-19 279.84,-15.5 279.84,-22.5" /><text text-anchor="middle" x="253.5" y="-22.8" font-family="Times,serif" font-size="14.00">túnel</text></g><g id="svg-graphviz-1ae21f2837a3-node4" class="node"><title>r2</title><path fill="#eef4ff" stroke="#5b7bbb" d="M635,-38C635,-38 565,-38 565,-38 559,-38 553,-32 553,-26 553,-26 553,-12 553,-12 553,-6 559,0 565,0 565,0 635,0 635,0 641,0 647,-6 647,-12 647,-12 647,-26 647,-26 647,-32 641,-38 635,-38" /><text text-anchor="middle" x="600" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">Roteador</text><text text-anchor="middle" x="600" y="-7.8" font-family="Helvetica,sans-Serif" font-size="14.00">pilha dupla</text></g><g id="svg-graphviz-1ae21f2837a3-edge3" class="edge"><title>ipv4-&gt;r2</title><path fill="none" stroke="black" d="M480.24,-19C480.24,-19 542.83,-19 542.83,-19" /><polygon fill="black" stroke="black" points="542.83,-22.5 552.83,-19 542.83,-15.5 542.83,-22.5" /><text text-anchor="middle" x="516.5" y="-22.8" font-family="Times,serif" font-size="14.00">túnel</text></g><g id="svg-graphviz-1ae21f2837a3-node5" class="node"><title>ipv6b</title><path fill="#eef4ff" stroke="#5b7bbb" d="M758,-37C758,-37 696,-37 696,-37 690,-37 684,-31 684,-25 684,-25 684,-13 684,-13 684,-7 690,-1 696,-1 696,-1 758,-1 758,-1 764,-1 770,-7 770,-13 770,-13 770,-25 770,-25 770,-31 764,-37 758,-37" /><text text-anchor="middle" x="727" y="-15.3" font-family="Helvetica,sans-Serif" font-size="14.00">Rede IPv6</text></g><g id="svg-graphviz-1ae21f2837a3-edge4" class="edge"><title>r2-&gt;ipv6b</title><path fill="none" stroke="black" d="M647.29,-19C647.29,-19 673.87,-19 673.87,-19" /><polygon fill="black" stroke="black" points="673.87,-22.5 683.87,-19 673.87,-15.5 673.87,-22.5" /></g></g></svg></div></div>
+
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">Observação<br /></span>
+  </div>
+  <div class="callout-content">
+<p>A coexistência entre IPv4 e IPv6 é uma realidade prática. Você pode encontrar máquinas, provedores e serviços usando as duas versões simultaneamente.</p>
+  </div>
+</div>
+<h2 id="fechando-a-ideia"><span class="heading-text">Fechando a ideia</span><span class="heading-arabic">9.14</span></h2>
+<p>O IP é a peça que torna possível interligar redes diferentes em uma Internet. O IPv4 organiza essa entrega com datagramas, endereços de 32 bits, prefixos, máscaras e sub-redes. Sub-redes tornam a administração viável ao dividir blocos em partes menores. O IPv6 amplia o espaço de endereços e reorganiza o cabeçalho, mas preserva a ideia central de encaminhar pacotes entre redes por meio de endereços lógicos.</p>
+<div class="callout callout-success">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></span>
+    <span class="callout-title-inner">Conclusão prática<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Para entender redes IP, você precisa ler um endereço junto com seu prefixo. Sem a máscara, um IPv4 é só um número. Com a máscara, ele revela rede, sub-rede, intervalo de hosts e a forma como os roteadores podem encaminhar pacotes.</p>
+  </div>
+</div>
+<h2 id="questões"><span class="heading-text">Questões</span><span class="heading-arabic">9.15</span></h2>
+<div class="questions">
+  <p><strong>1.</strong> Explique por que o endereço MAC não é suficiente para a comunicação entre redes diferentes.</p>
+<p><strong>2.</strong> O que significa dizer que o IPv4 é um protocolo sem conexão e de melhor esforço?</p>
+<p><strong>3.</strong> Cite três campos importantes do cabeçalho IPv4 e explique a função de cada um.</p>
+<p><strong>4.</strong> Para que serve o campo TTL no IPv4?</p>
+<p><strong>5.</strong> Converta a ideia abaixo para uma frase explicativa: <code>192.168.1.34/24</code>.</p>
+<p><strong>6.</strong> Qual é a diferença entre endereço IP, prefixo e máscara?</p>
+<p><strong>7.</strong> Por que o endereçamento com classes se tornou insuficiente?</p>
+<p><strong>8.</strong> O que o CIDR acrescentou ao endereçamento IPv4?</p>
+<p><strong>9.</strong> Explique, com suas palavras, o que é uma sub-rede.</p>
+<p><strong>10.</strong> Divida a rede <code>192.168.20.0/24</code> em 4 sub-redes de mesmo tamanho. Informe o prefixo novo e os endereços das sub-redes.</p>
+<p><strong>11.</strong> Um host possui o endereço <code>192.168.20.130/26</code>. Qual é a sub-rede dele e qual é o broadcast dessa sub-rede?</p>
+<p><strong>12.</strong> Explique por que <code>/28</code> representa blocos menores do que <code>/24</code>.</p>
+<p><strong>13.</strong> O que significa correspondência pelo prefixo mais longo em uma tabela de roteamento?</p>
+<p><strong>14.</strong> Um roteador tem as rotas <code>172.16.0.0/12</code>, <code>172.16.40.0/24</code> e <code>0.0.0.0/0</code>. Para qual prefixo ele deve encaminhar um pacote destinado a <code>172.16.40.55</code>?</p>
+<p><strong>15.</strong> Diferencie sub-rede e NAT.</p>
+<p><strong>16.</strong> Cite duas diferenças importantes entre IPv4 e IPv6.</p>
+<p><strong>17.</strong> O que é pilha dupla na transição de IPv4 para IPv6?</p>
+<p><strong>18.</strong> Marque <strong>V</strong> ou <strong>F</strong>.</p>
+<ul>
+<li><strong>( )</strong> O endereço IPv4 tem 32 bits.</li>
+<li><strong>( )</strong> A máscara <code>/24</code> sempre deixa 24 bits para hosts.</li>
+<li><strong>( )</strong> O prefixo mais longo é escolhido porque é mais específico.</li>
+<li><strong>( )</strong> O IPv6 tem endereços menores que o IPv4, mas cabeçalho maior.</li>
+<li><strong>( )</strong> NAT e sub-rede são exatamente o mesmo mecanismo.</li>
+</ul>
+</div>
+<div class="example">
+  <div class="example-title">Gabarito</div>
+  <p><strong>1.</strong> Porque o MAC resolve a entrega local no enlace atual. Para atravessar redes diferentes, é necessário um endereço lógico que os roteadores consigam interpretar em escala de rede.</p>
+<p><strong>2.</strong> Significa que o IPv4 não estabelece uma conexão antes do envio e não garante, sozinho, entrega, ordem ou confiabilidade. Ele tenta encaminhar os datagramas da melhor forma possível.</p>
+<p><strong>3.</strong> Exemplos possíveis: TTL limita a quantidade de saltos; protocolo indica o conteúdo transportado, como TCP ou UDP; endereço de destino indica para onde o pacote deve ir; checksum verifica erros no cabeçalho.</p>
+<p><strong>4.</strong> Serve para impedir que pacotes circulem indefinidamente. Cada roteador decrementa o TTL e descarta o pacote quando o valor chega a zero.</p>
+<p><strong>5.</strong> É o endereço IPv4 <code>192.168.1.34</code> dentro de uma rede cujo prefixo tem 24 bits, normalmente a rede <code>192.168.1.0/24</code>.</p>
+<p><strong>6.</strong> O endereço IP identifica logicamente uma interface. O prefixo indica quantos bits pertencem à rede. A máscara é a forma binária ou decimal que separa bits de rede e bits de host.</p>
+<p><strong>7.</strong> Porque as classes tinham tamanhos fixos e frequentemente desperdiçavam endereços, acelerando o esgotamento do IPv4.</p>
+<p><strong>8.</strong> O CIDR permitiu prefixos flexíveis, sem depender dos tamanhos fixos das classes, além de facilitar alocação mais ajustada e agregação de rotas.</p>
+<p><strong>9.</strong> É uma divisão lógica menor criada dentro de um bloco de endereços maior, usando um prefixo mais específico.</p>
+<p><strong>10.</strong> Para 4 sub-redes, usamos 2 bits adicionais. O prefixo novo é <code>/26</code>. As sub-redes são <code>192.168.20.0/26</code>, <code>192.168.20.64/26</code>, <code>192.168.20.128/26</code> e <code>192.168.20.192/26</code>.</p>
+<p><strong>11.</strong> Com <code>/26</code>, os blocos têm tamanho 64. O endereço 130 cai no intervalo 128 a 191. A sub-rede é <code>192.168.20.128/26</code> e o broadcast é <code>192.168.20.191</code>.</p>
+<p><strong>12.</strong> Porque <code>/28</code> usa mais bits para identificar a rede e deixa menos bits para hosts. Por isso, cada bloco tem menos endereços.</p>
+<p><strong>13.</strong> Significa escolher, entre todas as rotas que combinam com o destino, aquela com o maior comprimento de prefixo.</p>
+<p><strong>14.</strong> Deve usar <code>172.16.40.0/24</code>, porque é a rota mais específica entre as que combinam com o destino.</p>
+<p><strong>15.</strong> Sub-rede divide um bloco de endereços em redes menores. NAT traduz endereços, normalmente entre uma rede privada e a Internet pública.</p>
+<p><strong>16.</strong> IPv4 usa endereços de 32 bits e IPv6 usa 128 bits. IPv6 remove o checksum do cabeçalho base e usa cabeçalhos de extensão para funcionalidades opcionais.</p>
+<p><strong>17.</strong> É a estratégia em que um host ou roteador executa IPv4 e IPv6 ao mesmo tempo durante o período de transição.</p>
+<p><strong>18.</strong></p>
+<ul>
+<li><strong>( V )</strong> O endereço IPv4 tem 32 bits.</li>
+<li><strong>( F )</strong> A máscara <code>/24</code> sempre deixa 24 bits para hosts.</li>
+<li><strong>( V )</strong> O prefixo mais longo é escolhido porque é mais específico.</li>
+<li><strong>( F )</strong> O IPv6 tem endereços menores que o IPv4, mas cabeçalho maior.</li>
+<li><strong>( F )</strong> NAT e sub-rede são exatamente o mesmo mecanismo.</li>
+</ul>
+</div>
+<h2 id="próximos-passos"><span class="heading-text">Próximos passos</span><span class="heading-arabic">9.16</span></h2>
+<p>Na próxima aula, o passo natural é conectar endereçamento IP com os protocolos auxiliares que fazem a rede funcionar no cotidiano.</p>
+<p>Você verá como ARP, ICMP e DHCP ajudam hosts e roteadores a descobrir vizinhos, diagnosticar problemas e obter configuração de rede automaticamente.</p>
+
+                </div>
+            </article>
+            <footer class="footer">
+                <p>© 2025 · <a href="#">Gabriel Soares Baptista</a></p>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        const toggle = document.querySelector('.mobile-menu-toggle');
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.querySelector('.mobile-menu-overlay');
+
+        function openMenu() {
+            sidebar.classList.add('open');
+            overlay.classList.add('open');
+            toggle.classList.add('open');
+            toggle.innerHTML = '<i data-lucide="x"></i>';
+            CourseForgeUI.initIcons();
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMenu() {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('open');
+            toggle.classList.remove('open');
+            toggle.innerHTML = '<i data-lucide="menu"></i>';
+            CourseForgeUI.initIcons();
+            document.body.style.overflow = '';
+        }
+
+        toggle.addEventListener('click', () => {
+            if (sidebar.classList.contains('open')) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        overlay.addEventListener('click', closeMenu);
+    </script>
+
+    
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            renderMathInElement(document.body, {
+                output: 'html',
+                delimiters: [
+                    { left: "$$", right: "$$", display: true },
+                    { left: "$", right: "$", display: false },
+                    { left: "\\(", right: "\\)", display: false },
+                    { left: "\\[", right: "\\]", display: true }
+                ],
+                throwOnError: false,
+                strict: false
+            });
+        });
+    </script>
+    
+    
+    <script src="/aulas-faesa/js/vendor/prism/prism.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-c.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-cpp.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-python.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-clike.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-perl.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-java.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-mermaid.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-php.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js" data-no-bundle></script>
+    
+    
+    
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            mermaid.initialize({
+                startOnLoad: true,
+                theme: 'default',
+                securityLevel: 'loose',
+                fontFamily: 'Inter, system-ui, sans-serif',
+                themeVariables: {
+                    fontSize: '16px',
+                    edgeLabelFontSize: '16px',
+                    multiplicityFontSize: '18px'
+                }
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const isSubcourse = false;
+        const courseName = "Redes";
+        CourseForgeNav.applyDynamicBreadcrumbs('.breadcrumb', isSubcourse);
+        CourseForgeNav.initScrollSpy();
+        CourseForgeUI.initCopyButtons();
+        CourseForgeUI.initExamples();
+        });
+
+        function handleBackNavigation() {
+            const isSubcourse = false;
+        const dynamic = CourseForgeNav.getBackLink('contents.html', 'Voltar', isSubcourse);
+        window.location.href = dynamic.url;
+        }
+    </script>
+</body>
+
+</html>

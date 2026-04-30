@@ -1,0 +1,1593 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <title>Protocolo IP, Endereçamento e Sub-redes</title>
+    <link rel="icon" href="/aulas-faesa/img/dark-favicon.svg" media="(prefers-color-scheme: light)">
+    <link rel="icon" href="/aulas-faesa/img/light-favicon.svg" media="(prefers-color-scheme: dark)">
+
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/reset.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/reveal.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/theme/white.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/aulas-faesa/css/prism-one-light.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/fonts.css" data-no-bundle>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+            <section><h1>Protocolo IP, Endereçamento e Sub-redes</h1>
+<h2>Como a Internet identifica redes, hosts e caminhos</h2>
+<p>Professor: Gabriel Soares Baptista</p>
+</section>
+<section><h1>Da Aula Anterior Para Hoje</h1>
+<p>Na aula passada, vimos a camada de rede como a camada que escolhe caminhos entre redes.</p>
+<p>Hoje vamos concretizar essa ideia com o protocolo IP.</p>
+<h3>Perguntas centrais</h3>
+<ul>
+<li>Como um pacote IP é formado?</li>
+<li>Como interpretar um endereço IPv4?</li>
+<li>Como dividir uma rede em sub-redes?</li>
+<li>O que muda com IPv6?</li>
+</ul>
+</section>
+<section><h1>Ideia Central</h1>
+<p>O IP oferece uma forma lógica de endereçar hosts e redes.</p>
+<h3>Nesta aula</h3>
+<ul>
+<li>IPv4 usa endereços de <strong>32 bits</strong>.</li>
+<li>Prefixos e máscaras separam <strong>rede</strong> e <strong>host</strong>.</li>
+<li>Sub-redes dividem um bloco maior em redes menores.</li>
+<li>IPv6 amplia o endereçamento para <strong>128 bits</strong>.</li>
+</ul>
+<div class="callout callout-abstract">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
+    <span class="callout-title-inner">Base da aula<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Tanenbaum 5.6.1 a 5.6.3, Forouzan capítulo 19 e apoio do capítulo 22 para encaminhamento.</p>
+  </div>
+</div>
+</section>
+<section><h1>O Problema Que o IP Resolve</h1>
+<p>Uma LAN Ethernet não representa a Internet inteira.</p>
+<h3>Dentro da LAN</h3>
+<ul>
+<li>O MAC entrega quadros localmente.</li>
+<li>O switch encaminha por endereço MAC.</li>
+<li>O enlace atual resolve só o próximo trecho.</li>
+</ul>
+<h3>Fora da LAN</h3>
+<ul>
+<li>A comunicação atravessa várias redes.</li>
+<li>Cada rede pode usar tecnologia diferente.</li>
+<li>Roteadores precisam de endereços lógicos.</li>
+</ul>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Se o endereço MAC identifica uma interface no enlace local, por que ele não basta para entregar dados pela Internet inteira?</p>
+  </div>
+</div>
+</section>
+<section><h1>MAC e IP Não Competem</h1>
+<p>O MAC não descreve uma posição lógica dentro de uma rede de redes.</p>
+<h3>Função de cada um</h3>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Endereço</th>
+  <th style="text-align:left">Função</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><strong>MAC</strong></td>
+  <td style="text-align:left">Entrega local no enlace atual</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>IP</strong></td>
+  <td style="text-align:left">Entrega lógica entre redes</td>
+</tr>
+</tbody>
+</table>
+<h3>Ideia prática</h3>
+<p>O MAC ajuda no próximo salto. O IP permite continuar a viagem.</p>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Erro comum<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Endereço IP não é “o MAC da Internet”. MAC identifica uma interface no enlace local. IP identifica logicamente uma interface em uma rede IP.</p>
+  </div>
+</div>
+</section>
+<section><h1>Exemplo 1</h1>
+<p>Seu notebook quer acessar um servidor fora de casa.</p>
+<ol>
+<li>O notebook envia um quadro ao roteador doméstico.</li>
+<li>O quadro usa MAC no enlace local.</li>
+<li>Dentro do quadro existe um pacote IP.</li>
+<li>O roteador observa o IP e encaminha para outra rede.</li>
+</ol>
+<h3>Conclusão</h3>
+<p>O quadro muda a cada enlace. O pacote IP mantém a direção lógica da comunicação.</p>
+</section>
+<section><h1>IPv4 Como Datagramas</h1>
+<p>O IPv4 trata cada pacote como um <strong>datagrama</strong>.</p>
+<h3>Isso significa</h3>
+<ul>
+<li>Cada pacote é encaminhado de forma independente.</li>
+<li>Não há conexão obrigatória antes do envio.</li>
+<li>O pacote carrega informações para ser roteado.</li>
+</ul>
+</section>
+<section><h1>Melhor Esforço</h1>
+<p>IPv4 é um protocolo <strong>sem conexão</strong> e de <strong>melhor esforço</strong>.</p>
+<h3>Ele não garante sozinho</h3>
+<ul>
+<li>Entrega.</li>
+<li>Ordem.</li>
+<li>Ausência de duplicação.</li>
+<li>Recuperação de perda.</li>
+</ul>
+<h3>Por que isso funciona?</h3>
+<p>A rede fica simples. A confiabilidade pode ser tratada nas pontas, por protocolos como TCP.</p>
+</section>
+<section><h1>Cabeçalho IPv4</h1>
+<p>Um datagrama IPv4 possui cabeçalho e dados.</p>
+<h3>Tamanho</h3>
+<ul>
+<li>Cabeçalho mínimo: <strong>20 bytes</strong>.</li>
+<li>Pode crescer se houver opções.</li>
+</ul>
+<img src="../static/fig5_41_cabecalho_ipv4_tanenbaum.png" width="78%" style="display: block; margin: 0 auto;">
+
+</section>
+<section><h1>Campos Importantes do IPv4</h1>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Campo</th>
+  <th style="text-align:left">Ideia principal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><strong>Versão</strong></td>
+  <td style="text-align:left">Indica IPv4</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>IHL</strong></td>
+  <td style="text-align:left">Tamanho do cabeçalho</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Comprimento total</strong></td>
+  <td style="text-align:left">Tamanho do datagrama</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>TTL</strong></td>
+  <td style="text-align:left">Limita saltos</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Protocolo</strong></td>
+  <td style="text-align:left">Indica TCP, UDP ou outro</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Origem e destino</strong></td>
+  <td style="text-align:left">Endereços IPv4 finais</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section><h1>TTL</h1>
+<p>O TTL evita que pacotes circulem indefinidamente.</p>
+<h3>Leitura prática</h3>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Etapa</th>
+  <th style="text-align:left">TTL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Origem</td>
+  <td style="text-align:left">4</td>
+</tr>
+<tr>
+  <td style="text-align:left">Depois de $R_1$</td>
+  <td style="text-align:left">3</td>
+</tr>
+<tr>
+  <td style="text-align:left">Depois de $R_2$</td>
+  <td style="text-align:left">2</td>
+</tr>
+<tr>
+  <td style="text-align:left">Depois de $R_3$</td>
+  <td style="text-align:left">1</td>
+</tr>
+<tr>
+  <td style="text-align:left">Depois de $R_4$</td>
+  <td style="text-align:left">0</td>
+</tr>
+</tbody>
+</table>
+<p>Quando chega a zero, o pacote é descartado.</p>
+<h3>Relação com <code>traceroute</code></h3>
+<ul>
+<li>Envia pacotes com TTL crescente.</li>
+<li>Cada roteador que zera o TTL responde com erro.</li>
+<li>A origem descobre os saltos intermediários.</li>
+</ul>
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">Observação<br /></span>
+  </div>
+  <div class="callout-content">
+<p>O TTL protege contra loops e também permite diagnóstico de caminho.</p>
+  </div>
+</div>
+</section>
+<section><h1>Endereços IPv4</h1>
+<p>Um endereço IPv4 tem <strong>32 bits</strong>.</p>
+<h3>Escrita humana</h3>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">192.168.1.34
+</code></pre>
+<h3>Escrita binária</h3>
+<p>$$
+192.168.1.34 = 11000000.10101000.00000001.00100010
+$$</p>
+<p>Cada número decimal representa um octeto.</p>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Se o endereço IPv4 tem 32 bits, como um roteador sabe qual parte identifica a rede e qual parte identifica o host?</p>
+  </div>
+</div>
+</section>
+<section><h1>Prefixo e Máscara</h1>
+<p>Um endereço IP precisa ser lido junto com seu prefixo.</p>
+<h3>Exemplo</h3>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">192.168.1.34/24
+</code></pre>
+<h3>Interpretação</h3>
+<p>$$
+\underbrace{192.168.1}_{24\ bits\ de\ rede}.\underbrace{34}_{8\ bits\ de\ host}
+$$</p>
+<p>O <code>/24</code> diz quantos bits pertencem à rede.</p>
+</section>
+<section><h1>Máscara</h1>
+<p>Uma máscara tem 32 bits.</p>
+<h3>Regra</h3>
+<ul>
+<li>Bits <strong>1</strong> indicam a parte de rede.</li>
+<li>Bits <strong>0</strong> indicam a parte de host.</li>
+</ul>
+<h3>Para <code>/24</code></h3>
+<p>$$
+11111111.11111111.11111111.00000000
+$$</p>
+<p>$$
+255.255.255.0
+$$</p>
+</section>
+<section><h1>Exemplo 2</h1>
+<p>Considere o endereço:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">192.168.1.34/24
+</code></pre>
+<h3>Leitura</h3>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">Rede: 192.168.1.0/24
+Host: 34
+</code></pre>
+<h3>Conclusão</h3>
+<p><code>192.168.1.34</code> é um host dentro da rede <code>192.168.1.0/24</code>.</p>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Cuidado<br /></span>
+  </div>
+  <div class="callout-content">
+<p>A rede não são sempre os três primeiros números. Isso só acontece em prefixos como <code>/24</code>. A separação real depende da máscara.</p>
+  </div>
+</div>
+</section>
+<section><h1>Endereçamento Com Classes</h1>
+<p>Historicamente, o IPv4 usou classes.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Classe</th>
+  <th style="text-align:left">Prefixo padrão</th>
+  <th style="text-align:left">Uso conceitual</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><strong>A</strong></td>
+  <td style="text-align:left"><code>/8</code></td>
+  <td style="text-align:left">Poucas redes muito grandes</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>B</strong></td>
+  <td style="text-align:left"><code>/16</code></td>
+  <td style="text-align:left">Redes médias</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>C</strong></td>
+  <td style="text-align:left"><code>/24</code></td>
+  <td style="text-align:left">Muitas redes pequenas</td>
+</tr>
+</tbody>
+</table>
+<h3>Problema</h3>
+<p>As classes tinham tamanhos fixos e desperdiçavam endereços.</p>
+<h3>Consequência</h3>
+<ul>
+<li>Desperdício de blocos.</li>
+<li>Tabelas menos eficientes.</li>
+<li>Esgotamento mais rápido do IPv4.</li>
+</ul>
+</section>
+<section><h1>CIDR</h1>
+<p>CIDR significa <em>Classless Inter-Domain Routing</em>.</p>
+<h3>Ideia</h3>
+<p>Abandonar tamanhos fixos de classes e usar prefixos flexíveis.</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">192.168.10.0/24
+10.40.0.0/20
+172.16.8.0/21
+</code></pre>
+<p>CIDR permite alocar blocos mais próximos da necessidade real.</p>
+</section>
+<section><h1>CIDR e Agregação</h1>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="760" viewBox="0.00 0.00 455.00 158.00" class="svg-graph graphviz-img"><g id="svg-graphviz-b5cf83b9c009-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 154)"><title>CIDR</title><g id="svg-graphviz-b5cf83b9c009-node1" class="node"><title>isp</title><path fill="#eef4ff" stroke="#5b7bbb" d="M104,-94C104,-94 12,-94 12,-94 6,-94 0,-88 0,-82 0,-82 0,-68 0,-68 0,-62 6,-56 12,-56 12,-56 104,-56 104,-56 110,-56 116,-62 116,-68 116,-68 116,-82 116,-82 116,-88 110,-94 104,-94" /><text text-anchor="middle" x="58" y="-78.8" font-family="Helvetica,sans-Serif" font-size="14.00">ISP</text><text text-anchor="middle" x="58" y="-63.8" font-family="Helvetica,sans-Serif" font-size="14.00">200.10.0.0/20</text></g><g id="svg-graphviz-b5cf83b9c009-node2" class="node"><title>a</title><path fill="#eef4ff" stroke="#5b7bbb" d="M256,-150C256,-150 164,-150 164,-150 158,-150 152,-144 152,-138 152,-138 152,-124 152,-124 152,-118 158,-112 164,-112 164,-112 256,-112 256,-112 262,-112 268,-118 268,-124 268,-124 268,-138 268,-138 268,-144 262,-150 256,-150" /><text text-anchor="middle" x="210" y="-134.8" font-family="Helvetica,sans-Serif" font-size="14.00">Cliente A</text><text text-anchor="middle" x="210" y="-119.8" font-family="Helvetica,sans-Serif" font-size="14.00">200.10.0.0/22</text></g><g id="svg-graphviz-b5cf83b9c009-edge1" class="edge"><title>isp-&gt;a</title><path fill="none" stroke="black" d="M58,-94.27C58,-110.47 58,-131 58,-131 58,-131 141.67,-131 141.67,-131" /><polygon fill="black" stroke="black" points="141.67,-134.5 151.67,-131 141.67,-127.5 141.67,-134.5" /></g><g id="svg-graphviz-b5cf83b9c009-node3" class="node"><title>b</title><path fill="#eef4ff" stroke="#5b7bbb" d="M256,-94C256,-94 164,-94 164,-94 158,-94 152,-88 152,-82 152,-82 152,-68 152,-68 152,-62 158,-56 164,-56 164,-56 256,-56 256,-56 262,-56 268,-62 268,-68 268,-68 268,-82 268,-82 268,-88 262,-94 256,-94" /><text text-anchor="middle" x="210" y="-78.8" font-family="Helvetica,sans-Serif" font-size="14.00">Cliente B</text><text text-anchor="middle" x="210" y="-63.8" font-family="Helvetica,sans-Serif" font-size="14.00">200.10.4.0/23</text></g><g id="svg-graphviz-b5cf83b9c009-edge2" class="edge"><title>isp-&gt;b</title><path fill="none" stroke="black" d="M116.33,-75C116.33,-75 141.82,-75 141.82,-75" /><polygon fill="black" stroke="black" points="141.82,-78.5 151.82,-75 141.82,-71.5 141.82,-78.5" /></g><g id="svg-graphviz-b5cf83b9c009-node4" class="node"><title>c</title><path fill="#eef4ff" stroke="#5b7bbb" d="M256,-38C256,-38 164,-38 164,-38 158,-38 152,-32 152,-26 152,-26 152,-12 152,-12 152,-6 158,0 164,0 164,0 256,0 256,0 262,0 268,-6 268,-12 268,-12 268,-26 268,-26 268,-32 262,-38 256,-38" /><text text-anchor="middle" x="210" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">Cliente C</text><text text-anchor="middle" x="210" y="-7.8" font-family="Helvetica,sans-Serif" font-size="14.00">200.10.6.0/24</text></g><g id="svg-graphviz-b5cf83b9c009-edge3" class="edge"><title>isp-&gt;c</title><path fill="none" stroke="black" d="M58,-55.73C58,-39.53 58,-19 58,-19 58,-19 141.67,-19 141.67,-19" /><polygon fill="black" stroke="black" points="141.67,-22.5 151.67,-19 141.67,-15.5 141.67,-22.5" /></g><g id="svg-graphviz-b5cf83b9c009-node5" class="node"><title>rota</title><path fill="#eef4ff" stroke="#5b7bbb" d="M435,-94C435,-94 316,-94 316,-94 310,-94 304,-88 304,-82 304,-82 304,-68 304,-68 304,-62 310,-56 316,-56 316,-56 435,-56 435,-56 441,-56 447,-62 447,-68 447,-68 447,-82 447,-82 447,-88 441,-94 435,-94" /><text text-anchor="middle" x="375.5" y="-78.8" font-family="Helvetica,sans-Serif" font-size="14.00">Anúncio agregado</text><text text-anchor="middle" x="375.5" y="-63.8" font-family="Helvetica,sans-Serif" font-size="14.00">200.10.0.0/20</text></g><g id="svg-graphviz-b5cf83b9c009-edge4" class="edge"><title>a-&gt;rota</title><path fill="none" stroke="black" stroke-dasharray="5,2" d="M268.06,-131C315.93,-131 376,-131 376,-131 376,-131 376,-104.27 376,-104.27" /><polygon fill="black" stroke="black" points="379.5,-104.27 376,-94.27 372.5,-104.27 379.5,-104.27" /></g><g id="svg-graphviz-b5cf83b9c009-edge5" class="edge"><title>b-&gt;rota</title><path fill="none" stroke="black" stroke-dasharray="5,2" d="M268.35,-75C268.35,-75 293.75,-75 293.75,-75" /><polygon fill="black" stroke="black" points="293.75,-78.5 303.75,-75 293.75,-71.5 293.75,-78.5" /></g><g id="svg-graphviz-b5cf83b9c009-edge6" class="edge"><title>c-&gt;rota</title><path fill="none" stroke="black" stroke-dasharray="5,2" d="M268.06,-19C315.93,-19 376,-19 376,-19 376,-19 376,-45.73 376,-45.73" /><polygon fill="black" stroke="black" points="372.5,-45.73 376,-55.73 379.5,-45.73 372.5,-45.73" /></g></g></svg></div></div>
+
+</section>
+<section><h1>Sub-redes</h1>
+<p>Uma organização pode receber um bloco e dividi-lo internamente.</p>
+<h3>Exemplo de bloco</h3>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">192.168.10.0/24
+</code></pre>
+<h3>Por que dividir?</h3>
+<ul>
+<li>Reduzir broadcast.</li>
+<li>Separar setores.</li>
+<li>Melhorar administração.</li>
+<li>Facilitar políticas de segurança.</li>
+</ul>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Se uma organização recebe um bloco único, por que ela não deveria colocar todos os hosts na mesma rede?</p>
+  </div>
+</div>
+</section>
+<section><h1>Configuração Com Sub-redes</h1>
+<p>Sub-redes criam divisões lógicas menores dentro de um bloco maior.</p>
+<img src="../static/fig19_7_configuracao_sub_redes_forouzan.png" width="76%" style="display: block; margin: 0 auto;">
+
+</section>
+<section><h1>Matemática da Sub-rede</h1>
+<p>Em uma rede <code>/24</code>, existem 8 bits de host.</p>
+<p>$$
+32 - 24 = 8
+$$</p>
+<p>Para criar 4 sub-redes, precisamos de 2 bits.</p>
+<p>$$
+2^2 = 4
+$$</p>
+<p>O novo prefixo será:</p>
+<p>$$
+/24 + 2 = /26
+$$</p>
+<p>Com <code>/26</code>, sobram 6 bits para hosts.</p>
+<p>$$
+32 - 26 = 6
+$$</p>
+<p>Logo, cada sub-rede tem 64 endereços.</p>
+<p>$$
+2^6 = 64
+$$</p>
+<p>Em IPv4 tradicional, dois endereços ficam reservados.</p>
+<p>$$
+64 - 2 = 62
+$$</p>
+</section>
+<section><h1>Exemplo 3</h1>
+<p>Divida a rede abaixo em 4 sub-redes.</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">192.168.10.0/24
+</code></pre>
+<h3>Resultado</h3>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Sub-rede</th>
+  <th style="text-align:left">Intervalo</th>
+  <th style="text-align:left">Broadcast</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><code>192.168.10.0/26</code></td>
+  <td style="text-align:left"><code>.0</code> a <code>.63</code></td>
+  <td style="text-align:left"><code>.63</code></td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>192.168.10.64/26</code></td>
+  <td style="text-align:left"><code>.64</code> a <code>.127</code></td>
+  <td style="text-align:left"><code>.127</code></td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>192.168.10.128/26</code></td>
+  <td style="text-align:left"><code>.128</code> a <code>.191</code></td>
+  <td style="text-align:left"><code>.191</code></td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>192.168.10.192/26</code></td>
+  <td style="text-align:left"><code>.192</code> a <code>.255</code></td>
+  <td style="text-align:left"><code>.255</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section><h1>Exemplo 3: Host Dentro da Sub-rede</h1>
+<p>Qual é a sub-rede do host abaixo?</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">192.168.10.77/26
+</code></pre>
+<h3>Blocos de <code>/26</code></h3>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">0, 64, 128, 192
+</code></pre>
+<h3>Resultado</h3>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">Sub-rede: 192.168.10.64/26
+Broadcast: 192.168.10.127
+Hosts: 192.168.10.65 a 192.168.10.126
+</code></pre>
+</section>
+<section><h1>Máscaras Comuns</h1>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Prefixo</th>
+  <th style="text-align:left">Máscara</th>
+  <th style="text-align:left">Bloco</th>
+  <th style="text-align:left">Hosts úteis</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><code>/25</code></td>
+  <td style="text-align:left"><code>255.255.255.128</code></td>
+  <td style="text-align:left">128</td>
+  <td style="text-align:left">126</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>/26</code></td>
+  <td style="text-align:left"><code>255.255.255.192</code></td>
+  <td style="text-align:left">64</td>
+  <td style="text-align:left">62</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>/27</code></td>
+  <td style="text-align:left"><code>255.255.255.224</code></td>
+  <td style="text-align:left">32</td>
+  <td style="text-align:left">30</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>/28</code></td>
+  <td style="text-align:left"><code>255.255.255.240</code></td>
+  <td style="text-align:left">16</td>
+  <td style="text-align:left">14</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>/29</code></td>
+  <td style="text-align:left"><code>255.255.255.248</code></td>
+  <td style="text-align:left">8</td>
+  <td style="text-align:left">6</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>/30</code></td>
+  <td style="text-align:left"><code>255.255.255.252</code></td>
+  <td style="text-align:left">4</td>
+  <td style="text-align:left">2</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Atenção<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Máscara maior não significa rede maior. Um prefixo maior usa mais bits para rede e deixa menos bits para hosts.</p>
+  </div>
+</div>
+</section>
+<section><h1>Hierarquia de Endereços</h1>
+<p>Com sub-redes, o endereço IPv4 ganha três níveis conceituais.</p>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="720" viewBox="0.00 0.00 478.50 118.00" class="svg-graph graphviz-img"><g id="svg-graphviz-8c552c313a72-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 114)"><title>HierarquiaIPv4</title><g id="svg-graphviz-8c552c313a72-node1" class="node"><title>endereco</title><path fill="#fff4e8" stroke="#b8792f" d="M262,-110C262,-110 170,-110 170,-110 164,-110 158,-104 158,-98 158,-98 158,-86 158,-86 158,-80 164,-74 170,-74 170,-74 262,-74 262,-74 268,-74 274,-80 274,-86 274,-86 274,-98 274,-98 274,-104 268,-110 262,-110" /><text text-anchor="middle" x="216" y="-88.3" font-family="Helvetica,sans-Serif" font-size="14.00">Endereço IPv4</text></g><g id="svg-graphviz-8c552c313a72-node2" class="node"><title>rede</title><path fill="#fff4e8" stroke="#b8792f" d="M110,-38C110,-38 12,-38 12,-38 6,-38 0,-32 0,-26 0,-26 0,-12 0,-12 0,-6 6,0 12,0 12,0 110,0 110,0 116,0 122,-6 122,-12 122,-12 122,-26 122,-26 122,-32 116,-38 110,-38" /><text text-anchor="middle" x="61" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">Prefixo da rede</text><text text-anchor="middle" x="61" y="-7.8" font-family="Helvetica,sans-Serif" font-size="14.00">da organização</text></g><g id="svg-graphviz-8c552c313a72-edge1" class="edge"><title>endereco-&gt;rede</title><path fill="none" stroke="black" d="M157.84,-92C113.86,-92 61,-92 61,-92 61,-92 61,-48.18 61,-48.18" /><polygon fill="black" stroke="black" points="64.5,-48.18 61,-38.18 57.5,-48.18 64.5,-48.18" /></g><g id="svg-graphviz-8c552c313a72-node3" class="node"><title>subrede</title><path fill="#fff4e8" stroke="#b8792f" d="M279.5,-37C279.5,-37 152.5,-37 152.5,-37 146.5,-37 140.5,-31 140.5,-25 140.5,-25 140.5,-13 140.5,-13 140.5,-7 146.5,-1 152.5,-1 152.5,-1 279.5,-1 279.5,-1 285.5,-1 291.5,-7 291.5,-13 291.5,-13 291.5,-25 291.5,-25 291.5,-31 285.5,-37 279.5,-37" /><text text-anchor="middle" x="216" y="-15.3" font-family="Helvetica,sans-Serif" font-size="14.00">Prefixo da sub-rede</text></g><g id="svg-graphviz-8c552c313a72-edge2" class="edge"><title>endereco-&gt;subrede</title><path fill="none" stroke="black" d="M216,-73.96C216,-73.96 216,-47.09 216,-47.09" /><polygon fill="black" stroke="black" points="219.5,-47.09 216,-37.09 212.5,-47.09 219.5,-47.09" /></g><g id="svg-graphviz-8c552c313a72-node4" class="node"><title>host</title><path fill="#fff4e8" stroke="#b8792f" d="M458.5,-37C458.5,-37 321.5,-37 321.5,-37 315.5,-37 309.5,-31 309.5,-25 309.5,-25 309.5,-13 309.5,-13 309.5,-7 315.5,-1 321.5,-1 321.5,-1 458.5,-1 458.5,-1 464.5,-1 470.5,-7 470.5,-13 470.5,-13 470.5,-25 470.5,-25 470.5,-31 464.5,-37 458.5,-37" /><text text-anchor="middle" x="390" y="-15.3" font-family="Helvetica,sans-Serif" font-size="14.00">Identificador do host</text></g><g id="svg-graphviz-8c552c313a72-edge3" class="edge"><title>endereco-&gt;host</title><path fill="none" stroke="black" d="M274.42,-92C324.97,-92 390,-92 390,-92 390,-92 390,-47.04 390,-47.04" /><polygon fill="black" stroke="black" points="393.5,-47.04 390,-37.04 386.5,-47.04 393.5,-47.04" /></g></g></svg></div></div>
+
+</section>
+<section><h1>Encaminhamento Por Prefixo</h1>
+<p>O roteador consulta a tabela de roteamento usando o IP de destino.</p>
+<h3>Cada entrada informa</h3>
+<ul>
+<li>Prefixo.</li>
+<li>Máscara ou comprimento do prefixo.</li>
+<li>Próximo salto ou interface de saída.</li>
+</ul>
+<h3>Regra</h3>
+<p>Escolher a rota válida mais específica.</p>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="760" viewBox="0.00 0.00 397.00 158.00" class="svg-graph graphviz-img"><g id="svg-graphviz-19ddb1675386-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 154)"><title>PrefixoMaisLongo</title><g id="svg-graphviz-19ddb1675386-node1" class="node"><title>destino</title><path fill="#eefaf0" stroke="#4f9b63" d="M90,-94C90,-94 12,-94 12,-94 6,-94 0,-88 0,-82 0,-82 0,-68 0,-68 0,-62 6,-56 12,-56 12,-56 90,-56 90,-56 96,-56 102,-62 102,-68 102,-68 102,-82 102,-82 102,-88 96,-94 90,-94" /><text text-anchor="middle" x="51" y="-78.8" font-family="Helvetica,sans-Serif" font-size="14.00">Destino</text><text text-anchor="middle" x="51" y="-63.8" font-family="Helvetica,sans-Serif" font-size="14.00">10.20.30.45</text></g><g id="svg-graphviz-19ddb1675386-node2" class="node"><title>p8</title><path fill="#eefaf0" stroke="#4f9b63" d="M232,-150C232,-150 167,-150 167,-150 161,-150 155,-144 155,-138 155,-138 155,-124 155,-124 155,-118 161,-112 167,-112 167,-112 232,-112 232,-112 238,-112 244,-118 244,-124 244,-124 244,-138 244,-138 244,-144 238,-150 232,-150" /><text text-anchor="middle" x="199.5" y="-134.8" font-family="Helvetica,sans-Serif" font-size="14.00">10.0.0.0/8</text><text text-anchor="middle" x="199.5" y="-119.8" font-family="Helvetica,sans-Serif" font-size="14.00">combina</text></g><g id="svg-graphviz-19ddb1675386-edge1" class="edge"><title>destino-&gt;p8</title><path fill="none" stroke="black" d="M51,-94.27C51,-110.47 51,-131 51,-131 51,-131 144.95,-131 144.95,-131" /><polygon fill="black" stroke="black" points="144.95,-134.5 154.95,-131 144.95,-127.5 144.95,-134.5" /></g><g id="svg-graphviz-19ddb1675386-node3" class="node"><title>p16</title><path fill="#eefaf0" stroke="#4f9b63" d="M241,-94C241,-94 158,-94 158,-94 152,-94 146,-88 146,-82 146,-82 146,-68 146,-68 146,-62 152,-56 158,-56 158,-56 241,-56 241,-56 247,-56 253,-62 253,-68 253,-68 253,-82 253,-82 253,-88 247,-94 241,-94" /><text text-anchor="middle" x="199.5" y="-78.8" font-family="Helvetica,sans-Serif" font-size="14.00">10.20.0.0/16</text><text text-anchor="middle" x="199.5" y="-63.8" font-family="Helvetica,sans-Serif" font-size="14.00">combina</text></g><g id="svg-graphviz-19ddb1675386-edge2" class="edge"><title>destino-&gt;p16</title><path fill="none" stroke="black" d="M102.11,-81.33C102.11,-81.33 135.77,-81.33 135.77,-81.33" /><polygon fill="black" stroke="black" points="135.77,-84.83 145.77,-81.33 135.77,-77.83 135.77,-84.83" /></g><g id="svg-graphviz-19ddb1675386-node4" class="node"><title>p24</title><path fill="#eefaf0" stroke="#2f7d46" stroke-width="2" d="M249,-38C249,-38 150,-38 150,-38 144,-38 138,-32 138,-26 138,-26 138,-12 138,-12 138,-6 144,0 150,0 150,0 249,0 249,0 255,0 261,-6 261,-12 261,-12 261,-26 261,-26 261,-32 255,-38 249,-38" /><text text-anchor="middle" x="199.5" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">10.20.30.0/24</text><text text-anchor="middle" x="199.5" y="-7.8" font-family="Helvetica,sans-Serif" font-size="14.00">mais específico</text></g><g id="svg-graphviz-19ddb1675386-edge3" class="edge"><title>destino-&gt;p24</title><path fill="none" stroke="black" d="M102.09,-68.67C122.83,-68.67 142,-68.67 142,-68.67 142,-68.67 142,-48.06 142,-48.06" /><polygon fill="black" stroke="black" points="145.5,-48.06 142,-38.06 138.5,-48.06 145.5,-48.06" /></g><g id="svg-graphviz-19ddb1675386-node5" class="node"><title>saida</title><path fill="#eefaf0" stroke="#4f9b63" d="M377,-38C377,-38 309,-38 309,-38 303,-38 297,-32 297,-26 297,-26 297,-12 297,-12 297,-6 303,0 309,0 309,0 377,0 377,0 383,0 389,-6 389,-12 389,-12 389,-26 389,-26 389,-32 383,-38 377,-38" /><text text-anchor="middle" x="343" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">Escolha</text><text text-anchor="middle" x="343" y="-7.8" font-family="Helvetica,sans-Serif" font-size="14.00">interface C</text></g><g id="svg-graphviz-19ddb1675386-edge4" class="edge"><title>p24-&gt;saida</title><path fill="none" stroke="black" d="M261.19,-19C261.19,-19 286.97,-19 286.97,-19" /><polygon fill="black" stroke="black" points="286.97,-22.5 296.97,-19 286.97,-15.5 286.97,-22.5" /></g></g></svg></div></div>
+
+</section>
+<section><h1>Exemplo 4</h1>
+<p>Tabela de roteamento:</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Prefixo</th>
+  <th style="text-align:left">Saída</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><code>10.0.0.0/8</code></td>
+  <td style="text-align:left">interface A</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>10.20.0.0/16</code></td>
+  <td style="text-align:left">interface B</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>10.20.30.0/24</code></td>
+  <td style="text-align:left">interface C</td>
+</tr>
+</tbody>
+</table>
+<p>Destino:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">10.20.30.45
+</code></pre>
+<p>Escolha correta: <code>10.20.30.0/24</code>, pela interface C.</p>
+</section>
+<section><h1>NAT</h1>
+<p>O NAT prolongou a vida do IPv4.</p>
+<h3>Ideia</h3>
+<ul>
+<li>A rede interna usa endereços privados.</li>
+<li>O roteador troca o endereço privado por um público.</li>
+<li>A Internet enxerga o endereço público.</li>
+</ul>
+<h3>NAT não é sub-rede</h3>
+<p>Sub-rede divide blocos. NAT traduz endereços.</p>
+</section>
+<section><h1>NAT Em Diagrama</h1>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="760" viewBox="0.00 0.00 747.00 102.00" class="svg-graph graphviz-img"><g id="svg-graphviz-393455e6e4df-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 98)"><title>NAT</title><g id="svg-graphviz-393455e6e4df-node1" class="node"><title>host1</title><path fill="#f4efff" stroke="#8064c8" d="M99,-94C99,-94 12,-94 12,-94 6,-94 0,-88 0,-82 0,-82 0,-68 0,-68 0,-62 6,-56 12,-56 12,-56 99,-56 99,-56 105,-56 111,-62 111,-68 111,-68 111,-82 111,-82 111,-88 105,-94 99,-94" /><text text-anchor="middle" x="55.5" y="-78.8" font-family="Helvetica,sans-Serif" font-size="14.00">Host interno</text><text text-anchor="middle" x="55.5" y="-63.8" font-family="Helvetica,sans-Serif" font-size="14.00">192.168.1.34</text></g><g id="svg-graphviz-393455e6e4df-node3" class="node"><title>nat</title><path fill="#f4efff" stroke="#5f43ad" stroke-width="2" d="M282,-66C282,-66 160,-66 160,-66 154,-66 148,-60 148,-54 148,-54 148,-40 148,-40 148,-34 154,-28 160,-28 160,-28 282,-28 282,-28 288,-28 294,-34 294,-40 294,-40 294,-54 294,-54 294,-60 288,-66 282,-66" /><text text-anchor="middle" x="221" y="-50.8" font-family="Helvetica,sans-Serif" font-size="14.00">Roteador NAT</text><text text-anchor="middle" x="221" y="-35.8" font-family="Helvetica,sans-Serif" font-size="14.00">privado -&gt; público</text></g><g id="svg-graphviz-393455e6e4df-edge1" class="edge"><title>host1-&gt;nat</title><path fill="none" stroke="black" d="M111.07,-61C111.07,-61 137.94,-61 137.94,-61" /><polygon fill="black" stroke="black" points="137.94,-64.5 147.94,-61 137.94,-57.5 137.94,-64.5" /></g><g id="svg-graphviz-393455e6e4df-node2" class="node"><title>host2</title><path fill="#f4efff" stroke="#8064c8" d="M99,-38C99,-38 12,-38 12,-38 6,-38 0,-32 0,-26 0,-26 0,-12 0,-12 0,-6 6,0 12,0 12,0 99,0 99,0 105,0 111,-6 111,-12 111,-12 111,-26 111,-26 111,-32 105,-38 99,-38" /><text text-anchor="middle" x="55.5" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">Host interno</text><text text-anchor="middle" x="55.5" y="-7.8" font-family="Helvetica,sans-Serif" font-size="14.00">192.168.1.35</text></g><g id="svg-graphviz-393455e6e4df-edge2" class="edge"><title>host2-&gt;nat</title><path fill="none" stroke="black" d="M111.07,-33C111.07,-33 137.94,-33 137.94,-33" /><polygon fill="black" stroke="black" points="137.94,-36.5 147.94,-33 137.94,-29.5 137.94,-36.5" /></g><g id="svg-graphviz-393455e6e4df-node4" class="node"><title>internet</title><path fill="#f4efff" stroke="#8064c8" d="M558,-66C558,-66 464,-66 464,-66 458,-66 452,-60 452,-54 452,-54 452,-40 452,-40 452,-34 458,-28 464,-28 464,-28 558,-28 558,-28 564,-28 570,-34 570,-40 570,-40 570,-54 570,-54 570,-60 564,-66 558,-66" /><text text-anchor="middle" x="511" y="-50.8" font-family="Helvetica,sans-Serif" font-size="14.00">Internet</text><text text-anchor="middle" x="511" y="-35.8" font-family="Helvetica,sans-Serif" font-size="14.00">vê o IP público</text></g><g id="svg-graphviz-393455e6e4df-edge3" class="edge"><title>nat-&gt;internet</title><path fill="none" stroke="black" d="M294.18,-47C294.18,-47 441.98,-47 441.98,-47" /><polygon fill="black" stroke="black" points="441.98,-50.5 451.98,-47 441.98,-43.5 441.98,-50.5" /><text text-anchor="middle" x="373" y="-50.8" font-family="Times,serif" font-size="14.00">endereço público</text></g><g id="svg-graphviz-393455e6e4df-node5" class="node"><title>server</title><path fill="#f4efff" stroke="#8064c8" d="M727,-65C727,-65 619,-65 619,-65 613,-65 607,-59 607,-53 607,-53 607,-41 607,-41 607,-35 613,-29 619,-29 619,-29 727,-29 727,-29 733,-29 739,-35 739,-41 739,-41 739,-53 739,-53 739,-59 733,-65 727,-65" /><text text-anchor="middle" x="673" y="-43.3" font-family="Helvetica,sans-Serif" font-size="14.00">Servidor externo</text></g><g id="svg-graphviz-393455e6e4df-edge4" class="edge"><title>internet-&gt;server</title><path fill="none" stroke="black" d="M570.4,-47C570.4,-47 596.77,-47 596.77,-47" /><polygon fill="black" stroke="black" points="596.77,-50.5 606.77,-47 596.77,-43.5 596.77,-50.5" /></g></g></svg></div></div>
+
+</section>
+<section><h1>Exemplo 5</h1>
+<p>Dentro de casa, seu computador pode ter:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">192.168.1.34
+</code></pre>
+<h3>Ao acessar um site</h3>
+<ul>
+<li>O roteador substitui o IP privado pelo IP público.</li>
+<li>A resposta volta para o roteador.</li>
+<li>A tabela NAT indica qual host interno deve receber a resposta.</li>
+</ul>
+<h3>Faixas privadas comuns</h3>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Bloco privado</th>
+  <th style="text-align:left">Uso típico</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><code>10.0.0.0/8</code></td>
+  <td style="text-align:left">Redes privadas grandes</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>172.16.0.0/12</code></td>
+  <td style="text-align:left">Redes privadas intermediárias</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>192.168.0.0/16</code></td>
+  <td style="text-align:left">Redes domésticas e pequenas redes</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section><h1>IPv6</h1>
+<p>O IPv6 surgiu como resposta de longo prazo ao esgotamento do IPv4.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Versão</th>
+  <th style="text-align:left">Endereço</th>
+  <th style="text-align:left">Escrita comum</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">IPv4</td>
+  <td style="text-align:left">32 bits</td>
+  <td style="text-align:left">decimal pontuada</td>
+</tr>
+<tr>
+  <td style="text-align:left">IPv6</td>
+  <td style="text-align:left">128 bits</td>
+  <td style="text-align:left">hexadecimal com dois-pontos</td>
+</tr>
+</tbody>
+</table>
+<p>Forma completa:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">2001:0db8:0000:0000:0000:ff00:0042:8329
+</code></pre>
+<p>Forma abreviada:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">2001:db8::ff00:42:8329
+</code></pre>
+<h3>Ideia</h3>
+<p>Zeros à esquerda podem ser omitidos e uma sequência de zeros pode ser comprimida.</p>
+</section>
+<section><h1>Cabeçalho IPv6</h1>
+<p>O IPv6 tem cabeçalho base fixo de <strong>40 bytes</strong>.</p>
+<h3>Objetivo</h3>
+<p>Facilitar o processamento pelos roteadores.</p>
+<img src="../static/fig5_49_cabecalho_ipv6_tanenbaum.png" width="78%" style="display: block; margin: 0 auto;">
+
+</section>
+<section><h1>IPv4 x IPv6</h1>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Aspecto</th>
+  <th style="text-align:left">IPv4</th>
+  <th style="text-align:left">IPv6</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Endereço</td>
+  <td style="text-align:left">32 bits</td>
+  <td style="text-align:left">128 bits</td>
+</tr>
+<tr>
+  <td style="text-align:left">Checksum</td>
+  <td style="text-align:left">No cabeçalho</td>
+  <td style="text-align:left">Removido do cabeçalho base</td>
+</tr>
+<tr>
+  <td style="text-align:left">Fragmentação</td>
+  <td style="text-align:left">Pode ocorrer em roteador</td>
+  <td style="text-align:left">Só na origem</td>
+</tr>
+<tr>
+  <td style="text-align:left">Opções</td>
+  <td style="text-align:left">Cabeçalho variável</td>
+  <td style="text-align:left">Cabeçalhos de extensão</td>
+</tr>
+<tr>
+  <td style="text-align:left">Broadcast</td>
+  <td style="text-align:left">Existe</td>
+  <td style="text-align:left">Substituído por multicast e outros mecanismos</td>
+</tr>
+</tbody>
+</table>
+<p>Exemplo:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">2001:db8:acad:1::/64
+</code></pre>
+<h3>Leitura</h3>
+<ul>
+<li>Os 64 primeiros bits identificam o prefixo da rede.</li>
+<li>Os 64 bits restantes identificam a interface.</li>
+</ul>
+<p>Mesmo com endereços maiores, a ideia de prefixo continua central.</p>
+</section>
+<section><h1>Transição IPv4 Para IPv6</h1>
+<p>A Internet não poderia trocar de protocolo de uma vez.</p>
+<h3>Estratégias comuns</h3>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Estratégia</th>
+  <th style="text-align:left">Ideia</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><strong>Pilha dupla</strong></td>
+  <td style="text-align:left">Host suporta IPv4 e IPv6</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Tunelamento</strong></td>
+  <td style="text-align:left">IPv6 atravessa uma região IPv4 encapsulado</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Tradução</strong></td>
+  <td style="text-align:left">Cabeçalhos ou endereços são convertidos</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section><h1>Tunelamento IPv6 Sobre IPv4</h1>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="760" viewBox="0.00 0.00 778.00 46.00" class="svg-graph graphviz-img"><g id="svg-graphviz-7b9eaf89d7f0-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 42)"><title>TransicaoIPv6</title><g id="svg-graphviz-7b9eaf89d7f0-node1" class="node"><title>ipv6a</title><path fill="#eef4ff" stroke="#5b7bbb" d="M74,-37C74,-37 12,-37 12,-37 6,-37 0,-31 0,-25 0,-25 0,-13 0,-13 0,-7 6,-1 12,-1 12,-1 74,-1 74,-1 80,-1 86,-7 86,-13 86,-13 86,-25 86,-25 86,-31 80,-37 74,-37" /><text text-anchor="middle" x="43" y="-15.3" font-family="Helvetica,sans-Serif" font-size="14.00">Rede IPv6</text></g><g id="svg-graphviz-7b9eaf89d7f0-node2" class="node"><title>r1</title><path fill="#eef4ff" stroke="#5b7bbb" d="M205,-38C205,-38 135,-38 135,-38 129,-38 123,-32 123,-26 123,-26 123,-12 123,-12 123,-6 129,0 135,0 135,0 205,0 205,0 211,0 217,-6 217,-12 217,-12 217,-26 217,-26 217,-32 211,-38 205,-38" /><text text-anchor="middle" x="170" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">Roteador</text><text text-anchor="middle" x="170" y="-7.8" font-family="Helvetica,sans-Serif" font-size="14.00">pilha dupla</text></g><g id="svg-graphviz-7b9eaf89d7f0-edge1" class="edge"><title>ipv6a-&gt;r1</title><path fill="none" stroke="black" d="M86.35,-19C86.35,-19 112.93,-19 112.93,-19" /><polygon fill="black" stroke="black" points="112.93,-22.5 122.93,-19 112.93,-15.5 112.93,-22.5" /></g><g id="svg-graphviz-7b9eaf89d7f0-node3" class="node"><title>ipv4</title><path fill="#fff4e8" stroke="#b8792f" d="M468,-38C468,-38 302,-38 302,-38 296,-38 290,-32 290,-26 290,-26 290,-12 290,-12 290,-6 296,0 302,0 302,0 468,0 468,0 474,0 480,-6 480,-12 480,-12 480,-26 480,-26 480,-32 474,-38 468,-38" /><text text-anchor="middle" x="385" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">Região IPv4</text><text text-anchor="middle" x="385" y="-7.8" font-family="Helvetica,sans-Serif" font-size="14.00">pacote IPv6 encapsulado</text></g><g id="svg-graphviz-7b9eaf89d7f0-edge2" class="edge"><title>r1-&gt;ipv4</title><path fill="none" stroke="black" d="M217.18,-19C217.18,-19 279.84,-19 279.84,-19" /><polygon fill="black" stroke="black" points="279.84,-22.5 289.84,-19 279.84,-15.5 279.84,-22.5" /><text text-anchor="middle" x="253.5" y="-22.8" font-family="Times,serif" font-size="14.00">túnel</text></g><g id="svg-graphviz-7b9eaf89d7f0-node4" class="node"><title>r2</title><path fill="#eef4ff" stroke="#5b7bbb" d="M635,-38C635,-38 565,-38 565,-38 559,-38 553,-32 553,-26 553,-26 553,-12 553,-12 553,-6 559,0 565,0 565,0 635,0 635,0 641,0 647,-6 647,-12 647,-12 647,-26 647,-26 647,-32 641,-38 635,-38" /><text text-anchor="middle" x="600" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">Roteador</text><text text-anchor="middle" x="600" y="-7.8" font-family="Helvetica,sans-Serif" font-size="14.00">pilha dupla</text></g><g id="svg-graphviz-7b9eaf89d7f0-edge3" class="edge"><title>ipv4-&gt;r2</title><path fill="none" stroke="black" d="M480.24,-19C480.24,-19 542.83,-19 542.83,-19" /><polygon fill="black" stroke="black" points="542.83,-22.5 552.83,-19 542.83,-15.5 542.83,-22.5" /><text text-anchor="middle" x="516.5" y="-22.8" font-family="Times,serif" font-size="14.00">túnel</text></g><g id="svg-graphviz-7b9eaf89d7f0-node5" class="node"><title>ipv6b</title><path fill="#eef4ff" stroke="#5b7bbb" d="M758,-37C758,-37 696,-37 696,-37 690,-37 684,-31 684,-25 684,-25 684,-13 684,-13 684,-7 690,-1 696,-1 696,-1 758,-1 758,-1 764,-1 770,-7 770,-13 770,-13 770,-25 770,-25 770,-31 764,-37 758,-37" /><text text-anchor="middle" x="727" y="-15.3" font-family="Helvetica,sans-Serif" font-size="14.00">Rede IPv6</text></g><g id="svg-graphviz-7b9eaf89d7f0-edge4" class="edge"><title>r2-&gt;ipv6b</title><path fill="none" stroke="black" d="M647.29,-19C647.29,-19 673.87,-19 673.87,-19" /><polygon fill="black" stroke="black" points="673.87,-22.5 683.87,-19 673.87,-15.5 673.87,-22.5" /></g></g></svg></div></div>
+
+</section>
+<section><h1>Fechando a Ideia</h1>
+<p>O IP torna possível interligar redes diferentes.</p>
+<h3>Para IPv4, você precisa dominar</h3>
+<ul>
+<li>Endereço de 32 bits.</li>
+<li>Prefixo e máscara.</li>
+<li>Sub-redes.</li>
+<li>Correspondência pelo prefixo mais longo.</li>
+</ul>
+<h3>Para IPv6, você precisa perceber</h3>
+<ul>
+<li>O espaço de endereços aumenta muito.</li>
+<li>O cabeçalho base muda.</li>
+<li>A transição é gradual.</li>
+</ul>
+<div class="callout callout-success">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></span>
+    <span class="callout-title-inner">Ideia para levar<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Para entender redes IP, leia sempre o endereço junto com o prefixo. Sem a máscara, um IPv4 é só um número. Com a máscara, ele revela rede, sub-rede, intervalo de hosts e encaminhamento.</p>
+  </div>
+</div>
+</section>
+<section><h1>Questões Para Revisão</h1>
+<ol>
+<li>Por que MAC não basta para comunicação entre redes?</li>
+<li>O que significa melhor esforço no IPv4?</li>
+<li>Para que serve o TTL?</li>
+<li>O que significa <code>192.168.1.34/24</code>?</li>
+<li>Por que <code>/28</code> cria blocos menores que <code>/24</code>?</li>
+<li>O que é correspondência pelo prefixo mais longo?</li>
+<li>Qual é a diferença entre sub-rede e NAT?</li>
+<li>Cite duas diferenças entre IPv4 e IPv6.</li>
+</ol>
+</section>
+<section><h1>Próximos Passos</h1>
+<p>Na próxima aula, conectaremos endereçamento IP com protocolos auxiliares da camada de rede.</p>
+<h3>Veremos</h3>
+<ul>
+<li>ARP.</li>
+<li>ICMP.</li>
+<li>DHCP.</li>
+<li>Descoberta de vizinhos e diagnóstico.</li>
+</ul>
+</section>
+        </div>
+    </div>
+
+    <script src="/aulas-faesa/js/vendor/reveal/reveal.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/notes/notes.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/markdown/markdown.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/math/math.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/zoom/zoom.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/prism.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-c.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-python.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-clike.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-cpp.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-perl.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-java.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-php.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/toolbar/prism-toolbar.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/show-language/prism-show-language.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/prism-slang.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/mermaid.min.js" data-no-bundle></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            mermaid.initialize({
+                startOnLoad: false,
+                theme: 'default',
+                securityLevel: 'loose',
+                htmlLabels: false,
+                fontFamily: 'Inter, system-ui, sans-serif',
+            });
+        });
+    </script>
+    <script src="/aulas-faesa/js/rough.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/apply_sketch.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/lucide.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/ui.js" data-no-bundle></script>
+    <script>
+        const waitForNextFrame = () => new Promise(resolve => requestAnimationFrame(resolve));
+
+        const initSlideUI = () => {
+            if (!window.CourseForgeUI) {
+                return;
+            }
+
+            window.CourseForgeUI.initCopyButtons();
+            window.CourseForgeUI.initIcons();
+        };
+
+        const renderMermaidsInSlide = async (slide) => {
+            if (!slide) {
+                return;
+            }
+
+            const mermaids = slide.querySelectorAll('.mermaid');
+            if (!mermaids.length) {
+                return;
+            }
+
+            try {
+                if (document.fonts?.ready) {
+                    await document.fonts.ready;
+                }
+
+                await waitForNextFrame();
+                await waitForNextFrame();
+
+                for (const element of mermaids) {
+                    if (element.dataset.mermaidRendered === 'true') {
+                        continue;
+                    }
+
+                    await mermaid.run({
+                        nodes: [element],
+                    });
+                    element.dataset.mermaidRendered = 'true';
+                }
+            } catch (err) {
+                console.warn('Mermaid render failed', err);
+            }
+        };
+
+        const updateMermaidDisplayBounds = (slide) => {
+            const scope = slide || document;
+            const displays = scope.querySelectorAll('.mermaid-display');
+
+            for (const display of displays) {
+                const rect = display.getBoundingClientRect();
+                const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+                const bottomGap = 24;
+                const availableHeight = Math.max(160, Math.floor(viewportHeight - rect.top - bottomGap));
+                display.style.setProperty('--mermaid-max-height', `${availableHeight}px`);
+            }
+        };
+
+        const resetNativeLineNumbers = (pre) => {
+            if (!pre?.classList.contains('line-numbers')) {
+                return;
+            }
+
+            const existingRows = pre.querySelector('.line-numbers-rows');
+            if (existingRows) {
+                existingRows.remove();
+            }
+        };
+
+        const highlightCodeInSlide = (slide) => {
+            const scope = slide || document;
+            const codeBlocks = scope.querySelectorAll('pre[class*="language-"] > code[class*="language-"]');
+
+            for (const code of codeBlocks) {
+                const pre = code.parentElement;
+                resetNativeLineNumbers(pre);
+                Prism.highlightElement(code);
+
+                if (pre?.classList.contains('line-numbers') && Prism.plugins?.lineNumbers?.resize) {
+                    Prism.plugins.lineNumbers.resize(pre);
+                }
+            }
+        };
+
+        const enhanceCurrentSlide = async (slide) => {
+            highlightCodeInSlide(slide);
+            await renderMermaidsInSlide(slide);
+            updateMermaidDisplayBounds(slide);
+            initSlideUI();
+        };
+
+        Reveal.initialize({
+            hash: true,
+            slideNumber: 'c/t',
+            center: false,
+            controls: false,
+            plugins: [RevealMarkdown, RevealNotes, RevealMath.KaTeX, RevealZoom],
+            katex: {
+                local: '/aulas-faesa/js/vendor/katex',
+                output: 'html',
+                throwOnError: false,
+                strict: false,
+            },
+            width: 960,
+            height: 800,
+            margin: 0.15,
+            maxScale: 2.0,
+        });
+
+        Reveal.on('ready', event => {
+            enhanceCurrentSlide(event.currentSlide);
+        });
+
+        Reveal.on('slideready', event => {
+            enhanceCurrentSlide(event.currentSlide);
+        });
+
+        Reveal.on('slidechanged', event => {
+            enhanceCurrentSlide(event.currentSlide);
+        });
+
+        window.addEventListener('resize', () => {
+            updateMermaidDisplayBounds(Reveal.getCurrentSlide());
+        });
+    </script>
+    <style>
+        /* Modern base styles */
+        :root {
+            --callout-note: #448aff;
+            --callout-abstract: #00b0ff;
+            --callout-info: #00b8d4;
+            --callout-todo: #00bfa5;
+            --callout-tip: #00c853;
+            --callout-success: #64dd17;
+            --callout-question: #ffab00;
+            --callout-warning: #ff9100;
+            --callout-failure: #ff5252;
+            --callout-danger: #ff1744;
+            --callout-bug: #f50057;
+            --callout-example: #7c4dff;
+            --callout-quote: #9e9e9e;
+            --code-bg: #f1f5f9;
+            --border: #e2e8f0;
+            --radius: 6px;
+            --radius-sm: 4px;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --text-muted: #64748b;
+            --text: #334155;
+            --bg: #ffffff;
+            --heading: #0f172a;
+            --link: #3b82f6;
+            --font-code: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+        }
+
+        .reveal {
+            font-size: 20px;
+            text-align: left !important;
+        }
+
+        .reveal code:not(pre code) {
+            font-family: var(--font-code) !important;
+            background-color: var(--code-bg) !important;
+            padding: 0.1em 0.35em !important;
+            border-radius: var(--radius-sm) !important;
+            font-size: 0.9em !important;
+            color: var(--link) !important;
+            border: 1px dashed var(--border) !important;
+            white-space: pre-wrap !important;
+            word-break: break-word !important;
+            font-variant-ligatures: none;
+            font-feature-settings: "liga" 0, "calt" 0;
+        }
+
+        .reveal h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px !important;
+            margin-left: 0 !important;
+            /* min-height: 2.3em; */
+            display: flex;
+            align-items: center;
+            justify-content: flex-start !important;
+            text-align: left !important;
+            width: 100% !important;
+            text-shadow: none !important;
+        }
+
+        /* Prism overrides for Reveal.js */
+        .reveal div.code-toolbar {
+            position: relative;
+            width: 100% !important;
+            margin: 1.5rem 0 !important;
+        }
+
+        .reveal pre[class*="language-"] {
+            background: hsl(230, 1%, 98%) !important;
+            margin: 1.5rem 0 !important;
+            padding: 1rem !important;
+            border: 1px solid var(--border) !important;
+            border-radius: var(--radius) !important;
+            box-shadow: var(--shadow-sm) !important;
+            font-family: var(--font-code) !important;
+            font-size: 0.85em !important;
+            position: relative;
+            overflow-x: auto;
+            box-sizing: border-box !important;
+            max-width: 100% !important;
+            font-variant-ligatures: none;
+            font-feature-settings: "liga" 0, "calt" 0;
+        }
+
+        .reveal pre[class*="language-"] > code {
+            background: 0 0 !important;
+            text-shadow: none !important;
+            color: hsl(230, 8%, 24%) !important;
+            position: relative !important;
+            display: block !important;
+        }
+
+        .reveal .line-numbers .line-numbers-rows {
+            border-right: 1px solid #444 !important;
+            padding-right: .5rem !important;
+            margin-bottom: 1.5rem;
+        }
+
+        .reveal .line-numbers-rows>span:before {
+            color: #666 !important;
+        }
+
+        .reveal pre[class*="language-"].line-numbers,
+        .reveal pre[class*="language-"]:has(.line-numbers-rows) {
+            padding-left: 3.8em !important;
+            overflow-y: hidden !important;
+        }
+
+        .reveal .copy-button,
+        .reveal pre[data-lang]::before {
+            position: absolute;
+            top: .5rem;
+            height: 26px;
+            background: hsl(230, 1%, 92%);
+            border: 1px solid hsl(230, 1%, 85%);
+            border-radius: var(--radius-sm);
+            box-sizing: border-box;
+        }
+
+        .reveal .copy-button {
+            right: .5rem;
+            width: 26px;
+            padding: 0;
+            color: hsl(230, 6%, 44%);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all .2s ease;
+            z-index: 20;
+            opacity: .8;
+        }
+
+        .reveal .copy-button:hover {
+            background: hsl(230, 1%, 85%);
+            color: hsl(230, 8%, 24%);
+            opacity: 1;
+        }
+
+        .reveal .copy-button svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Language label styling - hide all Prism toolbar plugins, keep only data-lang label */
+        .reveal div.toolbar,
+        .reveal div.toolbar-item,
+        .reveal button.toolbar-item,
+        .reveal span.toolbar-item {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            height: 0 !important;
+            width: 0 !important;
+            overflow: hidden !important;
+            position: absolute !important;
+            pointer-events: none !important;
+        }
+
+        /* Use the pseudo-element data-lang label only */
+        .reveal pre[data-lang]::before {
+            content: attr(data-lang);
+            right: 2.35rem;
+            padding: 0 .5rem;
+            font-size: .65rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: hsl(230, 6%, 50%);
+            pointer-events: none;
+            z-index: 10;
+            display: inline-flex !important;
+            align-items: center !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            height: 26px !important;
+            width: auto !important;
+            position: absolute !important;
+            overflow: visible !important;
+            line-height: 26px !important;
+        }
+
+        .reveal h2 {
+            font-size: 1.6em;
+            margin-top: 30px !important;
+            margin-bottom: 20px !important;
+            text-align: left !important;
+        }
+
+        .reveal h3 {
+            font-size: 1.3em;
+            margin-top: 20px !important;
+            margin-bottom: 15px !important;
+            text-align: left !important;
+        }
+
+        .reveal p {
+            line-height: 1.5;
+            margin-top: 20px !important;
+            margin-left: 0 !important;
+            text-align: left !important;
+        }
+
+        .reveal ul,
+        .reveal ol,
+        .reveal li {
+            line-height: 1.5;
+            text-align: left !important;
+            margin-left: 0 !important;
+        }
+        
+        .reveal ul, .reveal ol {
+            display: block !important;
+            padding-left: 1.2em !important;
+        }
+
+        /* Slide padding and layout */
+        .reveal .slides section {
+            padding: 40px !important;
+            box-sizing: border-box;
+            text-align: left !important;
+            overflow: visible !important;
+        }
+
+        .reveal .slides {
+            text-align: left !important;
+        }
+
+        /* Centering for Title slides (h1 ONLY, h1 + h2 ONLY, or h1 + h2 + p ONLY) */
+        .reveal .slides section:not(.stack):has(> h1:only-child),
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child),
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) {
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: center !important;
+            align-items: center !important;
+            text-align: center !important;
+            height: 100% !important;
+            top: 0 !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:only-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child) h2,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h2,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) p {
+            justify-content: center !important;
+            text-align: center !important;
+            margin: 0 !important;
+            min-height: auto !important;
+            width: 100% !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h1 {
+            margin-bottom: 0.5em !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h2 {
+            margin-bottom: 0.3em !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) p {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        /* Full screen slide fix */
+        .reveal .slides section:has(.full-screen-image) {
+            padding: 0 !important;
+        }
+
+        /* Full screen slide fix - Garantindo que o fundo do Reveal fique visível e a imagem carregada */
+        .reveal:has(section.present .full-screen-image) {
+            background-image: url('../../slide_end_background.png') !important;
+            background-size: cover !important;
+            background-position: center !important;
+        }
+
+        /* Torna o slide e o container de slides transparentes para mostrar o fundo da .reveal */
+        .reveal:has(section.present .full-screen-image) .slides,
+        .reveal:has(section.present .full-screen-image) .slides section.present {
+            background: transparent !important;
+        }
+
+        .full-screen-image {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 !important;
+            /* Se houver texto, ele centraliza aqui */
+        }
+
+        /* Spacing for diagrams */
+        .reveal .svg-graph {
+            margin-top: 1em !important;
+            margin-bottom: 1em !important;
+            overflow: visible !important; /* Prevent labels from being cut off */
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* Mermaid Diagram Styles */
+        .reveal .mermaid {
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            padding: 0 !important;
+            margin: 1rem 0 !important;
+            font-family: inherit !important;
+            overflow: visible !important;
+            text-align: center;
+            display: block !important;
+            width: auto !important;
+            max-width: 100% !important;
+        }
+
+        .reveal pre.mermaid {
+            white-space: pre;
+            font-family: var(--font-code);
+            color: var(--text-muted);
+            margin: 0 !important;
+            padding: 0 !important;
+            width: auto !important;
+            line-height: 1 !important;
+            border: none !important;
+            box-shadow: none !important;
+            background: transparent !important;
+            overflow: visible !important;
+        }
+
+        .reveal .centered .mermaid {
+            display: block !important;
+            justify-content: center;
+            margin-left: auto !important;
+            margin-right: auto !important;
+        }
+
+        .reveal .mermaid svg {
+            max-width: 100% !important;
+            height: auto !important;
+            display: block !important;
+            overflow: visible !important;
+            vertical-align: top !important;
+            font-family: Inter, system-ui, sans-serif !important;
+            font-style: normal !important;
+            font-variant: normal !important;
+            font-weight: 400 !important;
+            letter-spacing: normal !important;
+            word-spacing: normal !important;
+            text-transform: none !important;
+            text-shadow: none !important;
+            line-height: normal !important;
+            text-rendering: geometricPrecision !important;
+        }
+
+        .reveal .mermaid svg * {
+            font-family: inherit !important;
+            font-style: normal !important;
+            font-variant: normal !important;
+            letter-spacing: normal !important;
+            word-spacing: normal !important;
+            text-transform: none !important;
+            text-shadow: none !important;
+            line-height: normal !important;
+        }
+
+        .reveal .mermaid svg .edgeBadge text,
+        .reveal .mermaid svg .edgeBadge tspan,
+        .reveal .mermaid svg .edgeTerm text,
+        .reveal .mermaid svg .edgeTerm tspan,
+        .reveal .mermaid svg .multiplicity text,
+        .reveal .mermaid svg .multiplicity tspan,
+        .reveal .mermaid svg text.edgeBadge,
+        .reveal .mermaid svg text.edgeTerm {
+            font-size: 18px !important;
+            font-weight: 700 !important;
+            fill: var(--heading) !important;
+        }
+
+        /* Mermaid Source Switcher */
+        .reveal .mermaid-outer-container {
+            margin: 1rem 0;
+            position: relative;
+            width: 100%;
+            max-width: 100%;
+        }
+
+        .reveal .mermaid-switcher {
+            display: flex !important;
+            justify-content: flex-end;
+            margin-bottom: 0.5rem;
+            width: 100%;
+        }
+
+        .reveal .switcher-track {
+            display: inline-flex;
+            align-items: center;
+            background: var(--code-bg);
+            padding: 3px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            position: relative;
+        }
+
+        .reveal .switcher-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            border: none;
+            background: transparent;
+            padding: 0.35rem 1rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            border-radius: calc(var(--radius) - 2px);
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            z-index: 1;
+        }
+
+        .reveal .switcher-btn svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .reveal .switcher-btn:hover {
+            color: var(--text);
+        }
+
+        .reveal .switcher-btn.active {
+            color: var(--heading);
+            background: var(--bg);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        .reveal .mermaid-content {
+            min-height: 50px;
+        }
+
+        /* Mermaid display - respect inline width */
+        .reveal .mermaid-display {
+            transition: opacity 0.2s ease;
+            display: block !important;
+            max-width: 100% !important;
+            max-height: var(--mermaid-max-height, calc(100vh - 140px)) !important;
+            border: none !important;
+            box-shadow: none !important;
+            background: transparent !important;
+            overflow: auto !important;
+        }
+
+        .reveal .mermaid-source pre {
+            margin: 0 !important;
+            background: var(--code-bg) !important;
+            border: 1px dashed var(--border) !important;
+        }
+
+        /* Ensure proper toggle behavior */
+        .reveal .mermaid-source {
+            display: none !important;
+        }
+
+        .reveal .mermaid-source[style*="display: block"],
+        .reveal .mermaid-source[style*="display:block"] {
+            display: block !important;
+        }
+
+        .reveal .mermaid-display[style*="display: none"],
+        .reveal .mermaid-display[style*="display:none"] {
+            display: none !important;
+        }
+
+        .reveal .mermaid-display.centered {
+            margin-left: auto !important;
+            margin-right: auto !important;
+            max-width: 100% !important;
+        }
+
+        .centered:not(.mermaid-display) {
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            width: 100% !important;
+            margin: 1em 0 !important;
+        }
+
+        .no-break {
+            display: block;
+            width: 100%;
+        }
+
+        .reveal blockquote {
+            display: block;
+            position: relative;
+            margin: var(--r-block-margin) auto !important;
+            padding: 5px;
+            font-style: italic;
+            background: rgba(255, 170, 73, 0.2);
+            box-shadow: 0 0 2px rgba(0,0,0,.2);
+            text-align: left !important;
+        }
+
+        .col1 {
+            width: 90%;
+            margin: 0 auto;
+        }
+
+        .col2 {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start;
+            width: 90%;
+            margin: 0 auto;
+            align-items: flex-start;
+        }
+
+        /* Callout Styles */
+        :root {
+            --callout-note: #448aff;
+            --callout-abstract: #00b0ff;
+            --callout-info: #00b8d4;
+            --callout-todo: #00bfa5;
+            --callout-tip: #00c853;
+            --callout-success: #64dd17;
+            --callout-question: #ffab00;
+            --callout-warning: #ff9100;
+            --callout-failure: #ff5252;
+            --callout-danger: #ff1744;
+            --callout-bug: #f50057;
+            --callout-example: #7c4dff;
+            --callout-quote: #9e9e9e;
+            --code-bg: #f8f8f8;
+            --border: #ddd;
+        }
+
+        .reveal .callout {
+            margin: 1rem auto !important;
+            border: 1px solid var(--border);
+            border-left: 6px solid var(--callout-note);
+            border-radius: 4px;
+            overflow: hidden;
+            text-align: left !important;
+            font-size: 0.8em;
+            width: 75% !important;
+            max-width: 100% !important;
+        }
+
+        .reveal .callout-title {
+            padding: 0.5rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            color: var(--callout-note);
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .reveal .callout-icon {
+            display: flex;
+            align-items: center;
+        }
+
+        .reveal .callout-icon svg {
+            width: 1.2em;
+            height: 1.2em;
+        }
+
+        .reveal .callout-content {
+            padding: 0.5rem 1rem;
+        }
+
+        .reveal .callout-content p {
+            margin-top: 0.5rem !important;
+        }
+
+        .reveal .callout-content p:first-child {
+            margin-top: 0 !important;
+        }
+
+        .reveal h1 { text-transform: none !important; }
+
+        .reveal .callout-abstract { border-left-color: var(--callout-abstract); }
+        .reveal .callout-abstract .callout-title { color: var(--callout-abstract); }
+        .reveal .callout-info { border-left-color: var(--callout-info); }
+        .reveal .callout-info .callout-title { color: var(--callout-info); }
+        .reveal .callout-todo { border-left-color: var(--callout-todo); }
+        .reveal .callout-todo .callout-title { color: var(--callout-todo); }
+        .reveal .callout-tip { border-left-color: var(--callout-tip); }
+        .reveal .callout-tip .callout-title { color: var(--callout-tip); }
+        .reveal .callout-success { border-left-color: var(--callout-success); }
+        .reveal .callout-success .callout-title { color: var(--callout-success); }
+        .reveal .callout-question { border-left-color: var(--callout-question); }
+        .reveal .callout-question .callout-title { color: var(--callout-question) ; }
+        .reveal .callout-warning { border-left-color: var(--callout-warning); }
+        .reveal .callout-warning .callout-title { color: var(--callout-warning); }
+        .reveal .callout-failure { border-left-color: var(--callout-failure); }
+        .reveal .callout-failure .callout-title { color: var(--callout-failure); }
+        .reveal .callout-danger { border-left-color: var(--callout-danger); }
+        .reveal .callout-danger .callout-title { color: var(--callout-danger); }
+        .reveal .callout-bug { border-left-color: var(--callout-bug); }
+        .reveal .callout-bug .callout-title { color: var(--callout-bug); }
+        .reveal .callout-example { border-left-color: var(--callout-example); }
+        .reveal .callout-example .callout-title { color: var(--callout-example); }
+        .reveal .callout-quote { border-left-color: var(--callout-quote); }
+        .reveal .callout-quote .callout-title { color: var(--callout-quote); }
+        .red-note { color: var(--callout-failure); }
+
+        .reveal .slide-number {
+            font-size: 0.8em !important;
+            padding: 5px 10px !important;
+            background: rgba(0,0,0,0.1) !important;
+            border-radius: 4px;
+            color: #000000b1 !important;
+        }
+
+        /* Print styles */
+        @media print {
+            .reveal .slides section {
+                display: block !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                position: relative !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+                page-break-after: always !important;
+                overflow: hidden !important;
+            }
+
+            .reveal .slides {
+                transform: none !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+            }
+            
+            .reveal {
+                overflow: visible !important;
+            }
+        }
+    </style>
+</body>
+
+</html>
