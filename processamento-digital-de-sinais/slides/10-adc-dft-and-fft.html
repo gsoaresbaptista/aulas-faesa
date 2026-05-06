@@ -1,0 +1,1383 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <title>Conversão A/D, TDF e FFT</title>
+    <link rel="icon" href="/aulas-faesa/img/dark-favicon.svg" media="(prefers-color-scheme: light)">
+    <link rel="icon" href="/aulas-faesa/img/light-favicon.svg" media="(prefers-color-scheme: dark)">
+
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/reset.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/reveal.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/theme/white.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/aulas-faesa/css/prism-one-light.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/fonts.css" data-no-bundle>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+            <section><h1>Conversão A/D, TDF e FFT</h1>
+<h2>Quantização, Fourier Numérica e Custo Computacional</h2>
+<p>Professor: Gabriel Soares Baptista</p>
+</section>
+<section><h1>Ideia da Aula</h1>
+<ul>
+<li>Na aula anterior, vimos quando amostras preservam a informação do sinal.</li>
+<li>Agora a pergunta muda: depois de amostrar, como representar essas amostras em bits?</li>
+<li>Também veremos como calcular Fourier com uma quantidade finita de números.</li>
+<li>A ponte final é a TDF, e a FFT torna esse cálculo viável na prática.</li>
+</ul>
+<div class="callout callout-abstract">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
+    <span class="callout-title-inner">Ideia central<br /></span>
+  </div>
+  <div class="callout-content">
+<p>A conversão A/D transforma amostras em palavras binárias. A TDF relaciona amostras no tempo com amostras em frequência, e a FFT calcula essa mesma TDF com muito menos operações.</p>
+  </div>
+</div>
+</section>
+<section><h1>Roteiro da Aula</h1>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Seção</th>
+  <th style="text-align:left">Tema</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">8.3</td>
+  <td style="text-align:left">Conversão Analógico para Digital</td>
+</tr>
+<tr>
+  <td style="text-align:left">8.4</td>
+  <td style="text-align:left">Amostragem Espectral</td>
+</tr>
+<tr>
+  <td style="text-align:left">8.5</td>
+  <td style="text-align:left">Cálculo Numérico da Transformada de Fourier: TDF</td>
+</tr>
+<tr>
+  <td style="text-align:left">8.5-1</td>
+  <td style="text-align:left">Propriedades da TDF</td>
+</tr>
+<tr>
+  <td style="text-align:left">8.5-2</td>
+  <td style="text-align:left">Aplicações da TDF</td>
+</tr>
+<tr>
+  <td style="text-align:left">8.6</td>
+  <td style="text-align:left">Transformada Rápida de Fourier</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section><h1>Amostrar Não É Digitalizar</h1>
+<p>Um erro comum é dizer que um sinal se torna digital apenas porque foi amostrado.</p>
+<ul>
+<li>A amostragem discretiza o tempo.</li>
+<li>A amplitude ainda pode assumir infinitos valores.</li>
+<li>Para obter um sinal digital, também precisamos quantizar e codificar.</li>
+</ul>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Se cada amostra ainda pode assumir qualquer valor real entre $-V$ e $V$, quantos símbolos seriam necessários para transmitir essa amostra sem arredondamento?</p>
+  </div>
+</div>
+</section>
+<section><h1>Da Amostra Ao Código Binário</h1>
+<p>A conversão A/D combina três etapas:</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Etapa</th>
+  <th style="text-align:left">O que muda</th>
+  <th style="text-align:left">Resultado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Amostragem</td>
+  <td style="text-align:left">tempo contínuo vira instantes discretos</td>
+  <td style="text-align:left">sequência de amostras</td>
+</tr>
+<tr>
+  <td style="text-align:left">Quantização</td>
+  <td style="text-align:left">amplitude contínua vira níveis finitos</td>
+  <td style="text-align:left">amostras arredondadas</td>
+</tr>
+<tr>
+  <td style="text-align:left">Codificação</td>
+  <td style="text-align:left">cada nível vira uma palavra binária</td>
+  <td style="text-align:left">sequência de bits</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Amostrar responde quando medir.</li>
+<li>Quantizar responde quais valores são permitidos.</li>
+<li>Codificar responde como transmitir ou armazenar esses valores.</li>
+</ul>
+</section>
+<section><h1>Quantização Visual</h1>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:ns2="http://creativecommons.org/ns#" xmlns:ns4="http://www.w3.org/1999/xlink" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" width="760" viewBox="0 0 712.5025 279.154375" version="1.1" class="svg-graph matplotlib-plot-img"> <metadata>  <rdf:RDF>   <ns2:Work>    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage" />    <dc:date>2026-05-06T17:57:29.670252</dc:date>    <dc:format>image/svg+xml</dc:format>    <dc:creator>     <ns2:Agent>      <dc:title>Matplotlib v3.10.8, https://matplotlib.org/</dc:title>     </ns2:Agent>    </dc:creator>   </ns2:Work>  </rdf:RDF> </metadata> <defs>  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style> </defs> <g id="svg-matplotlib-8723e41804a8-figure_1">  <g id="svg-matplotlib-8723e41804a8-patch_1">   <path d="M 0 279.154375 L 712.5025 279.154375 L 712.5025 0 L 0 0 L 0 279.154375 z" style="fill: none" />  </g>  <g id="svg-matplotlib-8723e41804a8-axes_1">   <g id="svg-matplotlib-8723e41804a8-patch_2">    <path d="M 52.160938 241.598125 L 697.350937 241.598125 L 697.350937 22.798125 L 52.160938 22.798125 L 52.160938 241.598125 z" style="fill: none" />   </g>   <g id="svg-matplotlib-8723e41804a8-matplotlib.axis_1">    <g id="svg-matplotlib-8723e41804a8-xtick_1">     <g id="svg-matplotlib-8723e41804a8-line2d_1">      <path d="M 52.160938 241.598125 L 52.160938 22.798125 " clip-path="url(#svg-matplotlib-8723e41804a8-p3f84e003d2)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.25; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-8723e41804a8-line2d_2">      <defs>       <path id="svg-matplotlib-8723e41804a8-m9e128cfe57" d="M 0 0 L 0 3.5 " style="stroke: #000000; stroke-width: 0.8" />      </defs>      <g>       <use ns4:href="#svg-matplotlib-8723e41804a8-m9e128cfe57" x="52.160938" y="241.598125" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-8723e41804a8-text_1">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle" x="52.160938" y="256.196563" transform="rotate(-0 52.160938 256.196563)">0.0</text>     </g>    </g>    <g id="svg-matplotlib-8723e41804a8-xtick_2">     <g id="svg-matplotlib-8723e41804a8-line2d_3">      <path d="M 181.198937 241.598125 L 181.198937 22.798125 " clip-path="url(#svg-matplotlib-8723e41804a8-p3f84e003d2)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.25; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-8723e41804a8-line2d_4">      <g>       <use ns4:href="#svg-matplotlib-8723e41804a8-m9e128cfe57" x="181.198937" y="241.598125" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-8723e41804a8-text_2">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle" x="181.198937" y="256.196563" transform="rotate(-0 181.198937 256.196563)">0.2</text>     </g>    </g>    <g id="svg-matplotlib-8723e41804a8-xtick_3">     <g id="svg-matplotlib-8723e41804a8-line2d_5">      <path d="M 310.236937 241.598125 L 310.236937 22.798125 " clip-path="url(#svg-matplotlib-8723e41804a8-p3f84e003d2)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.25; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-8723e41804a8-line2d_6">      <g>       <use ns4:href="#svg-matplotlib-8723e41804a8-m9e128cfe57" x="310.236937" y="241.598125" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-8723e41804a8-text_3">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle" x="310.236937" y="256.196563" transform="rotate(-0 310.236937 256.196563)">0.4</text>     </g>    </g>    <g id="svg-matplotlib-8723e41804a8-xtick_4">     <g id="svg-matplotlib-8723e41804a8-line2d_7">      <path d="M 439.274938 241.598125 L 439.274938 22.798125 " clip-path="url(#svg-matplotlib-8723e41804a8-p3f84e003d2)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.25; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-8723e41804a8-line2d_8">      <g>       <use ns4:href="#svg-matplotlib-8723e41804a8-m9e128cfe57" x="439.274938" y="241.598125" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-8723e41804a8-text_4">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle" x="439.274938" y="256.196563" transform="rotate(-0 439.274938 256.196563)">0.6</text>     </g>    </g>    <g id="svg-matplotlib-8723e41804a8-xtick_5">     <g id="svg-matplotlib-8723e41804a8-line2d_9">      <path d="M 568.312937 241.598125 L 568.312937 22.798125 " clip-path="url(#svg-matplotlib-8723e41804a8-p3f84e003d2)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.25; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-8723e41804a8-line2d_10">      <g>       <use ns4:href="#svg-matplotlib-8723e41804a8-m9e128cfe57" x="568.312937" y="241.598125" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-8723e41804a8-text_5">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle" x="568.312937" y="256.196563" transform="rotate(-0 568.312937 256.196563)">0.8</text>     </g>    </g>    <g id="svg-matplotlib-8723e41804a8-xtick_6">     <g id="svg-matplotlib-8723e41804a8-line2d_11">      <path d="M 697.350937 241.598125 L 697.350937 22.798125 " clip-path="url(#svg-matplotlib-8723e41804a8-p3f84e003d2)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.25; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-8723e41804a8-line2d_12">      <g>       <use ns4:href="#svg-matplotlib-8723e41804a8-m9e128cfe57" x="697.350937" y="241.598125" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-8723e41804a8-text_6">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle" x="697.350937" y="256.196563" transform="rotate(-0 697.350937 256.196563)">1.0</text>     </g>    </g>    <g id="svg-matplotlib-8723e41804a8-text_7">     <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle" x="374.755937" y="269.874687" transform="rotate(-0 374.755937 269.874687)">Tempo</text>    </g>   </g>   <g id="svg-matplotlib-8723e41804a8-matplotlib.axis_2">    <g id="svg-matplotlib-8723e41804a8-ytick_1">     <g id="svg-matplotlib-8723e41804a8-line2d_13">      <defs>       <path id="svg-matplotlib-8723e41804a8-m15e2ea7a0a" d="M 0 0 L -3.5 0 " style="stroke: #000000; stroke-width: 0.8" />      </defs>      <g>       <use ns4:href="#svg-matplotlib-8723e41804a8-m15e2ea7a0a" x="52.160938" y="227.32856" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-8723e41804a8-text_8">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end" x="45.160938" y="231.127779" transform="rotate(-0 45.160938 231.127779)">−1.0</text>     </g>    </g>    <g id="svg-matplotlib-8723e41804a8-ytick_2">     <g id="svg-matplotlib-8723e41804a8-line2d_14">      <g>       <use ns4:href="#svg-matplotlib-8723e41804a8-m15e2ea7a0a" x="52.160938" y="179.763342" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-8723e41804a8-text_9">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end" x="45.160938" y="183.562561" transform="rotate(-0 45.160938 183.562561)">−0.5</text>     </g>    </g>    <g id="svg-matplotlib-8723e41804a8-ytick_3">     <g id="svg-matplotlib-8723e41804a8-line2d_15">      <g>       <use ns4:href="#svg-matplotlib-8723e41804a8-m15e2ea7a0a" x="52.160938" y="132.198125" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-8723e41804a8-text_10">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end" x="45.160938" y="135.997344" transform="rotate(-0 45.160938 135.997344)">0.0</text>     </g>    </g>    <g id="svg-matplotlib-8723e41804a8-ytick_4">     <g id="svg-matplotlib-8723e41804a8-line2d_16">      <g>       <use ns4:href="#svg-matplotlib-8723e41804a8-m15e2ea7a0a" x="52.160938" y="84.632908" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-8723e41804a8-text_11">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end" x="45.160938" y="88.432126" transform="rotate(-0 45.160938 88.432126)">0.5</text>     </g>    </g>    <g id="svg-matplotlib-8723e41804a8-ytick_5">     <g id="svg-matplotlib-8723e41804a8-line2d_17">      <g>       <use ns4:href="#svg-matplotlib-8723e41804a8-m15e2ea7a0a" x="52.160938" y="37.06769" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-8723e41804a8-text_12">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end" x="45.160938" y="40.866909" transform="rotate(-0 45.160938 40.866909)">1.0</text>     </g>    </g>    <g id="svg-matplotlib-8723e41804a8-text_13">     <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle" x="14.798438" y="132.198125" transform="rotate(-90 14.798438 132.198125)">Amplitude</text>    </g>   </g>   <g id="svg-matplotlib-8723e41804a8-line2d_18">    <path d="M 52.160938 227.32856 L 697.350937 227.32856 " clip-path="url(#svg-matplotlib-8723e41804a8-p3f84e003d2)" style="fill: none; stroke: #808080; stroke-opacity: 0.35; stroke-width: 0.6; stroke-linecap: square" />   </g>   <g id="svg-matplotlib-8723e41804a8-line2d_19">    <path d="M 52.160938 203.545951 L 697.350937 203.545951 " clip-path="url(#svg-matplotlib-8723e41804a8-p3f84e003d2)" style="fill: none; stroke: #808080; stroke-opacity: 0.35; stroke-width: 0.6; stroke-linecap: square" />   </g>   <g id="svg-matplotlib-8723e41804a8-line2d_20">    <path d="M 52.160938 179.763342 L 697.350937 179.763342 " clip-path="url(#svg-matplotlib-8723e41804a8-p3f84e003d2)" style="fill: none; stroke: #808080; stroke-opacity: 0.35; stroke-width: 0.6; stroke-linecap: square" />   </g>   <g id="svg-matplotlib-8723e41804a8-line2d_21">    <path d="M 52.160938 155.980734 L 697.350937 155.980734 " clip-path="url(#svg-matplotlib-8723e41804a8-p3f84e003d2)" style="fill: none; stroke: #808080; stroke-opacity: 0.35; stroke-width: 0.6; stroke-linecap: square" />   </g>   <g id="svg-matplotlib-8723e41804a8-line2d_22">    <path d="M 52.160938 132.198125 L 697.350937 132.198125 " clip-path="url(#svg-matplotlib-8723e41804a8-p3f84e003d2)" style="fill: none; stroke: #808080; stroke-opacity: 0.35; stroke-width: 0.6; stroke-linecap: square" />   </g>   <g id="svg-matplotlib-8723e41804a8-line2d_23">    <path d="M 52.160938 108.415516 L 697.350937 108.415516 " clip-path="url(#svg-matplotlib-8723e41804a8-p3f84e003d2)" style="fill: none; stroke: #808080; stroke-opacity: 0.35; stroke-width: 0.6; stroke-linecap: square" />   </g>   <g id="svg-matplotlib-8723e41804a8-line2d_24">    <path d="M 52.160938 84.632908 L 697.350937 84.632908 " clip-path="url(#svg-matplotlib-8723e41804a8-p3f84e003d2)" style="fill: none; stroke: #808080; stroke-opacity: 0.35; stroke-width: 0.6; stroke-linecap: square" />   </g>   <g id="svg-matplotlib-8723e41804a8-line2d_25">    <path d="M 52.160938 60.850299 L 697.350937 60.850299 " clip-path="url(#svg-matplotlib-8723e41804a8-p3f84e003d2)" style="fill: none; stroke: #808080; stroke-opacity: 0.35; stroke-width: 0.6; stroke-linecap: square" />   </g>   <g id="svg-matplotlib-8723e41804a8-line2d_26">    <path d="M 52.160938 37.06769 L 697.350937 37.06769 " clip-path="url(#svg-matplotlib-8723e41804a8-p3f84e003d2)" style="fill: none; stroke: #808080; stroke-opacity: 0.35; stroke-width: 0.6; stroke-linecap: square" />   </g>   <g id="svg-matplotlib-8723e41804a8-line2d_27">    <path d="M 52.160938 132.198125 L 58.619296 113.944987 L 62.494311 103.712298 L 65.72349 95.896128 L 68.306833 90.224695 L 70.890177 85.141251 L 72.827684 81.744247 L 74.765192 78.719436 L 76.702699 76.074971 L 78.640207 73.813165 L 80.577714 71.930514 L 82.515222 70.417815 L 84.452729 69.260391 L 86.390237 68.4384 L 88.327744 67.927244 L 90.265252 67.698045 L 92.202759 67.718211 L 94.140267 67.952047 L 96.72361 68.530056 L 99.952789 69.54654 L 108.348655 72.433702 L 110.931999 73.046089 L 113.515342 73.396989 L 115.452849 73.454348 L 117.390357 73.314784 L 119.327864 72.965412 L 121.265372 72.398761 L 123.202879 71.612925 L 125.140387 70.611611 L 127.077894 69.404088 L 129.661238 67.499416 L 132.244581 65.303788 L 135.47376 62.248452 L 146.45297 51.432708 L 149.036313 49.343399 L 150.97382 48.020713 L 152.911328 46.95104 L 154.848835 46.170784 L 156.786343 45.713007 L 158.078015 45.601538 L 159.369686 45.653971 L 160.661358 45.876899 L 161.95303 46.27591 L 163.244701 46.85554 L 164.536373 47.619234 L 165.828045 48.56931 L 167.765552 50.346139 L 169.70306 52.543741 L 171.640567 55.155268 L 173.578075 58.168045 L 175.515582 61.563747 L 178.098925 66.645314 L 180.682269 72.295063 L 183.911448 80.027555 L 187.786463 90.038226 L 194.890657 109.30261 L 199.411508 121.299831 L 202.640687 129.369678 L 205.869866 136.826721 L 208.45321 142.257013 L 211.036553 147.152619 L 213.619896 151.477345 L 215.557404 154.334579 L 217.494911 156.859068 L 219.432419 159.055558 L 221.369926 160.934362 L 223.307434 162.511112 L 225.244942 163.806421 L 227.182449 164.845453 L 229.119957 165.657416 L 231.7033 166.443717 L 234.286643 166.969739 L 238.161658 167.470721 L 243.974181 168.199247 L 246.557524 168.744869 L 249.140867 169.540098 L 251.078375 170.340504 L 253.015882 171.341652 L 254.95339 172.56176 L 256.890897 174.013952 L 258.828405 175.705974 L 260.765912 177.640018 L 263.349256 180.588448 L 265.932599 183.936688 L 268.515943 187.643896 L 271.745122 192.694614 L 276.265973 200.280124 L 283.370167 212.313934 L 286.599346 217.336689 L 289.182689 220.957845 L 291.120197 223.377196 L 293.057704 225.499484 L 294.995212 227.289656 L 296.932719 228.716606 L 298.224391 229.45277 L 299.516063 230.008887 L 300.807734 230.379305 L 302.099406 230.559453 L 303.391078 230.54587 L 304.682749 230.336238 L 305.974421 229.929399 L 307.266093 229.325367 L 308.557764 228.525329 L 309.849436 227.53164 L 311.786944 225.685985 L 313.724451 223.429306 L 315.661959 220.783574 L 317.599466 217.775827 L 320.182809 213.25769 L 322.766153 208.23886 L 325.995332 201.409049 L 330.516183 191.178347 L 338.912049 171.944757 L 342.141228 165.061254 L 345.370407 158.717607 L 347.95375 154.11379 L 350.537094 149.977228 L 353.120437 146.334303 L 355.057945 143.931834 L 356.995452 141.809115 L 358.93296 139.957529 L 360.870467 138.363109 L 362.807975 137.006851 L 364.745482 135.86511 L 367.328825 134.627891 L 369.912169 133.646575 L 373.787184 132.468192 L 379.599706 130.749675 L 382.18305 129.768359 L 384.766393 128.53114 L 386.7039 127.389399 L 388.641408 126.033141 L 390.578915 124.438721 L 392.516423 122.587135 L 394.45393 120.464416 L 396.391438 118.061947 L 398.328946 115.376671 L 400.912289 111.361739 L 403.495632 106.871299 L 406.078976 101.944832 L 409.308155 95.260447 L 413.18317 86.659266 L 425.454051 58.82473 L 428.68323 52.349941 L 431.266573 47.698104 L 433.204081 44.576508 L 435.141588 41.806861 L 437.079096 39.417798 L 439.016603 37.433023 L 440.954111 35.870921 L 442.245782 35.070883 L 443.537454 34.466851 L 444.829126 34.060012 L 446.120797 33.85038 L 447.412469 33.836797 L 448.704141 34.016945 L 449.995812 34.387363 L 451.287484 34.94348 L 452.579156 35.679644 L 454.516663 37.106594 L 456.454171 38.896766 L 458.391678 41.019054 L 460.329186 43.438405 L 462.912529 47.059561 L 466.141708 52.082316 L 470.662559 59.675808 L 477.766753 71.701636 L 480.995932 76.752354 L 483.579276 80.459562 L 486.162619 83.807802 L 488.745963 86.756232 L 490.68347 88.690276 L 492.620978 90.382298 L 494.558485 91.83449 L 496.495993 93.054598 L 498.4335 94.055746 L 500.371008 94.856152 L 502.954351 95.651381 L 505.537694 96.197003 L 508.766873 96.646477 L 515.871068 97.538518 L 518.454411 98.121262 L 520.391918 98.738834 L 522.329426 99.550797 L 524.266933 100.589829 L 526.204441 101.885138 L 528.141949 103.461888 L 530.079456 105.340692 L 532.016964 107.537182 L 533.954471 110.061671 L 535.891979 112.918905 L 537.829486 116.107905 L 540.412829 120.863494 L 542.996173 126.164463 L 545.579516 131.96168 L 548.808695 139.805222 L 552.68371 149.879688 L 566.246263 185.966991 L 569.475442 193.562528 L 572.058785 199.077577 L 574.642129 204.005595 L 576.579636 207.27603 L 578.517144 210.156818 L 580.454651 212.631494 L 582.392159 214.689309 L 584.329666 216.325376 L 585.621338 217.182042 L 586.91301 217.853344 L 588.204681 218.342165 L 589.496353 218.6525 L 590.788025 218.789418 L 592.079696 218.759015 L 593.371368 218.568367 L 595.308875 217.999655 L 597.246383 217.119074 L 599.18389 215.960873 L 601.121398 214.562421 L 603.704741 212.393189 L 606.93392 209.33171 L 617.91313 198.519528 L 620.496473 196.391211 L 623.079816 194.567539 L 625.017324 193.427384 L 626.954831 192.497139 L 628.892339 191.78423 L 630.829846 191.290494 L 632.767354 191.012159 L 634.704861 190.939929 L 636.642369 191.059164 L 639.225712 191.481239 L 641.809056 192.14864 L 645.038235 193.216643 L 652.142429 195.683989 L 654.725772 196.325308 L 656.66328 196.621995 L 658.600787 196.717485 L 660.538295 196.575196 L 662.475802 196.161429 L 664.41331 195.446005 L 666.350817 194.402841 L 668.288325 193.01046 L 670.225832 191.252424 L 672.16334 189.117678 L 674.100847 186.600798 L 676.038355 183.702151 L 677.975862 180.427947 L 679.91337 176.790196 L 682.496713 171.40566 L 685.080057 165.463529 L 688.309236 157.363181 L 692.184251 146.885053 L 697.350937 132.198125 L 697.350937 132.198125 " clip-path="url(#svg-matplotlib-8723e41804a8-p3f84e003d2)" style="fill: none; stroke: #1f77b4; stroke-width: 2.2; stroke-linecap: square" />   </g>   <g id="svg-matplotlib-8723e41804a8-line2d_28">    <path d="M 52.160938 132.198125 L 56.35887 132.198125 L 56.35887 108.415516 L 65.400572 108.415516 L 65.400572 84.632908 L 79.608961 84.632908 L 79.608961 60.850299 L 109.317409 60.850299 L 109.317409 84.632908 L 120.296618 84.632908 L 120.296618 60.850299 L 149.359231 60.850299 L 149.359231 37.06769 L 166.150963 37.06769 L 166.150963 60.850299 L 181.005187 60.850299 L 181.005187 84.632908 L 190.046888 84.632908 L 190.046888 108.415516 L 199.08859 108.415516 L 199.08859 132.198125 L 209.421964 132.198125 L 209.421964 155.980734 L 241.713755 155.980734 L 241.713755 179.763342 L 271.422204 179.763342 L 271.422204 203.545951 L 285.630592 203.545951 L 285.630592 227.32856 L 319.214056 227.32856 L 319.214056 203.545951 L 330.193265 203.545951 L 330.193265 179.763342 L 340.526638 179.763342 L 340.526638 155.980734 L 354.735027 155.980734 L 354.735027 132.198125 L 394.776848 132.198125 L 394.776848 108.415516 L 408.985237 108.415516 L 408.985237 84.632908 L 419.31861 84.632908 L 419.31861 60.850299 L 430.297819 60.850299 L 430.297819 37.06769 L 463.881283 37.06769 L 463.881283 60.850299 L 478.089671 60.850299 L 478.089671 84.632908 L 507.79812 84.632908 L 507.79812 108.415516 L 540.089911 108.415516 L 540.089911 132.198125 L 550.423285 132.198125 L 550.423285 155.980734 L 559.464987 155.980734 L 559.464987 179.763342 L 568.506688 179.763342 L 568.506688 203.545951 L 583.360912 203.545951 L 583.360912 227.32856 L 600.152644 227.32856 L 600.152644 203.545951 L 629.215257 203.545951 L 629.215257 179.763342 L 640.194466 179.763342 L 640.194466 203.545951 L 669.902914 203.545951 L 669.902914 179.763342 L 684.111303 179.763342 L 684.111303 155.980734 L 693.153005 155.980734 L 693.153005 132.198125 L 697.350937 132.198125 L 697.350937 132.198125 " clip-path="url(#svg-matplotlib-8723e41804a8-p3f84e003d2)" style="fill: none; stroke: #ff7f0e; stroke-width: 1.7; stroke-linecap: square" />   </g>   <g id="svg-matplotlib-8723e41804a8-patch_3">    <path d="M 52.160938 241.598125 L 52.160938 22.798125 " style="fill: none; stroke: #000000; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square" />   </g>   <g id="svg-matplotlib-8723e41804a8-patch_4">    <path d="M 697.350937 241.598125 L 697.350937 22.798125 " style="fill: none; stroke: #000000; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square" />   </g>   <g id="svg-matplotlib-8723e41804a8-patch_5">    <path d="M 52.160938 241.598125 L 697.350937 241.598125 " style="fill: none; stroke: #000000; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square" />   </g>   <g id="svg-matplotlib-8723e41804a8-patch_6">    <path d="M 52.160938 22.798125 L 697.350937 22.798125 " style="fill: none; stroke: #000000; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square" />   </g>   <g id="svg-matplotlib-8723e41804a8-text_14">    <text style="font-size: 12px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle" x="374.755937" y="16.798125" transform="rotate(-0 374.755937 16.798125)">Quantização aproxima cada amostra por um nível permitido</text>   </g>   <g id="svg-matplotlib-8723e41804a8-legend_1">    <g id="svg-matplotlib-8723e41804a8-patch_7">     <path d="M 548.936875 60.554375 L 690.350937 60.554375 Q 692.350937 60.554375 692.350937 58.554375 L 692.350937 29.798125 Q 692.350937 27.798125 690.350937 27.798125 L 548.936875 27.798125 Q 546.936875 27.798125 546.936875 29.798125 L 546.936875 58.554375 Q 546.936875 60.554375 548.936875 60.554375 z" style="fill: #ffffff; opacity: 0.8; stroke: #cccccc; stroke-linejoin: miter" />    </g>    <g id="svg-matplotlib-8723e41804a8-line2d_29">     <path d="M 550.936875 36.296562 L 560.936875 36.296562 L 570.936875 36.296562 " style="fill: none; stroke: #1f77b4; stroke-width: 2.2; stroke-linecap: square" />    </g>    <g id="svg-matplotlib-8723e41804a8-text_15">     <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start" x="578.936875" y="39.796562" transform="rotate(-0 578.936875 39.796562)">amplitude contínua</text>    </g>    <g id="svg-matplotlib-8723e41804a8-line2d_30">     <path d="M 550.936875 50.974687 L 555.936875 50.974687 L 555.936875 50.974687 L 565.936875 50.974687 L 565.936875 50.974687 L 570.936875 50.974687 " style="fill: none; stroke: #ff7f0e; stroke-width: 1.7; stroke-linecap: square" />    </g>    <g id="svg-matplotlib-8723e41804a8-text_16">     <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start" x="578.936875" y="54.474687" transform="rotate(-0 578.936875 54.474687)">amplitude quantizada</text>    </g>   </g>  </g> </g> <defs>  <clipPath id="svg-matplotlib-8723e41804a8-p3f84e003d2">   <rect x="52.160938" y="22.798125" width="645.19" height="218.8" />  </clipPath> </defs></svg></div></div>
+
+</section>
+<section><h1>Passo de Quantização</h1>
+<p>Se a amplitude está na faixa $(-V,V)$ e usamos $L$ níveis:</p>
+<p>$$
+\Delta=\frac{2V}{L}
+$$</p>
+<p>No modelo de arredondamento para o nível mais próximo, o erro máximo é:</p>
+<p>$$
+\frac{\Delta}{2}
+$$</p>
+<ul>
+<li>Quanto maior $L$, menor o passo.</li>
+<li>Quanto menor o passo, menor o erro máximo.</li>
+<li>O custo é usar mais bits por amostra.</li>
+</ul>
+</section>
+<section><h1>Bits Por Amostra</h1>
+<p>Se cada nível é representado em binário:</p>
+<p>$$
+2^b=L
+$$</p>
+<p>Logo:</p>
+<p>$$
+b=\log_2 L
+$$</p>
+<ul>
+<li>$L=256$ níveis exige $8$ bits.</li>
+<li>$L=1024$ níveis exige $10$ bits.</li>
+<li>Em conversores binários, $L$ costuma ser potência de $2$.</li>
+</ul>
+</section>
+<section><h1>Exemplo 1</h1>
+<p>Um conversor usa $L=256$ níveis. Quantos bits são necessários por amostra?</p>
+<p>Usamos:</p>
+<p>$$
+2^b=L
+$$</p>
+<p>Como:</p>
+<p>$$
+256=2^8
+$$</p>
+<p>temos:</p>
+<p>$$
+\boxed{b=8\text{ bits por amostra}}
+$$</p>
+</section>
+<section><h1>Taxa de Bits Em PCM</h1>
+<p>Na modulação por código de pulso, cada amostra quantizada vira uma palavra binária.</p>
+<p>Se a taxa de amostragem é $f_s$ e cada amostra usa $b$ bits:</p>
+<p>$$
+R_b=bf_s
+$$</p>
+<ul>
+<li>$f_s$ mede amostras por segundo.</li>
+<li>$b$ mede bits por amostra.</li>
+<li>$R_b$ mede bits por segundo.</li>
+</ul>
+</section>
+<section><h1>Exemplo 2</h1>
+<p>Um sinal de voz é amostrado a $8000$ amostras/s e cada amostra usa $8$ bits.</p>
+<p>$$
+R_b=bf_s
+$$</p>
+<p>Logo:</p>
+<p>$$
+R_b=8\cdot 8000=64000\text{ bits/s}
+$$</p>
+<p>Portanto:</p>
+<p>$$
+\boxed{R_b=64\text{ kbits/s}}
+$$</p>
+</section>
+<section><h1>Exemplo 3</h1>
+<p>Um sinal limitado em faixa a $3$ kHz é amostrado $33\%$ acima da taxa de Nyquist.</p>
+<p>Taxa de Nyquist:</p>
+<p>$$
+f_{\text{Nyq}}=2\cdot 3000=6000\text{ Hz}
+$$</p>
+<p>Taxa real:</p>
+<p>$$
+f_s=6000\cdot \frac{4}{3}=8000\text{ Hz}
+$$</p>
+<p>Se usamos $8$ bits por amostra:</p>
+<p>$$
+R_b=8\cdot 8000=64000\text{ bits/s}
+$$</p>
+</section>
+<section><h1>Robustez Digital</h1>
+<p>Sinais digitais são robustos porque podem ser regenerados.</p>
+<ul>
+<li>Em transmissão analógica, ruído e distorção se acumulam continuamente.</li>
+<li>Em transmissão digital, o receptor decide entre símbolos permitidos.</li>
+<li>Se a decisão ainda for correta, o sistema pode retransmitir pulsos limpos.</li>
+</ul>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Cuidado<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Sinal digital não significa ausência de erro. A vantagem é que, abaixo dos limites de decisão, a sequência pode ser regenerada com alta confiabilidade.</p>
+  </div>
+</div>
+</section>
+<section><h1>O Dual da Amostragem No Tempo</h1>
+<p>Na aula anterior:</p>
+<ul>
+<li>amostrar no tempo cria repetições do espectro.</li>
+</ul>
+<p>Agora aparece o dual:</p>
+<ul>
+<li>repetir um sinal no tempo cria amostras do espectro.</li>
+</ul>
+<p>Se $x(t)$ é limitado no tempo a uma duração $\tau$, seu espectro pode ser reconstruído a partir de amostras em frequência suficientemente próximas.</p>
+</section>
+<section><h1>Amostragem Espectral</h1>
+<p>Para um sinal de duração $\tau$ segundos, o espaçamento entre amostras do espectro deve ser menor que:</p>
+<p>$$
+\frac{1}{\tau}\text{ Hz}
+$$</p>
+<p>De forma equivalente:</p>
+<ul>
+<li>duração curta no tempo permite amostras mais espaçadas em frequência;</li>
+<li>duração longa no tempo exige amostras mais próximas em frequência.</li>
+</ul>
+</section>
+<section><h1>Exemplo 4</h1>
+<p>Um sinal é limitado no tempo a $\tau=2$ s. Qual deve ser o maior espaçamento permitido entre amostras de $X(\omega)$?</p>
+<p>Pelo teorema de amostragem espectral:</p>
+<p>$$
+\frac{1}{\tau}=\frac{1}{2}=0{,}5\text{ Hz}
+$$</p>
+<p>Logo, as amostras de frequência devem estar espaçadas por menos de $0{,}5$ Hz.</p>
+</section>
+<section><h1>A Ponte Para a TDF</h1>
+<p>Um computador não calcula a Transformada de Fourier contínua inteira.</p>
+<p>Ele trabalha com:</p>
+<ul>
+<li>uma quantidade finita de amostras no tempo;</li>
+<li>uma quantidade finita de amostras em frequência;</li>
+<li>uma relação algébrica entre essas duas listas.</li>
+</ul>
+<p>Essa relação é a <strong>TDF</strong>.</p>
+</section>
+<section><h1>O Que a TDF Relaciona</h1>
+<p>Se temos $N_0$ amostras em um período, a TDF relaciona duas sequências periódicas de período $N_0$.</p>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:ns2="http://creativecommons.org/ns#" xmlns:ns4="http://www.w3.org/1999/xlink" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" width="760" viewBox="0 0 784.182937 262.95625" version="1.1" class="svg-graph matplotlib-plot-img"> <metadata>  <rdf:RDF>   <ns2:Work>    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage" />    <dc:date>2026-05-06T17:57:29.858482</dc:date>    <dc:format>image/svg+xml</dc:format>    <dc:creator>     <ns2:Agent>      <dc:title>Matplotlib v3.10.8, https://matplotlib.org/</dc:title>     </ns2:Agent>    </dc:creator>   </ns2:Work>  </rdf:RDF> </metadata> <defs>  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style> </defs> <g id="svg-matplotlib-174f30b114d0-figure_1">  <g id="svg-matplotlib-174f30b114d0-patch_1">   <path d="M 0 262.95625 L 784.182937 262.95625 L 784.182937 0 L 0 0 L 0 262.95625 z" style="fill: none" />  </g>  <g id="svg-matplotlib-174f30b114d0-axes_1">   <g id="svg-matplotlib-174f30b114d0-patch_2">    <path d="M 52.160938 225.4 L 393.996937 225.4 L 393.996937 22.8 L 52.160938 22.8 L 52.160938 225.4 z" style="fill: none" />   </g>   <g id="svg-matplotlib-174f30b114d0-matplotlib.axis_1">    <g id="svg-matplotlib-174f30b114d0-xtick_1">     <g id="svg-matplotlib-174f30b114d0-line2d_1">      <path d="M 67.698937 225.4 L 67.698937 22.8 " clip-path="url(#svg-matplotlib-174f30b114d0-p34bb160142)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-174f30b114d0-line2d_2">      <defs>       <path id="svg-matplotlib-174f30b114d0-m05ab78253b" d="M 0 0 L 0 3.5 " style="stroke: #000000; stroke-width: 0.8" />      </defs>      <g>       <use ns4:href="#svg-matplotlib-174f30b114d0-m05ab78253b" x="67.698937" y="225.4" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-174f30b114d0-text_1">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle" x="67.698937" y="239.998438" transform="rotate(-0 67.698937 239.998438)">0</text>     </g>    </g>    <g id="svg-matplotlib-174f30b114d0-xtick_2">     <g id="svg-matplotlib-174f30b114d0-line2d_3">      <path d="M 109.133604 225.4 L 109.133604 22.8 " clip-path="url(#svg-matplotlib-174f30b114d0-p34bb160142)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-174f30b114d0-line2d_4">      <g>       <use ns4:href="#svg-matplotlib-174f30b114d0-m05ab78253b" x="109.133604" y="225.4" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-174f30b114d0-text_2">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle" x="109.133604" y="239.998438" transform="rotate(-0 109.133604 239.998438)">2</text>     </g>    </g>    <g id="svg-matplotlib-174f30b114d0-xtick_3">     <g id="svg-matplotlib-174f30b114d0-line2d_5">      <path d="M 150.568271 225.4 L 150.568271 22.8 " clip-path="url(#svg-matplotlib-174f30b114d0-p34bb160142)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-174f30b114d0-line2d_6">      <g>       <use ns4:href="#svg-matplotlib-174f30b114d0-m05ab78253b" x="150.568271" y="225.4" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-174f30b114d0-text_3">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle" x="150.568271" y="239.998438" transform="rotate(-0 150.568271 239.998438)">4</text>     </g>    </g>    <g id="svg-matplotlib-174f30b114d0-xtick_4">     <g id="svg-matplotlib-174f30b114d0-line2d_7">      <path d="M 192.002938 225.4 L 192.002938 22.8 " clip-path="url(#svg-matplotlib-174f30b114d0-p34bb160142)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-174f30b114d0-line2d_8">      <g>       <use ns4:href="#svg-matplotlib-174f30b114d0-m05ab78253b" x="192.002938" y="225.4" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-174f30b114d0-text_4">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle" x="192.002938" y="239.998438" transform="rotate(-0 192.002938 239.998438)">6</text>     </g>    </g>    <g id="svg-matplotlib-174f30b114d0-xtick_5">     <g id="svg-matplotlib-174f30b114d0-line2d_9">      <path d="M 233.437604 225.4 L 233.437604 22.8 " clip-path="url(#svg-matplotlib-174f30b114d0-p34bb160142)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-174f30b114d0-line2d_10">      <g>       <use ns4:href="#svg-matplotlib-174f30b114d0-m05ab78253b" x="233.437604" y="225.4" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-174f30b114d0-text_5">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle" x="233.437604" y="239.998438" transform="rotate(-0 233.437604 239.998438)">8</text>     </g>    </g>    <g id="svg-matplotlib-174f30b114d0-xtick_6">     <g id="svg-matplotlib-174f30b114d0-line2d_11">      <path d="M 274.872271 225.4 L 274.872271 22.8 " clip-path="url(#svg-matplotlib-174f30b114d0-p34bb160142)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-174f30b114d0-line2d_12">      <g>       <use ns4:href="#svg-matplotlib-174f30b114d0-m05ab78253b" x="274.872271" y="225.4" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-174f30b114d0-text_6">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle" x="274.872271" y="239.998438" transform="rotate(-0 274.872271 239.998438)">10</text>     </g>    </g>    <g id="svg-matplotlib-174f30b114d0-xtick_7">     <g id="svg-matplotlib-174f30b114d0-line2d_13">      <path d="M 316.306938 225.4 L 316.306938 22.8 " clip-path="url(#svg-matplotlib-174f30b114d0-p34bb160142)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-174f30b114d0-line2d_14">      <g>       <use ns4:href="#svg-matplotlib-174f30b114d0-m05ab78253b" x="316.306938" y="225.4" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-174f30b114d0-text_7">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle" x="316.306938" y="239.998438" transform="rotate(-0 316.306938 239.998438)">12</text>     </g>    </g>    <g id="svg-matplotlib-174f30b114d0-xtick_8">     <g id="svg-matplotlib-174f30b114d0-line2d_15">      <path d="M 357.741604 225.4 L 357.741604 22.8 " clip-path="url(#svg-matplotlib-174f30b114d0-p34bb160142)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-174f30b114d0-line2d_16">      <g>       <use ns4:href="#svg-matplotlib-174f30b114d0-m05ab78253b" x="357.741604" y="225.4" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-174f30b114d0-text_8">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle" x="357.741604" y="239.998438" transform="rotate(-0 357.741604 239.998438)">14</text>     </g>    </g>    <g id="svg-matplotlib-174f30b114d0-text_9">     <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle" x="223.078937" y="253.676563" transform="rotate(-0 223.078937 253.676563)">n</text>    </g>   </g>   <g id="svg-matplotlib-174f30b114d0-matplotlib.axis_2">    <g id="svg-matplotlib-174f30b114d0-ytick_1">     <g id="svg-matplotlib-174f30b114d0-line2d_17">      <path d="M 52.160938 208.117877 L 393.996937 208.117877 " clip-path="url(#svg-matplotlib-174f30b114d0-p34bb160142)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-174f30b114d0-line2d_18">      <defs>       <path id="svg-matplotlib-174f30b114d0-m4f861fd669" d="M 0 0 L -3.5 0 " style="stroke: #000000; stroke-width: 0.8" />      </defs>      <g>       <use ns4:href="#svg-matplotlib-174f30b114d0-m4f861fd669" x="52.160938" y="208.117877" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-174f30b114d0-text_10">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end" x="45.160938" y="211.917096" transform="rotate(-0 45.160938 211.917096)">−1.0</text>     </g>    </g>    <g id="svg-matplotlib-174f30b114d0-ytick_2">     <g id="svg-matplotlib-174f30b114d0-line2d_19">      <path d="M 52.160938 166.108938 L 393.996937 166.108938 " clip-path="url(#svg-matplotlib-174f30b114d0-p34bb160142)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-174f30b114d0-line2d_20">      <g>       <use ns4:href="#svg-matplotlib-174f30b114d0-m4f861fd669" x="52.160938" y="166.108938" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-174f30b114d0-text_11">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end" x="45.160938" y="169.908157" transform="rotate(-0 45.160938 169.908157)">−0.5</text>     </g>    </g>    <g id="svg-matplotlib-174f30b114d0-ytick_3">     <g id="svg-matplotlib-174f30b114d0-line2d_21">      <path d="M 52.160938 124.1 L 393.996937 124.1 " clip-path="url(#svg-matplotlib-174f30b114d0-p34bb160142)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-174f30b114d0-line2d_22">      <g>       <use ns4:href="#svg-matplotlib-174f30b114d0-m4f861fd669" x="52.160938" y="124.1" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-174f30b114d0-text_12">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end" x="45.160938" y="127.899219" transform="rotate(-0 45.160938 127.899219)">0.0</text>     </g>    </g>    <g id="svg-matplotlib-174f30b114d0-ytick_4">     <g id="svg-matplotlib-174f30b114d0-line2d_23">      <path d="M 52.160938 82.091062 L 393.996937 82.091062 " clip-path="url(#svg-matplotlib-174f30b114d0-p34bb160142)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-174f30b114d0-line2d_24">      <g>       <use ns4:href="#svg-matplotlib-174f30b114d0-m4f861fd669" x="52.160938" y="82.091062" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-174f30b114d0-text_13">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end" x="45.160938" y="85.89028" transform="rotate(-0 45.160938 85.89028)">0.5</text>     </g>    </g>    <g id="svg-matplotlib-174f30b114d0-ytick_5">     <g id="svg-matplotlib-174f30b114d0-line2d_25">      <path d="M 52.160938 40.082123 L 393.996937 40.082123 " clip-path="url(#svg-matplotlib-174f30b114d0-p34bb160142)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-174f30b114d0-line2d_26">      <g>       <use ns4:href="#svg-matplotlib-174f30b114d0-m4f861fd669" x="52.160938" y="40.082123" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-174f30b114d0-text_14">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end" x="45.160938" y="43.881342" transform="rotate(-0 45.160938 43.881342)">1.0</text>     </g>    </g>    <g id="svg-matplotlib-174f30b114d0-text_15">          <g transform="translate(14.798438 129.45) rotate(-90)">      <text>       <tspan x="0" y="-0.53125" style="font-style: oblique; font-size: 10px; font-family: 'DejaVu Sans'">x</tspan>       <tspan x="5.917969" y="1.109375" style="font-style: oblique; font-size: 7px; font-family: 'DejaVu Sans'">n</tspan>      </text>     </g>    </g>   </g>   <g id="svg-matplotlib-174f30b114d0-LineCollection_1">    <path d="M 67.698937 124.1 L 67.698937 40.082123 " clip-path="url(#svg-matplotlib-174f30b114d0-p34bb160142)" style="fill: none; stroke: #1f77b4; stroke-width: 1.5" />    <path d="M 88.416271 124.1 L 88.416271 57.017672 " clip-path="url(#svg-matplotlib-174f30b114d0-p34bb160142)" style="fill: none; stroke: #1f77b4; stroke-width: 1.5" />    <path d="M 109.133604 124.1 L 109.133604 210.243935 " clip-path="url(#svg-matplotlib-174f30b114d0-p34bb160142)" style="fill: none; stroke: #1f77b4; stroke-width: 1.5" />    <path d="M 129.850937 124.1 L 129.850937 216.190909 " clip-path="url(#svg-matplotlib-174f30b114d0-p34bb160142)" style="fill: none; stroke: #1f77b4; stroke-width: 1.5" />    <path d="M 150.568271 124.1 L 150.568271 86.291955 " clip-path="url(#svg-matplotlib-174f30b114d0-p34bb160142)" style="fill: none; stroke: #1f77b4; stroke-width: 1.5" />    <path d="M 171.285604 124.1 L 171.285604 60.946115 " clip-path="url(#svg-matplotlib-174f30b114d0-p34bb160142)" style="fill: none; stroke: #1f77b4; stroke-width: 1.5" />    <path d="M 192.002938 124.1 L 192.002938 91.424714 " clip-path="url(#svg-matplotlib-174f30b114d0-p34bb160142)" style="fill: none; stroke: #1f77b4; stroke-width: 1.5" />    <path d="M 212.720271 124.1 L 212.720271 121.322171 " clip-path="url(#svg-matplotlib-174f30b114d0-p34bb160142)" style="fill: none; stroke: #1f77b4; stroke-width: 1.5" />    <path d="M 233.437604 124.1 L 233.437604 208.117877 " clip-path="url(#svg-matplotlib-174f30b114d0-p34bb160142)" style="fill: none; stroke: #1f77b4; stroke-width: 1.5" />    <path d="M 254.154937 124.1 L 254.154937 191.182328 " clip-path="url(#svg-matplotlib-174f30b114d0-p34bb160142)" style="fill: none; stroke: #1f77b4; stroke-width: 1.5" />    <path d="M 274.872271 124.1 L 274.872271 37.956065 " clip-path="url(#svg-matplotlib-174f30b114d0-p34bb160142)" style="fill: none; stroke: #1f77b4; stroke-width: 1.5" />    <path d="M 295.589604 124.1 L 295.589604 32.009091 " clip-path="url(#svg-matplotlib-174f30b114d0-p34bb160142)" style="fill: none; stroke: #1f77b4; stroke-width: 1.5" />    <path d="M 316.306938 124.1 L 316.306938 161.908045 " clip-path="url(#svg-matplotlib-174f30b114d0-p34bb160142)" style="fill: none; stroke: #1f77b4; stroke-width: 1.5" />    <path d="M 337.024271 124.1 L 337.024271 187.253885 " clip-path="url(#svg-matplotlib-174f30b114d0-p34bb160142)" style="fill: none; stroke: #1f77b4; stroke-width: 1.5" />    <path d="M 357.741604 124.1 L 357.741604 156.775286 " clip-path="url(#svg-matplotlib-174f30b114d0-p34bb160142)" style="fill: none; stroke: #1f77b4; stroke-width: 1.5" />    <path d="M 378.458937 124.1 L 378.458937 126.877829 " clip-path="url(#svg-matplotlib-174f30b114d0-p34bb160142)" style="fill: none; stroke: #1f77b4; stroke-width: 1.5" />   </g>   <g id="svg-matplotlib-174f30b114d0-line2d_27">    <defs>     <path id="svg-matplotlib-174f30b114d0-mce764f6919" d="M 0 3 C 0.795609 3 1.55874 2.683901 2.12132 2.12132 C 2.683901 1.55874 3 0.795609 3 0 C 3 -0.795609 2.683901 -1.55874 2.12132 -2.12132 C 1.55874 -2.683901 0.795609 -3 0 -3 C -0.795609 -3 -1.55874 -2.683901 -2.12132 -2.12132 C -2.683901 -1.55874 -3 -0.795609 -3 0 C -3 0.795609 -2.683901 1.55874 -2.12132 2.12132 C -1.55874 2.683901 -0.795609 3 0 3 z" style="stroke: #1f77b4" />    </defs>    <g clip-path="url(#svg-matplotlib-174f30b114d0-p34bb160142)">     <use ns4:href="#svg-matplotlib-174f30b114d0-mce764f6919" x="67.698937" y="40.082123" style="fill: #1f77b4; stroke: #1f77b4" />     <use ns4:href="#svg-matplotlib-174f30b114d0-mce764f6919" x="88.416271" y="57.017672" style="fill: #1f77b4; stroke: #1f77b4" />     <use ns4:href="#svg-matplotlib-174f30b114d0-mce764f6919" x="109.133604" y="210.243935" style="fill: #1f77b4; stroke: #1f77b4" />     <use ns4:href="#svg-matplotlib-174f30b114d0-mce764f6919" x="129.850937" y="216.190909" style="fill: #1f77b4; stroke: #1f77b4" />     <use ns4:href="#svg-matplotlib-174f30b114d0-mce764f6919" x="150.568271" y="86.291955" style="fill: #1f77b4; stroke: #1f77b4" />     <use ns4:href="#svg-matplotlib-174f30b114d0-mce764f6919" x="171.285604" y="60.946115" style="fill: #1f77b4; stroke: #1f77b4" />     <use ns4:href="#svg-matplotlib-174f30b114d0-mce764f6919" x="192.002938" y="91.424714" style="fill: #1f77b4; stroke: #1f77b4" />     <use ns4:href="#svg-matplotlib-174f30b114d0-mce764f6919" x="212.720271" y="121.322171" style="fill: #1f77b4; stroke: #1f77b4" />     <use ns4:href="#svg-matplotlib-174f30b114d0-mce764f6919" x="233.437604" y="208.117877" style="fill: #1f77b4; stroke: #1f77b4" />     <use ns4:href="#svg-matplotlib-174f30b114d0-mce764f6919" x="254.154937" y="191.182328" style="fill: #1f77b4; stroke: #1f77b4" />     <use ns4:href="#svg-matplotlib-174f30b114d0-mce764f6919" x="274.872271" y="37.956065" style="fill: #1f77b4; stroke: #1f77b4" />     <use ns4:href="#svg-matplotlib-174f30b114d0-mce764f6919" x="295.589604" y="32.009091" style="fill: #1f77b4; stroke: #1f77b4" />     <use ns4:href="#svg-matplotlib-174f30b114d0-mce764f6919" x="316.306938" y="161.908045" style="fill: #1f77b4; stroke: #1f77b4" />     <use ns4:href="#svg-matplotlib-174f30b114d0-mce764f6919" x="337.024271" y="187.253885" style="fill: #1f77b4; stroke: #1f77b4" />     <use ns4:href="#svg-matplotlib-174f30b114d0-mce764f6919" x="357.741604" y="156.775286" style="fill: #1f77b4; stroke: #1f77b4" />     <use ns4:href="#svg-matplotlib-174f30b114d0-mce764f6919" x="378.458937" y="126.877829" style="fill: #1f77b4; stroke: #1f77b4" />    </g>   </g>   <g id="svg-matplotlib-174f30b114d0-line2d_28" />   <g id="svg-matplotlib-174f30b114d0-patch_3">    <path d="M 52.160938 225.4 L 52.160938 22.8 " style="fill: none; stroke: #000000; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square" />   </g>   <g id="svg-matplotlib-174f30b114d0-patch_4">    <path d="M 393.996937 225.4 L 393.996937 22.8 " style="fill: none; stroke: #000000; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square" />   </g>   <g id="svg-matplotlib-174f30b114d0-patch_5">    <path d="M 52.160938 225.4 L 393.996938 225.4 " style="fill: none; stroke: #000000; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square" />   </g>   <g id="svg-matplotlib-174f30b114d0-patch_6">    <path d="M 52.160938 22.8 L 393.996938 22.8 " style="fill: none; stroke: #000000; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square" />   </g>   <g id="svg-matplotlib-174f30b114d0-text_16">        <g transform="translate(155.218937 16.8)">     <text>      <tspan x="0" y="-0.25" style="font-style: oblique; font-size: 12px; font-family: 'DejaVu Sans'">N</tspan>      <tspan x="8.976562" y="1.71875" style="font-size: 8.4px; font-family: 'DejaVu Sans'">0</tspan>      <tspan x="14.649023" y="-0.25" style="font-size: 12px; font-family: 'DejaVu Sans'"> </tspan>      <tspan x="18.463477" y="-0.25" style="font-size: 12px; font-family: 'DejaVu Sans'">a</tspan>      <tspan x="25.816992" y="-0.25" style="font-size: 12px; font-family: 'DejaVu Sans'">m</tspan>      <tspan x="37.506445" y="-0.25" style="font-size: 12px; font-family: 'DejaVu Sans'">o</tspan>      <tspan x="44.848242" y="-0.25" style="font-size: 12px; font-family: 'DejaVu Sans'">s</tspan>      <tspan x="51.100195" y="-0.25" style="font-size: 12px; font-family: 'DejaVu Sans'">t</tspan>      <tspan x="55.805273" y="-0.25" style="font-size: 12px; font-family: 'DejaVu Sans'">r</tspan>      <tspan x="60.738867" y="-0.25" style="font-size: 12px; font-family: 'DejaVu Sans'">a</tspan>      <tspan x="68.092383" y="-0.25" style="font-size: 12px; font-family: 'DejaVu Sans'">s</tspan>      <tspan x="74.344336" y="-0.25" style="font-size: 12px; font-family: 'DejaVu Sans'"> </tspan>      <tspan x="78.158789" y="-0.25" style="font-size: 12px; font-family: 'DejaVu Sans'">n</tspan>      <tspan x="85.764258" y="-0.25" style="font-size: 12px; font-family: 'DejaVu Sans'">o</tspan>      <tspan x="93.106055" y="-0.25" style="font-size: 12px; font-family: 'DejaVu Sans'"> </tspan>      <tspan x="96.920508" y="-0.25" style="font-size: 12px; font-family: 'DejaVu Sans'">t</tspan>      <tspan x="101.625586" y="-0.25" style="font-size: 12px; font-family: 'DejaVu Sans'">e</tspan>      <tspan x="109.008398" y="-0.25" style="font-size: 12px; font-family: 'DejaVu Sans'">m</tspan>      <tspan x="120.697852" y="-0.25" style="font-size: 12px; font-family: 'DejaVu Sans'">p</tspan>      <tspan x="128.315039" y="-0.25" style="font-size: 12px; font-family: 'DejaVu Sans'">o</tspan>     </text>    </g>   </g>  </g>  <g id="svg-matplotlib-174f30b114d0-axes_2">   <g id="svg-matplotlib-174f30b114d0-patch_7">    <path d="M 435.146937 225.4 L 776.982937 225.4 L 776.982937 22.8 L 435.146937 22.8 L 435.146937 225.4 z" style="fill: none" />   </g>   <g id="svg-matplotlib-174f30b114d0-matplotlib.axis_3">    <g id="svg-matplotlib-174f30b114d0-xtick_9">     <g id="svg-matplotlib-174f30b114d0-line2d_29">      <path d="M 450.684937 225.4 L 450.684937 22.8 " clip-path="url(#svg-matplotlib-174f30b114d0-p4462df83c5)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-174f30b114d0-line2d_30">      <g>       <use ns4:href="#svg-matplotlib-174f30b114d0-m05ab78253b" x="450.684937" y="225.4" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-174f30b114d0-text_17">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle" x="450.684937" y="239.998438" transform="rotate(-0 450.684937 239.998438)">0</text>     </g>    </g>    <g id="svg-matplotlib-174f30b114d0-xtick_10">     <g id="svg-matplotlib-174f30b114d0-line2d_31">      <path d="M 492.119604 225.4 L 492.119604 22.8 " clip-path="url(#svg-matplotlib-174f30b114d0-p4462df83c5)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-174f30b114d0-line2d_32">      <g>       <use ns4:href="#svg-matplotlib-174f30b114d0-m05ab78253b" x="492.119604" y="225.4" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-174f30b114d0-text_18">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle" x="492.119604" y="239.998438" transform="rotate(-0 492.119604 239.998438)">2</text>     </g>    </g>    <g id="svg-matplotlib-174f30b114d0-xtick_11">     <g id="svg-matplotlib-174f30b114d0-line2d_33">      <path d="M 533.554271 225.4 L 533.554271 22.8 " clip-path="url(#svg-matplotlib-174f30b114d0-p4462df83c5)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-174f30b114d0-line2d_34">      <g>       <use ns4:href="#svg-matplotlib-174f30b114d0-m05ab78253b" x="533.554271" y="225.4" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-174f30b114d0-text_19">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle" x="533.554271" y="239.998438" transform="rotate(-0 533.554271 239.998438)">4</text>     </g>    </g>    <g id="svg-matplotlib-174f30b114d0-xtick_12">     <g id="svg-matplotlib-174f30b114d0-line2d_35">      <path d="M 574.988937 225.4 L 574.988937 22.8 " clip-path="url(#svg-matplotlib-174f30b114d0-p4462df83c5)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-174f30b114d0-line2d_36">      <g>       <use ns4:href="#svg-matplotlib-174f30b114d0-m05ab78253b" x="574.988937" y="225.4" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-174f30b114d0-text_20">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle" x="574.988937" y="239.998438" transform="rotate(-0 574.988937 239.998438)">6</text>     </g>    </g>    <g id="svg-matplotlib-174f30b114d0-xtick_13">     <g id="svg-matplotlib-174f30b114d0-line2d_37">      <path d="M 616.423604 225.4 L 616.423604 22.8 " clip-path="url(#svg-matplotlib-174f30b114d0-p4462df83c5)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-174f30b114d0-line2d_38">      <g>       <use ns4:href="#svg-matplotlib-174f30b114d0-m05ab78253b" x="616.423604" y="225.4" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-174f30b114d0-text_21">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle" x="616.423604" y="239.998438" transform="rotate(-0 616.423604 239.998438)">8</text>     </g>    </g>    <g id="svg-matplotlib-174f30b114d0-xtick_14">     <g id="svg-matplotlib-174f30b114d0-line2d_39">      <path d="M 657.858271 225.4 L 657.858271 22.8 " clip-path="url(#svg-matplotlib-174f30b114d0-p4462df83c5)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-174f30b114d0-line2d_40">      <g>       <use ns4:href="#svg-matplotlib-174f30b114d0-m05ab78253b" x="657.858271" y="225.4" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-174f30b114d0-text_22">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle" x="657.858271" y="239.998438" transform="rotate(-0 657.858271 239.998438)">10</text>     </g>    </g>    <g id="svg-matplotlib-174f30b114d0-xtick_15">     <g id="svg-matplotlib-174f30b114d0-line2d_41">      <path d="M 699.292937 225.4 L 699.292937 22.8 " clip-path="url(#svg-matplotlib-174f30b114d0-p4462df83c5)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-174f30b114d0-line2d_42">      <g>       <use ns4:href="#svg-matplotlib-174f30b114d0-m05ab78253b" x="699.292937" y="225.4" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-174f30b114d0-text_23">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle" x="699.292937" y="239.998438" transform="rotate(-0 699.292937 239.998438)">12</text>     </g>    </g>    <g id="svg-matplotlib-174f30b114d0-xtick_16">     <g id="svg-matplotlib-174f30b114d0-line2d_43">      <path d="M 740.727604 225.4 L 740.727604 22.8 " clip-path="url(#svg-matplotlib-174f30b114d0-p4462df83c5)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-174f30b114d0-line2d_44">      <g>       <use ns4:href="#svg-matplotlib-174f30b114d0-m05ab78253b" x="740.727604" y="225.4" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-174f30b114d0-text_24">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle" x="740.727604" y="239.998438" transform="rotate(-0 740.727604 239.998438)">14</text>     </g>    </g>    <g id="svg-matplotlib-174f30b114d0-text_25">     <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle" x="606.064937" y="253.676563" transform="rotate(-0 606.064937 253.676563)">r</text>    </g>   </g>   <g id="svg-matplotlib-174f30b114d0-matplotlib.axis_4">    <g id="svg-matplotlib-174f30b114d0-ytick_6">     <g id="svg-matplotlib-174f30b114d0-line2d_45">      <path d="M 435.146937 216.190909 L 776.982937 216.190909 " clip-path="url(#svg-matplotlib-174f30b114d0-p4462df83c5)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-174f30b114d0-line2d_46">      <g>       <use ns4:href="#svg-matplotlib-174f30b114d0-m4f861fd669" x="435.146937" y="216.190909" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-174f30b114d0-text_26">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end" x="428.146937" y="219.990128" transform="rotate(-0 428.146937 219.990128)">0</text>     </g>    </g>    <g id="svg-matplotlib-174f30b114d0-ytick_7">     <g id="svg-matplotlib-174f30b114d0-line2d_47">      <path d="M 435.146937 193.168182 L 776.982937 193.168182 " clip-path="url(#svg-matplotlib-174f30b114d0-p4462df83c5)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-174f30b114d0-line2d_48">      <g>       <use ns4:href="#svg-matplotlib-174f30b114d0-m4f861fd669" x="435.146937" y="193.168182" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-174f30b114d0-text_27">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end" x="428.146937" y="196.967401" transform="rotate(-0 428.146937 196.967401)">1</text>     </g>    </g>    <g id="svg-matplotlib-174f30b114d0-ytick_8">     <g id="svg-matplotlib-174f30b114d0-line2d_49">      <path d="M 435.146937 170.145455 L 776.982937 170.145455 " clip-path="url(#svg-matplotlib-174f30b114d0-p4462df83c5)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-174f30b114d0-line2d_50">      <g>       <use ns4:href="#svg-matplotlib-174f30b114d0-m4f861fd669" x="435.146937" y="170.145455" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-174f30b114d0-text_28">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end" x="428.146937" y="173.944673" transform="rotate(-0 428.146937 173.944673)">2</text>     </g>    </g>    <g id="svg-matplotlib-174f30b114d0-ytick_9">     <g id="svg-matplotlib-174f30b114d0-line2d_51">      <path d="M 435.146937 147.122727 L 776.982937 147.122727 " clip-path="url(#svg-matplotlib-174f30b114d0-p4462df83c5)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-174f30b114d0-line2d_52">      <g>       <use ns4:href="#svg-matplotlib-174f30b114d0-m4f861fd669" x="435.146937" y="147.122727" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-174f30b114d0-text_29">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end" x="428.146937" y="150.921946" transform="rotate(-0 428.146937 150.921946)">3</text>     </g>    </g>    <g id="svg-matplotlib-174f30b114d0-ytick_10">     <g id="svg-matplotlib-174f30b114d0-line2d_53">      <path d="M 435.146937 124.1 L 776.982937 124.1 " clip-path="url(#svg-matplotlib-174f30b114d0-p4462df83c5)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-174f30b114d0-line2d_54">      <g>       <use ns4:href="#svg-matplotlib-174f30b114d0-m4f861fd669" x="435.146937" y="124.1" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-174f30b114d0-text_30">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end" x="428.146937" y="127.899219" transform="rotate(-0 428.146937 127.899219)">4</text>     </g>    </g>    <g id="svg-matplotlib-174f30b114d0-ytick_11">     <g id="svg-matplotlib-174f30b114d0-line2d_55">      <path d="M 435.146937 101.077273 L 776.982937 101.077273 " clip-path="url(#svg-matplotlib-174f30b114d0-p4462df83c5)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-174f30b114d0-line2d_56">      <g>       <use ns4:href="#svg-matplotlib-174f30b114d0-m4f861fd669" x="435.146937" y="101.077273" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-174f30b114d0-text_31">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end" x="428.146937" y="104.876491" transform="rotate(-0 428.146937 104.876491)">5</text>     </g>    </g>    <g id="svg-matplotlib-174f30b114d0-ytick_12">     <g id="svg-matplotlib-174f30b114d0-line2d_57">      <path d="M 435.146937 78.054545 L 776.982937 78.054545 " clip-path="url(#svg-matplotlib-174f30b114d0-p4462df83c5)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-174f30b114d0-line2d_58">      <g>       <use ns4:href="#svg-matplotlib-174f30b114d0-m4f861fd669" x="435.146937" y="78.054545" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-174f30b114d0-text_32">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end" x="428.146937" y="81.853764" transform="rotate(-0 428.146937 81.853764)">6</text>     </g>    </g>    <g id="svg-matplotlib-174f30b114d0-ytick_13">     <g id="svg-matplotlib-174f30b114d0-line2d_59">      <path d="M 435.146937 55.031818 L 776.982937 55.031818 " clip-path="url(#svg-matplotlib-174f30b114d0-p4462df83c5)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-174f30b114d0-line2d_60">      <g>       <use ns4:href="#svg-matplotlib-174f30b114d0-m4f861fd669" x="435.146937" y="55.031818" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-174f30b114d0-text_33">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end" x="428.146937" y="58.831037" transform="rotate(-0 428.146937 58.831037)">7</text>     </g>    </g>    <g id="svg-matplotlib-174f30b114d0-ytick_14">     <g id="svg-matplotlib-174f30b114d0-line2d_61">      <path d="M 435.146937 32.009091 L 776.982937 32.009091 " clip-path="url(#svg-matplotlib-174f30b114d0-p4462df83c5)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-174f30b114d0-line2d_62">      <g>       <use ns4:href="#svg-matplotlib-174f30b114d0-m4f861fd669" x="435.146937" y="32.009091" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-174f30b114d0-text_34">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end" x="428.146937" y="35.80831" transform="rotate(-0 428.146937 35.80831)">8</text>     </g>    </g>    <g id="svg-matplotlib-174f30b114d0-text_35">          <g transform="translate(415.384437 132.5) rotate(-90)">      <text>       <tspan x="0" y="-0.359375" style="font-size: 10px; font-family: 'DejaVu Sans'">|</tspan>       <tspan x="13.371094" y="-0.359375" style="font-size: 10px; font-family: 'DejaVu Sans'">|</tspan>       <tspan x="3.369141" y="-0.359375" style="font-style: oblique; font-size: 10px; font-family: 'DejaVu Sans'">X</tspan>       <tspan x="10.219727" y="1.28125" style="font-style: oblique; font-size: 7px; font-family: 'DejaVu Sans'">r</tspan>      </text>     </g>    </g>   </g>   <g id="svg-matplotlib-174f30b114d0-LineCollection_2">    <path d="M 450.684937 216.190909 L 450.684937 216.190909 " clip-path="url(#svg-matplotlib-174f30b114d0-p4462df83c5)" style="fill: none; stroke: #ff7f0e; stroke-width: 1.5" />    <path d="M 471.402271 216.190909 L 471.402271 216.190909 " clip-path="url(#svg-matplotlib-174f30b114d0-p4462df83c5)" style="fill: none; stroke: #ff7f0e; stroke-width: 1.5" />    <path d="M 492.119604 216.190909 L 492.119604 216.190909 " clip-path="url(#svg-matplotlib-174f30b114d0-p4462df83c5)" style="fill: none; stroke: #ff7f0e; stroke-width: 1.5" />    <path d="M 512.836937 216.190909 L 512.836937 32.009091 " clip-path="url(#svg-matplotlib-174f30b114d0-p4462df83c5)" style="fill: none; stroke: #ff7f0e; stroke-width: 1.5" />    <path d="M 533.554271 216.190909 L 533.554271 216.190909 " clip-path="url(#svg-matplotlib-174f30b114d0-p4462df83c5)" style="fill: none; stroke: #ff7f0e; stroke-width: 1.5" />    <path d="M 554.271604 216.190909 L 554.271604 133.309091 " clip-path="url(#svg-matplotlib-174f30b114d0-p4462df83c5)" style="fill: none; stroke: #ff7f0e; stroke-width: 1.5" />    <path d="M 574.988937 216.190909 L 574.988937 216.190909 " clip-path="url(#svg-matplotlib-174f30b114d0-p4462df83c5)" style="fill: none; stroke: #ff7f0e; stroke-width: 1.5" />    <path d="M 595.706271 216.190909 L 595.706271 216.190909 " clip-path="url(#svg-matplotlib-174f30b114d0-p4462df83c5)" style="fill: none; stroke: #ff7f0e; stroke-width: 1.5" />    <path d="M 616.423604 216.190909 L 616.423604 216.190909 " clip-path="url(#svg-matplotlib-174f30b114d0-p4462df83c5)" style="fill: none; stroke: #ff7f0e; stroke-width: 1.5" />    <path d="M 637.140937 216.190909 L 637.140937 216.190909 " clip-path="url(#svg-matplotlib-174f30b114d0-p4462df83c5)" style="fill: none; stroke: #ff7f0e; stroke-width: 1.5" />    <path d="M 657.858271 216.190909 L 657.858271 216.190909 " clip-path="url(#svg-matplotlib-174f30b114d0-p4462df83c5)" style="fill: none; stroke: #ff7f0e; stroke-width: 1.5" />    <path d="M 678.575604 216.190909 L 678.575604 133.309091 " clip-path="url(#svg-matplotlib-174f30b114d0-p4462df83c5)" style="fill: none; stroke: #ff7f0e; stroke-width: 1.5" />    <path d="M 699.292937 216.190909 L 699.292937 216.190909 " clip-path="url(#svg-matplotlib-174f30b114d0-p4462df83c5)" style="fill: none; stroke: #ff7f0e; stroke-width: 1.5" />    <path d="M 720.010271 216.190909 L 720.010271 32.009091 " clip-path="url(#svg-matplotlib-174f30b114d0-p4462df83c5)" style="fill: none; stroke: #ff7f0e; stroke-width: 1.5" />    <path d="M 740.727604 216.190909 L 740.727604 216.190909 " clip-path="url(#svg-matplotlib-174f30b114d0-p4462df83c5)" style="fill: none; stroke: #ff7f0e; stroke-width: 1.5" />    <path d="M 761.444937 216.190909 L 761.444937 216.190909 " clip-path="url(#svg-matplotlib-174f30b114d0-p4462df83c5)" style="fill: none; stroke: #ff7f0e; stroke-width: 1.5" />   </g>   <g id="svg-matplotlib-174f30b114d0-line2d_63">    <defs>     <path id="svg-matplotlib-174f30b114d0-m04b04582a2" d="M 0 3 C 0.795609 3 1.55874 2.683901 2.12132 2.12132 C 2.683901 1.55874 3 0.795609 3 0 C 3 -0.795609 2.683901 -1.55874 2.12132 -2.12132 C 1.55874 -2.683901 0.795609 -3 0 -3 C -0.795609 -3 -1.55874 -2.683901 -2.12132 -2.12132 C -2.683901 -1.55874 -3 -0.795609 -3 0 C -3 0.795609 -2.683901 1.55874 -2.12132 2.12132 C -1.55874 2.683901 -0.795609 3 0 3 z" style="stroke: #ff7f0e" />    </defs>    <g clip-path="url(#svg-matplotlib-174f30b114d0-p4462df83c5)">     <use ns4:href="#svg-matplotlib-174f30b114d0-m04b04582a2" x="450.684937" y="216.190909" style="fill: #ff7f0e; stroke: #ff7f0e" />     <use ns4:href="#svg-matplotlib-174f30b114d0-m04b04582a2" x="471.402271" y="216.190909" style="fill: #ff7f0e; stroke: #ff7f0e" />     <use ns4:href="#svg-matplotlib-174f30b114d0-m04b04582a2" x="492.119604" y="216.190909" style="fill: #ff7f0e; stroke: #ff7f0e" />     <use ns4:href="#svg-matplotlib-174f30b114d0-m04b04582a2" x="512.836937" y="32.009091" style="fill: #ff7f0e; stroke: #ff7f0e" />     <use ns4:href="#svg-matplotlib-174f30b114d0-m04b04582a2" x="533.554271" y="216.190909" style="fill: #ff7f0e; stroke: #ff7f0e" />     <use ns4:href="#svg-matplotlib-174f30b114d0-m04b04582a2" x="554.271604" y="133.309091" style="fill: #ff7f0e; stroke: #ff7f0e" />     <use ns4:href="#svg-matplotlib-174f30b114d0-m04b04582a2" x="574.988937" y="216.190909" style="fill: #ff7f0e; stroke: #ff7f0e" />     <use ns4:href="#svg-matplotlib-174f30b114d0-m04b04582a2" x="595.706271" y="216.190909" style="fill: #ff7f0e; stroke: #ff7f0e" />     <use ns4:href="#svg-matplotlib-174f30b114d0-m04b04582a2" x="616.423604" y="216.190909" style="fill: #ff7f0e; stroke: #ff7f0e" />     <use ns4:href="#svg-matplotlib-174f30b114d0-m04b04582a2" x="637.140937" y="216.190909" style="fill: #ff7f0e; stroke: #ff7f0e" />     <use ns4:href="#svg-matplotlib-174f30b114d0-m04b04582a2" x="657.858271" y="216.190909" style="fill: #ff7f0e; stroke: #ff7f0e" />     <use ns4:href="#svg-matplotlib-174f30b114d0-m04b04582a2" x="678.575604" y="133.309091" style="fill: #ff7f0e; stroke: #ff7f0e" />     <use ns4:href="#svg-matplotlib-174f30b114d0-m04b04582a2" x="699.292937" y="216.190909" style="fill: #ff7f0e; stroke: #ff7f0e" />     <use ns4:href="#svg-matplotlib-174f30b114d0-m04b04582a2" x="720.010271" y="32.009091" style="fill: #ff7f0e; stroke: #ff7f0e" />     <use ns4:href="#svg-matplotlib-174f30b114d0-m04b04582a2" x="740.727604" y="216.190909" style="fill: #ff7f0e; stroke: #ff7f0e" />     <use ns4:href="#svg-matplotlib-174f30b114d0-m04b04582a2" x="761.444937" y="216.190909" style="fill: #ff7f0e; stroke: #ff7f0e" />    </g>   </g>   <g id="svg-matplotlib-174f30b114d0-line2d_64" />   <g id="svg-matplotlib-174f30b114d0-patch_8">    <path d="M 435.146937 225.4 L 435.146937 22.8 " style="fill: none; stroke: #000000; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square" />   </g>   <g id="svg-matplotlib-174f30b114d0-patch_9">    <path d="M 776.982937 225.4 L 776.982937 22.8 " style="fill: none; stroke: #000000; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square" />   </g>   <g id="svg-matplotlib-174f30b114d0-patch_10">    <path d="M 435.146937 225.4 L 776.982937 225.4 " style="fill: none; stroke: #000000; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square" />   </g>   <g id="svg-matplotlib-174f30b114d0-patch_11">    <path d="M 435.146937 22.8 L 776.982937 22.8 " style="fill: none; stroke: #000000; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square" />   </g>   <g id="svg-matplotlib-174f30b114d0-text_36">        <g transform="translate(523.504937 16.8)">     <text>      <tspan x="0" y="-0.40625" style="font-style: oblique; font-size: 12px; font-family: 'DejaVu Sans'">N</tspan>      <tspan x="8.976562" y="1.5625" style="font-size: 8.4px; font-family: 'DejaVu Sans'">0</tspan>      <tspan x="14.649023" y="-0.40625" style="font-size: 12px; font-family: 'DejaVu Sans'"> </tspan>      <tspan x="18.463477" y="-0.40625" style="font-size: 12px; font-family: 'DejaVu Sans'">a</tspan>      <tspan x="25.816992" y="-0.40625" style="font-size: 12px; font-family: 'DejaVu Sans'">m</tspan>      <tspan x="37.506445" y="-0.40625" style="font-size: 12px; font-family: 'DejaVu Sans'">o</tspan>      <tspan x="44.848242" y="-0.40625" style="font-size: 12px; font-family: 'DejaVu Sans'">s</tspan>      <tspan x="51.100195" y="-0.40625" style="font-size: 12px; font-family: 'DejaVu Sans'">t</tspan>      <tspan x="55.805273" y="-0.40625" style="font-size: 12px; font-family: 'DejaVu Sans'">r</tspan>      <tspan x="60.738867" y="-0.40625" style="font-size: 12px; font-family: 'DejaVu Sans'">a</tspan>      <tspan x="68.092383" y="-0.40625" style="font-size: 12px; font-family: 'DejaVu Sans'">s</tspan>      <tspan x="74.344336" y="-0.40625" style="font-size: 12px; font-family: 'DejaVu Sans'"> </tspan>      <tspan x="78.158789" y="-0.40625" style="font-size: 12px; font-family: 'DejaVu Sans'">e</tspan>      <tspan x="85.541602" y="-0.40625" style="font-size: 12px; font-family: 'DejaVu Sans'">m</tspan>      <tspan x="97.231055" y="-0.40625" style="font-size: 12px; font-family: 'DejaVu Sans'"> </tspan>      <tspan x="101.045508" y="-0.40625" style="font-size: 12px; font-family: 'DejaVu Sans'">f</tspan>      <tspan x="105.270117" y="-0.40625" style="font-size: 12px; font-family: 'DejaVu Sans'">r</tspan>      <tspan x="110.203711" y="-0.40625" style="font-size: 12px; font-family: 'DejaVu Sans'">e</tspan>      <tspan x="117.586523" y="-0.40625" style="font-size: 12px; font-family: 'DejaVu Sans'">q</tspan>      <tspan x="125.203711" y="-0.40625" style="font-size: 12px; font-family: 'DejaVu Sans'">u</tspan>      <tspan x="132.80918" y="-0.40625" style="font-size: 12px; font-family: 'DejaVu Sans'">ê</tspan>      <tspan x="140.191992" y="-0.40625" style="font-size: 12px; font-family: 'DejaVu Sans'">n</tspan>      <tspan x="147.797461" y="-0.40625" style="font-size: 12px; font-family: 'DejaVu Sans'">c</tspan>      <tspan x="154.395117" y="-0.40625" style="font-size: 12px; font-family: 'DejaVu Sans'">i</tspan>      <tspan x="157.729102" y="-0.40625" style="font-size: 12px; font-family: 'DejaVu Sans'">a</tspan>     </text>    </g>   </g>  </g> </g> <defs>  <clipPath id="svg-matplotlib-174f30b114d0-p34bb160142">   <rect x="52.160938" y="22.8" width="341.836" height="202.6" />  </clipPath>  <clipPath id="svg-matplotlib-174f30b114d0-p4462df83c5">   <rect x="435.146937" y="22.8" width="341.836" height="202.6" />  </clipPath> </defs></svg></div></div>
+
+</section>
+<section><h1>Definição da TDF Direta</h1>
+<p>A TDF direta é:</p>
+<p>$$
+X_r=\sum_{n=0}^{N_0-1}x_n e^{-j\frac{2\pi}{N_0}rn}
+$$</p>
+<p>para:</p>
+<p>$$
+r=0,1,\ldots,N_0-1
+$$</p>
+<ul>
+<li>A entrada é uma lista de amostras $x_n$.</li>
+<li>A saída é uma lista de amostras espectrais $X_r$.</li>
+</ul>
+</section>
+<section><h1>Definição da TDF Inversa</h1>
+<p>A TDF inversa é:</p>
+<p>$$
+x_n=\frac{1}{N_0}\sum_{r=0}^{N_0-1}X_r e^{j\frac{2\pi}{N_0}rn}
+$$</p>
+<p>para:</p>
+<p>$$
+n=0,1,\ldots,N_0-1
+$$</p>
+<ul>
+<li>A TDF direta vai do tempo para a frequência.</li>
+<li>A TDF inversa reconstrói a sequência a partir das amostras espectrais.</li>
+</ul>
+</section>
+<section><h1>TDF Não É Fourier Errada</h1>
+<p>A TDF é exata para sequências finitas e periódicas.</p>
+<p>A aproximação aparece quando interpretamos essas sequências como amostras de sinais contínuos e espectros contínuos.</p>
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">Ponto importante<br /></span>
+  </div>
+  <div class="callout-content">
+<p>O cuidado não é desconfiar da TDF. O cuidado é escolher amostragem, duração e resolução de forma coerente com o sinal contínuo que queremos representar.</p>
+  </div>
+</div>
+</section>
+<section><h1>Escolha de $T$, $T_0$ e $N_0$</h1>
+<p>Para usar a TDF como aproximação da Transformada de Fourier contínua, escolhemos três grandezas:</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Grandeza</th>
+  <th style="text-align:left">Significado</th>
+  <th style="text-align:left">Relação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">$T$</td>
+  <td style="text-align:left">intervalo de amostragem no tempo</td>
+  <td style="text-align:left">$T=1/f_s$</td>
+</tr>
+<tr>
+  <td style="text-align:left">$T_0$</td>
+  <td style="text-align:left">duração observada ou período efetivo</td>
+  <td style="text-align:left">$f_0=1/T_0$</td>
+</tr>
+<tr>
+  <td style="text-align:left">$N_0$</td>
+  <td style="text-align:left">número de amostras</td>
+  <td style="text-align:left">$N_0=T_0/T$</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section><h1>Critérios de Escolha</h1>
+<p>Se a largura de faixa essencial é $B$:</p>
+<p>$$
+f_s\ge 2B
+$$</p>
+<p>ou:</p>
+<p>$$
+T\le \frac{1}{2B}
+$$</p>
+<p>Se queremos resolução em frequência $f_0$:</p>
+<p>$$
+T_0=\frac{1}{f_0}
+$$</p>
+</section>
+<section><h1>Exemplo 5</h1>
+<p>Um sinal tem duração de $2$ ms e largura de faixa essencial de $10$ kHz. Deseja-se resolução de $100$ Hz.</p>
+<p>Para a resolução:</p>
+<p>$$
+T_0=\frac{1}{100}=0{,}01\text{ s}=10\text{ ms}
+$$</p>
+<p>Pelo critério de Nyquist:</p>
+<p>$$
+f_s=2B=20000\text{ Hz}
+$$</p>
+<p>Logo:</p>
+<p>$$
+N_0=\frac{T_0}{T}=\frac{10\text{ ms}}{50\ \mu\text{s}}=200
+$$</p>
+<p>Na prática, pode-se escolher $N_0=256$ para facilitar a FFT.</p>
+</section>
+<section><h1>Três Cuidados No Cálculo Numérico</h1>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Cuidado</th>
+  <th style="text-align:left">O que acontece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Aliasing</td>
+  <td style="text-align:left">taxa temporal insuficiente contamina o espectro</td>
+</tr>
+<tr>
+  <td style="text-align:left">Vazamento</td>
+  <td style="text-align:left">truncamento espalha energia espectral</td>
+</tr>
+<tr>
+  <td style="text-align:left">Efeito de cerca</td>
+  <td style="text-align:left">a TDF mostra apenas amostras do espectro</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Um pico pode cair entre duas amostras de frequência.</li>
+<li>Nesse caso, ele pode parecer menor ou ficar difícil de identificar.</li>
+</ul>
+</section>
+<section><h1>Preenchimento Nulo</h1>
+<p>Preenchimento nulo significa adicionar zeros à sequência antes de calcular a TDF.</p>
+<ul>
+<li>Aumenta a quantidade de amostras visualizadas do espectro.</li>
+<li>Pode facilitar a leitura de picos e curvas.</li>
+<li>Não cria informação nova.</li>
+<li>Não corrige aliasing temporal.</li>
+<li>Não corrige truncamento inadequado.</li>
+</ul>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Cuidado<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Mais pontos no gráfico não significam mais informação física no sinal medido.</p>
+  </div>
+</div>
+</section>
+<section><h1>Propriedades Básicas da TDF</h1>
+<p>As propriedades lembram a Transformada de Fourier, mas com uma diferença importante: as sequências são periódicas de período $N_0$.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Propriedade</th>
+  <th style="text-align:left">Forma conceitual</th>
+  <th style="text-align:left">Cuidado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Linearidade</td>
+  <td style="text-align:left">combinação no tempo vira combinação na frequência</td>
+  <td style="text-align:left">mesma intuição de Fourier</td>
+</tr>
+<tr>
+  <td style="text-align:left">Simetria de conjugado</td>
+  <td style="text-align:left">sequência real gera espectro conjugado simétrico</td>
+  <td style="text-align:left">basta calcular metade em muitos casos</td>
+</tr>
+<tr>
+  <td style="text-align:left">Deslocamento no tempo</td>
+  <td style="text-align:left">deslocamento gera fator de fase</td>
+  <td style="text-align:left">deslocamento circular</td>
+</tr>
+<tr>
+  <td style="text-align:left">Deslocamento na frequência</td>
+  <td style="text-align:left">multiplicação desloca o espectro</td>
+  <td style="text-align:left">também circular</td>
+</tr>
+<tr>
+  <td style="text-align:left">Convolução periódica</td>
+  <td style="text-align:left">convolução circular vira produto</td>
+  <td style="text-align:left">não é automaticamente convolução linear</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section><h1>Aplicações da TDF</h1>
+<p>O Lathi destaca três aplicações principais:</p>
+<ul>
+<li>cálculo numérico de Fourier;</li>
+<li>convolução;</li>
+<li>filtragem.</li>
+</ul>
+<p>Na filtragem:</p>
+<p>$$
+x_n \xrightarrow{\text{TDF}} X_r
+$$</p>
+<p>Depois multiplicamos por amostras da resposta em frequência $H_r$ e aplicamos a TDF inversa.</p>
+</section>
+<section><h1>Convolução Linear Por TDF</h1>
+<p>A TDF trabalha naturalmente com convolução circular.</p>
+<p>Para calcular convolução linear por multiplicação em frequência, precisamos preencher com zeros.</p>
+<p>Se as sequências têm comprimentos $N_1$ e $N_2$, o comprimento mínimo é:</p>
+<p>$$
+N_1+N_2-1
+$$</p>
+</section>
+<section><h1>Exemplo 6</h1>
+<p>Duas sequências têm comprimentos $N_1=5$ e $N_2=4$.</p>
+<p>O tamanho mínimo para calcular a convolução linear por TDF é:</p>
+<p>$$
+N_1+N_2-1=5+4-1=8
+$$</p>
+<p>Logo, as sequências devem ser preenchidas com zeros até tamanho $8$ antes de aplicar a TDF.</p>
+</section>
+<section><h1>FFT: Mesma TDF, Menos Cálculo</h1>
+<p>A FFT não é uma transformada diferente.</p>
+<p>Ela é um algoritmo eficiente para calcular a TDF.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Método</th>
+  <th style="text-align:left">Ordem de operações</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">TDF direta</td>
+  <td style="text-align:left">$N_0^2$</td>
+</tr>
+<tr>
+  <td style="text-align:left">FFT</td>
+  <td style="text-align:left">$N_0\log_2N_0$</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>O resultado numérico é o mesmo.</li>
+<li>A diferença está no custo para chegar ao resultado.</li>
+</ul>
+</section>
+<section><h1>Comparação de Custo</h1>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:ns2="http://creativecommons.org/ns#" xmlns:ns4="http://www.w3.org/1999/xlink" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" width="760" viewBox="0 0 639.910753 288.394375" version="1.1" class="svg-graph matplotlib-plot-img"> <metadata>  <rdf:RDF>   <ns2:Work>    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage" />    <dc:date>2026-05-06T17:57:30.097737</dc:date>    <dc:format>image/svg+xml</dc:format>    <dc:creator>     <ns2:Agent>      <dc:title>Matplotlib v3.10.8, https://matplotlib.org/</dc:title>     </ns2:Agent>    </dc:creator>   </ns2:Work>  </rdf:RDF> </metadata> <defs>  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style> </defs> <g id="svg-matplotlib-bfae5abb9892-figure_1">  <g id="svg-matplotlib-bfae5abb9892-patch_1">   <path d="M 0 288.394375 L 639.910753 288.394375 L 639.910753 0 L 0 0 L 0 288.394375 z" style="fill: none" />  </g>  <g id="svg-matplotlib-bfae5abb9892-axes_1">   <g id="svg-matplotlib-bfae5abb9892-patch_2">    <path d="M 45.648438 250.838125 L 632.710753 250.838125 L 632.710753 22.318125 L 45.648438 22.318125 L 45.648438 250.838125 z" style="fill: none" />   </g>   <g id="svg-matplotlib-bfae5abb9892-matplotlib.axis_1">    <g id="svg-matplotlib-bfae5abb9892-xtick_1">     <g id="svg-matplotlib-bfae5abb9892-line2d_1">      <path d="M 72.333088 250.838125 L 72.333088 22.318125 " clip-path="url(#svg-matplotlib-bfae5abb9892-p88e51cb144)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-bfae5abb9892-line2d_2">      <defs>       <path id="svg-matplotlib-bfae5abb9892-m61c25894ff" d="M 0 0 L 0 3.5 " style="stroke: #000000; stroke-width: 0.8" />      </defs>      <g>       <use ns4:href="#svg-matplotlib-bfae5abb9892-m61c25894ff" x="72.333088" y="250.838125" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-bfae5abb9892-text_1">            <g transform="translate(66.733088 265.436562)">       <text>        <tspan x="0" y="-0.976562" style="font-size: 10px; font-family: 'DejaVu Sans'">2</tspan>        <tspan x="6.458008" y="-4.804688" style="font-size: 7px; font-family: 'DejaVu Sans'">3</tspan>       </text>      </g>     </g>    </g>    <g id="svg-matplotlib-bfae5abb9892-xtick_2">     <g id="svg-matplotlib-bfae5abb9892-line2d_3">      <path d="M 148.574947 250.838125 L 148.574947 22.318125 " clip-path="url(#svg-matplotlib-bfae5abb9892-p88e51cb144)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-bfae5abb9892-line2d_4">      <g>       <use ns4:href="#svg-matplotlib-bfae5abb9892-m61c25894ff" x="148.574947" y="250.838125" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-bfae5abb9892-text_2">            <g transform="translate(142.974947 265.436562)">       <text>        <tspan x="0" y="-0.064063" style="font-size: 10px; font-family: 'DejaVu Sans'">2</tspan>        <tspan x="6.458008" y="-3.892188" style="font-size: 7px; font-family: 'DejaVu Sans'">4</tspan>       </text>      </g>     </g>    </g>    <g id="svg-matplotlib-bfae5abb9892-xtick_3">     <g id="svg-matplotlib-bfae5abb9892-line2d_5">      <path d="M 224.816806 250.838125 L 224.816806 22.318125 " clip-path="url(#svg-matplotlib-bfae5abb9892-p88e51cb144)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-bfae5abb9892-line2d_6">      <g>       <use ns4:href="#svg-matplotlib-bfae5abb9892-m61c25894ff" x="224.816806" y="250.838125" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-bfae5abb9892-text_3">            <g transform="translate(219.216806 265.436562)">       <text>        <tspan x="0" y="-0.064063" style="font-size: 10px; font-family: 'DejaVu Sans'">2</tspan>        <tspan x="6.458008" y="-3.892188" style="font-size: 7px; font-family: 'DejaVu Sans'">5</tspan>       </text>      </g>     </g>    </g>    <g id="svg-matplotlib-bfae5abb9892-xtick_4">     <g id="svg-matplotlib-bfae5abb9892-line2d_7">      <path d="M 301.058666 250.838125 L 301.058666 22.318125 " clip-path="url(#svg-matplotlib-bfae5abb9892-p88e51cb144)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-bfae5abb9892-line2d_8">      <g>       <use ns4:href="#svg-matplotlib-bfae5abb9892-m61c25894ff" x="301.058666" y="250.838125" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-bfae5abb9892-text_4">            <g transform="translate(295.458666 265.436562)">       <text>        <tspan x="0" y="-0.976562" style="font-size: 10px; font-family: 'DejaVu Sans'">2</tspan>        <tspan x="6.458008" y="-4.804688" style="font-size: 7px; font-family: 'DejaVu Sans'">6</tspan>       </text>      </g>     </g>    </g>    <g id="svg-matplotlib-bfae5abb9892-xtick_5">     <g id="svg-matplotlib-bfae5abb9892-line2d_9">      <path d="M 377.300525 250.838125 L 377.300525 22.318125 " clip-path="url(#svg-matplotlib-bfae5abb9892-p88e51cb144)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-bfae5abb9892-line2d_10">      <g>       <use ns4:href="#svg-matplotlib-bfae5abb9892-m61c25894ff" x="377.300525" y="250.838125" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-bfae5abb9892-text_5">            <g transform="translate(371.700525 265.436562)">       <text>        <tspan x="0" y="-0.064063" style="font-size: 10px; font-family: 'DejaVu Sans'">2</tspan>        <tspan x="6.458008" y="-3.892188" style="font-size: 7px; font-family: 'DejaVu Sans'">7</tspan>       </text>      </g>     </g>    </g>    <g id="svg-matplotlib-bfae5abb9892-xtick_6">     <g id="svg-matplotlib-bfae5abb9892-line2d_11">      <path d="M 453.542384 250.838125 L 453.542384 22.318125 " clip-path="url(#svg-matplotlib-bfae5abb9892-p88e51cb144)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-bfae5abb9892-line2d_12">      <g>       <use ns4:href="#svg-matplotlib-bfae5abb9892-m61c25894ff" x="453.542384" y="250.838125" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-bfae5abb9892-text_6">            <g transform="translate(447.942384 265.436562)">       <text>        <tspan x="0" y="-0.976562" style="font-size: 10px; font-family: 'DejaVu Sans'">2</tspan>        <tspan x="6.458008" y="-4.804688" style="font-size: 7px; font-family: 'DejaVu Sans'">8</tspan>       </text>      </g>     </g>    </g>    <g id="svg-matplotlib-bfae5abb9892-xtick_7">     <g id="svg-matplotlib-bfae5abb9892-line2d_13">      <path d="M 529.784243 250.838125 L 529.784243 22.318125 " clip-path="url(#svg-matplotlib-bfae5abb9892-p88e51cb144)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-bfae5abb9892-line2d_14">      <g>       <use ns4:href="#svg-matplotlib-bfae5abb9892-m61c25894ff" x="529.784243" y="250.838125" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-bfae5abb9892-text_7">            <g transform="translate(524.184243 265.436562)">       <text>        <tspan x="0" y="-0.976562" style="font-size: 10px; font-family: 'DejaVu Sans'">2</tspan>        <tspan x="6.458008" y="-4.804688" style="font-size: 7px; font-family: 'DejaVu Sans'">9</tspan>       </text>      </g>     </g>    </g>    <g id="svg-matplotlib-bfae5abb9892-xtick_8">     <g id="svg-matplotlib-bfae5abb9892-line2d_15">      <path d="M 606.026102 250.838125 L 606.026102 22.318125 " clip-path="url(#svg-matplotlib-bfae5abb9892-p88e51cb144)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-bfae5abb9892-line2d_16">      <g>       <use ns4:href="#svg-matplotlib-bfae5abb9892-m61c25894ff" x="606.026102" y="250.838125" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-bfae5abb9892-text_8">            <g transform="translate(598.176102 265.436562)">       <text>        <tspan x="0" y="-0.976562" style="font-size: 10px; font-family: 'DejaVu Sans'">2</tspan>        <tspan x="6.458008" y="-4.804688" style="font-size: 7px; font-family: 'DejaVu Sans'">1</tspan>        <tspan x="10.911621" y="-4.804688" style="font-size: 7px; font-family: 'DejaVu Sans'">0</tspan>       </text>      </g>     </g>    </g>    <g id="svg-matplotlib-bfae5abb9892-text_9">          <g transform="translate(333.029595 279.114687)">      <text>       <tspan x="0" y="-0.703125" style="font-style: oblique; font-size: 10px; font-family: 'DejaVu Sans'">N</tspan>       <tspan x="7.480469" y="0.9375" style="font-size: 7px; font-family: 'DejaVu Sans'">0</tspan>      </text>     </g>    </g>   </g>   <g id="svg-matplotlib-bfae5abb9892-matplotlib.axis_2">    <g id="svg-matplotlib-bfae5abb9892-ytick_1">     <g id="svg-matplotlib-bfae5abb9892-line2d_17">      <path d="M 45.648438 212.703543 L 632.710753 212.703543 " clip-path="url(#svg-matplotlib-bfae5abb9892-p88e51cb144)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-bfae5abb9892-line2d_18">      <defs>       <path id="svg-matplotlib-bfae5abb9892-mbf17ad5388" d="M 0 0 L -3.5 0 " style="stroke: #000000; stroke-width: 0.8" />      </defs>      <g>       <use ns4:href="#svg-matplotlib-bfae5abb9892-mbf17ad5388" x="45.648438" y="212.703543" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-bfae5abb9892-text_10">            <g transform="translate(21.048438 216.502762)">       <text>        <tspan x="0" y="-0.976562" style="font-size: 10px; font-family: 'DejaVu Sans'">1</tspan>        <tspan x="6.362305" y="-0.976562" style="font-size: 10px; font-family: 'DejaVu Sans'">0</tspan>        <tspan x="12.820312" y="-4.804688" style="font-size: 7px; font-family: 'DejaVu Sans'">2</tspan>       </text>      </g>     </g>    </g>    <g id="svg-matplotlib-bfae5abb9892-ytick_2">     <g id="svg-matplotlib-bfae5abb9892-line2d_19">      <path d="M 45.648438 167.934566 L 632.710753 167.934566 " clip-path="url(#svg-matplotlib-bfae5abb9892-p88e51cb144)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-bfae5abb9892-line2d_20">      <g>       <use ns4:href="#svg-matplotlib-bfae5abb9892-mbf17ad5388" x="45.648438" y="167.934566" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-bfae5abb9892-text_11">            <g transform="translate(21.048438 171.733785)">       <text>        <tspan x="0" y="-0.976562" style="font-size: 10px; font-family: 'DejaVu Sans'">1</tspan>        <tspan x="6.362305" y="-0.976562" style="font-size: 10px; font-family: 'DejaVu Sans'">0</tspan>        <tspan x="12.820312" y="-4.804688" style="font-size: 7px; font-family: 'DejaVu Sans'">3</tspan>       </text>      </g>     </g>    </g>    <g id="svg-matplotlib-bfae5abb9892-ytick_3">     <g id="svg-matplotlib-bfae5abb9892-line2d_21">      <path d="M 45.648438 123.165589 L 632.710753 123.165589 " clip-path="url(#svg-matplotlib-bfae5abb9892-p88e51cb144)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-bfae5abb9892-line2d_22">      <g>       <use ns4:href="#svg-matplotlib-bfae5abb9892-mbf17ad5388" x="45.648438" y="123.165589" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-bfae5abb9892-text_12">            <g transform="translate(21.048438 126.964808)">       <text>        <tspan x="0" y="-0.064063" style="font-size: 10px; font-family: 'DejaVu Sans'">1</tspan>        <tspan x="6.362305" y="-0.064063" style="font-size: 10px; font-family: 'DejaVu Sans'">0</tspan>        <tspan x="12.820312" y="-3.892188" style="font-size: 7px; font-family: 'DejaVu Sans'">4</tspan>       </text>      </g>     </g>    </g>    <g id="svg-matplotlib-bfae5abb9892-ytick_4">     <g id="svg-matplotlib-bfae5abb9892-line2d_23">      <path d="M 45.648438 78.396612 L 632.710753 78.396612 " clip-path="url(#svg-matplotlib-bfae5abb9892-p88e51cb144)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-bfae5abb9892-line2d_24">      <g>       <use ns4:href="#svg-matplotlib-bfae5abb9892-mbf17ad5388" x="45.648438" y="78.396612" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-bfae5abb9892-text_13">            <g transform="translate(21.048438 82.195831)">       <text>        <tspan x="0" y="-0.064063" style="font-size: 10px; font-family: 'DejaVu Sans'">1</tspan>        <tspan x="6.362305" y="-0.064063" style="font-size: 10px; font-family: 'DejaVu Sans'">0</tspan>        <tspan x="12.820312" y="-3.892188" style="font-size: 7px; font-family: 'DejaVu Sans'">5</tspan>       </text>      </g>     </g>    </g>    <g id="svg-matplotlib-bfae5abb9892-ytick_5">     <g id="svg-matplotlib-bfae5abb9892-line2d_25">      <path d="M 45.648438 33.627635 L 632.710753 33.627635 " clip-path="url(#svg-matplotlib-bfae5abb9892-p88e51cb144)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-bfae5abb9892-line2d_26">      <g>       <use ns4:href="#svg-matplotlib-bfae5abb9892-mbf17ad5388" x="45.648438" y="33.627635" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-bfae5abb9892-text_14">            <g transform="translate(21.048438 37.426854)">       <text>        <tspan x="0" y="-0.976562" style="font-size: 10px; font-family: 'DejaVu Sans'">1</tspan>        <tspan x="6.362305" y="-0.976562" style="font-size: 10px; font-family: 'DejaVu Sans'">0</tspan>        <tspan x="12.820312" y="-4.804688" style="font-size: 7px; font-family: 'DejaVu Sans'">6</tspan>       </text>      </g>     </g>    </g>    <g id="svg-matplotlib-bfae5abb9892-ytick_6">     <g id="svg-matplotlib-bfae5abb9892-line2d_27">      <path d="M 45.648438 243.995716 L 632.710753 243.995716 " clip-path="url(#svg-matplotlib-bfae5abb9892-p88e51cb144)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-bfae5abb9892-line2d_28">      <defs>       <path id="svg-matplotlib-bfae5abb9892-m2fbcb7ffe9" d="M 0 0 L -2 0 " style="stroke: #000000; stroke-width: 0.6" />      </defs>      <g>       <use ns4:href="#svg-matplotlib-bfae5abb9892-m2fbcb7ffe9" x="45.648438" y="243.995716" style="stroke: #000000; stroke-width: 0.6" />      </g>     </g>    </g>    <g id="svg-matplotlib-bfae5abb9892-ytick_7">     <g id="svg-matplotlib-bfae5abb9892-line2d_29">      <path d="M 45.648438 236.11229 L 632.710753 236.11229 " clip-path="url(#svg-matplotlib-bfae5abb9892-p88e51cb144)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-bfae5abb9892-line2d_30">      <g>       <use ns4:href="#svg-matplotlib-bfae5abb9892-m2fbcb7ffe9" x="45.648438" y="236.11229" style="stroke: #000000; stroke-width: 0.6" />      </g>     </g>    </g>    <g id="svg-matplotlib-bfae5abb9892-ytick_8">     <g id="svg-matplotlib-bfae5abb9892-line2d_31">      <path d="M 45.648438 230.518911 L 632.710753 230.518911 " clip-path="url(#svg-matplotlib-bfae5abb9892-p88e51cb144)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-bfae5abb9892-line2d_32">      <g>       <use ns4:href="#svg-matplotlib-bfae5abb9892-m2fbcb7ffe9" x="45.648438" y="230.518911" style="stroke: #000000; stroke-width: 0.6" />      </g>     </g>    </g>    <g id="svg-matplotlib-bfae5abb9892-ytick_9">     <g id="svg-matplotlib-bfae5abb9892-line2d_33">      <path d="M 45.648438 226.180349 L 632.710753 226.180349 " clip-path="url(#svg-matplotlib-bfae5abb9892-p88e51cb144)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-bfae5abb9892-line2d_34">      <g>       <use ns4:href="#svg-matplotlib-bfae5abb9892-m2fbcb7ffe9" x="45.648438" y="226.180349" style="stroke: #000000; stroke-width: 0.6" />      </g>     </g>    </g>    <g id="svg-matplotlib-bfae5abb9892-ytick_10">     <g id="svg-matplotlib-bfae5abb9892-line2d_35">      <path d="M 45.648438 222.635485 L 632.710753 222.635485 " clip-path="url(#svg-matplotlib-bfae5abb9892-p88e51cb144)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-bfae5abb9892-line2d_36">      <g>       <use ns4:href="#svg-matplotlib-bfae5abb9892-m2fbcb7ffe9" x="45.648438" y="222.635485" style="stroke: #000000; stroke-width: 0.6" />      </g>     </g>    </g>    <g id="svg-matplotlib-bfae5abb9892-ytick_11">     <g id="svg-matplotlib-bfae5abb9892-line2d_37">      <path d="M 45.648438 219.638346 L 632.710753 219.638346 " clip-path="url(#svg-matplotlib-bfae5abb9892-p88e51cb144)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-bfae5abb9892-line2d_38">      <g>       <use ns4:href="#svg-matplotlib-bfae5abb9892-m2fbcb7ffe9" x="45.648438" y="219.638346" style="stroke: #000000; stroke-width: 0.6" />      </g>     </g>    </g>    <g id="svg-matplotlib-bfae5abb9892-ytick_12">     <g id="svg-matplotlib-bfae5abb9892-line2d_39">      <path d="M 45.648438 217.042106 L 632.710753 217.042106 " clip-path="url(#svg-matplotlib-bfae5abb9892-p88e51cb144)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-bfae5abb9892-line2d_40">      <g>       <use ns4:href="#svg-matplotlib-bfae5abb9892-m2fbcb7ffe9" x="45.648438" y="217.042106" style="stroke: #000000; stroke-width: 0.6" />      </g>     </g>    </g>    <g id="svg-matplotlib-bfae5abb9892-ytick_13">     <g id="svg-matplotlib-bfae5abb9892-line2d_41">      <path d="M 45.648438 214.75206 L 632.710753 214.75206 " clip-path="url(#svg-matplotlib-bfae5abb9892-p88e51cb144)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-bfae5abb9892-line2d_42">      <g>       <use ns4:href="#svg-matplotlib-bfae5abb9892-m2fbcb7ffe9" x="45.648438" y="214.75206" style="stroke: #000000; stroke-width: 0.6" />      </g>     </g>    </g>    <g id="svg-matplotlib-bfae5abb9892-ytick_14">     <g id="svg-matplotlib-bfae5abb9892-line2d_43">      <path d="M 45.648438 199.226738 L 632.710753 199.226738 " clip-path="url(#svg-matplotlib-bfae5abb9892-p88e51cb144)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-bfae5abb9892-line2d_44">      <g>       <use ns4:href="#svg-matplotlib-bfae5abb9892-m2fbcb7ffe9" x="45.648438" y="199.226738" style="stroke: #000000; stroke-width: 0.6" />      </g>     </g>    </g>    <g id="svg-matplotlib-bfae5abb9892-ytick_15">     <g id="svg-matplotlib-bfae5abb9892-line2d_45">      <path d="M 45.648438 191.343313 L 632.710753 191.343313 " clip-path="url(#svg-matplotlib-bfae5abb9892-p88e51cb144)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-bfae5abb9892-line2d_46">      <g>       <use ns4:href="#svg-matplotlib-bfae5abb9892-m2fbcb7ffe9" x="45.648438" y="191.343313" style="stroke: #000000; stroke-width: 0.6" />      </g>     </g>    </g>    <g id="svg-matplotlib-bfae5abb9892-ytick_16">     <g id="svg-matplotlib-bfae5abb9892-line2d_47">      <path d="M 45.648438 185.749933 L 632.710753 185.749933 " clip-path="url(#svg-matplotlib-bfae5abb9892-p88e51cb144)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-bfae5abb9892-line2d_48">      <g>       <use ns4:href="#svg-matplotlib-bfae5abb9892-m2fbcb7ffe9" x="45.648438" y="185.749933" style="stroke: #000000; stroke-width: 0.6" />      </g>     </g>    </g>    <g id="svg-matplotlib-bfae5abb9892-ytick_17">     <g id="svg-matplotlib-bfae5abb9892-line2d_49">      <path d="M 45.648438 181.411371 L 632.710753 181.411371 " clip-path="url(#svg-matplotlib-bfae5abb9892-p88e51cb144)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-bfae5abb9892-line2d_50">      <g>       <use ns4:href="#svg-matplotlib-bfae5abb9892-m2fbcb7ffe9" x="45.648438" y="181.411371" style="stroke: #000000; stroke-width: 0.6" />      </g>     </g>    </g>    <g id="svg-matplotlib-bfae5abb9892-ytick_18">     <g id="svg-matplotlib-bfae5abb9892-line2d_51">      <path d="M 45.648438 177.866508 L 632.710753 177.866508 " clip-path="url(#svg-matplotlib-bfae5abb9892-p88e51cb144)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-bfae5abb9892-line2d_52">      <g>       <use ns4:href="#svg-matplotlib-bfae5abb9892-m2fbcb7ffe9" x="45.648438" y="177.866508" style="stroke: #000000; stroke-width: 0.6" />      </g>     </g>    </g>    <g id="svg-matplotlib-bfae5abb9892-ytick_19">     <g id="svg-matplotlib-bfae5abb9892-line2d_53">      <path d="M 45.648438 174.869369 L 632.710753 174.869369 " clip-path="url(#svg-matplotlib-bfae5abb9892-p88e51cb144)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-bfae5abb9892-line2d_54">      <g>       <use ns4:href="#svg-matplotlib-bfae5abb9892-m2fbcb7ffe9" x="45.648438" y="174.869369" style="stroke: #000000; stroke-width: 0.6" />      </g>     </g>    </g>    <g id="svg-matplotlib-bfae5abb9892-ytick_20">     <g id="svg-matplotlib-bfae5abb9892-line2d_55">      <path d="M 45.648438 172.273128 L 632.710753 172.273128 " clip-path="url(#svg-matplotlib-bfae5abb9892-p88e51cb144)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-bfae5abb9892-line2d_56">      <g>       <use ns4:href="#svg-matplotlib-bfae5abb9892-m2fbcb7ffe9" x="45.648438" y="172.273128" style="stroke: #000000; stroke-width: 0.6" />      </g>     </g>    </g>    <g id="svg-matplotlib-bfae5abb9892-ytick_21">     <g id="svg-matplotlib-bfae5abb9892-line2d_57">      <path d="M 45.648438 169.983082 L 632.710753 169.983082 " clip-path="url(#svg-matplotlib-bfae5abb9892-p88e51cb144)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-bfae5abb9892-line2d_58">      <g>       <use ns4:href="#svg-matplotlib-bfae5abb9892-m2fbcb7ffe9" x="45.648438" y="169.983082" style="stroke: #000000; stroke-width: 0.6" />      </g>     </g>    </g>    <g id="svg-matplotlib-bfae5abb9892-ytick_22">     <g id="svg-matplotlib-bfae5abb9892-line2d_59">      <path d="M 45.648438 154.457761 L 632.710753 154.457761 " clip-path="url(#svg-matplotlib-bfae5abb9892-p88e51cb144)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-bfae5abb9892-line2d_60">      <g>       <use ns4:href="#svg-matplotlib-bfae5abb9892-m2fbcb7ffe9" x="45.648438" y="154.457761" style="stroke: #000000; stroke-width: 0.6" />      </g>     </g>    </g>    <g id="svg-matplotlib-bfae5abb9892-ytick_23">     <g id="svg-matplotlib-bfae5abb9892-line2d_61">      <path d="M 45.648438 146.574336 L 632.710753 146.574336 " clip-path="url(#svg-matplotlib-bfae5abb9892-p88e51cb144)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-bfae5abb9892-line2d_62">      <g>       <use ns4:href="#svg-matplotlib-bfae5abb9892-m2fbcb7ffe9" x="45.648438" y="146.574336" style="stroke: #000000; stroke-width: 0.6" />      </g>     </g>    </g>    <g id="svg-matplotlib-bfae5abb9892-ytick_24">     <g id="svg-matplotlib-bfae5abb9892-line2d_63">      <path d="M 45.648438 140.980956 L 632.710753 140.980956 " clip-path="url(#svg-matplotlib-bfae5abb9892-p88e51cb144)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-bfae5abb9892-line2d_64">      <g>       <use ns4:href="#svg-matplotlib-bfae5abb9892-m2fbcb7ffe9" x="45.648438" y="140.980956" style="stroke: #000000; stroke-width: 0.6" />      </g>     </g>    </g>    <g id="svg-matplotlib-bfae5abb9892-ytick_25">     <g id="svg-matplotlib-bfae5abb9892-line2d_65">      <path d="M 45.648438 136.642394 L 632.710753 136.642394 " clip-path="url(#svg-matplotlib-bfae5abb9892-p88e51cb144)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-bfae5abb9892-line2d_66">      <g>       <use ns4:href="#svg-matplotlib-bfae5abb9892-m2fbcb7ffe9" x="45.648438" y="136.642394" style="stroke: #000000; stroke-width: 0.6" />      </g>     </g>    </g>    <g id="svg-matplotlib-bfae5abb9892-ytick_26">     <g id="svg-matplotlib-bfae5abb9892-line2d_67">      <path d="M 45.648438 133.097531 L 632.710753 133.097531 " clip-path="url(#svg-matplotlib-bfae5abb9892-p88e51cb144)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-bfae5abb9892-line2d_68">      <g>       <use ns4:href="#svg-matplotlib-bfae5abb9892-m2fbcb7ffe9" x="45.648438" y="133.097531" style="stroke: #000000; stroke-width: 0.6" />      </g>     </g>    </g>    <g id="svg-matplotlib-bfae5abb9892-ytick_27">     <g id="svg-matplotlib-bfae5abb9892-line2d_69">      <path d="M 45.648438 130.100391 L 632.710753 130.100391 " clip-path="url(#svg-matplotlib-bfae5abb9892-p88e51cb144)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-bfae5abb9892-line2d_70">      <g>       <use ns4:href="#svg-matplotlib-bfae5abb9892-m2fbcb7ffe9" x="45.648438" y="130.100391" style="stroke: #000000; stroke-width: 0.6" />      </g>     </g>    </g>    <g id="svg-matplotlib-bfae5abb9892-ytick_28">     <g id="svg-matplotlib-bfae5abb9892-line2d_71">      <path d="M 45.648438 127.504151 L 632.710753 127.504151 " clip-path="url(#svg-matplotlib-bfae5abb9892-p88e51cb144)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-bfae5abb9892-line2d_72">      <g>       <use ns4:href="#svg-matplotlib-bfae5abb9892-m2fbcb7ffe9" x="45.648438" y="127.504151" style="stroke: #000000; stroke-width: 0.6" />      </g>     </g>    </g>    <g id="svg-matplotlib-bfae5abb9892-ytick_29">     <g id="svg-matplotlib-bfae5abb9892-line2d_73">      <path d="M 45.648438 125.214105 L 632.710753 125.214105 " clip-path="url(#svg-matplotlib-bfae5abb9892-p88e51cb144)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-bfae5abb9892-line2d_74">      <g>       <use ns4:href="#svg-matplotlib-bfae5abb9892-m2fbcb7ffe9" x="45.648438" y="125.214105" style="stroke: #000000; stroke-width: 0.6" />      </g>     </g>    </g>    <g id="svg-matplotlib-bfae5abb9892-ytick_30">     <g id="svg-matplotlib-bfae5abb9892-line2d_75">      <path d="M 45.648438 109.688784 L 632.710753 109.688784 " clip-path="url(#svg-matplotlib-bfae5abb9892-p88e51cb144)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-bfae5abb9892-line2d_76">      <g>       <use ns4:href="#svg-matplotlib-bfae5abb9892-m2fbcb7ffe9" x="45.648438" y="109.688784" style="stroke: #000000; stroke-width: 0.6" />      </g>     </g>    </g>    <g id="svg-matplotlib-bfae5abb9892-ytick_31">     <g id="svg-matplotlib-bfae5abb9892-line2d_77">      <path d="M 45.648438 101.805359 L 632.710753 101.805359 " clip-path="url(#svg-matplotlib-bfae5abb9892-p88e51cb144)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-bfae5abb9892-line2d_78">      <g>       <use ns4:href="#svg-matplotlib-bfae5abb9892-m2fbcb7ffe9" x="45.648438" y="101.805359" style="stroke: #000000; stroke-width: 0.6" />      </g>     </g>    </g>    <g id="svg-matplotlib-bfae5abb9892-ytick_32">     <g id="svg-matplotlib-bfae5abb9892-line2d_79">      <path d="M 45.648438 96.211979 L 632.710753 96.211979 " clip-path="url(#svg-matplotlib-bfae5abb9892-p88e51cb144)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-bfae5abb9892-line2d_80">      <g>       <use ns4:href="#svg-matplotlib-bfae5abb9892-m2fbcb7ffe9" x="45.648438" y="96.211979" style="stroke: #000000; stroke-width: 0.6" />      </g>     </g>    </g>    <g id="svg-matplotlib-bfae5abb9892-ytick_33">     <g id="svg-matplotlib-bfae5abb9892-line2d_81">      <path d="M 45.648438 91.873417 L 632.710753 91.873417 " clip-path="url(#svg-matplotlib-bfae5abb9892-p88e51cb144)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-bfae5abb9892-line2d_82">      <g>       <use ns4:href="#svg-matplotlib-bfae5abb9892-m2fbcb7ffe9" x="45.648438" y="91.873417" style="stroke: #000000; stroke-width: 0.6" />      </g>     </g>    </g>    <g id="svg-matplotlib-bfae5abb9892-ytick_34">     <g id="svg-matplotlib-bfae5abb9892-line2d_83">      <path d="M 45.648438 88.328554 L 632.710753 88.328554 " clip-path="url(#svg-matplotlib-bfae5abb9892-p88e51cb144)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-bfae5abb9892-line2d_84">      <g>       <use ns4:href="#svg-matplotlib-bfae5abb9892-m2fbcb7ffe9" x="45.648438" y="88.328554" style="stroke: #000000; stroke-width: 0.6" />      </g>     </g>    </g>    <g id="svg-matplotlib-bfae5abb9892-ytick_35">     <g id="svg-matplotlib-bfae5abb9892-line2d_85">      <path d="M 45.648438 85.331414 L 632.710753 85.331414 " clip-path="url(#svg-matplotlib-bfae5abb9892-p88e51cb144)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-bfae5abb9892-line2d_86">      <g>       <use ns4:href="#svg-matplotlib-bfae5abb9892-m2fbcb7ffe9" x="45.648438" y="85.331414" style="stroke: #000000; stroke-width: 0.6" />      </g>     </g>    </g>    <g id="svg-matplotlib-bfae5abb9892-ytick_36">     <g id="svg-matplotlib-bfae5abb9892-line2d_87">      <path d="M 45.648438 82.735174 L 632.710753 82.735174 " clip-path="url(#svg-matplotlib-bfae5abb9892-p88e51cb144)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-bfae5abb9892-line2d_88">      <g>       <use ns4:href="#svg-matplotlib-bfae5abb9892-m2fbcb7ffe9" x="45.648438" y="82.735174" style="stroke: #000000; stroke-width: 0.6" />      </g>     </g>    </g>    <g id="svg-matplotlib-bfae5abb9892-ytick_37">     <g id="svg-matplotlib-bfae5abb9892-line2d_89">      <path d="M 45.648438 80.445128 L 632.710753 80.445128 " clip-path="url(#svg-matplotlib-bfae5abb9892-p88e51cb144)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-bfae5abb9892-line2d_90">      <g>       <use ns4:href="#svg-matplotlib-bfae5abb9892-m2fbcb7ffe9" x="45.648438" y="80.445128" style="stroke: #000000; stroke-width: 0.6" />      </g>     </g>    </g>    <g id="svg-matplotlib-bfae5abb9892-ytick_38">     <g id="svg-matplotlib-bfae5abb9892-line2d_91">      <path d="M 45.648438 64.919807 L 632.710753 64.919807 " clip-path="url(#svg-matplotlib-bfae5abb9892-p88e51cb144)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-bfae5abb9892-line2d_92">      <g>       <use ns4:href="#svg-matplotlib-bfae5abb9892-m2fbcb7ffe9" x="45.648438" y="64.919807" style="stroke: #000000; stroke-width: 0.6" />      </g>     </g>    </g>    <g id="svg-matplotlib-bfae5abb9892-ytick_39">     <g id="svg-matplotlib-bfae5abb9892-line2d_93">      <path d="M 45.648438 57.036381 L 632.710753 57.036381 " clip-path="url(#svg-matplotlib-bfae5abb9892-p88e51cb144)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-bfae5abb9892-line2d_94">      <g>       <use ns4:href="#svg-matplotlib-bfae5abb9892-m2fbcb7ffe9" x="45.648438" y="57.036381" style="stroke: #000000; stroke-width: 0.6" />      </g>     </g>    </g>    <g id="svg-matplotlib-bfae5abb9892-ytick_40">     <g id="svg-matplotlib-bfae5abb9892-line2d_95">      <path d="M 45.648438 51.443002 L 632.710753 51.443002 " clip-path="url(#svg-matplotlib-bfae5abb9892-p88e51cb144)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-bfae5abb9892-line2d_96">      <g>       <use ns4:href="#svg-matplotlib-bfae5abb9892-m2fbcb7ffe9" x="45.648438" y="51.443002" style="stroke: #000000; stroke-width: 0.6" />      </g>     </g>    </g>    <g id="svg-matplotlib-bfae5abb9892-ytick_41">     <g id="svg-matplotlib-bfae5abb9892-line2d_97">      <path d="M 45.648438 47.10444 L 632.710753 47.10444 " clip-path="url(#svg-matplotlib-bfae5abb9892-p88e51cb144)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-bfae5abb9892-line2d_98">      <g>       <use ns4:href="#svg-matplotlib-bfae5abb9892-m2fbcb7ffe9" x="45.648438" y="47.10444" style="stroke: #000000; stroke-width: 0.6" />      </g>     </g>    </g>    <g id="svg-matplotlib-bfae5abb9892-ytick_42">     <g id="svg-matplotlib-bfae5abb9892-line2d_99">      <path d="M 45.648438 43.559576 L 632.710753 43.559576 " clip-path="url(#svg-matplotlib-bfae5abb9892-p88e51cb144)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-bfae5abb9892-line2d_100">      <g>       <use ns4:href="#svg-matplotlib-bfae5abb9892-m2fbcb7ffe9" x="45.648438" y="43.559576" style="stroke: #000000; stroke-width: 0.6" />      </g>     </g>    </g>    <g id="svg-matplotlib-bfae5abb9892-ytick_43">     <g id="svg-matplotlib-bfae5abb9892-line2d_101">      <path d="M 45.648438 40.562437 L 632.710753 40.562437 " clip-path="url(#svg-matplotlib-bfae5abb9892-p88e51cb144)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-bfae5abb9892-line2d_102">      <g>       <use ns4:href="#svg-matplotlib-bfae5abb9892-m2fbcb7ffe9" x="45.648438" y="40.562437" style="stroke: #000000; stroke-width: 0.6" />      </g>     </g>    </g>    <g id="svg-matplotlib-bfae5abb9892-ytick_44">     <g id="svg-matplotlib-bfae5abb9892-line2d_103">      <path d="M 45.648438 37.966197 L 632.710753 37.966197 " clip-path="url(#svg-matplotlib-bfae5abb9892-p88e51cb144)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-bfae5abb9892-line2d_104">      <g>       <use ns4:href="#svg-matplotlib-bfae5abb9892-m2fbcb7ffe9" x="45.648438" y="37.966197" style="stroke: #000000; stroke-width: 0.6" />      </g>     </g>    </g>    <g id="svg-matplotlib-bfae5abb9892-ytick_45">     <g id="svg-matplotlib-bfae5abb9892-line2d_105">      <path d="M 45.648438 35.676151 L 632.710753 35.676151 " clip-path="url(#svg-matplotlib-bfae5abb9892-p88e51cb144)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-bfae5abb9892-line2d_106">      <g>       <use ns4:href="#svg-matplotlib-bfae5abb9892-m2fbcb7ffe9" x="45.648438" y="35.676151" style="stroke: #000000; stroke-width: 0.6" />      </g>     </g>    </g>    <g id="svg-matplotlib-bfae5abb9892-text_15">     <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle" x="14.96875" y="136.578125" transform="rotate(-90 14.96875 136.578125)">Ordem de operações</text>    </g>   </g>   <g id="svg-matplotlib-bfae5abb9892-line2d_107">    <path d="M 72.333088 221.380668 L 148.574947 194.427058 L 224.816806 167.473448 L 301.058666 140.519838 L 377.300525 113.566228 L 453.542384 86.612618 L 529.784243 59.659008 L 606.026102 32.705398 " clip-path="url(#svg-matplotlib-bfae5abb9892-p88e51cb144)" style="fill: none; stroke: #1f77b4; stroke-width: 2.2; stroke-linecap: square" />    <defs>     <path id="svg-matplotlib-bfae5abb9892-m831e504ef1" d="M 0 3 C 0.795609 3 1.55874 2.683901 2.12132 2.12132 C 2.683901 1.55874 3 0.795609 3 0 C 3 -0.795609 2.683901 -1.55874 2.12132 -2.12132 C 1.55874 -2.683901 0.795609 -3 0 -3 C -0.795609 -3 -1.55874 -2.683901 -2.12132 -2.12132 C -2.683901 -1.55874 -3 -0.795609 -3 0 C -3 0.795609 -2.683901 1.55874 -2.12132 2.12132 C -1.55874 2.683901 -0.795609 3 0 3 z" style="stroke: #1f77b4" />    </defs>    <g clip-path="url(#svg-matplotlib-bfae5abb9892-p88e51cb144)">     <use ns4:href="#svg-matplotlib-bfae5abb9892-m831e504ef1" x="72.333088" y="221.380668" style="fill: #1f77b4; stroke: #1f77b4" />     <use ns4:href="#svg-matplotlib-bfae5abb9892-m831e504ef1" x="148.574947" y="194.427058" style="fill: #1f77b4; stroke: #1f77b4" />     <use ns4:href="#svg-matplotlib-bfae5abb9892-m831e504ef1" x="224.816806" y="167.473448" style="fill: #1f77b4; stroke: #1f77b4" />     <use ns4:href="#svg-matplotlib-bfae5abb9892-m831e504ef1" x="301.058666" y="140.519838" style="fill: #1f77b4; stroke: #1f77b4" />     <use ns4:href="#svg-matplotlib-bfae5abb9892-m831e504ef1" x="377.300525" y="113.566228" style="fill: #1f77b4; stroke: #1f77b4" />     <use ns4:href="#svg-matplotlib-bfae5abb9892-m831e504ef1" x="453.542384" y="86.612618" style="fill: #1f77b4; stroke: #1f77b4" />     <use ns4:href="#svg-matplotlib-bfae5abb9892-m831e504ef1" x="529.784243" y="59.659008" style="fill: #1f77b4; stroke: #1f77b4" />     <use ns4:href="#svg-matplotlib-bfae5abb9892-m831e504ef1" x="606.026102" y="32.705398" style="fill: #1f77b4; stroke: #1f77b4" />    </g>   </g>   <g id="svg-matplotlib-bfae5abb9892-line2d_108">    <path d="M 72.333088 240.450852 L 148.574947 221.380668 L 224.816806 203.565301 L 301.058666 186.543632 L 377.300525 170.069688 L 453.542384 153.996643 L 529.784243 138.229792 L 606.026102 122.704471 " clip-path="url(#svg-matplotlib-bfae5abb9892-p88e51cb144)" style="fill: none; stroke: #ff7f0e; stroke-width: 2.2; stroke-linecap: square" />    <defs>     <path id="svg-matplotlib-bfae5abb9892-md8e2131a4e" d="M 0 3 C 0.795609 3 1.55874 2.683901 2.12132 2.12132 C 2.683901 1.55874 3 0.795609 3 0 C 3 -0.795609 2.683901 -1.55874 2.12132 -2.12132 C 1.55874 -2.683901 0.795609 -3 0 -3 C -0.795609 -3 -1.55874 -2.683901 -2.12132 -2.12132 C -2.683901 -1.55874 -3 -0.795609 -3 0 C -3 0.795609 -2.683901 1.55874 -2.12132 2.12132 C -1.55874 2.683901 -0.795609 3 0 3 z" style="stroke: #ff7f0e" />    </defs>    <g clip-path="url(#svg-matplotlib-bfae5abb9892-p88e51cb144)">     <use ns4:href="#svg-matplotlib-bfae5abb9892-md8e2131a4e" x="72.333088" y="240.450852" style="fill: #ff7f0e; stroke: #ff7f0e" />     <use ns4:href="#svg-matplotlib-bfae5abb9892-md8e2131a4e" x="148.574947" y="221.380668" style="fill: #ff7f0e; stroke: #ff7f0e" />     <use ns4:href="#svg-matplotlib-bfae5abb9892-md8e2131a4e" x="224.816806" y="203.565301" style="fill: #ff7f0e; stroke: #ff7f0e" />     <use ns4:href="#svg-matplotlib-bfae5abb9892-md8e2131a4e" x="301.058666" y="186.543632" style="fill: #ff7f0e; stroke: #ff7f0e" />     <use ns4:href="#svg-matplotlib-bfae5abb9892-md8e2131a4e" x="377.300525" y="170.069688" style="fill: #ff7f0e; stroke: #ff7f0e" />     <use ns4:href="#svg-matplotlib-bfae5abb9892-md8e2131a4e" x="453.542384" y="153.996643" style="fill: #ff7f0e; stroke: #ff7f0e" />     <use ns4:href="#svg-matplotlib-bfae5abb9892-md8e2131a4e" x="529.784243" y="138.229792" style="fill: #ff7f0e; stroke: #ff7f0e" />     <use ns4:href="#svg-matplotlib-bfae5abb9892-md8e2131a4e" x="606.026102" y="122.704471" style="fill: #ff7f0e; stroke: #ff7f0e" />    </g>   </g>   <g id="svg-matplotlib-bfae5abb9892-patch_3">    <path d="M 45.648438 250.838125 L 45.648438 22.318125 " style="fill: none; stroke: #000000; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square" />   </g>   <g id="svg-matplotlib-bfae5abb9892-patch_4">    <path d="M 632.710753 250.838125 L 632.710753 22.318125 " style="fill: none; stroke: #000000; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square" />   </g>   <g id="svg-matplotlib-bfae5abb9892-patch_5">    <path d="M 45.648438 250.838125 L 632.710753 250.838125 " style="fill: none; stroke: #000000; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square" />   </g>   <g id="svg-matplotlib-bfae5abb9892-patch_6">    <path d="M 45.648438 22.318125 L 632.710753 22.318125 " style="fill: none; stroke: #000000; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square" />   </g>   <g id="svg-matplotlib-bfae5abb9892-text_16">    <text style="font-size: 12px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle" x="339.179595" y="16.318125" transform="rotate(-0 339.179595 16.318125)">Crescimento do custo: TDF direta vs FFT</text>   </g>   <g id="svg-matplotlib-bfae5abb9892-legend_1">    <g id="svg-matplotlib-bfae5abb9892-patch_7">     <path d="M 52.648438 62.018125 L 130.848438 62.018125 Q 132.848438 62.018125 132.848438 60.018125 L 132.848438 29.318125 Q 132.848438 27.318125 130.848438 27.318125 L 52.648438 27.318125 Q 50.648438 27.318125 50.648438 29.318125 L 50.648438 60.018125 Q 50.648438 62.018125 52.648438 62.018125 z" style="fill: #ffffff; opacity: 0.8; stroke: #cccccc; stroke-linejoin: miter" />    </g>    <g id="svg-matplotlib-bfae5abb9892-line2d_109">     <path d="M 54.648438 36.918125 L 64.648438 36.918125 L 74.648438 36.918125 " style="fill: none; stroke: #1f77b4; stroke-width: 2.2; stroke-linecap: square" />     <g>      <use ns4:href="#svg-matplotlib-bfae5abb9892-m831e504ef1" x="64.648438" y="36.918125" style="fill: #1f77b4; stroke: #1f77b4" />     </g>    </g>    <g id="svg-matplotlib-bfae5abb9892-text_17">          <g transform="translate(82.648438 40.418125)">      <text>       <tspan x="0" y="-0.976562" style="font-style: oblique; font-size: 10px; font-family: 'DejaVu Sans'">N</tspan>       <tspan x="7.480469" y="1.757812" style="font-size: 7px; font-family: 'DejaVu Sans'">0</tspan>       <tspan x="8.183021" y="-4.804688" style="font-size: 7px; font-family: 'DejaVu Sans'">2</tspan>      </text>     </g>    </g>    <g id="svg-matplotlib-bfae5abb9892-line2d_110">     <path d="M 54.648438 52.418125 L 64.648438 52.418125 L 74.648438 52.418125 " style="fill: none; stroke: #ff7f0e; stroke-width: 2.2; stroke-linecap: square" />     <g>      <use ns4:href="#svg-matplotlib-bfae5abb9892-md8e2131a4e" x="64.648438" y="52.418125" style="fill: #ff7f0e; stroke: #ff7f0e" />     </g>    </g>    <g id="svg-matplotlib-bfae5abb9892-text_18">          <g transform="translate(82.648438 55.918125)">      <text>       <tspan x="0" y="-0.40625" style="font-style: oblique; font-size: 10px; font-family: 'DejaVu Sans'">N</tspan>       <tspan x="33.897982" y="-0.40625" style="font-style: oblique; font-size: 10px; font-family: 'DejaVu Sans'">N</tspan>       <tspan x="7.480469" y="1.234375" style="font-size: 7px; font-family: 'DejaVu Sans'">0</tspan>       <tspan x="27.547363" y="1.234375" style="font-size: 7px; font-family: 'DejaVu Sans'">2</tspan>       <tspan x="41.37845" y="1.234375" style="font-size: 7px; font-family: 'DejaVu Sans'">0</tspan>       <tspan x="12.20752" y="-0.40625" style="font-size: 10px; font-family: 'DejaVu Sans'">l</tspan>       <tspan x="14.98584" y="-0.40625" style="font-size: 10px; font-family: 'DejaVu Sans'">o</tspan>       <tspan x="21.104004" y="-0.40625" style="font-size: 10px; font-family: 'DejaVu Sans'">g</tspan>      </text>     </g>    </g>   </g>  </g> </g> <defs>  <clipPath id="svg-matplotlib-bfae5abb9892-p88e51cb144">   <rect x="45.648438" y="22.318125" width="587.062315" height="228.52" />  </clipPath> </defs></svg></div></div>
+
+</section>
+<section><h1>Exemplo 7</h1>
+<p>Compare a ordem de grandeza para $N_0=1024$.</p>
+<p>TDF direta:</p>
+<p>$$
+N_0^2=1024^2=1.048.576
+$$</p>
+<p>FFT:</p>
+<p>$$
+N_0\log_2N_0=1024\cdot 10=10.240
+$$</p>
+<ul>
+<li>A FFT calcula a mesma TDF.</li>
+<li>A economia vem da organização do cálculo.</li>
+</ul>
+</section>
+<section><h1>Como a FFT Economiza Operações</h1>
+<p>O algoritmo clássico de Cooley-Tukey decompõe a TDF em problemas menores.</p>
+<p>No caso de decimação no tempo:</p>
+<ul>
+<li>a sequência é dividida em amostras pares e ímpares;</li>
+<li>uma TDF de $N_0$ pontos vira duas TDFs de $N_0/2$ pontos;</li>
+<li>o processo continua até chegar a TDFs de um ponto.</li>
+</ul>
+<p>Quando $N_0$ é potência de $2$, essa divisão é especialmente simples.</p>
+</section>
+<section><h1>Escolher Potência de 2</h1>
+<p>Valores como $128$, $256$, $512$ e $1024$ aparecem com frequência porque facilitam a FFT.</p>
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">Leitura prática<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Escolher $N_0$ como potência de $2$ não muda o sinal. Essa escolha facilita o cálculo e costuma ser combinada com preenchimento nulo quando necessário.</p>
+  </div>
+</div>
+</section>
+<section><h1>Próximos Passos</h1>
+<ul>
+<li>Avaliação C2!</li>
+</ul>
+</section>
+        </div>
+    </div>
+
+    <script src="/aulas-faesa/js/vendor/reveal/reveal.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/notes/notes.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/markdown/markdown.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/math/math.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/zoom/zoom.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/prism.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-c.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-python.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-clike.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-cpp.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-perl.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-java.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-php.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/toolbar/prism-toolbar.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/show-language/prism-show-language.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/prism-slang.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/mermaid.min.js" data-no-bundle></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            mermaid.initialize({
+                startOnLoad: false,
+                theme: 'default',
+                securityLevel: 'loose',
+                htmlLabels: false,
+                fontFamily: 'Inter, system-ui, sans-serif',
+            });
+        });
+    </script>
+    <script src="/aulas-faesa/js/rough.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/apply_sketch.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/lucide.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/ui.js" data-no-bundle></script>
+    <script>
+        const waitForNextFrame = () => new Promise(resolve => requestAnimationFrame(resolve));
+
+        const initSlideUI = () => {
+            if (!window.CourseForgeUI) {
+                return;
+            }
+
+            window.CourseForgeUI.initCopyButtons();
+            window.CourseForgeUI.initIcons();
+        };
+
+        const renderMermaidsInSlide = async (slide) => {
+            if (!slide) {
+                return;
+            }
+
+            const mermaids = slide.querySelectorAll('.mermaid');
+            if (!mermaids.length) {
+                return;
+            }
+
+            try {
+                if (document.fonts?.ready) {
+                    await document.fonts.ready;
+                }
+
+                await waitForNextFrame();
+                await waitForNextFrame();
+
+                for (const element of mermaids) {
+                    if (element.dataset.mermaidRendered === 'true') {
+                        continue;
+                    }
+
+                    await mermaid.run({
+                        nodes: [element],
+                    });
+                    element.dataset.mermaidRendered = 'true';
+                }
+            } catch (err) {
+                console.warn('Mermaid render failed', err);
+            }
+        };
+
+        const updateMermaidDisplayBounds = (slide) => {
+            const scope = slide || document;
+            const displays = scope.querySelectorAll('.mermaid-display');
+
+            for (const display of displays) {
+                const rect = display.getBoundingClientRect();
+                const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+                const bottomGap = 24;
+                const availableHeight = Math.max(160, Math.floor(viewportHeight - rect.top - bottomGap));
+                display.style.setProperty('--mermaid-max-height', `${availableHeight}px`);
+            }
+        };
+
+        const resetNativeLineNumbers = (pre) => {
+            if (!pre?.classList.contains('line-numbers')) {
+                return;
+            }
+
+            const existingRows = pre.querySelector('.line-numbers-rows');
+            if (existingRows) {
+                existingRows.remove();
+            }
+        };
+
+        const highlightCodeInSlide = (slide) => {
+            const scope = slide || document;
+            const codeBlocks = scope.querySelectorAll('pre[class*="language-"] > code[class*="language-"]');
+
+            for (const code of codeBlocks) {
+                const pre = code.parentElement;
+                resetNativeLineNumbers(pre);
+                Prism.highlightElement(code);
+
+                if (pre?.classList.contains('line-numbers') && Prism.plugins?.lineNumbers?.resize) {
+                    Prism.plugins.lineNumbers.resize(pre);
+                }
+            }
+        };
+
+        const enhanceCurrentSlide = async (slide) => {
+            highlightCodeInSlide(slide);
+            await renderMermaidsInSlide(slide);
+            updateMermaidDisplayBounds(slide);
+            initSlideUI();
+        };
+
+        Reveal.initialize({
+            hash: true,
+            slideNumber: 'c/t',
+            center: false,
+            controls: false,
+            plugins: [RevealMarkdown, RevealNotes, RevealMath.KaTeX, RevealZoom],
+            katex: {
+                local: '/aulas-faesa/js/vendor/katex',
+                output: 'html',
+                throwOnError: false,
+                strict: false,
+            },
+            width: 960,
+            height: 800,
+            margin: 0.15,
+            maxScale: 2.0,
+        });
+
+        Reveal.on('ready', event => {
+            enhanceCurrentSlide(event.currentSlide);
+        });
+
+        Reveal.on('slideready', event => {
+            enhanceCurrentSlide(event.currentSlide);
+        });
+
+        Reveal.on('slidechanged', event => {
+            enhanceCurrentSlide(event.currentSlide);
+        });
+
+        window.addEventListener('resize', () => {
+            updateMermaidDisplayBounds(Reveal.getCurrentSlide());
+        });
+    </script>
+    <style>
+        /* Modern base styles */
+        :root {
+            --callout-note: #448aff;
+            --callout-abstract: #00b0ff;
+            --callout-info: #00b8d4;
+            --callout-todo: #00bfa5;
+            --callout-tip: #00c853;
+            --callout-success: #64dd17;
+            --callout-question: #ffab00;
+            --callout-warning: #ff9100;
+            --callout-failure: #ff5252;
+            --callout-danger: #ff1744;
+            --callout-bug: #f50057;
+            --callout-example: #7c4dff;
+            --callout-quote: #9e9e9e;
+            --code-bg: #f1f5f9;
+            --border: #e2e8f0;
+            --radius: 6px;
+            --radius-sm: 4px;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --text-muted: #64748b;
+            --text: #334155;
+            --bg: #ffffff;
+            --heading: #0f172a;
+            --link: #3b82f6;
+            --font-code: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+        }
+
+        .reveal {
+            font-size: 20px;
+            text-align: left !important;
+        }
+
+        .reveal code:not(pre code) {
+            font-family: var(--font-code) !important;
+            background-color: var(--code-bg) !important;
+            padding: 0.1em 0.35em !important;
+            border-radius: var(--radius-sm) !important;
+            font-size: 0.9em !important;
+            color: var(--link) !important;
+            border: 1px dashed var(--border) !important;
+            white-space: pre-wrap !important;
+            word-break: break-word !important;
+            font-variant-ligatures: none;
+            font-feature-settings: "liga" 0, "calt" 0;
+        }
+
+        .reveal h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px !important;
+            margin-left: 0 !important;
+            /* min-height: 2.3em; */
+            display: flex;
+            align-items: center;
+            justify-content: flex-start !important;
+            text-align: left !important;
+            width: 100% !important;
+            text-shadow: none !important;
+        }
+
+        /* Prism overrides for Reveal.js */
+        .reveal div.code-toolbar {
+            position: relative;
+            width: 100% !important;
+            margin: 1.5rem 0 !important;
+        }
+
+        .reveal pre[class*="language-"] {
+            background: hsl(230, 1%, 98%) !important;
+            margin: 1.5rem 0 !important;
+            padding: 1rem !important;
+            border: 1px solid var(--border) !important;
+            border-radius: var(--radius) !important;
+            box-shadow: var(--shadow-sm) !important;
+            font-family: var(--font-code) !important;
+            font-size: 0.85em !important;
+            position: relative;
+            overflow-x: auto;
+            box-sizing: border-box !important;
+            max-width: 100% !important;
+            font-variant-ligatures: none;
+            font-feature-settings: "liga" 0, "calt" 0;
+        }
+
+        .reveal pre[class*="language-"] > code {
+            background: 0 0 !important;
+            text-shadow: none !important;
+            color: hsl(230, 8%, 24%) !important;
+            position: relative !important;
+            display: block !important;
+        }
+
+        .reveal .line-numbers .line-numbers-rows {
+            border-right: 1px solid #444 !important;
+            padding-right: .5rem !important;
+            margin-bottom: 1.5rem;
+        }
+
+        .reveal .line-numbers-rows>span:before {
+            color: #666 !important;
+        }
+
+        .reveal pre[class*="language-"].line-numbers,
+        .reveal pre[class*="language-"]:has(.line-numbers-rows) {
+            padding-left: 3.8em !important;
+            overflow-y: hidden !important;
+        }
+
+        .reveal .copy-button,
+        .reveal pre[data-lang]::before {
+            position: absolute;
+            top: .5rem;
+            height: 26px;
+            background: hsl(230, 1%, 92%);
+            border: 1px solid hsl(230, 1%, 85%);
+            border-radius: var(--radius-sm);
+            box-sizing: border-box;
+        }
+
+        .reveal .copy-button {
+            right: .5rem;
+            width: 26px;
+            padding: 0;
+            color: hsl(230, 6%, 44%);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all .2s ease;
+            z-index: 20;
+            opacity: .8;
+        }
+
+        .reveal .copy-button:hover {
+            background: hsl(230, 1%, 85%);
+            color: hsl(230, 8%, 24%);
+            opacity: 1;
+        }
+
+        .reveal .copy-button svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Language label styling - hide all Prism toolbar plugins, keep only data-lang label */
+        .reveal div.toolbar,
+        .reveal div.toolbar-item,
+        .reveal button.toolbar-item,
+        .reveal span.toolbar-item {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            height: 0 !important;
+            width: 0 !important;
+            overflow: hidden !important;
+            position: absolute !important;
+            pointer-events: none !important;
+        }
+
+        /* Use the pseudo-element data-lang label only */
+        .reveal pre[data-lang]::before {
+            content: attr(data-lang);
+            right: 2.35rem;
+            padding: 0 .5rem;
+            font-size: .65rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: hsl(230, 6%, 50%);
+            pointer-events: none;
+            z-index: 10;
+            display: inline-flex !important;
+            align-items: center !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            height: 26px !important;
+            width: auto !important;
+            position: absolute !important;
+            overflow: visible !important;
+            line-height: 26px !important;
+        }
+
+        .reveal h2 {
+            font-size: 1.6em;
+            margin-top: 30px !important;
+            margin-bottom: 20px !important;
+            text-align: left !important;
+        }
+
+        .reveal h3 {
+            font-size: 1.3em;
+            margin-top: 20px !important;
+            margin-bottom: 15px !important;
+            text-align: left !important;
+        }
+
+        .reveal p {
+            line-height: 1.5;
+            margin-top: 20px !important;
+            margin-left: 0 !important;
+            text-align: left !important;
+        }
+
+        .reveal ul,
+        .reveal ol,
+        .reveal li {
+            line-height: 1.5;
+            text-align: left !important;
+            margin-left: 0 !important;
+        }
+        
+        .reveal ul, .reveal ol {
+            display: block !important;
+            padding-left: 1.2em !important;
+        }
+
+        /* Slide padding and layout */
+        .reveal .slides section {
+            padding: 40px !important;
+            box-sizing: border-box;
+            text-align: left !important;
+            overflow: visible !important;
+        }
+
+        .reveal .slides {
+            text-align: left !important;
+        }
+
+        /* Centering for Title slides (h1 ONLY, h1 + h2 ONLY, or h1 + h2 + p ONLY) */
+        .reveal .slides section:not(.stack):has(> h1:only-child),
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child),
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) {
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: center !important;
+            align-items: center !important;
+            text-align: center !important;
+            height: 100% !important;
+            top: 0 !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:only-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child) h2,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h2,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) p {
+            justify-content: center !important;
+            text-align: center !important;
+            margin: 0 !important;
+            min-height: auto !important;
+            width: 100% !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h1 {
+            margin-bottom: 0.5em !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h2 {
+            margin-bottom: 0.3em !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) p {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        /* Full screen slide fix */
+        .reveal .slides section:has(.full-screen-image) {
+            padding: 0 !important;
+        }
+
+        /* Full screen slide fix - Garantindo que o fundo do Reveal fique visível e a imagem carregada */
+        .reveal:has(section.present .full-screen-image) {
+            background-image: url('../../slide_end_background.png') !important;
+            background-size: cover !important;
+            background-position: center !important;
+        }
+
+        /* Torna o slide e o container de slides transparentes para mostrar o fundo da .reveal */
+        .reveal:has(section.present .full-screen-image) .slides,
+        .reveal:has(section.present .full-screen-image) .slides section.present {
+            background: transparent !important;
+        }
+
+        .full-screen-image {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 !important;
+            /* Se houver texto, ele centraliza aqui */
+        }
+
+        /* Spacing for diagrams */
+        .reveal .svg-graph {
+            margin-top: 1em !important;
+            margin-bottom: 1em !important;
+            overflow: visible !important; /* Prevent labels from being cut off */
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* Mermaid Diagram Styles */
+        .reveal .mermaid {
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            padding: 0 !important;
+            margin: 1rem 0 !important;
+            font-family: inherit !important;
+            overflow: visible !important;
+            text-align: center;
+            display: block !important;
+            width: auto !important;
+            max-width: 100% !important;
+        }
+
+        .reveal pre.mermaid {
+            white-space: pre;
+            font-family: var(--font-code);
+            color: var(--text-muted);
+            margin: 0 !important;
+            padding: 0 !important;
+            width: auto !important;
+            line-height: 1 !important;
+            border: none !important;
+            box-shadow: none !important;
+            background: transparent !important;
+            overflow: visible !important;
+        }
+
+        .reveal .centered .mermaid {
+            display: block !important;
+            justify-content: center;
+            margin-left: auto !important;
+            margin-right: auto !important;
+        }
+
+        .reveal .mermaid svg {
+            max-width: 100% !important;
+            height: auto !important;
+            display: block !important;
+            overflow: visible !important;
+            vertical-align: top !important;
+            font-family: Inter, system-ui, sans-serif !important;
+            font-style: normal !important;
+            font-variant: normal !important;
+            font-weight: 400 !important;
+            letter-spacing: normal !important;
+            word-spacing: normal !important;
+            text-transform: none !important;
+            text-shadow: none !important;
+            line-height: normal !important;
+            text-rendering: geometricPrecision !important;
+        }
+
+        .reveal .mermaid svg * {
+            font-family: inherit !important;
+            font-style: normal !important;
+            font-variant: normal !important;
+            letter-spacing: normal !important;
+            word-spacing: normal !important;
+            text-transform: none !important;
+            text-shadow: none !important;
+            line-height: normal !important;
+        }
+
+        .reveal .mermaid svg .edgeBadge text,
+        .reveal .mermaid svg .edgeBadge tspan,
+        .reveal .mermaid svg .edgeTerm text,
+        .reveal .mermaid svg .edgeTerm tspan,
+        .reveal .mermaid svg .multiplicity text,
+        .reveal .mermaid svg .multiplicity tspan,
+        .reveal .mermaid svg text.edgeBadge,
+        .reveal .mermaid svg text.edgeTerm {
+            font-size: 18px !important;
+            font-weight: 700 !important;
+            fill: var(--heading) !important;
+        }
+
+        /* Mermaid Source Switcher */
+        .reveal .mermaid-outer-container {
+            margin: 1rem 0;
+            position: relative;
+            width: 100%;
+            max-width: 100%;
+        }
+
+        .reveal .mermaid-switcher {
+            display: flex !important;
+            justify-content: flex-end;
+            margin-bottom: 0.5rem;
+            width: 100%;
+        }
+
+        .reveal .switcher-track {
+            display: inline-flex;
+            align-items: center;
+            background: var(--code-bg);
+            padding: 3px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            position: relative;
+        }
+
+        .reveal .switcher-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            border: none;
+            background: transparent;
+            padding: 0.35rem 1rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            border-radius: calc(var(--radius) - 2px);
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            z-index: 1;
+        }
+
+        .reveal .switcher-btn svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .reveal .switcher-btn:hover {
+            color: var(--text);
+        }
+
+        .reveal .switcher-btn.active {
+            color: var(--heading);
+            background: var(--bg);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        .reveal .mermaid-content {
+            min-height: 50px;
+        }
+
+        /* Mermaid display - respect inline width */
+        .reveal .mermaid-display {
+            transition: opacity 0.2s ease;
+            display: block !important;
+            max-width: 100% !important;
+            max-height: var(--mermaid-max-height, calc(100vh - 140px)) !important;
+            border: none !important;
+            box-shadow: none !important;
+            background: transparent !important;
+            overflow: auto !important;
+        }
+
+        .reveal .mermaid-source pre {
+            margin: 0 !important;
+            background: var(--code-bg) !important;
+            border: 1px dashed var(--border) !important;
+        }
+
+        /* Ensure proper toggle behavior */
+        .reveal .mermaid-source {
+            display: none !important;
+        }
+
+        .reveal .mermaid-source[style*="display: block"],
+        .reveal .mermaid-source[style*="display:block"] {
+            display: block !important;
+        }
+
+        .reveal .mermaid-display[style*="display: none"],
+        .reveal .mermaid-display[style*="display:none"] {
+            display: none !important;
+        }
+
+        .reveal .mermaid-display.centered {
+            margin-left: auto !important;
+            margin-right: auto !important;
+            max-width: 100% !important;
+        }
+
+        .centered:not(.mermaid-display) {
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            width: 100% !important;
+            margin: 1em 0 !important;
+        }
+
+        .no-break {
+            display: block;
+            width: 100%;
+        }
+
+        .reveal blockquote {
+            display: block;
+            position: relative;
+            margin: var(--r-block-margin) auto !important;
+            padding: 5px;
+            font-style: italic;
+            background: rgba(255, 170, 73, 0.2);
+            box-shadow: 0 0 2px rgba(0,0,0,.2);
+            text-align: left !important;
+        }
+
+        .col1 {
+            width: 90%;
+            margin: 0 auto;
+        }
+
+        .col2 {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start;
+            width: 90%;
+            margin: 0 auto;
+            align-items: flex-start;
+        }
+
+        /* Callout Styles */
+        :root {
+            --callout-note: #448aff;
+            --callout-abstract: #00b0ff;
+            --callout-info: #00b8d4;
+            --callout-todo: #00bfa5;
+            --callout-tip: #00c853;
+            --callout-success: #64dd17;
+            --callout-question: #ffab00;
+            --callout-warning: #ff9100;
+            --callout-failure: #ff5252;
+            --callout-danger: #ff1744;
+            --callout-bug: #f50057;
+            --callout-example: #7c4dff;
+            --callout-quote: #9e9e9e;
+            --code-bg: #f8f8f8;
+            --border: #ddd;
+        }
+
+        .reveal .callout {
+            margin: 1rem auto !important;
+            border: 1px solid var(--border);
+            border-left: 6px solid var(--callout-note);
+            border-radius: 4px;
+            overflow: hidden;
+            text-align: left !important;
+            font-size: 0.8em;
+            width: 75% !important;
+            max-width: 100% !important;
+        }
+
+        .reveal .callout-title {
+            padding: 0.5rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            color: var(--callout-note);
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .reveal .callout-icon {
+            display: flex;
+            align-items: center;
+        }
+
+        .reveal .callout-icon svg {
+            width: 1.2em;
+            height: 1.2em;
+        }
+
+        .reveal .callout-content {
+            padding: 0.5rem 1rem;
+        }
+
+        .reveal .callout-content p {
+            margin-top: 0.5rem !important;
+        }
+
+        .reveal .callout-content p:first-child {
+            margin-top: 0 !important;
+        }
+
+        .reveal h1 { text-transform: none !important; }
+
+        .reveal .callout-abstract { border-left-color: var(--callout-abstract); }
+        .reveal .callout-abstract .callout-title { color: var(--callout-abstract); }
+        .reveal .callout-info { border-left-color: var(--callout-info); }
+        .reveal .callout-info .callout-title { color: var(--callout-info); }
+        .reveal .callout-todo { border-left-color: var(--callout-todo); }
+        .reveal .callout-todo .callout-title { color: var(--callout-todo); }
+        .reveal .callout-tip { border-left-color: var(--callout-tip); }
+        .reveal .callout-tip .callout-title { color: var(--callout-tip); }
+        .reveal .callout-success { border-left-color: var(--callout-success); }
+        .reveal .callout-success .callout-title { color: var(--callout-success); }
+        .reveal .callout-question { border-left-color: var(--callout-question); }
+        .reveal .callout-question .callout-title { color: var(--callout-question) ; }
+        .reveal .callout-warning { border-left-color: var(--callout-warning); }
+        .reveal .callout-warning .callout-title { color: var(--callout-warning); }
+        .reveal .callout-failure { border-left-color: var(--callout-failure); }
+        .reveal .callout-failure .callout-title { color: var(--callout-failure); }
+        .reveal .callout-danger { border-left-color: var(--callout-danger); }
+        .reveal .callout-danger .callout-title { color: var(--callout-danger); }
+        .reveal .callout-bug { border-left-color: var(--callout-bug); }
+        .reveal .callout-bug .callout-title { color: var(--callout-bug); }
+        .reveal .callout-example { border-left-color: var(--callout-example); }
+        .reveal .callout-example .callout-title { color: var(--callout-example); }
+        .reveal .callout-quote { border-left-color: var(--callout-quote); }
+        .reveal .callout-quote .callout-title { color: var(--callout-quote); }
+        .red-note { color: var(--callout-failure); }
+
+        .reveal .slide-number {
+            font-size: 0.8em !important;
+            padding: 5px 10px !important;
+            background: rgba(0,0,0,0.1) !important;
+            border-radius: 4px;
+            color: #000000b1 !important;
+        }
+
+        /* Print styles */
+        @media print {
+            .reveal .slides section {
+                display: block !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                position: relative !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+                page-break-after: always !important;
+                overflow: hidden !important;
+            }
+
+            .reveal .slides {
+                transform: none !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+            }
+            
+            .reveal {
+                overflow: visible !important;
+            }
+        }
+    </style>
+</body>
+
+</html>
