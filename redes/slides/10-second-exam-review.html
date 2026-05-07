@@ -1,0 +1,2161 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <title>Revisão Para a Segunda Avaliação</title>
+    <link rel="icon" href="/aulas-faesa/img/dark-favicon.svg" media="(prefers-color-scheme: light)">
+    <link rel="icon" href="/aulas-faesa/img/light-favicon.svg" media="(prefers-color-scheme: dark)">
+
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/reset.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/reveal.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/theme/white.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/aulas-faesa/css/prism-one-light.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/fonts.css" data-no-bundle>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+            <section><h1>Revisão Para a Segunda Avaliação</h1>
+<h2>Da camada de enlace ao endereçamento IP</h2>
+<p>Professor: Gabriel Soares Baptista</p>
+</section>
+<section><h1>Ideia Geral da Prova</h1>
+<p>A avaliação cobre a passagem de uma comunicação <strong>local</strong> para uma comunicação <strong>entre redes</strong>.</p>
+<h3>Pense em três perguntas centrais</h3>
+<ol>
+<li>Como os bits viram unidades organizadas no enlace?</li>
+<li>Como a LAN decide quem recebe cada quadro?</li>
+<li>Como o pacote sai da LAN e atravessa redes diferentes?</li>
+</ol>
+</section>
+<section><h1>Mapa Mental</h1>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Tema</th>
+  <th style="text-align:left">Unidade</th>
+  <th style="text-align:left">Endereço</th>
+  <th style="text-align:left">Equipamento</th>
+  <th style="text-align:left">Escopo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Física</td>
+  <td style="text-align:left">bits</td>
+  <td style="text-align:left">nenhum</td>
+  <td style="text-align:left">repetidor / hub</td>
+  <td style="text-align:left">sinal</td>
+</tr>
+<tr>
+  <td style="text-align:left">Enlace</td>
+  <td style="text-align:left">quadro</td>
+  <td style="text-align:left">MAC</td>
+  <td style="text-align:left">switch L2</td>
+  <td style="text-align:left">LAN local</td>
+</tr>
+<tr>
+  <td style="text-align:left">Rede</td>
+  <td style="text-align:left">pacote</td>
+  <td style="text-align:left">IP</td>
+  <td style="text-align:left">roteador</td>
+  <td style="text-align:left">entre redes</td>
+</tr>
+</tbody>
+</table>
+<h3>Regra prática</h3>
+<p>Se o problema é <strong>local</strong>, pense em quadro, MAC, switch e VLAN.</p>
+<p>Se o problema é <strong>entre redes</strong>, pense em pacote, IP, roteador e rota.</p>
+</section>
+<section><h1>Conceitos Que Você Precisa Dominar</h1>
+<h3>Camada de enlace</h3>
+<ul>
+<li>transforma fluxo de bits em <strong>quadros</strong></li>
+<li>define começo e fim com <strong>enquadramento</strong></li>
+<li>detecta erros com redundância, como <strong>CRC</strong></li>
+</ul>
+<h3>Camada de rede</h3>
+<ul>
+<li>transporta <strong>pacotes</strong> entre redes diferentes</li>
+<li>usa endereços <strong>IP</strong></li>
+<li>depende de roteadores e algoritmos de roteamento</li>
+</ul>
+</section>
+<section><h1>Camada de Enlace</h1>
+<p>A camada física entrega apenas um fluxo bruto de bits.</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">01111110010000010100001001111110...
+</code></pre>
+<h3>Problema</h3>
+<p>O receptor precisa saber:</p>
+<ul>
+<li>onde uma unidade começa</li>
+<li>onde ela termina</li>
+<li>se houve alteração durante a transmissão</li>
+</ul>
+<h3>Solução</h3>
+<p>A camada de enlace organiza os bits em <strong>quadros</strong>.</p>
+</section>
+<section><h1>Quadro x Pacote</h1>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Unidade</th>
+  <th style="text-align:left">Camada</th>
+  <th style="text-align:left">Função</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Bit</td>
+  <td style="text-align:left">Física</td>
+  <td style="text-align:left">representar sinais no meio</td>
+</tr>
+<tr>
+  <td style="text-align:left">Quadro</td>
+  <td style="text-align:left">Enlace</td>
+  <td style="text-align:left">organizar entrega local</td>
+</tr>
+<tr>
+  <td style="text-align:left">Pacote</td>
+  <td style="text-align:left">Rede</td>
+  <td style="text-align:left">permitir entrega entre redes</td>
+</tr>
+</tbody>
+</table>
+<h3>Encapsulamento</h3>
+<p>O pacote IP viaja dentro do quadro Ethernet no enlace atual.</p>
+<p>Quando muda o enlace, o quadro pode mudar. O pacote IP continua guiando o destino lógico.</p>
+</section>
+<section><h1>Enquadramento</h1>
+<p>Enquadrar significa definir claramente onde o quadro começa e termina.</p>
+<h3>Métodos principais</h3>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Método</th>
+  <th style="text-align:left">Ideia</th>
+  <th style="text-align:left">Cuidado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Contagem de caracteres</td>
+  <td style="text-align:left">campo informa tamanho</td>
+  <td style="text-align:left">erro no tamanho desalinha tudo</td>
+</tr>
+<tr>
+  <td style="text-align:left">Byte stuffing</td>
+  <td style="text-align:left">usa <code>FLAG</code> e <code>ESC</code></td>
+  <td style="text-align:left"><code>FLAG</code> nos dados vira <code>ESC FLAG</code></td>
+</tr>
+<tr>
+  <td style="text-align:left">Bit stuffing</td>
+  <td style="text-align:left">usa flag em bits</td>
+  <td style="text-align:left">após cinco <code>1</code>, insere <code>0</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section><h1>Byte Stuffing</h1>
+<p>Se <code>FLAG</code> marca a borda do quadro, ela não pode ser confundida com dado comum.</p>
+<h3>Regras</h3>
+<ol>
+<li>Se <code>FLAG</code> aparecer nos dados, transmite <code>ESC FLAG</code>.</li>
+<li>Se <code>ESC</code> aparecer nos dados, transmite <code>ESC ESC</code>.</li>
+</ol>
+<h3>Exemplo</h3>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">Dados:        A FLAG B
+Transmitido:  FLAG A ESC FLAG B FLAG
+</code></pre>
+</section>
+<section><h1>Bit Stuffing</h1>
+<p>Em protocolos com delimitação por bits, uma flag comum é:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">01111110
+</code></pre>
+<h3>Regra</h3>
+<p>Sempre que o transmissor encontra cinco bits <code>1</code> consecutivos nos dados, ele insere um <code>0</code>.</p>
+<h3>Intuição</h3>
+<p>O transmissor evita que o padrão de flag apareça por acidente dentro dos dados.</p>
+<p>O receptor remove o <code>0</code> inserido artificialmente.</p>
+</section>
+<section><h1>Bit Stuffing: Exemplo Rápido</h1>
+<p>Suponha que os dados tenham uma sequência com cinco <code>1</code>s seguidos.</p>
+<div style="font-size: 1.15em; line-height: 1.8; font-family: monospace;">
+Dados:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#555">0</span><span style="color:#d35400; font-weight:700">11111</span><span style="color:#555">101</span><br>
+Transmissor:&nbsp;&nbsp;<span style="color:#555">0</span><span style="color:#d35400; font-weight:700">11111</span><span style="color:#c0392b; font-weight:700">0</span><span style="color:#555">101</span>
+</div>
+
+<h3>Leitura</h3>
+<ul>
+<li><span style="color:#d35400; font-weight:700">cinco bits <code>1</code></span> aparecem nos dados</li>
+<li><span style="color:#c0392b; font-weight:700"><code>0</code> inserido</span> evita formar uma falsa flag</li>
+</ul>
+<h3>Ideia</h3>
+<p>O transmissor não quer que a sequência dos dados seja confundida com a flag <code>01111110</code>.</p>
+<p>No receptor, esse <code>0</code> extra é removido antes de entregar os dados.</p>
+</section>
+<section><h1>Detecção x Correção de Erros</h1>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Conceito</th>
+  <th style="text-align:left">Ideia</th>
+  <th style="text-align:left">Exemplo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Detecção</td>
+  <td style="text-align:left">percebe que algo foi corrompido</td>
+  <td style="text-align:left">CRC, checksum, paridade</td>
+</tr>
+<tr>
+  <td style="text-align:left">Correção</td>
+  <td style="text-align:left">localiza e corrige certos erros</td>
+  <td style="text-align:left">Hamming, Reed-Solomon</td>
+</tr>
+</tbody>
+</table>
+<h3>Frase para lembrar</h3>
+<p><strong>Detecção:</strong> sei que algo deu errado.</p>
+<p><strong>Correção:</strong> sei que algo deu errado e consigo consertar.</p>
+</section>
+<section><h1>Redundância</h1>
+<p>Nenhum mecanismo de erro funciona enviando apenas os dados crus.</p>
+<h3>Ideia central</h3>
+<p>O transmissor adiciona informação extra.</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">dados + redundância = quadro verificável
+</code></pre>
+<h3>Na Ethernet</h3>
+<p>O quadro possui um <strong>FCS</strong>, normalmente calculado com <strong>CRC</strong>, para detectar alterações no quadro.</p>
+</section>
+<section><h1>Código de Hamming: O Que Importa</h1>
+<p>O Hamming mostra que redundância bem organizada pode indicar onde está o erro.</p>
+<h3>Hamming (7,4)</h3>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Posição</th>
+  <th style="text-align:left">1</th>
+  <th style="text-align:left">2</th>
+  <th style="text-align:left">3</th>
+  <th style="text-align:left">4</th>
+  <th style="text-align:left">5</th>
+  <th style="text-align:left">6</th>
+  <th style="text-align:left">7</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Tipo</td>
+  <td style="text-align:left">p1</td>
+  <td style="text-align:left">p2</td>
+  <td style="text-align:left">d1</td>
+  <td style="text-align:left">p4</td>
+  <td style="text-align:left">d2</td>
+  <td style="text-align:left">d3</td>
+  <td style="text-align:left">d4</td>
+</tr>
+</tbody>
+</table>
+<h3>Ideia</h3>
+<p>As posições de paridade são potências de 2.</p>
+<p>A síndrome aponta a posição com erro.</p>
+</section>
+<section><h1>Hamming (7,4): Colocando os Dados</h1>
+<p>Vamos transmitir os dados originais:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">1011
+</code></pre>
+<p>No Hamming (7,4), as posições <code>1</code>, <code>2</code> e <code>4</code> são de paridade.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Posição</th>
+  <th style="text-align:left">1</th>
+  <th style="text-align:left">2</th>
+  <th style="text-align:left">3</th>
+  <th style="text-align:left">4</th>
+  <th style="text-align:left">5</th>
+  <th style="text-align:left">6</th>
+  <th style="text-align:left">7</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Tipo</td>
+  <td style="text-align:left">p1</td>
+  <td style="text-align:left">p2</td>
+  <td style="text-align:left">d1</td>
+  <td style="text-align:left">p4</td>
+  <td style="text-align:left">d2</td>
+  <td style="text-align:left">d3</td>
+  <td style="text-align:left">d4</td>
+</tr>
+<tr>
+  <td style="text-align:left">Conteúdo</td>
+  <td style="text-align:left">p1</td>
+  <td style="text-align:left">p2</td>
+  <td style="text-align:left">1</td>
+  <td style="text-align:left">p4</td>
+  <td style="text-align:left">0</td>
+  <td style="text-align:left">1</td>
+  <td style="text-align:left">1</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section><h1>Hamming (7,4): De Onde Vêm os Grupos?</h1>
+<p>Os grupos de paridade vêm da representação binária das posições.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Posição</th>
+  <th style="text-align:left">Binário</th>
+  <th style="text-align:left">Participa de</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">1</td>
+  <td style="text-align:left"><code>001</code></td>
+  <td style="text-align:left"><span style="color:#1f77b4; font-weight:700">p1</span></td>
+</tr>
+<tr>
+  <td style="text-align:left">2</td>
+  <td style="text-align:left"><code>010</code></td>
+  <td style="text-align:left"><span style="color:#2ca02c; font-weight:700">p2</span></td>
+</tr>
+<tr>
+  <td style="text-align:left">3</td>
+  <td style="text-align:left"><code>011</code></td>
+  <td style="text-align:left"><span style="color:#1f77b4; font-weight:700">p1</span>, <span style="color:#2ca02c; font-weight:700">p2</span></td>
+</tr>
+<tr>
+  <td style="text-align:left">4</td>
+  <td style="text-align:left"><code>100</code></td>
+  <td style="text-align:left"><span style="color:#ff7f0e; font-weight:700">p4</span></td>
+</tr>
+<tr>
+  <td style="text-align:left">5</td>
+  <td style="text-align:left"><code>101</code></td>
+  <td style="text-align:left"><span style="color:#1f77b4; font-weight:700">p1</span>, <span style="color:#ff7f0e; font-weight:700">p4</span></td>
+</tr>
+<tr>
+  <td style="text-align:left">6</td>
+  <td style="text-align:left"><code>110</code></td>
+  <td style="text-align:left"><span style="color:#2ca02c; font-weight:700">p2</span>, <span style="color:#ff7f0e; font-weight:700">p4</span></td>
+</tr>
+<tr>
+  <td style="text-align:left">7</td>
+  <td style="text-align:left"><code>111</code></td>
+  <td style="text-align:left"><span style="color:#1f77b4; font-weight:700">p1</span>, <span style="color:#2ca02c; font-weight:700">p2</span>, <span style="color:#ff7f0e; font-weight:700">p4</span></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section><h1>Hamming (7,4): Regra Visual</h1>
+<p>Cada paridade observa as posições em que um bit específico do número binário vale <code>1</code>.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Paridade</th>
+  <th style="text-align:left">Peso</th>
+  <th style="text-align:left">Regra</th>
+  <th style="text-align:left">Posições</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><span style="color:#1f77b4; font-weight:700">p1</span></td>
+  <td style="text-align:left">1</td>
+  <td style="text-align:left">último bit é <code>1</code></td>
+  <td style="text-align:left"><code>001</code>, <code>011</code>, <code>101</code>, <code>111</code> = 1, 3, 5, 7</td>
+</tr>
+<tr>
+  <td style="text-align:left"><span style="color:#2ca02c; font-weight:700">p2</span></td>
+  <td style="text-align:left">2</td>
+  <td style="text-align:left">bit do meio é <code>1</code></td>
+  <td style="text-align:left"><code>010</code>, <code>011</code>, <code>110</code>, <code>111</code> = 2, 3, 6, 7</td>
+</tr>
+<tr>
+  <td style="text-align:left"><span style="color:#ff7f0e; font-weight:700">p4</span></td>
+  <td style="text-align:left">4</td>
+  <td style="text-align:left">primeiro bit é <code>1</code></td>
+  <td style="text-align:left"><code>100</code>, <code>101</code>, <code>110</code>, <code>111</code> = 4, 5, 6, 7</td>
+</tr>
+</tbody>
+</table>
+<h3>Portanto</h3>
+<p>Essa ordem não é decorada. Ela vem dos bits <code>1</code>, <code>2</code> e <code>4</code> que aparecem na numeração binária das posições.</p>
+</section>
+<section><h1>Hamming (7,4): Grupos de Paridade</h1>
+<p>Usando <strong>paridade par</strong>:</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Paridade</th>
+  <th style="text-align:left">Verifica posições</th>
+  <th style="text-align:left">Bits conhecidos</th>
+  <th style="text-align:left">Resultado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><span style="color:#1f77b4; font-weight:700">p1</span></td>
+  <td style="text-align:left">1, 3, 5, 7</td>
+  <td style="text-align:left">p1, 1, 0, 1</td>
+  <td style="text-align:left"><span style="color:#1f77b4; font-weight:700">p1 = 0</span></td>
+</tr>
+<tr>
+  <td style="text-align:left"><span style="color:#2ca02c; font-weight:700">p2</span></td>
+  <td style="text-align:left">2, 3, 6, 7</td>
+  <td style="text-align:left">p2, 1, 1, 1</td>
+  <td style="text-align:left"><span style="color:#2ca02c; font-weight:700">p2 = 1</span></td>
+</tr>
+<tr>
+  <td style="text-align:left"><span style="color:#ff7f0e; font-weight:700">p4</span></td>
+  <td style="text-align:left">4, 5, 6, 7</td>
+  <td style="text-align:left">p4, 0, 1, 1</td>
+  <td style="text-align:left"><span style="color:#ff7f0e; font-weight:700">p4 = 0</span></td>
+</tr>
+</tbody>
+</table>
+<h3>Por quê?</h3>
+<p>Cada grupo precisa ficar com quantidade <strong>par</strong> de bits <code>1</code>.</p>
+</section>
+<section><h1>Hamming (7,4): Palavra Transmitida</h1>
+<p>Substituindo os bits de paridade:</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Posição</th>
+  <th style="text-align:left">1</th>
+  <th style="text-align:left">2</th>
+  <th style="text-align:left">3</th>
+  <th style="text-align:left">4</th>
+  <th style="text-align:left">5</th>
+  <th style="text-align:left">6</th>
+  <th style="text-align:left">7</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Conteúdo</td>
+  <td style="text-align:left"><span style="color:#1f77b4; font-weight:700">0</span></td>
+  <td style="text-align:left"><span style="color:#2ca02c; font-weight:700">1</span></td>
+  <td style="text-align:left">1</td>
+  <td style="text-align:left"><span style="color:#ff7f0e; font-weight:700">0</span></td>
+  <td style="text-align:left">0</td>
+  <td style="text-align:left">1</td>
+  <td style="text-align:left">1</td>
+</tr>
+</tbody>
+</table>
+<h3>Palavra final</h3>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">0 1 1 0 0 1 1
+</code></pre>
+<p>Sem espaços:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">0110011
+</code></pre>
+</section>
+<section><h1>Hamming (7,4): Detectando Um Erro</h1>
+<p>Suponha que o bit da posição 5 seja invertido no caminho.</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">Transmitido: 0110011
+Recebido:    0110111
+</code></pre>
+<h3>Testes de paridade</h3>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Teste</th>
+  <th style="text-align:left">Posições</th>
+  <th style="text-align:left">Resultado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><span style="color:#1f77b4; font-weight:700">p1</span></td>
+  <td style="text-align:left">1, 3, 5, 7</td>
+  <td style="text-align:left"><span style="color:#c0392b; font-weight:700">falha = 1</span></td>
+</tr>
+<tr>
+  <td style="text-align:left"><span style="color:#2ca02c; font-weight:700">p2</span></td>
+  <td style="text-align:left">2, 3, 6, 7</td>
+  <td style="text-align:left">ok = 0</td>
+</tr>
+<tr>
+  <td style="text-align:left"><span style="color:#ff7f0e; font-weight:700">p4</span></td>
+  <td style="text-align:left">4, 5, 6, 7</td>
+  <td style="text-align:left"><span style="color:#c0392b; font-weight:700">falha = 1</span></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section><h1>Hamming (7,4): Síndrome</h1>
+<p>Montamos a síndrome na ordem <span style="color:#ff7f0e; font-weight:700">p4</span> <span style="color:#2ca02c; font-weight:700">p2</span> <span style="color:#1f77b4; font-weight:700">p1</span>, porque esses testes têm pesos <code>4</code>, <code>2</code> e <code>1</code>.</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">p4 p2 p1
+ 1  0  1
+</code></pre>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">101 em binário = 5 em decimal
+</code></pre>
+<p>Também podemos ler como soma dos pesos:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">p4 + p2 + p1 = 4 + 0 + 1 = 5
+</code></pre>
+<h3>Conclusão</h3>
+<p>O erro está na posição <code>5</code>.</p>
+<p>O receptor inverte o bit da posição 5 e recupera a palavra correta.</p>
+</section>
+<section><h1>Subcamada MAC</h1>
+<p>A subcamada MAC resolve o problema de acesso ao meio.</p>
+<h3>Ela responde</h3>
+<ul>
+<li>quando uma estação pode transmitir</li>
+<li>o que fazer se o meio estiver ocupado</li>
+<li>como reagir a colisões</li>
+<li>qual interface local deve receber o quadro</li>
+</ul>
+<h3>Importante</h3>
+<p>MAC significa <em>Medium Access Control</em>.</p>
+</section>
+<section><h1>Ethernet Clássica x Ethernet Comutada</h1>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Cenário</th>
+  <th style="text-align:left">Meio</th>
+  <th style="text-align:left">Colisões</th>
+  <th style="text-align:left">Papel do CSMA/CD</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Ethernet clássica</td>
+  <td style="text-align:left">compartilhado</td>
+  <td style="text-align:left">possíveis</td>
+  <td style="text-align:left">essencial</td>
+</tr>
+<tr>
+  <td style="text-align:left">Ethernet comutada full-duplex</td>
+  <td style="text-align:left">ponto a ponto</td>
+  <td style="text-align:left">praticamente inexistentes</td>
+  <td style="text-align:left">deixa de ser necessário</td>
+</tr>
+</tbody>
+</table>
+<h3>Por quê?</h3>
+<p>Em full-duplex, cada host conversa com uma porta do switch em um enlace próprio. Não há um único barramento compartilhado por todos.</p>
+</section>
+<section><h1>Endereço MAC</h1>
+<p>O endereço MAC identifica uma <strong>interface de rede</strong> no enlace local.</p>
+<h3>Exemplo</h3>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">70:85:c2:94:54:22
+</code></pre>
+<h3>Tipos de destino</h3>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Tipo</th>
+  <th style="text-align:left">Significado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Unicast</td>
+  <td style="text-align:left">uma interface específica</td>
+</tr>
+<tr>
+  <td style="text-align:left">Multicast</td>
+  <td style="text-align:left">um grupo</td>
+</tr>
+<tr>
+  <td style="text-align:left">Broadcast</td>
+  <td style="text-align:left">todas as estações da LAN</td>
+</tr>
+</tbody>
+</table>
+<p>Broadcast Ethernet:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">ff:ff:ff:ff:ff:ff
+</code></pre>
+</section>
+<section><h1>MAC Não Substitui IP</h1>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Endereço</th>
+  <th style="text-align:left">Pergunta que responde</th>
+  <th style="text-align:left">Escopo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">MAC</td>
+  <td style="text-align:left">para qual interface local este quadro vai?</td>
+  <td style="text-align:left">enlace local</td>
+</tr>
+<tr>
+  <td style="text-align:left">IP</td>
+  <td style="text-align:left">para qual rede e host lógico este pacote deve seguir?</td>
+  <td style="text-align:left">entre redes</td>
+</tr>
+</tbody>
+</table>
+<h3>Exemplo</h3>
+<p>Para acessar um servidor fora da LAN, o quadro pode usar o MAC do roteador como destino local.</p>
+<p>Mas o pacote dentro dele mantém o IP do servidor como destino final.</p>
+</section>
+<section><h1>Exemplo: Quadro Muda, Pacote Continua</h1>
+<p>Seu notebook acessa um servidor fora da LAN.</p>
+<h3>Primeiro enlace</h3>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">Quadro Ethernet:
+MAC origem = notebook
+MAC destino = roteador local
+
+Pacote IP dentro do quadro:
+IP origem = notebook
+IP destino = servidor externo
+</code></pre>
+<h3>Cores da ideia</h3>
+<p><span style="color:#d35400; font-weight:700">Quadro/MAC</span> vale para o enlace atual.</p>
+<p><span style="color:#1f77b4; font-weight:700">Pacote/IP</span> carrega o destino lógico final.</p>
+<h3>Próximo enlace</h3>
+<p>O roteador remove o quadro local e cria outro quadro para o próximo salto.</p>
+<p>O destino IP do servidor continua guiando a viagem.</p>
+</section>
+<section><h1>Hub, Switch e Roteador</h1>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Dispositivo</th>
+  <th style="text-align:left">Camada</th>
+  <th style="text-align:left">O que observa</th>
+  <th style="text-align:left">Função</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Hub</td>
+  <td style="text-align:left">Física</td>
+  <td style="text-align:left">sinal</td>
+  <td style="text-align:left">replica para todas as portas</td>
+</tr>
+<tr>
+  <td style="text-align:left">Switch L2</td>
+  <td style="text-align:left">Enlace</td>
+  <td style="text-align:left">MAC / VLAN</td>
+  <td style="text-align:left">encaminha quadros localmente</td>
+</tr>
+<tr>
+  <td style="text-align:left">Roteador</td>
+  <td style="text-align:left">Rede</td>
+  <td style="text-align:left">IP</td>
+  <td style="text-align:left">encaminha pacotes entre redes</td>
+</tr>
+</tbody>
+</table>
+<h3>Erro comum</h3>
+<p>Switch não é apenas um hub mais rápido. Ele muda a lógica de entrega dentro da LAN.</p>
+</section>
+<section><h1>Como o Switch Aprende</h1>
+<p>O switch usa <strong>aprendizado reverso</strong>.</p>
+<h3>Regra</h3>
+<p>Quando um quadro entra por uma porta, o switch observa o <strong>MAC de origem</strong>.</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">MAC de origem A entra pela porta 1
+</code></pre>
+<p>Então ele aprende:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">A -&gt; porta 1
+</code></pre>
+</section>
+<section><h1>Flood, Forward e Filter</h1>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Ação</th>
+  <th style="text-align:left">Quando acontece</th>
+  <th style="text-align:left">Efeito</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Flood</td>
+  <td style="text-align:left">destino desconhecido ou broadcast</td>
+  <td style="text-align:left">replica para portas relevantes</td>
+</tr>
+<tr>
+  <td style="text-align:left">Forward</td>
+  <td style="text-align:left">destino conhecido em outra porta</td>
+  <td style="text-align:left">envia só para a porta correta</td>
+</tr>
+<tr>
+  <td style="text-align:left">Filter</td>
+  <td style="text-align:left">destino conhecido na mesma porta de entrada</td>
+  <td style="text-align:left">não reenvia o quadro</td>
+</tr>
+</tbody>
+</table>
+<h3>Atenção</h3>
+<p>Mesmo com switch, broadcasts ainda existem dentro do domínio de broadcast.</p>
+</section>
+<section><h1>Switch: Exemplo de Aprendizado</h1>
+<p>Considere um switch com quatro portas.</p>
+<ol>
+<li><code>A</code> envia um quadro para <code>D</code> pela porta 1.</li>
+<li>O switch aprende <code>A -&gt; porta 1</code>.</li>
+<li>Como ainda não sabe onde está <code>D</code>, faz <strong>flood</strong>.</li>
+<li><code>D</code> responde pela porta 4.</li>
+<li>O switch aprende <code>D -&gt; porta 4</code>.</li>
+<li>No próximo quadro de <code>A</code> para <code>D</code>, faz <strong>forward</strong> só para a porta 4.</li>
+</ol>
+<h3>Ideia central</h3>
+<p>O próprio tráfego ensina a tabela MAC ao switch.</p>
+</section>
+<section><h1>VLAN</h1>
+<p>Uma VLAN é uma LAN virtual.</p>
+<h3>Efeito principal</h3>
+<p>Cada VLAN cria seu próprio <strong>domínio de broadcast</strong>.</p>
+<h3>Exemplo</h3>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">Portas 1 a 4 -&gt; VLAN 10
+Portas 5 a 8 -&gt; VLAN 20
+</code></pre>
+<p>Um broadcast da VLAN 10 não deve atingir automaticamente hosts da VLAN 20.</p>
+</section>
+<section><h1>Access, Trunk e 802.1Q</h1>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Conceito</th>
+  <th style="text-align:left">Função</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Porta de acesso</td>
+  <td style="text-align:left">liga um host final a uma única VLAN</td>
+</tr>
+<tr>
+  <td style="text-align:left">Porta trunk</td>
+  <td style="text-align:left">transporta múltiplas VLANs entre switches</td>
+</tr>
+<tr>
+  <td style="text-align:left">802.1Q</td>
+  <td style="text-align:left">adiciona tag VLAN ao quadro Ethernet</td>
+</tr>
+</tbody>
+</table>
+<h3>Ideia importante</h3>
+<p>Se várias VLANs atravessam o mesmo enlace trunk, o switch receptor precisa saber a qual VLAN cada quadro pertence.</p>
+<p>Essa identificação vem da tag <strong>802.1Q</strong>.</p>
+</section>
+<section><h1>VLAN em Dois Switches</h1>
+<p>Imagine dois switches conectados por uma porta trunk.</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">Switch A, porta 2 -&gt; VLAN 10
+Switch B, porta 7 -&gt; VLAN 10
+Enlace entre switches -&gt; trunk
+</code></pre>
+<div style="font-size:1.1em; line-height:1.7;">
+<span style="color:#1f77b4; font-weight:700">VLAN 10</span> representa um domínio lógico.<br>
+<span style="color:#8e44ad; font-weight:700">Trunk</span> carrega múltiplas VLANs.<br>
+<span style="color:#d35400; font-weight:700">802.1Q</span> identifica a VLAN dentro do quadro.
+</div>
+
+<h3>O que acontece em um broadcast da VLAN 10?</h3>
+<ol>
+<li>O quadro sai da porta 2 no Switch A.</li>
+<li>Ao atravessar o trunk, recebe identificação 802.1Q da VLAN 10.</li>
+<li>O Switch B lê a tag.</li>
+<li>O Switch B entrega apenas para portas da VLAN 10.</li>
+</ol>
+</section>
+<section><h1>O Que VLAN Não Faz Sozinha</h1>
+<p>VLAN separa domínios de camada 2.</p>
+<h3>Consequência</h3>
+<p>Duas máquinas em VLANs diferentes normalmente não se comunicam diretamente em camada 2 apenas por estarem no mesmo switch físico.</p>
+<h3>Para comunicar VLANs</h3>
+<p>É necessário roteamento entre VLANs, ou seja, camada 3.</p>
+</section>
+<section><h1>Camada de Rede</h1>
+<p>A camada de rede trata da comunicação entre redes diferentes.</p>
+<h3>Unidade central</h3>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">pacote
+</code></pre>
+<h3>Equipamento central</h3>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">roteador
+</code></pre>
+<h3>Ideia</h3>
+<p>Cada roteador recebe um pacote, consulta sua tabela e escolhe o próximo salto.</p>
+</section>
+<section><h1>Encaminhamento x Roteamento</h1>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Conceito</th>
+  <th style="text-align:left">Significado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Encaminhamento</td>
+  <td style="text-align:left">decisão local de enviar um pacote por uma interface</td>
+</tr>
+<tr>
+  <td style="text-align:left">Roteamento</td>
+  <td style="text-align:left">processo de descobrir e manter as melhores rotas</td>
+</tr>
+</tbody>
+</table>
+<h3>Frase para lembrar</h3>
+<p>Encaminhamento é a decisão do momento.</p>
+<p>Roteamento é o cálculo que prepara essa decisão.</p>
+</section>
+<section><h1>IPv4 Como Datagrama</h1>
+<p>O IPv4 é <strong>sem conexão</strong> e de <strong>melhor esforço</strong>.</p>
+<h3>Sem conexão</h3>
+<p>Não estabelece um caminho fixo antes de enviar cada pacote.</p>
+<h3>Melhor esforço</h3>
+<p>A rede tenta entregar, mas não garante:</p>
+<ul>
+<li>entrega</li>
+<li>ordem</li>
+<li>ausência de duplicação</li>
+<li>recuperação automática de perda</li>
+</ul>
+</section>
+<section><h1>Dijkstra: O Que o Algoritmo Faz</h1>
+<p>Dijkstra encontra o menor caminho em um grafo com custos nas arestas.</p>
+<h3>Na prova, organize uma tabela</h3>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Nó</th>
+  <th style="text-align:left">Distância</th>
+  <th style="text-align:left">Predecessor</th>
+  <th style="text-align:left">Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><span style="color:#2ca02c; font-weight:700">A</span></td>
+  <td style="text-align:left">0</td>
+  <td style="text-align:left">—</td>
+  <td style="text-align:left"><span style="color:#2ca02c; font-weight:700">permanente</span></td>
+</tr>
+<tr>
+  <td style="text-align:left"><span style="color:#d4a017; font-weight:700">B</span></td>
+  <td style="text-align:left">infinito</td>
+  <td style="text-align:left">—</td>
+  <td style="text-align:left"><span style="color:#d4a017; font-weight:700">provisório</span></td>
+</tr>
+</tbody>
+</table>
+<h3>Significado</h3>
+<ul>
+<li>distância = melhor custo conhecido até agora</li>
+<li>predecessor = nó anterior no melhor caminho</li>
+<li>status = provisório ou permanente</li>
+</ul>
+</section>
+<section><h1>Dijkstra: Passos Fixos</h1>
+<ol>
+<li>Inicialize a origem com custo <code>0</code>.</li>
+<li>Inicialize os demais nós com custo <code>infinito</code>.</li>
+<li>Escolha o nó provisório de menor custo.</li>
+<li>Torne esse nó permanente.</li>
+<li>Relaxe as arestas que saem dele.</li>
+<li>Repita até fixar o destino.</li>
+<li>Reconstrua a rota pelos predecessores.</li>
+</ol>
+<h3>Relaxar uma aresta</h3>
+<p>Testar se passar pelo nó recém-fixado melhora o custo de um vizinho.</p>
+</section>
+<section><h1>Dijkstra: Grafo Para Revisão</h1>
+<p>Queremos sair de $A$ e chegar a $E$.</p>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="520" viewBox="0.00 0.00 154.01 132.01" class="svg-graph graphviz-img"><g id="svg-graphviz-c47abe66d90d-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 128.01)"><title>DijkstraReview</title><g id="svg-graphviz-c47abe66d90d-node1" class="node"><title>A</title><ellipse fill="#fff4e8" stroke="#b8792f" cx="18" cy="-62" rx="18" ry="18" /><text text-anchor="middle" x="18" y="-58.3" font-family="Helvetica,sans-Serif" font-size="14.00">A</text></g><g id="svg-graphviz-c47abe66d90d-node2" class="node"><title>B</title><ellipse fill="#fff4e8" stroke="#b8792f" cx="62" cy="-106.01" rx="18" ry="18" /><text text-anchor="middle" x="62" y="-102.31" font-family="Helvetica,sans-Serif" font-size="14.00">B</text></g><g id="svg-graphviz-c47abe66d90d-edge1" class="edge"><title>A--B</title><path fill="none" stroke="black" d="M30.96,-74.97C36.64,-80.65 43.29,-87.3 48.98,-92.98" /><text text-anchor="middle" x="34.97" y="-87.77" font-family="Times,serif" font-size="14.00">2</text></g><g id="svg-graphviz-c47abe66d90d-node3" class="node"><title>C</title><ellipse fill="#fff4e8" stroke="#b8792f" cx="62" cy="-18" rx="18" ry="18" /><text text-anchor="middle" x="62" y="-14.3" font-family="Helvetica,sans-Serif" font-size="14.00">C</text></g><g id="svg-graphviz-c47abe66d90d-edge2" class="edge"><title>A--C</title><path fill="none" stroke="black" d="M30.96,-49.04C36.64,-43.36 43.29,-36.71 48.98,-31.02" /><text text-anchor="middle" x="34.97" y="-28.83" font-family="Times,serif" font-size="14.00">1</text></g><g id="svg-graphviz-c47abe66d90d-node4" class="node"><title>D</title><ellipse fill="#fff4e8" stroke="#b8792f" cx="128.01" cy="-106.01" rx="18" ry="18" /><text text-anchor="middle" x="128.01" y="-102.31" font-family="Helvetica,sans-Serif" font-size="14.00">D</text></g><g id="svg-graphviz-c47abe66d90d-edge3" class="edge"><title>B--D</title><path fill="none" stroke="black" d="M80.04,-106.01C89.35,-106.01 100.69,-106.01 110,-106.01" /><text text-anchor="middle" x="90.02" y="-109.81" font-family="Times,serif" font-size="14.00">3</text></g><g id="svg-graphviz-c47abe66d90d-edge4" class="edge"><title>C--D</title><path fill="none" stroke="black" d="M72.9,-32.53C85.13,-48.84 104.86,-75.14 117.1,-91.45" /><text text-anchor="middle" x="90" y="-65.79" font-family="Times,serif" font-size="14.00">5</text></g><g id="svg-graphviz-c47abe66d90d-node5" class="node"><title>E</title><ellipse fill="#fff4e8" stroke="#b8792f" cx="128.01" cy="-18" rx="18" ry="18" /><text text-anchor="middle" x="128.01" y="-14.3" font-family="Helvetica,sans-Serif" font-size="14.00">E</text></g><g id="svg-graphviz-c47abe66d90d-edge5" class="edge"><title>C--E</title><path fill="none" stroke="black" d="M80.04,-18C89.35,-18 100.69,-18 110,-18" /><text text-anchor="middle" x="90.02" y="-21.8" font-family="Times,serif" font-size="14.00">2</text></g><g id="svg-graphviz-c47abe66d90d-edge6" class="edge"><title>D--E</title><path fill="none" stroke="black" d="M128.01,-87.77C128.01,-72.67 128.01,-51.31 128.01,-36.21" /><text text-anchor="middle" x="123.01" y="-65.79" font-family="Times,serif" font-size="14.00">1</text></g></g></svg></div></div>
+
+</section>
+<section><h1>Dijkstra: Passo 0</h1>
+<p>Começamos pela origem $A$.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Nó</th>
+  <th style="text-align:left">Distância</th>
+  <th style="text-align:left">Predecessor</th>
+  <th style="text-align:left">Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><span style="color:#2ca02c; font-weight:700">A</span></td>
+  <td style="text-align:left">0</td>
+  <td style="text-align:left">—</td>
+  <td style="text-align:left"><span style="color:#2ca02c; font-weight:700">permanente</span></td>
+</tr>
+<tr>
+  <td style="text-align:left">B</td>
+  <td style="text-align:left">infinito</td>
+  <td style="text-align:left">—</td>
+  <td style="text-align:left">provisório</td>
+</tr>
+<tr>
+  <td style="text-align:left">C</td>
+  <td style="text-align:left">infinito</td>
+  <td style="text-align:left">—</td>
+  <td style="text-align:left">provisório</td>
+</tr>
+<tr>
+  <td style="text-align:left">D</td>
+  <td style="text-align:left">infinito</td>
+  <td style="text-align:left">—</td>
+  <td style="text-align:left">provisório</td>
+</tr>
+<tr>
+  <td style="text-align:left">E</td>
+  <td style="text-align:left">infinito</td>
+  <td style="text-align:left">—</td>
+  <td style="text-align:left">provisório</td>
+</tr>
+</tbody>
+</table>
+<h3>Relaxe os vizinhos de A</h3>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">B = 0 + 2 = 2, predecessor A
+C = 0 + 1 = 1, predecessor A
+</code></pre>
+</section>
+<section><h1>Dijkstra: Depois de Relaxar A</h1>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Nó</th>
+  <th style="text-align:left">Distância</th>
+  <th style="text-align:left">Predecessor</th>
+  <th style="text-align:left">Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><span style="color:#2ca02c; font-weight:700">A</span></td>
+  <td style="text-align:left">0</td>
+  <td style="text-align:left">—</td>
+  <td style="text-align:left"><span style="color:#2ca02c; font-weight:700">permanente</span></td>
+</tr>
+<tr>
+  <td style="text-align:left">B</td>
+  <td style="text-align:left">2</td>
+  <td style="text-align:left">A</td>
+  <td style="text-align:left">provisório</td>
+</tr>
+<tr>
+  <td style="text-align:left"><span style="color:#d35400; font-weight:700">C</span></td>
+  <td style="text-align:left">1</td>
+  <td style="text-align:left">A</td>
+  <td style="text-align:left"><span style="color:#d35400; font-weight:700">menor provisório</span></td>
+</tr>
+<tr>
+  <td style="text-align:left">D</td>
+  <td style="text-align:left">infinito</td>
+  <td style="text-align:left">—</td>
+  <td style="text-align:left">provisório</td>
+</tr>
+<tr>
+  <td style="text-align:left">E</td>
+  <td style="text-align:left">infinito</td>
+  <td style="text-align:left">—</td>
+  <td style="text-align:left">provisório</td>
+</tr>
+</tbody>
+</table>
+<h3>Próxima escolha</h3>
+<p>O menor provisório é $C$, com custo <code>1</code>.</p>
+<p>Então $C$ se torna permanente.</p>
+</section>
+<section><h1>Dijkstra: Passo 1, Expandindo C</h1>
+<p>Agora $P = \{A, C\}$.</p>
+<h3>Vizinhos de C</h3>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">D: custo por C = 1 + 5 = 6
+E: custo por C = 1 + 2 = 3
+</code></pre>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Nó</th>
+  <th style="text-align:left">Distância</th>
+  <th style="text-align:left">Predecessor</th>
+  <th style="text-align:left">Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><span style="color:#2ca02c; font-weight:700">A</span></td>
+  <td style="text-align:left">0</td>
+  <td style="text-align:left">—</td>
+  <td style="text-align:left"><span style="color:#2ca02c; font-weight:700">permanente</span></td>
+</tr>
+<tr>
+  <td style="text-align:left">B</td>
+  <td style="text-align:left">2</td>
+  <td style="text-align:left">A</td>
+  <td style="text-align:left">provisório</td>
+</tr>
+<tr>
+  <td style="text-align:left"><span style="color:#2ca02c; font-weight:700">C</span></td>
+  <td style="text-align:left">1</td>
+  <td style="text-align:left">A</td>
+  <td style="text-align:left"><span style="color:#2ca02c; font-weight:700">permanente</span></td>
+</tr>
+<tr>
+  <td style="text-align:left">D</td>
+  <td style="text-align:left">6</td>
+  <td style="text-align:left">C</td>
+  <td style="text-align:left">provisório</td>
+</tr>
+<tr>
+  <td style="text-align:left">E</td>
+  <td style="text-align:left">3</td>
+  <td style="text-align:left">C</td>
+  <td style="text-align:left">provisório</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section><h1>Dijkstra: Passo 2, Expandindo B</h1>
+<p>O menor provisório agora é $B$, com custo <code>2</code>.</p>
+<p>Então $B$ se torna permanente.</p>
+<h3>Teste em D</h3>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">D por B = 2 + 3 = 5
+D atual = 6
+</code></pre>
+<p>Como <code>5</code> é menor que <code>6</code>, atualizamos $D$.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Nó</th>
+  <th style="text-align:left">Distância</th>
+  <th style="text-align:left">Predecessor</th>
+  <th style="text-align:left">Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><span style="color:#2ca02c; font-weight:700">A</span></td>
+  <td style="text-align:left">0</td>
+  <td style="text-align:left">—</td>
+  <td style="text-align:left"><span style="color:#2ca02c; font-weight:700">permanente</span></td>
+</tr>
+<tr>
+  <td style="text-align:left"><span style="color:#2ca02c; font-weight:700">B</span></td>
+  <td style="text-align:left">2</td>
+  <td style="text-align:left">A</td>
+  <td style="text-align:left"><span style="color:#2ca02c; font-weight:700">permanente</span></td>
+</tr>
+<tr>
+  <td style="text-align:left"><span style="color:#2ca02c; font-weight:700">C</span></td>
+  <td style="text-align:left">1</td>
+  <td style="text-align:left">A</td>
+  <td style="text-align:left"><span style="color:#2ca02c; font-weight:700">permanente</span></td>
+</tr>
+<tr>
+  <td style="text-align:left">D</td>
+  <td style="text-align:left">5</td>
+  <td style="text-align:left">B</td>
+  <td style="text-align:left">provisório</td>
+</tr>
+<tr>
+  <td style="text-align:left"><span style="color:#d35400; font-weight:700">E</span></td>
+  <td style="text-align:left">3</td>
+  <td style="text-align:left">C</td>
+  <td style="text-align:left"><span style="color:#d35400; font-weight:700">menor provisório</span></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section><h1>Dijkstra: Passo 3, Destino Resolvido</h1>
+<p>O menor provisório é $E$, com custo <code>3</code>.</p>
+<p>Como $E$ é o destino, o menor caminho foi encontrado.</p>
+<h3>Reconstruindo pelos predecessores</h3>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">E &lt;- C &lt;- A
+</code></pre>
+<p>Invertendo:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">A -&gt; C -&gt; E
+</code></pre>
+<h3>Custo total</h3>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">1 + 2 = 3
+</code></pre>
+</section>
+<section><h1>Dijkstra: Checklist Para Fazer à Mão</h1>
+<ol>
+<li>Não altere o custo de nó permanente.</li>
+<li>Sempre registre o predecessor quando melhorar um custo.</li>
+<li>Escolha sempre o menor provisório.</li>
+<li>Se houver empate, use um critério consistente.</li>
+<li>No final, reconstrua de trás para frente.</li>
+</ol>
+<h3>Erro comum</h3>
+<p>Encontrar um caminho até o destino não basta. Ele só está garantido quando o destino vira o menor provisório e é fixado.</p>
+</section>
+<section><h1>Protocolo IP</h1>
+<p>O IP oferece endereçamento lógico para interligar redes.</p>
+<h3>IPv4</h3>
+<ul>
+<li>endereço de 32 bits</li>
+<li>escrita decimal pontuada</li>
+<li>depende de prefixo e máscara</li>
+</ul>
+<h3>IPv6</h3>
+<ul>
+<li>endereço de 128 bits</li>
+<li>escrita hexadecimal com dois-pontos</li>
+<li>cabeçalho base fixo de 40 bytes</li>
+</ul>
+</section>
+<section><h1>Prefixo e Máscara</h1>
+<p>Um endereço IPv4 sozinho não separa rede e host.</p>
+<h3>Exemplo</h3>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">192.168.1.34/24
+</code></pre>
+<h3>Interpretação</h3>
+<ul>
+<li><span style="color:#1f77b4; font-weight:700"><code>/24</code> indica 24 bits de rede</span></li>
+<li><span style="color:#2ca02c; font-weight:700">sobram 8 bits de host</span></li>
+<li>máscara equivalente: <code>255.255.255.0</code></li>
+</ul>
+<h3>Cuidado</h3>
+<p>A rede não são sempre os três primeiros números. Isso depende do prefixo.</p>
+</section>
+<section><h1>Sub-redes: Receita de Cálculo</h1>
+<p>Para dividir uma rede em sub-redes de tamanho fixo:</p>
+<ol>
+<li>Veja o prefixo original.</li>
+<li>Calcule quantos bits precisa emprestar para a quantidade de sub-redes.</li>
+<li>Some esses bits ao prefixo original.</li>
+<li>Calcule quantos bits sobraram para hosts.</li>
+<li>Calcule tamanho do bloco e hosts utilizáveis.</li>
+</ol>
+</section>
+<section><h1>Exemplo de Sub-rede</h1>
+<p>Divida <code>192.168.10.0/24</code> em 4 sub-redes iguais.</p>
+<h3>Passo 1: bits para sub-redes</h3>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">2^2 = 4
+</code></pre>
+<p>Precisamos emprestar 2 bits.</p>
+<h3>Passo 2: novo prefixo</h3>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">/24 + 2 = /26
+</code></pre>
+<h3>Leitura por cores</h3>
+<p><span style="color:#1f77b4; font-weight:700">/24 original</span> + <span style="color:#d35400; font-weight:700">2 bits emprestados para sub-rede</span> = <span style="color:#8e44ad; font-weight:700">/26 novo prefixo</span></p>
+</section>
+<section><h1>Exemplo de Sub-rede: Hosts</h1>
+<p>Com <code>/26</code>, sobram:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">32 - 26 = 6 bits de host
+</code></pre>
+<p>Quantidade total de endereços por sub-rede:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">2^6 = 64
+</code></pre>
+<p>Hosts utilizáveis em IPv4 tradicional:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">64 - 2 = 62
+</code></pre>
+<h3>Por que menos 2?</h3>
+<p>Um endereço identifica a rede e outro identifica o broadcast.</p>
+</section>
+<section><h1>Exemplo de Sub-rede: Blocos /26</h1>
+<p>Dentro de um <code>/24</code>, o <code>/26</code> cria blocos de 64 endereços.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Sub-rede</th>
+  <th style="text-align:left">Intervalo</th>
+  <th style="text-align:left">Broadcast</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><span style="color:#1f77b4; font-weight:700"><code>192.168.10.0/26</code></span></td>
+  <td style="text-align:left"><code>.0</code> a <code>.63</code></td>
+  <td style="text-align:left"><code>.63</code></td>
+</tr>
+<tr>
+  <td style="text-align:left"><span style="color:#2ca02c; font-weight:700"><code>192.168.10.64/26</code></span></td>
+  <td style="text-align:left"><code>.64</code> a <code>.127</code></td>
+  <td style="text-align:left"><code>.127</code></td>
+</tr>
+<tr>
+  <td style="text-align:left"><span style="color:#d35400; font-weight:700"><code>192.168.10.128/26</code></span></td>
+  <td style="text-align:left"><code>.128</code> a <code>.191</code></td>
+  <td style="text-align:left"><code>.191</code></td>
+</tr>
+<tr>
+  <td style="text-align:left"><span style="color:#8e44ad; font-weight:700"><code>192.168.10.192/26</code></span></td>
+  <td style="text-align:left"><code>.192</code> a <code>.255</code></td>
+  <td style="text-align:left"><code>.255</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section><h1>Exemplo de Sub-rede: Host 192.168.10.77/26</h1>
+<p>Blocos de <code>/26</code>:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">0, 64, 128, 192
+</code></pre>
+<p>O número <code>77</code> cai entre <code>64</code> e <code>127</code>.</p>
+<p><span style="color:#2ca02c; font-weight:700">Logo, ele pertence ao bloco que começa em <code>.64</code>.</span></p>
+<h3>Resultado</h3>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">Sub-rede: 192.168.10.64/26
+Broadcast: 192.168.10.127
+Hosts úteis: 192.168.10.65 a 192.168.10.126
+</code></pre>
+</section>
+<section><h1>Sub-redes: Técnica Rápida do Bloco</h1>
+<p>Para descobrir a sub-rede de <code>192.168.10.77/26</code>:</p>
+<h3>Passo 1: descobrir o bloco</h3>
+<p><code>/26</code> dentro de um <code>/24</code> tem bloco de 64.</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">0, 64, 128, 192
+</code></pre>
+<h3>Passo 2: localizar o host</h3>
+<p>O último octeto é <code>77</code>.</p>
+<p>O maior início de bloco menor ou igual a <code>77</code> é <code>64</code>.</p>
+<p><span style="color:#2ca02c; font-weight:700">Esse é o ponto-chave: achar o início do bloco.</span></p>
+<h3>Resultado</h3>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">Rede:      192.168.10.64/26
+Broadcast: 192.168.10.127
+</code></pre>
+</section>
+<section><h1>Máscaras Comuns Dentro de Um /24</h1>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Prefixo</th>
+  <th style="text-align:left">Máscara</th>
+  <th style="text-align:left">Bloco</th>
+  <th style="text-align:left">Hosts úteis</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><code>/25</code></td>
+  <td style="text-align:left"><code>255.255.255.128</code></td>
+  <td style="text-align:left">128</td>
+  <td style="text-align:left">126</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>/26</code></td>
+  <td style="text-align:left"><code>255.255.255.192</code></td>
+  <td style="text-align:left">64</td>
+  <td style="text-align:left">62</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>/27</code></td>
+  <td style="text-align:left"><code>255.255.255.224</code></td>
+  <td style="text-align:left">32</td>
+  <td style="text-align:left">30</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>/28</code></td>
+  <td style="text-align:left"><code>255.255.255.240</code></td>
+  <td style="text-align:left">16</td>
+  <td style="text-align:left">14</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>/29</code></td>
+  <td style="text-align:left"><code>255.255.255.248</code></td>
+  <td style="text-align:left">8</td>
+  <td style="text-align:left">6</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>/30</code></td>
+  <td style="text-align:left"><code>255.255.255.252</code></td>
+  <td style="text-align:left">4</td>
+  <td style="text-align:left">2</td>
+</tr>
+</tbody>
+</table>
+<h3>Atenção</h3>
+<p>Prefixo maior significa mais bits de rede e menos bits de host.</p>
+</section>
+<section><h1>Correspondência Pelo Prefixo Mais Longo</h1>
+<p>Quando várias rotas combinam com o destino, o roteador escolhe a mais específica.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Prefixo</th>
+  <th style="text-align:left">Saída</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><code>10.0.0.0/8</code></td>
+  <td style="text-align:left">interface A</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>10.20.0.0/16</code></td>
+  <td style="text-align:left">interface B</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>10.20.30.0/24</code></td>
+  <td style="text-align:left">interface C</td>
+</tr>
+</tbody>
+</table>
+<p>Destino:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">10.20.30.45
+</code></pre>
+<p>Escolha correta: <code>10.20.30.0/24</code>, interface C.</p>
+</section>
+<section><h1>IPv4 x IPv6</h1>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Aspecto</th>
+  <th style="text-align:left">IPv4</th>
+  <th style="text-align:left">IPv6</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Tamanho</td>
+  <td style="text-align:left">32 bits</td>
+  <td style="text-align:left">128 bits</td>
+</tr>
+<tr>
+  <td style="text-align:left">Escrita</td>
+  <td style="text-align:left">decimal pontuada</td>
+  <td style="text-align:left">hexadecimal com dois-pontos</td>
+</tr>
+<tr>
+  <td style="text-align:left">Checksum</td>
+  <td style="text-align:left">existe no cabeçalho</td>
+  <td style="text-align:left">removido do cabeçalho base</td>
+</tr>
+<tr>
+  <td style="text-align:left">Fragmentação</td>
+  <td style="text-align:left">pode ocorrer em roteadores</td>
+  <td style="text-align:left">só na origem</td>
+</tr>
+<tr>
+  <td style="text-align:left">Broadcast</td>
+  <td style="text-align:left">existe</td>
+  <td style="text-align:left">substituído por multicast e outros mecanismos</td>
+</tr>
+</tbody>
+</table>
+<h3>Ideia central</h3>
+<p>IPv6 aumenta muito o espaço de endereços, mas a ideia de prefixo continua importante.</p>
+</section>
+<section><h3>Próximos Passos</h3>
+<p>Avaliação (C2)!</p>
+</section>
+        </div>
+    </div>
+
+    <script src="/aulas-faesa/js/vendor/reveal/reveal.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/notes/notes.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/markdown/markdown.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/math/math.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/zoom/zoom.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/prism.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-c.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-python.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-clike.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-cpp.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-perl.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-java.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-php.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/toolbar/prism-toolbar.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/show-language/prism-show-language.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/prism-slang.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/mermaid.min.js" data-no-bundle></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            mermaid.initialize({
+                startOnLoad: false,
+                theme: 'default',
+                securityLevel: 'loose',
+                htmlLabels: false,
+                fontFamily: 'Inter, system-ui, sans-serif',
+            });
+        });
+    </script>
+    <script src="/aulas-faesa/js/rough.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/apply_sketch.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/lucide.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/ui.js" data-no-bundle></script>
+    <script>
+        const waitForNextFrame = () => new Promise(resolve => requestAnimationFrame(resolve));
+
+        const initSlideUI = () => {
+            if (!window.CourseForgeUI) {
+                return;
+            }
+
+            window.CourseForgeUI.initCopyButtons();
+            window.CourseForgeUI.initIcons();
+        };
+
+        const renderMermaidsInSlide = async (slide) => {
+            if (!slide) {
+                return;
+            }
+
+            const mermaids = slide.querySelectorAll('.mermaid');
+            if (!mermaids.length) {
+                return;
+            }
+
+            try {
+                if (document.fonts?.ready) {
+                    await document.fonts.ready;
+                }
+
+                await waitForNextFrame();
+                await waitForNextFrame();
+
+                for (const element of mermaids) {
+                    if (element.dataset.mermaidRendered === 'true') {
+                        continue;
+                    }
+
+                    await mermaid.run({
+                        nodes: [element],
+                    });
+                    element.dataset.mermaidRendered = 'true';
+                }
+            } catch (err) {
+                console.warn('Mermaid render failed', err);
+            }
+        };
+
+        const updateMermaidDisplayBounds = (slide) => {
+            const scope = slide || document;
+            const displays = scope.querySelectorAll('.mermaid-display');
+
+            for (const display of displays) {
+                const rect = display.getBoundingClientRect();
+                const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+                const bottomGap = 24;
+                const availableHeight = Math.max(160, Math.floor(viewportHeight - rect.top - bottomGap));
+                display.style.setProperty('--mermaid-max-height', `${availableHeight}px`);
+            }
+        };
+
+        const resetNativeLineNumbers = (pre) => {
+            if (!pre?.classList.contains('line-numbers')) {
+                return;
+            }
+
+            const existingRows = pre.querySelector('.line-numbers-rows');
+            if (existingRows) {
+                existingRows.remove();
+            }
+        };
+
+        const highlightCodeInSlide = (slide) => {
+            const scope = slide || document;
+            const codeBlocks = scope.querySelectorAll('pre[class*="language-"] > code[class*="language-"]');
+
+            for (const code of codeBlocks) {
+                const pre = code.parentElement;
+                resetNativeLineNumbers(pre);
+                Prism.highlightElement(code);
+
+                if (pre?.classList.contains('line-numbers') && Prism.plugins?.lineNumbers?.resize) {
+                    Prism.plugins.lineNumbers.resize(pre);
+                }
+            }
+        };
+
+        const enhanceCurrentSlide = async (slide) => {
+            highlightCodeInSlide(slide);
+            await renderMermaidsInSlide(slide);
+            updateMermaidDisplayBounds(slide);
+            initSlideUI();
+        };
+
+        Reveal.initialize({
+            hash: true,
+            slideNumber: 'c/t',
+            center: false,
+            controls: false,
+            plugins: [RevealMarkdown, RevealNotes, RevealMath.KaTeX, RevealZoom],
+            katex: {
+                local: '/aulas-faesa/js/vendor/katex',
+                output: 'html',
+                throwOnError: false,
+                strict: false,
+            },
+            width: 960,
+            height: 800,
+            margin: 0.15,
+            maxScale: 2.0,
+        });
+
+        Reveal.on('ready', event => {
+            enhanceCurrentSlide(event.currentSlide);
+        });
+
+        Reveal.on('slideready', event => {
+            enhanceCurrentSlide(event.currentSlide);
+        });
+
+        Reveal.on('slidechanged', event => {
+            enhanceCurrentSlide(event.currentSlide);
+        });
+
+        window.addEventListener('resize', () => {
+            updateMermaidDisplayBounds(Reveal.getCurrentSlide());
+        });
+    </script>
+    <style>
+        /* Modern base styles */
+        :root {
+            --callout-note: #448aff;
+            --callout-abstract: #00b0ff;
+            --callout-info: #00b8d4;
+            --callout-todo: #00bfa5;
+            --callout-tip: #00c853;
+            --callout-success: #64dd17;
+            --callout-question: #ffab00;
+            --callout-warning: #ff9100;
+            --callout-failure: #ff5252;
+            --callout-danger: #ff1744;
+            --callout-bug: #f50057;
+            --callout-example: #7c4dff;
+            --callout-quote: #9e9e9e;
+            --code-bg: #f1f5f9;
+            --border: #e2e8f0;
+            --radius: 6px;
+            --radius-sm: 4px;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --text-muted: #64748b;
+            --text: #334155;
+            --bg: #ffffff;
+            --heading: #0f172a;
+            --link: #3b82f6;
+            --font-code: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+        }
+
+        .reveal {
+            font-size: 20px;
+            text-align: left !important;
+        }
+
+        .reveal code:not(pre code) {
+            font-family: var(--font-code) !important;
+            background-color: var(--code-bg) !important;
+            padding: 0.1em 0.35em !important;
+            border-radius: var(--radius-sm) !important;
+            font-size: 0.9em !important;
+            color: var(--link) !important;
+            border: 1px dashed var(--border) !important;
+            white-space: pre-wrap !important;
+            word-break: break-word !important;
+            font-variant-ligatures: none;
+            font-feature-settings: "liga" 0, "calt" 0;
+        }
+
+        .reveal h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px !important;
+            margin-left: 0 !important;
+            /* min-height: 2.3em; */
+            display: flex;
+            align-items: center;
+            justify-content: flex-start !important;
+            text-align: left !important;
+            width: 100% !important;
+            text-shadow: none !important;
+        }
+
+        /* Prism overrides for Reveal.js */
+        .reveal div.code-toolbar {
+            position: relative;
+            width: 100% !important;
+            margin: 1.5rem 0 !important;
+        }
+
+        .reveal pre[class*="language-"] {
+            background: hsl(230, 1%, 98%) !important;
+            margin: 1.5rem 0 !important;
+            padding: 1rem !important;
+            border: 1px solid var(--border) !important;
+            border-radius: var(--radius) !important;
+            box-shadow: var(--shadow-sm) !important;
+            font-family: var(--font-code) !important;
+            font-size: 0.85em !important;
+            position: relative;
+            overflow-x: auto;
+            box-sizing: border-box !important;
+            max-width: 100% !important;
+            font-variant-ligatures: none;
+            font-feature-settings: "liga" 0, "calt" 0;
+        }
+
+        .reveal pre[class*="language-"] > code {
+            background: 0 0 !important;
+            text-shadow: none !important;
+            color: hsl(230, 8%, 24%) !important;
+            position: relative !important;
+            display: block !important;
+        }
+
+        .reveal .line-numbers .line-numbers-rows {
+            border-right: 1px solid #444 !important;
+            padding-right: .5rem !important;
+            margin-bottom: 1.5rem;
+        }
+
+        .reveal .line-numbers-rows>span:before {
+            color: #666 !important;
+        }
+
+        .reveal pre[class*="language-"].line-numbers,
+        .reveal pre[class*="language-"]:has(.line-numbers-rows) {
+            padding-left: 3.8em !important;
+            overflow-y: hidden !important;
+        }
+
+        .reveal .copy-button,
+        .reveal pre[data-lang]::before {
+            position: absolute;
+            top: .5rem;
+            height: 26px;
+            background: hsl(230, 1%, 92%);
+            border: 1px solid hsl(230, 1%, 85%);
+            border-radius: var(--radius-sm);
+            box-sizing: border-box;
+        }
+
+        .reveal .copy-button {
+            right: .5rem;
+            width: 26px;
+            padding: 0;
+            color: hsl(230, 6%, 44%);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all .2s ease;
+            z-index: 20;
+            opacity: .8;
+        }
+
+        .reveal .copy-button:hover {
+            background: hsl(230, 1%, 85%);
+            color: hsl(230, 8%, 24%);
+            opacity: 1;
+        }
+
+        .reveal .copy-button svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Language label styling - hide all Prism toolbar plugins, keep only data-lang label */
+        .reveal div.toolbar,
+        .reveal div.toolbar-item,
+        .reveal button.toolbar-item,
+        .reveal span.toolbar-item {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            height: 0 !important;
+            width: 0 !important;
+            overflow: hidden !important;
+            position: absolute !important;
+            pointer-events: none !important;
+        }
+
+        /* Use the pseudo-element data-lang label only */
+        .reveal pre[data-lang]::before {
+            content: attr(data-lang);
+            right: 2.35rem;
+            padding: 0 .5rem;
+            font-size: .65rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: hsl(230, 6%, 50%);
+            pointer-events: none;
+            z-index: 10;
+            display: inline-flex !important;
+            align-items: center !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            height: 26px !important;
+            width: auto !important;
+            position: absolute !important;
+            overflow: visible !important;
+            line-height: 26px !important;
+        }
+
+        .reveal h2 {
+            font-size: 1.6em;
+            margin-top: 30px !important;
+            margin-bottom: 20px !important;
+            text-align: left !important;
+        }
+
+        .reveal h3 {
+            font-size: 1.3em;
+            margin-top: 20px !important;
+            margin-bottom: 15px !important;
+            text-align: left !important;
+        }
+
+        .reveal p {
+            line-height: 1.5;
+            margin-top: 20px !important;
+            margin-left: 0 !important;
+            text-align: left !important;
+        }
+
+        .reveal ul,
+        .reveal ol,
+        .reveal li {
+            line-height: 1.5;
+            text-align: left !important;
+            margin-left: 0 !important;
+        }
+        
+        .reveal ul, .reveal ol {
+            display: block !important;
+            padding-left: 1.2em !important;
+        }
+
+        /* Slide padding and layout */
+        .reveal .slides section {
+            padding: 40px !important;
+            box-sizing: border-box;
+            text-align: left !important;
+            overflow: visible !important;
+        }
+
+        .reveal .slides {
+            text-align: left !important;
+        }
+
+        /* Centering for Title slides (h1 ONLY, h1 + h2 ONLY, or h1 + h2 + p ONLY) */
+        .reveal .slides section:not(.stack):has(> h1:only-child),
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child),
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) {
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: center !important;
+            align-items: center !important;
+            text-align: center !important;
+            height: 100% !important;
+            top: 0 !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:only-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child) h2,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h2,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) p {
+            justify-content: center !important;
+            text-align: center !important;
+            margin: 0 !important;
+            min-height: auto !important;
+            width: 100% !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h1 {
+            margin-bottom: 0.5em !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h2 {
+            margin-bottom: 0.3em !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) p {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        /* Full screen slide fix */
+        .reveal .slides section:has(.full-screen-image) {
+            padding: 0 !important;
+        }
+
+        /* Full screen slide fix - Garantindo que o fundo do Reveal fique visível e a imagem carregada */
+        .reveal:has(section.present .full-screen-image) {
+            background-image: url('../../slide_end_background.png') !important;
+            background-size: cover !important;
+            background-position: center !important;
+        }
+
+        /* Torna o slide e o container de slides transparentes para mostrar o fundo da .reveal */
+        .reveal:has(section.present .full-screen-image) .slides,
+        .reveal:has(section.present .full-screen-image) .slides section.present {
+            background: transparent !important;
+        }
+
+        .full-screen-image {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 !important;
+            /* Se houver texto, ele centraliza aqui */
+        }
+
+        /* Spacing for diagrams */
+        .reveal .svg-graph {
+            margin-top: 1em !important;
+            margin-bottom: 1em !important;
+            overflow: visible !important; /* Prevent labels from being cut off */
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* Mermaid Diagram Styles */
+        .reveal .mermaid {
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            padding: 0 !important;
+            margin: 1rem 0 !important;
+            font-family: inherit !important;
+            overflow: visible !important;
+            text-align: center;
+            display: block !important;
+            width: auto !important;
+            max-width: 100% !important;
+        }
+
+        .reveal pre.mermaid {
+            white-space: pre;
+            font-family: var(--font-code);
+            color: var(--text-muted);
+            margin: 0 !important;
+            padding: 0 !important;
+            width: auto !important;
+            line-height: 1 !important;
+            border: none !important;
+            box-shadow: none !important;
+            background: transparent !important;
+            overflow: visible !important;
+        }
+
+        .reveal .centered .mermaid {
+            display: block !important;
+            justify-content: center;
+            margin-left: auto !important;
+            margin-right: auto !important;
+        }
+
+        .reveal .mermaid svg {
+            max-width: 100% !important;
+            height: auto !important;
+            display: block !important;
+            overflow: visible !important;
+            vertical-align: top !important;
+            font-family: Inter, system-ui, sans-serif !important;
+            font-style: normal !important;
+            font-variant: normal !important;
+            font-weight: 400 !important;
+            letter-spacing: normal !important;
+            word-spacing: normal !important;
+            text-transform: none !important;
+            text-shadow: none !important;
+            line-height: normal !important;
+            text-rendering: geometricPrecision !important;
+        }
+
+        .reveal .mermaid svg * {
+            font-family: inherit !important;
+            font-style: normal !important;
+            font-variant: normal !important;
+            letter-spacing: normal !important;
+            word-spacing: normal !important;
+            text-transform: none !important;
+            text-shadow: none !important;
+            line-height: normal !important;
+        }
+
+        .reveal .mermaid svg .edgeBadge text,
+        .reveal .mermaid svg .edgeBadge tspan,
+        .reveal .mermaid svg .edgeTerm text,
+        .reveal .mermaid svg .edgeTerm tspan,
+        .reveal .mermaid svg .multiplicity text,
+        .reveal .mermaid svg .multiplicity tspan,
+        .reveal .mermaid svg text.edgeBadge,
+        .reveal .mermaid svg text.edgeTerm {
+            font-size: 18px !important;
+            font-weight: 700 !important;
+            fill: var(--heading) !important;
+        }
+
+        /* Mermaid Source Switcher */
+        .reveal .mermaid-outer-container {
+            margin: 1rem 0;
+            position: relative;
+            width: 100%;
+            max-width: 100%;
+        }
+
+        .reveal .mermaid-switcher {
+            display: flex !important;
+            justify-content: flex-end;
+            margin-bottom: 0.5rem;
+            width: 100%;
+        }
+
+        .reveal .switcher-track {
+            display: inline-flex;
+            align-items: center;
+            background: var(--code-bg);
+            padding: 3px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            position: relative;
+        }
+
+        .reveal .switcher-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            border: none;
+            background: transparent;
+            padding: 0.35rem 1rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            border-radius: calc(var(--radius) - 2px);
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            z-index: 1;
+        }
+
+        .reveal .switcher-btn svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .reveal .switcher-btn:hover {
+            color: var(--text);
+        }
+
+        .reveal .switcher-btn.active {
+            color: var(--heading);
+            background: var(--bg);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        .reveal .mermaid-content {
+            min-height: 50px;
+        }
+
+        /* Mermaid display - respect inline width */
+        .reveal .mermaid-display {
+            transition: opacity 0.2s ease;
+            display: block !important;
+            max-width: 100% !important;
+            max-height: var(--mermaid-max-height, calc(100vh - 140px)) !important;
+            border: none !important;
+            box-shadow: none !important;
+            background: transparent !important;
+            overflow: auto !important;
+        }
+
+        .reveal .mermaid-source pre {
+            margin: 0 !important;
+            background: var(--code-bg) !important;
+            border: 1px dashed var(--border) !important;
+        }
+
+        /* Ensure proper toggle behavior */
+        .reveal .mermaid-source {
+            display: none !important;
+        }
+
+        .reveal .mermaid-source[style*="display: block"],
+        .reveal .mermaid-source[style*="display:block"] {
+            display: block !important;
+        }
+
+        .reveal .mermaid-display[style*="display: none"],
+        .reveal .mermaid-display[style*="display:none"] {
+            display: none !important;
+        }
+
+        .reveal .mermaid-display.centered {
+            margin-left: auto !important;
+            margin-right: auto !important;
+            max-width: 100% !important;
+        }
+
+        .centered:not(.mermaid-display) {
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            width: 100% !important;
+            margin: 1em 0 !important;
+        }
+
+        .no-break {
+            display: block;
+            width: 100%;
+        }
+
+        .reveal blockquote {
+            display: block;
+            position: relative;
+            margin: var(--r-block-margin) auto !important;
+            padding: 5px;
+            font-style: italic;
+            background: rgba(255, 170, 73, 0.2);
+            box-shadow: 0 0 2px rgba(0,0,0,.2);
+            text-align: left !important;
+        }
+
+        .col1 {
+            width: 90%;
+            margin: 0 auto;
+        }
+
+        .col2 {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start;
+            width: 90%;
+            margin: 0 auto;
+            align-items: flex-start;
+        }
+
+        /* Callout Styles */
+        :root {
+            --callout-note: #448aff;
+            --callout-abstract: #00b0ff;
+            --callout-info: #00b8d4;
+            --callout-todo: #00bfa5;
+            --callout-tip: #00c853;
+            --callout-success: #64dd17;
+            --callout-question: #ffab00;
+            --callout-warning: #ff9100;
+            --callout-failure: #ff5252;
+            --callout-danger: #ff1744;
+            --callout-bug: #f50057;
+            --callout-example: #7c4dff;
+            --callout-quote: #9e9e9e;
+            --code-bg: #f8f8f8;
+            --border: #ddd;
+        }
+
+        .reveal .callout {
+            margin: 1rem auto !important;
+            border: 1px solid var(--border);
+            border-left: 6px solid var(--callout-note);
+            border-radius: 4px;
+            overflow: hidden;
+            text-align: left !important;
+            font-size: 0.8em;
+            width: 75% !important;
+            max-width: 100% !important;
+        }
+
+        .reveal .callout-title {
+            padding: 0.5rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            color: var(--callout-note);
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .reveal .callout-icon {
+            display: flex;
+            align-items: center;
+        }
+
+        .reveal .callout-icon svg {
+            width: 1.2em;
+            height: 1.2em;
+        }
+
+        .reveal .callout-content {
+            padding: 0.5rem 1rem;
+        }
+
+        .reveal .callout-content p {
+            margin-top: 0.5rem !important;
+        }
+
+        .reveal .callout-content p:first-child {
+            margin-top: 0 !important;
+        }
+
+        .reveal h1 { text-transform: none !important; }
+
+        .reveal .callout-abstract { border-left-color: var(--callout-abstract); }
+        .reveal .callout-abstract .callout-title { color: var(--callout-abstract); }
+        .reveal .callout-info { border-left-color: var(--callout-info); }
+        .reveal .callout-info .callout-title { color: var(--callout-info); }
+        .reveal .callout-todo { border-left-color: var(--callout-todo); }
+        .reveal .callout-todo .callout-title { color: var(--callout-todo); }
+        .reveal .callout-tip { border-left-color: var(--callout-tip); }
+        .reveal .callout-tip .callout-title { color: var(--callout-tip); }
+        .reveal .callout-success { border-left-color: var(--callout-success); }
+        .reveal .callout-success .callout-title { color: var(--callout-success); }
+        .reveal .callout-question { border-left-color: var(--callout-question); }
+        .reveal .callout-question .callout-title { color: var(--callout-question) ; }
+        .reveal .callout-warning { border-left-color: var(--callout-warning); }
+        .reveal .callout-warning .callout-title { color: var(--callout-warning); }
+        .reveal .callout-failure { border-left-color: var(--callout-failure); }
+        .reveal .callout-failure .callout-title { color: var(--callout-failure); }
+        .reveal .callout-danger { border-left-color: var(--callout-danger); }
+        .reveal .callout-danger .callout-title { color: var(--callout-danger); }
+        .reveal .callout-bug { border-left-color: var(--callout-bug); }
+        .reveal .callout-bug .callout-title { color: var(--callout-bug); }
+        .reveal .callout-example { border-left-color: var(--callout-example); }
+        .reveal .callout-example .callout-title { color: var(--callout-example); }
+        .reveal .callout-quote { border-left-color: var(--callout-quote); }
+        .reveal .callout-quote .callout-title { color: var(--callout-quote); }
+        .red-note { color: var(--callout-failure); }
+
+        .reveal .slide-number {
+            font-size: 0.8em !important;
+            padding: 5px 10px !important;
+            background: rgba(0,0,0,0.1) !important;
+            border-radius: 4px;
+            color: #000000b1 !important;
+        }
+
+        /* Print styles */
+        @media print {
+            .reveal .slides section {
+                display: block !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                position: relative !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+                page-break-after: always !important;
+                overflow: hidden !important;
+            }
+
+            .reveal .slides {
+                transform: none !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+            }
+            
+            .reveal {
+                overflow: visible !important;
+            }
+        }
+    </style>
+</body>
+
+</html>

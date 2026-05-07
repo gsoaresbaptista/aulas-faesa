@@ -413,7 +413,7 @@
   "../obsidian-vault/6. Teaching/T\u00f3picos de Programa\u00e7\u00e3o II/slides/5 - libraries in c.md": "eee8b7630c9447fc7bdf4d6a0642490a",
   "../obsidian-vault/6. Teaching/T\u00f3picos de Programa\u00e7\u00e3o II/slides/6 - abstract data types.md": "9b041cfaec858198b54112723df9ff44",
   "../obsidian-vault/6. Teaching/Sistemas Operacionais/static/fig_dining_philosophers.png": "7bdd4c6686f2e0534c44f8096fb53067",
-  "../obsidian-vault/6. Teaching/.course_forge_cache/build_cache.json": "cb788d3b17b626b79e2219b50240b79c",
+  "../obsidian-vault/6. Teaching/.course_forge_cache/build_cache.json": "2ca97267725b58e712d4c520d6ac47dd",
   "../obsidian-vault/6. Teaching/Redes/6 - mac sublayer, ethernet and mac addressing.md": "6c07c69cbad857bdba2ec8e1933b60b6",
   "../obsidian-vault/6. Teaching/Compiladores/bin/tests/lexer/expected/01_delimiters.txt": "7eee78b2a963b2b5582b4959d31eb53c",
   "../obsidian-vault/6. Teaching/Compiladores/bin/tests/lexer/expected/08_strings.txt": "3a48f84a1c1c66feb1064c6c970613b6",
@@ -564,5 +564,9 @@
   "../obsidian-vault/6. Teaching/T\u00f3picos de Programa\u00e7\u00e3o II/bin/modelo-c2-livros.zip": "45aa62e91050440cf0ef3a98996d9bba",
   "../obsidian-vault/6. Teaching/T\u00f3picos de Programa\u00e7\u00e3o II/assignments/second exam official.md": "66304b34251eb95fa6a1389c5dbebec1",
   "../obsidian-vault/6. Teaching/T\u00f3picos de Programa\u00e7\u00e3o II/assignments/second exam useful functions.md": "f7f945a0fabb97730fc6b518dfcb2458",
-  "../obsidian-vault/6. Teaching/Processamento Digital de Sinais/slides/10 - adc dft and fft.md": "3dad97e6309688d7ccb4cb9d52794f9e"
+  "../obsidian-vault/6. Teaching/Processamento Digital de Sinais/slides/10 - adc dft and fft.md": "3dad97e6309688d7ccb4cb9d52794f9e",
+  "../obsidian-vault/6. Teaching/Redes/assignments/second_exam_questionnaire_import_utf8.csv": "06a8e6ba7cae0437dd6a6c9bcc3ec86d",
+  "../obsidian-vault/6. Teaching/Redes/slides/10 - second exam review.md": "84f5cc882b0da3fd68956241e516c21e",
+  "../obsidian-vault/6. Teaching/Compiladores/14 - lr0 parsing.md": "81f0cfb1a5ade3cc42dcad58eb2a7f4b",
+  "../obsidian-vault/6. Teaching/Compiladores/slides/9 - lr0 parsing.md": "1e1fd46b5abf53f731b696d690d4e025"
 }
