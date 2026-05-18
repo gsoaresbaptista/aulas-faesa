@@ -7,10 +7,13 @@ nome != "admin" or ativo
 10 % 3 + 1
 </code></pre><p>Note que já estamos usando os <strong>tokens reais do projeto</strong>, vindos diretamente do lexer implementado nos laboratórios anteriores.</p><p>Os tipos de tokens relevantes aqui são:</p><ul><li><code>TOK_IDENTIFIER</code></li><li><code>TOK_NUMBER</code></li><li><code>TOK_STRING</code></li><li><code>TOK_CHAR</code></li><li><code>TOK_KW_TRUE</code> e <code>TOK_KW_FALSE</code></li><li><code>TOK_PLUS</code> e <code>TOK_MINUS</code></li><li><code>TOK_STAR</code>, <code>TOK_SLASH</code> e <code>TOK_PERCENT</code></li><li><code>TOK_EQ</code> e <code>TOK_BANG_EQ</code></li><li><code>TOK_GT</code>, <code>TOK_GT_EQ</code>, <code>TOK_LT</code> e <code>TOK_LT_EQ</code></li><li><code>TOK_AND</code>, <code>TOK_OR</code> e <code>TOK_NOT</code></li><li><code>TOK_LPAREN</code> e <code>TOK_RPAREN</code></li></ul><p>Isso é importante porque, a partir de agora, o parser deixa de ser um algoritmo abstrato e passa a trabalhar sobre a linguagem do próprio projeto.</p><h3 id=ajuste-pendente-vindo-do-lexer-suporte-a-codecode><span class=heading-text>Ajuste pendente vindo do lexer: suporte a <code>%</code></span><span class=heading-arabic>11.2.1</span></h3><p>Antes de continuar, precisamos alinhar uma pequena pendência entre o estado que os alunos já têm e o estado que vamos usar neste laboratório.</p><p>Ao longo deste capítulo, a nossa gramática tratará o operador de módulo <code>%</code> no mesmo nível de precedência de <code>*</code> e <code>/</code>. Isso significa que o parser precisará reconhecer <code>TOK_PERCENT</code>.</p><p>Se você tentar escrever <code>parse_factor</code> usando <code>TOK_PERCENT</code> sem atualizar antes a definição dos tokens, o projeto nem chegará a compilar. O erro será algo na linha de:</p><pre class="line-numbers language-txt" data-lang=TXT><code class=language-txt>error: 'TOK_PERCENT' undeclared
 </code></pre><p>Esse erro não está no parser em si. Ele acontece porque o <code>enum</code> de tokens ainda não conhece esse nome.</p><p>Portanto, antes de implementar o parser, faça estes dois ajustes no lexer.</p><h4 id=adicionando-codetok-percentcode-em-codeincludecompilertokenhcode><span class=heading-text>Adicionando <code>TOK_PERCENT</code> em <code>include/compiler/token.h</code></span><span class=heading-arabic>11.2.1.1</span></h4><p>Abra <code>include/compiler/token.h</code> e insira <code>TOK_PERCENT</code> junto dos operadores aritméticos:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>#define TOKEN_LIST \
-    .
-    .
-    .
-    X(TOK_PERCENT)
+    X(TOK_PLUS)          /* + */ \
+    X(TOK_MINUS)         /* - */ \
+    X(TOK_STAR)          /* * */ \
+    X(TOK_SLASH)         /* / */ \
+    X(TOK_PERCENT)       /* % */ \
+    X(TOK_ASSIGN)        /* = */ \
+    /* restante da lista */
 </code></pre><p>Como usamos X-Macros, esse único acréscimo já atualiza automaticamente:</p><ul><li>o <code>enum TokenType</code>;</li><li>o array <code>TokenNames</code>.</li></ul><h4 id=fazendo-o-lexer-reconhecer-codecode-em-codesrccompilerlexerccode><span class=heading-text>Fazendo o lexer reconhecer <code>%</code> em <code>src/compiler/lexer.c</code></span><span class=heading-arabic>11.2.1.2</span></h4><p>Agora abra <code>src/compiler/lexer.c</code> e, dentro do <code>switch</code> principal de <code>lexer_next_token</code>, adicione o caso do operador <code>%</code>:</p><pre class="line-numbers language-c" data-lang=C><code class=language-c>.
 .
 .

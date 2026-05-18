@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toposia - Sistemas Operacionais</title>
+    <link rel="icon" href="/aulas-faesa/img/dark-favicon.svg" media="(prefers-color-scheme: light)">
+    <link rel="icon" href="/aulas-faesa/img/light-favicon.svg" media="(prefers-color-scheme: dark)">
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/fonts.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/bundles/katex-base-prism-one-light-b0347952c973.bundle.min.css">
+    
+    
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css" data-no-bundle>
+    <script src="/aulas-faesa/js/bundles/lucide-katex-auto-render-4b36e8bd8642.bundle.min.js"></script>
+</head>
+
+<body>
+    <script>
+        // Restore sidebar state instantly (before first paint) to avoid transition flash
+        (function() {
+            if (localStorage.getItem('cf_sidebar_hidden') === 'true') {
+                document.body.classList.add('sidebar-hidden', 'no-transition');
+            }
+            requestAnimationFrame(function() {
+                requestAnimationFrame(function() {
+                    document.body.classList.remove('no-transition');
+                });
+            });
+        })();
+    </script>
+    <div class="page-wrapper">
+        <nav class="sidebar">
+            <div class="sidebar-content">
+                <header class="sidebar-title-section">
+                    <a href="contents.html" class="course-title-link">
+                        <h1 class="sidebar-course-title">Sistemas Operacionais</h1>
+                    </a>
+                    <div class="sidebar-ornament">❧</div>
+                </header>
+
+                
+                <section class="sidebar-toc-section">
+                    <h2 class="toc-header">Tabela de Conteúdos</h2>
+                    <ol class="toc-list">
+                        
+                        <li class="toc-item level-2">
+                            <a href="#introdução">8.1. Introdução</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#sem-abstração-de-memória">8.2. Sem abstração de memória</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#por-que-proteção-sozinha-não-resolve">8.2.1. Por que proteção sozinha não resolve</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#multiprogramação-e-uso-da-cpu">8.2.2. Multiprogramação e uso da CPU</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#espaços-de-endereçamento">8.3. Espaços de endereçamento</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#base-e-limite">8.3.1. Base e limite</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#swapping">8.4. Swapping</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#crescimento-dos-processos">8.5. Crescimento dos processos</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#gerenciamento-de-memória-livre">8.6. Gerenciamento de memória livre</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#mapa-de-bits">8.6.1. Mapa de bits</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#lista-encadeada-de-segmentos">8.6.2. Lista encadeada de segmentos</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#algoritmos-de-alocação">8.7. Algoritmos de alocação</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#first-fit-primeiro-encaixe">8.7.1. First fit (primeiro encaixe)</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#next-fit-próximo-encaixe">8.7.2. Next fit (próximo encaixe)</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#best-fit-melhor-encaixe">8.7.3. Best fit (melhor encaixe)</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#worst-fit-pior-encaixe">8.7.4. Worst fit (pior encaixe)</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#quick-fit-encaixe-rápido">8.7.5. Quick fit (encaixe rápido)</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#fragmentação">8.7.6. Fragmentação</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#questões">8.8. Questões</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#próximos-passos">8.9. Próximos passos</a>
+                        </li>
+                        
+                    </ol>
+                </section>
+                
+
+                <nav class="sidebar-nav-section">
+                    
+                    <a href="7-deadlocks.html" class="sidebar-nav-link prev"><i data-lucide="chevron-left" class="nav-icon"></i> Impasses (Deadlocks)</a>
+                    
+                    
+                    <a href="javascript:void(0)" onclick="handleBackNavigation()"
+                        class="sidebar-nav-link back"><i data-lucide="arrow-left" class="nav-icon"></i> Voltar</a>
+                </nav>
+
+            </div>
+        </nav>
+
+        <button class="mobile-menu-toggle" aria-label="Menu">
+            <i data-lucide="menu"></i>
+        </button>
+
+        <button class="sidebar-toggle" onclick="CourseForgeNav.toggleSidebar()" aria-label="Alternar Barra Lateral">
+            <i data-lucide="chevron-left" class="toggle-icon" id="sidebar-toggle-icon"></i>
+        </button>
+
+        <div class="mobile-menu-overlay"></div>
+
+        <main class="main-content">
+            <article class="article">
+                <header class="article-header">
+                    <span class="chapter-number">8</span>
+                    <h1 class="article-title">
+                        <span class="title-ornament left">❧</span>
+                        <span class="title-text">Gerência de Memória</span>
+                        <span class="title-ornament right">❧</span>
+                    </h1>
+                    
+                    <p class="article-date">03/04/2026</p>
+                    
+                    
+                    <nav class="breadcrumb" aria-label="Breadcrumb">
+                        
+                        
+                        
+                        <a href="contents.html" class="breadcrumb-link">Sistemas Operacionais</a>
+                        
+                        <span class="breadcrumb-separator"><i data-lucide="chevron-right" class="breadcrumb-icon"></i></span>
+                        
+                        
+                        
+                        
+                        <a href="contents.html#part-III" class="breadcrumb-link">III - Memória e Arquivos</a>
+                        
+                        <span class="breadcrumb-separator"><i data-lucide="chevron-right" class="breadcrumb-icon"></i></span>
+                        
+                        
+                        
+                        <span class="breadcrumb-current">Gerência de Memória</span>
+                        
+                        
+                    </nav>
+                    
+                </header>
+                <div class="article-body">
+                    <h2 id="introdução"><span class="heading-text">Introdução</span><span class="heading-arabic">8.1</span></h2>
+<p>Hoje veremos como o sistema operacional organiza o espaço onde os processos vivem: a memória principal.</p>
+<p>Até aqui, tratamos processos como se cada um tivesse apenas uma sequência de instruções, alguns registradores e um estado no escalonador. Essa visão é útil, mas incompleta. Um processo também precisa de memória para código, variáveis globais, pilha, heap, bibliotecas e buffers de entrada e saída. Se dois processos enxergassem a memória física diretamente, um erro simples de ponteiro poderia sobrescrever dados de outro processo ou até do próprio sistema operacional.</p>
+<p>O problema central desta aula é este: <strong>como permitir que vários programas coexistam na RAM sem que um destrua o espaço do outro?</strong></p>
+<p>Esta aula usa como base o Tanenbaum, capítulo 3, seções 3.1 e 3.2, páginas 125 a 133. Tanenbaum apresenta esse tema começando pelo caso mais simples, sem abstração de memória, e só depois introduz a ideia de <strong>espaço de endereçamento</strong>. Vamos seguir essa progressão porque ela revela por que a abstração é necessária.</p>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="760" viewBox="0.00 0.00 555.00 268.50" class="svg-graph graphviz-img"><g id="svg-graphviz-e39e14111af1-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 264.5)"><title>MemoryIntro</title><polygon fill="white" stroke="transparent" points="-4,4 -4,-264.5 551,-264.5 551,4 -4,4" /><g id="svg-graphviz-e39e14111af1-node1" class="node"><title>A</title><path fill="#ffe3c2" stroke="black" d="M120,-260.5C120,-260.5 12,-260.5 12,-260.5 6,-260.5 0,-254.5 0,-248.5 0,-248.5 0,-219.5 0,-219.5 0,-213.5 6,-207.5 12,-207.5 12,-207.5 120,-207.5 120,-207.5 126,-207.5 132,-213.5 132,-219.5 132,-219.5 132,-248.5 132,-248.5 132,-254.5 126,-260.5 120,-260.5" /><text text-anchor="middle" x="66" y="-245.3" font-family="Helvetica,sans-Serif" font-size="14.00">Processo A</text><text text-anchor="middle" x="66" y="-230.3" font-family="Helvetica,sans-Serif" font-size="14.00">acredita ter</text><text text-anchor="middle" x="66" y="-215.3" font-family="Helvetica,sans-Serif" font-size="14.00">memoria propria</text></g><g id="svg-graphviz-e39e14111af1-node4" class="node"><title>RAM</title><polygon fill="#f5f5f5" stroke="black" points="324,-105 324,-141 547,-141 547,-105 324,-105" /><text text-anchor="middle" x="368" y="-119.3" font-family="Helvetica,sans-Serif" font-size="14.00">RAM fisica</text><polyline fill="none" stroke="black" points="412,-105 412,-141 " /><text text-anchor="middle" x="430.5" y="-119.3" font-family="Helvetica,sans-Serif" font-size="14.00">SO</text><polyline fill="none" stroke="black" points="449,-105 449,-141 " /><text text-anchor="middle" x="462" y="-119.3" font-family="Helvetica,sans-Serif" font-size="14.00">A</text><polyline fill="none" stroke="black" points="475,-105 475,-141 " /><text text-anchor="middle" x="488" y="-119.3" font-family="Helvetica,sans-Serif" font-size="14.00">B</text><polyline fill="none" stroke="black" points="501,-105 501,-141 " /><text text-anchor="middle" x="524" y="-119.3" font-family="Helvetica,sans-Serif" font-size="14.00">livre</text></g><g id="svg-graphviz-e39e14111af1-edge1" class="edge"><title>A-&gt;RAM</title><path fill="none" stroke="black" d="M132.28,-214.28C197.74,-194.51 298.18,-164.17 365.08,-143.97" /><polygon fill="black" stroke="black" points="366.13,-147.31 374.7,-141.06 364.11,-140.6 366.13,-147.31" /><text text-anchor="middle" x="228" y="-204.8" font-family="Times,serif" font-size="14.00">enderecos</text></g><g id="svg-graphviz-e39e14111af1-node2" class="node"><title>B</title><path fill="#ffe3c2" stroke="black" d="M120,-149.5C120,-149.5 12,-149.5 12,-149.5 6,-149.5 0,-143.5 0,-137.5 0,-137.5 0,-108.5 0,-108.5 0,-102.5 6,-96.5 12,-96.5 12,-96.5 120,-96.5 120,-96.5 126,-96.5 132,-102.5 132,-108.5 132,-108.5 132,-137.5 132,-137.5 132,-143.5 126,-149.5 120,-149.5" /><text text-anchor="middle" x="66" y="-134.3" font-family="Helvetica,sans-Serif" font-size="14.00">Processo B</text><text text-anchor="middle" x="66" y="-119.3" font-family="Helvetica,sans-Serif" font-size="14.00">acredita ter</text><text text-anchor="middle" x="66" y="-104.3" font-family="Helvetica,sans-Serif" font-size="14.00">memoria propria</text></g><g id="svg-graphviz-e39e14111af1-edge2" class="edge"><title>B-&gt;RAM</title><path fill="none" stroke="black" d="M132.28,-123C182.39,-123 252.99,-123 313.35,-123" /><polygon fill="black" stroke="black" points="313.72,-126.5 323.72,-123 313.72,-119.5 313.72,-126.5" /><text text-anchor="middle" x="228" y="-126.8" font-family="Times,serif" font-size="14.00">enderecos</text></g><g id="svg-graphviz-e39e14111af1-node3" class="node"><title>SO</title><path fill="#d9ecff" stroke="black" d="M104,-38C104,-38 28,-38 28,-38 22,-38 16,-32 16,-26 16,-26 16,-12 16,-12 16,-6 22,0 28,0 28,0 104,0 104,0 110,0 116,-6 116,-12 116,-12 116,-26 116,-26 116,-32 110,-38 104,-38" /><text text-anchor="middle" x="66" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">Sistema</text><text text-anchor="middle" x="66" y="-7.8" font-family="Helvetica,sans-Serif" font-size="14.00">Operacional</text></g><g id="svg-graphviz-e39e14111af1-edge3" class="edge"><title>SO-&gt;RAM</title><path fill="none" stroke="black" d="M116.18,-32.92C178.95,-50.68 288.08,-81.56 360.8,-102.14" /><polygon fill="black" stroke="black" points="360.24,-105.62 370.81,-104.98 362.15,-98.89 360.24,-105.62" /><text text-anchor="middle" x="228" y="-84.8" font-family="Times,serif" font-size="14.00">protege e traduz</text></g></g></svg></div></div>
+
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Se um programa em C acessa por engano uma posição de memória fora do vetor, por que isso não deveria permitir que ele altere variáveis de outro programa aberto no computador?</p>
+  </div>
+</div>
+<h2 id="sem-abstração-de-memória"><span class="heading-text">Sem abstração de memória</span><span class="heading-arabic">8.2</span></h2>
+<p>A forma mais simples de usar memória é não ter abstração nenhuma. O programa trabalha diretamente com endereços físicos. Se ele lê o endereço 1000, está lendo a posição física 1000 da RAM. Se escreve no endereço 2000, modifica a posição física 2000.</p>
+<p>Essa ideia parece natural em sistemas muito simples. Um microcontrolador pequeno, um sistema embarcado mínimo ou um computador antigo executando um único programa podem funcionar assim. O programa ocupa a memória, usa os dispositivos e não precisa dividir a RAM com aplicações concorrentes.</p>
+<p>O problema aparece quando queremos <strong>multiprogramação</strong>. Se vários processos ficam na memória ao mesmo tempo, cada um não pode simplesmente usar os mesmos endereços físicos.</p>
+<p>Tanenbaum abre o capítulo com as três organizações mais simples para esse cenário sem abstração. Em todas elas, o processo de usuário acessa endereços físicos diretamente, mas o sistema operacional pode estar posicionado de maneiras diferentes.</p>
+<img src="static/fig_3_1_organizacoes_memoria.png" width="85%">
+
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Organização</th>
+  <th style="text-align:left">No livro</th>
+  <th style="text-align:left">Quem usa</th>
+  <th style="text-align:left">Risco principal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">SO em RAM baixa</td>
+  <td style="text-align:left">Figura 3.1(a)</td>
+  <td style="text-align:left">Computadores de grande porte antigos</td>
+  <td style="text-align:left">Um erro do usuário pode sobrescrever o SO.</td>
+</tr>
+<tr>
+  <td style="text-align:left">SO em ROM alta</td>
+  <td style="text-align:left">Figura 3.1(b)</td>
+  <td style="text-align:left">Portáteis e sistemas embarcados simples</td>
+  <td style="text-align:left">Pouco flexível para cargas variáveis.</td>
+</tr>
+<tr>
+  <td style="text-align:left">Drivers em ROM, SO em RAM</td>
+  <td style="text-align:left">Figura 3.1(c)</td>
+  <td style="text-align:left">Primeiros PCs (ex: MS-DOS com BIOS)</td>
+  <td style="text-align:left">Um programa ainda pode danificar a parte do SO em RAM.</td>
+</tr>
+</tbody>
+</table>
+<p>Nessas três organizações, tipicamente apenas um processo executa por vez. O usuário digita um comando, o SO copia o programa do disco para a memória e o executa. Quando o processo termina, o SO exibe o prompt de novo e o ciclo recomeça. Para executar múltiplos programas, é possível salvar o conteúdo da memória em disco e carregar o programa seguinte, mas isso já antecipa o conceito de swapping.</p>
+<p>Essa organização funciona quando o software é conhecido de antemão, como em um eletrodoméstico ou dispositivo simples. Ela continua comum em sistemas embarcados e cartões inteligentes. Mas ela não é adequada para um computador de propósito geral onde usuários abrem programas independentes.</p>
+<div class="example">
+  <div class="example-title">Exemplo 1</div>
+  <p>Considere dois programas compilados como se começassem no endereço físico $0$.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Programa</th>
+  <th style="text-align:left">Endereço esperado</th>
+  <th style="text-align:left">Conteúdo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Editor de texto</td>
+  <td style="text-align:left">$0$ a $999$</td>
+  <td style="text-align:left">código e dados do editor</td>
+</tr>
+<tr>
+  <td style="text-align:left">Navegador</td>
+  <td style="text-align:left">$0$ a $1999$</td>
+  <td style="text-align:left">código e dados do navegador</td>
+</tr>
+</tbody>
+</table>
+<p>Se os dois forem carregados literalmente a partir do endereço $0$, eles se sobrepõem. O segundo programa sobrescreve parte do primeiro.</p>
+<p>O erro não está no código do editor nem no código do navegador. O erro está na ausência de uma camada que permita que cada programa tenha sua própria visão de memória.</p>
+</div>
+<p>Sem abstração, surgem dois problemas fundamentais.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Problema</th>
+  <th style="text-align:left">O que significa</th>
+  <th style="text-align:left">Consequência</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><strong>Realocação</strong></td>
+  <td style="text-align:left">O programa pode ser carregado em posições diferentes da RAM.</td>
+  <td style="text-align:left">Endereços internos precisam continuar fazendo sentido.</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Proteção</strong></td>
+  <td style="text-align:left">Um processo não deve acessar memória de outro processo ou do núcleo.</td>
+  <td style="text-align:left">Acesso indevido precisa ser bloqueado.</td>
+</tr>
+</tbody>
+</table>
+<p>Esses dois problemas explicam por que a gerência de memória não é apenas uma tabela de espaços livres. Ela é uma parte essencial da segurança e da ilusão de isolamento entre processos.</p>
+<h3 id="por-que-proteção-sozinha-não-resolve"><span class="heading-text">Por que proteção sozinha não resolve</span><span class="heading-arabic">8.2.1</span></h3>
+<p>Uma solução histórica foi usada nos primeiros modelos IBM 360. A memória era dividida em blocos de 2 KB, e cada bloco recebia uma <strong>chave de proteção</strong> de 4 bits armazenada em registradores especiais na CPU. O processo em execução também tinha uma chave associada, guardada na PSW (Palavra de Estado do Programa). O hardware impedia que um processo acessasse blocos com chave diferente, e só o SO podia modificar essas chaves.</p>
+<p>Essa estratégia garante a proteção: um processo não consegue escrever sobre áreas de outro. Mas ela não resolve o problema completo, como Tanenbaum demonstra com o exemplo da Figura 3.2.</p>
+<div class="example">
+  <div class="example-title">Exemplo 2</div>
+  <p>Considere dois programas de 16 KB compilados como se começassem no endereço $0$.</p>
+<img src="static/fig_3_2_problema_realocacao.png" width="95%">
+
+<p>O primeiro programa começa com um salto <code>JMP 24</code> e o segundo com <code>JMP 28</code>. Se o primeiro for carregado na base $0$ e o segundo na base $16384$, a instrução <code>JMP 28</code> do segundo programa deveria significar &quot;vá para o endereço 28 <strong>dentro do meu próprio espaço</strong>&quot;. Mas o hardware interpreta $28$ como endereço físico absoluto. Resultado: o segundo programa salta para dentro do primeiro, provavelmente colapsando em menos de um segundo.</p>
+<p>As chaves de proteção impedem escrita indevida, mas não corrigem automaticamente os endereços internos do programa. O problema que as chaves não resolvem é justamente a <strong>realocação</strong>: fazer com que endereços como $28$ e $24$ apontem para o lugar certo quando o programa é carregado em uma posição diferente.</p>
+</div>
+<p>Uma tentativa de corrigir isso é a <strong>realocação estática</strong>. Durante o carregamento, o sistema soma a base de carga a cada endereço usado pelo programa. Assim, <code>JMP 28</code> vira <code>JMP 16412</code> (pois $16384 + 28 = 16412$). O IBM 360 usava essa técnica como solução provisória.</p>
+<p>O problema é que o carregador precisa saber quais valores são endereços e quais são constantes comuns. Na Figura 3.2, o valor $28$ no segundo programa deve ser realocado, mas uma instrução como <code>MOV REGISTER1, 28</code> contém um $28$ que é apenas um valor literal, não um endereço. Realocar tudo cegamente quebraria o programa. Além disso, o processo de realocação durante a carga torna a inicialização mais lenta e exige que o executável indique quais posições contêm endereços.</p>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Proteção e realocação são problemas diferentes<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Proteger impede que um processo acesse áreas proibidas. Realocar garante que os endereços internos do programa façam sentido quando ele é carregado em outra posição da memória. Um sistema correto precisa resolver as duas coisas.</p>
+  </div>
+</div>
+<h3 id="multiprogramação-e-uso-da-cpu"><span class="heading-text">Multiprogramação e uso da CPU</span><span class="heading-arabic">8.2.2</span></h3>
+<p>Por que manter vários processos na memória ao mesmo tempo? Porque processos frequentemente bloqueiam esperando entrada e saída. Enquanto um processo espera disco, rede ou teclado, outro pode usar a CPU.</p>
+<p>Tanenbaum modela essa intuição com uma ideia simples. Se um processo passa uma fração $p$ do tempo esperando E/S, então a probabilidade de todos os $n$ processos estarem esperando ao mesmo tempo é aproximadamente $p^n$. Logo, uma estimativa de utilização da CPU é:</p>
+<p>$$
+U = 1 - p^n
+$$</p>
+<p>Essa fórmula não pretende descrever todos os detalhes de um sistema real. Ela serve para mostrar a força da multiprogramação: quanto mais processos independentes estão residentes, menor a chance de a CPU ficar sem nada para fazer.</p>
+<div class="example">
+  <div class="example-title">Exemplo 3</div>
+  <p>Suponha que cada processo passe $80\%$ do tempo esperando E/S. Nesse caso, $p = 0{,}8$.</p>
+<p>Com apenas um processo:</p>
+<p>$$
+U = 1 - 0{,}8^1 = 0{,}2
+$$</p>
+<p>A CPU fica ocupada cerca de $20\%$ do tempo.</p>
+<p>Com quatro processos:</p>
+<p>$$
+U = 1 - 0{,}8^4 = 1 - 0{,}4096 = 0{,}5904
+$$</p>
+<p>A utilização sobe para aproximadamente $59\%$.</p>
+<p>O ganho aparece porque é improvável que todos estejam esperando E/S exatamente ao mesmo tempo.</p>
+</div>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Cuidado com a leitura da fórmula<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Aumentar o número de processos residentes melhora a chance de manter a CPU ocupada, mas não cria memória infinita. Em algum ponto, a RAM acaba, a troca com disco aumenta e o sistema pode ficar mais lento.</p>
+  </div>
+</div>
+<h2 id="espaços-de-endereçamento"><span class="heading-text">Espaços de endereçamento</span><span class="heading-arabic">8.3</span></h2>
+<p>A abstração central da gerência de memória é o <strong>espaço de endereçamento</strong>. Em vez de entregar endereços físicos diretamente ao processo, o sistema permite que cada processo enxergue uma coleção própria de endereços.</p>
+<p>Um processo pode acreditar que sua memória começa em $0$, mesmo que, fisicamente, ele esteja carregado a partir do endereço $12000$ da RAM. O endereço que o programa gera é chamado de <strong>endereço lógico</strong> ou <strong>endereço virtual</strong>. O endereço efetivamente usado na RAM é o <strong>endereço físico</strong>.</p>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="760" viewBox="0.00 0.00 951.00 61.00" class="svg-graph graphviz-img"><g id="svg-graphviz-454edaf7dbd2-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 57)"><title>AddressSpace</title><polygon fill="white" stroke="transparent" points="-4,4 -4,-57 947,-57 947,4 -4,4" /><g id="svg-graphviz-454edaf7dbd2-node1" class="node"><title>CPU</title><path fill="#ffe3c2" stroke="black" d="M149,-53C149,-53 12,-53 12,-53 6,-53 0,-47 0,-41 0,-41 0,-12 0,-12 0,-6 6,0 12,0 12,0 149,0 149,0 155,0 161,-6 161,-12 161,-12 161,-41 161,-41 161,-47 155,-53 149,-53" /><text text-anchor="middle" x="80.5" y="-37.8" font-family="Helvetica,sans-Serif" font-size="14.00">CPU</text><text text-anchor="middle" x="80.5" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">gera endereco logico</text><text text-anchor="middle" x="80.5" y="-7.8" font-family="Helvetica,sans-Serif" font-size="14.00">350</text></g><g id="svg-graphviz-454edaf7dbd2-node2" class="node"><title>MMU</title><path fill="#d9ecff" stroke="black" d="M322,-45.5C322,-45.5 237,-45.5 237,-45.5 231,-45.5 225,-39.5 225,-33.5 225,-33.5 225,-19.5 225,-19.5 225,-13.5 231,-7.5 237,-7.5 237,-7.5 322,-7.5 322,-7.5 328,-7.5 334,-13.5 334,-19.5 334,-19.5 334,-33.5 334,-33.5 334,-39.5 328,-45.5 322,-45.5" /><text text-anchor="middle" x="279.5" y="-30.3" font-family="Helvetica,sans-Serif" font-size="14.00">MMU</text><text text-anchor="middle" x="279.5" y="-15.3" font-family="Helvetica,sans-Serif" font-size="14.00">base + limite</text></g><g id="svg-graphviz-454edaf7dbd2-edge1" class="edge"><title>CPU-&gt;MMU</title><path fill="none" stroke="black" d="M161.06,-26.5C178.83,-26.5 197.46,-26.5 214.52,-26.5" /><polygon fill="black" stroke="black" points="214.91,-30 224.91,-26.5 214.91,-23 214.91,-30" /><text text-anchor="middle" x="193" y="-30.3" font-family="Times,serif" font-size="14.00">350</text></g><g id="svg-graphviz-454edaf7dbd2-node3" class="node"><title>RAM</title><polygon fill="#f5f5f5" stroke="black" points="416,-8.5 416,-44.5 943,-44.5 943,-8.5 416,-8.5" /><text text-anchor="middle" x="460" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">RAM fisica</text><polyline fill="none" stroke="black" points="504,-8.5 504,-44.5 " /><text text-anchor="middle" x="551.5" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">0..9999 SO</text><polyline fill="none" stroke="black" points="599,-8.5 599,-44.5 " /><text text-anchor="middle" x="696.5" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">10000..13999 Processo A</text><polyline fill="none" stroke="black" points="794,-8.5 794,-44.5 " /><text text-anchor="middle" x="868.5" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">14000..19999 livre</text></g><g id="svg-graphviz-454edaf7dbd2-edge2" class="edge"><title>MMU-&gt;RAM</title><path fill="none" stroke="black" d="M334.18,-26.5C354.31,-26.5 378.8,-26.5 405.35,-26.5" /><polygon fill="black" stroke="black" points="405.62,-30 415.62,-26.5 405.62,-23 405.62,-30" /><text text-anchor="middle" x="375" y="-30.3" font-family="Times,serif" font-size="14.00">10350</text></g></g></svg></div></div>
+
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Se dois processos usam internamente o endereço lógico $100$, por que isso não significa que ambos acessarão a mesma posição física da RAM?</p>
+  </div>
+</div>
+<h3 id="base-e-limite"><span class="heading-text">Base e limite</span><span class="heading-arabic">8.3.1</span></h3>
+<p>Agora chegamos à solução que Tanenbaum apresenta como clássica: dois registradores especiais de hardware, chamados de <strong>base</strong> e <strong>limite</strong>. Essa técnica, usada em máquinas como o CDC 6600 e o Intel 8088, implementa realocação dinâmica de forma simples.</p>
+<p>O registrador <strong>base</strong> guarda o endereço físico onde o programa começa na memória. O registrador <strong>limite</strong> guarda o comprimento do programa. A cada acesso à memória, o hardware da CPU automaticamente adiciona o valor da base ao endereço gerado pelo processo, antes de enviá-lo ao barramento. Ao mesmo tempo, confere se o endereço oferecido é menor que o valor do registrador limite; se não for, gera uma falta e aborta o acesso.</p>
+<img src="static/fig_3_3_registradores_base_limite.png" width="75%">
+
+<p>$$
+\text{endereço físico} = \text{base} + \text{endereço lógico}
+$$</p>
+<p>desde que:</p>
+<p>$$
+0 \leq \text{endereço lógico} < \text{limite}
+$$</p>
+<div class="example">
+  <div class="example-title">Exemplo 4</div>
+  <p>Um processo tem:</p>
+<p>$$
+base = 10000
+$$</p>
+<p>$$
+limite = 4000
+$$</p>
+<p>Se ele acessa o endereço lógico $350$, o acesso é válido porque $350 < 4000$. O endereço físico será:</p>
+<p>$$
+10000 + 350 = 10350
+$$</p>
+<p>Se ele tenta acessar o endereço lógico $5000$, o acesso é inválido porque $5000 \geq 4000$. O sistema deve bloquear a operação.</p>
+</div>
+<p>Essa técnica resolve realocação e proteção ao mesmo tempo.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Necessidade</th>
+  <th style="text-align:left">Como base e limite ajudam</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Realocação</td>
+  <td style="text-align:left">O mesmo programa pode ser carregado em outro ponto da RAM mudando apenas a base.</td>
+</tr>
+<tr>
+  <td style="text-align:left">Proteção</td>
+  <td style="text-align:left">O limite impede que o processo saia da sua região.</td>
+</tr>
+</tbody>
+</table>
+<p>Quando o escalonador troca de processo, o sistema operacional também troca os valores de base e limite. Assim, cada processo passa a enxergar seu próprio espaço.</p>
+<div class="example">
+  <div class="example-title">Exemplo 5</div>
+  <p>Considere dois processos:</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Processo</th>
+  <th style="text-align:left">Base</th>
+  <th style="text-align:left">Limite</th>
+  <th style="text-align:left">Endereço lógico acessado</th>
+  <th style="text-align:left">Endereço físico</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">$P_1$</td>
+  <td style="text-align:left">$10000$</td>
+  <td style="text-align:left">$4000$</td>
+  <td style="text-align:left">$120$</td>
+  <td style="text-align:left">$10120$</td>
+</tr>
+<tr>
+  <td style="text-align:left">$P_2$</td>
+  <td style="text-align:left">$30000$</td>
+  <td style="text-align:left">$4000$</td>
+  <td style="text-align:left">$120$</td>
+  <td style="text-align:left">$30120$</td>
+</tr>
+</tbody>
+</table>
+<p>Os dois usam o mesmo endereço lógico $120$, mas acessam posições físicas diferentes. Essa é a essência do isolamento por espaço de endereçamento.</p>
+</div>
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">A MMU torna a abstração viável<br /></span>
+  </div>
+  <div class="callout-content">
+<p>A tradução de endereços precisa ocorrer em todo acesso à memória. Por isso ela não pode ser feita lentamente por software comum. O hardware de gerência de memória, normalmente chamado de MMU, executa essa tradução e verifica proteção durante a execução.</p>
+  </div>
+</div>
+<p>Também existe um custo nessa simplicidade. Com base e limite, todo acesso à memória exige pelo menos uma comparação e uma soma. A comparação verifica se o endereço lógico está dentro do limite. A soma adiciona a base para produzir o endereço físico. Comparações são rápidas, mas adições podem ser lentas por causa do tempo de propagação do transporte (carry-propagation time). Em máquinas modernas isso é resolvido com circuitos de adição especializados, mas a observação é importante: abstrações de memória têm custo e precisam ser implementadas com cuidado.</p>
+<p>Em muitas implementações, os registradores base e limite são protegidos para que apenas o SO possa modificá-los. O CDC 6600 tinha essa proteção; o Intel 8088 não tinha nem registrador limite. Ele tinha múltiplos registradores base, permitindo realocar código e dados independentemente, mas sem oferecer proteção contra referências além dos limites.</p>
+<h2 id="swapping"><span class="heading-text">Swapping</span><span class="heading-arabic">8.4</span></h2>
+<p>Mesmo com espaços de endereçamento, a RAM continua sendo finita. Se há mais processos ativos do que memória disponível, o sistema pode mover temporariamente um processo inteiro para o disco e trazer outro para a RAM. Essa técnica é chamada de <strong>swapping</strong> (troca de processos).</p>
+<p>A ideia é simples. Um processo bloqueado ou ocioso pode sair da memória principal. Seu conteúdo é salvo em disco. Mais tarde, quando ele precisar executar novamente, o sistema o carrega de volta para a RAM.</p>
+<img src="static/fig_3_4_troca_processos.png" width="95%">
+
+<p>A Figura 3.4 do Tanenbaum ilustra essa dinâmica. De início, só o processo A está na memória. Depois B e C são criados ou trazidos do disco. Em seguida, A é devolvido ao disco e D entra. Por fim, B sai e A volta, mas em uma posição diferente. Quando A retorna, os endereços dentro dele precisam ser realocados, seja por software durante a carga, seja pelo hardware durante a execução (registradores base e limite funcionam bem aqui).</p>
+<p>Swapping aumenta a flexibilidade, mas tem custo alto. Disco é muito mais lento que RAM. Se o sistema começa a gastar tempo demais movendo processos para dentro e para fora da memória, a máquina parece travar mesmo que a CPU esteja tecnicamente ativa.</p>
+<div class="example">
+  <div class="example-title">Exemplo 6</div>
+  <p>Imagine uma máquina com $8$ GB de RAM executando três processos grandes:</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Processo</th>
+  <th style="text-align:left">Memória necessária</th>
+  <th style="text-align:left">Estado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Editor de vídeo</td>
+  <td style="text-align:left">$5$ GB</td>
+  <td style="text-align:left">ativo</td>
+</tr>
+<tr>
+  <td style="text-align:left">Navegador</td>
+  <td style="text-align:left">$3$ GB</td>
+  <td style="text-align:left">ativo</td>
+</tr>
+<tr>
+  <td style="text-align:left">Jogo</td>
+  <td style="text-align:left">$4$ GB</td>
+  <td style="text-align:left">aberto em segundo plano</td>
+</tr>
+</tbody>
+</table>
+<p>Os três juntos exigem $12$ GB. Como a RAM não comporta tudo ao mesmo tempo, o sistema pode retirar temporariamente o jogo da RAM e gravá-lo na área de swap. Quando o usuário volta para o jogo, ele precisa ser trazido novamente.</p>
+<p>O usuário percebe isso como uma demora grande na troca de janelas.</p>
+</div>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Swapping não é memória grátis<br /></span>
+  </div>
+  <div class="callout-content">
+<p>O disco permite sobreviver a picos de uso, mas não substitui RAM. Quando o sistema depende demais de swap, o gargalo passa a ser a movimentação de dados entre memória e disco.</p>
+  </div>
+</div>
+<p>Tanenbaum chama atenção para um detalhe prático. Sistemas comuns podem iniciar dezenas de processos de fundo logo após ligar, antes mesmo de o usuário abrir um aplicativo. Cada processo pode consumir vários megabytes. Aplicações pesadas podem consumir centenas de megabytes ou gigabytes. Por isso, manter todos os processos completamente residentes o tempo todo muitas vezes não é viável.</p>
+<p>Quando o swapping cria vários buracos na memória, uma ideia natural é <strong>compactar</strong> a memória, movendo processos para juntar todos os espaços livres em uma região maior. Essa ideia funciona conceitualmente, mas é cara. Tanenbaum dá uma ordem de grandeza: em uma máquina com $16$ GB, mesmo copiando $8$ bytes a cada $8$ ns, compactar toda a memória levaria cerca de $16$ segundos.</p>
+<h2 id="crescimento-dos-processos"><span class="heading-text">Crescimento dos processos</span><span class="heading-arabic">8.5</span></h2>
+<p>Um processo nem sempre mantém o mesmo tamanho durante toda a execução. A pilha pode crescer com chamadas de função. O heap pode crescer com alocações dinâmicas. Bibliotecas podem ser carregadas sob demanda. Buffers podem aumentar.</p>
+<p>Isso cria uma dificuldade prática. Se o processo foi colocado em uma lacuna de memória exatamente do seu tamanho inicial, não haverá espaço para crescer.</p>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="760" viewBox="0.00 0.00 951.00 45.00" class="svg-graph graphviz-img"><g id="svg-graphviz-9e220da43672-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 41)"><title>Growth</title><polygon fill="white" stroke="transparent" points="-4,4 -4,-41 947,-41 947,4 -4,4" /><g id="svg-graphviz-9e220da43672-node1" class="node"><title>Before</title><polygon fill="#f5f5f5" stroke="black" points="0,-0.5 0,-36.5 369,-36.5 369,-0.5 0,-0.5" /><text text-anchor="middle" x="28" y="-14.8" font-family="Helvetica,sans-Serif" font-size="14.00">Antes</text><polyline fill="none" stroke="black" points="56,-0.5 56,-36.5 " /><text text-anchor="middle" x="74.5" y="-14.8" font-family="Helvetica,sans-Serif" font-size="14.00">SO</text><polyline fill="none" stroke="black" points="93,-0.5 93,-36.5 " /><text text-anchor="middle" x="139" y="-14.8" font-family="Helvetica,sans-Serif" font-size="14.00">Processo A</text><polyline fill="none" stroke="black" points="185,-0.5 185,-36.5 " /><text text-anchor="middle" x="208" y="-14.8" font-family="Helvetica,sans-Serif" font-size="14.00">livre</text><polyline fill="none" stroke="black" points="231,-0.5 231,-36.5 " /><text text-anchor="middle" x="277" y="-14.8" font-family="Helvetica,sans-Serif" font-size="14.00">Processo B</text><polyline fill="none" stroke="black" points="323,-0.5 323,-36.5 " /><text text-anchor="middle" x="346" y="-14.8" font-family="Helvetica,sans-Serif" font-size="14.00">livre</text></g><g id="svg-graphviz-9e220da43672-node2" class="node"><title>After</title><polygon fill="#f5f5f5" stroke="black" points="544,-0.5 544,-36.5 943,-36.5 943,-0.5 544,-0.5" /><text text-anchor="middle" x="576" y="-14.8" font-family="Helvetica,sans-Serif" font-size="14.00">Depois</text><polyline fill="none" stroke="black" points="608,-0.5 608,-36.5 " /><text text-anchor="middle" x="626.5" y="-14.8" font-family="Helvetica,sans-Serif" font-size="14.00">SO</text><polyline fill="none" stroke="black" points="645,-0.5 645,-36.5 " /><text text-anchor="middle" x="713" y="-14.8" font-family="Helvetica,sans-Serif" font-size="14.00">Processo A maior</text><polyline fill="none" stroke="black" points="781,-0.5 781,-36.5 " /><text text-anchor="middle" x="793" y="-14.8" font-family="Helvetica,sans-Serif" font-size="14.00">?</text><polyline fill="none" stroke="black" points="805,-0.5 805,-36.5 " /><text text-anchor="middle" x="851" y="-14.8" font-family="Helvetica,sans-Serif" font-size="14.00">Processo B</text><polyline fill="none" stroke="black" points="897,-0.5 897,-36.5 " /><text text-anchor="middle" x="920" y="-14.8" font-family="Helvetica,sans-Serif" font-size="14.00">livre</text></g><g id="svg-graphviz-9e220da43672-edge1" class="edge"><title>Before-&gt;After</title><path fill="none" stroke="black" d="M369.04,-18.5C421.71,-18.5 479.52,-18.5 533.6,-18.5" /><polygon fill="black" stroke="black" points="533.65,-22 543.65,-18.5 533.65,-15 533.65,-22" /><text text-anchor="middle" x="456.5" y="-22.3" font-family="Times,serif" font-size="14.00">heap/pilha crescem</text></g></g></svg></div></div>
+
+<p>Há algumas respostas possíveis:</p>
+<ol>
+<li>reservar espaço extra ao carregar o processo,</li>
+<li>mover o processo para uma lacuna maior,</li>
+<li>recusar a alocação se não houver espaço,</li>
+<li>usar técnicas mais avançadas, como memória virtual com paginação, que veremos depois.</li>
+</ol>
+<p>O ponto importante é que gerenciar memória não é apenas encontrar uma posição inicial. O sistema precisa lidar com mudanças ao longo do tempo.</p>
+<p>Tanenbaum destaca dois crescimentos típicos dentro do processo. O segmento de dados, usado por alocação dinâmica, costuma crescer para cima. A pilha, usada por chamadas de função, variáveis locais e endereços de retorno, costuma crescer para baixo.</p>
+<img src="static/fig_3_5_crescimento_processos.png" width="90%">
+
+<p>A Figura 3.5(a) mostra uma configuração com espaço de crescimento reservado para cada processo. A Figura 3.5(b) mostra uma alternativa: cada processo tem uma pilha no topo da sua região, crescendo para baixo, e um segmento de dados logo após o programa, crescendo para cima. A memória entre eles pode ser usada por qualquer um dos dois.</p>
+<p>Se esse espaço interno acaba, o sistema precisa mover o processo para uma região maior, trocar o processo para o disco até existir espaço suficiente ou encerrar a execução.</p>
+<p>Quando um processo é transferido para o disco, Tanenbaum observa que apenas a memória realmente em uso deve ser copiada, levar junto o espaço extra de crescimento seria desperdício.</p>
+<h2 id="gerenciamento-de-memória-livre"><span class="heading-text">Gerenciamento de memória livre</span><span class="heading-arabic">8.6</span></h2>
+<p>Quando processos entram e saem da RAM, surgem lacunas livres espalhadas. O sistema operacional precisa saber quais partes da memória estão ocupadas e quais estão disponíveis.</p>
+<p>Tanenbaum apresenta duas formas clássicas de representar essa informação: <strong>mapas de bits</strong> e <strong>listas encadeadas</strong>.</p>
+<img src="static/fig_3_6_mapa_bits_lista.png" width="95%">
+
+<p>A Figura 3.6 mostra as três representações lado a lado: (a) a memória com cinco processos e três lacunas, (b) o mapa de bits correspondente e (c) a mesma informação como lista encadeada.</p>
+<h3 id="mapa-de-bits"><span class="heading-text">Mapa de bits</span><span class="heading-arabic">8.6.1</span></h3>
+<p>No mapa de bits, a memória é dividida em unidades de alocação, que podem ser tão pequenas quanto algumas palavras ou tão grandes quanto vários kilobytes. Cada unidade recebe um bit: $0$ para livre, $1$ para ocupado.</p>
+<p>O tamanho da unidade de alocação é uma decisão importante. Unidades pequenas (como 4 bytes) reduzem desperdício no último bloco de cada processo, mas aumentam o tamanho do mapa. Com uma unidade de 4 bytes, o mapa ocupa $1/32$ da memória total. Unidades grandes reduzem o mapa, mas aumentam o desperdício na última unidade de cada processo.</p>
+<p>O principal problema do mapa de bits é a busca. Para carregar um processo que precisa de $k$ unidades contíguas, o sistema precisa encontrar $k$ bits $0$ consecutivos. Procurar uma sequência longa em um mapa de bits é uma operação lenta, especialmente porque a sequência pode ultrapassar os limites de palavras no mapa.</p>
+<div class="example">
+  <div class="example-title">Exemplo 7: Funcionamento do mapa de bits</div>
+  <p>Considere a memória dividida em blocos de mesmo tamanho.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Bloco</th>
+  <th style="text-align:left">0</th>
+  <th style="text-align:left">1</th>
+  <th style="text-align:left">2</th>
+  <th style="text-align:left">3</th>
+  <th style="text-align:left">4</th>
+  <th style="text-align:left">5</th>
+  <th style="text-align:left">6</th>
+  <th style="text-align:left">7</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Estado</td>
+  <td style="text-align:left">ocupado</td>
+  <td style="text-align:left">ocupado</td>
+  <td style="text-align:left">livre</td>
+  <td style="text-align:left">livre</td>
+  <td style="text-align:left">ocupado</td>
+  <td style="text-align:left">livre</td>
+  <td style="text-align:left">livre</td>
+  <td style="text-align:left">livre</td>
+</tr>
+<tr>
+  <td style="text-align:left">Bit</td>
+  <td style="text-align:left">1</td>
+  <td style="text-align:left">1</td>
+  <td style="text-align:left">0</td>
+  <td style="text-align:left">0</td>
+  <td style="text-align:left">1</td>
+  <td style="text-align:left">0</td>
+  <td style="text-align:left">0</td>
+  <td style="text-align:left">0</td>
+</tr>
+</tbody>
+</table>
+<p>Se um processo precisa de três blocos contíguos, o sistema procura três zeros consecutivos. Nesse exemplo, os blocos $5$, $6$ e $7$ servem.</p>
+</div>
+<h3 id="lista-encadeada-de-segmentos"><span class="heading-text">Lista encadeada de segmentos</span><span class="heading-arabic">8.6.2</span></h3>
+<p>Outra estratégia é manter uma lista encadeada de trechos livres e ocupados. Cada entrada na lista especifica se o trecho é um espaço livre (L) ou está alocado a um processo (P), o endereço onde começa, seu comprimento e um ponteiro para o próximo item.</p>
+<p>Quando a lista é mantida ordenada por endereço, liberar memória fica mais simples. O sistema olha os vizinhos do segmento recém-liberado. Há quatro combinações possíveis, ilustradas na Figura 3.7 do Tanenbaum.</p>
+<div class="example">
+  <div class="example-title">Exemplo 8</div>
+  <p>Uma lista de memória pode ser representada assim:</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Tipo</th>
+  <th style="text-align:left">Início</th>
+  <th style="text-align:left">Tamanho</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Processo $P_1$</td>
+  <td style="text-align:left">$0$</td>
+  <td style="text-align:left">$100$</td>
+</tr>
+<tr>
+  <td style="text-align:left">Livre</td>
+  <td style="text-align:left">$100$</td>
+  <td style="text-align:left">$50$</td>
+</tr>
+<tr>
+  <td style="text-align:left">Processo $P_2$</td>
+  <td style="text-align:left">$150$</td>
+  <td style="text-align:left">$80$</td>
+</tr>
+<tr>
+  <td style="text-align:left">Livre</td>
+  <td style="text-align:left">$230$</td>
+  <td style="text-align:left">$120$</td>
+</tr>
+</tbody>
+</table>
+<p>Se $P_2$ termina, sua região vira livre. Como há uma lacuna livre logo depois dele, o sistema deve unir os dois espaços:</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Tipo</th>
+  <th style="text-align:left">Início</th>
+  <th style="text-align:left">Tamanho</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Processo $P_1$</td>
+  <td style="text-align:left">$0$</td>
+  <td style="text-align:left">$100$</td>
+</tr>
+<tr>
+  <td style="text-align:left">Livre</td>
+  <td style="text-align:left">$100$</td>
+  <td style="text-align:left">$50$</td>
+</tr>
+<tr>
+  <td style="text-align:left">Livre</td>
+  <td style="text-align:left">$150$</td>
+  <td style="text-align:left">$200$</td>
+</tr>
+</tbody>
+</table>
+<p>Depois da fusão, a lista correta fica:</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Tipo</th>
+  <th style="text-align:left">Início</th>
+  <th style="text-align:left">Tamanho</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Processo $P_1$</td>
+  <td style="text-align:left">$0$</td>
+  <td style="text-align:left">$100$</td>
+</tr>
+<tr>
+  <td style="text-align:left">Livre</td>
+  <td style="text-align:left">$100$</td>
+  <td style="text-align:left">$250$</td>
+</tr>
+</tbody>
+</table>
+<p>A fusão evita que a memória pareça mais fragmentada do que realmente está.</p>
+</div>
+<p>Quando a lista é mantida ordenada por endereço, liberar memória fica mais simples. O sistema olha os vizinhos do segmento recém-liberado. Há quatro combinações possíveis, ilustradas na Figura 3.7 do Tanenbaum.</p>
+<img src="static/fig_3_7_combinacoes_vizinhos.png" width="75%">
+
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Vizinho anterior</th>
+  <th style="text-align:left">Vizinho seguinte</th>
+  <th style="text-align:left">Ação</th>
+  <th style="text-align:left">Entradas na lista</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Processo</td>
+  <td style="text-align:left">Processo</td>
+  <td style="text-align:left">Apenas troca o tipo de P para L.</td>
+  <td style="text-align:left">Nenhuma mudança no número de entradas.</td>
+</tr>
+<tr>
+  <td style="text-align:left">Livre</td>
+  <td style="text-align:left">Processo</td>
+  <td style="text-align:left">Funde com a lacuna anterior.</td>
+  <td style="text-align:left">Uma entrada a menos.</td>
+</tr>
+<tr>
+  <td style="text-align:left">Processo</td>
+  <td style="text-align:left">Livre</td>
+  <td style="text-align:left">Funde com a lacuna seguinte.</td>
+  <td style="text-align:left">Uma entrada a menos.</td>
+</tr>
+<tr>
+  <td style="text-align:left">Livre</td>
+  <td style="text-align:left">Livre</td>
+  <td style="text-align:left">Funde as três regiões em uma única lacuna.</td>
+  <td style="text-align:left">Duas entradas a menos.</td>
+</tr>
+</tbody>
+</table>
+<p>Uma lista duplamente encadeada facilita essa fusão porque permite encontrar rapidamente o vizinho anterior. Como a entrada da tabela de processos do processo que está terminando geralmente aponta para a entrada da lista do próprio processo, o encadeamento duplo torna a fusão mais conveniente.</p>
+<h2 id="algoritmos-de-alocação"><span class="heading-text">Algoritmos de alocação</span><span class="heading-arabic">8.7</span></h2>
+<p>Quando um novo processo precisa entrar na memória (ou um que estava em disco precisa voltar), o sistema precisa escolher uma lacuna livre para ele. Essa escolha afeta diretamente a fragmentação e o desempenho. Tanenbaum descreve cinco algoritmos.</p>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Antes de ver os algoritmos: se você precisasse guardar caixas de tamanhos diferentes em um depósito com prateleiras de vários tamanhos, como escolheria onde colocar cada caixa? Tentaria a primeira que coubesse, a que encaixasse mais justa ou a maior de todas?</p>
+  </div>
+</div>
+<h3 id="first-fit-primeiro-encaixe"><span class="heading-text">First fit (primeiro encaixe)</span><span class="heading-arabic">8.7.1</span></h3>
+<p>O gerenciador de memória percorre a lista de segmentos até encontrar o <strong>primeiro</strong> espaço livre que seja grande o suficiente. O espaço é então dividido em duas partes: uma para o processo e outra para o que sobrou (a menos que o encaixe seja exato).</p>
+<p><strong>Passo a passo:</strong></p>
+<ol>
+<li>Comece no início da lista de segmentos.</li>
+<li>Examine cada entrada, se for um espaço livre e tiver tamanho $\geq$ o necessário, pare a busca.</li>
+<li>Se o espaço for exatamente do tamanho pedido, entregue-o inteiro ao processo.</li>
+<li>Se o espaço for maior, divida-o: a parte de tamanho exato vai para o processo e a sobra permanece como lacuna livre.</li>
+<li>Se nenhum espaço for suficiente, o processo precisa esperar (ou provocar swapping).</li>
+</ol>
+<p>É o algoritmo mais rápido porque a busca termina assim que encontra o primeiro encaixe. Como efeito colateral, tende a concentrar processos no início da memória e lacunas maiores no final.</p>
+<h3 id="next-fit-próximo-encaixe"><span class="heading-text">Next fit (próximo encaixe)</span><span class="heading-arabic">8.7.2</span></h3>
+<p>Funciona como o first fit, com uma diferença: ele <strong>memoriza a posição onde parou</strong> na busca anterior. Da próxima vez, começa dali em vez de recomeçar do início.</p>
+<p><strong>Passo a passo:</strong></p>
+<ol>
+<li>Mantenha um ponteiro indicando a última posição onde um espaço foi alocado.</li>
+<li>Na próxima alocação, inicie a busca a partir desse ponteiro.</li>
+<li>Percorra a lista circularmente até encontrar um espaço livre adequado.</li>
+<li>Se der a volta completa sem encontrar, o processo precisa esperar.</li>
+</ol>
+<p>A intenção é não concentrar toda a atividade no início da lista. Porém, simulações de Bays (1977) mostram que o next fit tem desempenho ligeiramente pior que o first fit.</p>
+<h3 id="best-fit-melhor-encaixe"><span class="heading-text">Best fit (melhor encaixe)</span><span class="heading-arabic">8.7.3</span></h3>
+<p>Percorre a lista <strong>inteira</strong>, do início ao fim, e escolhe o <strong>menor</strong> espaço livre que seja grande o suficiente para o processo. A ideia é encontrar um encaixe quase exato para não desperdiçar espaço.</p>
+<p><strong>Passo a passo:</strong></p>
+<ol>
+<li>Inicialize uma variável com o melhor candidato como &quot;nenhum&quot;.</li>
+<li>Percorra toda a lista de segmentos.</li>
+<li>Para cada lacuna livre com tamanho $\geq$ o necessário, compare com o melhor candidato atual.</li>
+<li>Se for menor que o melhor candidato atual (e ainda couber), atualize o candidato.</li>
+<li>Ao final da lista, se houver candidato, aloque ali.</li>
+<li>Se não houver nenhum espaço suficiente, o processo espera.</li>
+</ol>
+<p>O best fit é mais lento que o first fit porque sempre percorre a lista inteira. Surpreendentemente, ele também tende a gerar mais desperdício: ao escolher a lacuna que encaixa mais justa, sobra um pedaço minúsculo que provavelmente nunca será usado para nada.</p>
+<h3 id="worst-fit-pior-encaixe"><span class="heading-text">Worst fit (pior encaixe)</span><span class="heading-arabic">8.7.4</span></h3>
+<p>Escolhe a <strong>maior</strong> lacuna disponível. A intuição é que, pegando a maior lacuna, a sobra ainda será grande o suficiente para ser útil em alocações futuras.</p>
+<p><strong>Passo a passo:</strong></p>
+<ol>
+<li>Inicialize o maior candidato como &quot;nenhum&quot;.</li>
+<li>Percorra toda a lista de segmentos.</li>
+<li>Para cada lacuna livre, se for maior que o maior candidato atual, atualize-o, mas apenas se também couber o processo.</li>
+<li>Ao final, aloque na maior lacuna encontrada.</li>
+</ol>
+<p>Apesar de parecer engenhoso, simulações mostram que o worst fit também não é uma boa ideia na prática.</p>
+<h3 id="quick-fit-encaixe-rápido"><span class="heading-text">Quick fit (encaixe rápido)</span><span class="heading-arabic">8.7.5</span></h3>
+<p>Mantém listas <strong>separadas</strong> para tamanhos comuns de alocação, por exemplo, uma lista para lacunas de 4 KB, outra para 8 KB, outra para 12 KB e assim por diante.</p>
+<p><strong>Passo a passo:</strong></p>
+<ol>
+<li>Mantenha uma tabela com $n$ entradas, cada uma apontando para uma lista de lacunas de um tamanho específico.</li>
+<li>Quando um processo solicitar $k$ KB, vá direto para a lista correspondente (ou a mais próxima acima de $k$).</li>
+<li>Se houver uma lacuna nessa lista, aloque e divida se necessário.</li>
+<li>Se a lista estiver vazia, tente listas de tamanhos maiores.</li>
+<li>Se nenhuma lista tiver lacuna suficiente, o processo espera.</li>
+</ol>
+<p>Encontrar um espaço é extremamente rápido para tamanhos comuns. O problema é a liberação: quando um processo termina, o sistema precisa descobrir quem são os vizinhos para fundir lacunas. Isso é muito mais caro com listas separadas. Se a fusão não for feita, a memória se fragmenta rapidamente em muitos pedaços pequenos.</p>
+<div class="example">
+  <div class="example-title">Exemplo 9</div>
+  <p>Considere as lacunas livres abaixo, nessa ordem:</p>
+<p>$$
+50\text{ KB},\ 120\text{ KB},\ 70\text{ KB},\ 300\text{ KB}
+$$</p>
+<p>Um processo precisa de $65$ KB.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Algoritmo</th>
+  <th style="text-align:left">Lacuna escolhida</th>
+  <th style="text-align:left">Sobra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">First fit</td>
+  <td style="text-align:left">$120$ KB</td>
+  <td style="text-align:left">$55$ KB</td>
+</tr>
+<tr>
+  <td style="text-align:left">Best fit</td>
+  <td style="text-align:left">$70$ KB</td>
+  <td style="text-align:left">$5$ KB</td>
+</tr>
+<tr>
+  <td style="text-align:left">Worst fit</td>
+  <td style="text-align:left">$300$ KB</td>
+  <td style="text-align:left">$235$ KB</td>
+</tr>
+</tbody>
+</table>
+<p>O best fit parece ótimo porque desperdiça pouco naquele instante. Mas a sobra de $5$ KB talvez seja pequena demais para usos futuros. Esse é o tipo de decisão local que pode piorar o estado global da memória.</p>
+</div>
+<p>Tanenbaum observa que todos os quatro primeiros algoritmos podem ser acelerados mantendo listas <strong>separadas</strong> para processos e lacunas livres. Assim, a busca por espaço percorre apenas lacunas, ignorando processos. O custo aparece na liberação: o segmento precisa sair da lista de processos, entrar na lista de livres e talvez ser fundido com vizinhos.</p>
+<p>Quando a lista de lacunas é mantida separada e <strong>ordenada por tamanho</strong>, o best fit fica mais rápido: ele simplesmente percorre do menor para o maior e para no primeiro que couber. Nesse caso, first fit e best fit se tornam igualmente rápidos, e next fit perde o sentido.</p>
+<h3 id="fragmentação"><span class="heading-text">Fragmentação</span><span class="heading-arabic">8.7.6</span></h3>
+<p>Fragmentação é o desperdício causado pela forma como a memória foi dividida.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Tipo</th>
+  <th style="text-align:left">Onde está o desperdício</th>
+  <th style="text-align:left">Exemplo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><strong>Fragmentação interna</strong></td>
+  <td style="text-align:left">Dentro de uma área alocada.</td>
+  <td style="text-align:left">O processo recebe $64$ KB, mas usa $60$ KB.</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Fragmentação externa</strong></td>
+  <td style="text-align:left">Entre áreas alocadas.</td>
+  <td style="text-align:left">Há $100$ KB livres no total, mas quebrados em lacunas pequenas.</td>
+</tr>
+</tbody>
+</table>
+<div class="example">
+  <div class="example-title">Exemplo 10</div>
+  <p>Um processo precisa de $90$ KB. A memória livre total é $120$ KB, distribuída assim:</p>
+<p>$$
+40\text{ KB},\ 30\text{ KB},\ 50\text{ KB}
+$$</p>
+<p>Apesar de haver $120$ KB livres ao todo, nenhuma lacuna isolada comporta o processo. Esse é um caso de fragmentação externa.</p>
+<p>Uma solução possível seria compactar a memória, movendo processos para juntar os espaços livres. Mas compactação custa tempo e exige realocação segura.</p>
+</div>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="760" viewBox="0.00 0.00 881.00 45.00" class="svg-graph graphviz-img"><g id="svg-graphviz-1aab3faf8ae1-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 41)"><title>Fragmentation</title><polygon fill="white" stroke="transparent" points="-4,4 -4,-41 877,-41 877,4 -4,4" /><g id="svg-graphviz-1aab3faf8ae1-node1" class="node"><title>A</title><polygon fill="#f5f5f5" stroke="black" points="0,-0.5 0,-36.5 362,-36.5 362,-0.5 0,-0.5" /><text text-anchor="middle" x="28" y="-14.8" font-family="Helvetica,sans-Serif" font-size="14.00">Antes</text><polyline fill="none" stroke="black" points="56,-0.5 56,-36.5 " /><text text-anchor="middle" x="73" y="-14.8" font-family="Helvetica,sans-Serif" font-size="14.00">P1</text><polyline fill="none" stroke="black" points="90,-0.5 90,-36.5 " /><text text-anchor="middle" x="124" y="-14.8" font-family="Helvetica,sans-Serif" font-size="14.00">livre 40</text><polyline fill="none" stroke="black" points="158,-0.5 158,-36.5 " /><text text-anchor="middle" x="175" y="-14.8" font-family="Helvetica,sans-Serif" font-size="14.00">P2</text><polyline fill="none" stroke="black" points="192,-0.5 192,-36.5 " /><text text-anchor="middle" x="226" y="-14.8" font-family="Helvetica,sans-Serif" font-size="14.00">livre 30</text><polyline fill="none" stroke="black" points="260,-0.5 260,-36.5 " /><text text-anchor="middle" x="277" y="-14.8" font-family="Helvetica,sans-Serif" font-size="14.00">P3</text><polyline fill="none" stroke="black" points="294,-0.5 294,-36.5 " /><text text-anchor="middle" x="328" y="-14.8" font-family="Helvetica,sans-Serif" font-size="14.00">livre 50</text></g><g id="svg-graphviz-1aab3faf8ae1-node2" class="node"><title>B</title><polygon fill="#f5f5f5" stroke="black" points="512,-0.5 512,-36.5 873,-36.5 873,-0.5 512,-0.5" /><text text-anchor="middle" x="603" y="-14.8" font-family="Helvetica,sans-Serif" font-size="14.00">Depois da compactacao</text><polyline fill="none" stroke="black" points="694,-0.5 694,-36.5 " /><text text-anchor="middle" x="711" y="-14.8" font-family="Helvetica,sans-Serif" font-size="14.00">P1</text><polyline fill="none" stroke="black" points="728,-0.5 728,-36.5 " /><text text-anchor="middle" x="745" y="-14.8" font-family="Helvetica,sans-Serif" font-size="14.00">P2</text><polyline fill="none" stroke="black" points="762,-0.5 762,-36.5 " /><text text-anchor="middle" x="779" y="-14.8" font-family="Helvetica,sans-Serif" font-size="14.00">P3</text><polyline fill="none" stroke="black" points="796,-0.5 796,-36.5 " /><text text-anchor="middle" x="834.5" y="-14.8" font-family="Helvetica,sans-Serif" font-size="14.00">livre 120</text></g><g id="svg-graphviz-1aab3faf8ae1-edge1" class="edge"><title>A-&gt;B</title><path fill="none" stroke="black" d="M362.35,-18.5C407.46,-18.5 455.98,-18.5 501.54,-18.5" /><polygon fill="black" stroke="black" points="501.82,-22 511.82,-18.5 501.82,-15 501.82,-22" /><text text-anchor="middle" x="437" y="-22.3" font-family="Times,serif" font-size="14.00">move processos</text></g></g></svg></div></div>
+
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">Compactação é possível, mas não é gratuita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Para compactar, o sistema precisa mover processos na memória e ajustar as traduções de endereço. Isso pode ser caro, especialmente se feito com frequência.</p>
+  </div>
+</div>
+<div class="callout callout-success">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></span>
+    <span class="callout-title-inner">Ideia central<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Gerenciar memória é criar a ilusão de que cada processo tem seu próprio espaço contínuo e protegido, mesmo quando a RAM física é compartilhada, limitada e fragmentada.</p>
+  </div>
+</div>
+<h2 id="questões"><span class="heading-text">Questões</span><span class="heading-arabic">8.8</span></h2>
+<div class="questions">
+  <p><strong>1.</strong> Qual é o principal problema de executar vários programas sem abstração de memória?</p>
+<ul>
+<li>A) A CPU não consegue alternar entre processos.</li>
+<li>B) Todos os programas precisam ser escritos em assembly.</li>
+<li>C) Processos podem sobrescrever a memória uns dos outros ou do sistema operacional.</li>
+<li>D) O disco deixa de poder ser usado para E/S.</li>
+</ul>
+<p><strong>2.</strong> Explique a diferença entre <strong>endereço lógico</strong> e <strong>endereço físico</strong>.</p>
+<p><strong>3.</strong> Um processo possui $base = 5000$ e $limite = 2000$. Para cada endereço lógico abaixo, diga se o acesso é válido e, se for, calcule o endereço físico.</p>
+<ul>
+<li><strong>a)</strong> $100$</li>
+<li><strong>b)</strong> $1999$</li>
+<li><strong>c)</strong> $2000$</li>
+<li><strong>d)</strong> $2500$</li>
+</ul>
+<p><strong>4.</strong> Por que os registradores de base e limite ajudam tanto na realocação quanto na proteção?</p>
+<p><strong>5.</strong> Se um processo passa $70\%$ do tempo esperando E/S, estime a utilização da CPU com $3$ processos residentes usando $U = 1 - p^n$.</p>
+<p><strong>6.</strong> O que é swapping? Por que ele melhora a flexibilidade do sistema, mas pode degradar muito o desempenho?</p>
+<p><strong>7.</strong> Diferencie mapa de bits e lista encadeada como formas de gerenciar memória livre.</p>
+<p><strong>8.</strong> Considere lacunas livres de $40$ KB, $100$ KB, $60$ KB e $200$ KB, nessa ordem. Um processo precisa de $55$ KB. Qual lacuna seria escolhida por first fit, best fit e worst fit?</p>
+<p><strong>9.</strong> Diferencie fragmentação interna e fragmentação externa com um exemplo para cada.</p>
+<p><strong>10.</strong> Um sistema possui $150$ KB livres no total, distribuídos em lacunas de $30$ KB, $50$ KB e $70$ KB. Um processo precisa de $100$ KB. Ele pode ser carregado em memória contígua sem compactação? Justifique.</p>
+<p><strong>11.</strong> Por que o crescimento do heap ou da pilha pode complicar a alocação de processos em memória contígua?</p>
+<p><strong>12.</strong> Em uma frase, explique por que a gerência de memória é também um mecanismo de segurança.</p>
+<p><strong>13.</strong> Por que uma técnica de proteção por chaves, como a usada no IBM 360, não resolve sozinha o problema de executar dois programas compilados para começar no endereço $0$?</p>
+<p><strong>14.</strong> Em uma lista de segmentos ordenada por endereço, um processo termina e seus dois vizinhos imediatos são lacunas livres. O que o sistema deve fazer com essas três regiões?</p>
+<p><strong>15.</strong> Qual é a principal vantagem do quick fit e qual é seu principal custo quando processos terminam ou são transferidos para o disco?</p>
+<p><strong>16.</strong> Descreva o passo a passo do algoritmo best fit. Por que, apesar de procurar o encaixe mais justo, ele tende a gerar mais desperdício que o first fit?</p>
+<p><strong>17.</strong> Qual é a diferença entre first fit e next fit? O next fit resolve qual possível problema do first fit?</p>
+</div>
+<div class="example">
+  <div class="example-title">Gabarito</div>
+  <p><strong>1.</strong> C.</p>
+<p><strong>2.</strong> Endereço lógico é o endereço gerado pelo programa dentro do seu espaço de endereçamento. Endereço físico é a posição real acessada na RAM depois da tradução feita pelo hardware e pelo sistema operacional.</p>
+<p><strong>3.</strong> a) válido, endereço físico $5100$. b) válido, endereço físico $6999$. c) inválido, pois o limite permite endereços de $0$ até $1999$. d) inválido.</p>
+<p><strong>4.</strong> A base permite carregar o mesmo processo em diferentes posições físicas sem reescrever todos os seus endereços. O limite impede acessos fora da região autorizada.</p>
+<p><strong>5.</strong> $U = 1 - 0{,}7^3 = 1 - 0{,}343 = 0{,}657$. A utilização estimada é de aproximadamente $65{,}7\%$.</p>
+<p><strong>6.</strong> Swapping é mover temporariamente processos entre RAM e disco. Ele permite executar mais processos do que caberiam simultaneamente na RAM, mas pode ser muito lento porque disco é muito mais lento que memória principal.</p>
+<p><strong>7.</strong> No mapa de bits, cada unidade de memória é representada por um bit livre ou ocupado. Na lista encadeada, a memória é representada por segmentos com tipo, início e tamanho.</p>
+<p><strong>8.</strong> First fit escolhe $100$ KB. Best fit escolhe $60$ KB. Worst fit escolhe $200$ KB.</p>
+<p><strong>9.</strong> Fragmentação interna ocorre quando há sobra dentro de uma área alocada. Fragmentação externa ocorre quando há memória livre total suficiente, mas dividida em lacunas pequenas demais.</p>
+<p><strong>10.</strong> Não. Há $150$ KB livres no total, mas a maior lacuna tem apenas $70$ KB. Sem compactação ou outra técnica, o processo de $100$ KB não cabe em memória contígua.</p>
+<p><strong>11.</strong> Porque o processo pode precisar de mais espaço depois de carregado. Se não houver lacuna adjacente livre, o sistema precisa mover o processo, reservar folga antecipadamente ou negar a alocação.</p>
+<p><strong>12.</strong> Porque ela impede que um processo acesse ou modifique regiões de memória pertencentes a outros processos ou ao núcleo.</p>
+<p><strong>13.</strong> Porque a chave de proteção impede acessos indevidos, mas não muda os endereços internos do programa. Se o segundo programa contém um salto para $28$, esse valor ainda pode ser interpretado como endereço físico absoluto, saltando para dentro de outro programa.</p>
+<p><strong>14.</strong> Deve fundir a lacuna anterior, o segmento recém-liberado e a lacuna seguinte em uma única lacuna maior.</p>
+<p><strong>15.</strong> A vantagem é encontrar rapidamente lacunas de tamanhos comuns por meio de listas separadas. O custo é que, ao liberar memória, fica mais caro localizar vizinhos e fundir lacunas, aumentando o risco de fragmentação se a fusão não for feita.</p>
+<p><strong>16.</strong> Best fit: percorre toda a lista do início ao fim, guarda o menor espaço livre que seja $\geq$ ao pedido e aloca nele. Gera mais desperdício porque a sobra costuma ser minúscula e inútil, lacunas pequenas demais para qualquer alocação futura.</p>
+<p><strong>17.</strong> First fit sempre recomeça do início da lista; next fit continua de onde parou na busca anterior. O next fit tenta evitar que o início da lista concentre toda a atividade e se fragmente mais rápido que o resto.</p>
+</div>
+<h2 id="próximos-passos"><span class="heading-text">Próximos passos</span><span class="heading-arabic">8.9</span></h2>
+<p>Vimos como o SO organiza o espaço de memória para múltiplos processos usando realocação, proteção, swapping e algoritmos de alocação. Em aulas futuras, exploraremos a memória virtual com paginação, que elimina a exigência de regiões contíguas e permite executar programas maiores que a RAM física.</p>
+
+                </div>
+            </article>
+            <footer class="footer">
+                <p>© 2025 · <a href="#">Gabriel Soares Baptista</a></p>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        const toggle = document.querySelector('.mobile-menu-toggle');
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.querySelector('.mobile-menu-overlay');
+
+        function openMenu() {
+            sidebar.classList.add('open');
+            overlay.classList.add('open');
+            toggle.classList.add('open');
+            toggle.innerHTML = '<i data-lucide="x"></i>';
+            CourseForgeUI.initIcons();
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMenu() {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('open');
+            toggle.classList.remove('open');
+            toggle.innerHTML = '<i data-lucide="menu"></i>';
+            CourseForgeUI.initIcons();
+            document.body.style.overflow = '';
+        }
+
+        toggle.addEventListener('click', () => {
+            if (sidebar.classList.contains('open')) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        overlay.addEventListener('click', closeMenu);
+    </script>
+
+    
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            renderMathInElement(document.body, {
+                output: 'html',
+                delimiters: [
+                    { left: "$$", right: "$$", display: true },
+                    { left: "$", right: "$", display: false },
+                    { left: "\\(", right: "\\)", display: false },
+                    { left: "\\[", right: "\\]", display: true }
+                ],
+                throwOnError: false,
+                strict: false
+            });
+        });
+    </script>
+    
+    
+    <script src="/aulas-faesa/js/vendor/prism/prism.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-c.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-cpp.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-python.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-clike.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-perl.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-java.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-mermaid.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-php.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js" data-no-bundle></script>
+    
+    
+    
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            mermaid.initialize({
+                startOnLoad: true,
+                theme: 'default',
+                securityLevel: 'loose',
+                fontFamily: 'Inter, system-ui, sans-serif',
+                themeVariables: {
+                    fontSize: '16px',
+                    edgeLabelFontSize: '16px',
+                    multiplicityFontSize: '18px'
+                }
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const isSubcourse = false;
+        const courseName = "Sistemas Operacionais";
+        CourseForgeNav.applyDynamicBreadcrumbs('.breadcrumb', isSubcourse);
+        CourseForgeNav.initScrollSpy();
+        CourseForgeUI.initCopyButtons();
+        CourseForgeUI.initExamples();
+        });
+
+        function handleBackNavigation() {
+            const isSubcourse = false;
+        const dynamic = CourseForgeNav.getBackLink('contents.html', 'Voltar', isSubcourse);
+        window.location.href = dynamic.url;
+        }
+    </script>
+</body>
+
+</html>

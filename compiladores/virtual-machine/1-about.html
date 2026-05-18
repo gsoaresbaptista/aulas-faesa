@@ -1,2 +1,296 @@
-<!doctype html><html lang=pt-BR><meta charset=UTF-8><meta content="width=device-width,initial-scale=1.0" name=viewport><title>Toposia - Máquina Virtual</title><link media="(prefers-color-scheme: light)" href=/aulas-faesa/img/dark-favicon.svg rel=icon><link media="(prefers-color-scheme: dark)" href=/aulas-faesa/img/light-favicon.svg rel=icon><link data-no-bundle href=/aulas-faesa/css/vendor/fonts.css rel=stylesheet><link href=/aulas-faesa/css/bundles/katex-base-prism-one-light-b0347952c973.bundle.min.css rel=stylesheet><link data-no-bundle href=/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css rel=stylesheet><script src=/aulas-faesa/js/bundles/lucide-katex-auto-render-4b36e8bd8642.bundle.min.js></script></head><body><script>// Restore sidebar state instantly (before first paint) to avoid transition flash
-(function(){localStorage.getItem(`cf_sidebar_hidden`)===`true`&&document.body.classList.add(`sidebar-hidden`,`no-transition`),requestAnimationFrame(function(){requestAnimationFrame(function(){document.body.classList.remove(`no-transition`)})})})();</script><div class=page-wrapper><nav class=sidebar><div class=sidebar-content><header class=sidebar-title-section><a class=course-title-link href=contents.html> <h1 class=sidebar-course-title>Máquina Virtual</h1> </a><div class=sidebar-ornament>❧</div></header><nav class=sidebar-nav-section><a class="sidebar-nav-link next" href=2-opcodes.html>Instruções e OPCodes <i class=nav-icon data-lucide=chevron-right></i></a><a class="sidebar-nav-link back" href=javascript:void(0) onclick=handleBackNavigation()><i class=nav-icon data-lucide=arrow-left></i> Voltar</a></nav></div></nav><button aria-label=Menu class=mobile-menu-toggle><i data-lucide=menu></i></button><button aria-label="Alternar Barra Lateral" class=sidebar-toggle onclick=CourseForgeNav.toggleSidebar()><i class=toggle-icon data-lucide=chevron-left id=sidebar-toggle-icon></i></button><div class=mobile-menu-overlay></div><main class=main-content><article class=article><header class=article-header><span class=chapter-number>1</span><h1 class=article-title><span class="title-ornament left">❧</span> <span class=title-text>A Máquina Virtual</span> <span class="title-ornament right">❧</span></h1><p class=article-date>16/12/2025</p><nav aria-label=Breadcrumb class=breadcrumb><a class=breadcrumb-link href=../contents.html>Compiladores</a><span class=breadcrumb-separator><i class=breadcrumb-icon data-lucide=chevron-right></i></span><a class=breadcrumb-link href=contents.html>Virtual Machine</a><span class=breadcrumb-separator><i class=breadcrumb-icon data-lucide=chevron-right></i></span><span class=breadcrumb-current>A Máquina Virtual</span></nav></header><div class=article-body><p>antes</p><table><thead><tr><th style=text-align:center>Versão</th><th style=text-align:center>Sistema</th><th style=text-align:center>Download</th></tr></thead><tbody><tr><td style=text-align:center>v1.0</td><td style=text-align:center>Linux</td><td style=text-align:center><a class=download-link href=virtual-machine.zip>VM-v1.0.bin</a></td></tr><tr><td style=text-align:center>v1.0</td><td style=text-align:center>Windows</td><td style=text-align:center><a class=download-link href=virtual-machine.zip>VM-v1.0.exe</a></td></tr></tbody></table><p>depois</p></div></article><footer class=footer><p>© 2025 · <a href=#>Gabriel Soares Baptista</a></p></footer></main></div><script>const toggle=document.querySelector(`.mobile-menu-toggle`),sidebar=document.querySelector(`.sidebar`),overlay=document.querySelector(`.mobile-menu-overlay`);function openMenu(){sidebar.classList.add(`open`),overlay.classList.add(`open`),toggle.classList.add(`open`),toggle.innerHTML=`<i data-lucide="x"></i>`,CourseForgeUI.initIcons(),document.body.style.overflow=`hidden`}function closeMenu(){sidebar.classList.remove(`open`),overlay.classList.remove(`open`),toggle.classList.remove(`open`),toggle.innerHTML=`<i data-lucide="menu"></i>`,CourseForgeUI.initIcons(),document.body.style.overflow=``}toggle.addEventListener(`click`,()=>{sidebar.classList.contains(`open`)?closeMenu():openMenu()}),overlay.addEventListener(`click`,closeMenu);</script><script>document.addEventListener(`DOMContentLoaded`,function(){renderMathInElement(document.body,{output:`html`,delimiters:[{left:`$$`,right:`$$`,display:!0},{left:`$`,right:`$`,display:!1},{left:`\\(`,right:`\\)`,display:!1},{left:`\\[`,right:`\\]`,display:!0}],throwOnError:!1,strict:!1})});</script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/prism.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-c.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-cpp.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-python.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-clike.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-perl.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-java.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-mermaid.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/components/prism-php.min.js></script><script data-no-bundle src=/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js></script><script>document.addEventListener(`DOMContentLoaded`,function(){mermaid.initialize({startOnLoad:!0,theme:`default`,securityLevel:`loose`,fontFamily:`Inter, system-ui, sans-serif`,themeVariables:{fontSize:`16px`,edgeLabelFontSize:`16px`,multiplicityFontSize:`18px`}})});</script><script>document.addEventListener(`DOMContentLoaded`,function(){let isSubcourse=!0,courseName=`Máquina Virtual`;CourseForgeNav.applyDynamicBreadcrumbs(`.breadcrumb`,!0),CourseForgeNav.initScrollSpy(),CourseForgeUI.initCopyButtons(),CourseForgeUI.initExamples()});function handleBackNavigation(){let isSubcourse=!0,dynamic=CourseForgeNav.getBackLink(`contents.html`,`Voltar`,!0);window.location.href=dynamic.url}</script></body></html>
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toposia - Máquina Virtual</title>
+    <link rel="icon" href="/aulas-faesa/img/dark-favicon.svg" media="(prefers-color-scheme: light)">
+    <link rel="icon" href="/aulas-faesa/img/light-favicon.svg" media="(prefers-color-scheme: dark)">
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/fonts.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/bundles/katex-base-prism-one-light-b0347952c973.bundle.min.css">
+    
+    
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css" data-no-bundle>
+    <script src="/aulas-faesa/js/bundles/lucide-katex-auto-render-4b36e8bd8642.bundle.min.js"></script>
+</head>
+
+<body>
+    <script>
+        // Restore sidebar state instantly (before first paint) to avoid transition flash
+        (function() {
+            if (localStorage.getItem('cf_sidebar_hidden') === 'true') {
+                document.body.classList.add('sidebar-hidden', 'no-transition');
+            }
+            requestAnimationFrame(function() {
+                requestAnimationFrame(function() {
+                    document.body.classList.remove('no-transition');
+                });
+            });
+        })();
+    </script>
+    <div class="page-wrapper">
+        <nav class="sidebar">
+            <div class="sidebar-content">
+                <header class="sidebar-title-section">
+                    <a href="contents.html" class="course-title-link">
+                        <h1 class="sidebar-course-title">Máquina Virtual</h1>
+                    </a>
+                    <div class="sidebar-ornament">❧</div>
+                </header>
+
+                
+                <section class="sidebar-toc-section">
+                    <h2 class="toc-header">Tabela de Conteúdos</h2>
+                    <ol class="toc-list">
+                        
+                        <li class="toc-item level-2">
+                            <a href="#a-máquina-virtual-do-slang">1.1. A Máquina Virtual do Slang</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#por-que-uma-vm-de-pilha">1.1.1. Por que uma VM de pilha?</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#frames-e-variáveis-locais">1.1.2. Frames e variáveis locais</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#binários-da-vm">1.1.3. Binários da VM</a>
+                        </li>
+                        
+                    </ol>
+                </section>
+                
+
+                <nav class="sidebar-nav-section">
+                    
+                    
+                    <a href="2-opcodes.html" class="sidebar-nav-link next">Instruções e OPCodes <i data-lucide="chevron-right" class="nav-icon"></i></a>
+                    
+                    <a href="javascript:void(0)" onclick="handleBackNavigation()"
+                        class="sidebar-nav-link back"><i data-lucide="arrow-left" class="nav-icon"></i> Voltar</a>
+                </nav>
+
+            </div>
+        </nav>
+
+        <button class="mobile-menu-toggle" aria-label="Menu">
+            <i data-lucide="menu"></i>
+        </button>
+
+        <button class="sidebar-toggle" onclick="CourseForgeNav.toggleSidebar()" aria-label="Alternar Barra Lateral">
+            <i data-lucide="chevron-left" class="toggle-icon" id="sidebar-toggle-icon"></i>
+        </button>
+
+        <div class="mobile-menu-overlay"></div>
+
+        <main class="main-content">
+            <article class="article">
+                <header class="article-header">
+                    <span class="chapter-number">1</span>
+                    <h1 class="article-title">
+                        <span class="title-ornament left">❧</span>
+                        <span class="title-text">A Máquina Virtual</span>
+                        <span class="title-ornament right">❧</span>
+                    </h1>
+                    
+                    <p class="article-date">16/12/2025</p>
+                    
+                    
+                    <nav class="breadcrumb" aria-label="Breadcrumb">
+                        
+                        
+                        
+                        <a href="../contents.html" class="breadcrumb-link">Compiladores</a>
+                        
+                        <span class="breadcrumb-separator"><i data-lucide="chevron-right" class="breadcrumb-icon"></i></span>
+                        
+                        
+                        
+                        
+                        <a href="contents.html" class="breadcrumb-link">Virtual Machine</a>
+                        
+                        <span class="breadcrumb-separator"><i data-lucide="chevron-right" class="breadcrumb-icon"></i></span>
+                        
+                        
+                        
+                        <span class="breadcrumb-current">A Máquina Virtual</span>
+                        
+                        
+                    </nav>
+                    
+                </header>
+                <div class="article-body">
+                    <h2 id="a-máquina-virtual-do-slang"><span class="heading-text">A Máquina Virtual do Slang</span><span class="heading-arabic">1.1</span></h2>
+<p>A SlangVM é uma máquina virtual de pilha usada como alvo final do compilador didático de Slang.</p>
+<p>Em vez de gerar código de máquina real para x86, ARM ou RISC-V, o compilador gera um assembly textual simples, com extensão sugerida <code>.slasm</code>. Esse assembly é executado por um programa separado chamado <code>slang-vm</code>.</p>
+<p>O fluxo final fica assim:</p>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="850" viewBox="0.00 0.00 653.00 46.00" class="svg-graph graphviz-img"><g id="svg-graphviz-8a24be1b230b-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 42)"><title>SlangVMFlow</title><polygon fill="white" stroke="transparent" points="-4,4 -4,-42 649,-42 649,4 -4,4" /><g id="svg-graphviz-8a24be1b230b-node1" class="node"><title>source</title><path fill="#f8fafc" stroke="#6b7280" d="M98,-37C98,-37 12,-37 12,-37 6,-37 0,-31 0,-25 0,-25 0,-13 0,-13 0,-7 6,-1 12,-1 12,-1 98,-1 98,-1 104,-1 110,-7 110,-13 110,-13 110,-25 110,-25 110,-31 104,-37 98,-37" /><text text-anchor="middle" x="55" y="-15.3" font-family="Helvetica,sans-Serif" font-size="14.00">arquivo.slang</text></g><g id="svg-graphviz-8a24be1b230b-node2" class="node"><title>lexer</title><path fill="#f8fafc" stroke="#6b7280" d="M229,-38C229,-38 180,-38 180,-38 174,-38 168,-32 168,-26 168,-26 168,-12 168,-12 168,-6 174,0 180,0 180,0 229,0 229,0 235,0 241,-6 241,-12 241,-12 241,-26 241,-26 241,-32 235,-38 229,-38" /><text text-anchor="middle" x="204.5" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">Lexer</text><text text-anchor="middle" x="204.5" y="-7.8" font-family="Helvetica,sans-Serif" font-size="14.00">(tokens)</text></g><g id="svg-graphviz-8a24be1b230b-edge1" class="edge"><title>source-&gt;lexer</title><path fill="none" stroke="black" d="M110,-19C121.6,-19 136.17,-19 157.68,-19" /><polygon fill="black" stroke="black" points="157.7,-22.5 167.7,-19 157.7,-15.5 157.7,-22.5" /></g><g id="svg-graphviz-8a24be1b230b-node3" class="node"><title>parser</title><path fill="#f8fafc" stroke="#6b7280" d="M347,-38C347,-38 311,-38 311,-38 305,-38 299,-32 299,-26 299,-26 299,-12 299,-12 299,-6 305,0 311,0 311,0 347,0 347,0 353,0 359,-6 359,-12 359,-12 359,-26 359,-26 359,-32 353,-38 347,-38" /><text text-anchor="middle" x="329" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">Parser</text><text text-anchor="middle" x="329" y="-7.8" font-family="Helvetica,sans-Serif" font-size="14.00">(AST)</text></g><g id="svg-graphviz-8a24be1b230b-edge2" class="edge"><title>lexer-&gt;parser</title><path fill="none" stroke="black" d="M241.18,-19C252.18,-19 265.52,-19 288.77,-19" /><polygon fill="black" stroke="black" points="288.96,-22.5 298.96,-19 288.96,-15.5 288.96,-22.5" /></g><g id="svg-graphviz-8a24be1b230b-node4" class="node"><title>codegen</title><path fill="#f8fafc" stroke="#6b7280" d="M483,-38C483,-38 429,-38 429,-38 423,-38 417,-32 417,-26 417,-26 417,-12 417,-12 417,-6 423,0 429,0 429,0 483,0 483,0 489,0 495,-6 495,-12 495,-12 495,-26 495,-26 495,-32 489,-38 483,-38" /><text text-anchor="middle" x="456" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">Codegen</text><text text-anchor="middle" x="456" y="-7.8" font-family="Helvetica,sans-Serif" font-size="14.00">(.slasm)</text></g><g id="svg-graphviz-8a24be1b230b-edge3" class="edge"><title>parser-&gt;codegen</title><path fill="none" stroke="black" d="M359.22,-19C381.11,-19 395.51,-19 406.63,-19" /><polygon fill="black" stroke="black" points="406.81,-22.5 416.81,-19 406.81,-15.5 406.81,-22.5" /></g><g id="svg-graphviz-8a24be1b230b-node5" class="node"><title>vm</title><path fill="#f8fafc" stroke="#6b7280" d="M633,-38C633,-38 565,-38 565,-38 559,-38 553,-32 553,-26 553,-26 553,-12 553,-12 553,-6 559,0 565,0 565,0 633,0 633,0 639,0 645,-6 645,-12 645,-12 645,-26 645,-26 645,-32 639,-38 633,-38" /><text text-anchor="middle" x="599" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">SlangVM</text><text text-anchor="middle" x="599" y="-7.8" font-family="Helvetica,sans-Serif" font-size="14.00">(execucao)</text></g><g id="svg-graphviz-8a24be1b230b-edge4" class="edge"><title>codegen-&gt;vm</title><path fill="none" stroke="black" d="M495.28,-19C516.51,-19 531.1,-19 542.58,-19" /><polygon fill="black" stroke="black" points="542.75,-22.5 552.75,-19 542.75,-15.5 542.75,-22.5" /></g></g></svg></div></div>
+
+<p>Na prática:</p>
+<pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">./build/compiler code programa.slang &gt; programa.slasm
+./build/slang-vm programa.slasm
+</code></pre>
+<h3 id="por-que-uma-vm-de-pilha"><span class="heading-text">Por que uma VM de pilha?</span><span class="heading-arabic">1.1.1</span></h3>
+<p>Uma VM de pilha simplifica a geração de código. O compilador não precisa decidir qual registrador usar para cada valor temporário. Ele apenas emite instruções que empilham operandos e consomem esses operandos na ordem correta.</p>
+<p>Por exemplo, a expressão:</p>
+<pre class="line-numbers language-slang" data-lang="SLANG"><code class="language-slang">1 + 2 * 3
+</code></pre>
+<p>pode ser gerada como:</p>
+<pre class="line-numbers language-slasm" data-lang="SLASM"><code class="language-slasm">push 1
+push 2
+push 3
+mul
+add
+</code></pre>
+<p>O resultado final fica no topo da pilha.</p>
+<h3 id="frames-e-variáveis-locais"><span class="heading-text">Frames e variáveis locais</span><span class="heading-arabic">1.1.2</span></h3>
+<p>Cada chamada de função cria um frame. Dentro desse frame, os parâmetros e variáveis locais são guardados em slots numéricos.</p>
+<p>Exemplo:</p>
+<pre class="line-numbers language-slang" data-lang="SLANG"><code class="language-slang">fn dobro(n: int) -&gt; int {
+    return n * 2
+}
+</code></pre>
+<p>O parâmetro <code>n</code> ocupa o slot local <code>0</code>:</p>
+<pre class="line-numbers language-slasm" data-lang="SLASM"><code class="language-slasm">label fn_dobro
+get_local 0
+push 2
+mul
+ret
+</code></pre>
+<h3 id="binários-da-vm"><span class="heading-text">Binários da VM</span><span class="heading-arabic">1.1.3</span></h3>
+<table>
+<thead>
+<tr>
+  <th style="text-align:center">Versão</th>
+  <th style="text-align:center">Sistema</th>
+  <th style="text-align:center">Download</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:center">v1.0</td>
+  <td style="text-align:center">Linux</td>
+  <td style="text-align:center"><a href="virtual-machine.zip" class="download-link">VM-v1.0.bin</a></td>
+</tr>
+<tr>
+  <td style="text-align:center">v1.0</td>
+  <td style="text-align:center">Windows</td>
+  <td style="text-align:center"><a href="virtual-machine.zip" class="download-link">VM-v1.0.exe</a></td>
+</tr>
+</tbody>
+</table>
+
+                </div>
+            </article>
+            <footer class="footer">
+                <p>© 2025 · <a href="#">Gabriel Soares Baptista</a></p>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        const toggle = document.querySelector('.mobile-menu-toggle');
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.querySelector('.mobile-menu-overlay');
+
+        function openMenu() {
+            sidebar.classList.add('open');
+            overlay.classList.add('open');
+            toggle.classList.add('open');
+            toggle.innerHTML = '<i data-lucide="x"></i>';
+            CourseForgeUI.initIcons();
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMenu() {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('open');
+            toggle.classList.remove('open');
+            toggle.innerHTML = '<i data-lucide="menu"></i>';
+            CourseForgeUI.initIcons();
+            document.body.style.overflow = '';
+        }
+
+        toggle.addEventListener('click', () => {
+            if (sidebar.classList.contains('open')) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        overlay.addEventListener('click', closeMenu);
+    </script>
+
+    
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            renderMathInElement(document.body, {
+                output: 'html',
+                delimiters: [
+                    { left: "$$", right: "$$", display: true },
+                    { left: "$", right: "$", display: false },
+                    { left: "\\(", right: "\\)", display: false },
+                    { left: "\\[", right: "\\]", display: true }
+                ],
+                throwOnError: false,
+                strict: false
+            });
+        });
+    </script>
+    
+    
+    <script src="/aulas-faesa/js/vendor/prism/prism.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-c.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-cpp.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-python.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-clike.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-perl.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-java.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-mermaid.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-php.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js" data-no-bundle></script>
+    
+    
+    
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            mermaid.initialize({
+                startOnLoad: true,
+                theme: 'default',
+                securityLevel: 'loose',
+                fontFamily: 'Inter, system-ui, sans-serif',
+                themeVariables: {
+                    fontSize: '16px',
+                    edgeLabelFontSize: '16px',
+                    multiplicityFontSize: '18px'
+                }
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const isSubcourse = true;
+        const courseName = "M\u00e1quina Virtual";
+        CourseForgeNav.applyDynamicBreadcrumbs('.breadcrumb', isSubcourse);
+        CourseForgeNav.initScrollSpy();
+        CourseForgeUI.initCopyButtons();
+        CourseForgeUI.initExamples();
+        });
+
+        function handleBackNavigation() {
+            const isSubcourse = true;
+        const dynamic = CourseForgeNav.getBackLink('contents.html', 'Voltar', isSubcourse);
+        window.location.href = dynamic.url;
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toposia - Redes</title>
+    <link rel="icon" href="/aulas-faesa/img/dark-favicon.svg" media="(prefers-color-scheme: light)">
+    <link rel="icon" href="/aulas-faesa/img/light-favicon.svg" media="(prefers-color-scheme: dark)">
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/fonts.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/bundles/katex-base-prism-one-light-b0347952c973.bundle.min.css">
+    
+    
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css" data-no-bundle>
+    <script src="/aulas-faesa/js/bundles/lucide-katex-auto-render-4b36e8bd8642.bundle.min.js"></script>
+</head>
+
+<body>
+    <script>
+        // Restore sidebar state instantly (before first paint) to avoid transition flash
+        (function() {
+            if (localStorage.getItem('cf_sidebar_hidden') === 'true') {
+                document.body.classList.add('sidebar-hidden', 'no-transition');
+            }
+            requestAnimationFrame(function() {
+                requestAnimationFrame(function() {
+                    document.body.classList.remove('no-transition');
+                });
+            });
+        })();
+    </script>
+    <div class="page-wrapper">
+        <nav class="sidebar">
+            <div class="sidebar-content">
+                <header class="sidebar-title-section">
+                    <a href="contents.html" class="course-title-link">
+                        <h1 class="sidebar-course-title">Redes</h1>
+                    </a>
+                    <div class="sidebar-ornament">❧</div>
+                </header>
+
+                
+                <section class="sidebar-toc-section">
+                    <h2 class="toc-header">Tabela de Conteúdos</h2>
+                    <ol class="toc-list">
+                        
+                        <li class="toc-item level-2">
+                            <a href="#introdução">10.1. Introdução</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#o-problema-que-a-camada-de-transporte-resolve">10.2. O problema que a camada de transporte resolve</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#portas-multiplexação-e-demultiplexação">10.3. Portas, multiplexação e demultiplexação</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#multiplexar-na-origem-demultiplexar-no-destino">10.3.1. Multiplexar na origem, demultiplexar no destino</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#udp-como-transporte-mínimo">10.4. UDP como transporte mínimo</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#o-cabeçalho-udp">10.4.1. O cabeçalho UDP</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#o-que-o-udp-não-faz">10.4.2. O que o UDP não faz</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#tcp-como-fluxo-confiável-de-bytes">10.5. TCP como fluxo confiável de bytes</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#fluxo-de-bytes-não-mensagens">10.5.1. Fluxo de bytes, não mensagens</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#segmentos-e-numeração-de-bytes">10.5.2. Segmentos e numeração de bytes</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#conexão-tcp-e-handshake-de-três-vias">10.6. Conexão TCP e handshake de três vias</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#por-que-três-vias-são-necessárias">10.6.1. Por que três vias são necessárias</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#controle-de-fluxo-erro-e-congestionamento">10.7. Controle de fluxo, erro e congestionamento</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#controle-de-fluxo">10.7.1. Controle de fluxo</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#controle-de-erro">10.7.2. Controle de erro</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#controle-de-congestionamento">10.0.1. Controle de congestionamento</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#encerramento-de-conexão-tcp">10.1. Encerramento de conexão TCP</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#fechando-a-ideia">10.8. Fechando a ideia</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#questões">10.9. Questões</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#próximos-passos">10.10. Próximos passos</a>
+                        </li>
+                        
+                    </ol>
+                </section>
+                
+
+                <nav class="sidebar-nav-section">
+                    
+                    <a href="9-ip-protocol-addressing-and-subnetting.html" class="sidebar-nav-link prev"><i data-lucide="chevron-left" class="nav-icon"></i> Protocolo IP, Endereçamento e Sub-redes</a>
+                    
+                    
+                    <a href="javascript:void(0)" onclick="handleBackNavigation()"
+                        class="sidebar-nav-link back"><i data-lucide="arrow-left" class="nav-icon"></i> Voltar</a>
+                </nav>
+
+            </div>
+        </nav>
+
+        <button class="mobile-menu-toggle" aria-label="Menu">
+            <i data-lucide="menu"></i>
+        </button>
+
+        <button class="sidebar-toggle" onclick="CourseForgeNav.toggleSidebar()" aria-label="Alternar Barra Lateral">
+            <i data-lucide="chevron-left" class="toggle-icon" id="sidebar-toggle-icon"></i>
+        </button>
+
+        <div class="mobile-menu-overlay"></div>
+
+        <main class="main-content">
+            <article class="article">
+                <header class="article-header">
+                    <span class="chapter-number">10</span>
+                    <h1 class="article-title">
+                        <span class="title-ornament left">❧</span>
+                        <span class="title-text">Camada de Transporte Completa: UDP e TCP</span>
+                        <span class="title-ornament right">❧</span>
+                    </h1>
+                    
+                    <p class="article-date">14/05/2026</p>
+                    
+                    
+                    <nav class="breadcrumb" aria-label="Breadcrumb">
+                        
+                        
+                        
+                        <a href="contents.html" class="breadcrumb-link">Redes</a>
+                        
+                        <span class="breadcrumb-separator"><i data-lucide="chevron-right" class="breadcrumb-icon"></i></span>
+                        
+                        
+                        
+                        
+                        <a href="contents.html#part-V" class="breadcrumb-link">V - Camada de Transporte</a>
+                        
+                        <span class="breadcrumb-separator"><i data-lucide="chevron-right" class="breadcrumb-icon"></i></span>
+                        
+                        
+                        
+                        <span class="breadcrumb-current">Camada de Transporte Completa: UDP e TCP</span>
+                        
+                        
+                    </nav>
+                    
+                </header>
+                <div class="article-body">
+                    <h2 id="introdução"><span class="heading-text">Introdução</span><span class="heading-arabic">10.1</span></h2>
+<p>Hoje você vai ver por que a comunicação na Internet não termina quando um pacote IP chega ao host correto. A camada de rede entrega pacotes entre máquinas, mas uma máquina executa muitos programas ao mesmo tempo. O problema da camada de transporte é levar os dados ao <strong>processo correto</strong> e, quando necessário, transformar uma rede de melhor esforço em uma comunicação confiável.</p>
+<p>Na aula anterior, o IP apareceu como um protocolo sem conexão e de melhor esforço. Isso é suficiente para encaminhar datagramas entre redes, mas não garante entrega, ordem, ausência de duplicação nem controle de velocidade. A camada de transporte existe justamente acima desse ponto frágil.</p>
+<div class="callout callout-abstract">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
+    <span class="callout-title-inner">Ideia central<br /></span>
+  </div>
+  <div class="callout-content">
+<p>A camada de transporte oferece comunicação processo a processo. O UDP faz isso com mínimo controle e baixo overhead. O TCP faz isso criando uma conexão virtual, numerando bytes, confirmando dados, controlando fluxo e reagindo a perdas e congestionamento.</p>
+  </div>
+</div>
+<p>Esta aula usa como base o Forouzan, capítulo 23, páginas 703 a 735, excluindo a parte de SCTP, e o Tanenbaum, capítulo 6, principalmente as seções 6.1 a 6.5, páginas 310 a 365.</p>
+<h2 id="o-problema-que-a-camada-de-transporte-resolve"><span class="heading-text">O problema que a camada de transporte resolve</span><span class="heading-arabic">10.2</span></h2>
+<p>Imagine que seu computador esteja acessando uma página Web, sincronizando arquivos, recebendo mensagens e fazendo uma consulta DNS quase ao mesmo tempo. Do ponto de vista da camada de rede, todos esses dados chegam ao mesmo endereço IP da sua máquina. Mas isso não basta.</p>
+<p>O IP identifica o host. Ele não identifica diretamente qual processo deve receber cada pedaço de dado. Sem a camada de transporte, o sistema operacional receberia pacotes IP e ainda teria de adivinhar se aquele conteúdo pertence ao navegador, ao cliente de e-mail, ao serviço de sincronização ou a outro programa.</p>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Se o endereço IP identifica a máquina de destino, qual informação falta para entregar o dado ao programa correto dentro dessa máquina?</p>
+  </div>
+</div>
+<p>Falta o endereço da camada de transporte. Na Internet, esse endereço é o <strong>número de porta</strong>. O par formado por endereço IP e porta identifica um ponto de comunicação em um host.</p>
+<p>Forouzan apresenta essa diferença como três níveis de comunicação.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Camada</th>
+  <th style="text-align:left">Unidade de entrega</th>
+  <th style="text-align:left">Tipo de comunicação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Enlace</td>
+  <td style="text-align:left">Quadro</td>
+  <td style="text-align:left">Nó a nó</td>
+</tr>
+<tr>
+  <td style="text-align:left">Rede</td>
+  <td style="text-align:left">Datagrama ou pacote</td>
+  <td style="text-align:left">Host a host</td>
+</tr>
+<tr>
+  <td style="text-align:left">Transporte</td>
+  <td style="text-align:left">Segmento ou datagrama de usuário</td>
+  <td style="text-align:left">Processo a processo</td>
+</tr>
+</tbody>
+</table>
+<p>O Tanenbaum reforça a mesma ideia por outro caminho. A camada de transporte roda nas máquinas finais e pode compensar limitações da camada de rede. Se a rede perde, atrasa, duplica ou reordena pacotes, a entidade de transporte pode implementar mecanismos para tornar o serviço mais adequado às aplicações.</p>
+<div class="example">
+  <div class="example-title">Exemplo 1</div>
+  <p>Considere um notebook com o endereço IP <code>192.168.1.20</code>. Ele executa três aplicações ao mesmo tempo.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Aplicação</th>
+  <th style="text-align:left">Protocolo típico</th>
+  <th style="text-align:left">Porta de destino remota</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Navegador acessando Web</td>
+  <td style="text-align:left">TCP</td>
+  <td style="text-align:left">443</td>
+</tr>
+<tr>
+  <td style="text-align:left">Consulta DNS</td>
+  <td style="text-align:left">UDP</td>
+  <td style="text-align:left">53</td>
+</tr>
+<tr>
+  <td style="text-align:left">Sincronização de horário</td>
+  <td style="text-align:left">UDP</td>
+  <td style="text-align:left">123</td>
+</tr>
+</tbody>
+</table>
+<p>Todos os pacotes podem sair do mesmo IP de origem, mas eles não pertencem ao mesmo processo. A camada de transporte separa essas conversas usando portas de origem e destino.</p>
+<p>O exemplo mostra que o IP coloca o pacote no host correto. A porta ajuda a colocá-lo no processo correto.</p>
+</div>
+<h2 id="portas-multiplexação-e-demultiplexação"><span class="heading-text">Portas, multiplexação e demultiplexação</span><span class="heading-arabic">10.3</span></h2>
+<p>Um número de porta tem 16 bits. Portanto, os valores possíveis vão de 0 a 65.535. Em uma comunicação cliente-servidor, o servidor normalmente usa uma porta conhecida, enquanto o cliente usa uma porta temporária, também chamada porta efêmera.</p>
+<p>Essa separação resolve um problema prático. O cliente precisa saber onde encontrar o serviço. Por isso, serviços padronizados costumam usar portas bem conhecidas. Já o cliente só precisa de uma identificação temporária para receber a resposta.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Porta</th>
+  <th style="text-align:left">Serviço comum</th>
+  <th style="text-align:left">Transporte usual</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">20 e 21</td>
+  <td style="text-align:left">FTP</td>
+  <td style="text-align:left">TCP</td>
+</tr>
+<tr>
+  <td style="text-align:left">22</td>
+  <td style="text-align:left">SSH</td>
+  <td style="text-align:left">TCP</td>
+</tr>
+<tr>
+  <td style="text-align:left">25</td>
+  <td style="text-align:left">SMTP</td>
+  <td style="text-align:left">TCP</td>
+</tr>
+<tr>
+  <td style="text-align:left">53</td>
+  <td style="text-align:left">DNS</td>
+  <td style="text-align:left">UDP ou TCP</td>
+</tr>
+<tr>
+  <td style="text-align:left">80</td>
+  <td style="text-align:left">HTTP</td>
+  <td style="text-align:left">TCP</td>
+</tr>
+<tr>
+  <td style="text-align:left">123</td>
+  <td style="text-align:left">NTP</td>
+  <td style="text-align:left">UDP</td>
+</tr>
+<tr>
+  <td style="text-align:left">443</td>
+  <td style="text-align:left">HTTPS</td>
+  <td style="text-align:left">TCP</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Cuidado conceitual<br /></span>
+  </div>
+  <div class="callout-content">
+<p>A porta não identifica uma máquina. Quem identifica a máquina é o endereço IP. A porta identifica um ponto de comunicação dentro da máquina.</p>
+  </div>
+</div>
+<h3 id="multiplexar-na-origem-demultiplexar-no-destino"><span class="heading-text">Multiplexar na origem, demultiplexar no destino</span><span class="heading-arabic">10.3.1</span></h3>
+<p>Na origem, vários processos podem querer enviar dados pela rede. A camada de transporte recebe dados desses processos, coloca cabeçalhos com portas e entrega os segmentos ou datagramas ao IP. Esse lado é a <strong>multiplexação</strong>.</p>
+<p>No destino, acontece o inverso. A camada de transporte recebe dados vindos do IP, observa as portas no cabeçalho e entrega o conteúdo ao processo adequado. Esse lado é a <strong>demultiplexação</strong>.</p>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="760" viewBox="0.00 0.00 916.00 158.00" class="svg-graph graphviz-img"><g id="svg-graphviz-1e67cd23a18a-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 154)"><title>TransporteMux</title><g id="svg-graphviz-1e67cd23a18a-node1" class="node"><title>p1</title><path fill="#eef4ff" stroke="#5b7bbb" d="M144,-150C144,-150 12,-150 12,-150 6,-150 0,-144 0,-138 0,-138 0,-124 0,-124 0,-118 6,-112 12,-112 12,-112 144,-112 144,-112 150,-112 156,-118 156,-124 156,-124 156,-138 156,-138 156,-144 150,-150 144,-150" /><text text-anchor="middle" x="78" y="-134.8" font-family="Helvetica,sans-Serif" font-size="14.00">Processo A</text><text text-anchor="middle" x="78" y="-119.8" font-family="Helvetica,sans-Serif" font-size="14.00">porta origem 52000</text></g><g id="svg-graphviz-1e67cd23a18a-node4" class="node"><title>t1</title><path fill="#eef4ff" stroke="#5b7bbb" d="M353,-94C353,-94 204,-94 204,-94 198,-94 192,-88 192,-82 192,-82 192,-68 192,-68 192,-62 198,-56 204,-56 204,-56 353,-56 353,-56 359,-56 365,-62 365,-68 365,-68 365,-82 365,-82 365,-88 359,-94 353,-94" /><text text-anchor="middle" x="278.5" y="-78.8" font-family="Helvetica,sans-Serif" font-size="14.00">Camada de transporte</text><text text-anchor="middle" x="278.5" y="-63.8" font-family="Helvetica,sans-Serif" font-size="14.00">multiplexação</text></g><g id="svg-graphviz-1e67cd23a18a-edge1" class="edge"><title>p1-&gt;t1</title><path fill="none" stroke="black" d="M146.48,-111.96C163.74,-107.09 182.43,-101.82 200.14,-96.82" /><polygon fill="black" stroke="black" points="201.2,-100.16 209.87,-94.08 199.29,-93.43 201.2,-100.16" /></g><g id="svg-graphviz-1e67cd23a18a-node2" class="node"><title>p2</title><path fill="#eef4ff" stroke="#5b7bbb" d="M144,-94C144,-94 12,-94 12,-94 6,-94 0,-88 0,-82 0,-82 0,-68 0,-68 0,-62 6,-56 12,-56 12,-56 144,-56 144,-56 150,-56 156,-62 156,-68 156,-68 156,-82 156,-82 156,-88 150,-94 144,-94" /><text text-anchor="middle" x="78" y="-78.8" font-family="Helvetica,sans-Serif" font-size="14.00">Processo B</text><text text-anchor="middle" x="78" y="-63.8" font-family="Helvetica,sans-Serif" font-size="14.00">porta origem 52001</text></g><g id="svg-graphviz-1e67cd23a18a-edge2" class="edge"><title>p2-&gt;t1</title><path fill="none" stroke="black" d="M156.03,-75C164.49,-75 173.18,-75 181.83,-75" /><polygon fill="black" stroke="black" points="181.95,-78.5 191.95,-75 181.95,-71.5 181.95,-78.5" /></g><g id="svg-graphviz-1e67cd23a18a-node3" class="node"><title>p3</title><path fill="#eef4ff" stroke="#5b7bbb" d="M144,-38C144,-38 12,-38 12,-38 6,-38 0,-32 0,-26 0,-26 0,-12 0,-12 0,-6 6,0 12,0 12,0 144,0 144,0 150,0 156,-6 156,-12 156,-12 156,-26 156,-26 156,-32 150,-38 144,-38" /><text text-anchor="middle" x="78" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">Processo C</text><text text-anchor="middle" x="78" y="-7.8" font-family="Helvetica,sans-Serif" font-size="14.00">porta origem 52002</text></g><g id="svg-graphviz-1e67cd23a18a-edge3" class="edge"><title>p3-&gt;t1</title><path fill="none" stroke="black" d="M146.48,-38.04C163.74,-42.91 182.43,-48.18 200.14,-53.18" /><polygon fill="black" stroke="black" points="199.29,-56.57 209.87,-55.92 201.2,-49.84 199.29,-56.57" /></g><g id="svg-graphviz-1e67cd23a18a-node5" class="node"><title>ip</title><path fill="#eef4ff" stroke="#5b7bbb" d="M541,-94C541,-94 413,-94 413,-94 407,-94 401,-88 401,-82 401,-82 401,-68 401,-68 401,-62 407,-56 413,-56 413,-56 541,-56 541,-56 547,-56 553,-62 553,-68 553,-68 553,-82 553,-82 553,-88 547,-94 541,-94" /><text text-anchor="middle" x="477" y="-78.8" font-family="Helvetica,sans-Serif" font-size="14.00">IP</text><text text-anchor="middle" x="477" y="-63.8" font-family="Helvetica,sans-Serif" font-size="14.00">entrega host a host</text></g><g id="svg-graphviz-1e67cd23a18a-edge4" class="edge"><title>t1-&gt;ip</title><path fill="none" stroke="black" d="M365.12,-75C373.57,-75 382.15,-75 390.61,-75" /><polygon fill="black" stroke="black" points="390.84,-78.5 400.84,-75 390.84,-71.5 390.84,-78.5" /></g><g id="svg-graphviz-1e67cd23a18a-node6" class="node"><title>t2</title><path fill="#eef4ff" stroke="#5b7bbb" d="M750,-94C750,-94 601,-94 601,-94 595,-94 589,-88 589,-82 589,-82 589,-68 589,-68 589,-62 595,-56 601,-56 601,-56 750,-56 750,-56 756,-56 762,-62 762,-68 762,-68 762,-82 762,-82 762,-88 756,-94 750,-94" /><text text-anchor="middle" x="675.5" y="-78.8" font-family="Helvetica,sans-Serif" font-size="14.00">Camada de transporte</text><text text-anchor="middle" x="675.5" y="-63.8" font-family="Helvetica,sans-Serif" font-size="14.00">demultiplexação</text></g><g id="svg-graphviz-1e67cd23a18a-edge5" class="edge"><title>ip-&gt;t2</title><path fill="none" stroke="black" d="M553.13,-75C561.54,-75 570.19,-75 578.81,-75" /><polygon fill="black" stroke="black" points="578.91,-78.5 588.91,-75 578.91,-71.5 578.91,-78.5" /></g><g id="svg-graphviz-1e67cd23a18a-node7" class="node"><title>s1</title><path fill="#eef4ff" stroke="#5b7bbb" d="M896,-122C896,-122 810,-122 810,-122 804,-122 798,-116 798,-110 798,-110 798,-96 798,-96 798,-90 804,-84 810,-84 810,-84 896,-84 896,-84 902,-84 908,-90 908,-96 908,-96 908,-110 908,-110 908,-116 902,-122 896,-122" /><text text-anchor="middle" x="853" y="-106.8" font-family="Helvetica,sans-Serif" font-size="14.00">Servidor Web</text><text text-anchor="middle" x="853" y="-91.8" font-family="Helvetica,sans-Serif" font-size="14.00">porta 443</text></g><g id="svg-graphviz-1e67cd23a18a-edge6" class="edge"><title>t2-&gt;s1</title><path fill="none" stroke="black" d="M762.19,-88.67C770.85,-90.05 779.54,-91.44 787.92,-92.78" /><polygon fill="black" stroke="black" points="787.53,-96.26 797.96,-94.38 788.63,-89.35 787.53,-96.26" /></g><g id="svg-graphviz-1e67cd23a18a-node8" class="node"><title>s2</title><path fill="#eef4ff" stroke="#5b7bbb" d="M896,-66C896,-66 810,-66 810,-66 804,-66 798,-60 798,-54 798,-54 798,-40 798,-40 798,-34 804,-28 810,-28 810,-28 896,-28 896,-28 902,-28 908,-34 908,-40 908,-40 908,-54 908,-54 908,-60 902,-66 896,-66" /><text text-anchor="middle" x="853" y="-50.8" font-family="Helvetica,sans-Serif" font-size="14.00">Servidor DNS</text><text text-anchor="middle" x="853" y="-35.8" font-family="Helvetica,sans-Serif" font-size="14.00">porta 53</text></g><g id="svg-graphviz-1e67cd23a18a-edge7" class="edge"><title>t2-&gt;s2</title><path fill="none" stroke="black" d="M762.19,-61.33C770.85,-59.95 779.54,-58.56 787.92,-57.22" /><polygon fill="black" stroke="black" points="788.63,-60.65 797.96,-55.62 787.53,-53.74 788.63,-60.65" /></g></g></svg></div></div>
+
+<div class="example">
+  <div class="example-title">Exemplo 2</div>
+  <p>Um cliente com IP <code>10.0.0.8</code> acessa um servidor HTTPS <code>200.10.1.5</code>.</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">Origem: 10.0.0.8:53144
+Destino: 200.10.1.5:443
+</code></pre>
+<p>O servidor responde invertendo os papéis.</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">Origem: 200.10.1.5:443
+Destino: 10.0.0.8:53144
+</code></pre>
+<p>A porta <code>443</code> diz ao cliente qual serviço foi acessado no servidor. A porta <code>53144</code> permite que a resposta volte para a conversa correta no cliente.</p>
+</div>
+<div class="example">
+  <div class="example-title">Exemplo 3</div>
+  <p>Suponha que duas abas do navegador acessem o mesmo servidor <code>200.10.1.5:443</code> ao mesmo tempo.</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">Aba 1: 10.0.0.8:53144 -&gt; 200.10.1.5:443
+Aba 2: 10.0.0.8:53145 -&gt; 200.10.1.5:443
+</code></pre>
+<p>O IP de origem e o IP de destino são iguais. A porta de destino também é igual. O que diferencia as duas conversas é a porta de origem escolhida no cliente. Assim, quando as respostas chegam, o sistema operacional consegue associar cada fluxo ao socket correto.</p>
+</div>
+<h2 id="udp-como-transporte-mínimo"><span class="heading-text">UDP como transporte mínimo</span><span class="heading-arabic">10.4</span></h2>
+<p>O UDP, ou <em>User Datagram Protocol</em>, é o protocolo de transporte mais simples da Internet. Ele oferece comunicação processo a processo usando portas, mas quase não acrescenta controle ao serviço do IP.</p>
+<p>O UDP é <strong>sem conexão</strong>. Isso significa que ele não estabelece uma conexão antes de enviar dados. Cada datagrama UDP é independente.</p>
+<p>O UDP também é <strong>não confiável</strong> no sentido técnico. Ele não confirma recebimento, não retransmite perdas, não reordena datagramas e não controla a velocidade do emissor. Isso não significa que ele seja inútil. Significa que ele deixa essas responsabilidades para a aplicação quando elas forem necessárias.</p>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Se o UDP não garante entrega, por que protocolos importantes como DNS, NTP e SNMP podem usá-lo?</p>
+  </div>
+</div>
+<p>Porque nem toda aplicação precisa do mesmo tipo de garantia dentro da camada de transporte. Uma consulta curta pode ser repetida pela própria aplicação. Uma aplicação em tempo real pode preferir perder uma pequena parte do áudio a esperar uma retransmissão atrasada. Um protocolo simples pode ganhar desempenho evitando o custo de uma conexão TCP.</p>
+<h3 id="o-cabeçalho-udp"><span class="heading-text">O cabeçalho UDP</span><span class="heading-arabic">10.4.1</span></h3>
+<p>O cabeçalho UDP tem apenas 8 bytes.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Campo</th>
+  <th style="text-align:left">Tamanho</th>
+  <th style="text-align:left">Função</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Porta de origem</td>
+  <td style="text-align:left">16 bits</td>
+  <td style="text-align:left">Identifica o processo de origem</td>
+</tr>
+<tr>
+  <td style="text-align:left">Porta de destino</td>
+  <td style="text-align:left">16 bits</td>
+  <td style="text-align:left">Identifica o processo de destino</td>
+</tr>
+<tr>
+  <td style="text-align:left">Comprimento</td>
+  <td style="text-align:left">16 bits</td>
+  <td style="text-align:left">Informa o tamanho do datagrama UDP completo</td>
+</tr>
+<tr>
+  <td style="text-align:left">Checksum</td>
+  <td style="text-align:left">16 bits</td>
+  <td style="text-align:left">Detecta erros no cabeçalho e nos dados</td>
+</tr>
+</tbody>
+</table>
+<p>O campo de checksum usa também um pseudocabeçalho com informações do IP, como endereços de origem e destino e o número do protocolo. A razão é importante. O UDP precisa detectar não apenas erros no conteúdo UDP, mas também situações em que o datagrama poderia ser entregue ao host ou protocolo errado.</p>
+<img src="static/fig23_9_formato_datagrama_udp_forouzan.png" width="65%">
+
+<p>Os campos são pequenos e o formato é enxuto. A porta de origem pode ser zero se o transmissor não esperar resposta. A porta de destino é essencial para a demultiplexação. O comprimento mínimo é 8 bytes (só cabeçalho, sem dados).</p>
+<p>O checksum do UDP inclui também um pseudocabeçalho com campos do IP.</p>
+<img src="static/fig23_10_pseudocabecalho_checksum_udp_forouzan.png" width="65%">
+
+<p>A inclusão do pseudocabeçalho é uma defesa contra erros de roteamento. Se o datagrama IP for entregue ao host errado, o checksum detectará a inconsistência entre os endereços IP do pseudocabeçalho e o que o host realmente recebeu.</p>
+<h3 id="o-que-o-udp-não-faz"><span class="heading-text">O que o UDP não faz</span><span class="heading-arabic">10.4.2</span></h3>
+<p>O UDP não cria relação entre datagramas sucessivos. Se uma aplicação envia três mensagens, o UDP não trata isso como um fluxo único. São três datagramas independentes.</p>
+<p>Isso tem consequências diretas.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Necessidade</th>
+  <th style="text-align:left">UDP faz sozinho?</th>
+  <th style="text-align:left">Consequência</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Estabelecer conexão</td>
+  <td style="text-align:left">Não</td>
+  <td style="text-align:left">Envia sem handshake</td>
+</tr>
+<tr>
+  <td style="text-align:left">Confirmar recebimento</td>
+  <td style="text-align:left">Não</td>
+  <td style="text-align:left">A aplicação deve confirmar, se precisar</td>
+</tr>
+<tr>
+  <td style="text-align:left">Retransmitir perda</td>
+  <td style="text-align:left">Não</td>
+  <td style="text-align:left">A aplicação deve retransmitir, se precisar</td>
+</tr>
+<tr>
+  <td style="text-align:left">Ordenar dados</td>
+  <td style="text-align:left">Não</td>
+  <td style="text-align:left">Datagramas podem chegar fora de ordem</td>
+</tr>
+<tr>
+  <td style="text-align:left">Controlar fluxo</td>
+  <td style="text-align:left">Não</td>
+  <td style="text-align:left">O receptor pode ser sobrecarregado</td>
+</tr>
+<tr>
+  <td style="text-align:left">Detectar erro simples</td>
+  <td style="text-align:left">Sim</td>
+  <td style="text-align:left">Usa checksum</td>
+</tr>
+</tbody>
+</table>
+<div class="example">
+  <div class="example-title">Exemplo 4</div>
+  <p>Uma aplicação envia uma consulta DNS para descobrir o endereço IP de <code>example.com</code>.</p>
+<ol>
+<li>O cliente envia uma pequena pergunta UDP para a porta 53 do servidor DNS.</li>
+<li>O servidor responde com um pequeno datagrama UDP.</li>
+<li>Se a resposta não chegar, o cliente pode tentar novamente.</li>
+</ol>
+<p>Esse padrão combina bem com UDP porque a interação é curta. Não faria tanto sentido estabelecer uma conexão completa apenas para uma pergunta e uma resposta simples.</p>
+</div>
+<div class="example">
+  <div class="example-title">Exemplo 5</div>
+  <p>Imagine uma chamada de voz. Se um pequeno pacote de áudio se perde, retransmiti-lo muito tarde pode piorar a experiência, porque aquele som já passou do momento de reprodução.</p>
+<p>Nesse caso, a aplicação pode preferir continuar com os próximos pacotes. O UDP combina com esse cenário porque não força retransmissões e não bloqueia a entrega esperando o dado perdido.</p>
+<p>O exemplo não significa que toda aplicação de mídia seja “sem controle”. Significa que o controle pode ser feito em outro nível, com lógica própria para tempo real.</p>
+</div>
+<h2 id="tcp-como-fluxo-confiável-de-bytes"><span class="heading-text">TCP como fluxo confiável de bytes</span><span class="heading-arabic">10.5</span></h2>
+<p>O TCP, ou <em>Transmission Control Protocol</em>, resolve um problema diferente. Ele foi projetado para oferecer um fluxo de bytes fim a fim confiável sobre uma rede IP que pode perder, atrasar, duplicar ou reordenar datagramas.</p>
+<p>O TCP é <strong>orientado a conexão</strong>. Antes da transferência de dados, as duas pontas estabelecem uma conexão virtual. Depois, os dados fluem. Ao final, a conexão é encerrada.</p>
+<p>Essa conexão não é um fio físico reservado. Ela é um estado mantido nas pontas. O IP continua encaminhando datagramas individualmente. O TCP é quem numera bytes, confirma recebimentos, retransmite perdas e entrega os dados em ordem para a aplicação.</p>
+<h3 id="fluxo-de-bytes-não-mensagens"><span class="heading-text">Fluxo de bytes, não mensagens</span><span class="heading-arabic">10.5.1</span></h3>
+<p>Uma das ideias mais importantes do TCP é que ele entrega um <strong>fluxo de bytes</strong>. Ele não preserva necessariamente as fronteiras das escritas feitas pela aplicação.</p>
+<p>Se uma aplicação escreve quatro blocos de 512 bytes, a outra ponta pode ler quatro blocos de 512 bytes, dois blocos de 1024 bytes, um bloco de 2048 bytes ou outra divisão. Para o TCP, os dados são uma sequência contínua de bytes.</p>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Erro comum<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Não pense no TCP como “UDP confiável”. O UDP preserva mensagens individuais. O TCP oferece um fluxo contínuo de bytes. A aplicação precisa definir sua própria forma de separar mensagens dentro desse fluxo quando isso for necessário.</p>
+  </div>
+</div>
+<div class="example">
+  <div class="example-title">Exemplo 6</div>
+  <p>Uma aplicação envia pelo TCP os textos abaixo em três chamadas de escrita.</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">GET
+ /index.html
+ HTTP/1.1
+</code></pre>
+<p>A aplicação do outro lado não deve assumir que receberá exatamente três pedaços. Ela pode receber tudo junto.</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">GET /index.html HTTP/1.1
+</code></pre>
+<p>Ou pode receber divisões diferentes. O TCP garante ordem e confiabilidade do fluxo, mas não preserva as fronteiras originais das chamadas de escrita.</p>
+</div>
+<h3 id="segmentos-e-numeração-de-bytes"><span class="heading-text">Segmentos e numeração de bytes</span><span class="heading-arabic">10.5.2</span></h3>
+<p>O TCP recebe bytes da aplicação, armazena em buffers e agrupa partes desse fluxo em <strong>segmentos TCP</strong>. Cada byte tem um número de sequência. O número de sequência de um segmento é o número do primeiro byte transportado naquele segmento.</p>
+<p>As confirmações são cumulativas. O número de confirmação indica o <strong>próximo byte esperado</strong>, não o último byte recebido.</p>
+<div class="example">
+  <div class="example-title">Exemplo 7</div>
+  <p>Uma conexão TCP envia 3000 bytes. O primeiro byte recebeu número de sequência 1001. O TCP divide os dados em três segmentos de 1000 bytes.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Segmento</th>
+  <th style="text-align:left">Bytes transportados</th>
+  <th style="text-align:left">Número de sequência</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">1</td>
+  <td style="text-align:left">1001 a 2000</td>
+  <td style="text-align:left">1001</td>
+</tr>
+<tr>
+  <td style="text-align:left">2</td>
+  <td style="text-align:left">2001 a 3000</td>
+  <td style="text-align:left">2001</td>
+</tr>
+<tr>
+  <td style="text-align:left">3</td>
+  <td style="text-align:left">3001 a 4000</td>
+  <td style="text-align:left">3001</td>
+</tr>
+</tbody>
+</table>
+<p>Se o receptor recebeu corretamente os três segmentos em ordem, ele pode responder com confirmação 4001. Isso significa “recebi tudo até 4000 e agora espero o byte 4001”.</p>
+</div>
+<h2 id="conexão-tcp-e-handshake-de-três-vias"><span class="heading-text">Conexão TCP e handshake de três vias</span><span class="heading-arabic">10.6</span></h2>
+<p>Antes de transferir dados, o TCP estabelece uma conexão com o <strong>handshake de três vias</strong>. Esse processo sincroniza os números de sequência iniciais e confirma que as duas pontas estão prontas.</p>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="760" viewBox="0.00 0.00 983.00 57.00" class="svg-graph graphviz-img"><g id="svg-graphviz-74b3c0f197d4-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 53)"><title>TCPHandshake</title><g id="svg-graphviz-74b3c0f197d4-node1" class="node"><title>cliente1</title><path fill="#eef4ff" stroke="#5b7bbb" d="M103,-38C103,-38 12,-38 12,-38 6,-38 0,-32 0,-26 0,-26 0,-12 0,-12 0,-6 6,0 12,0 12,0 103,0 103,0 109,0 115,-6 115,-12 115,-12 115,-26 115,-26 115,-32 109,-38 103,-38" /><text text-anchor="middle" x="57.5" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">Cliente</text><text text-anchor="middle" x="57.5" y="-7.8" font-family="Helvetica,sans-Serif" font-size="14.00">abertura ativa</text></g><g id="svg-graphviz-74b3c0f197d4-node2" class="node"><title>servidor1</title><path fill="#eef4ff" stroke="#5b7bbb" d="M328,-38C328,-38 218,-38 218,-38 212,-38 206,-32 206,-26 206,-26 206,-12 206,-12 206,-6 212,0 218,0 218,0 328,0 328,0 334,0 340,-6 340,-12 340,-12 340,-26 340,-26 340,-32 334,-38 328,-38" /><text text-anchor="middle" x="273" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">Servidor</text><text text-anchor="middle" x="273" y="-7.8" font-family="Helvetica,sans-Serif" font-size="14.00">abertura passiva</text></g><g id="svg-graphviz-74b3c0f197d4-edge1" class="edge"><title>cliente1-&gt;servidor1</title><path fill="none" stroke="black" d="M115.15,-19C139.91,-19 169.32,-19 195.94,-19" /><polygon fill="black" stroke="black" points="195.99,-22.5 205.99,-19 195.99,-15.5 195.99,-22.5" /><text text-anchor="middle" x="160.5" y="-37.8" font-family="Helvetica,sans-Serif" font-size="14.00">1. SYN</text><text text-anchor="middle" x="160.5" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">seq = x</text></g><g id="svg-graphviz-74b3c0f197d4-node3" class="node"><title>cliente2</title><path fill="#eef4ff" stroke="#5b7bbb" d="M677,-38C677,-38 535,-38 535,-38 529,-38 523,-32 523,-26 523,-26 523,-12 523,-12 523,-6 529,0 535,0 535,0 677,0 677,0 683,0 689,-6 689,-12 689,-12 689,-26 689,-26 689,-32 683,-38 677,-38" /><text text-anchor="middle" x="606" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">Cliente</text><text text-anchor="middle" x="606" y="-7.8" font-family="Helvetica,sans-Serif" font-size="14.00">conexão estabelecida</text></g><g id="svg-graphviz-74b3c0f197d4-edge2" class="edge"><title>servidor1-&gt;cliente2</title><path fill="none" stroke="black" d="M340.19,-19C389.65,-19 457.9,-19 512.72,-19" /><polygon fill="black" stroke="black" points="512.79,-22.5 522.79,-19 512.79,-15.5 512.79,-22.5" /><text text-anchor="middle" x="431.5" y="-37.8" font-family="Helvetica,sans-Serif" font-size="14.00">2. SYN + ACK</text><text text-anchor="middle" x="431.5" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">seq = y, ack = x + 1</text></g><g id="svg-graphviz-74b3c0f197d4-node4" class="node"><title>servidor2</title><path fill="#eef4ff" stroke="#5b7bbb" d="M963,-38C963,-38 821,-38 821,-38 815,-38 809,-32 809,-26 809,-26 809,-12 809,-12 809,-6 815,0 821,0 821,0 963,0 963,0 969,0 975,-6 975,-12 975,-12 975,-26 975,-26 975,-32 969,-38 963,-38" /><text text-anchor="middle" x="892" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">Servidor</text><text text-anchor="middle" x="892" y="-7.8" font-family="Helvetica,sans-Serif" font-size="14.00">conexão estabelecida</text></g><g id="svg-graphviz-74b3c0f197d4-edge3" class="edge"><title>cliente2-&gt;servidor2</title><path fill="none" stroke="black" d="M689.14,-19C723.29,-19 763.08,-19 798.27,-19" /><polygon fill="black" stroke="black" points="798.55,-22.5 808.55,-19 798.55,-15.5 798.55,-22.5" /><text text-anchor="middle" x="749" y="-37.8" font-family="Helvetica,sans-Serif" font-size="14.00">3. ACK</text><text text-anchor="middle" x="749" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">ack = y + 1</text></g></g></svg></div></div>
+
+<p>O primeiro segmento tem <code>SYN</code> ativo. Ele não carrega dados de aplicação, mas consome um número de sequência. O segundo segmento tem <code>SYN</code> e <code>ACK</code> ativos. Ele confirma o primeiro <code>SYN</code> e sincroniza o número de sequência da outra direção. O terceiro segmento confirma o <code>SYN</code> do servidor.</p>
+<img src="static/fig23_18_three_way_handshaking_forouzan.png" width="85%">
+
+<p>Repare no consumo de números de sequência. O primeiro <code>SYN</code> do cliente usa <code>seq = 8000</code>. O servidor responde com <code>seq = 15000</code> e <code>ack = 8001</code>, confirmando o byte &quot;fantasma&quot; do <code>SYN</code>. O cliente então envia <code>ack = 15001</code>. A partir desse ponto, o primeiro byte de dados do cliente terá sequência 8001, e o primeiro byte do servidor terá sequência 15001.</p>
+<div class="example">
+  <div class="example-title">Exemplo 8</div>
+  <p>Suponha que o cliente escolha número inicial 8000 e o servidor escolha 15000.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Etapa</th>
+  <th style="text-align:left">Segmento</th>
+  <th style="text-align:left">Significado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">1</td>
+  <td style="text-align:left">Cliente envia <code>SYN</code>, <code>seq = 8000</code></td>
+  <td style="text-align:left">Cliente pede abertura e sincroniza sua sequência</td>
+</tr>
+<tr>
+  <td style="text-align:left">2</td>
+  <td style="text-align:left">Servidor envia <code>SYN + ACK</code>, <code>seq = 15000</code>, <code>ack = 8001</code></td>
+  <td style="text-align:left">Servidor aceita e confirma o <code>SYN</code> do cliente</td>
+</tr>
+<tr>
+  <td style="text-align:left">3</td>
+  <td style="text-align:left">Cliente envia <code>ACK</code>, <code>ack = 15001</code></td>
+  <td style="text-align:left">Cliente confirma o <code>SYN</code> do servidor</td>
+</tr>
+</tbody>
+</table>
+<p>Após isso, a conexão entra no estado de transferência de dados. O primeiro byte real do cliente usará sequência 8001, porque o <code>SYN</code> consumiu um número de sequência.</p>
+</div>
+<h3 id="por-que-três-vias-são-necessárias"><span class="heading-text">Por que três vias são necessárias</span><span class="heading-arabic">10.6.1</span></h3>
+<p>O Tanenbaum dedica atenção ao problema de duplicatas atrasadas. Em uma rede real, um segmento antigo pode ficar preso, aparecer depois e ser confundido com uma nova tentativa de conexão. O handshake de três vias, combinado com números de sequência iniciais adequados, reduz esse risco.</p>
+<p>Se bastasse enviar “quero conectar” e receber “aceito”, uma duplicata antiga poderia criar confusão. Com três etapas, as duas pontas confirmam explicitamente que estão falando da mesma tentativa atual de conexão.</p>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Cuidado de segurança<br /></span>
+  </div>
+  <div class="callout-content">
+<p>O handshake TCP também abre espaço para ataques de inundação de SYN. Um atacante envia muitos <code>SYN</code> e não completa as conexões, consumindo recursos do servidor. Implementações modernas usam estratégias como limitação de solicitações e cookies SYN para reduzir esse problema.</p>
+  </div>
+</div>
+<h2 id="controle-de-fluxo-erro-e-congestionamento"><span class="heading-text">Controle de fluxo, erro e congestionamento</span><span class="heading-arabic">10.7</span></h2>
+<p>O TCP oferece confiabilidade porque combina vários mecanismos. Três deles precisam ficar bem separados.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Mecanismo</th>
+  <th style="text-align:left">Pergunta que responde</th>
+  <th style="text-align:left">Ideia central</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Controle de fluxo</td>
+  <td style="text-align:left">O receptor consegue receber mais dados?</td>
+  <td style="text-align:left">Evita sobrecarregar o buffer do receptor</td>
+</tr>
+<tr>
+  <td style="text-align:left">Controle de erro</td>
+  <td style="text-align:left">Algo foi perdido, corrompido, duplicado ou chegou fora de ordem?</td>
+  <td style="text-align:left">Usa checksum, ACKs, temporizadores e retransmissões</td>
+</tr>
+<tr>
+  <td style="text-align:left">Controle de congestionamento</td>
+  <td style="text-align:left">A rede consegue carregar mais dados agora?</td>
+  <td style="text-align:left">Ajusta envio para não piorar congestionamento</td>
+</tr>
+</tbody>
+</table>
+<h3 id="controle-de-fluxo"><span class="heading-text">Controle de fluxo</span><span class="heading-arabic">10.7.1</span></h3>
+<p>O controle de fluxo protege o receptor. O receptor anuncia uma janela de recepção, normalmente chamada <code>rwnd</code>, indicando quantos bytes ainda consegue receber. O transmissor deve respeitar esse limite.</p>
+<p>Se a janela anunciada for zero, o transmissor deve parar de enviar novos dados. Mais tarde, quando a aplicação receptora consumir dados do buffer, o receptor pode anunciar uma janela maior.</p>
+<div class="example">
+  <div class="example-title">Exemplo 9</div>
+  <p>Um receptor tem buffer livre de 4096 bytes. O transmissor envia 2048 bytes.</p>
+<ol>
+<li>O receptor recebe os 2048 bytes.</li>
+<li>Agora restam 2048 bytes livres no buffer.</li>
+<li>O receptor confirma os dados e anuncia janela 2048.</li>
+<li>O transmissor sabe que pode enviar mais 2048 bytes sem sobrecarregar o receptor.</li>
+</ol>
+<p>Se a aplicação no receptor não consumir nada e chegarem mais 2048 bytes, a janela pode cair para zero. Nesse caso, o transmissor deve aguardar.</p>
+</div>
+<h3 id="controle-de-erro"><span class="heading-text">Controle de erro</span><span class="heading-arabic">10.7.2</span></h3>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Se o checksum do UDP é opcional e o do TCP é obrigatório, o que essa diferença revela sobre o projeto de cada protocolo?</p>
+  </div>
+</div>
+<p>Revela que a confiabilidade é estrutural no TCP, não um extra. O TCP não pode delegar a detecção de corrupção para a aplicação porque sua tarefa é justamente entregar um fluxo confiável. Se um segmento silenciosamente corrompido fosse aceito, toda a abstração de &quot;fluxo de bytes confiável&quot; ruiria. No UDP, a aplicação pode optar por não verificar checksum se tiver seu próprio mecanismo ou se a corrupção for tolerável. Mas o TCP não tem essa liberdade.</p>
+<p>O controle de erro protege a confiabilidade do fluxo. O TCP usa checksum para detectar corrupção, confirmações para indicar progresso, temporizadores para detectar ausência de resposta e retransmissões para reenviar dados provavelmente perdidos.</p>
+<p>Um segmento corrompido é descartado e tratado como perdido. Um segmento fora de ordem pode ser armazenado temporariamente, mas não deve ser entregue à aplicação antes dos bytes faltantes.</p>
+<div class="example">
+  <div class="example-title">Exemplo 10</div>
+  <p>O transmissor envia quatro segmentos com estas faixas de bytes.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Segmento</th>
+  <th style="text-align:left">Bytes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">1</td>
+  <td style="text-align:left">501 a 600</td>
+</tr>
+<tr>
+  <td style="text-align:left">2</td>
+  <td style="text-align:left">601 a 700</td>
+</tr>
+<tr>
+  <td style="text-align:left">3</td>
+  <td style="text-align:left">701 a 800</td>
+</tr>
+<tr>
+  <td style="text-align:left">4</td>
+  <td style="text-align:left">801 a 900</td>
+</tr>
+</tbody>
+</table>
+<p>Se o segmento 3 se perde e o segmento 4 chega, o receptor ainda espera o byte 701. Ele pode armazenar 801 a 900 temporariamente, mas confirma novamente 701.</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">ACK = 701
+</code></pre>
+<div class="example">
+<div class="example-title">Exemplo 10b</div>
+
+<p>Nem toda retransmissão significa que os dados se perderam. Considere o mesmo cenário em que o transmissor envia os bytes 501 a 600.</p>
+<ol>
+<li>O receptor recebe o segmento corretamente e envia <code>ACK = 601</code>.</li>
+<li>Essa confirmação se perde na rede.</li>
+<li>O timer de retransmissão do transmissor expira.</li>
+<li>O transmissor reenvia os bytes 501 a 600.</li>
+</ol>
+<p>O receptor <strong>já tem</strong> esses bytes. O que ele faz? Simplesmente descarta a cópia duplicada e reenvia <code>ACK = 601</code>. Nenhum dano ao fluxo, apenas um segmento desperdiçado.</p>
+<p>Este exemplo é importante porque mostra que a retransmissão TCP é <strong>idempotente</strong> do ponto de vista do receptor. Chegar duas vezes o mesmo trecho não corrompe o fluxo nem insere bytes repetidos na entrega à aplicação.</p>
+<p>A diferença prática entre perda de dados e perda de ACK está em quem paga o custo. Na perda de dados, o transmissor <strong>precisa</strong> retransmitir para o receptor progredir. Na perda de ACK, a retransmissão é supérflua, mas inevitável sem um mecanismo adicional de distinção.</p>
+</div>
+
+<h3 id="controle-de-congestionamento"><span class="heading-text">Controle de congestionamento</span><span class="heading-arabic">10.0.1</span></h3>
+<p>O controle de congestionamento protege a rede. Mesmo que o receptor tenha buffer disponível, a rede pode estar sobrecarregada. O TCP considera esse cenário usando uma janela de congestionamento, normalmente chamada <code>cwnd</code>.</p>
+<p>Na prática, a quantidade de dados que o transmissor pode manter em trânsito depende de dois limites.</p>
+<p>$$
+janela\ efetiva = \min(rwnd, cwnd)
+$$</p>
+<p>O primeiro limite vem do receptor. O segundo vem da condição percebida da rede. Se houver sinais de congestionamento, como perdas, o TCP reduz sua taxa de envio.</p>
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">Observação<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Forouzan deixa o controle de congestionamento detalhado para o capítulo 24, enquanto Tanenbaum o discute no capítulo 6. Para esta aula, o ponto essencial é distinguir congestionamento de fluxo. Fluxo protege o receptor. Congestionamento protege a rede.</p>
+  </div>
+</div>
+<h2 id="encerramento-de-conexão-tcp"><span class="heading-text">Encerramento de conexão TCP</span><span class="heading-arabic">10.1</span></h2>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Se uma conexão TCP é full-duplex e cada lado pode enviar e receber ao mesmo tempo, por que não basta um lado simplesmente parar de enviar quando terminar? Por que é necessário um ritual explícito de encerramento com <code>FIN</code> e <code>ACK</code>?</p>
+  </div>
+</div>
+<p>Porque o outro lado precisa saber que a transmissão acabou e não está apenas em silêncio temporário. Sem um sinal explícito, o receptor poderia esperar indefinidamente por dados que nunca chegarão. É por isso que o TCP dedica flags, números de sequência e temporizadores ao encerramento da conexão.</p>
+<p>Como uma conexão TCP é full-duplex, cada direção pode ser encerrada separadamente. Um lado pode parar de enviar e ainda continuar recebendo. Esse comportamento é chamado semi-encerramento.</p>
+<p>O encerramento usa a flag <code>FIN</code>. Quando uma ponta envia <code>FIN</code>, ela informa que não tem mais dados para transmitir naquela direção. A outra ponta confirma com <code>ACK</code>. Depois, quando a outra direção também terminar, ela envia seu próprio <code>FIN</code>, que também deve ser confirmado.</p>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="760" viewBox="0.00 0.00 386.00 228.11" class="svg-graph graphviz-img"><g id="svg-graphviz-ac014c7d9b45-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 224.11)"><title>TCPClose</title><g id="svg-graphviz-ac014c7d9b45-node1" class="node"><title>cliente</title><path fill="#eef4ff" stroke="#5b7bbb" d="M53,-123.11C53,-123.11 12,-123.11 12,-123.11 6,-123.11 0,-117.11 0,-111.11 0,-111.11 0,-99.11 0,-99.11 0,-93.11 6,-87.11 12,-87.11 12,-87.11 53,-87.11 53,-87.11 59,-87.11 65,-93.11 65,-99.11 65,-99.11 65,-111.11 65,-111.11 65,-117.11 59,-123.11 53,-123.11" /><text text-anchor="middle" x="32.5" y="-101.41" font-family="Helvetica,sans-Serif" font-size="14.00">Cliente</text></g><g id="svg-graphviz-ac014c7d9b45-node2" class="node"><title>servidor</title><path fill="#eef4ff" stroke="#5b7bbb" d="M366,-123.11C366,-123.11 315,-123.11 315,-123.11 309,-123.11 303,-117.11 303,-111.11 303,-111.11 303,-99.11 303,-99.11 303,-93.11 309,-87.11 315,-87.11 315,-87.11 366,-87.11 366,-87.11 372,-87.11 378,-93.11 378,-99.11 378,-99.11 378,-111.11 378,-111.11 378,-117.11 372,-123.11 366,-123.11" /><text text-anchor="middle" x="340.5" y="-101.41" font-family="Helvetica,sans-Serif" font-size="14.00">Servidor</text></g><g id="svg-graphviz-ac014c7d9b45-edge1" class="edge"><title>cliente-&gt;servidor</title><path fill="none" stroke="black" d="M43.17,-123.26C51.63,-137.04 65.33,-154.96 83,-163.11 164.52,-200.71 202.6,-198.75 285,-163.11 300.15,-156.55 313.02,-143.49 322.45,-131.42" /><polygon fill="black" stroke="black" points="325.31,-133.44 328.41,-123.31 319.67,-129.29 325.31,-133.44" /><text text-anchor="middle" x="184" y="-208.91" font-family="Helvetica,sans-Serif" font-size="14.00">1. FIN</text><text text-anchor="middle" x="184" y="-193.91" font-family="Helvetica,sans-Serif" font-size="14.00">cliente não envia mais dados</text></g><g id="svg-graphviz-ac014c7d9b45-edge4" class="edge"><title>cliente-&gt;servidor</title><path fill="none" stroke="black" d="M65.15,-108.78C71.08,-109.33 77.22,-109.82 83,-110.11 172.66,-114.62 195.32,-114.21 285,-110.11 287.53,-109.99 290.13,-109.84 292.75,-109.68" /><polygon fill="black" stroke="black" points="293.17,-113.15 302.89,-108.93 292.66,-106.17 293.17,-113.15" /><text text-anchor="middle" x="184" y="-131.91" font-family="Helvetica,sans-Serif" font-size="14.00">4. ACK</text><text text-anchor="middle" x="184" y="-116.91" font-family="Helvetica,sans-Serif" font-size="14.00">cliente confirma</text></g><g id="svg-graphviz-ac014c7d9b45-edge2" class="edge"><title>servidor-&gt;cliente</title><path fill="none" stroke="black" d="M305.98,-87.03C299.21,-84.16 292.02,-81.64 285,-80.11 197.29,-60.95 170.33,-59.3 83,-80.11 79.77,-80.88 76.51,-81.89 73.29,-83.07" /><polygon fill="black" stroke="black" points="71.68,-79.95 63.81,-87.04 74.38,-86.41 71.68,-79.95" /><text text-anchor="middle" x="184" y="-98.91" font-family="Helvetica,sans-Serif" font-size="14.00">2. ACK</text><text text-anchor="middle" x="184" y="-83.91" font-family="Helvetica,sans-Serif" font-size="14.00">servidor confirma</text></g><g id="svg-graphviz-ac014c7d9b45-edge3" class="edge"><title>servidor-&gt;cliente</title><path fill="none" stroke="black" d="M332.03,-86.89C323.57,-68.98 307.93,-42.69 285,-31.11 204.88,9.39 162.19,11.19 83,-31.11 64.65,-40.91 51.91,-60.86 43.96,-77.57" /><polygon fill="black" stroke="black" points="40.66,-76.38 39.82,-86.94 47.06,-79.21 40.66,-76.38" /><text text-anchor="middle" x="184" y="-49.91" font-family="Helvetica,sans-Serif" font-size="14.00">3. FIN</text><text text-anchor="middle" x="184" y="-34.91" font-family="Helvetica,sans-Serif" font-size="14.00">servidor também encerra</text></g></g></svg></div></div>
+Repare no consumo de números de sequência. O primeiro `SYN` do cliente usa `seq = 8000`. O servidor responde com `seq = 15000` e `ack = 8001`, confirmando o byte "fantasma" do `SYN`. O cliente então envia `ack = 15001`. A partir desse ponto, o primeiro byte de dados do cliente terá sequência 8001, e o primeiro byte do servidor terá sequência 15001.
+# UDP e TCP lado a lado
+
+<p>UDP e TCP não são versões “boa” e “ruim” da mesma coisa. Eles resolvem problemas diferentes.<br />
+<img src="static/fig23_20_encerramento_conexao_tcp_forouzan.png" width="75%"></p>
+<p>O encerramento normal consome números de sequência de forma parecida com a abertura. O <code>FIN</code> do cliente e o <code>FIN + ACK</code> do servidor consomem um número de sequência cada um, mesmo sem transportar dados.</p>
+<p>No semi-encerramento, o cenário é assimétrico.</p>
+<img src="static/fig23_21_semi_encerramento_forouzan.png" width="75%">
+
+<p>O cliente envia <code>FIN</code> e o servidor confirma com <code>ACK</code>. A partir desse momento, o cliente <strong>não envia mais dados</strong>, mas continua recebendo e confirmando os dados que o servidor ainda transmite. Quando o servidor termina, ele envia seu próprio <code>FIN</code>, que o cliente confirma. Esse padrão é útil quando o servidor precisa processar antes de responder, como em uma ordenação remota.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">UDP</th>
+  <th style="text-align:left">TCP</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Sem conexão</td>
+  <td style="text-align:left">Orientado a conexão</td>
+</tr>
+<tr>
+  <td style="text-align:left">Datagrama independente</td>
+  <td style="text-align:left">Fluxo de bytes</td>
+</tr>
+<tr>
+  <td style="text-align:left">Cabeçalho pequeno</td>
+  <td style="text-align:left">Cabeçalho maior</td>
+</tr>
+<tr>
+  <td style="text-align:left">Sem retransmissão própria</td>
+  <td style="text-align:left">Retransmite perdas</td>
+</tr>
+<tr>
+  <td style="text-align:left">Sem controle de fluxo próprio</td>
+  <td style="text-align:left">Controla fluxo com janela</td>
+</tr>
+<tr>
+  <td style="text-align:left">Não entrega ordem garantida</td>
+  <td style="text-align:left">Entrega bytes em ordem</td>
+</tr>
+<tr>
+  <td style="text-align:left">Bom para mensagens curtas, tempo real e controle próprio da aplicação</td>
+  <td style="text-align:left">Bom para arquivos, Web, e-mail, SSH e dados que exigem confiabilidade</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="example">
+  <div class="example-title">Exemplo 11</div>
+  <p>Escolha o transporte mais adequado para cada caso.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Situação</th>
+  <th style="text-align:left">Escolha provável</th>
+  <th style="text-align:left">Motivo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Transferir um arquivo</td>
+  <td style="text-align:left">TCP</td>
+  <td style="text-align:left">Precisa de entrega completa e ordenada</td>
+</tr>
+<tr>
+  <td style="text-align:left">Consulta DNS simples</td>
+  <td style="text-align:left">UDP</td>
+  <td style="text-align:left">Pergunta e resposta curtas, tentativa pode ser repetida</td>
+</tr>
+<tr>
+  <td style="text-align:left">Acesso HTTPS</td>
+  <td style="text-align:left">TCP</td>
+  <td style="text-align:left">Requer fluxo confiável para HTTP sobre TLS</td>
+</tr>
+<tr>
+  <td style="text-align:left">Métrica periódica de monitoramento</td>
+  <td style="text-align:left">UDP</td>
+  <td style="text-align:left">Pode tolerar perda ocasional e evitar overhead</td>
+</tr>
+<tr>
+  <td style="text-align:left">Sessão SSH</td>
+  <td style="text-align:left">TCP</td>
+  <td style="text-align:left">Precisa de ordem, confiabilidade e conexão persistente</td>
+</tr>
+</tbody>
+</table>
+<p>O critério não é “qual é mais moderno”. O critério é o que a aplicação precisa da camada de transporte.</p>
+</div>
+<h2 id="fechando-a-ideia"><span class="heading-text">Fechando a ideia</span><span class="heading-arabic">10.8</span></h2>
+<p>A camada de transporte existe porque a comunicação real acontece entre processos, não apenas entre máquinas. O UDP resolve o problema com o mínimo de controle: portas, checksum e nada mais. O TCP resolve o mesmo problema com uma abstração mais rica: conexão virtual, numeração de bytes, confirmações, retransmissões, controle de fluxo e reação a congestionamento.</p>
+<p>A escolha entre os dois não é questão de &quot;qual é melhor&quot;. É questão de qual combinação de simplicidade, confiabilidade, ordem e controle a aplicação realmente precisa.</p>
+<div class="callout callout-success">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></span>
+    <span class="callout-title-inner">Conclusão prática<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Quando você vê uma aplicação usando TCP, entenda que há uma conexão lógica sendo mantida, com estado, buffers, timers e janelas. Quando vê UDP, entenda que a aplicação assumiu para si parte dessas responsabilidades ou deliberadamente não precisa delas.</p>
+  </div>
+</div>
+<h2 id="questões"><span class="heading-text">Questões</span><span class="heading-arabic">10.9</span></h2>
+<div class="questions">
+  <p><strong>1.</strong> Explique a diferença entre comunicação nó a nó, host a host e processo a processo.</p>
+<p><strong>2.</strong> Por que o endereço IP sozinho não basta para entregar dados ao programa correto?</p>
+<p><strong>3.</strong> O que é uma porta na camada de transporte?</p>
+<p><strong>4.</strong> Diferencie porta conhecida e porta efêmera.</p>
+<p><strong>5.</strong> Explique multiplexação e demultiplexação na camada de transporte.</p>
+<p><strong>6.</strong> Um cliente <code>10.0.0.5:52000</code> acessa um servidor <code>200.1.1.10:443</code>. Quais valores devem aparecer como origem e destino na resposta do servidor?</p>
+<p><strong>7.</strong> Cite duas características do UDP.</p>
+<p><strong>8.</strong> Por que o UDP pode ser adequado para uma consulta DNS simples?</p>
+<p><strong>9.</strong> Quais são os quatro campos do cabeçalho UDP?</p>
+<p><strong>10.</strong> Explique por que o TCP é chamado de protocolo orientado a conexão.</p>
+<p><strong>11.</strong> O que significa dizer que o TCP oferece um fluxo de bytes e não um fluxo de mensagens?</p>
+<p><strong>12.</strong> Uma conexão TCP envia bytes de 3001 a 4000 em um segmento. Qual é o número de sequência desse segmento?</p>
+<p><strong>13.</strong> Se um receptor TCP confirma com <code>ACK = 7001</code>, o que isso significa?</p>
+<p><strong>14.</strong> Descreva as três etapas do handshake TCP.</p>
+<p><strong>15.</strong> Diferencie controle de fluxo e controle de congestionamento.</p>
+<p><strong>16.</strong> O que acontece quando um segmento TCP chega corrompido?</p>
+<p><strong>17.</strong> Por que um segmento fora de ordem não deve ser entregue imediatamente à aplicação?</p>
+<p><strong>18.</strong> Marque <strong>V</strong> ou <strong>F</strong>.</p>
+<ul>
+<li><strong>( )</strong> O UDP estabelece conexão antes de enviar dados.</li>
+<li><strong>( )</strong> O TCP usa portas para identificar processos.</li>
+<li><strong>( )</strong> O número de confirmação TCP indica o próximo byte esperado.</li>
+<li><strong>( )</strong> Controle de fluxo protege principalmente a rede contra congestionamento.</li>
+<li><strong>( )</strong> Uma conexão TCP é virtual, não um circuito físico reservado.</li>
+</ul>
+</div>
+<div class="example">
+  <div class="example-title">Gabarito</div>
+  <p><strong>1.</strong> Nó a nó é a entrega no enlace entre dispositivos adjacentes. Host a host é a entrega da camada de rede entre máquinas. Processo a processo é a entrega da camada de transporte entre aplicações em execução nos hosts.</p>
+<p><strong>2.</strong> Porque o IP identifica o host, mas não indica qual processo dentro do host deve receber os dados. A porta resolve essa identificação dentro da máquina.</p>
+<p><strong>3.</strong> É um número de 16 bits usado pela camada de transporte para identificar um ponto de comunicação associado a um processo ou serviço.</p>
+<p><strong>4.</strong> Porta conhecida é usada por serviços padronizados, como 80 para HTTP e 443 para HTTPS. Porta efêmera é temporária, geralmente escolhida pelo cliente para identificar uma conversa específica.</p>
+<p><strong>5.</strong> Multiplexação é reunir dados de vários processos na origem e encaminhá-los pela camada de rede. Demultiplexação é receber dados no destino e entregá-los ao processo correto com base nas portas.</p>
+<p><strong>6.</strong> A resposta deve ter origem <code>200.1.1.10:443</code> e destino <code>10.0.0.5:52000</code>.</p>
+<p><strong>7.</strong> Exemplos possíveis: é um protocolo sem conexão (não estabelece circuito virtual), é não confiável (não confirma recebimento nem retransmite perdas) e não implementa controle de fluxo (não ajusta a taxa de envio ao receptor).</p>
+<p><strong>8.</strong> Porque a consulta é curta e pode ser repetida pela própria aplicação se não houver resposta. Assim, evita-se o custo de estabelecer uma conexão TCP para uma troca simples.</p>
+<p><strong>9.</strong> Porta de origem, porta de destino, comprimento e checksum.</p>
+<p><strong>10.</strong> Porque antes de transferir dados as duas pontas estabelecem uma conexão virtual, mantêm estado sobre ela e depois encerram essa conexão.</p>
+<p><strong>11.</strong> Significa que o TCP entrega uma sequência contínua de bytes. Ele não preserva obrigatoriamente as fronteiras das escritas feitas pela aplicação.</p>
+<p><strong>12.</strong> O número de sequência é 3001, pois ele identifica o primeiro byte transportado no segmento.</p>
+<p><strong>13.</strong> Significa que o receptor recebeu todos os bytes em ordem até 7000 e agora espera o byte 7001.</p>
+<p><strong>14.</strong> Primeiro, o cliente envia <code>SYN</code>. Segundo, o servidor responde com <code>SYN + ACK</code>. Terceiro, o cliente envia <code>ACK</code>, concluindo a abertura da conexão.</p>
+<p><strong>15.</strong> Controle de fluxo evita sobrecarregar o receptor. Controle de congestionamento evita injetar dados demais em uma rede congestionada.</p>
+<p><strong>16.</strong> Ele é descartado pelo TCP de destino e passa a ser tratado como perdido. A recuperação ocorre por retransmissão.</p>
+<p><strong>17.</strong> Porque o TCP promete entregar um fluxo ordenado de bytes. Entregar bytes fora de ordem quebraria a abstração oferecida à aplicação.</p>
+<p><strong>18.</strong></p>
+<ul>
+<li><strong>( F )</strong> O UDP estabelece conexão antes de enviar dados.</li>
+<li><strong>( V )</strong> O TCP usa portas para identificar processos.</li>
+<li><strong>( V )</strong> O número de confirmação TCP indica o próximo byte esperado.</li>
+<li><strong>( F )</strong> Controle de fluxo protege principalmente a rede contra congestionamento.</li>
+<li><strong>( V )</strong> Uma conexão TCP é virtual, não um circuito físico reservado.</li>
+</ul>
+</div>
+<h2 id="próximos-passos"><span class="heading-text">Próximos passos</span><span class="heading-arabic">10.10</span></h2>
+<p>Na próxima aula, o passo natural é subir para a camada de aplicação e observar como protocolos como DNS, HTTP e e-mail usam UDP e TCP para oferecer serviços concretos aos usuários.</p>
+<p>Você verá que muitas decisões da aplicação dependem diretamente do transporte escolhido.</p>
+
+                </div>
+            </article>
+            <footer class="footer">
+                <p>© 2025 · <a href="#">Gabriel Soares Baptista</a></p>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        const toggle = document.querySelector('.mobile-menu-toggle');
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.querySelector('.mobile-menu-overlay');
+
+        function openMenu() {
+            sidebar.classList.add('open');
+            overlay.classList.add('open');
+            toggle.classList.add('open');
+            toggle.innerHTML = '<i data-lucide="x"></i>';
+            CourseForgeUI.initIcons();
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMenu() {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('open');
+            toggle.classList.remove('open');
+            toggle.innerHTML = '<i data-lucide="menu"></i>';
+            CourseForgeUI.initIcons();
+            document.body.style.overflow = '';
+        }
+
+        toggle.addEventListener('click', () => {
+            if (sidebar.classList.contains('open')) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        overlay.addEventListener('click', closeMenu);
+    </script>
+
+    
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            renderMathInElement(document.body, {
+                output: 'html',
+                delimiters: [
+                    { left: "$$", right: "$$", display: true },
+                    { left: "$", right: "$", display: false },
+                    { left: "\\(", right: "\\)", display: false },
+                    { left: "\\[", right: "\\]", display: true }
+                ],
+                throwOnError: false,
+                strict: false
+            });
+        });
+    </script>
+    
+    
+    <script src="/aulas-faesa/js/vendor/prism/prism.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-c.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-cpp.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-python.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-clike.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-perl.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-java.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-mermaid.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-php.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js" data-no-bundle></script>
+    
+    
+    
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            mermaid.initialize({
+                startOnLoad: true,
+                theme: 'default',
+                securityLevel: 'loose',
+                fontFamily: 'Inter, system-ui, sans-serif',
+                themeVariables: {
+                    fontSize: '16px',
+                    edgeLabelFontSize: '16px',
+                    multiplicityFontSize: '18px'
+                }
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const isSubcourse = false;
+        const courseName = "Redes";
+        CourseForgeNav.applyDynamicBreadcrumbs('.breadcrumb', isSubcourse);
+        CourseForgeNav.initScrollSpy();
+        CourseForgeUI.initCopyButtons();
+        CourseForgeUI.initExamples();
+        });
+
+        function handleBackNavigation() {
+            const isSubcourse = false;
+        const dynamic = CourseForgeNav.getBackLink('contents.html', 'Voltar', isSubcourse);
+        window.location.href = dynamic.url;
+        }
+    </script>
+</body>
+
+</html>

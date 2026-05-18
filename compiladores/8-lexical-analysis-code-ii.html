@@ -202,7 +202,7 @@
     X(TOK_KW_TRUE)       /* true */ \
     X(TOK_KW_FALSE)      /* false */ \
     X(TOK_ERROR)         /* &lt;error&gt; */ \
-    X(TOK_EOF)           /* &lt;eof&gt; */ \
+    X(TOK_EOF)           /* &lt;eof&gt; */
 </code></pre>
 <h2 id="lookahead"><span class="heading-text">Lookahead</span><span class="heading-arabic">8.3</span></h2>
 <p>Temos um problema clássico na hora de escrever analisadores léxicos que é a maneira de distinguir entre <code>/</code> (divisão) de <code>//</code> (comentário) ou <code>=</code> (atribuição) de <code>==</code> (igualdade). Uma forma muito usada para solucionar esse problema é fazer nosso Lexer ser capaz de espiar o próximo caractere sem consumi-lo imediatamente.</p>
@@ -607,7 +607,7 @@ Para facilitar o acompanhamento do restante da disciplina, foi desenvolvida uma 
 <p>Caso necessário, reinicie o programa para que o código passe a aparecer corretamente estilizado.</p>
   </div>
 </div>
-<p>Compile e execute. A saída deve listar corretamente <code>TOK_STRING</code> (&quot;Compiladores&quot;), ignorar os comentários, identificar <code>TOK_AND</code>, <code>TOK_EQ_EQ</code> e <code>TOK_KW_VOID</code>.</p>
+<p>Compile e execute. A saída deve listar corretamente <code>TOK_STRING</code> (&quot;Compiladores&quot;), ignorar os comentários, identificar <code>TOK_AND</code>, <code>TOK_EQ</code> e <code>TOK_KW_VOID</code>.</p>
 <blockquote><p>Para rodar, caso não tenha feita na etapa anterior ainda, crie uma pasta chamada <code>build</code> e roda <code>cmake -B build</code>. Caso tenha feito apenas uma mudança em um arquivo existente basta rodar <code>cmake --build build</code> para recompilá-lo. <strong>Entretanto, caso adicione um novo arquivo <code>.h</code> ou <code>.c</code> precisará rodar o primeiro e o segundo comando novamente.</strong></p>
 <p>Após compilar o projeto basta chamar o binário pelo terminal passando o nome do arquivo que quer &quot;compiler&quot;, no nosso caso <code>./build/compiler teste.slang</code></p>
 </blockquote>

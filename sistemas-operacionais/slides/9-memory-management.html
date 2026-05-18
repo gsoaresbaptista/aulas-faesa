@@ -1,0 +1,1381 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <title>Gerência de Memória</title>
+    <link rel="icon" href="/aulas-faesa/img/dark-favicon.svg" media="(prefers-color-scheme: light)">
+    <link rel="icon" href="/aulas-faesa/img/light-favicon.svg" media="(prefers-color-scheme: dark)">
+
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/reset.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/reveal.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/theme/white.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/aulas-faesa/css/prism-one-light.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/fonts.css" data-no-bundle>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+            <section><h1>Sistemas Operacionais</h1>
+<h2>Gerência de Memória</h2>
+<p>Professor: Gabriel Soares Baptista</p>
+</section>
+<section><h1>Introdução</h1>
+<p>Hoje veremos como o SO organiza o espaço onde os processos vivem: a memória principal.</p>
+<p>Problema central: <strong>como permitir que vários programas coexistam na RAM sem que um destrua o espaço do outro?</strong></p>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="680" viewBox="0.00 0.00 555.00 268.50" class="svg-graph graphviz-img"><g id="svg-graphviz-7a599926f603-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 264.5)"><title>MemoryIntro</title><polygon fill="white" stroke="transparent" points="-4,4 -4,-264.5 551,-264.5 551,4 -4,4" /><g id="svg-graphviz-7a599926f603-node1" class="node"><title>A</title><path fill="#ffe3c2" stroke="black" d="M120,-260.5C120,-260.5 12,-260.5 12,-260.5 6,-260.5 0,-254.5 0,-248.5 0,-248.5 0,-219.5 0,-219.5 0,-213.5 6,-207.5 12,-207.5 12,-207.5 120,-207.5 120,-207.5 126,-207.5 132,-213.5 132,-219.5 132,-219.5 132,-248.5 132,-248.5 132,-254.5 126,-260.5 120,-260.5" /><text text-anchor="middle" x="66" y="-245.3" font-family="Helvetica,sans-Serif" font-size="14.00">Processo A</text><text text-anchor="middle" x="66" y="-230.3" font-family="Helvetica,sans-Serif" font-size="14.00">acredita ter</text><text text-anchor="middle" x="66" y="-215.3" font-family="Helvetica,sans-Serif" font-size="14.00">memoria propria</text></g><g id="svg-graphviz-7a599926f603-node4" class="node"><title>RAM</title><polygon fill="#f5f5f5" stroke="black" points="324,-105 324,-141 547,-141 547,-105 324,-105" /><text text-anchor="middle" x="368" y="-119.3" font-family="Helvetica,sans-Serif" font-size="14.00">RAM fisica</text><polyline fill="none" stroke="black" points="412,-105 412,-141 " /><text text-anchor="middle" x="430.5" y="-119.3" font-family="Helvetica,sans-Serif" font-size="14.00">SO</text><polyline fill="none" stroke="black" points="449,-105 449,-141 " /><text text-anchor="middle" x="462" y="-119.3" font-family="Helvetica,sans-Serif" font-size="14.00">A</text><polyline fill="none" stroke="black" points="475,-105 475,-141 " /><text text-anchor="middle" x="488" y="-119.3" font-family="Helvetica,sans-Serif" font-size="14.00">B</text><polyline fill="none" stroke="black" points="501,-105 501,-141 " /><text text-anchor="middle" x="524" y="-119.3" font-family="Helvetica,sans-Serif" font-size="14.00">livre</text></g><g id="svg-graphviz-7a599926f603-edge1" class="edge"><title>A-&gt;RAM</title><path fill="none" stroke="black" d="M132.28,-214.28C197.74,-194.51 298.18,-164.17 365.08,-143.97" /><polygon fill="black" stroke="black" points="366.13,-147.31 374.7,-141.06 364.11,-140.6 366.13,-147.31" /><text text-anchor="middle" x="228" y="-204.8" font-family="Times,serif" font-size="14.00">enderecos</text></g><g id="svg-graphviz-7a599926f603-node2" class="node"><title>B</title><path fill="#ffe3c2" stroke="black" d="M120,-149.5C120,-149.5 12,-149.5 12,-149.5 6,-149.5 0,-143.5 0,-137.5 0,-137.5 0,-108.5 0,-108.5 0,-102.5 6,-96.5 12,-96.5 12,-96.5 120,-96.5 120,-96.5 126,-96.5 132,-102.5 132,-108.5 132,-108.5 132,-137.5 132,-137.5 132,-143.5 126,-149.5 120,-149.5" /><text text-anchor="middle" x="66" y="-134.3" font-family="Helvetica,sans-Serif" font-size="14.00">Processo B</text><text text-anchor="middle" x="66" y="-119.3" font-family="Helvetica,sans-Serif" font-size="14.00">acredita ter</text><text text-anchor="middle" x="66" y="-104.3" font-family="Helvetica,sans-Serif" font-size="14.00">memoria propria</text></g><g id="svg-graphviz-7a599926f603-edge2" class="edge"><title>B-&gt;RAM</title><path fill="none" stroke="black" d="M132.28,-123C182.39,-123 252.99,-123 313.35,-123" /><polygon fill="black" stroke="black" points="313.72,-126.5 323.72,-123 313.72,-119.5 313.72,-126.5" /><text text-anchor="middle" x="228" y="-126.8" font-family="Times,serif" font-size="14.00">enderecos</text></g><g id="svg-graphviz-7a599926f603-node3" class="node"><title>SO</title><path fill="#d9ecff" stroke="black" d="M104,-38C104,-38 28,-38 28,-38 22,-38 16,-32 16,-26 16,-26 16,-12 16,-12 16,-6 22,0 28,0 28,0 104,0 104,0 110,0 116,-6 116,-12 116,-12 116,-26 116,-26 116,-32 110,-38 104,-38" /><text text-anchor="middle" x="66" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">Sistema</text><text text-anchor="middle" x="66" y="-7.8" font-family="Helvetica,sans-Serif" font-size="14.00">Operacional</text></g><g id="svg-graphviz-7a599926f603-edge3" class="edge"><title>SO-&gt;RAM</title><path fill="none" stroke="black" d="M116.18,-32.92C178.95,-50.68 288.08,-81.56 360.8,-102.14" /><polygon fill="black" stroke="black" points="360.24,-105.62 370.81,-104.98 362.15,-98.89 360.24,-105.62" /><text text-anchor="middle" x="228" y="-84.8" font-family="Times,serif" font-size="14.00">protege e traduz</text></g></g></svg></div></div>
+
+</section>
+<section><h1>Sem Abstração de Memória</h1>
+<p>Sem abstração, o programa trabalha com endereços físicos diretamente.</p>
+<p>Funciona em sistemas simples (microcontroladores, sistemas embarcados).</p>
+<p>O problema aparece com <strong>multiprogramação</strong>: cada processo não pode usar os mesmos endereços.</p>
+</section>
+<section><h1>Três Organizações Sem Abstração</h1>
+<p>Tanenbaum mostra três formas de organizar a memória com um SO e um processo.</p>
+<img src="../static/fig_3_1_organizacoes_memoria.png" width="80%">
+
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Organização</th>
+  <th style="text-align:left">Exemplo</th>
+  <th style="text-align:left">Risco principal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">SO em RAM baixa</td>
+  <td style="text-align:left">Mainframes antigos</td>
+  <td style="text-align:left">Erro do usuário sobrescreve SO</td>
+</tr>
+<tr>
+  <td style="text-align:left">SO em ROM alta</td>
+  <td style="text-align:left">Portáteis e embarcados</td>
+  <td style="text-align:left">Pouco flexível</td>
+</tr>
+<tr>
+  <td style="text-align:left">Drivers em ROM, SO em RAM</td>
+  <td style="text-align:left">MS-DOS com BIOS</td>
+  <td style="text-align:left">Programa pode danificar SO em RAM</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section><h1>Exemplo 1 — Sem Abstração</h1>
+<p>Dois programas compilados como se começassem no endereço $0$:</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Programa</th>
+  <th style="text-align:left">Endereço esperado</th>
+  <th style="text-align:left">Conteúdo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Editor de texto</td>
+  <td style="text-align:left">$0$ a $999$</td>
+  <td style="text-align:left">código e dados</td>
+</tr>
+<tr>
+  <td style="text-align:left">Navegador</td>
+  <td style="text-align:left">$0$ a $1999$</td>
+  <td style="text-align:left">código e dados</td>
+</tr>
+</tbody>
+</table>
+<p>Se carregados literalmente a partir de $0$, o segundo sobrescreve o primeiro.</p>
+<p><strong>Isso não é um erro no código</strong>, está na ausência de uma camada que dê a cada programa sua própria visão de memória.</p>
+</section>
+<section><h1>Dois Problemas Fundamentais</h1>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Problema</th>
+  <th style="text-align:left">O que significa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><strong>Realocação</strong></td>
+  <td style="text-align:left">O programa pode ser carregado em posições diferentes da RAM.</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Proteção</strong></td>
+  <td style="text-align:left">Um processo não deve acessar memória de outro ou do núcleo.</td>
+</tr>
+</tbody>
+</table>
+<p>A gerência de memória resolve os dois ao mesmo tempo.</p>
+</section>
+<section><h1>Proteção sem Realocação — IBM 360</h1>
+<p>Solução histórica: memória dividida em blocos de 2 KB com <strong>chave de proteção</strong> de 4 bits.</p>
+<p>O hardware impede acesso a blocos com chave diferente da PSW do processo.</p>
+<p>Só o SO modifica as chaves.</p>
+<p><strong>Problema:</strong> protege, mas não realoca. Endereços como <code>JMP 28</code> ainda são interpretados como físicos absolutos.</p>
+</section>
+<section><h1>Exemplo 2 — O Problema da Realocação</h1>
+<p>Dois programas de 16 KB, cada um com saltos absolutos.</p>
+<img src="../static/fig_3_2_problema_realocacao.png" width="75%">
+
+<p>Programa 1 carregado em $0$, programa 2 em $16384$.</p>
+<p><code>JMP 28</code> no programa 2 salta para o endereço físico $28$, que está dentro do programa 1.</p>
+<p><strong>Proteção por chave impede escrita, mas não corrige os endereços.</strong></p>
+</section>
+<section><h1>Realocação Estática</h1>
+<p>Durante a carga, soma-se a base a cada endereço do programa.</p>
+<p><code>JMP 28</code> vira <code>JMP 16412</code> (pois $16384 + 28 = 16412$).</p>
+<p><strong>Problema:</strong> o carregador não sabe distinguir endereços de constantes.</p>
+<p><code>MOV REGISTER1, 28</code> — o $28$ é um literal, não deve ser realocado.</p>
+<p>Processo lento e exige informação extra no executável.</p>
+</section>
+<section><h1>Espaços de Endereçamento</h1>
+<p>Abstração central: cada processo enxerga sua própria coleção de endereços.</p>
+<ul>
+<li><strong>Endereço lógico (virtual):</strong> gerado pelo programa.</li>
+<li><strong>Endereço físico:</strong> posição real na RAM após tradução.</li>
+</ul>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="680" viewBox="0.00 0.00 951.00 61.00" class="svg-graph graphviz-img"><g id="svg-graphviz-3d1bd3dd0664-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 57)"><title>AddressSpace</title><polygon fill="white" stroke="transparent" points="-4,4 -4,-57 947,-57 947,4 -4,4" /><g id="svg-graphviz-3d1bd3dd0664-node1" class="node"><title>CPU</title><path fill="#ffe3c2" stroke="black" d="M149,-53C149,-53 12,-53 12,-53 6,-53 0,-47 0,-41 0,-41 0,-12 0,-12 0,-6 6,0 12,0 12,0 149,0 149,0 155,0 161,-6 161,-12 161,-12 161,-41 161,-41 161,-47 155,-53 149,-53" /><text text-anchor="middle" x="80.5" y="-37.8" font-family="Helvetica,sans-Serif" font-size="14.00">CPU</text><text text-anchor="middle" x="80.5" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">gera endereco logico</text><text text-anchor="middle" x="80.5" y="-7.8" font-family="Helvetica,sans-Serif" font-size="14.00">350</text></g><g id="svg-graphviz-3d1bd3dd0664-node2" class="node"><title>MMU</title><path fill="#d9ecff" stroke="black" d="M322,-45.5C322,-45.5 237,-45.5 237,-45.5 231,-45.5 225,-39.5 225,-33.5 225,-33.5 225,-19.5 225,-19.5 225,-13.5 231,-7.5 237,-7.5 237,-7.5 322,-7.5 322,-7.5 328,-7.5 334,-13.5 334,-19.5 334,-19.5 334,-33.5 334,-33.5 334,-39.5 328,-45.5 322,-45.5" /><text text-anchor="middle" x="279.5" y="-30.3" font-family="Helvetica,sans-Serif" font-size="14.00">MMU</text><text text-anchor="middle" x="279.5" y="-15.3" font-family="Helvetica,sans-Serif" font-size="14.00">base + limite</text></g><g id="svg-graphviz-3d1bd3dd0664-edge1" class="edge"><title>CPU-&gt;MMU</title><path fill="none" stroke="black" d="M161.06,-26.5C178.83,-26.5 197.46,-26.5 214.52,-26.5" /><polygon fill="black" stroke="black" points="214.91,-30 224.91,-26.5 214.91,-23 214.91,-30" /><text text-anchor="middle" x="193" y="-30.3" font-family="Times,serif" font-size="14.00">350</text></g><g id="svg-graphviz-3d1bd3dd0664-node3" class="node"><title>RAM</title><polygon fill="#f5f5f5" stroke="black" points="416,-8.5 416,-44.5 943,-44.5 943,-8.5 416,-8.5" /><text text-anchor="middle" x="460" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">RAM fisica</text><polyline fill="none" stroke="black" points="504,-8.5 504,-44.5 " /><text text-anchor="middle" x="551.5" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">0..9999 SO</text><polyline fill="none" stroke="black" points="599,-8.5 599,-44.5 " /><text text-anchor="middle" x="696.5" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">10000..13999 Processo A</text><polyline fill="none" stroke="black" points="794,-8.5 794,-44.5 " /><text text-anchor="middle" x="868.5" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">14000..19999 livre</text></g><g id="svg-graphviz-3d1bd3dd0664-edge2" class="edge"><title>MMU-&gt;RAM</title><path fill="none" stroke="black" d="M334.18,-26.5C354.31,-26.5 378.8,-26.5 405.35,-26.5" /><polygon fill="black" stroke="black" points="405.62,-30 415.62,-26.5 405.62,-23 405.62,-30" /><text text-anchor="middle" x="375" y="-30.3" font-family="Times,serif" font-size="14.00">10350</text></g></g></svg></div></div>
+
+</section>
+<section><h1>Base e Limite</h1>
+<p>Dois registradores de hardware especiais:</p>
+<ul>
+<li><strong>Base:</strong> endereço físico onde o programa começa.</li>
+<li><strong>Limite:</strong> comprimento do programa (proteção).</li>
+</ul>
+<p>A cada acesso: hardware soma a base ao endereço lógico e verifica se é menor que o limite.</p>
+<img src="../static/fig_3_3_registradores_base_limite.png" width="50%">
+
+</section>
+<section><h1>Fórmula de Base e Limite</h1>
+<p>$$
+\text{endereço físico} = \text{base} + \text{endereço lógico}
+$$</p>
+<p>desde que:</p>
+<p>$$
+0 \leq \text{endereço lógico} < \text{limite}
+$$</p>
+<p>Resolve <strong>realocação</strong> (muda a base, mesmo programa funciona) e <strong>proteção</strong> (limite bloqueia acesso fora da região) ao mesmo tempo.</p>
+</section>
+<section><h1>Exemplo 4 — Cálculo com Base e Limite</h1>
+<p>Processo com $base = 10000$ e $limite = 4000$.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Acesso</th>
+  <th style="text-align:left">Válido?</th>
+  <th style="text-align:left">Endereço físico</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">$350$</td>
+  <td style="text-align:left">Sim ($350 < 4000$)</td>
+  <td style="text-align:left">$10000 + 350 = 10350$</td>
+</tr>
+<tr>
+  <td style="text-align:left">$5000$</td>
+  <td style="text-align:left">Não ($5000 \geq 4000$)</td>
+  <td style="text-align:left">Bloqueado</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section><h1>Exemplo 5 — Isolamento</h1>
+<p>Dois processos com o mesmo endereço lógico:</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Processo</th>
+  <th style="text-align:left">Base</th>
+  <th style="text-align:left">Limite</th>
+  <th style="text-align:left">Acessa</th>
+  <th style="text-align:left">Endereço físico</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">$P_1$</td>
+  <td style="text-align:left">$10000$</td>
+  <td style="text-align:left">$4000$</td>
+  <td style="text-align:left">$120$</td>
+  <td style="text-align:left">$10120$</td>
+</tr>
+<tr>
+  <td style="text-align:left">$P_2$</td>
+  <td style="text-align:left">$30000$</td>
+  <td style="text-align:left">$4000$</td>
+  <td style="text-align:left">$120$</td>
+  <td style="text-align:left">$30120$</td>
+</tr>
+</tbody>
+</table>
+<p>Mesmo endereço lógico <strong>$120$</strong>, posições físicas diferentes.</p>
+<p>Essa é a essência do isolamento por espaço de endereçamento.</p>
+</section>
+<section><h1>A MMU e o Custo</h1>
+<p>A MMU (Unidade de Gerenciamento de Memória) executa a tradução e verifica proteção a cada acesso.</p>
+<p>Cada acesso exige uma <strong>comparação</strong> e uma <strong>soma</strong>. Comparações são rápidas; adições podem ser lentas pelo carry-propagation time.</p>
+<p>CDC 6600: registradores base/limite protegidos (só o SO modifica).</p>
+<p>Intel 8088: múltiplos registradores base, mas <strong>sem registrador limite</strong> (sem proteção).</p>
+</section>
+<section><h1>Swapping (Troca de Processos)</h1>
+<p>RAM finita + muitos processos = mover processos entre RAM e disco.</p>
+<p>Processo bloqueado ou ocioso sai da RAM, conteúdo salvo em disco. Quando precisa executar, volta.</p>
+<img src="../static/fig_3_4_troca_processos.png" width="95%">
+
+<p>A volta, C sai, D entra, B sai, A retorna em <strong>posição diferente</strong> — precisa de realocação.</p>
+</section>
+<section><h1>Exemplo 6 — Cenário de Swapping</h1>
+<p>Máquina com $8$ GB de RAM:</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Processo</th>
+  <th style="text-align:left">Memória</th>
+  <th style="text-align:left">Estado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Editor de vídeo</td>
+  <td style="text-align:left">$5$ GB</td>
+  <td style="text-align:left">ativo</td>
+</tr>
+<tr>
+  <td style="text-align:left">Navegador</td>
+  <td style="text-align:left">$3$ GB</td>
+  <td style="text-align:left">ativo</td>
+</tr>
+<tr>
+  <td style="text-align:left">Jogo</td>
+  <td style="text-align:left">$4$ GB</td>
+  <td style="text-align:left">segundo plano</td>
+</tr>
+</tbody>
+</table>
+<p>Total: $12$ GB, mas RAM: $8$ GB. O SO retira o jogo para o disco.</p>
+<p>Quando o usuário volta ao jogo, ele precisa ser trazido de volta — demora perceptível.</p>
+</section>
+<section><h1>Swapping: Custo e Compactação</h1>
+<p><strong>Swapping não é memória grátis.</strong> Disco é muito mais lento que RAM.</p>
+<p>Sistemas iniciam dezenas de processos de fundo antes mesmo de o usuário abrir um aplicativo.</p>
+<p><strong>Compactação:</strong> juntar lacunas movendo processos. Funciona, mas é cara.</p>
+<p>Tanenbaum: em máquina de $16$ GB, copiando $8$ bytes a cada $8$ ns, compactar levaria $\approx 16$ segundos.</p>
+</section>
+<section><h1>Crescimento dos Processos</h1>
+<p>Um processo não mantém o mesmo tamanho durante a execução:</p>
+<ul>
+<li><strong>Heap</strong> cresce com alocação dinâmica</li>
+<li><strong>Pilha</strong> cresce com chamadas de função</li>
+<li>Bibliotecas carregadas sob demanda</li>
+</ul>
+<p>Se o processo foi colocado em uma lacuna exata, não há espaço para crescer.</p>
+</section>
+<section><h1>Crescimento: Dados e Pilha</h1>
+<img src="../static/fig_3_5_crescimento_processos.png" width="85%">
+
+<p><strong>(a)</strong> Espaço de crescimento reservado para cada processo.</p>
+<p><strong>(b)</strong> Dados crescem para cima, pilha cresce para baixo. Compartilham o espaço livre entre eles.</p>
+<p>Se o espaço interno acaba: mover o processo, trocar para o disco ou encerrar.</p>
+</section>
+<section><h1>Gerenciamento de Memória Livre</h1>
+<p>Processos entram e saem, criando lacunas. O SO precisa saber o que está livre.</p>
+<p>Duas formas clássicas: <strong>mapa de bits</strong> e <strong>listas encadeadas</strong>.</p>
+<img src="../static/fig_3_6_mapa_bits_lista.png" width="95%">
+
+<p>(a) Memória com processos e lacunas. (b) Mapa de bits. (c) Lista encadeada.</p>
+</section>
+<section><h1>Mapa de Bits</h1>
+<p>Memória dividida em unidades de alocação. Cada unidade: $0$ = livre, $1$ = ocupado.</p>
+<p><strong>Trade-off do tamanho da unidade:</strong></p>
+<ul>
+<li>Unidades pequenas: menos desperdício, mas mapa maior</li>
+<li>Unidades grandes: mapa menor, mas mais desperdício na última unidade</li>
+</ul>
+<p><strong>Problema principal:</strong> encontrar $k$ bits $0$ consecutivos é busca lenta.</p>
+</section>
+<section><h1>Exemplo 7 — Mapa de Bits</h1>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Bloco</th>
+  <th style="text-align:left">0</th>
+  <th style="text-align:left">1</th>
+  <th style="text-align:left">2</th>
+  <th style="text-align:left">3</th>
+  <th style="text-align:left">4</th>
+  <th style="text-align:left">5</th>
+  <th style="text-align:left">6</th>
+  <th style="text-align:left">7</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Bit</td>
+  <td style="text-align:left">1</td>
+  <td style="text-align:left">1</td>
+  <td style="text-align:left">0</td>
+  <td style="text-align:left">0</td>
+  <td style="text-align:left">1</td>
+  <td style="text-align:left">0</td>
+  <td style="text-align:left">0</td>
+  <td style="text-align:left">0</td>
+</tr>
+</tbody>
+</table>
+<p>Processo precisa de 3 blocos contíguos — procure 3 zeros consecutivos.</p>
+<p>Blocos $5$, $6$, $7$ servem.</p>
+</section>
+<section><h1>Lista Encadeada de Segmentos</h1>
+<p>Cada entrada: tipo (P = processo, L = livre), endereço inicial, comprimento, ponteiro.</p>
+<p><strong>Exemplo 8:</strong></p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Tipo</th>
+  <th style="text-align:left">Início</th>
+  <th style="text-align:left">Tamanho</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">P$_1$</td>
+  <td style="text-align:left">$0$</td>
+  <td style="text-align:left">$100$</td>
+</tr>
+<tr>
+  <td style="text-align:left">L</td>
+  <td style="text-align:left">$100$</td>
+  <td style="text-align:left">$50$</td>
+</tr>
+<tr>
+  <td style="text-align:left">P$_2$</td>
+  <td style="text-align:left">$150$</td>
+  <td style="text-align:left">$80$</td>
+</tr>
+<tr>
+  <td style="text-align:left">L</td>
+  <td style="text-align:left">$230$</td>
+  <td style="text-align:left">$120$</td>
+</tr>
+</tbody>
+</table>
+<p>Quando P$_2$ termina, sua região vira livre. Como há lacuna livre depois, funde: lacuna de $100$ a $330$ ($250$).</p>
+</section>
+<section><h1>Fusão de Vizinhos</h1>
+<img src="../static/fig_3_7_combinacoes_vizinhos.png" width="70%">
+
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Viz. anterior</th>
+  <th style="text-align:left">Viz. seguinte</th>
+  <th style="text-align:left">Ação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Processo</td>
+  <td style="text-align:left">Processo</td>
+  <td style="text-align:left">Troca P por L</td>
+</tr>
+<tr>
+  <td style="text-align:left">Livre</td>
+  <td style="text-align:left">Processo</td>
+  <td style="text-align:left">Funde com lacuna anterior</td>
+</tr>
+<tr>
+  <td style="text-align:left">Processo</td>
+  <td style="text-align:left">Livre</td>
+  <td style="text-align:left">Funde com lacuna seguinte</td>
+</tr>
+<tr>
+  <td style="text-align:left">Livre</td>
+  <td style="text-align:left">Livre</td>
+  <td style="text-align:left">Funde as três regiões</td>
+</tr>
+</tbody>
+</table>
+<p>Lista duplamente encadeada facilita encontrar o vizinho anterior.</p>
+</section>
+<section><h1>Algoritmos de Alocação</h1>
+<p>Quando um processo precisa de memória, qual lacuna escolher?</p>
+<p>Cinco algoritmos descritos por Tanenbaum:</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Algoritmo</th>
+  <th style="text-align:left">Estratégia</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><strong>First fit</strong></td>
+  <td style="text-align:left">Primeira lacuna que couber</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Next fit</strong></td>
+  <td style="text-align:left">Continua de onde parou</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Best fit</strong></td>
+  <td style="text-align:left">Menor lacuna que couber</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Worst fit</strong></td>
+  <td style="text-align:left">Maior lacuna disponível</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Quick fit</strong></td>
+  <td style="text-align:left">Listas separadas por tamanho</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section><h1>First Fit (Primeiro Encaixe)</h1>
+<p>Percorre a lista até achar o <strong>primeiro</strong> espaço $\geq$ o necessário.</p>
+<p><strong>Passo a passo:</strong></p>
+<ol>
+<li>Comece no início da lista.</li>
+<li>Examine cada entrada livre.</li>
+<li>Se o tamanho for $\geq$ o pedido, pare e aloque.</li>
+<li>Se maior, divida: parte exata para o processo, sobra como lacuna.</li>
+<li>Se chegar ao fim sem achar, o processo espera.</li>
+</ol>
+<p>Rápido, mas tende a concentrar atividade no início da memória.</p>
+</section>
+<section><h1>Next Fit (Próximo Encaixe)</h1>
+<p>Como first fit, mas <strong>memoriza</strong> onde parou.</p>
+<p><strong>Passo a passo:</strong></p>
+<ol>
+<li>Mantenha um ponteiro da última alocação.</li>
+<li>Na próxima busca, comece do ponteiro.</li>
+<li>Percorra circularmente até achar espaço $\geq$ o necessário.</li>
+<li>Se der a volta completa sem achar, o processo espera.</li>
+</ol>
+<p>Tenta evitar concentrar tudo no início. Simulações mostram desempenho <strong>ligeiramente pior</strong> que first fit.</p>
+</section>
+<section><h1>Best Fit (Melhor Encaixe)</h1>
+<p>Percorre a lista <strong>inteira</strong> e escolhe o <strong>menor</strong> espaço que couber.</p>
+<p><strong>Passo a passo:</strong></p>
+<ol>
+<li>Inicie melhor candidato como &quot;nenhum&quot;.</li>
+<li>Percorra toda a lista.</li>
+<li>Para cada lacuna $\geq$ o pedido, se for menor que o candidato atual, atualize.</li>
+<li>Ao final, aloque no melhor candidato.</li>
+</ol>
+<p>Mais lento (percorre tudo). Surpreendentemente, gera mais desperdício: sobras minúsculas e inúteis.</p>
+</section>
+<section><h1>Worst Fit (Pior Encaixe)</h1>
+<p>Escolhe a <strong>maior</strong> lacuna disponível.</p>
+<p><strong>Passo a passo:</strong></p>
+<ol>
+<li>Inicie maior candidato como &quot;nenhum&quot;.</li>
+<li>Percorra toda a lista.</li>
+<li>Para cada lacuna que couber, se for maior que o candidato, atualize.</li>
+<li>Ao final, aloque na maior.</li>
+</ol>
+<p>Intenção: sobras grandes e úteis. Simulações mostram que também não é uma boa ideia.</p>
+</section>
+<section><h1>Quick Fit (Encaixe Rápido)</h1>
+<p>Listas <strong>separadas</strong> por tamanho: 4 KB, 8 KB, 12 KB...</p>
+<p><strong>Passo a passo:</strong></p>
+<ol>
+<li>Mantenha tabela com $n$ listas de lacunas por tamanho.</li>
+<li>Solicitação de $k$ KB: vá para a lista correspondente.</li>
+<li>Se houver lacuna, aloque e divida.</li>
+<li>Se vazia, tente tamanhos maiores.</li>
+<li>Se todas vazias, processo espera.</li>
+</ol>
+<p>Encontrar é muito rápido. <strong>Problema:</strong> fundir lacunas ao liberar é caro. Sem fusão, fragmenta rápido.</p>
+</section>
+<section><h1>Exemplo 9 — Comparativo de Algoritmos</h1>
+<p>Lacunas: $50$ KB, $120$ KB, $70$ KB, $300$ KB (nesta ordem). Processo precisa de $65$ KB.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Algoritmo</th>
+  <th style="text-align:left">Lacuna</th>
+  <th style="text-align:left">Sobra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">First fit</td>
+  <td style="text-align:left">$120$ KB</td>
+  <td style="text-align:left">$55$ KB</td>
+</tr>
+<tr>
+  <td style="text-align:left">Best fit</td>
+  <td style="text-align:left">$70$ KB</td>
+  <td style="text-align:left">$5$ KB</td>
+</tr>
+<tr>
+  <td style="text-align:left">Worst fit</td>
+  <td style="text-align:left">$300$ KB</td>
+  <td style="text-align:left">$235$ KB</td>
+</tr>
+</tbody>
+</table>
+<p>Best fit parece ótimo agora, mas a sobra de $5$ KB é quase inútil para o futuro.</p>
+<p>Decisões locais podem piorar o estado global da memória.</p>
+</section>
+<section><h1>Otimizações</h1>
+<p>Listas separadas para processos e lacunas livres: busca percorre apenas lacunas.</p>
+<p>Lista de lacunas <strong>ordenada por tamanho</strong>: best fit e first fit ficam igualmente rápidos, next fit perde o sentido.</p>
+<p>O custo vai para a liberação: segmento precisa sair da lista de processos e entrar na de livres.</p>
+</section>
+<section><h1>Fragmentação</h1>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Tipo</th>
+  <th style="text-align:left">Desperdício</th>
+  <th style="text-align:left">Exemplo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><strong>Interna</strong></td>
+  <td style="text-align:left">Dentro da área alocada</td>
+  <td style="text-align:left">Recebe $64$ KB, usa $60$ KB</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Externa</strong></td>
+  <td style="text-align:left">Entre áreas alocadas</td>
+  <td style="text-align:left">$100$ KB livres no total, mas em pedaços pequenos</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section><h1>Exemplo 10 — Fragmentação Externa</h1>
+<p>Processo precisa de $90$ KB. Memória livre total: $120$ KB.</p>
+<p>Distribuição: $40$ KB, $30$ KB, $50$ KB.</p>
+<p><strong>Nenhuma lacuna isolada comporta o processo.</strong></p>
+<p>Solução: <strong>compactação</strong> — mover processos para juntar lacunas — custa tempo e exige realocação segura.</p>
+</section>
+<section><h1>Próximos Passos</h1>
+<p>Vimos como o SO organiza o espaço de memória para múltiplos processos com realocação, proteção, swapping e algoritmos de alocação.</p>
+<p>Em aulas futuras: <strong>memória virtual com paginação</strong>, eliminando a exigência de regiões contíguas e permitindo programas maiores que a RAM física.</p>
+</section>
+        </div>
+    </div>
+
+    <script src="/aulas-faesa/js/vendor/reveal/reveal.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/notes/notes.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/markdown/markdown.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/math/math.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/zoom/zoom.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/prism.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-c.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-python.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-clike.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-cpp.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-perl.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-java.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-php.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/toolbar/prism-toolbar.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/show-language/prism-show-language.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/prism-slang.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/mermaid.min.js" data-no-bundle></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            mermaid.initialize({
+                startOnLoad: false,
+                theme: 'default',
+                securityLevel: 'loose',
+                htmlLabels: false,
+                fontFamily: 'Inter, system-ui, sans-serif',
+            });
+        });
+    </script>
+    <script src="/aulas-faesa/js/rough.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/apply_sketch.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/lucide.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/ui.js" data-no-bundle></script>
+    <script>
+        const waitForNextFrame = () => new Promise(resolve => requestAnimationFrame(resolve));
+
+        const initSlideUI = () => {
+            if (!window.CourseForgeUI) {
+                return;
+            }
+
+            window.CourseForgeUI.initCopyButtons();
+            window.CourseForgeUI.initIcons();
+        };
+
+        const renderMermaidsInSlide = async (slide) => {
+            if (!slide) {
+                return;
+            }
+
+            const mermaids = slide.querySelectorAll('.mermaid');
+            if (!mermaids.length) {
+                return;
+            }
+
+            try {
+                if (document.fonts?.ready) {
+                    await document.fonts.ready;
+                }
+
+                await waitForNextFrame();
+                await waitForNextFrame();
+
+                for (const element of mermaids) {
+                    if (element.dataset.mermaidRendered === 'true') {
+                        continue;
+                    }
+
+                    await mermaid.run({
+                        nodes: [element],
+                    });
+                    element.dataset.mermaidRendered = 'true';
+                }
+            } catch (err) {
+                console.warn('Mermaid render failed', err);
+            }
+        };
+
+        const updateMermaidDisplayBounds = (slide) => {
+            const scope = slide || document;
+            const displays = scope.querySelectorAll('.mermaid-display');
+
+            for (const display of displays) {
+                const rect = display.getBoundingClientRect();
+                const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+                const bottomGap = 24;
+                const availableHeight = Math.max(160, Math.floor(viewportHeight - rect.top - bottomGap));
+                display.style.setProperty('--mermaid-max-height', `${availableHeight}px`);
+            }
+        };
+
+        const resetNativeLineNumbers = (pre) => {
+            if (!pre?.classList.contains('line-numbers')) {
+                return;
+            }
+
+            const existingRows = pre.querySelector('.line-numbers-rows');
+            if (existingRows) {
+                existingRows.remove();
+            }
+        };
+
+        const highlightCodeInSlide = (slide) => {
+            const scope = slide || document;
+            const codeBlocks = scope.querySelectorAll('pre[class*="language-"] > code[class*="language-"]');
+
+            for (const code of codeBlocks) {
+                const pre = code.parentElement;
+                resetNativeLineNumbers(pre);
+                Prism.highlightElement(code);
+
+                if (pre?.classList.contains('line-numbers') && Prism.plugins?.lineNumbers?.resize) {
+                    Prism.plugins.lineNumbers.resize(pre);
+                }
+            }
+        };
+
+        const enhanceCurrentSlide = async (slide) => {
+            highlightCodeInSlide(slide);
+            await renderMermaidsInSlide(slide);
+            updateMermaidDisplayBounds(slide);
+            initSlideUI();
+        };
+
+        Reveal.initialize({
+            hash: true,
+            slideNumber: 'c/t',
+            center: false,
+            controls: false,
+            plugins: [RevealMarkdown, RevealNotes, RevealMath.KaTeX, RevealZoom],
+            katex: {
+                local: '/aulas-faesa/js/vendor/katex',
+                output: 'html',
+                throwOnError: false,
+                strict: false,
+            },
+            width: 960,
+            height: 800,
+            margin: 0.15,
+            maxScale: 2.0,
+        });
+
+        Reveal.on('ready', event => {
+            enhanceCurrentSlide(event.currentSlide);
+        });
+
+        Reveal.on('slideready', event => {
+            enhanceCurrentSlide(event.currentSlide);
+        });
+
+        Reveal.on('slidechanged', event => {
+            enhanceCurrentSlide(event.currentSlide);
+        });
+
+        window.addEventListener('resize', () => {
+            updateMermaidDisplayBounds(Reveal.getCurrentSlide());
+        });
+    </script>
+    <style>
+        /* Modern base styles */
+        :root {
+            --callout-note: #448aff;
+            --callout-abstract: #00b0ff;
+            --callout-info: #00b8d4;
+            --callout-todo: #00bfa5;
+            --callout-tip: #00c853;
+            --callout-success: #64dd17;
+            --callout-question: #ffab00;
+            --callout-warning: #ff9100;
+            --callout-failure: #ff5252;
+            --callout-danger: #ff1744;
+            --callout-bug: #f50057;
+            --callout-example: #7c4dff;
+            --callout-quote: #9e9e9e;
+            --code-bg: #f1f5f9;
+            --border: #e2e8f0;
+            --radius: 6px;
+            --radius-sm: 4px;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --text-muted: #64748b;
+            --text: #334155;
+            --bg: #ffffff;
+            --heading: #0f172a;
+            --link: #3b82f6;
+            --font-code: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+        }
+
+        .reveal {
+            font-size: 20px;
+            text-align: left !important;
+        }
+
+        .reveal code:not(pre code) {
+            font-family: var(--font-code) !important;
+            background-color: var(--code-bg) !important;
+            padding: 0.1em 0.35em !important;
+            border-radius: var(--radius-sm) !important;
+            font-size: 0.9em !important;
+            color: var(--link) !important;
+            border: 1px dashed var(--border) !important;
+            white-space: pre-wrap !important;
+            word-break: break-word !important;
+            font-variant-ligatures: none;
+            font-feature-settings: "liga" 0, "calt" 0;
+        }
+
+        .reveal h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px !important;
+            margin-left: 0 !important;
+            /* min-height: 2.3em; */
+            display: flex;
+            align-items: center;
+            justify-content: flex-start !important;
+            text-align: left !important;
+            width: 100% !important;
+            text-shadow: none !important;
+        }
+
+        /* Prism overrides for Reveal.js */
+        .reveal div.code-toolbar {
+            position: relative;
+            width: 100% !important;
+            margin: 1.5rem 0 !important;
+        }
+
+        .reveal pre[class*="language-"] {
+            background: hsl(230, 1%, 98%) !important;
+            margin: 1.5rem 0 !important;
+            padding: 1rem !important;
+            border: 1px solid var(--border) !important;
+            border-radius: var(--radius) !important;
+            box-shadow: var(--shadow-sm) !important;
+            font-family: var(--font-code) !important;
+            font-size: 0.85em !important;
+            position: relative;
+            overflow-x: auto;
+            box-sizing: border-box !important;
+            max-width: 100% !important;
+            font-variant-ligatures: none;
+            font-feature-settings: "liga" 0, "calt" 0;
+        }
+
+        .reveal pre[class*="language-"] > code {
+            background: 0 0 !important;
+            text-shadow: none !important;
+            color: hsl(230, 8%, 24%) !important;
+            position: relative !important;
+            display: block !important;
+        }
+
+        .reveal .line-numbers .line-numbers-rows {
+            border-right: 1px solid #444 !important;
+            padding-right: .5rem !important;
+            margin-bottom: 1.5rem;
+        }
+
+        .reveal .line-numbers-rows>span:before {
+            color: #666 !important;
+        }
+
+        .reveal pre[class*="language-"].line-numbers,
+        .reveal pre[class*="language-"]:has(.line-numbers-rows) {
+            padding-left: 3.8em !important;
+            overflow-y: hidden !important;
+        }
+
+        .reveal .copy-button,
+        .reveal pre[data-lang]::before {
+            position: absolute;
+            top: .5rem;
+            height: 26px;
+            background: hsl(230, 1%, 92%);
+            border: 1px solid hsl(230, 1%, 85%);
+            border-radius: var(--radius-sm);
+            box-sizing: border-box;
+        }
+
+        .reveal .copy-button {
+            right: .5rem;
+            width: 26px;
+            padding: 0;
+            color: hsl(230, 6%, 44%);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all .2s ease;
+            z-index: 20;
+            opacity: .8;
+        }
+
+        .reveal .copy-button:hover {
+            background: hsl(230, 1%, 85%);
+            color: hsl(230, 8%, 24%);
+            opacity: 1;
+        }
+
+        .reveal .copy-button svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Language label styling - hide all Prism toolbar plugins, keep only data-lang label */
+        .reveal div.toolbar,
+        .reveal div.toolbar-item,
+        .reveal button.toolbar-item,
+        .reveal span.toolbar-item {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            height: 0 !important;
+            width: 0 !important;
+            overflow: hidden !important;
+            position: absolute !important;
+            pointer-events: none !important;
+        }
+
+        /* Use the pseudo-element data-lang label only */
+        .reveal pre[data-lang]::before {
+            content: attr(data-lang);
+            right: 2.35rem;
+            padding: 0 .5rem;
+            font-size: .65rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: hsl(230, 6%, 50%);
+            pointer-events: none;
+            z-index: 10;
+            display: inline-flex !important;
+            align-items: center !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            height: 26px !important;
+            width: auto !important;
+            position: absolute !important;
+            overflow: visible !important;
+            line-height: 26px !important;
+        }
+
+        .reveal h2 {
+            font-size: 1.6em;
+            margin-top: 30px !important;
+            margin-bottom: 20px !important;
+            text-align: left !important;
+        }
+
+        .reveal h3 {
+            font-size: 1.3em;
+            margin-top: 20px !important;
+            margin-bottom: 15px !important;
+            text-align: left !important;
+        }
+
+        .reveal p {
+            line-height: 1.5;
+            margin-top: 20px !important;
+            margin-left: 0 !important;
+            text-align: left !important;
+        }
+
+        .reveal ul,
+        .reveal ol,
+        .reveal li {
+            line-height: 1.5;
+            text-align: left !important;
+            margin-left: 0 !important;
+        }
+        
+        .reveal ul, .reveal ol {
+            display: block !important;
+            padding-left: 1.2em !important;
+        }
+
+        /* Slide padding and layout */
+        .reveal .slides section {
+            padding: 40px !important;
+            box-sizing: border-box;
+            text-align: left !important;
+            overflow: visible !important;
+        }
+
+        .reveal .slides {
+            text-align: left !important;
+        }
+
+        /* Centering for Title slides (h1 ONLY, h1 + h2 ONLY, or h1 + h2 + p ONLY) */
+        .reveal .slides section:not(.stack):has(> h1:only-child),
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child),
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) {
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: center !important;
+            align-items: center !important;
+            text-align: center !important;
+            height: 100% !important;
+            top: 0 !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:only-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child) h2,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h2,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) p {
+            justify-content: center !important;
+            text-align: center !important;
+            margin: 0 !important;
+            min-height: auto !important;
+            width: 100% !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h1 {
+            margin-bottom: 0.5em !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h2 {
+            margin-bottom: 0.3em !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) p {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        /* Full screen slide fix */
+        .reveal .slides section:has(.full-screen-image) {
+            padding: 0 !important;
+        }
+
+        /* Full screen slide fix - Garantindo que o fundo do Reveal fique visível e a imagem carregada */
+        .reveal:has(section.present .full-screen-image) {
+            background-image: url('../../slide_end_background.png') !important;
+            background-size: cover !important;
+            background-position: center !important;
+        }
+
+        /* Torna o slide e o container de slides transparentes para mostrar o fundo da .reveal */
+        .reveal:has(section.present .full-screen-image) .slides,
+        .reveal:has(section.present .full-screen-image) .slides section.present {
+            background: transparent !important;
+        }
+
+        .full-screen-image {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 !important;
+            /* Se houver texto, ele centraliza aqui */
+        }
+
+        /* Spacing for diagrams */
+        .reveal .svg-graph {
+            margin-top: 1em !important;
+            margin-bottom: 1em !important;
+            overflow: visible !important; /* Prevent labels from being cut off */
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* Mermaid Diagram Styles */
+        .reveal .mermaid {
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            padding: 0 !important;
+            margin: 1rem 0 !important;
+            font-family: inherit !important;
+            overflow: visible !important;
+            text-align: center;
+            display: block !important;
+            width: auto !important;
+            max-width: 100% !important;
+        }
+
+        .reveal pre.mermaid {
+            white-space: pre;
+            font-family: var(--font-code);
+            color: var(--text-muted);
+            margin: 0 !important;
+            padding: 0 !important;
+            width: auto !important;
+            line-height: 1 !important;
+            border: none !important;
+            box-shadow: none !important;
+            background: transparent !important;
+            overflow: visible !important;
+        }
+
+        .reveal .centered .mermaid {
+            display: block !important;
+            justify-content: center;
+            margin-left: auto !important;
+            margin-right: auto !important;
+        }
+
+        .reveal .mermaid svg {
+            max-width: 100% !important;
+            height: auto !important;
+            display: block !important;
+            overflow: visible !important;
+            vertical-align: top !important;
+            font-family: Inter, system-ui, sans-serif !important;
+            font-style: normal !important;
+            font-variant: normal !important;
+            font-weight: 400 !important;
+            letter-spacing: normal !important;
+            word-spacing: normal !important;
+            text-transform: none !important;
+            text-shadow: none !important;
+            line-height: normal !important;
+            text-rendering: geometricPrecision !important;
+        }
+
+        .reveal .mermaid svg * {
+            font-family: inherit !important;
+            font-style: normal !important;
+            font-variant: normal !important;
+            letter-spacing: normal !important;
+            word-spacing: normal !important;
+            text-transform: none !important;
+            text-shadow: none !important;
+            line-height: normal !important;
+        }
+
+        .reveal .mermaid svg .edgeBadge text,
+        .reveal .mermaid svg .edgeBadge tspan,
+        .reveal .mermaid svg .edgeTerm text,
+        .reveal .mermaid svg .edgeTerm tspan,
+        .reveal .mermaid svg .multiplicity text,
+        .reveal .mermaid svg .multiplicity tspan,
+        .reveal .mermaid svg text.edgeBadge,
+        .reveal .mermaid svg text.edgeTerm {
+            font-size: 18px !important;
+            font-weight: 700 !important;
+            fill: var(--heading) !important;
+        }
+
+        /* Mermaid Source Switcher */
+        .reveal .mermaid-outer-container {
+            margin: 1rem 0;
+            position: relative;
+            width: 100%;
+            max-width: 100%;
+        }
+
+        .reveal .mermaid-switcher {
+            display: flex !important;
+            justify-content: flex-end;
+            margin-bottom: 0.5rem;
+            width: 100%;
+        }
+
+        .reveal .switcher-track {
+            display: inline-flex;
+            align-items: center;
+            background: var(--code-bg);
+            padding: 3px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            position: relative;
+        }
+
+        .reveal .switcher-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            border: none;
+            background: transparent;
+            padding: 0.35rem 1rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            border-radius: calc(var(--radius) - 2px);
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            z-index: 1;
+        }
+
+        .reveal .switcher-btn svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .reveal .switcher-btn:hover {
+            color: var(--text);
+        }
+
+        .reveal .switcher-btn.active {
+            color: var(--heading);
+            background: var(--bg);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        .reveal .mermaid-content {
+            min-height: 50px;
+        }
+
+        /* Mermaid display - respect inline width */
+        .reveal .mermaid-display {
+            transition: opacity 0.2s ease;
+            display: block !important;
+            max-width: 100% !important;
+            max-height: var(--mermaid-max-height, calc(100vh - 140px)) !important;
+            border: none !important;
+            box-shadow: none !important;
+            background: transparent !important;
+            overflow: auto !important;
+        }
+
+        .reveal .mermaid-source pre {
+            margin: 0 !important;
+            background: var(--code-bg) !important;
+            border: 1px dashed var(--border) !important;
+        }
+
+        /* Ensure proper toggle behavior */
+        .reveal .mermaid-source {
+            display: none !important;
+        }
+
+        .reveal .mermaid-source[style*="display: block"],
+        .reveal .mermaid-source[style*="display:block"] {
+            display: block !important;
+        }
+
+        .reveal .mermaid-display[style*="display: none"],
+        .reveal .mermaid-display[style*="display:none"] {
+            display: none !important;
+        }
+
+        .reveal .mermaid-display.centered {
+            margin-left: auto !important;
+            margin-right: auto !important;
+            max-width: 100% !important;
+        }
+
+        .centered:not(.mermaid-display) {
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            width: 100% !important;
+            margin: 1em 0 !important;
+        }
+
+        .no-break {
+            display: block;
+            width: 100%;
+        }
+
+        .reveal blockquote {
+            display: block;
+            position: relative;
+            margin: var(--r-block-margin) auto !important;
+            padding: 5px;
+            font-style: italic;
+            background: rgba(255, 170, 73, 0.2);
+            box-shadow: 0 0 2px rgba(0,0,0,.2);
+            text-align: left !important;
+        }
+
+        .col1 {
+            width: 90%;
+            margin: 0 auto;
+        }
+
+        .col2 {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start;
+            width: 90%;
+            margin: 0 auto;
+            align-items: flex-start;
+        }
+
+        /* Callout Styles */
+        :root {
+            --callout-note: #448aff;
+            --callout-abstract: #00b0ff;
+            --callout-info: #00b8d4;
+            --callout-todo: #00bfa5;
+            --callout-tip: #00c853;
+            --callout-success: #64dd17;
+            --callout-question: #ffab00;
+            --callout-warning: #ff9100;
+            --callout-failure: #ff5252;
+            --callout-danger: #ff1744;
+            --callout-bug: #f50057;
+            --callout-example: #7c4dff;
+            --callout-quote: #9e9e9e;
+            --code-bg: #f8f8f8;
+            --border: #ddd;
+        }
+
+        .reveal .callout {
+            margin: 1rem auto !important;
+            border: 1px solid var(--border);
+            border-left: 6px solid var(--callout-note);
+            border-radius: 4px;
+            overflow: hidden;
+            text-align: left !important;
+            font-size: 0.8em;
+            width: 75% !important;
+            max-width: 100% !important;
+        }
+
+        .reveal .callout-title {
+            padding: 0.5rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            color: var(--callout-note);
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .reveal .callout-icon {
+            display: flex;
+            align-items: center;
+        }
+
+        .reveal .callout-icon svg {
+            width: 1.2em;
+            height: 1.2em;
+        }
+
+        .reveal .callout-content {
+            padding: 0.5rem 1rem;
+        }
+
+        .reveal .callout-content p {
+            margin-top: 0.5rem !important;
+        }
+
+        .reveal .callout-content p:first-child {
+            margin-top: 0 !important;
+        }
+
+        .reveal h1 { text-transform: none !important; }
+
+        .reveal .callout-abstract { border-left-color: var(--callout-abstract); }
+        .reveal .callout-abstract .callout-title { color: var(--callout-abstract); }
+        .reveal .callout-info { border-left-color: var(--callout-info); }
+        .reveal .callout-info .callout-title { color: var(--callout-info); }
+        .reveal .callout-todo { border-left-color: var(--callout-todo); }
+        .reveal .callout-todo .callout-title { color: var(--callout-todo); }
+        .reveal .callout-tip { border-left-color: var(--callout-tip); }
+        .reveal .callout-tip .callout-title { color: var(--callout-tip); }
+        .reveal .callout-success { border-left-color: var(--callout-success); }
+        .reveal .callout-success .callout-title { color: var(--callout-success); }
+        .reveal .callout-question { border-left-color: var(--callout-question); }
+        .reveal .callout-question .callout-title { color: var(--callout-question) ; }
+        .reveal .callout-warning { border-left-color: var(--callout-warning); }
+        .reveal .callout-warning .callout-title { color: var(--callout-warning); }
+        .reveal .callout-failure { border-left-color: var(--callout-failure); }
+        .reveal .callout-failure .callout-title { color: var(--callout-failure); }
+        .reveal .callout-danger { border-left-color: var(--callout-danger); }
+        .reveal .callout-danger .callout-title { color: var(--callout-danger); }
+        .reveal .callout-bug { border-left-color: var(--callout-bug); }
+        .reveal .callout-bug .callout-title { color: var(--callout-bug); }
+        .reveal .callout-example { border-left-color: var(--callout-example); }
+        .reveal .callout-example .callout-title { color: var(--callout-example); }
+        .reveal .callout-quote { border-left-color: var(--callout-quote); }
+        .reveal .callout-quote .callout-title { color: var(--callout-quote); }
+        .red-note { color: var(--callout-failure); }
+
+        .reveal .slide-number {
+            font-size: 0.8em !important;
+            padding: 5px 10px !important;
+            background: rgba(0,0,0,0.1) !important;
+            border-radius: 4px;
+            color: #000000b1 !important;
+        }
+
+        /* Print styles */
+        @media print {
+            .reveal .slides section {
+                display: block !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                position: relative !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+                page-break-after: always !important;
+                overflow: hidden !important;
+            }
+
+            .reveal .slides {
+                transform: none !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+            }
+            
+            .reveal {
+                overflow: visible !important;
+            }
+        }
+    </style>
+</body>
+
+</html>
