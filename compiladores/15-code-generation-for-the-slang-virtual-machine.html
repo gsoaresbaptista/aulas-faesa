@@ -49,91 +49,87 @@
                         </li>
                         
                         <li class="toc-item level-2">
-                            <a href="#o-que-muda-nesta-etapa">15.2. O que muda nesta etapa</a>
+                            <a href="#o-que-muda-no-compilador">15.2. O que muda no compilador</a>
                         </li>
                         
                         <li class="toc-item level-2">
-                            <a href="#o-assembly-da-slangvm">15.3. O assembly da SlangVM</a>
-                        </li>
-                        
-                        <li class="toc-item level-2">
-                            <a href="#instruções-que-vamos-gerar">15.4. Instruções que vamos gerar</a>
-                        </li>
-                        
-                        <li class="toc-item level-2">
-                            <a href="#estrutura-final-do-projeto">15.5. Estrutura final do projeto</a>
-                        </li>
-                        
-                        <li class="toc-item level-2">
-                            <a href="#adicionando-a-slangvm-ao-projeto">15.6. Adicionando a SlangVM ao projeto</a>
-                        </li>
-                        
-                        <li class="toc-item level-2">
-                            <a href="#criando-a-interface-do-gerador">15.7. Criando a interface do gerador</a>
-                        </li>
-                        
-                        <li class="toc-item level-2">
-                            <a href="#o-estado-interno-do-gerador">15.8. O estado interno do gerador</a>
-                        </li>
-                        
-                        <li class="toc-item level-2">
-                            <a href="#implementando-codesrccompilercodegenccode">15.9.1. Includes e declarações iniciais</a>
+                            <a href="#a-ideia-da-slangvm">15.3. A ideia da SlangVM</a>
                         </li>
                         
                         <li class="toc-item level-3">
-                            <a href="#tokens-labels-e-símbolos">15.9.2. Tokens, labels e símbolos</a>
+                            <a href="#instruções-da-slangvm-que-usaremos">15.3.1. Instruções da SlangVM que usaremos</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#preparando-o-alvo-de-execução">15.4. Preparando o alvo de execução</a>
                         </li>
                         
                         <li class="toc-item level-3">
-                            <a href="#literais-de-string-e-nomes-de-função">15.9.3. Literais de string e nomes de função</a>
+                            <a href="#adicionando-a-vm-ao-projeto">15.4.1. Adicionando a VM ao projeto</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#criando-a-interface-do-gerador">15.4.2. Criando a interface do gerador</a>
                         </li>
                         
                         <li class="toc-item level-2">
-                            <a href="#gerando-funções-e-blocos">15.10. Gerando funções e blocos</a>
+                            <a href="#estado-interno-do-gerador">15.5. Estado interno do gerador</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#criando-a-estrutura-codecodegencode">15.5.2. Trabalhando com tokens e símbolos</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#emitindo-literais-e-nomes-de-função">15.5.3. Emitindo literais e nomes de função</a>
                         </li>
                         
                         <li class="toc-item level-2">
-                            <a href="#gerando-variáveis-e-atribuições">15.11. Gerando variáveis e atribuições</a>
+                            <a href="#gerando-os-primeiros-elementos-da-linguagem">15.6. Gerando os primeiros elementos da linguagem</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#encontrando-a-função-codemaincode">15.6.2. Gerando blocos, funções e variáveis</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#gerando-chamadas-de-função">15.6.3. Gerando chamadas de função</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#gerando-expressões-simples">15.6.4. Gerando expressões simples</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#simulação-manual-percorrendo-uma-expressão-no-codegen">15.6.5. Simulação manual: percorrendo uma expressão no codegen</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#gerando-comandos-simples">15.6.6. Gerando comandos simples</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#gerando-a-entrada-do-programa">15.6.7. Gerando a entrada do programa</a>
                         </li>
                         
                         <li class="toc-item level-2">
-                            <a href="#gerando-expressões">15.12. Gerando expressões</a>
+                            <a href="#integrando-o-gerador-ao-compilador">15.7. Integrando o gerador ao compilador</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#atualizando-o-codemainccode">15.8. Testando a primeira versão do gerador</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#primeiro-teste-manual">15.8.1. Primeiro teste manual</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#testando-chamada-de-função">15.8.2. Testando chamada de função</a>
                         </li>
                         
                         <li class="toc-item level-2">
-                            <a href="#curto-circuito-de-codeandcode-e-codeorcode">15.16. Gerando chamadas de função</a>
-                        </li>
-                        
-                        <li class="toc-item level-2">
-                            <a href="#arquivo-completo-de-codecodegenccode">15.20. Primeiro teste manual</a>
-                        </li>
-                        
-                        <li class="toc-item level-2">
-                            <a href="#testando-funções-recursivas">15.21. Testando funções recursivas</a>
-                        </li>
-                        
-                        <li class="toc-item level-2">
-                            <a href="#testando-laços">15.22. Testando laços</a>
-                        </li>
-                        
-                        <li class="toc-item level-2">
-                            <a href="#reorganizando-os-testes-finais">15.23. Reorganizando os testes finais</a>
-                        </li>
-                        
-                        <li class="toc-item level-2">
-                            <a href="#rodando-a-suíte-completa">15.24. Rodando a suíte completa</a>
-                        </li>
-                        
-                        <li class="toc-item level-2">
-                            <a href="#o-que-esta-etapa-resolve">15.25. O que esta etapa resolve</a>
-                        </li>
-                        
-                        <li class="toc-item level-2">
-                            <a href="#limitações-conscientes">15.26. Limitações conscientes</a>
-                        </li>
-                        
-                        <li class="toc-item level-2">
-                            <a href="#próximos-passos">15.27. Próximos Passos</a>
+                            <a href="#próximos-passos">15.9. Próximos passos</a>
                         </li>
                         
                     </ol>
@@ -144,6 +140,8 @@
                     
                     <a href="14-lr0-parsing.html" class="sidebar-nav-link prev"><i data-lucide="chevron-left" class="nav-icon"></i> Parsing LR(0)</a>
                     
+                    
+                    <a href="16-code-generation-for-the-slang-virtual-machine-ii.html" class="sidebar-nav-link next">Lab - Geração de Código II <i data-lucide="chevron-right" class="nav-icon"></i></a>
                     
                     <a href="javascript:void(0)" onclick="handleBackNavigation()"
                         class="sidebar-nav-link back"><i data-lucide="arrow-left" class="nav-icon"></i> Voltar</a>
@@ -168,7 +166,7 @@
                     <span class="chapter-number">15</span>
                     <h1 class="article-title">
                         <span class="title-ornament left">❧</span>
-                        <span class="title-text">Lab - Geração de Código para a SlangVM</span>
+                        <span class="title-text">Lab - Geração de Código I</span>
                         <span class="title-ornament right">❧</span>
                     </h1>
                     
@@ -186,13 +184,13 @@
                         
                         
                         
-                        <a href="contents.html#part-IV" class="breadcrumb-link">IV - Análise Semântica</a>
+                        <a href="contents.html#part-IV" class="breadcrumb-link">IV - Geração de Código</a>
                         
                         <span class="breadcrumb-separator"><i data-lucide="chevron-right" class="breadcrumb-icon"></i></span>
                         
                         
                         
-                        <span class="breadcrumb-current">Lab - Geração de Código para a SlangVM</span>
+                        <span class="breadcrumb-current">Lab - Geração de Código I</span>
                         
                         
                     </nav>
@@ -200,179 +198,179 @@
                 </header>
                 <div class="article-body">
                     <h2 id="introdução"><span class="heading-text">Introdução</span><span class="heading-arabic">15.1</span></h2>
-<p>No laboratório anterior de implementação, finalizamos o analisador sintático estrutural do Slang. Ao terminar o segundo roteiro prático, o compilador já consegue fazer duas coisas importantes:</p>
+<p>No laboratório anterior de implementação, finalizamos o analisador sintático estrutural do Slang. Até esse ponto, o compilador já consegue executar duas etapas importantes:</p>
 <ul>
 <li>transformar o código-fonte em tokens com o modo <code>lex</code>;</li>
 <li>transformar o código-fonte em uma AST completa com o modo <code>parse</code>.</li>
 </ul>
-<p>Isso significa que o front-end do nosso compilador já está funcionando. O programa abaixo, por exemplo:</p>
+<p>Isso significa que o front-end do compilador já está funcionando. O programa abaixo, por exemplo:</p>
 <pre class="line-numbers language-slang" data-lang="SLANG"><code class="language-slang">fn main(args: void) -&gt; void {
     value: int = 5
     print(value)
 }
 </code></pre>
-<p>já pode ser lido, tokenizado, parseado e impresso como árvore. Mas ele ainda não pode ser <strong>executado</strong>.</p>
-<p>Neste laboratório, vamos fechar essa lacuna. O objetivo agora é pegar a AST produzida pelo parser e gerar código para uma máquina virtual de pilha, a <strong>SlangVM</strong>.</p>
-<p>O fluxo final será:</p>
-<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="850" viewBox="0.00 0.00 711.00 46.00" class="svg-graph graphviz-img"><g id="svg-graphviz-4768d43c2aa6-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 42)"><title>CodegenPipeline</title><polygon fill="white" stroke="transparent" points="-4,4 -4,-42 707,-42 707,4 -4,4" /><g id="svg-graphviz-4768d43c2aa6-node1" class="node"><title>source</title><path fill="#f8fafc" stroke="#6b7280" d="M103,-38C103,-38 12,-38 12,-38 6,-38 0,-32 0,-26 0,-26 0,-12 0,-12 0,-6 6,0 12,0 12,0 103,0 103,0 109,0 115,-6 115,-12 115,-12 115,-26 115,-26 115,-32 109,-38 103,-38" /><text text-anchor="middle" x="57.5" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">Slang</text><text text-anchor="middle" x="57.5" y="-7.8" font-family="Helvetica,sans-Serif" font-size="14.00">(codigo-fonte)</text></g><g id="svg-graphviz-4768d43c2aa6-node2" class="node"><title>lexer</title><path fill="#f8fafc" stroke="#6b7280" d="M234,-38C234,-38 185,-38 185,-38 179,-38 173,-32 173,-26 173,-26 173,-12 173,-12 173,-6 179,0 185,0 185,0 234,0 234,0 240,0 246,-6 246,-12 246,-12 246,-26 246,-26 246,-32 240,-38 234,-38" /><text text-anchor="middle" x="209.5" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">Lexer</text><text text-anchor="middle" x="209.5" y="-7.8" font-family="Helvetica,sans-Serif" font-size="14.00">(tokens)</text></g><g id="svg-graphviz-4768d43c2aa6-edge1" class="edge"><title>source-&gt;lexer</title><path fill="none" stroke="black" d="M115.3,-19C126.9,-19 141.47,-19 162.56,-19" /><polygon fill="black" stroke="black" points="162.71,-22.5 172.71,-19 162.71,-15.5 162.71,-22.5" /></g><g id="svg-graphviz-4768d43c2aa6-node3" class="node"><title>parser</title><path fill="#f8fafc" stroke="#6b7280" d="M352,-38C352,-38 316,-38 316,-38 310,-38 304,-32 304,-26 304,-26 304,-12 304,-12 304,-6 310,0 316,0 316,0 352,0 352,0 358,0 364,-6 364,-12 364,-12 364,-26 364,-26 364,-32 358,-38 352,-38" /><text text-anchor="middle" x="334" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">Parser</text><text text-anchor="middle" x="334" y="-7.8" font-family="Helvetica,sans-Serif" font-size="14.00">(AST)</text></g><g id="svg-graphviz-4768d43c2aa6-edge2" class="edge"><title>lexer-&gt;parser</title><path fill="none" stroke="black" d="M246.18,-19C257.18,-19 270.52,-19 293.77,-19" /><polygon fill="black" stroke="black" points="293.96,-22.5 303.96,-19 293.96,-15.5 293.96,-22.5" /></g><g id="svg-graphviz-4768d43c2aa6-node4" class="node"><title>codegen</title><path fill="#f8fafc" stroke="#6b7280" d="M541,-38C541,-38 434,-38 434,-38 428,-38 422,-32 422,-26 422,-26 422,-12 422,-12 422,-6 428,0 434,0 434,0 541,0 541,0 547,0 553,-6 553,-12 553,-12 553,-26 553,-26 553,-32 547,-38 541,-38" /><text text-anchor="middle" x="487.5" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">Codegen</text><text text-anchor="middle" x="487.5" y="-7.8" font-family="Helvetica,sans-Serif" font-size="14.00">assembly da VM</text></g><g id="svg-graphviz-4768d43c2aa6-edge3" class="edge"><title>parser-&gt;codegen</title><path fill="none" stroke="black" d="M364.08,-19C384.31,-19 399.58,-19 411.81,-19" /><polygon fill="black" stroke="black" points="411.83,-22.5 421.83,-19 411.83,-15.5 411.83,-22.5" /></g><g id="svg-graphviz-4768d43c2aa6-node5" class="node"><title>vm</title><path fill="#f8fafc" stroke="#6b7280" d="M691,-38C691,-38 623,-38 623,-38 617,-38 611,-32 611,-26 611,-26 611,-12 611,-12 611,-6 617,0 623,0 623,0 691,0 691,0 697,0 703,-6 703,-12 703,-12 703,-26 703,-26 703,-32 697,-38 691,-38" /><text text-anchor="middle" x="657" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">SlangVM</text><text text-anchor="middle" x="657" y="-7.8" font-family="Helvetica,sans-Serif" font-size="14.00">(execucao)</text></g><g id="svg-graphviz-4768d43c2aa6-edge4" class="edge"><title>codegen-&gt;vm</title><path fill="none" stroke="black" d="M553.13,-19C574.14,-19 588.53,-19 600.38,-19" /><polygon fill="black" stroke="black" points="600.68,-22.5 610.68,-19 600.68,-15.5 600.68,-22.5" /></g></g></svg></div></div>
+<p>já pode ser lido, tokenizado, analisado sintaticamente e impresso como árvore. Porém, ele ainda não pode ser executado, porque falta uma etapa essencial: transformar a AST em instruções que alguma máquina consiga executar.</p>
+<p>Neste laboratório, vamos iniciar a fase de <strong>geração de código</strong>. O objetivo será percorrer a AST produzida pelo parser e gerar assembly textual para uma máquina virtual de pilha, a <strong>SlangVM</strong>.</p>
+<p>O fluxo que estamos construindo é:</p>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="850" viewBox="0.00 0.00 711.00 46.00" class="svg-graph graphviz-img"><g id="svg-graphviz-accf533a9540-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 42)"><title>CodegenPipeline</title><polygon fill="white" stroke="transparent" points="-4,4 -4,-42 707,-42 707,4 -4,4" /><g id="svg-graphviz-accf533a9540-node1" class="node"><title>source</title><path fill="#f8fafc" stroke="#6b7280" d="M103,-38C103,-38 12,-38 12,-38 6,-38 0,-32 0,-26 0,-26 0,-12 0,-12 0,-6 6,0 12,0 12,0 103,0 103,0 109,0 115,-6 115,-12 115,-12 115,-26 115,-26 115,-32 109,-38 103,-38" /><text text-anchor="middle" x="57.5" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">Slang</text><text text-anchor="middle" x="57.5" y="-7.8" font-family="Helvetica,sans-Serif" font-size="14.00">(código-fonte)</text></g><g id="svg-graphviz-accf533a9540-node2" class="node"><title>lexer</title><path fill="#f8fafc" stroke="#6b7280" d="M234,-38C234,-38 185,-38 185,-38 179,-38 173,-32 173,-26 173,-26 173,-12 173,-12 173,-6 179,0 185,0 185,0 234,0 234,0 240,0 246,-6 246,-12 246,-12 246,-26 246,-26 246,-32 240,-38 234,-38" /><text text-anchor="middle" x="209.5" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">Lexer</text><text text-anchor="middle" x="209.5" y="-7.8" font-family="Helvetica,sans-Serif" font-size="14.00">(tokens)</text></g><g id="svg-graphviz-accf533a9540-edge1" class="edge"><title>source-&gt;lexer</title><path fill="none" stroke="black" d="M115.3,-19C126.9,-19 141.47,-19 162.56,-19" /><polygon fill="black" stroke="black" points="162.71,-22.5 172.71,-19 162.71,-15.5 162.71,-22.5" /></g><g id="svg-graphviz-accf533a9540-node3" class="node"><title>parser</title><path fill="#f8fafc" stroke="#6b7280" d="M352,-38C352,-38 316,-38 316,-38 310,-38 304,-32 304,-26 304,-26 304,-12 304,-12 304,-6 310,0 316,0 316,0 352,0 352,0 358,0 364,-6 364,-12 364,-12 364,-26 364,-26 364,-32 358,-38 352,-38" /><text text-anchor="middle" x="334" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">Parser</text><text text-anchor="middle" x="334" y="-7.8" font-family="Helvetica,sans-Serif" font-size="14.00">(AST)</text></g><g id="svg-graphviz-accf533a9540-edge2" class="edge"><title>lexer-&gt;parser</title><path fill="none" stroke="black" d="M246.18,-19C257.18,-19 270.52,-19 293.77,-19" /><polygon fill="black" stroke="black" points="293.96,-22.5 303.96,-19 293.96,-15.5 293.96,-22.5" /></g><g id="svg-graphviz-accf533a9540-node4" class="node"><title>codegen</title><path fill="#f8fafc" stroke="#6b7280" d="M541,-38C541,-38 434,-38 434,-38 428,-38 422,-32 422,-26 422,-26 422,-12 422,-12 422,-6 428,0 434,0 434,0 541,0 541,0 547,0 553,-6 553,-12 553,-12 553,-26 553,-26 553,-32 547,-38 541,-38" /><text text-anchor="middle" x="487.5" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">Codegen</text><text text-anchor="middle" x="487.5" y="-7.8" font-family="Helvetica,sans-Serif" font-size="14.00">assembly da VM</text></g><g id="svg-graphviz-accf533a9540-edge3" class="edge"><title>parser-&gt;codegen</title><path fill="none" stroke="black" d="M364.08,-19C384.31,-19 399.58,-19 411.81,-19" /><polygon fill="black" stroke="black" points="411.83,-22.5 421.83,-19 411.83,-15.5 411.83,-22.5" /></g><g id="svg-graphviz-accf533a9540-node5" class="node"><title>vm</title><path fill="#f8fafc" stroke="#6b7280" d="M691,-38C691,-38 623,-38 623,-38 617,-38 611,-32 611,-26 611,-26 611,-12 611,-12 611,-6 617,0 623,0 623,0 691,0 691,0 697,0 703,-6 703,-12 703,-12 703,-26 703,-26 703,-32 697,-38 691,-38" /><text text-anchor="middle" x="657" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">SlangVM</text><text text-anchor="middle" x="657" y="-7.8" font-family="Helvetica,sans-Serif" font-size="14.00">(execução)</text></g><g id="svg-graphviz-accf533a9540-edge4" class="edge"><title>codegen-&gt;vm</title><path fill="none" stroke="black" d="M553.13,-19C574.14,-19 588.53,-19 600.38,-19" /><polygon fill="black" stroke="black" points="600.68,-22.5 610.68,-19 600.68,-15.5 600.68,-22.5" /></g></g></svg></div></div>
 
-<p>Na prática, ao final deste laboratório, você poderá executar:</p>
+<p>Na prática, queremos chegar a este fluxo de comandos:</p>
 <pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">./build/compiler code programa.slang &gt; programa.slasm
 ./build/slang-vm programa.slasm
 </code></pre>
-<p>O primeiro comando usa o compilador para gerar assembly textual da VM. O segundo comando executa esse assembly.</p>
-<h2 id="o-que-muda-nesta-etapa"><span class="heading-text">O que muda nesta etapa</span><span class="heading-arabic">15.2</span></h2>
-<p>Até agora, o executável principal aceitava dois modos:</p>
+<p>Neste primeiro laboratório de geração de código, vamos preparar a infraestrutura e gerar código para uma parte controlada da linguagem:</p>
+<ul>
+<li>literais;</li>
+<li>variáveis locais;</li>
+<li>expressões aritméticas;</li>
+<li>expressões de comparação;</li>
+<li>chamadas de função;</li>
+<li><code>print</code>;</li>
+<li>funções simples com <code>return</code>.</li>
+</ul>
+<p>Vamos deixar <code>if</code>, <code>loop</code>, <code>break</code>, <code>continue</code> e curto-circuito lógico para a segunda parte. Esses recursos exigem saltos e labels; por isso, fazem mais sentido depois que a base da VM e do gerador já estiver funcionando.</p>
+<h2 id="o-que-muda-no-compilador"><span class="heading-text">O que muda no compilador</span><span class="heading-arabic">15.2</span></h2>
+<p>No fim do laboratório 12, o executável aceitava dois modos:</p>
 <pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">./build/compiler lex arquivo.slang
 ./build/compiler parse arquivo.slang
 </code></pre>
-<p>Agora adicionaremos um terceiro modo:</p>
+<p>Agora vamos adicionar um terceiro modo:</p>
 <pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">./build/compiler code arquivo.slang
 </code></pre>
-<p>Esse novo modo fará o seguinte:</p>
+<p>Esse novo modo fará quatro coisas:</p>
 <ol>
 <li>inicializar o parser;</li>
 <li>construir a AST do programa;</li>
-<li>percorrer a AST;</li>
+<li>percorrer a AST com o gerador de código;</li>
 <li>escrever assembly da SlangVM em <code>stdout</code>.</li>
 </ol>
-<p>Além disso, o projeto passará a compilar também um segundo executável:</p>
+<p>Também vamos adicionar um segundo executável ao projeto:</p>
 <pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">./build/slang-vm arquivo.slasm
 </code></pre>
-<p>Esse executável é a máquina virtual que interpreta o assembly gerado.</p>
-<h2 id="o-assembly-da-slangvm"><span class="heading-text">O assembly da SlangVM</span><span class="heading-arabic">15.3</span></h2>
-<p>A SlangVM é uma máquina de pilha. Isso significa que as instruções geralmente empilham valores, removem valores do topo da pilha e colocam resultados de volta no topo.</p>
+<p>O compilador gera o arquivo <code>.slasm</code>; a VM executa esse arquivo. Essa separação é didática e prática: conseguimos inspecionar o assembly gerado antes de executar o programa.</p>
+<h2 id="a-ideia-da-slangvm"><span class="heading-text">A ideia da SlangVM</span><span class="heading-arabic">15.3</span></h2>
+<p>A SlangVM é uma máquina de pilha. Isso significa que suas instruções manipulam valores no topo de uma pilha, em vez de usar registradores explícitos.</p>
 <p>Por exemplo, a expressão:</p>
 <pre class="line-numbers language-slang" data-lang="SLANG"><code class="language-slang">1 + 2 * 3
 </code></pre>
-<p>deve ser gerada como:</p>
+<p>será traduzida para:</p>
 <pre class="line-numbers language-slasm" data-lang="SLASM"><code class="language-slasm">push 1
 push 2
 push 3
 mul
 add
 </code></pre>
-<p>Essa sequência funciona porque:</p>
+<p>A execução ocorre assim:</p>
 <ol>
-<li><code>push 1</code> empilha o número <code>1</code>;</li>
-<li><code>push 2</code> empilha o número <code>2</code>;</li>
-<li><code>push 3</code> empilha o número <code>3</code>;</li>
+<li><code>push 1</code> empilha <code>1</code>;</li>
+<li><code>push 2</code> empilha <code>2</code>;</li>
+<li><code>push 3</code> empilha <code>3</code>;</li>
 <li><code>mul</code> remove <code>2</code> e <code>3</code>, calcula <code>6</code> e empilha o resultado;</li>
 <li><code>add</code> remove <code>1</code> e <code>6</code>, calcula <code>7</code> e empilha o resultado.</li>
 </ol>
-<p>Essa estratégia é muito conveniente para um compilador didático, porque evita que precisemos escolher registradores temporários.</p>
-<h2 id="instruções-que-vamos-gerar"><span class="heading-text">Instruções que vamos gerar</span><span class="heading-arabic">15.4</span></h2>
-<p>O gerador de código usará principalmente as instruções abaixo.</p>
+<p>Essa estratégia simplifica muito a geração de código. Em vez de escolher registradores para cada valor temporário, o compilador apenas emite instruções que empilham operandos e consomem esses operandos na ordem correta.</p>
+<h3 id="instruções-da-slangvm-que-usaremos"><span class="heading-text">Instruções da SlangVM que usaremos</span><span class="heading-arabic">15.3.1</span></h3>
+<p>O codegin vai emitir instruções de três categorias:</p>
+<p><strong>Manipulação da pilha:</strong></p>
 <table>
 <thead>
 <tr>
   <th>Instrução</th>
-  <th>Papel</th>
+  <th>Efeito</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-  <td><code>push valor</code></td>
-  <td>Empilha uma constante</td>
-</tr>
-<tr>
-  <td><code>get_local n</code></td>
-  <td>Lê o slot local <code>n</code></td>
-</tr>
-<tr>
-  <td><code>set_local n</code></td>
-  <td>Escreve no slot local <code>n</code></td>
+  <td><code>push N</code></td>
+  <td>Empilha o valor <code>N</code></td>
 </tr>
 <tr>
   <td><code>pop</code></td>
-  <td>Remove o topo da pilha</td>
+  <td>Remove o valor do topo</td>
 </tr>
 <tr>
-  <td><code>add</code>, <code>sub</code>, <code>mul</code>, <code>div</code>, <code>mod</code></td>
-  <td>Operações aritméticas</td>
-</tr>
-<tr>
-  <td><code>neg</code></td>
-  <td>Negação numérica</td>
-</tr>
-<tr>
-  <td><code>not</code></td>
-  <td>Negação lógica</td>
-</tr>
-<tr>
-  <td><code>eq</code>, <code>ne</code>, <code>lt</code>, <code>le</code>, <code>gt</code>, <code>ge</code></td>
-  <td>Comparações</td>
-</tr>
-<tr>
-  <td><code>label nome</code></td>
-  <td>Marca uma posição do programa</td>
-</tr>
-<tr>
-  <td><code>jump nome</code></td>
-  <td>Salto incondicional</td>
-</tr>
-<tr>
-  <td><code>jump_if_false nome</code></td>
-  <td>Salto condicional</td>
-</tr>
-<tr>
-  <td><code>call argc nome</code></td>
-  <td>Chamada de função</td>
-</tr>
-<tr>
-  <td><code>ret</code></td>
-  <td>Retorno de função</td>
-</tr>
-<tr>
-  <td><code>print</code></td>
-  <td>Impressão do topo da pilha</td>
-</tr>
-<tr>
-  <td><code>halt</code></td>
-  <td>Encerra a VM</td>
+  <td><code>dup</code></td>
+  <td>Duplica o valor do topo</td>
 </tr>
 </tbody>
 </table>
-<p>Essas instruções são suficientes para traduzir o subconjunto do Slang que já temos no parser: variáveis, expressões, <code>if</code>, <code>loop</code>, <code>break</code>, <code>continue</code>, <code>return</code>, funções e chamadas.</p>
-<h2 id="estrutura-final-do-projeto"><span class="heading-text">Estrutura final do projeto</span><span class="heading-arabic">15.5</span></h2>
-<p>Ao final deste laboratório, a estrutura relevante do projeto será:</p>
-<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">compilador/
-├── CMakeLists.txt
-├── include/
-│   ├── compiler/
-│   │   ├── ast.h
-│   │   ├── codegen.h
-│   │   ├── lexer.h
-│   │   ├── parser.h
-│   │   └── token.h
-│   └── vm/
-│       ├── assembler.h
-│       ├── chunk.h
-│       ├── debug.h
-│       ├── value.h
-│       └── vm.h
-├── src/
-│   ├── compiler/
-│   │   ├── ast.c
-│   │   ├── codegen.c
-│   │   ├── lexer.c
-│   │   ├── parser.c
-│   │   └── token.c
-│   ├── vm/
-│   │   ├── assembler.c
-│   │   ├── chunk.c
-│   │   ├── debug.c
-│   │   ├── main.c
-│   │   └── vm.c
-│   └── main.c
-└── tests/
-    ├── lexer/
-    ├── parser/
-    └── vm/
-</code></pre>
-<p>Observe que a máquina virtual fica separada do compilador. O compilador gera texto <code>.slasm</code>; a VM lê esse texto e executa.</p>
-<h2 id="adicionando-a-slangvm-ao-projeto"><span class="heading-text">Adicionando a SlangVM ao projeto</span><span class="heading-arabic">15.6</span></h2>
-<p>Neste laboratório, a VM será usada como alvo de execução. Para não misturar a implementação do parser, do gerador de código e da VM em um único problema grande demais, a implementação da VM deve ser adicionada como um módulo separado do projeto.</p>
+<p><strong>Variáveis locais:</strong></p>
+<table>
+<thead>
+<tr>
+  <th>Instrução</th>
+  <th>Efeito</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>get_local N</code></td>
+  <td>Empilha o valor do slot local <code>N</code></td>
+</tr>
+<tr>
+  <td><code>set_local N</code></td>
+  <td>Desempilha e armazena no slot <code>N</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Aritmética e comparação:</strong></p>
+<table>
+<thead>
+<tr>
+  <th>Instrução</th>
+  <th>Operação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>add</code>, <code>sub</code>, <code>mul</code>, <code>div</code>, <code>mod</code></td>
+  <td>Desempilha dois, empilha resultado</td>
+</tr>
+<tr>
+  <td><code>eq</code>, <code>ne</code>, <code>lt</code>, <code>le</code>, <code>gt</code>, <code>ge</code></td>
+  <td>Desempilha dois, empilha <code>true</code>/<code>false</code></td>
+</tr>
+<tr>
+  <td><code>neg</code>, <code>not</code></td>
+  <td>Desempilha um, empilha resultado</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Controle e funções:</strong></p>
+<table>
+<thead>
+<tr>
+  <th>Instrução</th>
+  <th>Efeito</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>call N fn_label</code></td>
+  <td>Chama função com <code>N</code> argumentos</td>
+</tr>
+<tr>
+  <td><code>ret</code></td>
+  <td>Retorna da função</td>
+</tr>
+<tr>
+  <td><code>halt</code></td>
+  <td>Encerra o programa</td>
+</tr>
+<tr>
+  <td><code>print</code></td>
+  <td>Imprime o valor do topo</td>
+</tr>
+<tr>
+  <td><code>jump L</code>, <code>jump_if_false L</code></td>
+  <td>Saltos (usados na Parte II)</td>
+</tr>
+</tbody>
+</table>
+<p>Não é preciso decorar essa tabela agora. Durante a implementação, cada instrução será apresentada no contexto em que aparece.</p>
+<h2 id="preparando-o-alvo-de-execução"><span class="heading-text">Preparando o alvo de execução</span><span class="heading-arabic">15.4</span></h2>
+<p>Antes de gerar código, precisamos ter uma máquina capaz de executar esse código. Por isso, o primeiro conjunto de mudanças adiciona a SlangVM ao projeto e define a interface entre o compilador e o gerador.</p>
+<h3 id="adicionando-a-vm-ao-projeto"><span class="heading-text">Adicionando a VM ao projeto</span><span class="heading-arabic">15.4.1</span></h3>
 <p>Crie as pastas:</p>
 <pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">include/vm/
 src/vm/
@@ -389,20 +387,125 @@ src/vm/assembler.c
 src/vm/debug.c
 src/vm/main.c
 </code></pre>
-<p>Antes de integrar o gerador de código, vale entender o papel de cada grupo de arquivos:</p>
+<p>O papel desses arquivos é:</p>
 <ul>
-<li><code>value.h</code> define os valores que a VM consegue manipular;</li>
-<li><code>chunk.h</code> e <code>chunk.c</code> armazenam bytecode e constantes;</li>
-<li><code>vm.h</code> e <code>vm.c</code> executam as instruções;</li>
-<li><code>assembler.h</code> e <code>assembler.c</code> transformam assembly textual em bytecode;</li>
-<li><code>debug.h</code> e <code>debug.c</code> ajudam a imprimir bytecode durante depuração;</li>
-<li><code>src/vm/main.c</code> cria o executável <code>slang-vm</code>.</li>
+<li><code>value.h</code>: define os tipos de valores que a VM manipula;</li>
+<li><code>chunk.h</code> e <code>chunk.c</code>: armazenam bytecode e constantes;</li>
+<li><code>vm.h</code> e <code>vm.c</code>: executam as instruções;</li>
+<li><code>assembler.h</code> e <code>assembler.c</code>: transformam assembly textual em bytecode;</li>
+<li><code>debug.h</code> e <code>debug.c</code>: ajudam a imprimir bytecode durante depuração;</li>
+<li><code>src/vm/main.c</code>: cria o executável <code>slang-vm</code>.</li>
 </ul>
-<p>Neste ponto, o compilador ainda não gera nada para a VM. Estamos apenas preparando o alvo.</p>
-<h2 id="criando-a-interface-do-gerador"><span class="heading-text">Criando a interface do gerador</span><span class="heading-arabic">15.7</span></h2>
-<p>Agora vamos adicionar o módulo responsável por traduzir AST para assembly da VM.</p>
+<p>Neste momento, o compilador ainda não gera código para a VM. Estamos apenas preparando o alvo de execução.</p>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Correções necessárias nos arquivos da VM<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Os arquivos fornecidos contêm dois bugs que precisam ser corrigidos para que programas com recursão, <code>if</code>, <code>loop</code> e labels funcionem corretamente:</p>
+<p><strong>1. <code>src/vm/vm.c</code> — <code>return_slot</code> em <code>OP_RET</code></strong></p>
+<p>O <code>OP_RET</code> original lê o <code>return_slot</code> do quadro <strong>chamador</strong> (<code>caller-&gt;return_slot</code>), mas deveria ler do quadro <strong>sendo destruído</strong> (<code>cur-&gt;return_slot</code>). Sem essa correção, chamadas de função aninhadas (como recursão) retornam <code>null</code> em vez do valor correto.</p>
+<p>Substitua o trecho:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">case OP_RET: {
+    Value result = vm-&gt;stack_top == 0 ? value_null() : vm_pop(vm);
+    vm-&gt;frame_count--;
+    if (vm-&gt;frame_count &gt; 0) {
+        CallFrame *caller = &amp;vm-&gt;frames[vm-&gt;frame_count - 1];
+        if (caller-&gt;return_slot &gt;= 0) {
+            vm-&gt;stack_top = caller-&gt;return_slot;
+            vm_push(vm, result);
+        }
+    }
+    break;
+}
+</code></pre>
+<p>por:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">case OP_RET: {
+    Value result = vm-&gt;stack_top == 0 ? value_null() : vm_pop(vm);
+    int return_slot = cur-&gt;return_slot;
+    vm-&gt;frame_count--;
+    if (vm-&gt;frame_count &gt; 0 &amp;&amp; return_slot &gt;= 0) {
+        vm-&gt;stack_top = return_slot;
+        vm_push(vm, result);
+    }
+    break;
+}
+</code></pre>
+<p><strong>2. <code>src/vm/assembler.c</code> — sistema de labels separado das constantes do chunk</strong></p>
+<p>O <code>find_or_create_label</code> original armazena labels como constantes string no chunk, mas depois as busca iterando sobre <code>constants[i].as.string</code>. Quando uma constante numérica aparece antes de uma label (ex.: <code>push 5</code> antes de <code>jump_if_false L0</code>), o acesso a <code>as.string</code> de um número causa <strong>segfault</strong>.</p>
+<p>A correção envolve três mudanças:</p>
+<p><strong>a)</strong> Em <code>include/vm/assembler.h</code>, substitua o campo <code>int *label_addresses</code> por um vetor de structs <code>Label</code>:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">typedef struct {
+    char *name;
+    int name_len;
+    int address;
+} Label;
+
+typedef struct {
+    Chunk chunk;
+    Label *labels;
+    int label_count;
+    int label_capacity;
+    int *fixup_ips;
+    int *fixup_labels;
+    int fixup_count;
+    int fixup_capacity;
+} Assembler;
+</code></pre>
+<p><strong>b)</strong> Em <code>src/vm/assembler.c</code>, reescreva <code>assembler_init</code> e <code>find_or_create_label</code>:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">static int find_label(Assembler *assembler, const char *name, int name_len) {
+    for (int i = 0; i &lt; assembler-&gt;label_count; i++) {
+        if (assembler-&gt;labels[i].name_len == name_len &amp;&amp;
+            memcmp(assembler-&gt;labels[i].name, name, name_len) == 0) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+static int create_label(Assembler *assembler, const char *name, int name_len) {
+    if (assembler-&gt;label_capacity &lt;= assembler-&gt;label_count) {
+        int old = assembler-&gt;label_capacity;
+        assembler-&gt;label_capacity = old &lt; 8 ? 8 : old * 2;
+        assembler-&gt;labels = (Label *)realloc(assembler-&gt;labels,
+                                              sizeof(Label) * assembler-&gt;label_capacity);
+    }
+    int idx = assembler-&gt;label_count++;
+    assembler-&gt;labels[idx].name = (char *)malloc(name_len + 1);
+    memcpy(assembler-&gt;labels[idx].name, name, name_len);
+    assembler-&gt;labels[idx].name[name_len] = '\0';
+    assembler-&gt;labels[idx].name_len = name_len;
+    assembler-&gt;labels[idx].address = -1;
+    return idx;
+}
+
+void assembler_init(Assembler *assembler) {
+    chunk_init(&amp;assembler-&gt;chunk);
+    assembler-&gt;labels = NULL;
+    assembler-&gt;label_count = 0;
+    assembler-&gt;label_capacity = 0;
+    assembler-&gt;fixup_ips = NULL;
+    assembler-&gt;fixup_labels = NULL;
+    assembler-&gt;fixup_count = 0;
+    assembler-&gt;fixup_capacity = 0;
+}
+
+static int find_or_create_label(Assembler *assembler, const char *name, int name_len) {
+    int idx = find_label(assembler, name, name_len);
+    if (idx &gt;= 0) return idx;
+    return create_label(assembler, name, name_len);
+}
+</code></pre>
+<p><strong>c)</strong> Em <code>src/vm/assembler.c</code>, em todas as ocorrências de <code>assembler-&gt;label_addresses[...] = ...</code>, substitua por <code>assembler-&gt;labels[...].address = ...</code>. Em <code>resolve_fixups</code>, use <code>assembler-&gt;labels[label_idx].address</code>. Em <code>assembler_free</code>, libere cada <code>labels[i].name</code> antes de liberar o vetor.</p>
+<p>Essas correções são necessárias para que a VM funcione com todos os recursos que implementaremos no <a href="16-code-generation-for-the-slang-virtual-machine-ii.html">próximo laboratório</a>.</p>
+  </div>
+</div>
+<h3 id="criando-a-interface-do-gerador"><span class="heading-text">Criando a interface do gerador</span><span class="heading-arabic">15.4.2</span></h3>
 <p>Crie o arquivo <code>include/compiler/codegen.h</code>:</p>
-<pre class="line-numbers language-c" data-lang="C"><code class="language-c">#ifndef COMPILER_CODEGEN_H_
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">// include/compiler/codegen.h
+
+#ifndef COMPILER_CODEGEN_H_
 #define COMPILER_CODEGEN_H_
 
 #include &lt;stdbool.h&gt;
@@ -413,55 +516,19 @@ bool codegen_generate(FILE *stream, const AstNode *program);
 
 #endif
 </code></pre>
-<p>A interface é pequena de propósito. O gerador recebe:</p>
+<p>A função <code>codegen_generate</code> recebe dois argumentos:</p>
 <ul>
-<li>um <code>FILE *stream</code>, para decidir onde escrever o assembly;</li>
-<li>a raiz da AST, que deve ser um <code>AST_PROGRAM</code>.</li>
+<li><code>stream</code>, que indica onde o assembly será escrito;</li>
+<li><code>program</code>, que é a raiz da AST gerada pelo parser.</li>
 </ul>
-<p>Se a geração terminar corretamente, a função retorna <code>true</code>. Se encontrar algo que ainda não sabemos gerar, retorna <code>false</code>.</p>
-<h2 id="o-estado-interno-do-gerador"><span class="heading-text">O estado interno do gerador</span><span class="heading-arabic">15.8</span></h2>
-<p>O gerador precisa lembrar algumas informações enquanto percorre a AST.</p>
-<p>Primeiro, ele precisa mapear variáveis para slots locais. Por exemplo:</p>
-<pre class="line-numbers language-slang" data-lang="SLANG"><code class="language-slang">fn main(args: void) -&gt; void {
-    x: int = 5
-    y: int = x + 1
-}
-</code></pre>
-<p>Aqui, <code>args</code> pode ocupar o slot <code>0</code>, <code>x</code> pode ocupar o slot <code>1</code> e <code>y</code> pode ocupar o slot <code>2</code>.</p>
-<p>Segundo, ele precisa criar labels para saltos. Um <code>if</code>, por exemplo, precisa de uma label para o <code>else</code> e outra para o fim do comando.</p>
-<p>Terceiro, ele precisa controlar <code>break</code> e <code>continue</code>. Esses comandos só fazem sentido dentro de um <code>loop</code>, então o gerador guarda a label de início e a label de fim do laço atual.</p>
-<p>Por isso, usaremos as estruturas abaixo em <code>src/compiler/codegen.c</code>:</p>
-<pre class="line-numbers language-c" data-lang="C"><code class="language-c">#define MAX_SYMBOLS 256
-#define MAX_LOOPS 64
+<p>Usar um <code>FILE *</code> deixa o gerador flexível. Nos testes e no modo <code>code</code>, vamos passar <code>stdout</code>; no futuro, poderíamos passar um arquivo aberto ou até um buffer de memória.</p>
+<h2 id="estado-interno-do-gerador"><span class="heading-text">Estado interno do gerador</span><span class="heading-arabic">15.5</span></h2>
+<p>Com a VM disponível, precisamos representar o estado usado durante a geração. Esse estado concentra a saída do assembly, a tabela de variáveis locais, os contadores de labels e as informações que serão usadas mais tarde em laços.</p>
+<h3 id="criando-a-estrutura-codecodegencode"><span class="heading-text">Criando a estrutura <code>Codegen</code></span><span class="heading-arabic">15.5.1</span></h3>
+<p>Crie <code>src/compiler/codegen.c</code> e comece com a estrutura abaixo:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">// src/compiler/codegen.c
 
-typedef struct {
-    const char *start;
-    int length;
-    int slot;
-} Symbol;
-
-typedef struct {
-    int start_label;
-    int end_label;
-} LoopLabels;
-
-typedef struct {
-    FILE *stream;
-    Symbol symbols[MAX_SYMBOLS];
-    int symbol_count;
-    int next_slot;
-    LoopLabels loops[MAX_LOOPS];
-    int loop_count;
-    int next_label;
-    bool had_error;
-} Codegen;
-</code></pre>
-<h2 id="implementando-codesrccompilercodegenccode"><span class="heading-text">Implementando <code>src/compiler/codegen.c</code></span><span class="heading-arabic">15.9</span></h2>
-<p>Agora crie o arquivo <code>src/compiler/codegen.c</code>.</p>
-<p>Vamos construí-lo por partes para entender a lógica antes de ver o arquivo completo.</p>
-<h3 id="includes-e-declarações-iniciais"><span class="heading-text">Includes e declarações iniciais</span><span class="heading-arabic">15.9.1</span></h3>
-<p>Comece com:</p>
-<pre class="line-numbers language-c" data-lang="C"><code class="language-c">#include &lt;stdbool.h&gt;
+#include &lt;stdbool.h&gt;
 #include &lt;stdio.h&gt;
 #include &lt;stdlib.h&gt;
 #include &lt;string.h&gt;
@@ -496,15 +563,19 @@ static void gen_declaration(Codegen *codegen, const AstNode *node);
 static void gen_statement(Codegen *codegen, const AstNode *node);
 static void gen_expression(Codegen *codegen, const AstNode *node);
 </code></pre>
-<p>Essas três funções serão a base da geração:</p>
+<p>A estrutura <code>Codegen</code> guarda tudo que o gerador precisa enquanto percorre a AST:</p>
 <ul>
-<li><code>gen_declaration</code> lida com declarações do nível atual;</li>
-<li><code>gen_statement</code> lida com comandos;</li>
-<li><code>gen_expression</code> lida com expressões.</li>
+<li><code>stream</code> é o destino do assembly;</li>
+<li><code>symbols</code> associa nomes de variáveis a slots locais;</li>
+<li><code>next_slot</code> indica qual será o próximo slot livre;</li>
+<li><code>loops</code> será usado na segunda parte para <code>break</code> e <code>continue</code>;</li>
+<li><code>next_label</code> será usado para criar labels únicas;</li>
+<li><code>had_error</code> interrompe a geração quando encontramos algo inválido.</li>
 </ul>
-<p>Essa separação segue a mesma divisão conceitual do parser.</p>
-<h3 id="tokens-labels-e-símbolos"><span class="heading-text">Tokens, labels e símbolos</span><span class="heading-arabic">15.9.2</span></h3>
-<p>Agora adicione as funções auxiliares:</p>
+<p>Mesmo que <code>LoopLabels</code> só seja usado na segunda parte, já deixamos a estrutura preparada. Assim, a forma geral do gerador não muda quando adicionarmos controle de fluxo.</p>
+<h3 id="trabalhando-com-tokens-e-símbolos"><span class="heading-text">Trabalhando com tokens e símbolos</span><span class="heading-arabic">15.5.2</span></h3>
+<p>O gerador precisa comparar tokens com nomes especiais, como <code>main</code> e <code>print</code>. Como os tokens apontam para fatias do código-fonte original, não podemos usar <code>strcmp</code> diretamente.</p>
+<p>Adicione:</p>
 <pre class="line-numbers language-c" data-lang="C"><code class="language-c">static bool token_equals(Token token, const char *text) {
     int length = (int)strlen(text);
     return token.length == length &amp;&amp; memcmp(token.start, text, length) == 0;
@@ -518,9 +589,8 @@ static int new_label(Codegen *codegen) {
     return codegen-&gt;next_label++;
 }
 </code></pre>
-<p><code>token_equals</code> será útil para reconhecer casos especiais, como <code>main</code> e <code>print</code>.</p>
-<p><code>new_label</code> gera números únicos para labels como <code>L0</code>, <code>L1</code>, <code>L2</code>.</p>
-<p>Agora precisamos mapear variáveis para slots:</p>
+<p>Agora precisamos de uma tabela simples para variáveis locais. Cada variável será associada a um slot numérico da VM.</p>
+<p>Adicione:</p>
 <pre class="line-numbers language-c" data-lang="C"><code class="language-c">static int find_symbol(Codegen *codegen, Token name) {
     for (int i = codegen-&gt;symbol_count - 1; i &gt;= 0; i--) {
         Symbol symbol = codegen-&gt;symbols[i];
@@ -529,14 +599,14 @@ static int new_label(Codegen *codegen) {
         }
     }
 
-    fprintf(stderr, &quot;Erro de geracao: variavel '%.*s' nao declarada.\n&quot;, name.length, name.start);
+    fprintf(stderr, &quot;Erro de geração: variável '%.*s' não declarada.\n&quot;, name.length, name.start);
     codegen-&gt;had_error = true;
     return 0;
 }
 
 static int declare_symbol(Codegen *codegen, Token name) {
     if (codegen-&gt;symbol_count == MAX_SYMBOLS) {
-        fprintf(stderr, &quot;Erro de geracao: muitas variaveis locais.\n&quot;);
+        fprintf(stderr, &quot;Erro de geração: muitas variáveis locais.\n&quot;);
         codegen-&gt;had_error = true;
         return 0;
     }
@@ -546,9 +616,9 @@ static int declare_symbol(Codegen *codegen, Token name) {
     return slot;
 }
 </code></pre>
-<p>Essa tabela de símbolos é simples. Ela não faz análise semântica completa. Ela apenas responde: “em qual slot local esta variável está guardada?”</p>
-<h3 id="literais-de-string-e-nomes-de-função"><span class="heading-text">Literais de string e nomes de função</span><span class="heading-arabic">15.9.3</span></h3>
-<p>Strings precisam de um cuidado especial. O token da string inclui as aspas do código-fonte, e o assembly também precisa receber uma string entre aspas.</p>
+<p>Essa tabela ainda não é uma análise semântica completa. Ela apenas responde: “qual slot local representa este nome?”.</p>
+<h3 id="emitindo-literais-e-nomes-de-função"><span class="heading-text">Emitindo literais e nomes de função</span><span class="heading-arabic">15.5.3</span></h3>
+<p>Strings precisam ser emitidas entre aspas no assembly. Também precisamos preservar escapes básicos para não quebrar o formato textual.</p>
 <p>Adicione:</p>
 <pre class="line-numbers language-c" data-lang="C"><code class="language-c">static void emit_string_literal(FILE *stream, Token token) {
     fputc('&quot;', stream);
@@ -561,279 +631,20 @@ static int declare_symbol(Codegen *codegen, Token name) {
     }
     fputc('&quot;', stream);
 }
-
-static void emit_function_label(FILE *stream, Token name) {
+</code></pre>
+<p>Também vamos padronizar labels de função. A função Slang <code>main</code> vira <code>fn_main</code>; a função <code>add</code> vira <code>fn_add</code>.</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">static void emit_function_label(FILE *stream, Token name) {
     fputs(&quot;fn_&quot;, stream);
     print_token(stream, name);
 }
 </code></pre>
-<p>Todas as funções do Slang serão emitidas com prefixo <code>fn_</code>. Assim, a função Slang <code>factorial</code> vira a label <code>fn_factorial</code> no assembly.</p>
-<h2 id="gerando-funções-e-blocos"><span class="heading-text">Gerando funções e blocos</span><span class="heading-arabic">15.10</span></h2>
-<p>Um bloco é uma sequência de declarações. Portanto, sua geração é direta:</p>
-<pre class="line-numbers language-c" data-lang="C"><code class="language-c">static void gen_block(Codegen *codegen, const AstNode *block) {
-    for (int i = 0; i &lt; block-&gt;children.count; i++) {
-        gen_declaration(codegen, block-&gt;children.items[i]);
-    }
-}
-</code></pre>
-<p>Uma função precisa criar uma label, registrar seus parâmetros como slots locais e gerar seu corpo:</p>
-<pre class="line-numbers language-c" data-lang="C"><code class="language-c">static void gen_function(Codegen *codegen, const AstNode *function) {
-    fputs(&quot;label &quot;, codegen-&gt;stream);
-    emit_function_label(codegen-&gt;stream, function-&gt;token);
-    fputc('\n', codegen-&gt;stream);
-
-    codegen-&gt;symbol_count = 0;
-    codegen-&gt;next_slot = 0;
-    codegen-&gt;loop_count = 0;
-
-    for (int i = 0; i &lt; function-&gt;children.count; i++) {
-        declare_symbol(codegen, function-&gt;children.items[i]-&gt;token);
-    }
-
-    gen_block(codegen, function-&gt;first);
-    fputs(&quot;push null\nret\n&quot;, codegen-&gt;stream);
-}
-</code></pre>
-<p>O <code>push null</code> final é um retorno padrão. Ele garante que uma função sem <code>return</code> explícito ainda retorne algum valor para a VM.</p>
-<h2 id="gerando-variáveis-e-atribuições"><span class="heading-text">Gerando variáveis e atribuições</span><span class="heading-arabic">15.11</span></h2>
-<p>Uma declaração de variável avalia o inicializador e guarda o resultado em um slot:</p>
-<pre class="line-numbers language-c" data-lang="C"><code class="language-c">static void gen_var_decl(Codegen *codegen, const AstNode *node) {
-    int slot = declare_symbol(codegen, node-&gt;token);
-    gen_expression(codegen, node-&gt;first);
-    fprintf(codegen-&gt;stream, &quot;set_local %d\n&quot;, slot);
-}
-</code></pre>
-<p>Uma atribuição é parecida, mas o slot já deve existir:</p>
-<pre class="line-numbers language-c" data-lang="C"><code class="language-c">case AST_ASSIGN:
-    gen_expression(codegen, node-&gt;first);
-    fprintf(codegen-&gt;stream, &quot;set_local %d\npop\n&quot;, find_symbol(codegen, node-&gt;token));
-    break;
-</code></pre>
-<p>Usamos <code>pop</code> na atribuição para remover da pilha o valor que acabou de ser gravado. Isso mantém a pilha limpa após comandos.</p>
-<h2 id="gerando-expressões"><span class="heading-text">Gerando expressões</span><span class="heading-arabic">15.12</span></h2>
-<p>Literais são os casos mais simples:</p>
-<pre class="line-numbers language-c" data-lang="C"><code class="language-c">case AST_NUMBER:
-    fputs(&quot;push &quot;, codegen-&gt;stream);
-    print_token(codegen-&gt;stream, node-&gt;token);
-    fputc('\n', codegen-&gt;stream);
-    break;
-
-case AST_BOOL:
-    fputs(node-&gt;token.type == TOK_KW_TRUE ? &quot;push true\n&quot; : &quot;push false\n&quot;, codegen-&gt;stream);
-    break;
-</code></pre>
-<p>Identificadores viram leitura de slot local:</p>
-<pre class="line-numbers language-c" data-lang="C"><code class="language-c">case AST_IDENTIFIER:
-    fprintf(codegen-&gt;stream, &quot;get_local %d\n&quot;, find_symbol(codegen, node-&gt;token));
-    break;
-</code></pre>
-<p>Operações binárias geram primeiro o lado esquerdo, depois o lado direito, depois a instrução da operação:</p>
-<pre class="line-numbers language-c" data-lang="C"><code class="language-c">gen_expression(codegen, node-&gt;first);
-gen_expression(codegen, node-&gt;second);
-</code></pre>
-<p>Depois disso, o operador decide qual instrução emitir:</p>
-<pre class="line-numbers language-c" data-lang="C"><code class="language-c">case TOK_PLUS: fputs(&quot;add\n&quot;, codegen-&gt;stream); break;
-case TOK_MINUS: fputs(&quot;sub\n&quot;, codegen-&gt;stream); break;
-case TOK_STAR: fputs(&quot;mul\n&quot;, codegen-&gt;stream); break;
-case TOK_SLASH: fputs(&quot;div\n&quot;, codegen-&gt;stream); break;
-case TOK_PERCENT: fputs(&quot;mod\n&quot;, codegen-&gt;stream); break;
-case TOK_EQ: fputs(&quot;eq\n&quot;, codegen-&gt;stream); break;
-case TOK_BANG_EQ: fputs(&quot;ne\n&quot;, codegen-&gt;stream); break;
-case TOK_LT: fputs(&quot;lt\n&quot;, codegen-&gt;stream); break;
-case TOK_LT_EQ: fputs(&quot;le\n&quot;, codegen-&gt;stream); break;
-case TOK_GT: fputs(&quot;gt\n&quot;, codegen-&gt;stream); break;
-case TOK_GT_EQ: fputs(&quot;ge\n&quot;, codegen-&gt;stream); break;
-</code></pre>
-<h2 id="curto-circuito-de-codeandcode-e-codeorcode"><span class="heading-text">Curto-circuito de <code>and</code> e <code>or</code></span><span class="heading-arabic">15.13</span></h2>
-<p>Operadores lógicos merecem atenção especial.</p>
-<p>Para <code>and</code>, se o lado esquerdo já for falso, não precisamos avaliar o lado direito. Esse comportamento é chamado de <strong>curto-circuito</strong>.</p>
-<pre class="line-numbers language-c" data-lang="C"><code class="language-c">if (node-&gt;token.type == TOK_AND) {
-    int end_label = new_label(codegen);
-    gen_expression(codegen, node-&gt;first);
-    fprintf(codegen-&gt;stream, &quot;jump_if_false L%d\npop\n&quot;, end_label);
-    gen_expression(codegen, node-&gt;second);
-    fprintf(codegen-&gt;stream, &quot;label L%d\n&quot;, end_label);
-    return;
-}
-</code></pre>
-<p>Para <code>or</code>, se o lado esquerdo já for verdadeiro, também não precisamos avaliar o lado direito:</p>
-<pre class="line-numbers language-c" data-lang="C"><code class="language-c">if (node-&gt;token.type == TOK_OR) {
-    int right_label = new_label(codegen);
-    int end_label = new_label(codegen);
-    gen_expression(codegen, node-&gt;first);
-    fprintf(codegen-&gt;stream, &quot;jump_if_false L%d\njump L%d\nlabel L%d\npop\n&quot;, right_label, end_label, right_label);
-    gen_expression(codegen, node-&gt;second);
-    fprintf(codegen-&gt;stream, &quot;label L%d\n&quot;, end_label);
-    return;
-}
-</code></pre>
-<p>Esse é um bom exemplo de por que a geração de código não é apenas uma troca direta de nó por instrução. Algumas construções precisam de controle de fluxo.</p>
-<h2 id="gerando-codeifcode"><span class="heading-text">Gerando <code>if</code></span><span class="heading-arabic">15.14</span></h2>
-<p>Um <code>if</code> precisa de duas labels:</p>
-<ul>
-<li>uma para o <code>else</code>;</li>
-<li>outra para o fim do comando.</li>
-</ul>
-<pre class="line-numbers language-c" data-lang="C"><code class="language-c">static void gen_if(Codegen *codegen, const AstNode *node) {
-    int else_label = new_label(codegen);
-    int end_label = new_label(codegen);
-
-    gen_expression(codegen, node-&gt;first);
-    fprintf(codegen-&gt;stream, &quot;jump_if_false L%d\npop\n&quot;, else_label);
-    gen_statement(codegen, node-&gt;second);
-    fprintf(codegen-&gt;stream, &quot;jump L%d\nlabel L%d\npop\n&quot;, end_label, else_label);
-    if (node-&gt;third != NULL) {
-        gen_statement(codegen, node-&gt;third);
-    }
-    fprintf(codegen-&gt;stream, &quot;label L%d\n&quot;, end_label);
-}
-</code></pre>
-<p>O campo <code>first</code> guarda a condição, <code>second</code> guarda o bloco do <code>then</code>, e <code>third</code> guarda o <code>else</code>, se existir.</p>
-<h2 id="gerando-codeloopcode-codebreakcode-e-codecontinuecode"><span class="heading-text">Gerando <code>loop</code>, <code>break</code> e <code>continue</code></span><span class="heading-arabic">15.15</span></h2>
-<p>Um laço precisa saber para onde voltar e para onde sair.</p>
-<pre class="line-numbers language-c" data-lang="C"><code class="language-c">static void gen_loop(Codegen *codegen, const AstNode *node) {
-    if (codegen-&gt;loop_count == MAX_LOOPS) {
-        fprintf(stderr, &quot;Erro de geracao: lacos aninhados demais.\n&quot;);
-        codegen-&gt;had_error = true;
-        return;
-    }
-
-    int start_label = new_label(codegen);
-    int false_label = new_label(codegen);
-    int end_label = new_label(codegen);
-    codegen-&gt;loops[codegen-&gt;loop_count++] = (LoopLabels){start_label, end_label};
-
-    fprintf(codegen-&gt;stream, &quot;label L%d\n&quot;, start_label);
-    if (node-&gt;first != NULL) {
-        gen_expression(codegen, node-&gt;first);
-        fprintf(codegen-&gt;stream, &quot;jump_if_false L%d\npop\n&quot;, false_label);
-    }
-
-    gen_statement(codegen, node-&gt;second);
-    fprintf(codegen-&gt;stream, &quot;jump L%d\n&quot;, start_label);
-
-    if (node-&gt;first != NULL) {
-        fprintf(codegen-&gt;stream, &quot;label L%d\npop\n&quot;, false_label);
-    }
-    fprintf(codegen-&gt;stream, &quot;label L%d\n&quot;, end_label);
-    codegen-&gt;loop_count--;
-}
-</code></pre>
-<p>Com isso, <code>continue</code> vira um salto para <code>start_label</code>, e <code>break</code> vira um salto para <code>end_label</code>.</p>
-<h2 id="gerando-chamadas-de-função"><span class="heading-text">Gerando chamadas de função</span><span class="heading-arabic">15.16</span></h2>
-<p>Chamadas são geradas avaliando todos os argumentos e depois emitindo <code>call</code>.</p>
-<pre class="line-numbers language-c" data-lang="C"><code class="language-c">for (int i = 0; i &lt; node-&gt;children.count; i++) {
-    gen_expression(codegen, node-&gt;children.items[i]);
-}
-
-fprintf(codegen-&gt;stream, &quot;call %d &quot;, node-&gt;children.count);
-emit_function_label(codegen-&gt;stream, node-&gt;first-&gt;token);
-fputc('\n', codegen-&gt;stream);
-</code></pre>
-<p>O caso especial é <code>print</code>. Em vez de ser uma função Slang real, vamos tratá-la como uma primitiva da VM:</p>
-<pre class="line-numbers language-c" data-lang="C"><code class="language-c">if (node-&gt;first != NULL &amp;&amp; node-&gt;first-&gt;kind == AST_IDENTIFIER &amp;&amp; token_equals(node-&gt;first-&gt;token, &quot;print&quot;)) {
-    for (int i = 0; i &lt; node-&gt;children.count; i++) {
-        gen_expression(codegen, node-&gt;children.items[i]);
-        fputs(&quot;print\n&quot;, codegen-&gt;stream);
-    }
-    fputs(&quot;push null\n&quot;, codegen-&gt;stream);
-    return;
-}
-</code></pre>
-<p>Depois de imprimir, empilhamos <code>null</code> porque chamadas usadas como expressão precisam deixar algum valor na pilha.</p>
-<h2 id="arquivo-completo-de-codecodegenccode"><span class="heading-text">Arquivo completo de <code>codegen.c</code></span><span class="heading-arabic">15.17</span></h2>
-<p>Depois de entender as partes, substitua <code>src/compiler/codegen.c</code> pelo arquivo completo abaixo:</p>
-<pre class="line-numbers language-c" data-lang="C"><code class="language-c">#include &lt;stdbool.h&gt;
-#include &lt;stdio.h&gt;
-#include &lt;stdlib.h&gt;
-#include &lt;string.h&gt;
-#include &quot;compiler/codegen.h&quot;
-
-#define MAX_SYMBOLS 256
-#define MAX_LOOPS 64
-
-typedef struct {
-    const char *start;
-    int length;
-    int slot;
-} Symbol;
-
-typedef struct {
-    int start_label;
-    int end_label;
-} LoopLabels;
-
-typedef struct {
-    FILE *stream;
-    Symbol symbols[MAX_SYMBOLS];
-    int symbol_count;
-    int next_slot;
-    LoopLabels loops[MAX_LOOPS];
-    int loop_count;
-    int next_label;
-    bool had_error;
-} Codegen;
-
-static void gen_declaration(Codegen *codegen, const AstNode *node);
-static void gen_statement(Codegen *codegen, const AstNode *node);
-static void gen_expression(Codegen *codegen, const AstNode *node);
-
-static bool token_equals(Token token, const char *text) {
-    int length = (int)strlen(text);
-    return token.length == length &amp;&amp; memcmp(token.start, text, length) == 0;
-}
-
-static void print_token(FILE *stream, Token token) {
-    fprintf(stream, &quot;%.*s&quot;, token.length, token.start);
-}
-
-static int new_label(Codegen *codegen) {
-    return codegen-&gt;next_label++;
-}
-
-static int find_symbol(Codegen *codegen, Token name) {
-    for (int i = codegen-&gt;symbol_count - 1; i &gt;= 0; i--) {
-        Symbol symbol = codegen-&gt;symbols[i];
-        if (symbol.length == name.length &amp;&amp; memcmp(symbol.start, name.start, name.length) == 0) {
-            return symbol.slot;
-        }
-    }
-
-    fprintf(stderr, &quot;Erro de geracao: variavel '%.*s' nao declarada.\n&quot;, name.length, name.start);
-    codegen-&gt;had_error = true;
-    return 0;
-}
-
-static int declare_symbol(Codegen *codegen, Token name) {
-    if (codegen-&gt;symbol_count == MAX_SYMBOLS) {
-        fprintf(stderr, &quot;Erro de geracao: muitas variaveis locais.\n&quot;);
-        codegen-&gt;had_error = true;
-        return 0;
-    }
-
-    int slot = codegen-&gt;next_slot++;
-    codegen-&gt;symbols[codegen-&gt;symbol_count++] = (Symbol){name.start, name.length, slot};
-    return slot;
-}
-
-static void emit_string_literal(FILE *stream, Token token) {
-    fputc('&quot;', stream);
-    for (int i = 1; i &lt; token.length - 1; i++) {
-        char c = token.start[i];
-        if (c == '&quot;' || c == '\\') {
-            fputc('\\', stream);
-        }
-        fputc(c, stream);
-    }
-    fputc('&quot;', stream);
-}
-
-static void emit_function_label(FILE *stream, Token name) {
-    fputs(&quot;fn_&quot;, stream);
-    print_token(stream, name);
-}
-
-static const AstNode *find_main(const AstNode *program) {
+<p>Esse prefixo evita colisão com labels internas como <code>L0</code>, <code>L1</code> e <code>__entry</code>.</p>
+<h2 id="gerando-os-primeiros-elementos-da-linguagem"><span class="heading-text">Gerando os primeiros elementos da linguagem</span><span class="heading-arabic">15.6</span></h2>
+<p>Agora que o gerador já tem estado interno e funções auxiliares, podemos começar a percorrer a AST. Nesta parte, vamos gerar funções, variáveis, chamadas e expressões simples.</p>
+<h3 id="encontrando-a-função-codemaincode"><span class="heading-text">Encontrando a função <code>main</code></span><span class="heading-arabic">15.6.1</span></h3>
+<p>O arquivo gerado precisa começar chamando uma função inicial. Em programas normais, essa função será <code>main</code>.</p>
+<p>Adicione:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">static const AstNode *find_main(const AstNode *program) {
     for (int i = 0; i &lt; program-&gt;children.count; i++) {
         const AstNode *child = program-&gt;children.items[i];
         if (child-&gt;kind == AST_FUNCTION &amp;&amp; token_equals(child-&gt;token, &quot;main&quot;)) {
@@ -851,14 +662,18 @@ static bool program_has_top_level_code(const AstNode *program) {
     }
     return false;
 }
-
-static void gen_block(Codegen *codegen, const AstNode *block) {
+</code></pre>
+<p>Se existir <code>main</code>, o assembly começa chamando <code>fn_main</code>. Se não existir, criaremos uma entrada sintética chamada <code>__entry</code> para executar declarações de topo.</p>
+<h3 id="gerando-blocos-funções-e-variáveis"><span class="heading-text">Gerando blocos, funções e variáveis</span><span class="heading-arabic">15.6.2</span></h3>
+<p>Um bloco é uma sequência de declarações. Portanto, a geração de bloco apenas percorre seus filhos:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">static void gen_block(Codegen *codegen, const AstNode *block) {
     for (int i = 0; i &lt; block-&gt;children.count; i++) {
         gen_declaration(codegen, block-&gt;children.items[i]);
     }
 }
-
-static void gen_function(Codegen *codegen, const AstNode *function) {
+</code></pre>
+<p>Uma função vira uma label. Seus parâmetros ocupam os primeiros slots locais:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">static void gen_function(Codegen *codegen, const AstNode *function) {
     fputs(&quot;label &quot;, codegen-&gt;stream);
     emit_function_label(codegen-&gt;stream, function-&gt;token);
     fputc('\n', codegen-&gt;stream);
@@ -874,56 +689,25 @@ static void gen_function(Codegen *codegen, const AstNode *function) {
     gen_block(codegen, function-&gt;first);
     fputs(&quot;push null\nret\n&quot;, codegen-&gt;stream);
 }
-
-static void gen_var_decl(Codegen *codegen, const AstNode *node) {
+</code></pre>
+<p>A lógica é a seguinte:</p>
+<ul>
+<li>antes de gerar uma função, limpamos a tabela de símbolos;</li>
+<li>cada parâmetro recebe um slot local;</li>
+<li>o corpo da função é gerado normalmente;</li>
+<li>se a função terminar sem <code>return</code>, emitimos <code>push null</code> e <code>ret</code> como retorno padrão.</li>
+</ul>
+<p>Uma declaração de variável gera o inicializador, salva o resultado no slot novo e remove o valor da pilha:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">static void gen_var_decl(Codegen *codegen, const AstNode *node) {
     int slot = declare_symbol(codegen, node-&gt;token);
     gen_expression(codegen, node-&gt;first);
-    fprintf(codegen-&gt;stream, &quot;set_local %d\n&quot;, slot);
+    fprintf(codegen-&gt;stream, &quot;set_local %d\npop\n&quot;, slot);
 }
-
-static void gen_if(Codegen *codegen, const AstNode *node) {
-    int else_label = new_label(codegen);
-    int end_label = new_label(codegen);
-
-    gen_expression(codegen, node-&gt;first);
-    fprintf(codegen-&gt;stream, &quot;jump_if_false L%d\npop\n&quot;, else_label);
-    gen_statement(codegen, node-&gt;second);
-    fprintf(codegen-&gt;stream, &quot;jump L%d\nlabel L%d\npop\n&quot;, end_label, else_label);
-    if (node-&gt;third != NULL) {
-        gen_statement(codegen, node-&gt;third);
-    }
-    fprintf(codegen-&gt;stream, &quot;label L%d\n&quot;, end_label);
-}
-
-static void gen_loop(Codegen *codegen, const AstNode *node) {
-    if (codegen-&gt;loop_count == MAX_LOOPS) {
-        fprintf(stderr, &quot;Erro de geracao: lacos aninhados demais.\n&quot;);
-        codegen-&gt;had_error = true;
-        return;
-    }
-
-    int start_label = new_label(codegen);
-    int false_label = new_label(codegen);
-    int end_label = new_label(codegen);
-    codegen-&gt;loops[codegen-&gt;loop_count++] = (LoopLabels){start_label, end_label};
-
-    fprintf(codegen-&gt;stream, &quot;label L%d\n&quot;, start_label);
-    if (node-&gt;first != NULL) {
-        gen_expression(codegen, node-&gt;first);
-        fprintf(codegen-&gt;stream, &quot;jump_if_false L%d\npop\n&quot;, false_label);
-    }
-
-    gen_statement(codegen, node-&gt;second);
-    fprintf(codegen-&gt;stream, &quot;jump L%d\n&quot;, start_label);
-
-    if (node-&gt;first != NULL) {
-        fprintf(codegen-&gt;stream, &quot;label L%d\npop\n&quot;, false_label);
-    }
-    fprintf(codegen-&gt;stream, &quot;label L%d\n&quot;, end_label);
-    codegen-&gt;loop_count--;
-}
-
-static void gen_call(Codegen *codegen, const AstNode *node) {
+</code></pre>
+<p>O inicializador deixa um valor no topo da pilha. A instrução <code>set_local</code> copia esse valor para o slot da variável, e o <code>pop</code> logo em seguida remove o valor original da pilha — evitando acúmulo de lixo a cada declaração.</p>
+<h3 id="gerando-chamadas-de-função"><span class="heading-text">Gerando chamadas de função</span><span class="heading-arabic">15.6.3</span></h3>
+<p>Chamadas comuns avaliam os argumentos da esquerda para a direita e emitem <code>call</code>:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">static void gen_call(Codegen *codegen, const AstNode *node) {
     if (node-&gt;first != NULL &amp;&amp; node-&gt;first-&gt;kind == AST_IDENTIFIER &amp;&amp; token_equals(node-&gt;first-&gt;token, &quot;print&quot;)) {
         for (int i = 0; i &lt; node-&gt;children.count; i++) {
             gen_expression(codegen, node-&gt;children.items[i]);
@@ -938,7 +722,7 @@ static void gen_call(Codegen *codegen, const AstNode *node) {
     }
 
     if (node-&gt;first == NULL || node-&gt;first-&gt;kind != AST_IDENTIFIER) {
-        fprintf(stderr, &quot;Erro de geracao: chamada indireta nao suportada.\n&quot;);
+        fprintf(stderr, &quot;Erro de geração: chamada indireta não suportada.\n&quot;);
         codegen-&gt;had_error = true;
         return;
     }
@@ -947,27 +731,17 @@ static void gen_call(Codegen *codegen, const AstNode *node) {
     emit_function_label(codegen-&gt;stream, node-&gt;first-&gt;token);
     fputc('\n', codegen-&gt;stream);
 }
-
-static void gen_binary(Codegen *codegen, const AstNode *node) {
-    if (node-&gt;token.type == TOK_AND) {
-        int end_label = new_label(codegen);
-        gen_expression(codegen, node-&gt;first);
-        fprintf(codegen-&gt;stream, &quot;jump_if_false L%d\npop\n&quot;, end_label);
-        gen_expression(codegen, node-&gt;second);
-        fprintf(codegen-&gt;stream, &quot;label L%d\n&quot;, end_label);
-        return;
-    }
-
-    if (node-&gt;token.type == TOK_OR) {
-        int right_label = new_label(codegen);
-        int end_label = new_label(codegen);
-        gen_expression(codegen, node-&gt;first);
-        fprintf(codegen-&gt;stream, &quot;jump_if_false L%d\njump L%d\nlabel L%d\npop\n&quot;, right_label, end_label, right_label);
-        gen_expression(codegen, node-&gt;second);
-        fprintf(codegen-&gt;stream, &quot;label L%d\n&quot;, end_label);
-        return;
-    }
-
+</code></pre>
+<p>Aqui fazemos um tratamento especial para <code>print</code>. Em vez de exigir uma função Slang chamada <code>print</code>, geramos diretamente a instrução <code>print</code> da VM. Depois disso, empilhamos <code>null</code> para manter a chamada como uma expressão que produz algum valor.</p>
+<h3 id="gerando-expressões-simples"><span class="heading-text">Gerando expressões simples</span><span class="heading-arabic">15.6.4</span></h3>
+<p>Operadores binários simples seguem sempre o mesmo padrão:</p>
+<ol>
+<li>gerar o lado esquerdo;</li>
+<li>gerar o lado direito;</li>
+<li>emitir a instrução que consome os dois valores.</li>
+</ol>
+<p>Adicione:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">static void gen_binary(Codegen *codegen, const AstNode *node) {
     gen_expression(codegen, node-&gt;first);
     gen_expression(codegen, node-&gt;second);
 
@@ -984,13 +758,15 @@ static void gen_binary(Codegen *codegen, const AstNode *node) {
         case TOK_GT: fputs(&quot;gt\n&quot;, codegen-&gt;stream); break;
         case TOK_GT_EQ: fputs(&quot;ge\n&quot;, codegen-&gt;stream); break;
         default:
-            fprintf(stderr, &quot;Erro de geracao: operador binario nao suportado.\n&quot;);
+            fprintf(stderr, &quot;Erro de geração: operador binário não suportado.\n&quot;);
             codegen-&gt;had_error = true;
             break;
     }
 }
-
-static void gen_expression(Codegen *codegen, const AstNode *node) {
+</code></pre>
+<p>Neste primeiro momento, <code>and</code> e <code>or</code> ainda não entram aqui. Eles exigem curto-circuito com saltos, então ficarão para a segunda parte.</p>
+<p>Agora adicione a função principal de geração de expressões:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">static void gen_expression(Codegen *codegen, const AstNode *node) {
     if (node == NULL || codegen-&gt;had_error) {
         return;
     }
@@ -1028,13 +804,45 @@ static void gen_expression(Codegen *codegen, const AstNode *node) {
             fputs(node-&gt;token.type == TOK_KW_TRUE ? &quot;push true\n&quot; : &quot;push false\n&quot;, codegen-&gt;stream);
             break;
         default:
-            fprintf(stderr, &quot;Erro de geracao: expressao nao suportada.\n&quot;);
+            fprintf(stderr, &quot;Erro de geração: expressão não suportada.\n&quot;);
             codegen-&gt;had_error = true;
             break;
     }
 }
-
-static void gen_statement(Codegen *codegen, const AstNode *node) {
+</code></pre>
+<p>Cada caso da AST deixa exatamente um valor no topo da pilha. Essa regra é importante: se toda expressão deixa um valor, os comandos podem decidir se usam esse valor, armazenam esse valor ou descartam esse valor.</p>
+<h3 id="simulação-manual-percorrendo-uma-expressão-no-codegen"><span class="heading-text">Simulação manual: percorrendo uma expressão no codegen</span><span class="heading-arabic">15.6.5</span></h3>
+<p>Para visualizar como essas funções se encaixam, vamos simular a geração de:</p>
+<pre class="line-numbers language-slang" data-lang="SLANG"><code class="language-slang">print(1 + 2 * 3)
+</code></pre>
+<p>O codegen começa em <code>gen_expression</code> com o nó <code>AST_CALL</code> que representa <code>print(...)</code>. Como <code>print</code> é uma função especial, <code>gen_call</code> é chamada e faz o seguinte:</p>
+<ol>
+<li>identifica que o alvo é <code>print</code>;</li>
+<li>para cada argumento (no caso, um só), chama <code>gen_expression</code>;</li>
+<li>dentro dessa chamada, o argumento é um nó <code>AST_BINARY</code> com operador <code>+</code>;</li>
+<li><code>gen_expression</code> despacha para <code>gen_binary</code>, que por sua vez:<ul>
+<li>chama <code>gen_expression</code> no lado esquerdo (<code>1</code>): emite <code>push 1</code>;</li>
+<li>chama <code>gen_expression</code> no lado direito (<code>2 * 3</code>): é outro <code>AST_BINARY</code> com <code>*</code>;</li>
+<li><code>gen_binary</code> para <code>*</code> emite <code>gen_expression(2)</code> → <code>push 2</code>, <code>gen_expression(3)</code> → <code>push 3</code>, e depois <code>mul</code>;</li>
+</ul>
+</li>
+<li>voltando ao <code>+</code>, emite <code>add</code>;</li>
+<li>volta para <code>gen_call</code>, que emite <code>print</code> e depois <code>push null</code>.</li>
+</ol>
+<p>O assembly gerado fica:</p>
+<pre class="line-numbers language-slasm" data-lang="SLASM"><code class="language-slasm">push 1
+push 2
+push 3
+mul
+add
+print
+push null
+</code></pre>
+<p>Esse <code>push null</code> final é o valor de retorno de <code>print</code> — como <code>print</code> é uma expressão (toda chamada é), ela precisa deixar um valor na pilha. O <code>null</code> indica &quot;nenhum valor relevante&quot;. Quem chamou <code>print</code> decide se usa ou descarta esse valor.</p>
+<h3 id="gerando-comandos-simples"><span class="heading-text">Gerando comandos simples</span><span class="heading-arabic">15.6.6</span></h3>
+<p>Nesta primeira parte, vamos gerar apenas comandos que não exigem saltos.</p>
+<p>Adicione <code>gen_statement</code> com os casos abaixo:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">static void gen_statement(Codegen *codegen, const AstNode *node) {
     if (node == NULL || codegen-&gt;had_error) {
         return;
     }
@@ -1046,12 +854,6 @@ static void gen_statement(Codegen *codegen, const AstNode *node) {
         case AST_VAR_DECL:
             gen_var_decl(codegen, node);
             break;
-        case AST_IF:
-            gen_if(codegen, node);
-            break;
-        case AST_LOOP:
-            gen_loop(codegen, node);
-            break;
         case AST_RETURN:
             if (node-&gt;first != NULL) {
                 gen_expression(codegen, node-&gt;first);
@@ -1059,22 +861,6 @@ static void gen_statement(Codegen *codegen, const AstNode *node) {
                 fputs(&quot;push null\n&quot;, codegen-&gt;stream);
             }
             fputs(&quot;ret\n&quot;, codegen-&gt;stream);
-            break;
-        case AST_BREAK:
-            if (codegen-&gt;loop_count == 0) {
-                fprintf(stderr, &quot;Erro de geracao: break fora de laco.\n&quot;);
-                codegen-&gt;had_error = true;
-            } else {
-                fprintf(codegen-&gt;stream, &quot;jump L%d\n&quot;, codegen-&gt;loops[codegen-&gt;loop_count - 1].end_label);
-            }
-            break;
-        case AST_CONTINUE:
-            if (codegen-&gt;loop_count == 0) {
-                fprintf(stderr, &quot;Erro de geracao: continue fora de laco.\n&quot;);
-                codegen-&gt;had_error = true;
-            } else {
-                fprintf(codegen-&gt;stream, &quot;jump L%d\n&quot;, codegen-&gt;loops[codegen-&gt;loop_count - 1].start_label);
-            }
             break;
         case AST_ASSIGN:
             gen_expression(codegen, node-&gt;first);
@@ -1085,13 +871,23 @@ static void gen_statement(Codegen *codegen, const AstNode *node) {
             fputs(&quot;pop\n&quot;, codegen-&gt;stream);
             break;
         default:
-            gen_expression(codegen, node);
-            fputs(&quot;pop\n&quot;, codegen-&gt;stream);
+            fprintf(stderr, &quot;Erro de geração: comando ainda não suportado nesta etapa.\n&quot;);
+            codegen-&gt;had_error = true;
             break;
     }
 }
-
-static void gen_declaration(Codegen *codegen, const AstNode *node) {
+</code></pre>
+<p>Observe a diferença entre expressão e comando:</p>
+<ul>
+<li>uma expressão deixa valor na pilha;</li>
+<li>um comando normalmente não deve deixar lixo na pilha;</li>
+<li>por isso <code>AST_EXPR_STMT</code> gera a expressão e depois emite <code>pop</code>.</li>
+</ul>
+<p>Ainda não tratamos <code>AST_IF</code>, <code>AST_LOOP</code>, <code>AST_BREAK</code> e <code>AST_CONTINUE</code>. Isso fica para a segunda parte, quando vamos falar de labels e saltos.</p>
+<h3 id="gerando-a-entrada-do-programa"><span class="heading-text">Gerando a entrada do programa</span><span class="heading-arabic">15.6.7</span></h3>
+<p>Agora precisamos ligar as funções anteriores ao programa inteiro.</p>
+<p>Adicione as funções finais do arquivo:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">static void gen_declaration(Codegen *codegen, const AstNode *node) {
     if (node-&gt;kind != AST_FUNCTION) {
         gen_statement(codegen, node);
     }
@@ -1144,74 +940,17 @@ bool codegen_generate(FILE *stream, const AstNode *program) {
     return !codegen.had_error;
 }
 </code></pre>
-<h2 id="atualizando-o-codemainccode"><span class="heading-text">Atualizando o <code>main.c</code></span><span class="heading-arabic">15.18</span></h2>
-<p>Agora precisamos expor o novo modo <code>code</code> na interface do compilador.</p>
-<p>Substitua <code>src/main.c</code> por:</p>
-<pre class="line-numbers language-c" data-lang="C"><code class="language-c">#include &lt;stdio.h&gt;
-#include &lt;stdlib.h&gt;
-#include &lt;stdbool.h&gt;
-#include &lt;string.h&gt;
-#include &quot;compiler/ast.h&quot;
+<p>Essa versão já é suficiente para programas sem controle de fluxo. A versão mais completa, com <code>if</code>, <code>loop</code>, <code>break</code>, <code>continue</code> e curto-circuito lógico, será consolidada no próximo laboratório.</p>
+<h2 id="integrando-o-gerador-ao-compilador"><span class="heading-text">Integrando o gerador ao compilador</span><span class="heading-arabic">15.7</span></h2>
+<p>Depois de implementar o gerador, precisamos expô-lo na linha de comando e garantir que o sistema de build compile todos os novos arquivos.</p>
+<h3 id="atualizando-o-codemainccode"><span class="heading-text">Atualizando o <code>main.c</code></span><span class="heading-arabic">15.7.1</span></h3>
+<p>Precisamos expor o novo modo <code>code</code> na interface do compilador.</p>
+<p>No topo de <code>src/main.c</code>, adicione:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">#include &lt;stdbool.h&gt;
 #include &quot;compiler/codegen.h&quot;
-#include &quot;compiler/lexer.h&quot;
-#include &quot;compiler/parser.h&quot;
-
-static char* read_file(const char* path) {
-    FILE* file = fopen(path, &quot;rb&quot;);
-    if (file == NULL) {
-        fprintf(stderr, &quot;Erro: Não foi possível abrir o arquivo \&quot;%s\&quot;.\n&quot;, path);
-        exit(74);
-    }
-
-    fseek(file, 0L, SEEK_END);
-    size_t fileSize = ftell(file);
-    rewind(file);
-
-    char* buffer = (char*)malloc(fileSize + 1);
-    if (buffer == NULL) {
-        fprintf(stderr, &quot;Erro: Memória insuficiente para ler \&quot;%s\&quot;.\n&quot;, path);
-        exit(74);
-    }
-
-    size_t bytesRead = fread(buffer, sizeof(char), fileSize, file);
-    if (bytesRead &lt; fileSize) {
-        fprintf(stderr, &quot;Erro: Falha na leitura do arquivo \&quot;%s\&quot;.\n&quot;, path);
-        exit(74);
-    }
-
-    buffer[bytesRead] = '\0';
-    fclose(file);
-    return buffer;
-}
-
-static int run_lexer_mode(const char *source) {
-    Lexer lexer;
-    lexer_init(&amp;lexer, source);
-
-    Token token;
-    do {
-        token = lexer_next_token(&amp;lexer);
-        token_println(&amp;token);
-    } while (token.type != TOK_EOF &amp;&amp; token.type != TOK_ERROR);
-
-    return 0;
-}
-
-static int run_parser_mode(const char *source) {
-    Parser parser;
-    parser_init(&amp;parser, source, stderr);
-
-    AstNode *program = parser_parse(&amp;parser);
-    if (program == NULL) {
-        return 65;
-    }
-
-    ast_print(stdout, program);
-    ast_free(program);
-    return 0;
-}
-
-static int run_codegen_mode(const char *source) {
+</code></pre>
+<p>Depois de <code>run_parser_mode</code>, adicione:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">static int run_codegen_mode(const char *source) {
     Parser parser;
     parser_init(&amp;parser, source, stderr);
 
@@ -1224,67 +963,26 @@ static int run_codegen_mode(const char *source) {
     ast_free(program);
     return ok ? 0 : 65;
 }
-
-int main(int argc, char* argv[]) {
-    if (argc != 3) {
-        fprintf(stderr, &quot;Uso: compiler &lt;lex|parse|code&gt; &lt;arquivo&gt;\n&quot;);
-        return 64;
-    }
-
-    char* source = read_file(argv[2]);
-
-    int result = 0;
-
-    if (strcmp(argv[1], &quot;lex&quot;) == 0) {
-        result = run_lexer_mode(source);
-    } else if (strcmp(argv[1], &quot;parse&quot;) == 0) {
-        result = run_parser_mode(source);
-    } else if (strcmp(argv[1], &quot;code&quot;) == 0) {
-        result = run_codegen_mode(source);
-    } else {
-        fprintf(stderr, &quot;Uso: compiler &lt;lex|parse|code&gt; &lt;arquivo&gt;\n&quot;);
-        free(source);
-        return 64;
-    }
-
-    free(source);
-    return result;
-}
 </code></pre>
-<p>A única ideia nova aqui é <code>run_codegen_mode</code>. Ele é muito parecido com <code>run_parser_mode</code>, mas em vez de imprimir a AST, chama <code>codegen_generate</code>.</p>
-<h2 id="atualizando-o-codecmakeliststxtcode"><span class="heading-text">Atualizando o <code>CMakeLists.txt</code></span><span class="heading-arabic">15.19</span></h2>
-<p>Agora precisamos informar ao CMake que existem novos arquivos no projeto.</p>
-<p>Substitua o <code>CMakeLists.txt</code> por:</p>
-<pre class="line-numbers language-cmake" data-lang="CMAKE"><code class="language-cmake">cmake_minimum_required(VERSION 3.20)
-project(compiler C)
-
-set(CMAKE_C_STANDARD 17)
-set(CMAKE_C_STANDARD_REQUIRED ON)
-
-add_library(compiler_lib
+<p>Agora ajuste a mensagem de uso:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">fprintf(stderr, &quot;Uso: compiler &lt;lex|parse|code&gt; &lt;arquivo&gt;\n&quot;);
+</code></pre>
+<p>E adicione o novo ramo no <code>main</code>:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">} else if (strcmp(argv[1], &quot;code&quot;) == 0) {
+    result = run_codegen_mode(source);
+</code></pre>
+<h3 id="atualizando-o-codecmakeliststxtcode"><span class="heading-text">Atualizando o <code>CMakeLists.txt</code></span><span class="heading-arabic">15.7.2</span></h3>
+<p>Primeiro, adicione <code>src/compiler/codegen.c</code> na biblioteca:</p>
+<pre class="line-numbers language-cmake" data-lang="CMAKE"><code class="language-cmake">add_library(compiler_lib
     src/compiler/token.c
     src/compiler/lexer.c
     src/compiler/ast.c
     src/compiler/parser.c
     src/compiler/codegen.c
 )
-
-target_include_directories(compiler_lib
-    PUBLIC
-        ${PROJECT_SOURCE_DIR}/include
-)
-
-target_compile_options(compiler_lib PRIVATE
-    -Wall -Wextra -Wpedantic
-)
-
-add_executable(compiler
-    src/main.c
-)
-
-target_link_libraries(compiler PRIVATE compiler_lib)
-
-add_executable(slang-vm
+</code></pre>
+<p>Depois, adicione o executável da VM:</p>
+<pre class="line-numbers language-cmake" data-lang="CMAKE"><code class="language-cmake">add_executable(slang-vm
     src/vm/main.c
     src/vm/assembler.c
     src/vm/chunk.c
@@ -1300,30 +998,16 @@ target_include_directories(slang-vm
 target_compile_options(slang-vm PRIVATE
     -Wall -Wextra -Wpedantic
 )
-
-add_executable(vm_opcode_tests
-    tests/vm/opcodes/opcode_tests.c
-    src/vm/chunk.c
-    src/vm/vm.c
-)
-
-target_include_directories(vm_opcode_tests
-    PRIVATE
-        ${PROJECT_SOURCE_DIR}/include
-)
-
-target_compile_options(vm_opcode_tests PRIVATE
-    -Wall -Wextra -Wpedantic
-)
 </code></pre>
-<p>Neste ponto, o projeto passa a gerar dois executáveis de uso direto:</p>
+<p>Agora o projeto deve gerar dois executáveis de uso direto:</p>
 <ul>
-<li><code>compiler</code>, que lê Slang e gera tokens, AST ou assembly;</li>
-<li><code>slang-vm</code>, que executa o assembly da VM.</li>
+<li><code>build/compiler</code>;</li>
+<li><code>build/slang-vm</code>.</li>
 </ul>
-<p>O alvo <code>vm_opcode_tests</code> é um executável auxiliar usado apenas pela suíte de testes para validar os opcodes da VM diretamente, sem passar pelo assembler textual.</p>
-<h2 id="primeiro-teste-manual"><span class="heading-text">Primeiro teste manual</span><span class="heading-arabic">15.20</span></h2>
-<p>Crie um arquivo chamado <code>programa.slang</code> com o conteúdo:</p>
+<h2 id="testando-a-primeira-versão-do-gerador"><span class="heading-text">Testando a primeira versão do gerador</span><span class="heading-arabic">15.8</span></h2>
+<p>Com a integração pronta, já podemos gerar assembly e executar programas simples na SlangVM.</p>
+<h3 id="primeiro-teste-manual"><span class="heading-text">Primeiro teste manual</span><span class="heading-arabic">15.8.1</span></h3>
+<p>Crie um arquivo chamado <code>programa.slang</code>:</p>
 <pre class="line-numbers language-slang" data-lang="SLANG"><code class="language-slang">fn main(args: void) -&gt; void {
     print(1 + 2 * 3)
 }
@@ -1332,7 +1016,7 @@ target_compile_options(vm_opcode_tests PRIVATE
 <pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">cmake -B build
 cmake --build build
 </code></pre>
-<p>Agora gere assembly:</p>
+<p>Gere assembly:</p>
 <pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">./build/compiler code programa.slang
 </code></pre>
 <p>A saída deve ser parecida com:</p>
@@ -1351,26 +1035,39 @@ pop
 push null
 ret
 </code></pre>
-<p>Agora salve essa saída em um arquivo:</p>
+<div class="callout callout-tip">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .5 2.2 1.5 3.1.7.7 1.3 1.5 1.5 2.4"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span>
+    <span class="callout-title-inner">Entendendo os <code>push null</code> e <code>pop</code> extras<br /></span>
+  </div>
+  <div class="callout-content">
+<p>O assembly gerado tem algumas instruções que podem parecer repetidas à primeira vista. Cada uma tem uma origem diferente:</p>
+<ul>
+<li><code>push null</code> antes de <code>call</code>: valor passado como argumento para o parâmetro <code>args</code> de <code>main</code>.</li>
+<li><code>print</code>: consome um valor (o resultado de <code>1 + 2 * 3</code>) e o imprime.</li>
+<li><code>push null</code> depois de <code>print</code>: é o valor de retorno de <code>print</code> (toda chamada deixa algo na pilha).</li>
+<li><code>pop</code> logo em seguida: o comando <code>print(...)</code> é uma expressão usada como comando, então o gerador descarta o valor deixado pela chamada.</li>
+<li><code>push null</code> antes de <code>ret</code>: retorno padrão que o gerador insere quando a função termina sem um <code>return</code> explícito.</li>
+</ul>
+<p>Na prática, apenas <code>push 1</code>, <code>push 2</code>, <code>push 3</code>, <code>mul</code>, <code>add</code> e <code>print</code> são essenciais para o cálculo. As demais instruções são necessárias por causa da convenção de pilha que adotamos.</p>
+  </div>
+</div>
+<p>Agora salve e execute:</p>
 <pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">./build/compiler code programa.slang &gt; programa.slasm
-</code></pre>
-<p>E execute na VM:</p>
-<pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">./build/slang-vm programa.slasm
+./build/slang-vm programa.slasm
 </code></pre>
 <p>A saída esperada é:</p>
 <pre class="line-numbers language-txt" data-lang="TXT"><code class="language-txt">7
 </code></pre>
-<h2 id="testando-funções-recursivas"><span class="heading-text">Testando funções recursivas</span><span class="heading-arabic">15.21</span></h2>
-<p>Agora teste um programa maior:</p>
-<pre class="line-numbers language-slang" data-lang="SLANG"><code class="language-slang">fn factorial(n: int) -&gt; int {
-    if n &lt;= 1 {
-        return 1
-    }
-    return n * factorial(n - 1)
+<h3 id="testando-chamada-de-função"><span class="heading-text">Testando chamada de função</span><span class="heading-arabic">15.8.2</span></h3>
+<p>Agora troque <code>programa.slang</code> por:</p>
+<pre class="line-numbers language-slang" data-lang="SLANG"><code class="language-slang">fn add(a: int, b: int) -&gt; int {
+    return a + b
 }
 
 fn main(args: void) -&gt; void {
-    print(factorial(5))
+    x: int = 10
+    print(add(x, 32))
 }
 </code></pre>
 <p>Gere e execute:</p>
@@ -1378,169 +1075,28 @@ fn main(args: void) -&gt; void {
 ./build/slang-vm programa.slasm
 </code></pre>
 <p>A saída esperada é:</p>
-<pre class="line-numbers language-txt" data-lang="TXT"><code class="language-txt">120
+<pre class="line-numbers language-txt" data-lang="TXT"><code class="language-txt">42
 </code></pre>
-<p>Esse teste é importante porque valida várias partes ao mesmo tempo:</p>
+<p>Esse teste valida:</p>
 <ul>
-<li>declaração de função;</li>
-<li>parâmetro local;</li>
-<li>comparação <code>&lt;=</code>;</li>
-<li><code>if</code>;</li>
-<li><code>return</code>;</li>
-<li>chamada recursiva;</li>
-<li>multiplicação;</li>
-<li><code>print</code>.</li>
-</ul>
-<h2 id="testando-laços"><span class="heading-text">Testando laços</span><span class="heading-arabic">15.22</span></h2>
-<p>Teste também um programa com <code>loop</code>, <code>%</code> e <code>continue</code>:</p>
-<pre class="line-numbers language-slang" data-lang="SLANG"><code class="language-slang">fn main(args: void) -&gt; void {
-    x: int = 0
-    loop x &lt; 5 {
-        x = x + 1
-        if x % 2 == 0 {
-            continue
-        }
-        print(x)
-    }
-}
-</code></pre>
-<p>A saída esperada é:</p>
-<pre class="line-numbers language-txt" data-lang="TXT"><code class="language-txt">1
-3
-5
-</code></pre>
-<p>Esse exemplo valida:</p>
-<ul>
+<li>parâmetros de função;</li>
 <li>variável local;</li>
-<li>atribuição;</li>
-<li>laço condicional;</li>
-<li>módulo <code>%</code>;</li>
-<li>comparação <code>==</code>;</li>
-<li><code>continue</code>;</li>
-<li>salto de volta para o início do laço.</li>
+<li>leitura com <code>get_local</code>;</li>
+<li>escrita com <code>set_local</code>;</li>
+<li>chamada com <code>call</code>;</li>
+<li>retorno com <code>ret</code>.</li>
 </ul>
-<h2 id="reorganizando-os-testes-finais"><span class="heading-text">Reorganizando os testes finais</span><span class="heading-arabic">15.23</span></h2>
-<p>No estado final do projeto, a pasta <code>tests</code> passa a ter também testes de VM:</p>
-<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">tests/
-├── lexer/
-├── parser/
-├── vm/
-│   ├── input/
-│   ├── expected/
-│   ├── asm/
-│   │   ├── input/
-│   │   └── expected/
-│   └── opcodes/
-└── run_tests.sh
-</code></pre>
-<p>Os testes de VM ficam divididos em três grupos:</p>
+<h2 id="próximos-passos"><span class="heading-text">Próximos passos</span><span class="heading-arabic">15.9</span></h2>
+<p>Neste ponto, já temos a primeira versão da geração de código. Ela consegue executar programas com funções, variáveis, expressões e chamadas simples.</p>
+<p>No próximo laboratório, <a href="16-code-generation-for-the-slang-virtual-machine-ii.html">Lab - Geração de Código II</a>, vamos completar o compilador adicionando:</p>
 <ul>
-<li>testes Slang completos, que passam por <code>compiler code</code> e depois por <code>slang-vm</code>;</li>
-<li>testes de assembly <code>.slasm</code>, que validam a VM diretamente;</li>
-<li>testes de opcode em C, que montam bytecode manualmente.</li>
+<li><code>if</code> e <code>else</code>;</li>
+<li><code>loop</code>;</li>
+<li><code>break</code> e <code>continue</code>;</li>
+<li>curto-circuito de <code>and</code> e <code>or</code>;</li>
+<li>testes completos de VM, assembly e opcodes.</li>
 </ul>
-<p>Essa separação é importante porque cada nível responde uma pergunta diferente:</p>
-<ul>
-<li>o codegen está gerando assembly correto?</li>
-<li>o assembler da VM entende o assembly textual?</li>
-<li>os opcodes da VM executam corretamente?</li>
-</ul>
-<h2 id="rodando-a-suíte-completa"><span class="heading-text">Rodando a suíte completa</span><span class="heading-arabic">15.24</span></h2>
-<p>Depois de adicionar os testes finais, compile tudo:</p>
-<pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">cmake -B build
-cmake --build build
-</code></pre>
-<p>Rode todos os testes:</p>
-<pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">./tests/run_tests.sh all
-</code></pre>
-<p>A saída esperada no estado final é:</p>
-<pre class="line-numbers language-txt" data-lang="TXT"><code class="language-txt">=============================================
-   EXECUTANDO TESTES DE LEXER
-=============================================
-  [OK] lexer/01_delimiters
-  [OK] lexer/02_simple_operators
-  [OK] lexer/03_lookahead_tokens
-  [OK] lexer/04_logical_operators
-  [OK] lexer/05_keywords
-  [OK] lexer/06_identifiers
-  [OK] lexer/07_numbers
-  [OK] lexer/08_strings
-  [OK] lexer/09_chars
-  [OK] lexer/10_comments
-  [OK] lexer/11_invalid_number_error
-  [OK] lexer/12_single_ampersand_error
-  [OK] lexer/13_complete_program
-  [OK] lexer/14_modulo_operator
-  [OK] lexer/15_single_pipe_error
-  [OK] lexer/16_unterminated_string_error
-
-=============================================
-   EXECUTANDO TESTES DE PARSER
-=============================================
-  [OK] parser/01_variable_declaration
-  [OK] parser/02_function_declaration
-  [OK] parser/03_expression_precedence
-  [OK] parser/04_control_flow
-  [OK] parser/05_complete_program
-  [OK] parser/06_infinite_loop
-  [OK] parser/07_missing_initializer
-  [OK] parser/08_missing_block_end
-  [OK] parser/09_invalid_parameter
-
-=============================================
-   EXECUTANDO TESTES DE VM
-=============================================
-  [OK] vm/01_arithmetic
-  [OK] vm/02_factorial
-  [OK] vm/03_loop_control
-  [OK] vm/04_literals_and_branches
-
-=============================================
-   EXECUTANDO TESTES DE VM ASM
-=============================================
-  [OK] vm/asm/01_constants
-  [OK] vm/asm/02_arithmetic
-  [OK] vm/asm/03_comparison_logic
-  [OK] vm/asm/04_stack_locals
-  [OK] vm/asm/05_jumps
-  [OK] vm/asm/06_call_return
-  [OK] vm/asm/07_input
-
-=============================================
-   EXECUTANDO TESTES DE OPCODES DA VM
-=============================================
-  [OK] vm/opcodes/all
-
-=============================================
-   RESULTADO: 37 PASSARAM | 0 FALHARAM | 37 TOTAL
-=============================================
-</code></pre>
-<h2 id="o-que-esta-etapa-resolve"><span class="heading-text">O que esta etapa resolve</span><span class="heading-arabic">15.25</span></h2>
-<p>Com este laboratório, o compilador deixa de ser apenas uma ferramenta de análise e passa a produzir código executável para uma máquina alvo.</p>
-<p>Antes, o fluxo terminava na AST. Agora, o fluxo termina em execução:</p>
-<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="850" viewBox="0.00 0.00 672.00 44.00" class="svg-graph graphviz-img"><g id="svg-graphviz-57a15fd1ba6d-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 40)"><title>FinalCompilerFlow</title><polygon fill="white" stroke="transparent" points="-4,4 -4,-40 668,-40 668,4 -4,4" /><g id="svg-graphviz-57a15fd1ba6d-node1" class="node"><title>source</title><path fill="#f8fafc" stroke="#6b7280" d="M92,-36C92,-36 12,-36 12,-36 6,-36 0,-30 0,-24 0,-24 0,-12 0,-12 0,-6 6,0 12,0 12,0 92,0 92,0 98,0 104,-6 104,-12 104,-12 104,-24 104,-24 104,-30 98,-36 92,-36" /><text text-anchor="middle" x="52" y="-14.3" font-family="Helvetica,sans-Serif" font-size="14.00">codigo-fonte</text></g><g id="svg-graphviz-57a15fd1ba6d-node2" class="node"><title>tokens</title><path fill="#f8fafc" stroke="#6b7280" d="M212,-36C212,-36 174,-36 174,-36 168,-36 162,-30 162,-24 162,-24 162,-12 162,-12 162,-6 168,0 174,0 174,0 212,0 212,0 218,0 224,-6 224,-12 224,-12 224,-24 224,-24 224,-30 218,-36 212,-36" /><text text-anchor="middle" x="193" y="-14.3" font-family="Helvetica,sans-Serif" font-size="14.00">tokens</text></g><g id="svg-graphviz-57a15fd1ba6d-edge1" class="edge"><title>source-&gt;tokens</title><path fill="none" stroke="black" d="M104.31,-18C115.7,-18 130.15,-18 151.81,-18" /><polygon fill="black" stroke="black" points="151.91,-21.5 161.91,-18 151.91,-14.5 151.91,-21.5" /></g><g id="svg-graphviz-57a15fd1ba6d-node3" class="node"><title>ast</title><path fill="#f8fafc" stroke="#6b7280" d="M324,-36C324,-36 294,-36 294,-36 288,-36 282,-30 282,-24 282,-24 282,-12 282,-12 282,-6 288,0 294,0 294,0 324,0 324,0 330,0 336,-6 336,-12 336,-12 336,-24 336,-24 336,-30 330,-36 324,-36" /><text text-anchor="middle" x="309" y="-14.3" font-family="Helvetica,sans-Serif" font-size="14.00">AST</text></g><g id="svg-graphviz-57a15fd1ba6d-edge2" class="edge"><title>tokens-&gt;ast</title><path fill="none" stroke="black" d="M224.17,-18C235.04,-18 247.7,-18 271.52,-18" /><polygon fill="black" stroke="black" points="271.61,-21.5 281.61,-18 271.61,-14.5 271.61,-21.5" /></g><g id="svg-graphviz-57a15fd1ba6d-node4" class="node"><title>slasm</title><path fill="#f8fafc" stroke="#6b7280" d="M513,-36C513,-36 406,-36 406,-36 400,-36 394,-30 394,-24 394,-24 394,-12 394,-12 394,-6 400,0 406,0 406,0 513,0 513,0 519,0 525,-6 525,-12 525,-12 525,-24 525,-24 525,-30 519,-36 513,-36" /><text text-anchor="middle" x="459.5" y="-14.3" font-family="Helvetica,sans-Serif" font-size="14.00">assembly da VM</text></g><g id="svg-graphviz-57a15fd1ba6d-edge3" class="edge"><title>ast-&gt;slasm</title><path fill="none" stroke="black" d="M336.23,-18C356.19,-18 371.33,-18 383.48,-18" /><polygon fill="black" stroke="black" points="383.85,-21.5 393.85,-18 383.85,-14.5 383.85,-21.5" /></g><g id="svg-graphviz-57a15fd1ba6d-node5" class="node"><title>run</title><path fill="#f8fafc" stroke="#6b7280" d="M652,-36C652,-36 595,-36 595,-36 589,-36 583,-30 583,-24 583,-24 583,-12 583,-12 583,-6 589,0 595,0 595,0 652,0 652,0 658,0 664,-6 664,-12 664,-12 664,-24 664,-24 664,-30 658,-36 652,-36" /><text text-anchor="middle" x="623.5" y="-14.3" font-family="Helvetica,sans-Serif" font-size="14.00">execucao</text></g><g id="svg-graphviz-57a15fd1ba6d-edge4" class="edge"><title>slasm-&gt;run</title><path fill="none" stroke="black" d="M525.04,-18C546.78,-18 561.03,-18 572.95,-18" /><polygon fill="black" stroke="black" points="572.96,-21.5 582.96,-18 572.96,-14.5 572.96,-21.5" /></g></g></svg></div></div>
-
-<p>Esse é o ponto em que o projeto se torna, de fato, um compilador completo dentro do escopo didático da disciplina.</p>
-<h2 id="limitações-conscientes"><span class="heading-text">Limitações conscientes</span><span class="heading-arabic">15.26</span></h2>
-<p>Ainda existem simplificações importantes:</p>
-<ul>
-<li>não há análise semântica completa de tipos;</li>
-<li>não há escopo lexical sofisticado para blocos aninhados;</li>
-<li>strings são suportadas principalmente como valores imprimíveis;</li>
-<li>a VM usa endereços pequenos em um byte para saltos e chamadas;</li>
-<li><code>print</code> é tratado como primitiva especial, não como função Slang comum.</li>
-</ul>
-<p>Essas limitações são aceitáveis neste marco porque o objetivo é consolidar a ideia central de geração de código. A partir daqui, cada uma delas pode virar uma melhoria futura.</p>
-<h2 id="próximos-passos"><span class="heading-text">Próximos Passos</span><span class="heading-arabic">15.27</span></h2>
-<p>Com o compilador gerando código para a SlangVM, as próximas extensões naturais seriam:</p>
-<ul>
-<li>adicionar análise semântica antes da geração de código;</li>
-<li>validar tipos de expressões e retornos de função;</li>
-<li>implementar escopos por bloco;</li>
-<li>adicionar otimizações simples, como constant folding;</li>
-<li>trocar o assembly textual por um bytecode binário real.</li>
-</ul>
-<p>O ponto principal, porém, já foi alcançado: agora temos um ciclo completo de compilação e execução para a linguagem Slang.</p>
+<p>Também será no próximo laboratório que vamos consolidar uma versão mais completa do gerador, reunindo os casos simples desta parte com os casos de controle de fluxo.</p>
 
                 </div>
             </article>

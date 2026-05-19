@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toposia - Compiladores</title>
+    <link rel="icon" href="/aulas-faesa/img/dark-favicon.svg" media="(prefers-color-scheme: light)">
+    <link rel="icon" href="/aulas-faesa/img/light-favicon.svg" media="(prefers-color-scheme: dark)">
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/fonts.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/bundles/katex-base-prism-one-light-b0347952c973.bundle.min.css">
+    
+    
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css" data-no-bundle>
+    <script src="/aulas-faesa/js/bundles/lucide-katex-auto-render-4b36e8bd8642.bundle.min.js"></script>
+</head>
+
+<body>
+    <script>
+        // Restore sidebar state instantly (before first paint) to avoid transition flash
+        (function() {
+            if (localStorage.getItem('cf_sidebar_hidden') === 'true') {
+                document.body.classList.add('sidebar-hidden', 'no-transition');
+            }
+            requestAnimationFrame(function() {
+                requestAnimationFrame(function() {
+                    document.body.classList.remove('no-transition');
+                });
+            });
+        })();
+    </script>
+    <div class="page-wrapper">
+        <nav class="sidebar">
+            <div class="sidebar-content">
+                <header class="sidebar-title-section">
+                    <a href="contents.html" class="course-title-link">
+                        <h1 class="sidebar-course-title">Compiladores</h1>
+                    </a>
+                    <div class="sidebar-ornament">❧</div>
+                </header>
+
+                
+                <section class="sidebar-toc-section">
+                    <h2 class="toc-header">Tabela de Conteúdos</h2>
+                    <ol class="toc-list">
+                        
+                        <li class="toc-item level-2">
+                            <a href="#introdução">16.1. Introdução</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#ponto-de-partida">16.2. Ponto de partida</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#labels-e-saltos-na-vm">16.3. Labels e saltos na VM</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#entendendo-labels">16.3.1. Entendendo labels</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#estruturas-de-controle">16.4. Estruturas de controle</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#gerando-codeifcode-e-codeelsecode">16.5. Operadores lógicos com curto-circuito</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#curto-circuito-de-codeandcode">16.6. Testes manuais de controle de fluxo</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#testando-codeifcode">16.6.2. Testando recursão</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#testando-codeloopcode-e-codecontinuecode">16.6.4. Testando curto-circuito</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#testes-automatizados-da-vm">16.7. Testes automatizados da VM</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#adicionando-testes-de-vm">16.7.1. Adicionando testes de VM</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#rodando-a-suíte-completa">16.7.2. Rodando a suíte completa</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#limitações-conscientes">16.8. Limitações conscientes</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#próximos-passos">16.9. Próximos passos</a>
+                        </li>
+                        
+                    </ol>
+                </section>
+                
+
+                <nav class="sidebar-nav-section">
+                    
+                    <a href="15-code-generation-for-the-slang-virtual-machine.html" class="sidebar-nav-link prev"><i data-lucide="chevron-left" class="nav-icon"></i> Lab - Geração de Código I</a>
+                    
+                    
+                    <a href="javascript:void(0)" onclick="handleBackNavigation()"
+                        class="sidebar-nav-link back"><i data-lucide="arrow-left" class="nav-icon"></i> Voltar</a>
+                </nav>
+
+            </div>
+        </nav>
+
+        <button class="mobile-menu-toggle" aria-label="Menu">
+            <i data-lucide="menu"></i>
+        </button>
+
+        <button class="sidebar-toggle" onclick="CourseForgeNav.toggleSidebar()" aria-label="Alternar Barra Lateral">
+            <i data-lucide="chevron-left" class="toggle-icon" id="sidebar-toggle-icon"></i>
+        </button>
+
+        <div class="mobile-menu-overlay"></div>
+
+        <main class="main-content">
+            <article class="article">
+                <header class="article-header">
+                    <span class="chapter-number">16</span>
+                    <h1 class="article-title">
+                        <span class="title-ornament left">❧</span>
+                        <span class="title-text">Lab - Geração de Código II</span>
+                        <span class="title-ornament right">❧</span>
+                    </h1>
+                    
+                    <p class="article-date">14/05/2026</p>
+                    
+                    
+                    <nav class="breadcrumb" aria-label="Breadcrumb">
+                        
+                        
+                        
+                        <a href="contents.html" class="breadcrumb-link">Compiladores</a>
+                        
+                        <span class="breadcrumb-separator"><i data-lucide="chevron-right" class="breadcrumb-icon"></i></span>
+                        
+                        
+                        
+                        
+                        <a href="contents.html#part-IV" class="breadcrumb-link">IV - Geração de Código</a>
+                        
+                        <span class="breadcrumb-separator"><i data-lucide="chevron-right" class="breadcrumb-icon"></i></span>
+                        
+                        
+                        
+                        <span class="breadcrumb-current">Lab - Geração de Código II</span>
+                        
+                        
+                    </nav>
+                    
+                </header>
+                <div class="article-body">
+                    <h2 id="introdução"><span class="heading-text">Introdução</span><span class="heading-arabic">16.1</span></h2>
+<p>No laboratório anterior, adicionamos a SlangVM ao projeto e implementamos a primeira versão do gerador de código. Essa versão já consegue traduzir programas com:</p>
+<ul>
+<li>funções simples;</li>
+<li>parâmetros;</li>
+<li>variáveis locais;</li>
+<li>expressões aritméticas;</li>
+<li>comparações;</li>
+<li>chamadas de função;</li>
+<li><code>print</code>;</li>
+<li><code>return</code>.</li>
+</ul>
+<p>Agora vamos finalizar a geração de código para as estruturas de controle do Slang. Essas estruturas exigem uma ideia nova: <strong>saltar</strong> de um ponto para outro do assembly gerado.</p>
+<p>Ao final deste laboratório, o compilador será capaz de gerar código para:</p>
+<ul>
+<li><code>if</code> e <code>else</code>;</li>
+<li><code>loop</code> com condição;</li>
+<li><code>loop</code> infinito;</li>
+<li><code>break</code>;</li>
+<li><code>continue</code>;</li>
+<li>operadores lógicos <code>and</code> e <code>or</code> com curto-circuito;</li>
+<li>testes finais da VM.</li>
+</ul>
+<p>Também vamos consolidar uma versão mais completa do gerador. A primeira parte mostrou os blocos fundamentais de forma incremental; esta segunda parte é o momento adequado para reunir tudo em uma versão final mais próxima do projeto completo.</p>
+<h2 id="ponto-de-partida"><span class="heading-text">Ponto de partida</span><span class="heading-arabic">16.2</span></h2>
+<p>Este laboratório parte do <code>codegen.c</code> construído na parte I. A ideia não é reescrever tudo do zero, mas completar os casos que ficaram faltando.</p>
+<p>Na parte I, <code>gen_statement</code> ainda rejeitava comandos como <code>AST_IF</code>, <code>AST_LOOP</code>, <code>AST_BREAK</code> e <code>AST_CONTINUE</code>. Também deixamos <code>and</code> e <code>or</code> fora de <code>gen_binary</code>, porque eles não podem ser tratados como operadores binários comuns.</p>
+<p>O motivo é simples:</p>
+<ul>
+<li>operadores como <code>+</code>, <code>*</code> e <code>&lt;</code> sempre avaliam os dois lados;</li>
+<li><code>and</code> e <code>or</code> podem ignorar o lado direito;</li>
+<li><code>if</code> e <code>loop</code> precisam desviar a execução para outra parte do programa.</li>
+</ul>
+<p>Esses desvios serão implementados com labels e saltos.</p>
+<div class="callout callout-tip">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .5 2.2 1.5 3.1.7.7 1.3 1.5 1.5 2.4"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span>
+    <span class="callout-title-inner">Testes em três níveis<br /></span>
+  </div>
+  <div class="callout-content">
+<p>No final deste laboratório, os testes da VM estarão divididos em três camadas:</p>
+<ol>
+<li><strong>Testes Slang completos</strong>: programas <code>.slang</code> passam pelo compilador e depois pela VM.</li>
+<li><strong>Testes de assembly <code>.slasm</code></strong>: arquivos de assembly já prontos testam a VM diretamente.</li>
+<li><strong>Testes de opcode em C</strong>: bytecode montado manualmente para exercitar instruções isoladas.</li>
+</ol>
+<p>Cada camada responde uma pergunta: o codegen está gerando assembly correto? O assembler entende o texto? Os opcodes executam certo? Essa separação ajuda a isolar bugs mais rápido.</p>
+  </div>
+</div>
+<h2 id="labels-e-saltos-na-vm"><span class="heading-text">Labels e saltos na VM</span><span class="heading-arabic">16.3</span></h2>
+<p>Antes de implementar <code>if</code> e <code>loop</code>, precisamos entender como o assembly da VM representa desvios de execução. Essa é a base de todo controle de fluxo.</p>
+<h3 id="entendendo-labels"><span class="heading-text">Entendendo labels</span><span class="heading-arabic">16.3.1</span></h3>
+<p>Controle de fluxo depende de saltos. Para saltar, precisamos de labels.</p>
+<p>Um <code>if</code> simples como:</p>
+<pre class="line-numbers language-slang" data-lang="SLANG"><code class="language-slang">if x &gt; 0 {
+    print(x)
+}
+</code></pre>
+<p>pode virar algo parecido com:</p>
+<pre class="line-numbers language-slasm" data-lang="SLASM"><code class="language-slasm">get_local 0
+push 0
+gt
+jump_if_false L0
+pop
+get_local 0
+print
+push null
+pop
+label L0
+pop
+</code></pre>
+<p>A instrução <code>jump_if_false L0</code> olha para o topo da pilha. Se o valor for falso, a VM salta para <code>L0</code>. Se o valor for verdadeiro, a execução continua na próxima instrução.</p>
+<p>Por isso deixamos a função abaixo pronta na parte I:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">static int new_label(Codegen *codegen) {
+    return codegen-&gt;next_label++;
+}
+</code></pre>
+<p>Cada chamada gera um número novo. Assim conseguimos criar <code>L0</code>, <code>L1</code>, <code>L2</code> e assim por diante, sem repetir labels dentro do mesmo arquivo gerado.</p>
+<h2 id="estruturas-de-controle"><span class="heading-text">Estruturas de controle</span><span class="heading-arabic">16.4</span></h2>
+<p>Com labels disponíveis, podemos gerar comandos que mudam o fluxo normal da execução. Primeiro vamos tratar seleção com <code>if</code> e <code>else</code>; depois, repetição com <code>loop</code>.</p>
+<h3 id="gerando-codeifcode-e-codeelsecode"><span class="heading-text">Gerando <code>if</code> e <code>else</code></span><span class="heading-arabic">16.4.1</span></h3>
+<p>Um <code>if</code> precisa de pelo menos uma label: a label para onde saltamos quando a condição é falsa. Quando existe <code>else</code>, também precisamos de uma label para o fim do comando inteiro.</p>
+<p>Adicione esta função em <code>src/compiler/codegen.c</code>, antes de <code>gen_call</code>:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">// src/compiler/codegen.c (adicione antes de gen_call)
+
+static void gen_if(Codegen *codegen, const AstNode *node) {
+    int else_label = new_label(codegen);
+    int end_label = new_label(codegen);
+
+    gen_expression(codegen, node-&gt;first);
+    fprintf(codegen-&gt;stream, &quot;jump_if_false L%d\npop\n&quot;, else_label);
+    gen_statement(codegen, node-&gt;second);
+    fprintf(codegen-&gt;stream, &quot;jump L%d\nlabel L%d\npop\n&quot;, end_label, else_label);
+    if (node-&gt;third != NULL) {
+        gen_statement(codegen, node-&gt;third);
+    }
+    fprintf(codegen-&gt;stream, &quot;label L%d\n&quot;, end_label);
+}
+</code></pre>
+<p>Na AST final do parser:</p>
+<ul>
+<li><code>node-&gt;first</code> guarda a condição;</li>
+<li><code>node-&gt;second</code> guarda o bloco do <code>then</code>;</li>
+<li><code>node-&gt;third</code> guarda o bloco do <code>else</code>, quando existir.</li>
+</ul>
+<p>A lógica gerada é:</p>
+<ol>
+<li>gerar a condição;</li>
+<li>saltar para o <code>else</code> se a condição for falsa;</li>
+<li>remover a condição da pilha se ela for verdadeira;</li>
+<li>gerar o bloco verdadeiro;</li>
+<li>saltar para o fim para não executar o <code>else</code>;</li>
+<li>gerar o bloco falso, quando ele existir.</li>
+</ol>
+<p>Os <code>pop</code> removem a condição da pilha depois que ela já foi usada para decidir o salto.</p>
+<div class="callout callout-bug">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m8 2 1.88 1.88"/><path d="M14.12 3.88 16 2"/><path d="M9 7.13v-1a3.003 3.003 0 1 1 6 0v1"/><path d="M12 20c-3.3 0-6-2.7-6-6v-3a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v3c0 3.3-2.7 6-6 6"/><path d="M12 20v-9"/><path d="M6.53 9C4.6 8.8 3 7.1 3 5"/><path d="M6 13H2"/><path d="M3 21c0-2.1 1.7-3.9 3.8-4"/><path d="M20.97 5c0 2.1-1.6 3.8-3.53 4"/><path d="M18 13h4"/><path d="M21 21c0-2.1-1.7-3.9-3.8-4"/></svg></span>
+    <span class="callout-title-inner">Cada caminho precisa do seu próprio <code>pop</code><br /></span>
+  </div>
+  <div class="callout-content">
+<p>Repare que há um <code>pop</code> no bloco verdadeiro (depois de <code>jump_if_false</code>) e outro <code>pop</code> no bloco falso (depois de <code>label</code>). Isso não é repetição acidental: a condição está no topo da pilha <strong>em ambos os caminhos</strong>.</p>
+<ul>
+<li>Se a condição for verdadeira, <code>jump_if_false</code> <strong>não</strong> salta, e o primeiro <code>pop</code> remove o valor verdadeiro da pilha.</li>
+<li>Se a condição for falsa, <code>jump_if_false</code> salta para <code>L0</code>, e o <code>pop</code> em <code>L0</code> remove o valor falso da pilha.</li>
+</ul>
+<p>Sem esse <code>pop</code> em cada ramo, a pilha acumularia valores de condição que nunca seriam removidos.</p>
+  </div>
+</div>
+<h4 id="simulação-manual-codeif-value-gt-0-printquotpositivequot-code"><span class="heading-text">Simulação manual: <code>if value &gt; 0 { print(&quot;positive&quot;) }</code></span><span class="heading-arabic">16.4.1.1</span></h4>
+<p>Para ver as labels e saltos em ação, vamos simular a geração deste programa simples:</p>
+<pre class="line-numbers language-slang" data-lang="SLANG"><code class="language-slang">fn main(args: void) -&gt; void {
+    value: int = 5
+    if value &gt; 0 {
+        print(&quot;positive&quot;)
+    }
+}
+</code></pre>
+<p>O codegen percorre a AST e executa a seguinte sequência:</p>
+<ol>
+<li><strong>Prólogo</strong>: emite <code>push null</code> (argumento de <code>main</code>), <code>call 1 fn_main</code> e <code>halt</code>.</li>
+<li><strong>Label <code>fn_main</code></strong>: zera a tabela de símbolos, declara o parâmetro <code>args</code> no slot 0.</li>
+<li><strong><code>gen_var_decl</code> para <code>value</code></strong>:<ul>
+<li><code>declare_symbol</code> atribui slot 1 a <code>value</code>;</li>
+<li><code>gen_expression</code> para o nó <code>AST_NUMBER(5)</code> → emite <code>push 5</code>;</li>
+<li>emite <code>set_local 1</code>.</li>
+</ul>
+</li>
+<li><strong><code>gen_if</code> para <code>if value &gt; 0</code></strong>:<ul>
+<li><code>new_label</code> cria <code>else_label = L0</code> e <code>end_label = L1</code>;</li>
+<li>gera a condição <code>value &gt; 0</code>: <code>get_local 1</code>, <code>push 0</code>, <code>gt</code>;</li>
+<li>emite <code>jump_if_false L0</code> e <code>pop</code>;</li>
+<li>gera o bloco <code>then</code>: chama <code>gen_call</code> para <code>print(&quot;positive&quot;)</code>, que emite <code>push &quot;positive&quot;</code>, <code>print</code>, <code>push null</code>;</li>
+<li>emite <code>jump L1</code>;</li>
+<li>emite <code>label L0</code> e <code>pop</code> (remove o falso da pilha);</li>
+<li><code>node-&gt;third</code> é <code>NULL</code>, então não gera <code>else</code>;</li>
+<li>emite <code>label L1</code>.</li>
+</ul>
+</li>
+<li><strong>Epílogo</strong>: emite <code>push null</code> e <code>ret</code>.</li>
+</ol>
+<p>O assembly final fica:</p>
+<pre class="line-numbers language-slasm" data-lang="SLASM"><code class="language-slasm">push null
+call 1 fn_main
+halt
+label fn_main
+push 5
+set_local 1
+pop
+get_local 1
+push 0
+gt
+jump_if_false L0
+pop
+push &quot;positive&quot;
+print
+push null
+jump L1
+label L0
+pop
+label L1
+push null
+ret
+</code></pre>
+<h3 id="gerando-codeloopcode"><span class="heading-text">Gerando <code>loop</code></span><span class="heading-arabic">16.4.2</span></h3>
+<p>Um <code>loop</code> precisa de uma label de início e uma label de fim.</p>
+<p>O início é o ponto para onde <code>continue</code> deve voltar. O fim é o ponto para onde <code>break</code> deve saltar.</p>
+<p>Adicione esta função depois de <code>gen_if</code>:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">// src/compiler/codegen.c (adicione depois de gen_if)
+
+static void gen_loop(Codegen *codegen, const AstNode *node) {
+    if (codegen-&gt;loop_count == MAX_LOOPS) {
+        fprintf(stderr, &quot;Erro de geração: laços aninhados demais.\n&quot;);
+        codegen-&gt;had_error = true;
+        return;
+    }
+
+    int start_label = new_label(codegen);
+    int false_label = new_label(codegen);
+    int end_label = new_label(codegen);
+    codegen-&gt;loops[codegen-&gt;loop_count++] = (LoopLabels){start_label, end_label};
+
+    fprintf(codegen-&gt;stream, &quot;label L%d\n&quot;, start_label);
+    if (node-&gt;first != NULL) {
+        gen_expression(codegen, node-&gt;first);
+        fprintf(codegen-&gt;stream, &quot;jump_if_false L%d\npop\n&quot;, false_label);
+    }
+
+    gen_statement(codegen, node-&gt;second);
+    fprintf(codegen-&gt;stream, &quot;jump L%d\n&quot;, start_label);
+
+    if (node-&gt;first != NULL) {
+        fprintf(codegen-&gt;stream, &quot;label L%d\npop\n&quot;, false_label);
+    }
+    fprintf(codegen-&gt;stream, &quot;label L%d\n&quot;, end_label);
+    codegen-&gt;loop_count--;
+}
+</code></pre>
+<p>Esse código cobre dois formatos da linguagem:</p>
+<pre class="line-numbers language-slang" data-lang="SLANG"><code class="language-slang">loop {
+    print(1)
+}
+</code></pre>
+<p>e:</p>
+<pre class="line-numbers language-slang" data-lang="SLANG"><code class="language-slang">loop x &lt; 10 {
+    x = x + 1
+}
+</code></pre>
+<p>Quando <code>node-&gt;first</code> é <code>NULL</code>, o laço não tem condição e se torna infinito. Quando <code>node-&gt;first</code> existe, a condição é testada a cada iteração.</p>
+<p>A pilha <code>loops</code> guarda as labels do laço atual. Isso é necessário porque <code>break</code> e <code>continue</code> podem aparecer dentro de laços aninhados; nesse caso, eles devem afetar o laço mais interno.</p>
+<h3 id="gerando-codebreakcode-e-codecontinuecode"><span class="heading-text">Gerando <code>break</code> e <code>continue</code></span><span class="heading-arabic">16.4.3</span></h3>
+<p><code>break</code> e <code>continue</code> dependem do laço atual.</p>
+<p>Por isso usamos a pilha <code>loops</code> dentro de <code>Codegen</code>:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">LoopLabels loops[MAX_LOOPS];
+int loop_count;
+</code></pre>
+<p>O topo dessa pilha guarda as labels do laço mais interno.</p>
+<p>Em <code>gen_statement</code>, os casos serão:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">case AST_BREAK:
+    if (codegen-&gt;loop_count == 0) {
+        fprintf(stderr, &quot;Erro de geração: break fora de laço.\n&quot;);
+        codegen-&gt;had_error = true;
+    } else {
+        fprintf(codegen-&gt;stream, &quot;jump L%d\n&quot;, codegen-&gt;loops[codegen-&gt;loop_count - 1].end_label);
+    }
+    break;
+
+case AST_CONTINUE:
+    if (codegen-&gt;loop_count == 0) {
+        fprintf(stderr, &quot;Erro de geração: continue fora de laço.\n&quot;);
+        codegen-&gt;had_error = true;
+    } else {
+        fprintf(codegen-&gt;stream, &quot;jump L%d\n&quot;, codegen-&gt;loops[codegen-&gt;loop_count - 1].start_label);
+    }
+    break;
+</code></pre>
+<p>Assim:</p>
+<ul>
+<li><code>break</code> salta para o fim do laço atual;</li>
+<li><code>continue</code> salta para o início do laço atual.</li>
+</ul>
+<h3 id="completando-codegen-statementcode"><span class="heading-text">Completando <code>gen_statement</code></span><span class="heading-arabic">16.4.4</span></h3>
+<p>Agora complete <code>gen_statement</code> com os casos das estruturas de controle.</p>
+<p>A versão completa da função deve ficar assim:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">// src/compiler/codegen.c — gen_statement completa
+
+static void gen_statement(Codegen *codegen, const AstNode *node) {
+    if (node == NULL || codegen-&gt;had_error) {
+        return;
+    }
+
+    switch (node-&gt;kind) {
+        case AST_BLOCK:
+            gen_block(codegen, node);
+            break;
+        case AST_VAR_DECL:
+            gen_var_decl(codegen, node);
+            break;
+        case AST_IF:
+            gen_if(codegen, node);
+            break;
+        case AST_LOOP:
+            gen_loop(codegen, node);
+            break;
+        case AST_RETURN:
+            if (node-&gt;first != NULL) {
+                gen_expression(codegen, node-&gt;first);
+            } else {
+                fputs(&quot;push null\n&quot;, codegen-&gt;stream);
+            }
+            fputs(&quot;ret\n&quot;, codegen-&gt;stream);
+            break;
+        case AST_BREAK:
+            if (codegen-&gt;loop_count == 0) {
+                fprintf(stderr, &quot;Erro de geração: break fora de laço.\n&quot;);
+                codegen-&gt;had_error = true;
+            } else {
+                fprintf(codegen-&gt;stream, &quot;jump L%d\n&quot;, codegen-&gt;loops[codegen-&gt;loop_count - 1].end_label);
+            }
+            break;
+        case AST_CONTINUE:
+            if (codegen-&gt;loop_count == 0) {
+                fprintf(stderr, &quot;Erro de geração: continue fora de laço.\n&quot;);
+                codegen-&gt;had_error = true;
+            } else {
+                fprintf(codegen-&gt;stream, &quot;jump L%d\n&quot;, codegen-&gt;loops[codegen-&gt;loop_count - 1].start_label);
+            }
+            break;
+        case AST_ASSIGN:
+            gen_expression(codegen, node-&gt;first);
+            fprintf(codegen-&gt;stream, &quot;set_local %d\npop\n&quot;, find_symbol(codegen, node-&gt;token));
+            break;
+        case AST_EXPR_STMT:
+            gen_expression(codegen, node-&gt;first);
+            fputs(&quot;pop\n&quot;, codegen-&gt;stream);
+            break;
+        default:
+            gen_expression(codegen, node);
+            fputs(&quot;pop\n&quot;, codegen-&gt;stream);
+            break;
+    }
+}
+</code></pre>
+<p>A mudança principal está nos casos <code>AST_IF</code> e <code>AST_LOOP</code>. Agora, comandos de controle não são tratados como erro; eles chamam funções próprias que emitem labels e saltos.</p>
+<h2 id="operadores-lógicos-com-curto-circuito"><span class="heading-text">Operadores lógicos com curto-circuito</span><span class="heading-arabic">16.5</span></h2>
+<p>Depois das estruturas de controle, falta tratar os operadores lógicos que também dependem de saltos. <code>and</code> e <code>or</code> não podem ser gerados como operadores binários comuns, porque nem sempre avaliam os dois lados.</p>
+<h3 id="curto-circuito-de-codeandcode"><span class="heading-text">Curto-circuito de <code>and</code></span><span class="heading-arabic">16.5.1</span></h3>
+<p>Na parte I, <code>gen_binary</code> tratava operadores binários comuns. Agora vamos adicionar <code>and</code> e <code>or</code>.</p>
+<p>O operador <code>and</code> deve avaliar o lado direito apenas se o lado esquerdo for verdadeiro. Se o lado esquerdo for falso, o resultado inteiro já é falso.</p>
+<p>No início de <code>gen_binary</code>, antes de gerar os dois lados normalmente, adicione:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">if (node-&gt;token.type == TOK_AND) {
+    int end_label = new_label(codegen);
+    gen_expression(codegen, node-&gt;first);
+    fprintf(codegen-&gt;stream, &quot;jump_if_false L%d\npop\n&quot;, end_label);
+    gen_expression(codegen, node-&gt;second);
+    fprintf(codegen-&gt;stream, &quot;label L%d\n&quot;, end_label);
+    return;
+}
+</code></pre>
+<p>Se o lado esquerdo for falso, <code>jump_if_false</code> salta para o fim e deixa esse falso no topo da pilha. Se for verdadeiro, removemos o valor com <code>pop</code> e avaliamos o lado direito.</p>
+<h3 id="curto-circuito-de-codeorcode"><span class="heading-text">Curto-circuito de <code>or</code></span><span class="heading-arabic">16.5.2</span></h3>
+<p>O operador <code>or</code> faz o contrário. Se o lado esquerdo já for verdadeiro, não precisamos avaliar o lado direito.</p>
+<p>Ainda no início de <code>gen_binary</code>, adicione depois do caso <code>TOK_AND</code>:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">if (node-&gt;token.type == TOK_OR) {
+    int right_label = new_label(codegen);
+    int end_label = new_label(codegen);
+    gen_expression(codegen, node-&gt;first);
+    fprintf(codegen-&gt;stream, &quot;jump_if_false L%d\njump L%d\nlabel L%d\npop\n&quot;, right_label, end_label, right_label);
+    gen_expression(codegen, node-&gt;second);
+    fprintf(codegen-&gt;stream, &quot;label L%d\n&quot;, end_label);
+    return;
+}
+</code></pre>
+<p>Esse padrão é um pouco mais longo porque <code>jump_if_false</code> só salta quando o valor é falso. Se o lado esquerdo for verdadeiro, usamos um <code>jump</code> incondicional para pular o lado direito.</p>
+<h3 id="conferindo-a-versão-mais-completa-de-codegen-binarycode"><span class="heading-text">Conferindo a versão mais completa de <code>gen_binary</code></span><span class="heading-arabic">16.5.3</span></h3>
+<p>Depois dos casos especiais de curto-circuito, o restante da função continua igual ao que fizemos na parte I.</p>
+<p>A versão mais completa fica assim:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">// src/compiler/codegen.c — gen_binary completa
+
+static void gen_binary(Codegen *codegen, const AstNode *node) {
+    if (node-&gt;token.type == TOK_AND) {
+        int end_label = new_label(codegen);
+        gen_expression(codegen, node-&gt;first);
+        fprintf(codegen-&gt;stream, &quot;jump_if_false L%d\npop\n&quot;, end_label);
+        gen_expression(codegen, node-&gt;second);
+        fprintf(codegen-&gt;stream, &quot;label L%d\n&quot;, end_label);
+        return;
+    }
+
+    if (node-&gt;token.type == TOK_OR) {
+        int right_label = new_label(codegen);
+        int end_label = new_label(codegen);
+        gen_expression(codegen, node-&gt;first);
+        fprintf(codegen-&gt;stream, &quot;jump_if_false L%d\njump L%d\nlabel L%d\npop\n&quot;, right_label, end_label, right_label);
+        gen_expression(codegen, node-&gt;second);
+        fprintf(codegen-&gt;stream, &quot;label L%d\n&quot;, end_label);
+        return;
+    }
+
+    gen_expression(codegen, node-&gt;first);
+    gen_expression(codegen, node-&gt;second);
+
+    switch (node-&gt;token.type) {
+        case TOK_PLUS: fputs(&quot;add\n&quot;, codegen-&gt;stream); break;
+        case TOK_MINUS: fputs(&quot;sub\n&quot;, codegen-&gt;stream); break;
+        case TOK_STAR: fputs(&quot;mul\n&quot;, codegen-&gt;stream); break;
+        case TOK_SLASH: fputs(&quot;div\n&quot;, codegen-&gt;stream); break;
+        case TOK_PERCENT: fputs(&quot;mod\n&quot;, codegen-&gt;stream); break;
+        case TOK_EQ: fputs(&quot;eq\n&quot;, codegen-&gt;stream); break;
+        case TOK_BANG_EQ: fputs(&quot;ne\n&quot;, codegen-&gt;stream); break;
+        case TOK_LT: fputs(&quot;lt\n&quot;, codegen-&gt;stream); break;
+        case TOK_LT_EQ: fputs(&quot;le\n&quot;, codegen-&gt;stream); break;
+        case TOK_GT: fputs(&quot;gt\n&quot;, codegen-&gt;stream); break;
+        case TOK_GT_EQ: fputs(&quot;ge\n&quot;, codegen-&gt;stream); break;
+        default:
+            fprintf(stderr, &quot;Erro de geração: operador binário não suportado.\n&quot;);
+            codegen-&gt;had_error = true;
+            break;
+    }
+}
+</code></pre>
+<p>Esse é o primeiro ponto da segunda parte em que reunimos código anterior com código novo. A ideia é mostrar como a função final fica depois da adição do curto-circuito.</p>
+<h2 id="testes-manuais-de-controle-de-fluxo"><span class="heading-text">Testes manuais de controle de fluxo</span><span class="heading-arabic">16.6</span></h2>
+<p>Agora vamos validar os recursos novos com programas pequenos. A ideia é observar o comportamento final antes de partir para a suíte automatizada.</p>
+<h3 id="testando-codeifcode"><span class="heading-text">Testando <code>if</code></span><span class="heading-arabic">16.6.1</span></h3>
+<p>Crie um arquivo <code>programa.slang</code>:</p>
+<pre class="line-numbers language-slang" data-lang="SLANG"><code class="language-slang">fn main(args: void) -&gt; void {
+    value: int = 5
+    if value &gt; 0 {
+        print(&quot;positive&quot;)
+    } else {
+        print(&quot;zero&quot;)
+    }
+}
+</code></pre>
+<p>Gere e execute:</p>
+<pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">./build/compiler code programa.slang &gt; programa.slasm
+./build/slang-vm programa.slasm
+</code></pre>
+<p>A saída esperada é:</p>
+<pre class="line-numbers language-txt" data-lang="TXT"><code class="language-txt">positive
+</code></pre>
+<p>Esse teste valida a geração de condição, salto condicional, bloco verdadeiro e bloco falso.</p>
+<h3 id="testando-recursão"><span class="heading-text">Testando recursão</span><span class="heading-arabic">16.6.2</span></h3>
+<p>Agora teste uma função recursiva:</p>
+<pre class="line-numbers language-slang" data-lang="SLANG"><code class="language-slang">fn factorial(n: int) -&gt; int {
+    if n &lt;= 1 {
+        return 1
+    }
+    return n * factorial(n - 1)
+}
+
+fn main(args: void) -&gt; void {
+    print(factorial(5))
+}
+</code></pre>
+<p>Gere e execute:</p>
+<pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">./build/compiler code programa.slang &gt; programa.slasm
+./build/slang-vm programa.slasm
+</code></pre>
+<p>A saída esperada é:</p>
+<pre class="line-numbers language-txt" data-lang="TXT"><code class="language-txt">120
+</code></pre>
+<p>Esse teste valida várias partes ao mesmo tempo:</p>
+<ul>
+<li>declaração de função;</li>
+<li>parâmetro local;</li>
+<li>comparação <code>&lt;=</code>;</li>
+<li><code>if</code>;</li>
+<li><code>return</code>;</li>
+<li>chamada recursiva;</li>
+<li>multiplicação;</li>
+<li><code>print</code>.</li>
+</ul>
+<h3 id="testando-codeloopcode-e-codecontinuecode"><span class="heading-text">Testando <code>loop</code> e <code>continue</code></span><span class="heading-arabic">16.6.3</span></h3>
+<p>Agora teste:</p>
+<pre class="line-numbers language-slang" data-lang="SLANG"><code class="language-slang">fn main(args: void) -&gt; void {
+    x: int = 0
+    loop x &lt; 5 {
+        x = x + 1
+        if x % 2 == 0 {
+            continue
+        }
+        print(x)
+    }
+}
+</code></pre>
+<p>Gere e execute:</p>
+<pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">./build/compiler code programa.slang &gt; programa.slasm
+./build/slang-vm programa.slasm
+</code></pre>
+<p>A saída esperada é:</p>
+<pre class="line-numbers language-txt" data-lang="TXT"><code class="language-txt">1
+3
+5
+</code></pre>
+<p>Esse exemplo valida:</p>
+<ul>
+<li>variável local;</li>
+<li>atribuição;</li>
+<li>laço condicional;</li>
+<li>módulo <code>%</code>;</li>
+<li>comparação <code>==</code>;</li>
+<li><code>continue</code>;</li>
+<li>salto de volta para o início do laço.</li>
+</ul>
+<h3 id="testando-curto-circuito"><span class="heading-text">Testando curto-circuito</span><span class="heading-arabic">16.6.4</span></h3>
+<p>Agora teste uma expressão em que o lado direito não deve ser avaliado:</p>
+<pre class="line-numbers language-slang" data-lang="SLANG"><code class="language-slang">fn fail() -&gt; bool {
+    print(&quot;fail&quot;)
+    return true
+}
+
+fn main(args: void) -&gt; void {
+    if false and fail() {
+        print(&quot;wrong&quot;)
+    } else {
+        print(&quot;ok&quot;)
+    }
+}
+</code></pre>
+<p>Gere e execute:</p>
+<pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">./build/compiler code programa.slang &gt; programa.slasm
+./build/slang-vm programa.slasm
+</code></pre>
+<p>A saída esperada é:</p>
+<pre class="line-numbers language-txt" data-lang="TXT"><code class="language-txt">ok
+</code></pre>
+<p>Se <code>fail</code> fosse chamado, a saída teria a palavra <code>fail</code>. Como isso não acontece, sabemos que o curto-circuito de <code>and</code> está funcionando.</p>
+<h2 id="testes-automatizados-da-vm"><span class="heading-text">Testes automatizados da VM</span><span class="heading-arabic">16.7</span></h2>
+<p>Os testes manuais ajudam a entender o comportamento, mas o projeto precisa de uma suíte repetível. Por isso, vamos separar os testes em camadas: programas Slang completos, assembly direto e opcodes isolados.</p>
+<h3 id="adicionando-testes-de-vm"><span class="heading-text">Adicionando testes de VM</span><span class="heading-arabic">16.7.1</span></h3>
+<p>No estado final do projeto, a pasta <code>tests</code> passa a ter também testes de VM:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">tests/
+├── lexer/
+├── parser/
+├── vm/
+│   ├── input/
+│   └── expected/
+└── run_tests.sh
+</code></pre>
+<p>Os testes de VM são arquivos <code>.slang</code> completos, que passam por duas etapas:</p>
+<pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">./build/compiler code teste.slang &gt; teste.slasm
+./build/slang-vm teste.slasm
+</code></pre>
+<p>O compilador gera o assembly, a VM executa e a saída padrão é comparada com o arquivo de resultado esperado. O script <code>run_tests.sh</code> faz esse processo automaticamente para todos os testes.</p>
+<h3 id="rodando-a-suíte-completa"><span class="heading-text">Rodando a suíte completa</span><span class="heading-arabic">16.7.2</span></h3>
+<p>Compile tudo:</p>
+<pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">cmake -B build
+cmake --build build
+</code></pre>
+<p>Rode todos os testes:</p>
+<pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">./tests/run_tests.sh all
+</code></pre>
+<p>A saída esperada no estado final é:</p>
+<pre class="line-numbers language-txt" data-lang="TXT"><code class="language-txt">=============================================
+   EXECUTANDO TESTES DE LEXER
+=============================================
+  [OK] lexer/01_delimiters
+  [OK] lexer/02_simple_operators
+  ...
+  [OK] lexer/16_unterminated_string_error
+
+=============================================
+   EXECUTANDO TESTES DE PARSER
+=============================================
+  [OK] parser/01_variable_declaration
+  [OK] parser/02_function_declaration
+  ...
+  [OK] parser/09_invalid_parameter
+
+=============================================
+   EXECUTANDO TESTES DE VM
+=============================================
+  [OK] vm/aritmetica_basica
+  [OK] vm/associatividade
+  [OK] vm/atribuicao
+  [OK] vm/break
+  [OK] vm/break_while
+  ...
+  [OK] vm/while_simples
+
+=============================================
+   RESULTADO: 63 PASSARAM | 0 FALHARAM | 63 TOTAL
+=============================================
+</code></pre>
+<h2 id="limitações-conscientes"><span class="heading-text">Limitações conscientes</span><span class="heading-arabic">16.8</span></h2>
+<p>Ainda existem simplificações importantes:</p>
+<ul>
+<li>não há análise semântica completa de tipos;</li>
+<li>não há escopo lexical sofisticado para blocos aninhados;</li>
+<li>strings são suportadas principalmente como valores imprimíveis;</li>
+<li>a VM usa endereços pequenos em um byte para saltos e chamadas;</li>
+<li><code>print</code> é tratado como primitiva especial, não como função Slang comum.</li>
+</ul>
+<p>Essas limitações são aceitáveis neste marco porque o objetivo é consolidar a ideia central de geração de código. A partir daqui, cada uma delas pode virar uma melhoria futura.</p>
+<h2 id="próximos-passos"><span class="heading-text">Próximos passos</span><span class="heading-arabic">16.9</span></h2>
+<p>Com o compilador gerando código para a SlangVM, fechamos o ciclo completo de compilação e execução. A partir daqui, o próximo tema do curso será o estudo de <strong>algoritmos de otimização</strong>, isto é, técnicas para transformar o programa gerado em versões equivalentes, mas mais eficientes.</p>
+<p>Algumas extensões naturais para essa direção são:</p>
+<ul>
+<li>adicionar análise semântica antes da geração de código;</li>
+<li>validar tipos de expressões e retornos de função;</li>
+<li>implementar escopos por bloco;</li>
+<li>estudar e implementar otimizações simples, como constant folding;</li>
+<li>trocar o assembly textual por um bytecode binário real.</li>
+</ul>
+<p>O ponto principal, porém, já foi alcançado: agora temos um ciclo completo de compilação e execução para a linguagem Slang.</p>
+
+                </div>
+            </article>
+            <footer class="footer">
+                <p>© 2025 · <a href="#">Gabriel Soares Baptista</a></p>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        const toggle = document.querySelector('.mobile-menu-toggle');
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.querySelector('.mobile-menu-overlay');
+
+        function openMenu() {
+            sidebar.classList.add('open');
+            overlay.classList.add('open');
+            toggle.classList.add('open');
+            toggle.innerHTML = '<i data-lucide="x"></i>';
+            CourseForgeUI.initIcons();
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMenu() {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('open');
+            toggle.classList.remove('open');
+            toggle.innerHTML = '<i data-lucide="menu"></i>';
+            CourseForgeUI.initIcons();
+            document.body.style.overflow = '';
+        }
+
+        toggle.addEventListener('click', () => {
+            if (sidebar.classList.contains('open')) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        overlay.addEventListener('click', closeMenu);
+    </script>
+
+    
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            renderMathInElement(document.body, {
+                output: 'html',
+                delimiters: [
+                    { left: "$$", right: "$$", display: true },
+                    { left: "$", right: "$", display: false },
+                    { left: "\\(", right: "\\)", display: false },
+                    { left: "\\[", right: "\\]", display: true }
+                ],
+                throwOnError: false,
+                strict: false
+            });
+        });
+    </script>
+    
+    
+    <script src="/aulas-faesa/js/vendor/prism/prism.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-c.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-cpp.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-python.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-clike.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-perl.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-java.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-mermaid.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-php.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js" data-no-bundle></script>
+    
+    
+    
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            mermaid.initialize({
+                startOnLoad: true,
+                theme: 'default',
+                securityLevel: 'loose',
+                fontFamily: 'Inter, system-ui, sans-serif',
+                themeVariables: {
+                    fontSize: '16px',
+                    edgeLabelFontSize: '16px',
+                    multiplicityFontSize: '18px'
+                }
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const isSubcourse = false;
+        const courseName = "Compiladores";
+        CourseForgeNav.applyDynamicBreadcrumbs('.breadcrumb', isSubcourse);
+        CourseForgeNav.initScrollSpy();
+        CourseForgeUI.initCopyButtons();
+        CourseForgeUI.initExamples();
+        });
+
+        function handleBackNavigation() {
+            const isSubcourse = false;
+        const dynamic = CourseForgeNav.getBackLink('contents.html', 'Voltar', isSubcourse);
+        window.location.href = dynamic.url;
+        }
+    </script>
+</body>
+
+</html>

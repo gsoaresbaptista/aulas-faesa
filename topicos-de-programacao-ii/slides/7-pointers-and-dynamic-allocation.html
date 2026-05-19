@@ -1,0 +1,1322 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <title>Ponteiros e Alocação Dinâmica</title>
+    <link rel="icon" href="/aulas-faesa/img/dark-favicon.svg" media="(prefers-color-scheme: light)">
+    <link rel="icon" href="/aulas-faesa/img/light-favicon.svg" media="(prefers-color-scheme: dark)">
+
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/reset.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/reveal.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/theme/white.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/aulas-faesa/css/prism-one-light.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/fonts.css" data-no-bundle>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+            <section><h1>Programação de Computadores</h1>
+<h2>Ponteiros e Alocação Dinâmica em C</h2>
+<p>Professor: Gabriel Soares Baptista</p>
+</section>
+<section><h1>Ligação com as aulas anteriores</h1>
+<p>A aula 11 mostrou <strong>como modelar</strong> dados com <code>struct</code>. <!-- .element: class="fragment" --></p>
+<p>Usamos símbolos como <code>&amp;</code>, <code>*</code>, <code>-&gt;</code> e <code>NULL</code> na prática. <!-- .element: class="fragment" --></p>
+<p>Mas ainda faltava desmontar a lógica por trás deles. <!-- .element: class="fragment" --></p>
+<p>Também notamos que o vetor <code>Aluno turma[100]</code> tem tamanho fixo. <!-- .element: class="fragment" --></p>
+<p>Esta aula resolve <strong>as duas coisas</strong>: o que são ponteiros por dentro e como criar dados dinamicamente. <!-- .element: class="fragment" --></p>
+</section>
+<section><h2>Objetivos</h2>
+<ul>
+<li>Entender que toda variavel ocupa um endereco de memoria. <!-- .element: class="fragment" --></li>
+<li>Usar <code>&amp;</code>, <code>*</code> e <code>-&gt;</code> para localizar e modificar dados. <!-- .element: class="fragment" --></li>
+<li>Diferenciar passagem por valor e passagem por endereco. <!-- .element: class="fragment" --></li>
+<li>Entender por que vetores fixos sao limitados. <!-- .element: class="fragment" --></li>
+<li>Usar <code>malloc</code>, <code>calloc</code>, <code>realloc</code> e <code>free</code>. <!-- .element: class="fragment" --></li>
+<li>Compreender e evitar vazamentos de memoria. <!-- .element: class="fragment" --></li>
+</ul>
+</section>
+<section><h1>Variaveis vivem na memoria</h1>
+<p>Quando declaramos uma variavel, o programa reserva um espaco na memoria.</p>
+<p>Esse espaco tem uma <strong>posicao concreta</strong> com um <strong>endereco</strong>.</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">int idade = 20;
+
+printf(&quot;Valor: %d\n&quot;, idade);           // 20
+printf(&quot;Endereco: %p\n&quot;, (void*)&amp;idade); // 0x...
+</code></pre>
+<ul>
+<li><code>idade</code> representa o <strong>valor</strong> da variavel. <!-- .element: class="fragment" --></li>
+<li><code>&amp;idade</code> representa o <strong>endereco</strong> da variavel. <!-- .element: class="fragment" --></li>
+<li>Sao coisas relacionadas, mas <strong>nao sao a mesma coisa</strong>. <!-- .element: class="fragment" --></li>
+</ul>
+</section>
+<section><h1>Um ponteiro guarda endereco</h1>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">int idade = 20;
+int *p = &amp;idade;
+</code></pre>
+<p>Leia assim:</p>
+<ul>
+<li><code>idade</code> guarda o valor <code>20</code></li>
+<li><code>&amp;idade</code> produz o endereco de <code>idade</code></li>
+<li><code>p</code> guarda esse endereco</li>
+<li>Portanto, <code>p</code> <strong>aponta para</strong> <code>idade</code></li>
+</ul>
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner"><br /></span>
+  </div>
+  <div class="callout-content">
+<code>p</code> nao guarda <code>20</code>. Quem guarda <code>20</code> e <code>idade</code>. <code>p</code> guarda o endereco de <code>idade</code>.</p>
+  </div>
+</div>
+</section>
+<section><h1>O tipo do ponteiro importa</h1>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">int *p;        // ponteiro para int
+float *q;      // ponteiro para float
+Aluno *a;      // ponteiro para Aluno
+char *texto;   // ponteiro para char
+</code></pre>
+<p>O tipo informa o que esperamos encontrar no endereco e quantos bytes ler ou escrever.</p>
+</section>
+<section><h1><code>*</code> tambem acessa o conteudo apontado</h1>
+<p>O <code>*</code> aparece em dois contextos:</p>
+<ul>
+<li>na <strong>declaracao</strong>: faz parte do tipo (<code>int *p</code>)</li>
+<li>na <strong>expressao</strong>: acessa o conteudo no endereco (<code>*p</code>)</li>
+</ul>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">printf(&quot;Endereco: %p\n&quot;, (void*)p);   // o endereco
+printf(&quot;Conteudo: %d\n&quot;, *p);          // o valor la encontrado
+</code></pre>
+<p><code>p</code> e endereco. <code>*p</code> e o conteudo encontrado nesse endereco.</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">*p = 35;   // altera a variavel apontada
+printf(&quot;%d\n&quot;, idade);   // agora imprime 35
+</code></pre>
+<div class="callout callout-important">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner"><br /></span>
+  </div>
+  <div class="callout-content">
+<code>p</code> e <code>*p</code> nao sao a mesma coisa. <code>p</code> e endereco. <code>*p</code> e o conteudo.</p>
+  </div>
+</div>
+</section>
+<section><h1><code>printf()</code> e <code>scanf()</code> na memoria</h1>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">int idade = 20;
+printf(&quot;Valor: %d\n&quot;, idade);       // le o conteudo
+printf(&quot;Endereco: %p\n&quot;, &amp;idade);   // mostra a localizacao
+</code></pre>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">int idade;
+scanf(&quot;%d&quot;, &amp;idade);   // precisa do endereco para escrever
+</code></pre>
+<p><code>scanf()</code> nao foi chamado para <strong>observar</strong> a variavel. Ele precisa <strong>escrever</strong> nela. Para escrever, precisa saber <strong>onde</strong> ela esta.</p>
+</section>
+<section><h1>Certo e errado no <code>scanf</code></h1>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">scanf(&quot;%d&quot;, &amp;idade);   // CORRETO: entrega o endereco
+</code></pre>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">scanf(&quot;%d&quot;, idade);    // ERRADO: idade e um valor, nao um endereco
+</code></pre>
+<p>O fluxo:</p>
+<ol>
+<li>usuario digita um valor</li>
+<li><code>scanf</code> interpreta esse valor</li>
+<li>o programa precisa saber onde grava-lo</li>
+<li><code>&amp;idade</code> entrega o endereco correto</li>
+<li>a escrita ocorre na posicao da variavel</li>
+</ol>
+</section>
+<section><h1>Passagem por valor</h1>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">void tentar_alterar(int x){
+    x = 100;
+}
+
+int main(void){
+    int n = 10;
+    tentar_alterar(n);
+    printf(&quot;%d\n&quot;, n);   // imprime 10
+    return 0;
+}
+</code></pre>
+<p>A funcao recebeu uma <strong>copia</strong> do valor de <code>n</code>.</p>
+<p>Alterar <code>x</code> nao altera <code>n</code>, porque sao variaveis em enderecos diferentes.</p>
+</section>
+<section><h1>Passagem por endereco</h1>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">void alterar(int *p){
+    *p = 100;
+}
+
+int main(void){
+    int n = 10;
+    alterar(&amp;n);
+    printf(&quot;%d\n&quot;, n);   // imprime 100
+    return 0;
+}
+</code></pre>
+<p><code>&amp;n</code> entrega o endereco de <code>n</code>. A funcao usa <code>*p</code> para acessar e modificar a <strong>variavel original</strong>.</p>
+<p>Foi exatamente isso que <code>aplicar_bonus(Aluno *a, float bonus)</code> fez na aula 11.</p>
+</section>
+<section><h1>Visualizando a diferenca</h1>
+<p>Passagem por valor:</p>
+<pre class="line-numbers"><code class="language-none">main: n = 10    ---copia---&gt;    funcao: x = 10
+</code></pre>
+<p>Passagem por endereco:</p>
+<pre class="line-numbers"><code class="language-none">funcao: p = 0x100   ---mesmo endereco---&gt;   main: n em 0x100
+</code></pre>
+<p>Na passagem por valor, sao duas variaveis separadas. <!-- .element: class="fragment" --></p>
+<p>Na passagem por endereco, a funcao trabalha com a <strong>mesma</strong> posicao de memoria. <!-- .element: class="fragment" --></p>
+</section>
+<section><h1>Ponteiros para <code>struct</code> e <code>-&gt;</code></h1>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">Aluno aluno;
+aluno.matricula = 1001;   // acesso direto: .
+
+Aluno *a = &amp;aluno;
+a-&gt;matricula = 1001;      // acesso via ponteiro: -&gt;
+</code></pre>
+<ul>
+<li><code>.</code> quando temos a estrutura <strong>diretamente</strong>. <!-- .element: class="fragment" --></li>
+<li><code>-&gt;</code> quando temos um <strong>ponteiro</strong> para a estrutura. <!-- .element: class="fragment" --></li>
+</ul>
+<p><code>a-&gt;faltas</code> equivale a <code>(*a).faltas</code>. Na pratica, usamos <code>-&gt;</code> porque a leitura fica mais natural. <!-- .element: class="fragment" --></p>
+</section>
+<section><h1><code>NULL</code> = ausencia de endereco valido</h1>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">int *p = NULL;
+</code></pre>
+<p><code>p</code> existe como variavel, mas <strong>nao aponta</strong> para nenhum objeto valido.</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">Aluno *a = buscar_aluno_por_matricula(...);
+
+if(a != NULL){
+    aplicar_bonus(a, bonus);
+}
+</code></pre>
+<p>Se a matricula existe: <code>a</code> recebe o endereco do aluno. <!-- .element: class="fragment" --></p>
+<p>Se nao existe: <code>a</code> recebe <code>NULL</code>. O teste protege contra acesso invalido. <!-- .element: class="fragment" --></p>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner"><br /></span>
+  </div>
+  <div class="callout-content">
+<p>Se <code>a == NULL</code>, nao faz sentido tentar <code>a-&gt;faltas</code>. Nao ha estrutura valida naquele endereco.</p>
+  </div>
+</div>
+</section>
+<section><h1>Arrays e enderecos</h1>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">int v[3] = {10, 20, 30};
+
+printf(&quot;%d\n&quot;, v[0]);   // 10
+printf(&quot;%d\n&quot;, *v);     // 10 tambem
+</code></pre>
+<p>O nome do vetor se comporta como o endereco do primeiro elemento. <!-- .element: class="fragment" --></p>
+<p>O vetor ocupa posicoes <strong>consecutivas</strong> de memoria: <code>0x300</code>, <code>0x304</code>, <code>0x308</code>... <!-- .element: class="fragment" --></p>
+<p>Isso explica <code>&amp;turma[i]</code> em <code>ler_aluno(&amp;turma[i])</code>: <code>turma[i]</code> e o aluno na posicao <code>i</code>, e <code>&amp;turma[i]</code> e o endereco desse aluno. <!-- .element: class="fragment" --></p>
+</section>
+<section><h1>O problema do tamanho fixo</h1>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">Aluno turma[100];
+</code></pre>
+<ul>
+<li>Sempre 100 posicoes, mesmo que <code>n = 3</code>. <!-- .element: class="fragment" --></li>
+<li>Se <code>n &gt; 100</code>, o programa quebra ou corrompe memoria. <!-- .element: class="fragment" --></li>
+<li>Nao da pra crescer depois de criado. <!-- .element: class="fragment" --></li>
+<li>O tamanho real so aparece em <strong>tempo de execucao</strong>. <!-- .element: class="fragment" --></li>
+</ul>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">int n;
+scanf(&quot;%d&quot;, &amp;n);
+Aluno turma[n];   // VLA: funciona em alguns compiladores, mas nao e portatil
+</code></pre>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Far sentido o programa ocupar memoria para 100 alunos se a maioria das execucoes usa apenas 3 ou 4?</p>
+  </div>
+</div>
+</section>
+<section><h1>Duas regioes de memoria</h1>
+<pre class="line-numbers"><code class="language-none">      Memoria do programa
+      /                \
+Pilha (stack)        Heap (monte)
+Automatica           Manual
+int x, float v[10]   malloc, free
+Tamanho fixo         Tamanho em execucao
+Liberada ao sair     Liberada com free
+</code></pre>
+<p>Ate agora usamos so a pilha. A alocacao dinamica usa o <strong>heap</strong>. <!-- .element: class="fragment" --></p>
+</section>
+<section><h1><code>malloc()</code>: pedindo memoria</h1>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">#include &lt;stdlib.h&gt;
+
+void *malloc(size_t tamanho);
+</code></pre>
+<p>Recebe a quantidade de <strong>bytes</strong> e devolve o endereco do bloco (ou <code>NULL</code> se falhar).</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">int *p = malloc(sizeof(int));
+*p = 42;
+</code></pre>
+<ul>
+<li><code>sizeof(int)</code> calcula os bytes de um <code>int</code> (normalmente 4). <!-- .element: class="fragment" --></li>
+<li><code>malloc</code> pede esses bytes ao heap. <!-- .element: class="fragment" --></li>
+<li><code>p</code> guarda o endereco devolvido. <!-- .element: class="fragment" --></li>
+<li>Usamos <code>*p</code> normalmente. <!-- .element: class="fragment" --></li>
+</ul>
+</section>
+<section><h1>Alocando um vetor</h1>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">int n;
+scanf(&quot;%d&quot;, &amp;n);
+
+int *v = malloc(n * sizeof(int));
+</code></pre>
+<p>Agora <code>n</code> veio da entrada. O heap aloca exatamente o necessario.</p>
+<p>Apos alocar, usamos <code>v[i]</code> como um vetor comum:</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">for(i = 0; i &lt; n; i++)
+    v[i] = i * 10;
+</code></pre>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner"><br /></span>
+  </div>
+  <div class="callout-content">
+<code>malloc(n)</code> aloca <code>n</code> <strong>bytes</strong>. Para <code>n</code> inteiros, precisa ser <code>malloc(n * sizeof(int))</code>.</p>
+  </div>
+</div>
+</section>
+<section><h1>Verificando falhas</h1>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">int *v = malloc(n * sizeof(int));
+
+if(v == NULL){
+    printf(&quot;Erro: memoria insuficiente.\n&quot;);
+    return 1;
+}
+</code></pre>
+<p><code>malloc</code> pode falhar se o heap nao tiver memoria suficiente. <!-- .element: class="fragment" --></p>
+<p>Ignorar a verificacao significa arriscar acessar <code>*v</code> quando <code>v == NULL</code>, o que causa falha de segmentacao. <!-- .element: class="fragment" --></p>
+</section>
+<section><h1>A turma dinamica</h1>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">int n;
+scanf(&quot;%d&quot;, &amp;n);
+
+Aluno *turma = malloc(n * sizeof(Aluno));
+
+if(turma == NULL){
+    printf(&quot;Erro ao alocar turma.\n&quot;);
+    return 1;
+}
+
+for(i = 0; i &lt; n; i++)
+    ler_aluno(&amp;turma[i]);
+</code></pre>
+<table>
+<thead>
+<tr>
+  <th>Antes (fixo)</th>
+  <th>Depois (dinamico)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>Aluno turma[100]</code></td>
+  <td><code>Aluno *turma = malloc(n * sizeof(Aluno))</code></td>
+</tr>
+<tr>
+  <td>Sempre 100 posicoes</td>
+  <td>Exatamente <code>n</code> posicoes</td>
+</tr>
+<tr>
+  <td><code>n</code> maximo 100</td>
+  <td>Limitado pela RAM</td>
+</tr>
+</tbody>
+</table>
+<p>As funcoes da biblioteca <strong>nao mudam</strong> -- recebem <code>Aluno *</code> e tanto faz se veio da pilha ou do heap. <!-- .element: class="fragment" --></p>
+</section>
+<section><h1><code>calloc()</code>: alocando e zerando</h1>
+<p><code>malloc</code> entrega lixo de memoria. <code>calloc</code> entrega tudo zerado.</p>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">int *v1 = malloc(5 * sizeof(int));   // ?, ?, ?, ?, ?
+int *v2 = calloc(5, sizeof(int));    // 0, 0, 0, 0, 0
+</code></pre>
+<table>
+<thead>
+<tr>
+  <th>Funcao</th>
+  <th>Argumentos</th>
+  <th>Inicializacao</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>malloc(n * sizeof(int))</code></td>
+  <td>Total de bytes</td>
+  <td>Nao limpa</td>
+</tr>
+<tr>
+  <td><code>calloc(n, sizeof(int))</code></td>
+  <td>Quantidade, tamanho</td>
+  <td>Zera tudo</td>
+</tr>
+</tbody>
+</table>
+<p><code>calloc</code> e mais seguro para vetores usados como acumuladores. <!-- .element: class="fragment" --></p>
+</section>
+<section><h1><code>realloc()</code>: redimensionando</h1>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">int *v = malloc(3 * sizeof(int));
+v[0] = 10; v[1] = 20; v[2] = 30;
+
+int *temp = realloc(v, 5 * sizeof(int));
+if(temp != NULL){
+    v = temp;
+    v[3] = 40;
+    v[4] = 50;
+}
+</code></pre>
+<ul>
+<li>Preserva os dados originais. <!-- .element: class="fragment" --></li>
+<li>Se nao couber no mesmo local, aloca outro, copia os dados e libera o antigo. <!-- .element: class="fragment" --></li>
+<li>Use <strong>ponteiro auxiliar</strong> (<code>temp</code>) para nao perder o bloco original se falhar. <!-- .element: class="fragment" --></li>
+</ul>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner"><br /></span>
+  </div>
+  <div class="callout-content">
+<code>v = realloc(v, ...)</code> e perigoso! Se <code>realloc</code> falhar, retorna <code>NULL</code> e voce perde o endereco original.</p>
+  </div>
+</div>
+</section>
+<section><h1>Acrescentando um aluno</h1>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">void turma_adicionar(Aluno **turma, int *n, Aluno aluno){
+    Aluno *temp = realloc(*turma, (*n + 1) * sizeof(Aluno));
+    if(temp == NULL) return;
+
+    *turma = temp;
+    (*turma)[*n] = aluno;
+    (*n)++;
+}
+</code></pre>
+<p><code>Aluno **turma</code>: para modificar o ponteiro da <code>main</code>, passamos o endereco dele. <!-- .element: class="fragment" --></p>
+<p>Mesma logica de <code>scanf(&quot;%d&quot;, &amp;idade)</code>: para alterar um <code>Aluno *</code>, passamos <code>Aluno **</code>. <!-- .element: class="fragment" --></p>
+</section>
+<section><h1><code>free()</code>: devolvendo memoria</h1>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">int *v = malloc(100 * sizeof(int));
+// usa o vetor...
+free(v);
+v = NULL;   // pratica defensiva
+</code></pre>
+<p>Depois de <code>free(v)</code>, o bloco volta ao sistema. <!-- .element: class="fragment" --></p>
+<p>Acessar <code>v[i]</code> depois disso e <strong>comportamento indefinido</strong>. <!-- .element: class="fragment" --></p>
+<p><code>free(NULL)</code> e seguro, entao <code>v = NULL</code> apos <code>free</code> protege contra uso acidental. <!-- .element: class="fragment" --></p>
+</section>
+<section><h1>Vazamento de memoria</h1>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">for(i = 0; i &lt; 1000; i++){
+    int *v = malloc(1000000 * sizeof(int));
+    // esqueceu de chamar free(v)
+}
+</code></pre>
+<p>A cada iteracao, o endereco anterior e perdido. Milhoes de bytes nunca serao liberados. <!-- .element: class="fragment" --></p>
+<p>Em programas que rodam horas (servidores, editores), vazamentos se acumulam e degradam o sistema. <!-- .element: class="fragment" --></p>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Regra de ouro<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Cada <code>malloc</code>, <code>calloc</code> ou <code>realloc</code> bem-sucedido exige um <code>free</code> correspondente.</p>
+  </div>
+</div>
+</section>
+<section><h1>O sistema completo com alocacao dinamica</h1>
+<pre class="line-numbers language-c" data-lang="C"><code class="language-c">int main(void){
+    int n;
+    scanf(&quot;%d&quot;, &amp;n);
+
+    Aluno *turma = malloc(n * sizeof(Aluno));
+    if(turma == NULL) return 1;
+
+    for(i = 0; i &lt; n; i++)
+        ler_aluno(&amp;turma[i]);
+
+    // aplica bonus, imprime relatorio...
+
+    free(turma);
+    return 0;
+}
+</code></pre>
+<p>Mudou muito pouco em relacao a versao com vetor fixo. <!-- .element: class="fragment" --></p>
+<p>A diferenca: o tamanho e exato, pode ser qualquer valor e liberamos no final. <!-- .element: class="fragment" --></p>
+</section>
+<section><h1>O ciclo completo</h1>
+<table>
+<thead>
+<tr>
+  <th>Aula</th>
+  <th>Problema central</th>
+  <th>Ferramenta</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>11. TADs</td>
+  <td>Dados soltos, sem modelo</td>
+  <td><code>struct</code>, <code>typedef</code>, <code>enum</code></td>
+</tr>
+<tr>
+  <td>12. Ponteiros e Aloc. Dinamica</td>
+  <td>Localizar, criar, redimensionar</td>
+  <td><code>&amp;</code>, <code>*</code>, <code>-&gt;</code>, <code>malloc</code>, <code>free</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>struct</code> modela as entidades. <!-- .element: class="fragment" --></p>
+<p>Ponteiros localizam e modificam essas entidades na memoria. <!-- .element: class="fragment" --></p>
+<p>Alocacao dinamica cria e redimensiona esses dados durante a execucao. <!-- .element: class="fragment" --></p>
+</section>
+<section><h1>Problema 1: troca com ponteiros</h1>
+<p>Escreva uma funcao <code>void trocar(int *a, int *b)</code> que troca os valores entre duas variavies.</p>
+<p>No <code>main</code>, declare <code>x = 10</code> e <code>y = 20</code>, chame <code>trocar(&amp;x, &amp;y)</code> e imprima os valores depois da troca.</p>
+<p>Saida esperada:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">x = 20, y = 10
+</code></pre>
+</section>
+<section><h1>Problema 2: vetor dinamico de notas</h1>
+<p>Leia um inteiro <code>n</code>, aloque um vetor de <code>float</code> com <code>malloc</code>, preencha com notas lidas do teclado, calcule a media e imprima.</p>
+<p>Nao esqueca de verificar se <code>malloc</code> retornou <code>NULL</code> e de liberar a memoria no final.</p>
+<p>Exemplo de execucao:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">3
+8.5 7.0 9.5
+Media: 8.33
+</code></pre>
+</section>
+<section><h1>Problema 3: expandindo um vetor</h1>
+<p>Comece com um vetor de 3 inteiros alocado com <code>malloc</code> e preenchido com <code>[10, 20, 30]</code>.</p>
+<p>Use <code>realloc</code> para expandir para 5 posicoes e preencher as novas com <code>40</code> e <code>50</code>.</p>
+<p>Imprima todos os elementos no final.</p>
+<p>Saida esperada:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">10 20 30 40 50
+</code></pre>
+</section>
+<section><h1>Proximos Passos</h1>
+<p>Agora sabemos localizar dados com ponteiros e criar e redimensionar dados com alocacao dinamica.</p>
+<p>Com <code>struct</code>, ponteiros e alocacao dinamica, temos as ferramentas para construir programas que se adaptam ao tamanho real dos dados.</p>
+<p>Na proxima aula, vamos estudar <strong>recursao</strong> e continuar com exercicios praticos para consolidar a leitura e a escrita de codigo.</p>
+</section>
+        </div>
+    </div>
+
+    <script src="/aulas-faesa/js/vendor/reveal/reveal.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/notes/notes.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/markdown/markdown.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/math/math.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/zoom/zoom.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/prism.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-c.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-python.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-clike.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-cpp.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-perl.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-java.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-php.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/toolbar/prism-toolbar.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/show-language/prism-show-language.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/prism-slang.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/mermaid.min.js" data-no-bundle></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            mermaid.initialize({
+                startOnLoad: false,
+                theme: 'default',
+                securityLevel: 'loose',
+                htmlLabels: false,
+                fontFamily: 'Inter, system-ui, sans-serif',
+            });
+        });
+    </script>
+    <script src="/aulas-faesa/js/rough.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/apply_sketch.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/lucide.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/ui.js" data-no-bundle></script>
+    <script>
+        const waitForNextFrame = () => new Promise(resolve => requestAnimationFrame(resolve));
+
+        const initSlideUI = () => {
+            if (!window.CourseForgeUI) {
+                return;
+            }
+
+            window.CourseForgeUI.initCopyButtons();
+            window.CourseForgeUI.initIcons();
+        };
+
+        const renderMermaidsInSlide = async (slide) => {
+            if (!slide) {
+                return;
+            }
+
+            const mermaids = slide.querySelectorAll('.mermaid');
+            if (!mermaids.length) {
+                return;
+            }
+
+            try {
+                if (document.fonts?.ready) {
+                    await document.fonts.ready;
+                }
+
+                await waitForNextFrame();
+                await waitForNextFrame();
+
+                for (const element of mermaids) {
+                    if (element.dataset.mermaidRendered === 'true') {
+                        continue;
+                    }
+
+                    await mermaid.run({
+                        nodes: [element],
+                    });
+                    element.dataset.mermaidRendered = 'true';
+                }
+            } catch (err) {
+                console.warn('Mermaid render failed', err);
+            }
+        };
+
+        const updateMermaidDisplayBounds = (slide) => {
+            const scope = slide || document;
+            const displays = scope.querySelectorAll('.mermaid-display');
+
+            for (const display of displays) {
+                const rect = display.getBoundingClientRect();
+                const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+                const bottomGap = 24;
+                const availableHeight = Math.max(160, Math.floor(viewportHeight - rect.top - bottomGap));
+                display.style.setProperty('--mermaid-max-height', `${availableHeight}px`);
+            }
+        };
+
+        const resetNativeLineNumbers = (pre) => {
+            if (!pre?.classList.contains('line-numbers')) {
+                return;
+            }
+
+            const existingRows = pre.querySelector('.line-numbers-rows');
+            if (existingRows) {
+                existingRows.remove();
+            }
+        };
+
+        const highlightCodeInSlide = (slide) => {
+            const scope = slide || document;
+            const codeBlocks = scope.querySelectorAll('pre[class*="language-"] > code[class*="language-"]');
+
+            for (const code of codeBlocks) {
+                const pre = code.parentElement;
+                resetNativeLineNumbers(pre);
+                Prism.highlightElement(code);
+
+                if (pre?.classList.contains('line-numbers') && Prism.plugins?.lineNumbers?.resize) {
+                    Prism.plugins.lineNumbers.resize(pre);
+                }
+            }
+        };
+
+        const enhanceCurrentSlide = async (slide) => {
+            highlightCodeInSlide(slide);
+            await renderMermaidsInSlide(slide);
+            updateMermaidDisplayBounds(slide);
+            initSlideUI();
+        };
+
+        Reveal.initialize({
+            hash: true,
+            slideNumber: 'c/t',
+            center: false,
+            controls: false,
+            plugins: [RevealMarkdown, RevealNotes, RevealMath.KaTeX, RevealZoom],
+            katex: {
+                local: '/aulas-faesa/js/vendor/katex',
+                output: 'html',
+                throwOnError: false,
+                strict: false,
+            },
+            width: 960,
+            height: 800,
+            margin: 0.15,
+            maxScale: 2.0,
+        });
+
+        Reveal.on('ready', event => {
+            enhanceCurrentSlide(event.currentSlide);
+        });
+
+        Reveal.on('slideready', event => {
+            enhanceCurrentSlide(event.currentSlide);
+        });
+
+        Reveal.on('slidechanged', event => {
+            enhanceCurrentSlide(event.currentSlide);
+        });
+
+        window.addEventListener('resize', () => {
+            updateMermaidDisplayBounds(Reveal.getCurrentSlide());
+        });
+    </script>
+    <style>
+        /* Modern base styles */
+        :root {
+            --callout-note: #448aff;
+            --callout-abstract: #00b0ff;
+            --callout-info: #00b8d4;
+            --callout-todo: #00bfa5;
+            --callout-tip: #00c853;
+            --callout-success: #64dd17;
+            --callout-question: #ffab00;
+            --callout-warning: #ff9100;
+            --callout-failure: #ff5252;
+            --callout-danger: #ff1744;
+            --callout-bug: #f50057;
+            --callout-example: #7c4dff;
+            --callout-quote: #9e9e9e;
+            --code-bg: #f1f5f9;
+            --border: #e2e8f0;
+            --radius: 6px;
+            --radius-sm: 4px;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --text-muted: #64748b;
+            --text: #334155;
+            --bg: #ffffff;
+            --heading: #0f172a;
+            --link: #3b82f6;
+            --font-code: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+        }
+
+        .reveal {
+            font-size: 20px;
+            text-align: left !important;
+        }
+
+        .reveal code:not(pre code) {
+            font-family: var(--font-code) !important;
+            background-color: var(--code-bg) !important;
+            padding: 0.1em 0.35em !important;
+            border-radius: var(--radius-sm) !important;
+            font-size: 0.9em !important;
+            color: var(--link) !important;
+            border: 1px dashed var(--border) !important;
+            white-space: pre-wrap !important;
+            word-break: break-word !important;
+            font-variant-ligatures: none;
+            font-feature-settings: "liga" 0, "calt" 0;
+        }
+
+        .reveal h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px !important;
+            margin-left: 0 !important;
+            /* min-height: 2.3em; */
+            display: flex;
+            align-items: center;
+            justify-content: flex-start !important;
+            text-align: left !important;
+            width: 100% !important;
+            text-shadow: none !important;
+        }
+
+        /* Prism overrides for Reveal.js */
+        .reveal div.code-toolbar {
+            position: relative;
+            width: 100% !important;
+            margin: 1.5rem 0 !important;
+        }
+
+        .reveal pre[class*="language-"] {
+            background: hsl(230, 1%, 98%) !important;
+            margin: 1.5rem 0 !important;
+            padding: 1rem !important;
+            border: 1px solid var(--border) !important;
+            border-radius: var(--radius) !important;
+            box-shadow: var(--shadow-sm) !important;
+            font-family: var(--font-code) !important;
+            font-size: 0.85em !important;
+            position: relative;
+            overflow-x: auto;
+            box-sizing: border-box !important;
+            max-width: 100% !important;
+            font-variant-ligatures: none;
+            font-feature-settings: "liga" 0, "calt" 0;
+        }
+
+        .reveal pre[class*="language-"] > code {
+            background: 0 0 !important;
+            text-shadow: none !important;
+            color: hsl(230, 8%, 24%) !important;
+            position: relative !important;
+            display: block !important;
+        }
+
+        .reveal .line-numbers .line-numbers-rows {
+            border-right: 1px solid #444 !important;
+            padding-right: .5rem !important;
+            margin-bottom: 1.5rem;
+        }
+
+        .reveal .line-numbers-rows>span:before {
+            color: #666 !important;
+        }
+
+        .reveal pre[class*="language-"].line-numbers,
+        .reveal pre[class*="language-"]:has(.line-numbers-rows) {
+            padding-left: 3.8em !important;
+            overflow-y: hidden !important;
+        }
+
+        .reveal .copy-button,
+        .reveal pre[data-lang]::before {
+            position: absolute;
+            top: .5rem;
+            height: 26px;
+            background: hsl(230, 1%, 92%);
+            border: 1px solid hsl(230, 1%, 85%);
+            border-radius: var(--radius-sm);
+            box-sizing: border-box;
+        }
+
+        .reveal .copy-button {
+            right: .5rem;
+            width: 26px;
+            padding: 0;
+            color: hsl(230, 6%, 44%);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all .2s ease;
+            z-index: 20;
+            opacity: .8;
+        }
+
+        .reveal .copy-button:hover {
+            background: hsl(230, 1%, 85%);
+            color: hsl(230, 8%, 24%);
+            opacity: 1;
+        }
+
+        .reveal .copy-button svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Language label styling - hide all Prism toolbar plugins, keep only data-lang label */
+        .reveal div.toolbar,
+        .reveal div.toolbar-item,
+        .reveal button.toolbar-item,
+        .reveal span.toolbar-item {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            height: 0 !important;
+            width: 0 !important;
+            overflow: hidden !important;
+            position: absolute !important;
+            pointer-events: none !important;
+        }
+
+        /* Use the pseudo-element data-lang label only */
+        .reveal pre[data-lang]::before {
+            content: attr(data-lang);
+            right: 2.35rem;
+            padding: 0 .5rem;
+            font-size: .65rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: hsl(230, 6%, 50%);
+            pointer-events: none;
+            z-index: 10;
+            display: inline-flex !important;
+            align-items: center !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            height: 26px !important;
+            width: auto !important;
+            position: absolute !important;
+            overflow: visible !important;
+            line-height: 26px !important;
+        }
+
+        .reveal h2 {
+            font-size: 1.6em;
+            margin-top: 30px !important;
+            margin-bottom: 20px !important;
+            text-align: left !important;
+        }
+
+        .reveal h3 {
+            font-size: 1.3em;
+            margin-top: 20px !important;
+            margin-bottom: 15px !important;
+            text-align: left !important;
+        }
+
+        .reveal p {
+            line-height: 1.5;
+            margin-top: 20px !important;
+            margin-left: 0 !important;
+            text-align: left !important;
+        }
+
+        .reveal ul,
+        .reveal ol,
+        .reveal li {
+            line-height: 1.5;
+            text-align: left !important;
+            margin-left: 0 !important;
+        }
+        
+        .reveal ul, .reveal ol {
+            display: block !important;
+            padding-left: 1.2em !important;
+        }
+
+        /* Slide padding and layout */
+        .reveal .slides section {
+            padding: 40px !important;
+            box-sizing: border-box;
+            text-align: left !important;
+            overflow: visible !important;
+        }
+
+        .reveal .slides {
+            text-align: left !important;
+        }
+
+        /* Centering for Title slides (h1 ONLY, h1 + h2 ONLY, or h1 + h2 + p ONLY) */
+        .reveal .slides section:not(.stack):has(> h1:only-child),
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child),
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) {
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: center !important;
+            align-items: center !important;
+            text-align: center !important;
+            height: 100% !important;
+            top: 0 !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:only-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child) h2,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h2,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) p {
+            justify-content: center !important;
+            text-align: center !important;
+            margin: 0 !important;
+            min-height: auto !important;
+            width: 100% !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h1 {
+            margin-bottom: 0.5em !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h2 {
+            margin-bottom: 0.3em !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) p {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        /* Full screen slide fix */
+        .reveal .slides section:has(.full-screen-image) {
+            padding: 0 !important;
+        }
+
+        /* Full screen slide fix - Garantindo que o fundo do Reveal fique visível e a imagem carregada */
+        .reveal:has(section.present .full-screen-image) {
+            background-image: url('../../slide_end_background.png') !important;
+            background-size: cover !important;
+            background-position: center !important;
+        }
+
+        /* Torna o slide e o container de slides transparentes para mostrar o fundo da .reveal */
+        .reveal:has(section.present .full-screen-image) .slides,
+        .reveal:has(section.present .full-screen-image) .slides section.present {
+            background: transparent !important;
+        }
+
+        .full-screen-image {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 !important;
+            /* Se houver texto, ele centraliza aqui */
+        }
+
+        /* Spacing for diagrams */
+        .reveal .svg-graph {
+            margin-top: 1em !important;
+            margin-bottom: 1em !important;
+            overflow: visible !important; /* Prevent labels from being cut off */
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* Mermaid Diagram Styles */
+        .reveal .mermaid {
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            padding: 0 !important;
+            margin: 1rem 0 !important;
+            font-family: inherit !important;
+            overflow: visible !important;
+            text-align: center;
+            display: block !important;
+            width: auto !important;
+            max-width: 100% !important;
+        }
+
+        .reveal pre.mermaid {
+            white-space: pre;
+            font-family: var(--font-code);
+            color: var(--text-muted);
+            margin: 0 !important;
+            padding: 0 !important;
+            width: auto !important;
+            line-height: 1 !important;
+            border: none !important;
+            box-shadow: none !important;
+            background: transparent !important;
+            overflow: visible !important;
+        }
+
+        .reveal .centered .mermaid {
+            display: block !important;
+            justify-content: center;
+            margin-left: auto !important;
+            margin-right: auto !important;
+        }
+
+        .reveal .mermaid svg {
+            max-width: 100% !important;
+            height: auto !important;
+            display: block !important;
+            overflow: visible !important;
+            vertical-align: top !important;
+            font-family: Inter, system-ui, sans-serif !important;
+            font-style: normal !important;
+            font-variant: normal !important;
+            font-weight: 400 !important;
+            letter-spacing: normal !important;
+            word-spacing: normal !important;
+            text-transform: none !important;
+            text-shadow: none !important;
+            line-height: normal !important;
+            text-rendering: geometricPrecision !important;
+        }
+
+        .reveal .mermaid svg * {
+            font-family: inherit !important;
+            font-style: normal !important;
+            font-variant: normal !important;
+            letter-spacing: normal !important;
+            word-spacing: normal !important;
+            text-transform: none !important;
+            text-shadow: none !important;
+            line-height: normal !important;
+        }
+
+        .reveal .mermaid svg .edgeBadge text,
+        .reveal .mermaid svg .edgeBadge tspan,
+        .reveal .mermaid svg .edgeTerm text,
+        .reveal .mermaid svg .edgeTerm tspan,
+        .reveal .mermaid svg .multiplicity text,
+        .reveal .mermaid svg .multiplicity tspan,
+        .reveal .mermaid svg text.edgeBadge,
+        .reveal .mermaid svg text.edgeTerm {
+            font-size: 18px !important;
+            font-weight: 700 !important;
+            fill: var(--heading) !important;
+        }
+
+        /* Mermaid Source Switcher */
+        .reveal .mermaid-outer-container {
+            margin: 1rem 0;
+            position: relative;
+            width: 100%;
+            max-width: 100%;
+        }
+
+        .reveal .mermaid-switcher {
+            display: flex !important;
+            justify-content: flex-end;
+            margin-bottom: 0.5rem;
+            width: 100%;
+        }
+
+        .reveal .switcher-track {
+            display: inline-flex;
+            align-items: center;
+            background: var(--code-bg);
+            padding: 3px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            position: relative;
+        }
+
+        .reveal .switcher-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            border: none;
+            background: transparent;
+            padding: 0.35rem 1rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            border-radius: calc(var(--radius) - 2px);
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            z-index: 1;
+        }
+
+        .reveal .switcher-btn svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .reveal .switcher-btn:hover {
+            color: var(--text);
+        }
+
+        .reveal .switcher-btn.active {
+            color: var(--heading);
+            background: var(--bg);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        .reveal .mermaid-content {
+            min-height: 50px;
+        }
+
+        /* Mermaid display - respect inline width */
+        .reveal .mermaid-display {
+            transition: opacity 0.2s ease;
+            display: block !important;
+            max-width: 100% !important;
+            max-height: var(--mermaid-max-height, calc(100vh - 140px)) !important;
+            border: none !important;
+            box-shadow: none !important;
+            background: transparent !important;
+            overflow: auto !important;
+        }
+
+        .reveal .mermaid-source pre {
+            margin: 0 !important;
+            background: var(--code-bg) !important;
+            border: 1px dashed var(--border) !important;
+        }
+
+        /* Ensure proper toggle behavior */
+        .reveal .mermaid-source {
+            display: none !important;
+        }
+
+        .reveal .mermaid-source[style*="display: block"],
+        .reveal .mermaid-source[style*="display:block"] {
+            display: block !important;
+        }
+
+        .reveal .mermaid-display[style*="display: none"],
+        .reveal .mermaid-display[style*="display:none"] {
+            display: none !important;
+        }
+
+        .reveal .mermaid-display.centered {
+            margin-left: auto !important;
+            margin-right: auto !important;
+            max-width: 100% !important;
+        }
+
+        .centered:not(.mermaid-display) {
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            width: 100% !important;
+            margin: 1em 0 !important;
+        }
+
+        .no-break {
+            display: block;
+            width: 100%;
+        }
+
+        .reveal blockquote {
+            display: block;
+            position: relative;
+            margin: var(--r-block-margin) auto !important;
+            padding: 5px;
+            font-style: italic;
+            background: rgba(255, 170, 73, 0.2);
+            box-shadow: 0 0 2px rgba(0,0,0,.2);
+            text-align: left !important;
+        }
+
+        .col1 {
+            width: 90%;
+            margin: 0 auto;
+        }
+
+        .col2 {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start;
+            width: 90%;
+            margin: 0 auto;
+            align-items: flex-start;
+        }
+
+        /* Callout Styles */
+        :root {
+            --callout-note: #448aff;
+            --callout-abstract: #00b0ff;
+            --callout-info: #00b8d4;
+            --callout-todo: #00bfa5;
+            --callout-tip: #00c853;
+            --callout-success: #64dd17;
+            --callout-question: #ffab00;
+            --callout-warning: #ff9100;
+            --callout-failure: #ff5252;
+            --callout-danger: #ff1744;
+            --callout-bug: #f50057;
+            --callout-example: #7c4dff;
+            --callout-quote: #9e9e9e;
+            --code-bg: #f8f8f8;
+            --border: #ddd;
+        }
+
+        .reveal .callout {
+            margin: 1rem auto !important;
+            border: 1px solid var(--border);
+            border-left: 6px solid var(--callout-note);
+            border-radius: 4px;
+            overflow: hidden;
+            text-align: left !important;
+            font-size: 0.8em;
+            width: 75% !important;
+            max-width: 100% !important;
+        }
+
+        .reveal .callout-title {
+            padding: 0.5rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            color: var(--callout-note);
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .reveal .callout-icon {
+            display: flex;
+            align-items: center;
+        }
+
+        .reveal .callout-icon svg {
+            width: 1.2em;
+            height: 1.2em;
+        }
+
+        .reveal .callout-content {
+            padding: 0.5rem 1rem;
+        }
+
+        .reveal .callout-content p {
+            margin-top: 0.5rem !important;
+        }
+
+        .reveal .callout-content p:first-child {
+            margin-top: 0 !important;
+        }
+
+        .reveal h1 { text-transform: none !important; }
+
+        .reveal .callout-abstract { border-left-color: var(--callout-abstract); }
+        .reveal .callout-abstract .callout-title { color: var(--callout-abstract); }
+        .reveal .callout-info { border-left-color: var(--callout-info); }
+        .reveal .callout-info .callout-title { color: var(--callout-info); }
+        .reveal .callout-todo { border-left-color: var(--callout-todo); }
+        .reveal .callout-todo .callout-title { color: var(--callout-todo); }
+        .reveal .callout-tip { border-left-color: var(--callout-tip); }
+        .reveal .callout-tip .callout-title { color: var(--callout-tip); }
+        .reveal .callout-success { border-left-color: var(--callout-success); }
+        .reveal .callout-success .callout-title { color: var(--callout-success); }
+        .reveal .callout-question { border-left-color: var(--callout-question); }
+        .reveal .callout-question .callout-title { color: var(--callout-question) ; }
+        .reveal .callout-warning { border-left-color: var(--callout-warning); }
+        .reveal .callout-warning .callout-title { color: var(--callout-warning); }
+        .reveal .callout-failure { border-left-color: var(--callout-failure); }
+        .reveal .callout-failure .callout-title { color: var(--callout-failure); }
+        .reveal .callout-danger { border-left-color: var(--callout-danger); }
+        .reveal .callout-danger .callout-title { color: var(--callout-danger); }
+        .reveal .callout-bug { border-left-color: var(--callout-bug); }
+        .reveal .callout-bug .callout-title { color: var(--callout-bug); }
+        .reveal .callout-example { border-left-color: var(--callout-example); }
+        .reveal .callout-example .callout-title { color: var(--callout-example); }
+        .reveal .callout-quote { border-left-color: var(--callout-quote); }
+        .reveal .callout-quote .callout-title { color: var(--callout-quote); }
+        .red-note { color: var(--callout-failure); }
+
+        .reveal .slide-number {
+            font-size: 0.8em !important;
+            padding: 5px 10px !important;
+            background: rgba(0,0,0,0.1) !important;
+            border-radius: 4px;
+            color: #000000b1 !important;
+        }
+
+        /* Print styles */
+        @media print {
+            .reveal .slides section {
+                display: block !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                position: relative !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+                page-break-after: always !important;
+                overflow: hidden !important;
+            }
+
+            .reveal .slides {
+                transform: none !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+            }
+            
+            .reveal {
+                overflow: visible !important;
+            }
+        }
+    </style>
+</body>
+
+</html>
