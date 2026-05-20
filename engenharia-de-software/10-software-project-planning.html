@@ -1,0 +1,1613 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toposia - Engenharia de Software</title>
+    <link rel="icon" href="/aulas-faesa/img/dark-favicon.svg" media="(prefers-color-scheme: light)">
+    <link rel="icon" href="/aulas-faesa/img/light-favicon.svg" media="(prefers-color-scheme: dark)">
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/fonts.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/bundles/katex-base-prism-one-light-b0347952c973.bundle.min.css">
+    
+    
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css" data-no-bundle>
+    <script src="/aulas-faesa/js/bundles/lucide-katex-auto-render-4b36e8bd8642.bundle.min.js"></script>
+</head>
+
+<body>
+    <script>
+        // Restore sidebar state instantly (before first paint) to avoid transition flash
+        (function() {
+            if (localStorage.getItem('cf_sidebar_hidden') === 'true') {
+                document.body.classList.add('sidebar-hidden', 'no-transition');
+            }
+            requestAnimationFrame(function() {
+                requestAnimationFrame(function() {
+                    document.body.classList.remove('no-transition');
+                });
+            });
+        })();
+    </script>
+    <div class="page-wrapper">
+        <nav class="sidebar">
+            <div class="sidebar-content">
+                <header class="sidebar-title-section">
+                    <a href="contents.html" class="course-title-link">
+                        <h1 class="sidebar-course-title">Engenharia de Software</h1>
+                    </a>
+                    <div class="sidebar-ornament">❧</div>
+                </header>
+
+                
+                <section class="sidebar-toc-section">
+                    <h2 class="toc-header">Tabela de Conteúdos</h2>
+                    <ol class="toc-list">
+                        
+                        <li class="toc-item level-2">
+                            <a href="#introdução">10.1. Introdução</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#o-planejamento-existe-porque-software-envolve-incerteza">10.2. O planejamento existe porque software envolve incerteza</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#o-plano-como-ferramenta-de-comunicação">10.2.1. O plano como ferramenta de comunicação</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#os-três-momentos-do-planejamento">10.3. Os três momentos do planejamento</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#planejamento-na-proposta">10.3.1. Planejamento na proposta</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#planejamento-na-iniciação">10.3.2. Planejamento na iniciação</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#planejamento-durante-o-desenvolvimento">10.3.3. Planejamento durante o desenvolvimento</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#custo-de-software-não-é-a-mesma-coisa-que-preço">10.4. Custo de software não é a mesma coisa que preço</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#os-principais-componentes-de-custo">10.4.1. Os principais componentes de custo</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#fatores-que-alteram-o-preço">10.4.2. Fatores que alteram o preço</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#preço-para-ganhar">10.4.3. Preço para ganhar</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#desenvolvimento-dirigido-a-planos">10.5. Desenvolvimento dirigido a planos</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#quando-o-plano-detalhado-ajuda">10.5.1. Quando o plano detalhado ajuda</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#quando-o-plano-detalhado-atrapalha">10.5.2. Quando o plano detalhado atrapalha</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#o-plano-de-projeto">10.6. O plano de projeto</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#um-plano-precisa-ser-monitorável">10.6.1. Um plano precisa ser monitorável</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#o-processo-de-planejamento-é-iterativo">10.7. O processo de planejamento é iterativo</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#pequenos-desvios-e-problemas-graves">10.7.1. Pequenos desvios e problemas graves</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#programação-de-projeto-e-cronograma">10.8. Programação de projeto e cronograma</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#tarefa-duração-e-esforço">10.8.1. Tarefa, duração e esforço</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#dependências-entre-tarefas">10.8.2. Dependências entre tarefas</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#marcos-e-entregáveis">10.8.3. Marcos e entregáveis</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#representando-cronogramas">10.9. Representando cronogramas</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#alocação-de-pessoas">10.9.1. Alocação de pessoas</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#contingência-e-prazos-realistas">10.10. Contingência e prazos realistas</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#o-erro-de-planejar-no-limite">10.10.1. O erro de planejar no limite</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#planejamento-ágil">10.11. Planejamento ágil</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#histórias-pontos-e-velocidade">10.11.1. Histórias, pontos e velocidade</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#prazo-fixo-e-escopo-variável">10.11.2. Prazo fixo e escopo variável</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#limitações-do-planejamento-ágil">10.11.3. Limitações do planejamento ágil</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#técnicas-de-estimativa">10.12. Técnicas de estimativa</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#a-incerteza-das-estimativas-iniciais">10.12.1. A incerteza das estimativas iniciais</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#estimativa-baseada-em-experiência">10.12.2. Estimativa baseada em experiência</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#modelagem-algorítmica-e-cocomo-ii">10.13. Modelagem algorítmica e COCOMO II</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#problemas-práticos-dos-modelos-algorítmicos">10.13.1. Problemas práticos dos modelos algorítmicos</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#cocomo-ii-em-visão-geral">10.13.2. COCOMO II em visão geral</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#pontos-de-aplicação">10.13.3. Pontos de aplicação</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#drivers-de-custo">10.13.4. Drivers de custo</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#duração-equipe-e-compressão-de-prazo">10.14. Duração, equipe e compressão de prazo</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#prazo-comprimido-aumenta-esforço">10.14.1. Prazo comprimido aumenta esforço</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#a-equipe-não-cresce-de-forma-uniforme">10.14.2. A equipe não cresce de forma uniforme</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#figuras-usadas-do-capítulo">10.15. Figuras usadas do capítulo</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#a-ideia-central-que-organiza-tudo">10.16. A ideia central que organiza tudo</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#questões">10.17. Questões</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#próximos-passos">10.18. Próximos passos</a>
+                        </li>
+                        
+                    </ol>
+                </section>
+                
+
+                <nav class="sidebar-nav-section">
+                    
+                    <a href="9-software-evolution-and-maintenance.html" class="sidebar-nav-link prev"><i data-lucide="chevron-left" class="nav-icon"></i> Evolução, Manutenção e Refatoração de Software</a>
+                    
+                    
+                    <a href="javascript:void(0)" onclick="handleBackNavigation()"
+                        class="sidebar-nav-link back"><i data-lucide="arrow-left" class="nav-icon"></i> Voltar</a>
+                </nav>
+
+            </div>
+        </nav>
+
+        <button class="mobile-menu-toggle" aria-label="Menu">
+            <i data-lucide="menu"></i>
+        </button>
+
+        <button class="sidebar-toggle" onclick="CourseForgeNav.toggleSidebar()" aria-label="Alternar Barra Lateral">
+            <i data-lucide="chevron-left" class="toggle-icon" id="sidebar-toggle-icon"></i>
+        </button>
+
+        <div class="mobile-menu-overlay"></div>
+
+        <main class="main-content">
+            <article class="article">
+                <header class="article-header">
+                    <span class="chapter-number">10</span>
+                    <h1 class="article-title">
+                        <span class="title-ornament left">❧</span>
+                        <span class="title-text">Planejamento e Gerência de Projetos de Software</span>
+                        <span class="title-ornament right">❧</span>
+                    </h1>
+                    
+                    <p class="article-date">06/05/2026</p>
+                    
+                    
+                    <nav class="breadcrumb" aria-label="Breadcrumb">
+                        
+                        
+                        
+                        <a href="contents.html" class="breadcrumb-link">Engenharia de Software</a>
+                        
+                        <span class="breadcrumb-separator"><i data-lucide="chevron-right" class="breadcrumb-icon"></i></span>
+                        
+                        
+                        
+                        
+                        <a href="contents.html#part-III" class="breadcrumb-link">III - Gerenciamento de Software</a>
+                        
+                        <span class="breadcrumb-separator"><i data-lucide="chevron-right" class="breadcrumb-icon"></i></span>
+                        
+                        
+                        
+                        <span class="breadcrumb-current">Planejamento e Gerência de Projetos de Software</span>
+                        
+                        
+                    </nav>
+                    
+                </header>
+                <div class="article-body">
+                    <h2 id="introdução"><span class="heading-text">Introdução</span><span class="heading-arabic">10.1</span></h2>
+<p>Hoje você vai ver por que planejar um projeto de software não é tentar adivinhar o futuro, mas reduzir a incerteza o suficiente para tomar decisões responsáveis.</p>
+<p>Até aqui, estudamos processos, requisitos, modelos, arquitetura, testes, evolução e manutenção. Esses temas explicam como o software é especificado, construído, validado e modificado. Agora o foco muda um pouco. Em vez de olhar apenas para o produto técnico, vamos olhar para o projeto como trabalho organizado.</p>
+<p>Em projetos reais, uma equipe precisa responder a compromissos de prazo, custo, escopo, risco e qualidade. O gerente de projeto precisa decidir quem fará cada parte do trabalho, quando cada parte deve começar, quais dependências existem, quais recursos serão necessários e como o progresso será acompanhado.</p>
+<p>Segundo Sommerville, um dos trabalhos mais importantes do gerente de projeto é exatamente esse planejamento. O plano ajuda a decompor o trabalho, comunicar expectativas, monitorar progresso e antecipar problemas.</p>
+<p>O ponto central é simples. Um plano de projeto não é uma promessa mágica de que nada mudará. Ele é uma hipótese organizada sobre como o trabalho será feito. Essa hipótese deve ser revisada conforme a equipe aprende mais sobre o sistema, sobre o cliente, sobre os riscos e sobre sua própria capacidade de entrega.</p>
+<h2 id="o-planejamento-existe-porque-software-envolve-incerteza"><span class="heading-text">O planejamento existe porque software envolve incerteza</span><span class="heading-arabic">10.2</span></h2>
+<p>Quando um projeto começa, a equipe raramente sabe tudo o que precisaria saber.</p>
+<p>Os requisitos podem estar incompletos. A tecnologia pode ser nova. O cliente pode mudar prioridades. Uma integração pode ser mais difícil do que parecia. Pessoas podem sair da equipe. Um fornecedor pode atrasar. Um módulo aparentemente simples pode revelar regras de negócio escondidas.</p>
+<p>Planejar é uma forma de lidar com isso sem fingir que o mundo é estável.</p>
+<p>Um bom plano tenta organizar cinco aspectos principais:</p>
+<ol>
+<li><strong>escopo</strong>, que indica o trabalho a ser feito;</li>
+<li><strong>esforço</strong>, que estima quanto trabalho humano será necessário;</li>
+<li><strong>cronograma</strong>, que distribui esse trabalho no calendário;</li>
+<li><strong>recursos</strong>, que incluem pessoas, ferramentas, hardware, software, viagens e treinamentos;</li>
+<li><strong>riscos</strong>, que indicam o que pode dar errado e como a equipe reagirá.</li>
+</ol>
+<p>Esses aspectos estão conectados. Se o prazo diminui, o esforço pode aumentar. Se a equipe perde uma pessoa experiente, o cronograma pode ficar irrealista. Se o escopo cresce sem controle, o orçamento deixa de representar o projeto real. Se a tecnologia é desconhecida, a estimativa inicial fica mais frágil.</p>
+<h3 id="o-plano-como-ferramenta-de-comunicação"><span class="heading-text">O plano como ferramenta de comunicação</span><span class="heading-arabic">10.2.1</span></h3>
+<p>O plano de projeto também serve para comunicação. Ele torna explícito o que a equipe pretende entregar, quando pretende entregar e quais condições precisam ser verdadeiras para que isso aconteça.</p>
+<p>Sem plano, cada pessoa pode ter uma expectativa diferente.</p>
+<p>O cliente pode acreditar que a primeira versão terá todos os relatórios. A equipe pode acreditar que os relatórios ficaram para uma segunda fase. A gerência pode acreditar que duas pessoas são suficientes. Os desenvolvedores podem saber que a integração com o sistema legado exigirá alguém especialista.</p>
+<p>O plano não elimina conflito, mas torna o conflito visível cedo.</p>
+<div class="example">
+  <div class="example-title">Exemplo 1</div>
+  <p>Imagine um sistema acadêmico que precisa entregar matrícula on-line, emissão de boletos, histórico escolar e integração com autenticação institucional.</p>
+<p>Sem planejamento, a equipe pode começar pela tela mais fácil e deixar a autenticação para o final. Isso parece produtivo nas primeiras semanas, porque várias telas aparecem rapidamente. O problema surge depois, quando a autenticação muda a forma como permissões, sessões, perfis e auditoria devem funcionar.</p>
+<p>Com planejamento, a equipe identifica a autenticação como dependência inicial. Talvez ela não implemente tudo no primeiro dia, mas precisa ao menos entender o risco e reservar tempo para uma prova de conceito.</p>
+<p>O plano, nesse caso, evita uma falsa sensação de progresso.</p>
+</div>
+<div class="example">
+  <div class="example-title">Exemplo 2</div>
+  <p>Considere uma equipe pequena que promete entregar um aplicativo em três meses. O cliente quer login, catálogo, carrinho, pagamento, nota fiscal e relatório administrativo.</p>
+<p>Se a equipe apenas aceitar o prazo, o projeto parece aprovado. Mas um plano inicial pode mostrar que a integração de pagamento e nota fiscal depende de fornecedores externos, homologação e testes em ambiente específico.</p>
+<p>Nesse caso, o plano ajuda a negociar uma primeira entrega realista, por exemplo catálogo, carrinho e pedido sem cobrança automática, deixando pagamento e nota fiscal para um incremento posterior.</p>
+<p>O plano não serve para dizer &quot;não&quot; por hábito. Ele serve para mostrar as consequências de dizer &quot;sim&quot;.</p>
+</div>
+<h2 id="os-três-momentos-do-planejamento"><span class="heading-text">Os três momentos do planejamento</span><span class="heading-arabic">10.3</span></h2>
+<p>Sommerville destaca que o planejamento aparece em momentos diferentes do ciclo de vida do projeto. Cada momento tem um grau diferente de informação e um objetivo diferente.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Momento</th>
+  <th style="text-align:left">O que se sabe</th>
+  <th style="text-align:left">Para que serve o plano</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><strong>Proposta</strong></td>
+  <td style="text-align:left">Descrição inicial, objetivos gerais e restrições conhecidas</td>
+  <td style="text-align:left">Decidir se vale concorrer, estimar preço e mostrar viabilidade</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Iniciação</strong></td>
+  <td style="text-align:left">Mais detalhes de requisitos, equipe provável e recursos disponíveis</td>
+  <td style="text-align:left">Organizar trabalho, orçamento, equipe, riscos e primeiros marcos</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Acompanhamento</strong></td>
+  <td style="text-align:left">Progresso real, problemas encontrados e mudanças de requisitos</td>
+  <td style="text-align:left">Atualizar estimativas, replanejar e renegociar quando necessário</td>
+</tr>
+</tbody>
+</table>
+<p>Essa divisão é importante porque uma estimativa feita no estágio de proposta não tem a mesma confiabilidade de uma estimativa feita depois que a arquitetura foi definida, os riscos principais foram explorados e a equipe já demonstrou sua velocidade real.</p>
+<h3 id="planejamento-na-proposta"><span class="heading-text">Planejamento na proposta</span><span class="heading-arabic">10.3.1</span></h3>
+<p>No estágio de proposta, a organização ainda pode estar tentando ganhar um contrato. Ela precisa estimar custo, prazo e viabilidade com informações incompletas.</p>
+<p>Esse é um momento delicado. Se a estimativa for alta demais, a empresa pode perder o contrato. Se for baixa demais, pode ganhar um projeto inviável. Se prometer mais do que consegue entregar, pode destruir a relação com o cliente e comprometer financeiramente a organização.</p>
+<p>O plano de proposta costuma ser especulativo, mas não deve ser irresponsável. Ele deve deixar claras as suposições usadas.</p>
+<div class="example">
+  <div class="example-title">Exemplo 3</div>
+  <p>Uma prefeitura solicita proposta para um sistema de protocolo digital. A descrição diz que o sistema deve permitir abertura de processos, tramitação entre setores e consulta pública.</p>
+<p>Antes de estimar, a empresa precisa assumir algumas hipóteses.</p>
+<ol>
+<li>Haverá integração com login único municipal.</li>
+<li>A consulta pública não exibirá documentos sigilosos.</li>
+<li>A migração de dados históricos não fará parte da primeira entrega.</li>
+<li>O cliente fornecerá acesso ao sistema atual em até duas semanas.</li>
+</ol>
+<p>Se essas hipóteses mudarem, o custo e o prazo também mudam. Por isso, um plano de proposta sério registra premissas, não apenas datas.</p>
+</div>
+<h3 id="planejamento-na-iniciação"><span class="heading-text">Planejamento na iniciação</span><span class="heading-arabic">10.3.2</span></h3>
+<p>Depois que o projeto é aprovado, o plano precisa ficar mais operacional. A equipe já sabe mais sobre o contrato, sobre os requisitos iniciais, sobre os recursos disponíveis e sobre as pessoas que participarão.</p>
+<p>Nesse momento, o plano ajuda a responder decisões práticas.</p>
+<ol>
+<li>Quantas pessoas serão necessárias.</li>
+<li>Que perfis técnicos precisam estar no projeto.</li>
+<li>Quais entregas serão feitas primeiro.</li>
+<li>Que ferramentas e ambientes precisam ser preparados.</li>
+<li>Quais riscos devem ser monitorados desde o início.</li>
+<li>Que relatórios ou reuniões de acompanhamento serão usados.</li>
+</ol>
+<p>O plano de iniciação não deve ser confundido com uma descrição perfeita do futuro. Ele é o primeiro plano suficientemente detalhado para organizar a execução.</p>
+<h3 id="planejamento-durante-o-desenvolvimento"><span class="heading-text">Planejamento durante o desenvolvimento</span><span class="heading-arabic">10.3.3</span></h3>
+<p>À medida que o projeto avança, o plano precisa ser atualizado. Isso acontece porque a equipe aprende.</p>
+<p>Ela aprende que uma integração é mais instável do que parecia. Aprende que uma parte do domínio é mais complexa. Aprende que um componente reaproveitado não atende a todos os casos. Aprende que uma pessoa da equipe resolve certo tipo de problema mais rápido. Aprende também que alguns requisitos originalmente pedidos perderam prioridade.</p>
+<p>Um plano que nunca muda pode parecer disciplinado, mas pode estar apenas ignorando a realidade.</p>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner"><br /></span>
+  </div>
+  <div class="callout-content">
+<p>O problema não é mudar o plano. O problema é mudar o projeto sem atualizar o plano. Quando o trabalho real e o plano divergem por muito tempo, a gerência perde capacidade de decisão.</p>
+  </div>
+</div>
+<h2 id="custo-de-software-não-é-a-mesma-coisa-que-preço"><span class="heading-text">Custo de software não é a mesma coisa que preço</span><span class="heading-arabic">10.4</span></h2>
+<p>Uma confusão comum em planejamento é imaginar que o preço cobrado do cliente seja apenas o custo de desenvolvimento somado a uma margem de lucro. Essa fórmula é simples, mas não descreve bem muitos projetos reais.</p>
+<p>Sommerville separa o problema em duas ideias.</p>
+<ol>
+<li><strong>Custo</strong> é o que a organização gasta para executar o projeto.</li>
+<li><strong>Preço</strong> é o valor negociado com o cliente.</li>
+</ol>
+<p>O custo influencia o preço, mas não determina o preço sozinho.</p>
+<h3 id="os-principais-componentes-de-custo"><span class="heading-text">Os principais componentes de custo</span><span class="heading-arabic">10.4.1</span></h3>
+<p>Em projetos de software, o maior custo normalmente é o esforço humano. Software profissional exige análise, desenvolvimento, testes, reuniões, documentação, coordenação, correção de defeitos, configuração de ambiente e comunicação com o cliente.</p>
+<p>Sommerville destaca três grupos principais de custo:</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Tipo de custo</th>
+  <th style="text-align:left">Exemplos</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><strong>Esforço</strong></td>
+  <td style="text-align:left">salários, encargos, tempo de gerentes, analistas, desenvolvedores, testadores e especialistas</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Hardware e software</strong></td>
+  <td style="text-align:left">servidores, licenças, ferramentas, ambientes, serviços de plataforma e manutenção</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Viagens e treinamentos</strong></td>
+  <td style="text-align:left">deslocamentos, reuniões presenciais, capacitação da equipe e tempo gasto fora do desenvolvimento direto</td>
+</tr>
+</tbody>
+</table>
+<p>O esforço tende a dominar porque software é intensivo em conhecimento. Mesmo quando ferramentas e servidores custam dinheiro, o maior impacto costuma estar no tempo das pessoas.</p>
+<div class="example">
+  <div class="example-title">Exemplo 4</div>
+  <p>Uma equipe estima que um projeto exigirá 40 pessoas-mês de esforço.</p>
+<p>Se o custo médio mensal de uma pessoa, incluindo salário, encargos e overhead organizacional, for R<span>$</span> 18.000,00, apenas o esforço custará:</p>
+<p>$$
+40 \times 18.000 = 720.000
+$$</p>
+<p>Se ainda houver R<span>$</span> 60.000,00 em licenças, R<span>$</span> 30.000,00 em infraestrutura e R<span>$</span> 20.000,00 em viagens, o custo estimado será:</p>
+<p>$$
+720.000 + 60.000 + 30.000 + 20.000 = 830.000
+$$</p>
+<p>Esse número ainda não é necessariamente o preço. Ele é a base econômica mínima para discutir preço, risco e margem.</p>
+</div>
+<h3 id="fatores-que-alteram-o-preço"><span class="heading-text">Fatores que alteram o preço</span><span class="heading-arabic">10.4.2</span></h3>
+<p>O preço pode subir ou descer por motivos comerciais, estratégicos e contratuais.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Fator</th>
+  <th style="text-align:left">Efeito possível sobre o preço</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><strong>Oportunidade de mercado</strong></td>
+  <td style="text-align:left">A empresa pode cobrar menos para entrar em um novo setor e ganhar referência.</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Incerteza da estimativa</strong></td>
+  <td style="text-align:left">Quanto maior a incerteza, maior pode ser a contingência embutida no preço.</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Condições contratuais</strong></td>
+  <td style="text-align:left">O preço pode mudar se o cliente exigir propriedade exclusiva do código ou aceitar reúso.</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Volatilidade de requisitos</strong></td>
+  <td style="text-align:left">Requisitos instáveis podem levar a preço inicial menor e mudanças posteriores caras.</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Saúde financeira</strong></td>
+  <td style="text-align:left">Uma empresa pode aceitar margem baixa para manter fluxo de caixa ou equipe ocupada.</td>
+</tr>
+</tbody>
+</table>
+<p>Essa separação é essencial para gerência. Um projeto pode ser tecnicamente bem estimado e ainda assim ter preço ruim. Também pode ter preço estrategicamente baixo, mas exigir controle rigoroso de escopo para não virar prejuízo.</p>
+<h3 id="preço-para-ganhar"><span class="heading-text">Preço para ganhar</span><span class="heading-arabic">10.4.3</span></h3>
+<p>Sommerville discute uma estratégia conhecida como <strong>preço para ganhar</strong>. Nela, a empresa tenta estimar o valor que o cliente espera pagar ou que será competitivo no processo de contratação. Depois, adapta a proposta a esse preço.</p>
+<p>Essa estratégia pode ser legítima quando todas as partes entendem que escopo, prazo e qualidade precisam caber no orçamento. Ela se torna problemática quando a empresa promete uma funcionalidade irrealista apenas para vencer a concorrência e depois depende de cobranças altas por mudanças inevitáveis.</p>
+<div class="example">
+  <div class="example-title">Exemplo 5</div>
+  <p>Uma empresa calcula que um sistema de gestão de clínicas custará R<span>$</span> 1.000.000,00 para ser feito com todo o escopo solicitado. Ela sabe, porém, que o cliente tem orçamento máximo de R<span>$</span> 750.000,00.</p>
+<p>Uma postura responsável seria propor uma primeira versão menor, com cadastro de pacientes, agenda, prontuário básico e faturamento simples. Relatórios avançados, integração com laboratórios e aplicativo móvel ficariam para outra fase.</p>
+<p>Uma postura arriscada seria prometer tudo por R<span>$</span> 750.000,00 e esperar renegociar depois. Nesse caso, o planejamento deixa de ser ferramenta de transparência e vira aposta comercial.</p>
+</div>
+<h2 id="desenvolvimento-dirigido-a-planos"><span class="heading-text">Desenvolvimento dirigido a planos</span><span class="heading-arabic">10.5</span></h2>
+<p>O desenvolvimento dirigido a planos é uma abordagem em que o trabalho é planejado em detalhes antes e durante a execução. O plano define atividades, responsabilidades, produtos de trabalho, marcos, entregáveis, cronograma, recursos e mecanismos de acompanhamento.</p>
+<p>Essa abordagem é comum em projetos grandes, contratos formais, sistemas críticos, ambientes regulados e projetos com várias organizações envolvidas.</p>
+<p>Ela contrasta com abordagens ágeis, nas quais muitas decisões de detalhe são adiadas para o momento em que há mais informação. A diferença principal não é que uma abordagem planeja e a outra não planeja. A diferença está no horizonte e no nível de detalhe do planejamento.</p>
+<h3 id="quando-o-plano-detalhado-ajuda"><span class="heading-text">Quando o plano detalhado ajuda</span><span class="heading-arabic">10.5.1</span></h3>
+<p>O planejamento antecipado ajuda quando há dependências organizacionais importantes.</p>
+<ol>
+<li>Pessoas especialistas precisam ser reservadas com antecedência.</li>
+<li>Ambientes precisam ser contratados ou configurados.</li>
+<li>Entregáveis contratuais precisam ser aprovados formalmente.</li>
+<li>Certificações, auditorias ou validações externas precisam ser planejadas.</li>
+<li>Várias equipes precisam coordenar interfaces entre sistemas.</li>
+</ol>
+<p>Nesses casos, adiar todas as decisões pode criar caos. Se duas equipes só descobrem no final que interpretaram uma interface de formas incompatíveis, o retrabalho pode ser enorme.</p>
+<h3 id="quando-o-plano-detalhado-atrapalha"><span class="heading-text">Quando o plano detalhado atrapalha</span><span class="heading-arabic">10.5.2</span></h3>
+<p>O planejamento detalhado atrapalha quando tenta congelar cedo demais decisões que dependem de aprendizado.</p>
+<p>Em sistemas de negócio com ambiente competitivo, os requisitos podem mudar rapidamente. O cliente pode descobrir novas prioridades ao ver as primeiras versões. Uma regra de negócio pode ser reformulada. Uma integração pode ser substituída por outra.</p>
+<p>Se o plano for tratado como contrato imutável, a equipe pode gastar energia defendendo uma previsão antiga em vez de entregar valor atual.</p>
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner"><br /></span>
+  </div>
+  <div class="callout-content">
+<p>Sommerville defende uma visão equilibrada. Projetos diferentes pedem combinações diferentes de planejamento dirigido a planos e planejamento ágil.</p>
+  </div>
+</div>
+<div class="example">
+  <div class="example-title">Exemplo 6</div>
+  <p>Um sistema de controle de equipamento médico exige documentação, análise de riscos, testes rigorosos e evidências para aprovação. Nesse contexto, uma abordagem fortemente dirigida a planos faz sentido.</p>
+<p>O plano ajuda a garantir rastreabilidade, revisões formais, validação e controle de mudanças. A equipe não pode simplesmente alterar prioridades toda semana sem avaliar segurança, documentação e impacto regulatório.</p>
+</div>
+<div class="example">
+  <div class="example-title">Exemplo 7</div>
+  <p>Uma startup está criando uma plataforma de reservas para um nicho de mercado ainda incerto. A equipe precisa descobrir quais funcionalidades realmente atraem usuários.</p>
+<p>Nesse contexto, um plano detalhado de doze meses pode envelhecer rapidamente. A equipe provavelmente precisa de ciclos curtos, validação com usuários e replanejamento frequente.</p>
+<p>Mesmo assim, ela ainda precisa planejar orçamento, equipe, releases e riscos. O planejamento não desaparece. Ele muda de forma.</p>
+</div>
+<h2 id="o-plano-de-projeto"><span class="heading-text">O plano de projeto</span><span class="heading-arabic">10.6</span></h2>
+<p>Em projetos dirigidos a planos, o plano de projeto organiza as decisões principais de gerenciamento. Ele não é apenas uma lista de tarefas. Ele descreve como o projeto será conduzido.</p>
+<p>Sommerville apresenta um conjunto típico de seções.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Seção do plano</th>
+  <th style="text-align:left">Função</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><strong>Introdução</strong></td>
+  <td style="text-align:left">Resume objetivos, restrições, orçamento, prazo e contexto do projeto.</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Organização do projeto</strong></td>
+  <td style="text-align:left">Define equipe, papéis, responsabilidades e forma de coordenação.</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Análise de riscos</strong></td>
+  <td style="text-align:left">Identifica riscos, probabilidades, impactos e estratégias de mitigação.</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Recursos de software e hardware</strong></td>
+  <td style="text-align:left">Lista ferramentas, ambientes, plataformas, licenças e infraestrutura.</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Divisão de trabalho</strong></td>
+  <td style="text-align:left">Decompõe o projeto em atividades, marcos e resultados esperados.</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Cronograma</strong></td>
+  <td style="text-align:left">Mostra dependências, duração, esforço, datas e alocação de pessoas.</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Monitoramento e relatórios</strong></td>
+  <td style="text-align:left">Define como o progresso será acompanhado e comunicado.</td>
+</tr>
+</tbody>
+</table>
+<p>Além do plano principal, projetos maiores podem ter planos complementares.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Plano complementar</th>
+  <th style="text-align:left">Para que serve</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><strong>Plano de qualidade</strong></td>
+  <td style="text-align:left">Define padrões, procedimentos e critérios de qualidade.</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Plano de validação</strong></td>
+  <td style="text-align:left">Define abordagem, recursos e cronograma de validação.</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Plano de configuração</strong></td>
+  <td style="text-align:left">Define controle de versões, mudanças, baselines e releases.</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Plano de manutenção</strong></td>
+  <td style="text-align:left">Estima necessidades de manutenção, esforço e custos futuros.</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Plano de desenvolvimento de pessoal</strong></td>
+  <td style="text-align:left">Planeja treinamento e evolução das habilidades da equipe.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="um-plano-precisa-ser-monitorável"><span class="heading-text">Um plano precisa ser monitorável</span><span class="heading-arabic">10.6.1</span></h3>
+<p>Um plano que não permite acompanhamento é apenas intenção.</p>
+<p>Para ser monitorável, o plano precisa ter resultados observáveis. Não basta dizer que a equipe &quot;trabalhará na arquitetura&quot;. É melhor indicar que, até determinada data, a equipe deve produzir uma visão arquitetural inicial, validar um protótipo de integração e revisar os riscos técnicos principais.</p>
+<p>Resultados observáveis permitem comparar progresso planejado e progresso real.</p>
+<div class="example">
+  <div class="example-title">Exemplo 8</div>
+  <p>Compare duas formas de planejar a mesma atividade.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Formulação fraca</th>
+  <th style="text-align:left">Formulação melhor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Trabalhar no módulo de relatórios.</td>
+  <td style="text-align:left">Implementar relatório de vendas por período, com filtros por loja e exportação CSV, até o fim da semana 4.</td>
+</tr>
+<tr>
+  <td style="text-align:left">Melhorar segurança.</td>
+  <td style="text-align:left">Ativar autenticação por provedor institucional, revisar permissões de administrador e registrar tentativas de acesso negadas.</td>
+</tr>
+<tr>
+  <td style="text-align:left">Fazer testes.</td>
+  <td style="text-align:left">Executar testes de integração do checkout, registrar defeitos críticos e entregar relatório de validação do fluxo de pagamento.</td>
+</tr>
+</tbody>
+</table>
+<p>A segunda coluna facilita acompanhamento porque deixa claro qual resultado será visto.</p>
+</div>
+<h2 id="o-processo-de-planejamento-é-iterativo"><span class="heading-text">O processo de planejamento é iterativo</span><span class="heading-arabic">10.7</span></h2>
+<p>Sommerville apresenta o planejamento como um ciclo. Primeiro a equipe identifica restrições, riscos, marcos e entregáveis. Depois define um cronograma, faz o trabalho, monitora progresso e reage a desvios.</p>
+<p>A Figura 23.1 do livro mostra esse ciclo como um processo com caminhos de retorno. Repare que os desvios pequenos voltam para o cronograma, enquanto problemas graves disparam mitigação e replanejamento.</p>
+<img src="static/figura-23-1-processo-planejamento-projeto.png" width="90%">
+
+<p>A mesma ideia pode ser redesenhada de forma mais enxuta assim:</p>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="780" viewBox="0.00 0.00 1152.00 259.00" class="svg-graph graphviz-img"><g id="svg-graphviz-caa615ea8b37-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 255)"><title>PlanejamentoProjeto</title><polygon fill="white" stroke="transparent" points="-4,4 -4,-255 1148,-255 1148,4 -4,4" /><g id="svg-graphviz-caa615ea8b37-node1" class="node"><title>restricoes</title><path fill="#f7f2dc" stroke="#9a7b35" d="M114,-194C114,-194 51,-194 51,-194 45,-194 39,-188 39,-182 39,-182 39,-168 39,-168 39,-162 45,-156 51,-156 51,-156 114,-156 114,-156 120,-156 126,-162 126,-168 126,-168 126,-182 126,-182 126,-188 120,-194 114,-194" /><text text-anchor="middle" x="82.5" y="-178.8" font-family="Helvetica,sans-Serif" font-size="14.00">Identificar</text><text text-anchor="middle" x="82.5" y="-163.8" font-family="Helvetica,sans-Serif" font-size="14.00">restrições</text></g><g id="svg-graphviz-caa615ea8b37-node4" class="node"><title>cronograma</title><path fill="#f7f2dc" stroke="#9a7b35" d="M312,-116C312,-116 236,-116 236,-116 230,-116 224,-110 224,-104 224,-104 224,-90 224,-90 224,-84 230,-78 236,-78 236,-78 312,-78 312,-78 318,-78 324,-84 324,-90 324,-90 324,-104 324,-104 324,-110 318,-116 312,-116" /><text text-anchor="middle" x="274" y="-100.8" font-family="Helvetica,sans-Serif" font-size="14.00">Definir</text><text text-anchor="middle" x="274" y="-85.8" font-family="Helvetica,sans-Serif" font-size="14.00">cronograma</text></g><g id="svg-graphviz-caa615ea8b37-edge1" class="edge"><title>restricoes-&gt;cronograma</title><path fill="none" stroke="black" d="M126.33,-164.5C178.32,-164.5 258,-164.5 258,-164.5 258,-164.5 258,-126.16 258,-126.16" /><polygon fill="black" stroke="black" points="261.5,-126.16 258,-116.16 254.5,-126.16 261.5,-126.16" /></g><g id="svg-graphviz-caa615ea8b37-node2" class="node"><title>riscos</title><path fill="#f7f2dc" stroke="#9a7b35" d="M114,-116C114,-116 51,-116 51,-116 45,-116 39,-110 39,-104 39,-104 39,-90 39,-90 39,-84 45,-78 51,-78 51,-78 114,-78 114,-78 120,-78 126,-84 126,-90 126,-90 126,-104 126,-104 126,-110 120,-116 114,-116" /><text text-anchor="middle" x="82.5" y="-100.8" font-family="Helvetica,sans-Serif" font-size="14.00">Identificar</text><text text-anchor="middle" x="82.5" y="-85.8" font-family="Helvetica,sans-Serif" font-size="14.00">riscos</text></g><g id="svg-graphviz-caa615ea8b37-edge2" class="edge"><title>riscos-&gt;cronograma</title><path fill="none" stroke="black" d="M126.43,-103.33C126.43,-103.33 213.85,-103.33 213.85,-103.33" /><polygon fill="black" stroke="black" points="213.85,-106.83 223.85,-103.33 213.85,-99.83 213.85,-106.83" /></g><g id="svg-graphviz-caa615ea8b37-node3" class="node"><title>marcos</title><path fill="#f7f2dc" stroke="#9a7b35" d="M153,-38C153,-38 12,-38 12,-38 6,-38 0,-32 0,-26 0,-26 0,-12 0,-12 0,-6 6,0 12,0 12,0 153,0 153,0 159,0 165,-6 165,-12 165,-12 165,-26 165,-26 165,-32 159,-38 153,-38" /><text text-anchor="middle" x="82.5" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">Definir</text><text text-anchor="middle" x="82.5" y="-7.8" font-family="Helvetica,sans-Serif" font-size="14.00">marcos e entregáveis</text></g><g id="svg-graphviz-caa615ea8b37-edge3" class="edge"><title>marcos-&gt;cronograma</title><path fill="none" stroke="black" d="M146,-38.21C146,-59.43 146,-90.67 146,-90.67 146,-90.67 213.78,-90.67 213.78,-90.67" /><polygon fill="black" stroke="black" points="213.78,-94.17 223.78,-90.67 213.78,-87.17 213.78,-94.17" /></g><g id="svg-graphviz-caa615ea8b37-node5" class="node"><title>trabalho</title><path fill="#f7f2dc" stroke="#9a7b35" d="M458,-173C458,-173 395,-173 395,-173 389,-173 383,-167 383,-161 383,-161 383,-147 383,-147 383,-141 389,-135 395,-135 395,-135 458,-135 458,-135 464,-135 470,-141 470,-147 470,-147 470,-161 470,-161 470,-167 464,-173 458,-173" /><text text-anchor="middle" x="426.5" y="-157.8" font-family="Helvetica,sans-Serif" font-size="14.00">Executar</text><text text-anchor="middle" x="426.5" y="-142.8" font-family="Helvetica,sans-Serif" font-size="14.00">o trabalho</text></g><g id="svg-graphviz-caa615ea8b37-edge4" class="edge"><title>cronograma-&gt;trabalho</title><path fill="none" stroke="black" d="M291,-116.17C291,-129.73 291,-145.5 291,-145.5 291,-145.5 372.88,-145.5 372.88,-145.5" /><polygon fill="black" stroke="black" points="372.88,-149 382.88,-145.5 372.88,-142 372.88,-149" /></g><g id="svg-graphviz-caa615ea8b37-node6" class="node"><title>monitorar</title><path fill="#f7f2dc" stroke="#9a7b35" d="M710,-186C710,-186 649,-186 649,-186 643,-186 637,-180 637,-174 637,-174 637,-160 637,-160 637,-154 643,-148 649,-148 649,-148 710,-148 710,-148 716,-148 722,-154 722,-160 722,-160 722,-174 722,-174 722,-180 716,-186 710,-186" /><text text-anchor="middle" x="679.5" y="-170.8" font-family="Helvetica,sans-Serif" font-size="14.00">Monitorar</text><text text-anchor="middle" x="679.5" y="-155.8" font-family="Helvetica,sans-Serif" font-size="14.00">progresso</text></g><g id="svg-graphviz-caa615ea8b37-edge5" class="edge"><title>trabalho-&gt;monitorar</title><path fill="none" stroke="black" d="M470.28,-156.33C470.28,-156.33 626.68,-156.33 626.68,-156.33" /><polygon fill="black" stroke="black" points="626.68,-159.83 636.68,-156.33 626.68,-152.83 626.68,-159.83" /></g><g id="svg-graphviz-caa615ea8b37-edge6" class="edge"><title>monitorar-&gt;trabalho</title><path fill="none" stroke="black" d="M636.87,-164.67C636.87,-164.67 480.16,-164.67 480.16,-164.67" /><polygon fill="black" stroke="black" points="480.16,-161.17 470.16,-164.67 480.16,-168.17 480.16,-161.17" /><text text-anchor="middle" x="553.5" y="-150.8" font-family="Times,serif" font-size="14.00">sem problemas</text></g><g id="svg-graphviz-caa615ea8b37-node7" class="node"><title>mitigar</title><path fill="#f7f2dc" stroke="#9a7b35" d="M972,-251C972,-251 931,-251 931,-251 925,-251 919,-245 919,-239 919,-239 919,-225 919,-225 919,-219 925,-213 931,-213 931,-213 972,-213 972,-213 978,-213 984,-219 984,-225 984,-225 984,-239 984,-239 984,-245 978,-251 972,-251" /><text text-anchor="middle" x="951.5" y="-235.8" font-family="Helvetica,sans-Serif" font-size="14.00">Mitigar</text><text text-anchor="middle" x="951.5" y="-220.8" font-family="Helvetica,sans-Serif" font-size="14.00">riscos</text></g><g id="svg-graphviz-caa615ea8b37-edge7" class="edge"><title>monitorar-&gt;mitigar</title><path fill="none" stroke="black" d="M722.08,-179.5C798.72,-179.5 952,-179.5 952,-179.5 952,-179.5 952,-202.75 952,-202.75" /><polygon fill="black" stroke="black" points="948.5,-202.75 952,-212.75 955.5,-202.75 948.5,-202.75" /><text text-anchor="middle" x="815" y="-226.8" font-family="Times,serif" font-size="14.00">problemas graves</text></g><g id="svg-graphviz-caa615ea8b37-node9" class="node"><title>terminar</title><path fill="#dcefdc" stroke="#5b8a5b" d="M983,-173C983,-173 920,-173 920,-173 914,-173 908,-167 908,-161 908,-161 908,-147 908,-147 908,-141 914,-135 920,-135 920,-135 983,-135 983,-135 989,-135 995,-141 995,-147 995,-147 995,-161 995,-161 995,-167 989,-173 983,-173" /><text text-anchor="middle" x="951.5" y="-157.8" font-family="Helvetica,sans-Serif" font-size="14.00">Projeto</text><text text-anchor="middle" x="951.5" y="-142.8" font-family="Helvetica,sans-Serif" font-size="14.00">terminado</text></g><g id="svg-graphviz-caa615ea8b37-edge10" class="edge"><title>monitorar-&gt;terminar</title><path fill="none" stroke="black" d="M722.3,-160.5C722.3,-160.5 897.6,-160.5 897.6,-160.5" /><polygon fill="black" stroke="black" points="897.6,-164 907.6,-160.5 897.6,-157 897.6,-164" /><text text-anchor="middle" x="815" y="-157.8" font-family="Times,serif" font-size="14.00">fim</text></g><g id="svg-graphviz-caa615ea8b37-node8" class="node"><title>replanejar</title><path fill="#f7f2dc" stroke="#9a7b35" d="M1132,-116C1132,-116 1066,-116 1066,-116 1060,-116 1054,-110 1054,-104 1054,-104 1054,-90 1054,-90 1054,-84 1060,-78 1066,-78 1066,-78 1132,-78 1132,-78 1138,-78 1144,-84 1144,-90 1144,-90 1144,-104 1144,-104 1144,-110 1138,-116 1132,-116" /><text text-anchor="middle" x="1099" y="-100.8" font-family="Helvetica,sans-Serif" font-size="14.00">Replanejar</text><text text-anchor="middle" x="1099" y="-85.8" font-family="Helvetica,sans-Serif" font-size="14.00">projeto</text></g><g id="svg-graphviz-caa615ea8b37-edge8" class="edge"><title>mitigar-&gt;replanejar</title><path fill="none" stroke="black" d="M984.24,-232C1027.69,-232 1099,-232 1099,-232 1099,-232 1099,-126.06 1099,-126.06" /><polygon fill="black" stroke="black" points="1102.5,-126.06 1099,-116.06 1095.5,-126.06 1102.5,-126.06" /></g><g id="svg-graphviz-caa615ea8b37-edge9" class="edge"><title>replanejar-&gt;cronograma</title><path fill="none" stroke="black" d="M1053.76,-97C1053.76,-97 334.1,-97 334.1,-97" /><polygon fill="black" stroke="black" points="334.1,-93.5 324.1,-97 334.1,-100.5 334.1,-93.5" /></g></g></svg></div></div>
+
+<p>O ciclo mostra uma ideia importante. Planejamento e execução não são fases completamente separadas. A execução produz informação, e essa informação melhora o planejamento.</p>
+<h3 id="pequenos-desvios-e-problemas-graves"><span class="heading-text">Pequenos desvios e problemas graves</span><span class="heading-arabic">10.7.1</span></h3>
+<p>Nem todo desvio exige renegociar o projeto. Pequenos desvios são esperados, porque estimativas iniciais são aproximadas. A equipe pode ajustar tarefas, reorganizar prioridades e atualizar datas internas.</p>
+<p>Problemas graves exigem outra postura. Se uma tecnologia central não funciona, se uma integração é bloqueada, se a equipe perdeu uma pessoa essencial ou se o cliente mudou um requisito crítico, o plano original pode deixar de ser viável.</p>
+<p>Nesses casos, o gerente precisa iniciar ações de mitigação e talvez renegociar escopo, prazo, custo ou entregáveis.</p>
+<div class="example">
+  <div class="example-title">Exemplo 9</div>
+  <p>Uma tarefa de implementação foi estimada em dez dias e levou doze. Isso pode ser um pequeno desvio, especialmente se havia contingência no cronograma.</p>
+<p>Agora considere outro caso. A equipe planejou usar uma API externa para consulta fiscal, mas o fornecedor informa que o acesso de homologação só estará disponível em dois meses. Essa dependência bloqueia testes e entrega de funcionalidades centrais.</p>
+<p>Aqui não basta pedir que a equipe &quot;trabalhe mais rápido&quot;. O projeto precisa de mitigação, como simular a API temporariamente, mudar a ordem das entregas ou renegociar o prazo da funcionalidade afetada.</p>
+</div>
+<h2 id="programação-de-projeto-e-cronograma"><span class="heading-text">Programação de projeto e cronograma</span><span class="heading-arabic">10.8</span></h2>
+<p>A programação de projeto é a parte do planejamento que decide como o trabalho será dividido em tarefas, quando essas tarefas serão executadas e quem trabalhará nelas.</p>
+<p>Ela envolve estimar:</p>
+<ol>
+<li>duração de cada tarefa no calendário;</li>
+<li>esforço necessário para realizar a tarefa;</li>
+<li>dependências entre tarefas;</li>
+<li>pessoas alocadas;</li>
+<li>recursos necessários;</li>
+<li>datas de início e término;</li>
+<li>marcos e entregáveis.</li>
+</ol>
+<p>Sommerville observa que tanto processos dirigidos a planos quanto processos ágeis precisam de algum tipo de cronograma inicial. A diferença está no detalhe. Em processos tradicionais, o cronograma completo costuma ser planejado cedo e revisado durante o projeto. Em processos ágeis, há um cronograma global mais leve e planejamento detalhado para iterações curtas.</p>
+<img src="static/figura-23-2-processo-programacao-projeto.png" width="90%">
+
+<p>A Figura 23.2 organiza a programação como um fluxo. Primeiro a equipe identifica atividades, depois dependências, depois recursos, depois pessoas e, por fim, produz gráficos de projeto. A seta de retorno indica que o cronograma pode precisar ser revisado quando a alocação ou os gráficos revelam conflito.</p>
+<h3 id="tarefa-duração-e-esforço"><span class="heading-text">Tarefa, duração e esforço</span><span class="heading-arabic">10.8.1</span></h3>
+<p>Uma tarefa de projeto tem pelo menos quatro informações importantes.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Elemento</th>
+  <th style="text-align:left">Significado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><strong>Duração</strong></td>
+  <td style="text-align:left">Tempo de calendário, como cinco dias, duas semanas ou um mês.</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Esforço</strong></td>
+  <td style="text-align:left">Quantidade de trabalho humano, como dez pessoas-dia ou três pessoas-mês.</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Deadline</strong></td>
+  <td style="text-align:left">Data limite para conclusão.</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Resultado tangível</strong></td>
+  <td style="text-align:left">Evidência de término, como documento, código revisado, testes passando ou relatório.</td>
+</tr>
+</tbody>
+</table>
+<p>Duração e esforço não são a mesma coisa.</p>
+<p>Uma tarefa pode ter duração de dez dias e esforço de cinco pessoas-dia. Isso significa que alguém trabalha nela em meio período ou com interrupções. Outra tarefa pode ter duração de dez dias e esforço de vinte pessoas-dia. Isso significa que duas pessoas trabalham nela em paralelo, ou que várias pessoas contribuem em parte do período.</p>
+<div class="example">
+  <div class="example-title">Exemplo 10</div>
+  <p>Uma equipe estima a criação de um protótipo de integração com serviço de pagamento.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Item</th>
+  <th style="text-align:left">Valor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Duração</td>
+  <td style="text-align:left">10 dias úteis</td>
+</tr>
+<tr>
+  <td style="text-align:left">Esforço</td>
+  <td style="text-align:left">15 pessoas-dia</td>
+</tr>
+<tr>
+  <td style="text-align:left">Pessoas</td>
+  <td style="text-align:left">1 desenvolvedor backend em tempo integral e 1 desenvolvedor frontend por meio período</td>
+</tr>
+<tr>
+  <td style="text-align:left">Resultado</td>
+  <td style="text-align:left">Protótipo executando pagamento simulado e registrando retorno da transação</td>
+</tr>
+</tbody>
+</table>
+<p>A duração é de duas semanas no calendário. O esforço é maior do que dez pessoas-dia porque há mais de uma pessoa envolvida.</p>
+</div>
+<h3 id="dependências-entre-tarefas"><span class="heading-text">Dependências entre tarefas</span><span class="heading-arabic">10.8.2</span></h3>
+<p>Dependência significa que uma tarefa só pode começar ou terminar depois de outra.</p>
+<p>Por exemplo, implementar uma tela pode depender da definição da API. Testar integração pode depender do ambiente de homologação. Gerar relatórios pode depender do modelo de dados. Treinar usuários pode depender da estabilização da versão.</p>
+<p>Dependências são uma das razões pelas quais cronograma não é apenas soma de durações.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Tarefa</th>
+  <th style="text-align:left">Duração</th>
+  <th style="text-align:left">Dependências</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">T1: definir modelo de dados</td>
+  <td style="text-align:left">5 dias</td>
+  <td style="text-align:left">nenhuma</td>
+</tr>
+<tr>
+  <td style="text-align:left">T2: implementar API de alunos</td>
+  <td style="text-align:left">8 dias</td>
+  <td style="text-align:left">T1</td>
+</tr>
+<tr>
+  <td style="text-align:left">T3: implementar tela de cadastro</td>
+  <td style="text-align:left">6 dias</td>
+  <td style="text-align:left">T2</td>
+</tr>
+<tr>
+  <td style="text-align:left">T4: preparar massa de testes</td>
+  <td style="text-align:left">4 dias</td>
+  <td style="text-align:left">T1</td>
+</tr>
+<tr>
+  <td style="text-align:left">T5: testar fluxo de cadastro</td>
+  <td style="text-align:left">5 dias</td>
+  <td style="text-align:left">T3, T4</td>
+</tr>
+</tbody>
+</table>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="680" viewBox="0.00 0.00 997.19 129.00" class="svg-graph graphviz-img"><g id="svg-graphviz-66644c83e068-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 125)"><title>DependenciasCadastro</title><polygon fill="white" stroke="transparent" points="-4,4 -4,-125 993.19,-125 993.19,4 -4,4" /><g id="svg-graphviz-66644c83e068-node1" class="node"><title>inicio</title><ellipse fill="#f7f7f7" stroke="#777777" cx="34.45" cy="-60" rx="34.39" ry="34.39" /><text text-anchor="middle" x="34.45" y="-56.3" font-family="Helvetica,sans-Serif" font-size="14.00">Início</text></g><g id="svg-graphviz-66644c83e068-node2" class="node"><title>t1</title><path fill="#eef5ff" stroke="#5b7aa0" d="M255.89,-79C255.89,-79 145.89,-79 145.89,-79 139.89,-79 133.89,-73 133.89,-67 133.89,-67 133.89,-53 133.89,-53 133.89,-47 139.89,-41 145.89,-41 145.89,-41 255.89,-41 255.89,-41 261.89,-41 267.89,-47 267.89,-53 267.89,-53 267.89,-67 267.89,-67 267.89,-73 261.89,-79 255.89,-79" /><text text-anchor="middle" x="200.89" y="-63.8" font-family="Helvetica,sans-Serif" font-size="14.00">T1</text><text text-anchor="middle" x="200.89" y="-48.8" font-family="Helvetica,sans-Serif" font-size="14.00">Modelo de dados</text></g><g id="svg-graphviz-66644c83e068-edge1" class="edge"><title>inicio-&gt;t1</title><path fill="none" stroke="black" d="M68.93,-60C68.93,-60 123.81,-60 123.81,-60" /><polygon fill="black" stroke="black" points="123.81,-63.5 133.81,-60 123.81,-56.5 123.81,-63.5" /></g><g id="svg-graphviz-66644c83e068-node3" class="node"><title>t2</title><path fill="#eef5ff" stroke="#5b7aa0" d="M431.89,-121C431.89,-121 344.89,-121 344.89,-121 338.89,-121 332.89,-115 332.89,-109 332.89,-109 332.89,-95 332.89,-95 332.89,-89 338.89,-83 344.89,-83 344.89,-83 431.89,-83 431.89,-83 437.89,-83 443.89,-89 443.89,-95 443.89,-95 443.89,-109 443.89,-109 443.89,-115 437.89,-121 431.89,-121" /><text text-anchor="middle" x="388.39" y="-105.8" font-family="Helvetica,sans-Serif" font-size="14.00">T2</text><text text-anchor="middle" x="388.39" y="-90.8" font-family="Helvetica,sans-Serif" font-size="14.00">API de alunos</text></g><g id="svg-graphviz-66644c83e068-edge2" class="edge"><title>t1-&gt;t2</title><path fill="none" stroke="black" d="M201.19,-79.32C201.19,-84.51 201.19,-88.72 201.19,-88.72 201.19,-88.72 322.73,-88.72 322.73,-88.72" /><polygon fill="black" stroke="black" points="322.73,-92.22 332.73,-88.72 322.73,-85.22 322.73,-92.22" /></g><g id="svg-graphviz-66644c83e068-node5" class="node"><title>t4</title><path fill="#eef5ff" stroke="#5b7aa0" d="M624.89,-38C624.89,-38 520.89,-38 520.89,-38 514.89,-38 508.89,-32 508.89,-26 508.89,-26 508.89,-12 508.89,-12 508.89,-6 514.89,0 520.89,0 520.89,0 624.89,0 624.89,0 630.89,0 636.89,-6 636.89,-12 636.89,-12 636.89,-26 636.89,-26 636.89,-32 630.89,-38 624.89,-38" /><text text-anchor="middle" x="572.89" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">T4</text><text text-anchor="middle" x="572.89" y="-7.8" font-family="Helvetica,sans-Serif" font-size="14.00">Massa de testes</text></g><g id="svg-graphviz-66644c83e068-edge4" class="edge"><title>t1-&gt;t4</title><path fill="none" stroke="black" d="M201.19,-40.71C201.19,-35.75 201.19,-31.78 201.19,-31.78 201.19,-31.78 498.57,-31.78 498.57,-31.78" /><polygon fill="black" stroke="black" points="498.57,-35.28 508.57,-31.78 498.57,-28.28 498.57,-35.28" /></g><g id="svg-graphviz-66644c83e068-node4" class="node"><title>t3</title><path fill="#eef5ff" stroke="#5b7aa0" d="M624.89,-120C624.89,-120 520.89,-120 520.89,-120 514.89,-120 508.89,-114 508.89,-108 508.89,-108 508.89,-94 508.89,-94 508.89,-88 514.89,-82 520.89,-82 520.89,-82 624.89,-82 624.89,-82 630.89,-82 636.89,-88 636.89,-94 636.89,-94 636.89,-108 636.89,-108 636.89,-114 630.89,-120 624.89,-120" /><text text-anchor="middle" x="572.89" y="-104.8" font-family="Helvetica,sans-Serif" font-size="14.00">T3</text><text text-anchor="middle" x="572.89" y="-89.8" font-family="Helvetica,sans-Serif" font-size="14.00">Tela de cadastro</text></g><g id="svg-graphviz-66644c83e068-edge3" class="edge"><title>t2-&gt;t3</title><path fill="none" stroke="black" d="M444,-101.5C444,-101.5 498.66,-101.5 498.66,-101.5" /><polygon fill="black" stroke="black" points="498.66,-105 508.66,-101.5 498.66,-98 498.66,-105" /></g><g id="svg-graphviz-66644c83e068-node6" class="node"><title>t5</title><path fill="#fff1d6" stroke="#b9852f" d="M811.89,-78C811.89,-78 713.89,-78 713.89,-78 707.89,-78 701.89,-72 701.89,-66 701.89,-66 701.89,-52 701.89,-52 701.89,-46 707.89,-40 713.89,-40 713.89,-40 811.89,-40 811.89,-40 817.89,-40 823.89,-46 823.89,-52 823.89,-52 823.89,-66 823.89,-66 823.89,-72 817.89,-78 811.89,-78" /><text text-anchor="middle" x="762.89" y="-62.8" font-family="Helvetica,sans-Serif" font-size="14.00">T5</text><text text-anchor="middle" x="762.89" y="-47.8" font-family="Helvetica,sans-Serif" font-size="14.00">Testar cadastro</text></g><g id="svg-graphviz-66644c83e068-edge5" class="edge"><title>t3-&gt;t5</title><path fill="none" stroke="black" d="M637.05,-95.57C692.3,-95.57 763.19,-95.57 763.19,-95.57 763.19,-95.57 763.19,-88.14 763.19,-88.14" /><polygon fill="black" stroke="black" points="766.69,-88.14 763.19,-78.14 759.69,-88.14 766.69,-88.14" /></g><g id="svg-graphviz-66644c83e068-edge6" class="edge"><title>t4-&gt;t5</title><path fill="none" stroke="black" d="M637.05,-23.43C692.3,-23.43 763.19,-23.43 763.19,-23.43 763.19,-23.43 763.19,-29.96 763.19,-29.96" /><polygon fill="black" stroke="black" points="759.69,-29.96 763.19,-39.96 766.69,-29.96 759.69,-29.96" /></g><g id="svg-graphviz-66644c83e068-node7" class="node"><title>fim</title><ellipse fill="#e2f4e2" stroke="#5b8a5b" cx="939.04" cy="-59" rx="46.28" ry="46.28" /><ellipse fill="none" stroke="#5b8a5b" cx="939.04" cy="-59" rx="50.29" ry="50.29" /><text text-anchor="middle" x="939.04" y="-55.3" font-family="Helvetica,sans-Serif" font-size="14.00">Entrega</text></g><g id="svg-graphviz-66644c83e068-edge7" class="edge"><title>t5-&gt;fim</title><path fill="none" stroke="black" d="M824.01,-59C824.01,-59 878.82,-59 878.82,-59" /><polygon fill="black" stroke="black" points="878.82,-62.5 888.82,-59 878.82,-55.5 878.82,-62.5" /></g></g></svg></div></div>
+
+<p>Mesmo que T4 seja curta, T5 não pode começar antes de T3 e T4 terminarem. Se T3 atrasar, T5 atrasa. Se T5 for necessária para uma entrega contratual, o atraso se propaga.</p>
+<h3 id="marcos-e-entregáveis"><span class="heading-text">Marcos e entregáveis</span><span class="heading-arabic">10.8.3</span></h3>
+<p>Sommerville diferencia <strong>milestone</strong> e <strong>entregável</strong>.</p>
+<p>Um <strong>milestone</strong> é um ponto de controle no projeto. Ele permite avaliar progresso. Pode ser interno, como &quot;arquitetura revisada&quot; ou &quot;ambiente de testes pronto&quot;.</p>
+<p>Um <strong>entregável</strong> é um produto de trabalho entregue ao cliente. Pode ser uma especificação, um protótipo, uma versão executável, um relatório de testes ou um manual.</p>
+<p>Todo entregável importante pode ser um milestone, mas nem todo milestone é entregue ao cliente.</p>
+<div class="example">
+  <div class="example-title">Exemplo 11</div>
+  <p>Em um projeto de sistema financeiro, a equipe define os seguintes pontos.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Ponto</th>
+  <th style="text-align:left">Tipo</th>
+  <th style="text-align:left">Evidência</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Modelo de dados aprovado pela equipe técnica</td>
+  <td style="text-align:left">Milestone interno</td>
+  <td style="text-align:left">Ata de revisão técnica</td>
+</tr>
+<tr>
+  <td style="text-align:left">Protótipo de conciliação bancária demonstrado ao cliente</td>
+  <td style="text-align:left">Entregável</td>
+  <td style="text-align:left">Versão executável e roteiro de demonstração</td>
+</tr>
+<tr>
+  <td style="text-align:left">Testes de integração com banco concluídos</td>
+  <td style="text-align:left">Milestone interno</td>
+  <td style="text-align:left">Relatório de execução dos testes</td>
+</tr>
+<tr>
+  <td style="text-align:left">Manual de operação entregue</td>
+  <td style="text-align:left">Entregável</td>
+  <td style="text-align:left">Documento enviado e aceito pelo cliente</td>
+</tr>
+</tbody>
+</table>
+<p>Essa distinção ajuda a não confundir controle gerencial com entrega contratual.</p>
+</div>
+<h2 id="representando-cronogramas"><span class="heading-text">Representando cronogramas</span><span class="heading-arabic">10.9</span></h2>
+<p>Cronogramas podem ser representados em tabelas, planilhas, gráficos de barras e redes de atividades.</p>
+<p>Sommerville destaca os gráficos de barras, conhecidos como gráficos de Gantt, porque eles mostram as atividades ao longo do calendário. Eles ajudam a visualizar início, fim, paralelismo, sobreposição e marcos.</p>
+<p>Uma representação textual simples pode ser suficiente em uma aula.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Tarefa</th>
+  <th style="text-align:center">Semana 1</th>
+  <th style="text-align:center">Semana 2</th>
+  <th style="text-align:center">Semana 3</th>
+  <th style="text-align:center">Semana 4</th>
+  <th style="text-align:center">Semana 5</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">T1: requisitos principais</td>
+  <td style="text-align:center">█</td>
+  <td style="text-align:center">█</td>
+  <td style="text-align:center"></td>
+  <td style="text-align:center"></td>
+  <td style="text-align:center"></td>
+</tr>
+<tr>
+  <td style="text-align:left">T2: modelo de dados</td>
+  <td style="text-align:center"></td>
+  <td style="text-align:center">█</td>
+  <td style="text-align:center">█</td>
+  <td style="text-align:center"></td>
+  <td style="text-align:center"></td>
+</tr>
+<tr>
+  <td style="text-align:left">T3: API inicial</td>
+  <td style="text-align:center"></td>
+  <td style="text-align:center"></td>
+  <td style="text-align:center">█</td>
+  <td style="text-align:center">█</td>
+  <td style="text-align:center"></td>
+</tr>
+<tr>
+  <td style="text-align:left">T4: interface de cadastro</td>
+  <td style="text-align:center"></td>
+  <td style="text-align:center"></td>
+  <td style="text-align:center">█</td>
+  <td style="text-align:center">█</td>
+  <td style="text-align:center"></td>
+</tr>
+<tr>
+  <td style="text-align:left">T5: testes de integração</td>
+  <td style="text-align:center"></td>
+  <td style="text-align:center"></td>
+  <td style="text-align:center"></td>
+  <td style="text-align:center"></td>
+  <td style="text-align:center">█</td>
+</tr>
+</tbody>
+</table>
+<p>Essa tabela mostra que T3 e T4 podem ocorrer em paralelo, mas T5 fica no final porque depende das duas.</p>
+<p>O mesmo cronograma fica mais fácil de ler quando aparece como gráfico de barras.</p>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:ns2="http://creativecommons.org/ns#" xmlns:ns4="http://www.w3.org/1999/xlink" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" width="760" viewBox="0 0 640.760312 264.754375" version="1.1" class="svg-graph matplotlib-plot-img"> <metadata>  <rdf:RDF>   <ns2:Work>    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage" />    <dc:date>2026-05-20T16:09:54.225343</dc:date>    <dc:format>image/svg+xml</dc:format>    <dc:creator>     <ns2:Agent>      <dc:title>Matplotlib v3.10.8, https://matplotlib.org/</dc:title>     </ns2:Agent>    </dc:creator>   </ns2:Work>  </rdf:RDF> </metadata> <defs>  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style> </defs> <g id="svg-matplotlib-ced5448c4a39-figure_1">  <g id="svg-matplotlib-ced5448c4a39-patch_1">   <path d="M 0 264.754375 L 640.760312 264.754375 L 640.760312 0 L 0 0 L 0 264.754375 z" style="fill: none" />  </g>  <g id="svg-matplotlib-ced5448c4a39-axes_1">   <g id="svg-matplotlib-ced5448c4a39-patch_2">    <path d="M 26.670313 227.198125 L 633.560312 227.198125 L 633.560312 22.798125 L 26.670313 22.798125 L 26.670313 227.198125 z" style="fill: none" />   </g>   <g id="svg-matplotlib-ced5448c4a39-patch_3">    <path d="M 26.670312 32.089034 L 260.089543 32.089034 L 260.089543 52.735499 L 26.670312 52.735499 z" clip-path="url(#svg-matplotlib-ced5448c4a39-p56fe8ab419)" style="fill: #8bb6d6; stroke: #444444; stroke-linejoin: miter" />   </g>   <g id="svg-matplotlib-ced5448c4a39-patch_4">    <path d="M 143.379928 73.381963 L 376.799159 73.381963 L 376.799159 94.028428 L 143.379928 94.028428 z" clip-path="url(#svg-matplotlib-ced5448c4a39-p56fe8ab419)" style="fill: #8bb6d6; stroke: #444444; stroke-linejoin: miter" />   </g>   <g id="svg-matplotlib-ced5448c4a39-patch_5">    <path d="M 260.089543 114.674893 L 493.508774 114.674893 L 493.508774 135.321357 L 260.089543 135.321357 z" clip-path="url(#svg-matplotlib-ced5448c4a39-p56fe8ab419)" style="fill: #f0b979; stroke: #444444; stroke-linejoin: miter" />   </g>   <g id="svg-matplotlib-ced5448c4a39-patch_6">    <path d="M 260.089543 155.967822 L 493.508774 155.967822 L 493.508774 176.614287 L 260.089543 176.614287 z" clip-path="url(#svg-matplotlib-ced5448c4a39-p56fe8ab419)" style="fill: #f0b979; stroke: #444444; stroke-linejoin: miter" />   </g>   <g id="svg-matplotlib-ced5448c4a39-patch_7">    <path d="M 493.508774 197.260751 L 610.218389 197.260751 L 610.218389 217.907216 L 493.508774 217.907216 z" clip-path="url(#svg-matplotlib-ced5448c4a39-p56fe8ab419)" style="fill: #9dcc93; stroke: #444444; stroke-linejoin: miter" />   </g>   <g id="svg-matplotlib-ced5448c4a39-matplotlib.axis_1">    <g id="svg-matplotlib-ced5448c4a39-xtick_1">     <g id="svg-matplotlib-ced5448c4a39-line2d_1">      <path d="M 26.670312 227.198125 L 26.670312 22.798125 " clip-path="url(#svg-matplotlib-ced5448c4a39-p56fe8ab419)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-ced5448c4a39-line2d_2">      <defs>       <path id="svg-matplotlib-ced5448c4a39-m124102d8f1" d="M 0 0 L 0 3.5 " style="stroke: #000000; stroke-width: 0.8" />      </defs>      <g>       <use ns4:href="#svg-matplotlib-ced5448c4a39-m124102d8f1" x="26.670312" y="227.198125" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-ced5448c4a39-text_1">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle" x="26.670312" y="241.796563" transform="rotate(-0 26.670312 241.796563)">1</text>     </g>    </g>    <g id="svg-matplotlib-ced5448c4a39-xtick_2">     <g id="svg-matplotlib-ced5448c4a39-line2d_3">      <path d="M 143.379928 227.198125 L 143.379928 22.798125 " clip-path="url(#svg-matplotlib-ced5448c4a39-p56fe8ab419)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-ced5448c4a39-line2d_4">      <g>       <use ns4:href="#svg-matplotlib-ced5448c4a39-m124102d8f1" x="143.379928" y="227.198125" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-ced5448c4a39-text_2">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle" x="143.379928" y="241.796563" transform="rotate(-0 143.379928 241.796563)">2</text>     </g>    </g>    <g id="svg-matplotlib-ced5448c4a39-xtick_3">     <g id="svg-matplotlib-ced5448c4a39-line2d_5">      <path d="M 260.089543 227.198125 L 260.089543 22.798125 " clip-path="url(#svg-matplotlib-ced5448c4a39-p56fe8ab419)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-ced5448c4a39-line2d_6">      <g>       <use ns4:href="#svg-matplotlib-ced5448c4a39-m124102d8f1" x="260.089543" y="227.198125" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-ced5448c4a39-text_3">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle" x="260.089543" y="241.796563" transform="rotate(-0 260.089543 241.796563)">3</text>     </g>    </g>    <g id="svg-matplotlib-ced5448c4a39-xtick_4">     <g id="svg-matplotlib-ced5448c4a39-line2d_7">      <path d="M 376.799159 227.198125 L 376.799159 22.798125 " clip-path="url(#svg-matplotlib-ced5448c4a39-p56fe8ab419)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-ced5448c4a39-line2d_8">      <g>       <use ns4:href="#svg-matplotlib-ced5448c4a39-m124102d8f1" x="376.799159" y="227.198125" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-ced5448c4a39-text_4">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle" x="376.799159" y="241.796563" transform="rotate(-0 376.799159 241.796563)">4</text>     </g>    </g>    <g id="svg-matplotlib-ced5448c4a39-xtick_5">     <g id="svg-matplotlib-ced5448c4a39-line2d_9">      <path d="M 493.508774 227.198125 L 493.508774 22.798125 " clip-path="url(#svg-matplotlib-ced5448c4a39-p56fe8ab419)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-ced5448c4a39-line2d_10">      <g>       <use ns4:href="#svg-matplotlib-ced5448c4a39-m124102d8f1" x="493.508774" y="227.198125" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-ced5448c4a39-text_5">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle" x="493.508774" y="241.796563" transform="rotate(-0 493.508774 241.796563)">5</text>     </g>    </g>    <g id="svg-matplotlib-ced5448c4a39-xtick_6">     <g id="svg-matplotlib-ced5448c4a39-line2d_11">      <path d="M 610.218389 227.198125 L 610.218389 22.798125 " clip-path="url(#svg-matplotlib-ced5448c4a39-p56fe8ab419)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.3; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-ced5448c4a39-line2d_12">      <g>       <use ns4:href="#svg-matplotlib-ced5448c4a39-m124102d8f1" x="610.218389" y="227.198125" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-ced5448c4a39-text_6">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle" x="610.218389" y="241.796563" transform="rotate(-0 610.218389 241.796563)">6</text>     </g>    </g>    <g id="svg-matplotlib-ced5448c4a39-text_7">     <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle" x="330.115312" y="255.474688" transform="rotate(-0 330.115312 255.474688)">Semana</text>    </g>   </g>   <g id="svg-matplotlib-ced5448c4a39-matplotlib.axis_2">    <g id="svg-matplotlib-ced5448c4a39-ytick_1">     <g id="svg-matplotlib-ced5448c4a39-line2d_13">      <defs>       <path id="svg-matplotlib-ced5448c4a39-mdb1fd303b7" d="M 0 0 L -3.5 0 " style="stroke: #000000; stroke-width: 0.8" />      </defs>      <g>       <use ns4:href="#svg-matplotlib-ced5448c4a39-mdb1fd303b7" x="26.670313" y="42.412266" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-ced5448c4a39-text_8">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end" x="19.670313" y="46.211485" transform="rotate(-0 19.670313 46.211485)">T1</text>     </g>    </g>    <g id="svg-matplotlib-ced5448c4a39-ytick_2">     <g id="svg-matplotlib-ced5448c4a39-line2d_14">      <g>       <use ns4:href="#svg-matplotlib-ced5448c4a39-mdb1fd303b7" x="26.670313" y="83.705196" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-ced5448c4a39-text_9">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end" x="19.670313" y="87.504414" transform="rotate(-0 19.670313 87.504414)">T2</text>     </g>    </g>    <g id="svg-matplotlib-ced5448c4a39-ytick_3">     <g id="svg-matplotlib-ced5448c4a39-line2d_15">      <g>       <use ns4:href="#svg-matplotlib-ced5448c4a39-mdb1fd303b7" x="26.670313" y="124.998125" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-ced5448c4a39-text_10">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end" x="19.670313" y="128.797344" transform="rotate(-0 19.670313 128.797344)">T3</text>     </g>    </g>    <g id="svg-matplotlib-ced5448c4a39-ytick_4">     <g id="svg-matplotlib-ced5448c4a39-line2d_16">      <g>       <use ns4:href="#svg-matplotlib-ced5448c4a39-mdb1fd303b7" x="26.670313" y="166.291054" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-ced5448c4a39-text_11">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end" x="19.670313" y="170.090273" transform="rotate(-0 19.670313 170.090273)">T4</text>     </g>    </g>    <g id="svg-matplotlib-ced5448c4a39-ytick_5">     <g id="svg-matplotlib-ced5448c4a39-line2d_17">      <g>       <use ns4:href="#svg-matplotlib-ced5448c4a39-mdb1fd303b7" x="26.670313" y="207.583984" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-ced5448c4a39-text_12">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end" x="19.670313" y="211.383202" transform="rotate(-0 19.670313 211.383202)">T5</text>     </g>    </g>   </g>   <g id="svg-matplotlib-ced5448c4a39-patch_8">    <path d="M 26.670313 227.198125 L 26.670313 22.798125 " style="fill: none; stroke: #000000; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square" />   </g>   <g id="svg-matplotlib-ced5448c4a39-patch_9">    <path d="M 633.560312 227.198125 L 633.560312 22.798125 " style="fill: none; stroke: #000000; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square" />   </g>   <g id="svg-matplotlib-ced5448c4a39-patch_10">    <path d="M 26.670312 227.198125 L 633.560312 227.198125 " style="fill: none; stroke: #000000; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square" />   </g>   <g id="svg-matplotlib-ced5448c4a39-patch_11">    <path d="M 26.670312 22.798125 L 633.560312 22.798125 " style="fill: none; stroke: #000000; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square" />   </g>   <g id="svg-matplotlib-ced5448c4a39-text_13">    <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle" x="143.379928" y="45.171641" transform="rotate(-0 143.379928 45.171641)">T1 requisitos</text>   </g>   <g id="svg-matplotlib-ced5448c4a39-text_14">    <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle" x="260.089543" y="86.464571" transform="rotate(-0 260.089543 86.464571)">T2 modelo</text>   </g>   <g id="svg-matplotlib-ced5448c4a39-text_15">    <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle" x="376.799159" y="127.7575" transform="rotate(-0 376.799159 127.7575)">T3 API</text>   </g>   <g id="svg-matplotlib-ced5448c4a39-text_16">    <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle" x="376.799159" y="169.050429" transform="rotate(-0 376.799159 169.050429)">T4 interface</text>   </g>   <g id="svg-matplotlib-ced5448c4a39-text_17">    <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle" x="551.863582" y="210.343359" transform="rotate(-0 551.863582 210.343359)">T5 testes</text>   </g>   <g id="svg-matplotlib-ced5448c4a39-text_18">    <text style="font-size: 12px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle" x="330.115312" y="16.798125" transform="rotate(-0 330.115312 16.798125)">Cronograma simples em gráfico de barras</text>   </g>  </g> </g> <defs>  <clipPath id="svg-matplotlib-ced5448c4a39-p56fe8ab419">   <rect x="26.670313" y="22.798125" width="606.89" height="204.4" />  </clipPath> </defs></svg></div></div>
+
+<p>A Figura 23.3 mostra a versão de Sommerville, já com atividades, paralelismo e milestones marcados no calendário.</p>
+<img src="static/figura-23-3-grafico-barras-atividades.png" width="85%">
+
+<h3 id="alocação-de-pessoas"><span class="heading-text">Alocação de pessoas</span><span class="heading-arabic">10.9.1</span></h3>
+<p>Além de tarefas, o cronograma precisa considerar pessoas. Uma pessoa pode estar em mais de um projeto, pode tirar férias, pode participar de treinamento ou pode ser especialista em uma parte crítica.</p>
+<p>Esse detalhe torna o planejamento mais realista.</p>
+<p>Se a única pessoa que entende autenticação institucional estiver alocada em outro projeto durante três semanas, não adianta colocar a tarefa de autenticação no cronograma como se qualquer pessoa pudesse executá-la.</p>
+<img src="static/figura-23-4-grafico-alocacao-pessoal.png" width="85%">
+
+<p>A Figura 23.4 é útil porque desloca a atenção das tarefas para as pessoas. Ela mostra que o mesmo cronograma pode ficar inviável quando uma pessoa aparece em várias atividades, quando há alocações parciais ou quando um especialista fica concentrado em uma tarefa específica.</p>
+<div class="example">
+  <div class="example-title">Exemplo 12</div>
+  <p>Uma equipe tem quatro pessoas.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Pessoa</th>
+  <th style="text-align:left">Disponibilidade</th>
+  <th style="text-align:left">Observação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Ana</td>
+  <td style="text-align:left">100%</td>
+  <td style="text-align:left">backend e banco de dados</td>
+</tr>
+<tr>
+  <td style="text-align:left">Bruno</td>
+  <td style="text-align:left">50%</td>
+  <td style="text-align:left">frontend, também está em outro projeto</td>
+</tr>
+<tr>
+  <td style="text-align:left">Carla</td>
+  <td style="text-align:left">100%</td>
+  <td style="text-align:left">testes e automação</td>
+</tr>
+<tr>
+  <td style="text-align:left">Diego</td>
+  <td style="text-align:left">25%</td>
+  <td style="text-align:left">especialista em autenticação institucional</td>
+</tr>
+</tbody>
+</table>
+<p>O cronograma inicial coloca autenticação nas semanas 2 e 3. Porém, Diego só está disponível na semana 4. O plano precisa mudar.</p>
+<p>Uma alternativa é antecipar a preparação de telas e banco, deixando a integração real de autenticação para a semana 4. Outra alternativa é treinar Ana para assumir parte da tarefa, reduzindo dependência de Diego.</p>
+<p>O cronograma melhora quando representa restrições humanas reais, não apenas tarefas abstratas.</p>
+</div>
+<h2 id="contingência-e-prazos-realistas"><span class="heading-text">Contingência e prazos realistas</span><span class="heading-arabic">10.10</span></h2>
+<p>Cronogramas de software tendem ao otimismo. A equipe imagina o caminho em que tudo funciona, todos estão disponíveis, a biblioteca atende, o cliente responde rápido e nenhum defeito grave aparece.</p>
+<p>Projetos reais raramente seguem esse caminho.</p>
+<p>Sommerville recomenda considerar a possibilidade de problemas e adicionar contingência. Dependendo do tipo de projeto, da incerteza, das restrições e da experiência da equipe, a contingência pode adicionar algo como 30% a 50% ao esforço e ao tempo necessário.</p>
+<p>Isso não significa inflar estimativas sem critério. Significa reconhecer que estimativa sem margem é frequentemente uma ficção.</p>
+<h3 id="o-erro-de-planejar-no-limite"><span class="heading-text">O erro de planejar no limite</span><span class="heading-arabic">10.10.1</span></h3>
+<p>Planejar no limite cria fragilidade. Se todas as tarefas estão encadeadas sem folga, qualquer atraso pequeno afeta a entrega final.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Situação</th>
+  <th style="text-align:left">Consequência</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Tarefa crítica sem folga</td>
+  <td style="text-align:left">Pequeno atraso desloca o projeto inteiro.</td>
+</tr>
+<tr>
+  <td style="text-align:left">Especialista único sem substituto</td>
+  <td style="text-align:left">Indisponibilidade paralisa dependências.</td>
+</tr>
+<tr>
+  <td style="text-align:left">Ambiente externo sem plano alternativo</td>
+  <td style="text-align:left">Atraso do fornecedor bloqueia testes.</td>
+</tr>
+<tr>
+  <td style="text-align:left">Escopo sem prioridade</td>
+  <td style="text-align:left">Tudo parece obrigatório, mesmo quando o prazo aperta.</td>
+</tr>
+</tbody>
+</table>
+<p>Um plano maduro não apenas distribui tarefas. Ele identifica onde o projeto é frágil.</p>
+<div class="example">
+  <div class="example-title">Exemplo 13</div>
+  <p>Uma equipe estima três tarefas sequenciais.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Tarefa</th>
+  <th style="text-align:center">Estimativa otimista</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Integração com API externa</td>
+  <td style="text-align:center">10 dias</td>
+</tr>
+<tr>
+  <td style="text-align:left">Implementação do fluxo de compra</td>
+  <td style="text-align:center">12 dias</td>
+</tr>
+<tr>
+  <td style="text-align:left">Testes de integração</td>
+  <td style="text-align:center">8 dias</td>
+</tr>
+</tbody>
+</table>
+<p>O total otimista é de 30 dias. Se o projeto promete entrega exatamente em 30 dias, não há espaço para atraso de fornecedor, defeitos, mudança de contrato da API ou indisponibilidade de ambiente.</p>
+<p>Com 30% de contingência, o planejamento gerencial consideraria aproximadamente:</p>
+<p>$$
+30 \times 1,3 = 39\text{ dias}
+$$</p>
+<p>Isso não obriga a equipe a gastar 39 dias. Significa que o compromisso externo deve reconhecer que o caminho provável não é o caminho perfeito.</p>
+</div>
+<h2 id="planejamento-ágil"><span class="heading-text">Planejamento ágil</span><span class="heading-arabic">10.11</span></h2>
+<p>Métodos ágeis também planejam. A diferença é que eles evitam detalhar cedo demais todo o projeto quando o ambiente muda e quando o aprendizado com incrementos é valioso.</p>
+<p>Sommerville descreve um planejamento em dois níveis, comum em abordagens como Scrum e XP.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Nível</th>
+  <th style="text-align:left">Horizonte</th>
+  <th style="text-align:left">Foco</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><strong>Planejamento de release</strong></td>
+  <td style="text-align:left">Vários meses</td>
+  <td style="text-align:left">Escolher funcionalidades esperadas para uma versão.</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Planejamento de iteração</strong></td>
+  <td style="text-align:left">Poucas semanas</td>
+  <td style="text-align:left">Escolher histórias e tarefas do próximo incremento.</td>
+</tr>
+</tbody>
+</table>
+<p>No XP, Sommerville apresenta o <strong>jogo de planejamento</strong>. A equipe e representantes do cliente participam da identificação, estimativa e seleção de histórias.</p>
+<img src="static/figura-23-5-planejamento-xp.png" width="90%">
+
+<p>O fluxo também pode ser lido como uma cadeia de decisões colaborativas.</p>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="820" viewBox="0.00 0.00 768.00 122.07" class="svg-graph graphviz-img"><g id="svg-graphviz-e2277174a16d-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 118.07)"><title>PlanejamentoXP</title><polygon fill="white" stroke="transparent" points="-4,4 -4,-118.07 764,-118.07 764,4 -4,4" /><g id="svg-graphviz-e2277174a16d-node1" class="node"><title>historias</title><path fill="#f0f6e8" stroke="#6b8f47" d="M75,-63.07C75,-63.07 12,-63.07 12,-63.07 6,-63.07 0,-57.07 0,-51.07 0,-51.07 0,-37.07 0,-37.07 0,-31.07 6,-25.07 12,-25.07 12,-25.07 75,-25.07 75,-25.07 81,-25.07 87,-31.07 87,-37.07 87,-37.07 87,-51.07 87,-51.07 87,-57.07 81,-63.07 75,-63.07" /><text text-anchor="middle" x="43.5" y="-47.87" font-family="Helvetica,sans-Serif" font-size="14.00">Identificar</text><text text-anchor="middle" x="43.5" y="-32.87" font-family="Helvetica,sans-Serif" font-size="14.00">histórias</text></g><g id="svg-graphviz-e2277174a16d-node2" class="node"><title>estimar</title><path fill="#f0f6e8" stroke="#6b8f47" d="M196,-63.07C196,-63.07 150,-63.07 150,-63.07 144,-63.07 138,-57.07 138,-51.07 138,-51.07 138,-37.07 138,-37.07 138,-31.07 144,-25.07 150,-25.07 150,-25.07 196,-25.07 196,-25.07 202,-25.07 208,-31.07 208,-37.07 208,-37.07 208,-51.07 208,-51.07 208,-57.07 202,-63.07 196,-63.07" /><text text-anchor="middle" x="173" y="-47.87" font-family="Helvetica,sans-Serif" font-size="14.00">Estimar</text><text text-anchor="middle" x="173" y="-32.87" font-family="Helvetica,sans-Serif" font-size="14.00">pontos</text></g><g id="svg-graphviz-e2277174a16d-edge1" class="edge"><title>historias-&gt;estimar</title><path fill="none" stroke="black" d="M87.04,-42.26C96.97,-42.23 109.22,-42.44 127.87,-42.9" /><polygon fill="black" stroke="black" points="127.81,-46.4 137.9,-43.15 127.99,-39.4 127.81,-46.4" /></g><g id="svg-graphviz-e2277174a16d-node3" class="node"><title>release</title><path fill="#f0f6e8" stroke="#6b8f47" d="M319,-63.07C319,-63.07 271,-63.07 271,-63.07 265,-63.07 259,-57.07 259,-51.07 259,-51.07 259,-37.07 259,-37.07 259,-31.07 265,-25.07 271,-25.07 271,-25.07 319,-25.07 319,-25.07 325,-25.07 331,-31.07 331,-37.07 331,-37.07 331,-51.07 331,-51.07 331,-57.07 325,-63.07 319,-63.07" /><text text-anchor="middle" x="295" y="-47.87" font-family="Helvetica,sans-Serif" font-size="14.00">Planejar</text><text text-anchor="middle" x="295" y="-32.87" font-family="Helvetica,sans-Serif" font-size="14.00">release</text></g><g id="svg-graphviz-e2277174a16d-edge2" class="edge"><title>estimar-&gt;release</title><path fill="none" stroke="black" d="M208.25,-41.03C218.09,-40.75 229.65,-41.03 248.73,-41.86" /><polygon fill="black" stroke="black" points="248.58,-45.36 258.73,-42.31 248.9,-38.36 248.58,-45.36" /></g><g id="svg-graphviz-e2277174a16d-node4" class="node"><title>iteracao</title><path fill="#f0f6e8" stroke="#6b8f47" d="M442,-63.07C442,-63.07 394,-63.07 394,-63.07 388,-63.07 382,-57.07 382,-51.07 382,-51.07 382,-37.07 382,-37.07 382,-31.07 388,-25.07 394,-25.07 394,-25.07 442,-25.07 442,-25.07 448,-25.07 454,-31.07 454,-37.07 454,-37.07 454,-51.07 454,-51.07 454,-57.07 448,-63.07 442,-63.07" /><text text-anchor="middle" x="418" y="-47.87" font-family="Helvetica,sans-Serif" font-size="14.00">Planejar</text><text text-anchor="middle" x="418" y="-32.87" font-family="Helvetica,sans-Serif" font-size="14.00">iteração</text></g><g id="svg-graphviz-e2277174a16d-edge3" class="edge"><title>release-&gt;iteracao</title><path fill="none" stroke="black" d="M331,-31.7C342.31,-29.57 353.36,-30.29 371.84,-33.85" /><polygon fill="black" stroke="black" points="371.38,-37.32 381.88,-35.89 372.78,-30.47 371.38,-37.32" /></g><g id="svg-graphviz-e2277174a16d-node5" class="node"><title>tarefas</title><path fill="#f0f6e8" stroke="#6b8f47" d="M583.5,-114.07C583.5,-114.07 535.5,-114.07 535.5,-114.07 529.5,-114.07 523.5,-108.07 523.5,-102.07 523.5,-102.07 523.5,-88.07 523.5,-88.07 523.5,-82.07 529.5,-76.07 535.5,-76.07 535.5,-76.07 583.5,-76.07 583.5,-76.07 589.5,-76.07 595.5,-82.07 595.5,-88.07 595.5,-88.07 595.5,-102.07 595.5,-102.07 595.5,-108.07 589.5,-114.07 583.5,-114.07" /><text text-anchor="middle" x="559.5" y="-98.87" font-family="Helvetica,sans-Serif" font-size="14.00">Planejar</text><text text-anchor="middle" x="559.5" y="-83.87" font-family="Helvetica,sans-Serif" font-size="14.00">tarefas</text></g><g id="svg-graphviz-e2277174a16d-edge4" class="edge"><title>iteracao-&gt;tarefas</title><path fill="none" stroke="black" d="M446.61,-63.13C461.91,-71.79 477.22,-76.53 513.18,-84.78" /><polygon fill="black" stroke="black" points="512.81,-88.28 523.33,-87.08 514.36,-81.46 512.81,-88.28" /></g><g id="svg-graphviz-e2277174a16d-node6" class="node"><title>entrega</title><path fill="#e6eefb" stroke="#567aa6" d="M748,-63.07C748,-63.07 677,-63.07 677,-63.07 671,-63.07 665,-57.07 665,-51.07 665,-51.07 665,-37.07 665,-37.07 665,-31.07 671,-25.07 677,-25.07 677,-25.07 748,-25.07 748,-25.07 754,-25.07 760,-31.07 760,-37.07 760,-37.07 760,-51.07 760,-51.07 760,-57.07 754,-63.07 748,-63.07" /><text text-anchor="middle" x="712.5" y="-47.87" font-family="Helvetica,sans-Serif" font-size="14.00">Incremento</text><text text-anchor="middle" x="712.5" y="-32.87" font-family="Helvetica,sans-Serif" font-size="14.00">entregue</text></g><g id="svg-graphviz-e2277174a16d-edge5" class="edge"><title>tarefas-&gt;entrega</title><path fill="none" stroke="black" d="M595.9,-87.74C636.82,-79.37 656.31,-74.69 672.41,-67.66" /><polygon fill="black" stroke="black" points="674.15,-70.71 681.64,-63.21 671.11,-64.4 674.15,-70.71" /></g><g id="svg-graphviz-e2277174a16d-edge6" class="edge"><title>entrega-&gt;iteracao</title><path fill="none" stroke="#777777" stroke-dasharray="5,2" d="M454.29,-30.34C552.99,6.59 577.16,9.61 656.65,-21.27" /><polygon fill="#777777" stroke="#777777" points="655.51,-24.59 666.1,-25 658.08,-18.07 655.51,-24.59" /><text text-anchor="middle" x="559.5" y="-24.87" font-family="Times,serif" font-size="14.00">velocidade real</text></g></g></svg></div></div>
+
+<h3 id="histórias-pontos-e-velocidade"><span class="heading-text">Histórias, pontos e velocidade</span><span class="heading-arabic">10.11.1</span></h3>
+<p>Em planejamento ágil, requisitos costumam aparecer como histórias de usuário. A equipe estima essas histórias usando pontos de esforço relativos. Depois, usa a velocidade da equipe para planejar quanto cabe em uma iteração ou release.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Conceito</th>
+  <th style="text-align:left">Significado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><strong>História</strong></td>
+  <td style="text-align:left">Descrição curta de uma funcionalidade valiosa para o usuário ou cliente.</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Pontos</strong></td>
+  <td style="text-align:left">Estimativa relativa de esforço, complexidade e incerteza.</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Velocidade</strong></td>
+  <td style="text-align:left">Quantidade de pontos concluídos pela equipe em uma iteração.</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Release</strong></td>
+  <td style="text-align:left">Versão do sistema entregue para uso ou avaliação.</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Iteração</strong></td>
+  <td style="text-align:left">Ciclo curto de desenvolvimento, geralmente de duas a quatro semanas.</td>
+</tr>
+</tbody>
+</table>
+<p>O ponto de esforço não é uma hora. Ele é uma medida relativa. Uma história de oito pontos parece maior, mais complexa ou mais incerta que uma história de dois pontos.</p>
+<div class="example">
+  <div class="example-title">Exemplo 14</div>
+  <p>Uma equipe estima as histórias de um sistema de biblioteca.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">História</th>
+  <th style="text-align:center">Pontos</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Cadastrar livro</td>
+  <td style="text-align:center">3</td>
+</tr>
+<tr>
+  <td style="text-align:left">Pesquisar livro por título</td>
+  <td style="text-align:center">2</td>
+</tr>
+<tr>
+  <td style="text-align:left">Registrar empréstimo</td>
+  <td style="text-align:center">5</td>
+</tr>
+<tr>
+  <td style="text-align:left">Renovar empréstimo pelo portal</td>
+  <td style="text-align:center">5</td>
+</tr>
+<tr>
+  <td style="text-align:left">Enviar aviso de atraso por e-mail</td>
+  <td style="text-align:center">8</td>
+</tr>
+</tbody>
+</table>
+<p>Depois de algumas iterações, a equipe observa que entrega cerca de 10 pontos por iteração.</p>
+<p>Isso não prova que toda iteração futura terá exatamente 10 pontos. Mas ajuda a planejar. Se o cliente quer uma release com 30 pontos, a equipe pode estimar algo próximo de três iterações, desde que a composição das histórias e os riscos sejam parecidos.</p>
+</div>
+<h3 id="prazo-fixo-e-escopo-variável"><span class="heading-text">Prazo fixo e escopo variável</span><span class="heading-arabic">10.11.2</span></h3>
+<p>Uma característica importante do planejamento ágil descrito por Sommerville é a preferência por manter a data da iteração e ajustar o escopo.</p>
+<p>Se a equipe não consegue concluir todas as histórias previstas, ela remove ou adia histórias, em vez de simplesmente estender a iteração indefinidamente.</p>
+<p>Essa estratégia protege a cadência de entrega. Porém, tem custo. Se o incremento ficar pequeno demais ou incompleto demais, pode não gerar valor suficiente para o cliente.</p>
+<div class="example">
+  <div class="example-title">Exemplo 15</div>
+  <p>Uma iteração de duas semanas tinha 24 pontos planejados. Na metade da iteração, a equipe concluiu apenas 7 pontos e percebeu que uma história de 8 pontos era mais complexa do que parecia.</p>
+<p>Em uma postura ágil, a equipe conversa com o cliente e remove uma história menos prioritária. A data da iteração é mantida. O escopo muda.</p>
+<p>Isso é diferente de esconder o atraso até o último dia. A transparência no meio da iteração permite decisão de produto.</p>
+</div>
+<h3 id="limitações-do-planejamento-ágil"><span class="heading-text">Limitações do planejamento ágil</span><span class="heading-arabic">10.11.3</span></h3>
+<p>Planejamento ágil depende de envolvimento real do cliente e de uma equipe estável o suficiente para aprender sua própria capacidade.</p>
+<p>Se o cliente não participa, a priorização fica fraca. Se a equipe muda toda semana, a velocidade histórica perde valor. Se o projeto é enorme e distribuído entre várias empresas, a coordenação informal fica difícil.</p>
+<p>Por isso, projetos grandes frequentemente combinam níveis. Pode haver planejamento geral dirigido a planos para coordenação entre organizações e planejamento ágil dentro de equipes menores.</p>
+<h2 id="técnicas-de-estimativa"><span class="heading-text">Técnicas de estimativa</span><span class="heading-arabic">10.12</span></h2>
+<p>Estimar esforço e prazo é difícil porque o software é invisível, flexível e dependente de conhecimento humano. Em estágios iniciais, a equipe pode ter apenas uma descrição de alto nível. Ainda não conhece detalhes da arquitetura, problemas de integração, qualidade dos requisitos, maturidade da equipe ou restrições reais de plataforma.</p>
+<p>Sommerville apresenta duas famílias principais de técnicas.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Técnica</th>
+  <th style="text-align:left">Base da estimativa</th>
+  <th style="text-align:left">Força</th>
+  <th style="text-align:left">Fragilidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><strong>Baseada em experiência</strong></td>
+  <td style="text-align:left">Julgamento de pessoas e projetos anteriores</td>
+  <td style="text-align:left">Usa conhecimento prático e contexto</td>
+  <td style="text-align:left">Falha quando o projeto é muito novo ou diferente</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Modelagem algorítmica</strong></td>
+  <td style="text-align:left">Fórmulas com tamanho, complexidade e fatores de custo</td>
+  <td style="text-align:left">Dá estrutura e repetibilidade</td>
+  <td style="text-align:left">Depende de dados difíceis de estimar e calibrar</td>
+</tr>
+</tbody>
+</table>
+<p>Nenhuma técnica elimina julgamento. Mesmo modelos matemáticos exigem estimar tamanho, complexidade, experiência da equipe, ferramentas, confiabilidade exigida e outras variáveis.</p>
+<h3 id="a-incerteza-das-estimativas-iniciais"><span class="heading-text">A incerteza das estimativas iniciais</span><span class="heading-arabic">10.12.1</span></h3>
+<p>Uma das ideias mais importantes do capítulo é que estimativas iniciais podem variar muito. Sommerville cita resultados associados a Boehm indicando que, no início, uma estimativa pode estar muito distante do esforço real.</p>
+<p>Se a estimativa inicial é $x$, o esforço real pode estar em uma faixa muito ampla, como de $0,25x$ até $4x$, dependendo do estágio e da informação disponível.</p>
+<p>Essa incerteza diminui conforme o projeto avança.</p>
+<img src="static/figura-23-6-incerteza-estimativa.png" width="85%">
+
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Estágio</th>
+  <th style="text-align:left">Incerteza típica</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Viabilidade</td>
+  <td style="text-align:left">Muito alta</td>
+</tr>
+<tr>
+  <td style="text-align:left">Requisitos</td>
+  <td style="text-align:left">Alta</td>
+</tr>
+<tr>
+  <td style="text-align:left">Projeto</td>
+  <td style="text-align:left">Moderada</td>
+</tr>
+<tr>
+  <td style="text-align:left">Código</td>
+  <td style="text-align:left">Menor</td>
+</tr>
+<tr>
+  <td style="text-align:left">Entrega</td>
+  <td style="text-align:left">Esforço real conhecido</td>
+</tr>
+</tbody>
+</table>
+<p>O gráfico abaixo redesenha a mesma ideia como um cone de incerteza. A mensagem importante não é decorar os valores, mas perceber a tendência. Quanto mais cedo a estimativa, maior a faixa de erro possível.</p>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:ns2="http://creativecommons.org/ns#" xmlns:ns4="http://www.w3.org/1999/xlink" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" width="760" viewBox="0 0 640.46125 293.87625" version="1.1" class="svg-graph matplotlib-plot-img"> <metadata>  <rdf:RDF>   <ns2:Work>    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage" />    <dc:date>2026-05-20T16:09:54.294423</dc:date>    <dc:format>image/svg+xml</dc:format>    <dc:creator>     <ns2:Agent>      <dc:title>Matplotlib v3.10.8, https://matplotlib.org/</dc:title>     </ns2:Agent>    </dc:creator>   </ns2:Work>  </rdf:RDF> </metadata> <defs>  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style> </defs> <g id="svg-matplotlib-a01961a5119f-figure_1">  <g id="svg-matplotlib-a01961a5119f-patch_1">   <path d="M 0 293.87625 L 640.46125 293.87625 L 640.46125 0 L 0 0 L 0 293.87625 z" style="fill: none" />  </g>  <g id="svg-matplotlib-a01961a5119f-axes_1">   <g id="svg-matplotlib-a01961a5119f-patch_2">    <path d="M 43.78125 269.598125 L 633.26125 269.598125 L 633.26125 22.318125 L 43.78125 22.318125 L 43.78125 269.598125 z" style="fill: none" />   </g>   <g id="svg-matplotlib-a01961a5119f-FillBetweenPolyCollection_1">    <defs>     <path id="svg-matplotlib-a01961a5119f-m98376d5e67" d="M 70.575795 -259.782887 L 70.575795 -38.997173 L 204.548523 -53.71622 L 338.52125 -65.491458 L 472.493977 -77.266696 L 606.466705 -83.154315 L 606.466705 -83.154315 L 606.466705 -83.154315 L 472.493977 -90.219458 L 338.52125 -109.648601 L 204.548523 -159.693363 L 70.575795 -259.782887 z" style="stroke: #d8e6f3; stroke-opacity: 0.85" />    </defs>    <g clip-path="url(#svg-matplotlib-a01961a5119f-p29a048ba7e)">     <use ns4:href="#svg-matplotlib-a01961a5119f-m98376d5e67" x="0" y="293.87625" style="fill: #d8e6f3; fill-opacity: 0.85; stroke: #d8e6f3; stroke-opacity: 0.85" />    </g>   </g>   <g id="svg-matplotlib-a01961a5119f-matplotlib.axis_1">    <g id="svg-matplotlib-a01961a5119f-xtick_1">     <g id="svg-matplotlib-a01961a5119f-line2d_1">      <defs>       <path id="svg-matplotlib-a01961a5119f-m0a08e877bc" d="M 0 0 L 0 3.5 " style="stroke: #000000; stroke-width: 0.8" />      </defs>      <g>       <use ns4:href="#svg-matplotlib-a01961a5119f-m0a08e877bc" x="70.575795" y="269.598125" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-a01961a5119f-text_1">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle" x="70.575795" y="284.196562" transform="rotate(-0 70.575795 284.196562)">Viabilidade</text>     </g>    </g>    <g id="svg-matplotlib-a01961a5119f-xtick_2">     <g id="svg-matplotlib-a01961a5119f-line2d_2">      <g>       <use ns4:href="#svg-matplotlib-a01961a5119f-m0a08e877bc" x="204.548523" y="269.598125" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-a01961a5119f-text_2">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle" x="204.548523" y="284.196562" transform="rotate(-0 204.548523 284.196562)">Requisitos</text>     </g>    </g>    <g id="svg-matplotlib-a01961a5119f-xtick_3">     <g id="svg-matplotlib-a01961a5119f-line2d_3">      <g>       <use ns4:href="#svg-matplotlib-a01961a5119f-m0a08e877bc" x="338.52125" y="269.598125" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-a01961a5119f-text_3">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle" x="338.52125" y="284.196562" transform="rotate(-0 338.52125 284.196562)">Projeto</text>     </g>    </g>    <g id="svg-matplotlib-a01961a5119f-xtick_4">     <g id="svg-matplotlib-a01961a5119f-line2d_4">      <g>       <use ns4:href="#svg-matplotlib-a01961a5119f-m0a08e877bc" x="472.493977" y="269.598125" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-a01961a5119f-text_4">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle" x="472.493977" y="284.596562" transform="rotate(-0 472.493977 284.596562)">Código</text>     </g>    </g>    <g id="svg-matplotlib-a01961a5119f-xtick_5">     <g id="svg-matplotlib-a01961a5119f-line2d_5">      <g>       <use ns4:href="#svg-matplotlib-a01961a5119f-m0a08e877bc" x="606.466705" y="269.598125" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-a01961a5119f-text_5">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle" x="606.466705" y="284.196562" transform="rotate(-0 606.466705 284.196562)">Entrega</text>     </g>    </g>   </g>   <g id="svg-matplotlib-a01961a5119f-matplotlib.axis_2">    <g id="svg-matplotlib-a01961a5119f-ytick_1">     <g id="svg-matplotlib-a01961a5119f-line2d_6">      <path d="M 43.78125 269.598125 L 633.26125 269.598125 " clip-path="url(#svg-matplotlib-a01961a5119f-p29a048ba7e)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.25; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-a01961a5119f-line2d_7">      <defs>       <path id="svg-matplotlib-a01961a5119f-mb6b1d145dd" d="M 0 0 L -3.5 0 " style="stroke: #000000; stroke-width: 0.8" />      </defs>      <g>       <use ns4:href="#svg-matplotlib-a01961a5119f-mb6b1d145dd" x="43.78125" y="269.598125" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-a01961a5119f-text_6">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end" x="36.78125" y="273.397344" transform="rotate(-0 36.78125 273.397344)">0.0</text>     </g>    </g>    <g id="svg-matplotlib-a01961a5119f-ytick_2">     <g id="svg-matplotlib-a01961a5119f-line2d_8">      <path d="M 43.78125 240.16003 L 633.26125 240.16003 " clip-path="url(#svg-matplotlib-a01961a5119f-p29a048ba7e)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.25; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-a01961a5119f-line2d_9">      <g>       <use ns4:href="#svg-matplotlib-a01961a5119f-mb6b1d145dd" x="43.78125" y="240.16003" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-a01961a5119f-text_7">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end" x="36.78125" y="243.959249" transform="rotate(-0 36.78125 243.959249)">0.5</text>     </g>    </g>    <g id="svg-matplotlib-a01961a5119f-ytick_3">     <g id="svg-matplotlib-a01961a5119f-line2d_10">      <path d="M 43.78125 210.721935 L 633.26125 210.721935 " clip-path="url(#svg-matplotlib-a01961a5119f-p29a048ba7e)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.25; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-a01961a5119f-line2d_11">      <g>       <use ns4:href="#svg-matplotlib-a01961a5119f-mb6b1d145dd" x="43.78125" y="210.721935" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-a01961a5119f-text_8">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end" x="36.78125" y="214.521153" transform="rotate(-0 36.78125 214.521153)">1.0</text>     </g>    </g>    <g id="svg-matplotlib-a01961a5119f-ytick_4">     <g id="svg-matplotlib-a01961a5119f-line2d_12">      <path d="M 43.78125 181.283839 L 633.26125 181.283839 " clip-path="url(#svg-matplotlib-a01961a5119f-p29a048ba7e)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.25; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-a01961a5119f-line2d_13">      <g>       <use ns4:href="#svg-matplotlib-a01961a5119f-mb6b1d145dd" x="43.78125" y="181.283839" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-a01961a5119f-text_9">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end" x="36.78125" y="185.083058" transform="rotate(-0 36.78125 185.083058)">1.5</text>     </g>    </g>    <g id="svg-matplotlib-a01961a5119f-ytick_5">     <g id="svg-matplotlib-a01961a5119f-line2d_14">      <path d="M 43.78125 151.845744 L 633.26125 151.845744 " clip-path="url(#svg-matplotlib-a01961a5119f-p29a048ba7e)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.25; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-a01961a5119f-line2d_15">      <g>       <use ns4:href="#svg-matplotlib-a01961a5119f-mb6b1d145dd" x="43.78125" y="151.845744" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-a01961a5119f-text_10">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end" x="36.78125" y="155.644963" transform="rotate(-0 36.78125 155.644963)">2.0</text>     </g>    </g>    <g id="svg-matplotlib-a01961a5119f-ytick_6">     <g id="svg-matplotlib-a01961a5119f-line2d_16">      <path d="M 43.78125 122.407649 L 633.26125 122.407649 " clip-path="url(#svg-matplotlib-a01961a5119f-p29a048ba7e)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.25; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-a01961a5119f-line2d_17">      <g>       <use ns4:href="#svg-matplotlib-a01961a5119f-mb6b1d145dd" x="43.78125" y="122.407649" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-a01961a5119f-text_11">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end" x="36.78125" y="126.206868" transform="rotate(-0 36.78125 126.206868)">2.5</text>     </g>    </g>    <g id="svg-matplotlib-a01961a5119f-ytick_7">     <g id="svg-matplotlib-a01961a5119f-line2d_18">      <path d="M 43.78125 92.969554 L 633.26125 92.969554 " clip-path="url(#svg-matplotlib-a01961a5119f-p29a048ba7e)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.25; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-a01961a5119f-line2d_19">      <g>       <use ns4:href="#svg-matplotlib-a01961a5119f-mb6b1d145dd" x="43.78125" y="92.969554" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-a01961a5119f-text_12">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end" x="36.78125" y="96.768772" transform="rotate(-0 36.78125 96.768772)">3.0</text>     </g>    </g>    <g id="svg-matplotlib-a01961a5119f-ytick_8">     <g id="svg-matplotlib-a01961a5119f-line2d_20">      <path d="M 43.78125 63.531458 L 633.26125 63.531458 " clip-path="url(#svg-matplotlib-a01961a5119f-p29a048ba7e)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.25; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-a01961a5119f-line2d_21">      <g>       <use ns4:href="#svg-matplotlib-a01961a5119f-mb6b1d145dd" x="43.78125" y="63.531458" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-a01961a5119f-text_13">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end" x="36.78125" y="67.330677" transform="rotate(-0 36.78125 67.330677)">3.5</text>     </g>    </g>    <g id="svg-matplotlib-a01961a5119f-ytick_9">     <g id="svg-matplotlib-a01961a5119f-line2d_22">      <path d="M 43.78125 34.093363 L 633.26125 34.093363 " clip-path="url(#svg-matplotlib-a01961a5119f-p29a048ba7e)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.25; stroke-width: 0.8; stroke-linecap: square" />     </g>     <g id="svg-matplotlib-a01961a5119f-line2d_23">      <g>       <use ns4:href="#svg-matplotlib-a01961a5119f-mb6b1d145dd" x="43.78125" y="34.093363" style="stroke: #000000; stroke-width: 0.8" />      </g>     </g>     <g id="svg-matplotlib-a01961a5119f-text_14">      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end" x="36.78125" y="37.892582" transform="rotate(-0 36.78125 37.892582)">4.0</text>     </g>    </g>    <g id="svg-matplotlib-a01961a5119f-text_15">     <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle" x="14.798438" y="145.958125" transform="rotate(-90 14.798438 145.958125)">esforço real / estimativa inicial</text>    </g>   </g>   <g id="svg-matplotlib-a01961a5119f-line2d_24">    <path d="M 70.575795 34.093363 L 204.548523 134.182887 L 338.52125 184.227649 L 472.493977 203.656792 L 606.466705 210.721935 " clip-path="url(#svg-matplotlib-a01961a5119f-p29a048ba7e)" style="fill: none; stroke: #4f83b6; stroke-width: 2; stroke-linecap: square" />   </g>   <g id="svg-matplotlib-a01961a5119f-line2d_25">    <path d="M 70.575795 254.879077 L 204.548523 240.16003 L 338.52125 228.384792 L 472.493977 216.609554 L 606.466705 210.721935 " clip-path="url(#svg-matplotlib-a01961a5119f-p29a048ba7e)" style="fill: none; stroke: #4f83b6; stroke-width: 2; stroke-linecap: square" />   </g>   <g id="svg-matplotlib-a01961a5119f-line2d_26">    <path d="M 43.78125 210.721935 L 633.26125 210.721935 " clip-path="url(#svg-matplotlib-a01961a5119f-p29a048ba7e)" style="fill: none; stroke-dasharray: 4.44,1.92; stroke-dashoffset: 0; stroke: #333333; stroke-width: 1.2" />   </g>   <g id="svg-matplotlib-a01961a5119f-patch_3">    <path d="M 43.78125 269.598125 L 43.78125 22.318125 " style="fill: none; stroke: #000000; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square" />   </g>   <g id="svg-matplotlib-a01961a5119f-patch_4">    <path d="M 633.26125 269.598125 L 633.26125 22.318125 " style="fill: none; stroke: #000000; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square" />   </g>   <g id="svg-matplotlib-a01961a5119f-patch_5">    <path d="M 43.78125 269.598125 L 633.26125 269.598125 " style="fill: none; stroke: #000000; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square" />   </g>   <g id="svg-matplotlib-a01961a5119f-patch_6">    <path d="M 43.78125 22.318125 L 633.26125 22.318125 " style="fill: none; stroke: #000000; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square" />   </g>   <g id="svg-matplotlib-a01961a5119f-text_16">    <text style="font-size: 12px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle" x="338.52125" y="16.318125" transform="rotate(-0 338.52125 16.318125)">Cone de incerteza de estimativas</text>   </g>   <g id="svg-matplotlib-a01961a5119f-legend_1">    <g id="svg-matplotlib-a01961a5119f-patch_7">     <path d="M 510.334687 60.074375 L 626.26125 60.074375 Q 628.26125 60.074375 628.26125 58.074375 L 628.26125 29.318125 Q 628.26125 27.318125 626.26125 27.318125 L 510.334687 27.318125 Q 508.334687 27.318125 508.334687 29.318125 L 508.334687 58.074375 Q 508.334687 60.074375 510.334687 60.074375 z" style="fill: #ffffff; opacity: 0.8; stroke: #cccccc; stroke-linejoin: miter" />    </g>    <g id="svg-matplotlib-a01961a5119f-patch_8">     <path d="M 512.334687 39.316562 L 532.334687 39.316562 L 532.334687 32.316562 L 512.334687 32.316562 z" style="fill: #d8e6f3; fill-opacity: 0.85; stroke: #d8e6f3; stroke-opacity: 0.85; stroke-linejoin: miter" />    </g>    <g id="svg-matplotlib-a01961a5119f-text_17">     <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start" x="540.334687" y="39.316562" transform="rotate(-0 540.334687 39.316562)">faixa possível</text>    </g>    <g id="svg-matplotlib-a01961a5119f-line2d_27">     <path d="M 512.334687 50.494687 L 522.334687 50.494687 L 532.334687 50.494687 " style="fill: none; stroke-dasharray: 4.44,1.92; stroke-dashoffset: 0; stroke: #333333; stroke-width: 1.2" />    </g>    <g id="svg-matplotlib-a01961a5119f-text_18">     <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start" x="540.334687" y="53.994687" transform="rotate(-0 540.334687 53.994687)">estimativa exata</text>    </g>   </g>  </g> </g> <defs>  <clipPath id="svg-matplotlib-a01961a5119f-p29a048ba7e">   <rect x="43.78125" y="22.318125" width="589.48" height="247.28" />  </clipPath> </defs></svg></div></div>
+
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner"><br /></span>
+  </div>
+  <div class="callout-content">
+<p>Uma estimativa inicial não deve ser tratada como verdade final. Ela é uma previsão feita com pouca informação. O erro gerencial é transformar uma estimativa frágil em compromisso rígido sem margem de revisão.</p>
+  </div>
+</div>
+<div class="example">
+  <div class="example-title">Exemplo 16</div>
+  <p>Uma equipe estima, na fase de proposta, que um projeto exigirá 20 pessoas-mês.</p>
+<p>Em um estágio de alta incerteza, isso não significa que o esforço real será exatamente 20. A faixa de risco pode ser muito maior.</p>
+<p>Se a organização assume contrato fechado com prazo agressivo, sem contingência e sem controle de escopo, ela transforma uma estimativa frágil em risco financeiro.</p>
+<p>Uma alternativa mais madura é registrar premissas, prever contingência, priorizar escopo e revisar estimativas quando requisitos e arquitetura estiverem mais claros.</p>
+</div>
+<h3 id="estimativa-baseada-em-experiência"><span class="heading-text">Estimativa baseada em experiência</span><span class="heading-arabic">10.12.2</span></h3>
+<p>Estimativas baseadas em experiência usam conhecimento acumulado em projetos anteriores. O gerente ou a equipe identifica entregáveis, componentes e atividades, estima cada parte e soma o esforço.</p>
+<p>Essa abordagem melhora quando várias pessoas participam. Cada pessoa pode perceber fatores que outra ignorou. Um desenvolvedor pode lembrar da dificuldade técnica. Uma pessoa de testes pode lembrar da massa de dados. Alguém de operações pode lembrar da implantação. O cliente pode lembrar de uma regra de negócio rara.</p>
+<p>Um processo simples pode seguir estes passos:</p>
+<ol>
+<li>listar entregáveis e componentes;</li>
+<li>decompor o trabalho em partes menores;</li>
+<li>estimar cada parte individualmente;</li>
+<li>discutir divergências entre estimativas;</li>
+<li>registrar premissas;</li>
+<li>somar esforço e adicionar contingência;</li>
+<li>revisar a estimativa conforme o projeto avança.</li>
+</ol>
+<div class="example">
+  <div class="example-title">Exemplo 17</div>
+  <p>Uma equipe estima um módulo de relatórios.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Parte</th>
+  <th style="text-align:center">Estimativa inicial</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Relatório de vendas por período</td>
+  <td style="text-align:center">4 pessoas-dia</td>
+</tr>
+<tr>
+  <td style="text-align:left">Relatório por vendedor</td>
+  <td style="text-align:center">3 pessoas-dia</td>
+</tr>
+<tr>
+  <td style="text-align:left">Exportação CSV</td>
+  <td style="text-align:center">2 pessoas-dia</td>
+</tr>
+<tr>
+  <td style="text-align:left">Controle de permissão</td>
+  <td style="text-align:center">3 pessoas-dia</td>
+</tr>
+<tr>
+  <td style="text-align:left">Testes com massa realista</td>
+  <td style="text-align:center">4 pessoas-dia</td>
+</tr>
+</tbody>
+</table>
+<p>O total direto é 16 pessoas-dia. Durante a discussão, a equipe percebe que os dados históricos estão inconsistentes e que alguns relatórios dependem de correção de cadastro.</p>
+<p>Ela adiciona 5 pessoas-dia para saneamento e adaptação de dados, elevando a estimativa para 21 pessoas-dia antes da contingência.</p>
+<p>A estimativa em grupo foi melhor porque revelou trabalho escondido.</p>
+</div>
+<h2 id="modelagem-algorítmica-e-cocomo-ii"><span class="heading-text">Modelagem algorítmica e COCOMO II</span><span class="heading-arabic">10.13</span></h2>
+<p>Modelos algorítmicos estimam esforço usando fórmulas. A ideia geral é relacionar esforço com tamanho do sistema, complexidade, características do produto, características do processo e capacidade da equipe.</p>
+<p>A forma geral apresentada por Sommerville é:</p>
+<p>$$
+\text{Esforço} = A \times \text{Tamanho}^{B} \times M
+$$</p>
+<p>Cada termo tem uma função.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Termo</th>
+  <th style="text-align:left">Significado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">$A$</td>
+  <td style="text-align:left">Fator associado a práticas locais e tipo de software.</td>
+</tr>
+<tr>
+  <td style="text-align:left">$\text{Tamanho}$</td>
+  <td style="text-align:left">Medida de tamanho, como linhas de código, pontos de função ou pontos de aplicação.</td>
+</tr>
+<tr>
+  <td style="text-align:left">$B$</td>
+  <td style="text-align:left">Expoente que reflete crescimento não linear do esforço com tamanho e complexidade.</td>
+</tr>
+<tr>
+  <td style="text-align:left">$M$</td>
+  <td style="text-align:left">Multiplicador formado por fatores de produto, processo, plataforma e equipe.</td>
+</tr>
+</tbody>
+</table>
+<p>O expoente $B$ é importante porque projetos maiores não crescem apenas em quantidade de código. Eles aumentam comunicação, coordenação, integração, configuração e risco. Por isso, dobrar o tamanho do sistema pode mais do que dobrar o esforço.</p>
+<h3 id="problemas-práticos-dos-modelos-algorítmicos"><span class="heading-text">Problemas práticos dos modelos algorítmicos</span><span class="heading-arabic">10.13.1</span></h3>
+<p>Modelos algorítmicos parecem objetivos, mas dependem de entradas difíceis.</p>
+<ol>
+<li>O tamanho final é difícil de estimar cedo.</li>
+<li>Linhas de código dependem de linguagem, arquitetura e reúso.</li>
+<li>Fatores como experiência da equipe são subjetivos.</li>
+<li>O modelo precisa ser calibrado com dados locais.</li>
+<li>Muitas organizações não registram dados históricos suficientes.</li>
+</ol>
+<p>Por isso, um modelo algorítmico deve apoiar decisão, não substituir julgamento.</p>
+<h3 id="cocomo-ii-em-visão-geral"><span class="heading-text">COCOMO II em visão geral</span><span class="heading-arabic">10.13.2</span></h3>
+<p>Sommerville discute o COCOMO II como um modelo algorítmico maduro, documentado e não proprietário. Ele foi criado para considerar formas modernas de desenvolvimento, incluindo linguagens dinâmicas, composição de componentes, programação de banco de dados e reúso.</p>
+<p>O COCOMO II possui submodelos para diferentes momentos e tipos de desenvolvimento.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Submodelo</th>
+  <th style="text-align:left">Uso principal</th>
+  <th style="text-align:left">Medida comum</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><strong>Composição de aplicações</strong></td>
+  <td style="text-align:left">Prototipação e sistemas montados com componentes, scripts ou banco de dados</td>
+  <td style="text-align:left">Pontos de aplicação</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Projeto preliminar</strong></td>
+  <td style="text-align:left">Estimativa inicial após requisitos principais</td>
+  <td style="text-align:left">Pontos de função convertidos em linhas de código</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Reúso</strong></td>
+  <td style="text-align:left">Estimar esforço para integrar código reusável ou gerado</td>
+  <td style="text-align:left">Linhas de código reusadas ou equivalentes</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Pós-arquitetura</strong></td>
+  <td style="text-align:left">Estimativa mais detalhada após arquitetura inicial</td>
+  <td style="text-align:left">Linhas de código, fatores de escala e drivers de custo</td>
+</tr>
+</tbody>
+</table>
+<img src="static/figura-23-7-modelos-cocomo.png" width="90%">
+
+<p>O desenho do livro é útil porque mostra que o COCOMO II não é uma única conta aplicada sempre do mesmo jeito. O submodelo escolhido depende do tipo de informação disponível e do momento do projeto.</p>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="840" viewBox="0.00 0.00 533.00 268.00" class="svg-graph graphviz-img"><g id="svg-graphviz-35d02cd147b4-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 264)"><title>CocomoModelos</title><polygon fill="white" stroke="transparent" points="-4,4 -4,-264 529,-264 529,4 -4,4" /><g id="svg-graphviz-35d02cd147b4-node1" class="node"><title>app_in</title><path fill="#f7f2dc" stroke="#9a7b35" d="M93,-38C93,-38 32,-38 32,-38 26,-38 20,-32 20,-26 20,-26 20,-12 20,-12 20,-6 26,0 32,0 32,0 93,0 93,0 99,0 105,-6 105,-12 105,-12 105,-26 105,-26 105,-32 99,-38 93,-38" /><text text-anchor="middle" x="62.5" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">Pontos de</text><text text-anchor="middle" x="62.5" y="-7.8" font-family="Helvetica,sans-Serif" font-size="14.00">aplicação</text></g><g id="svg-graphviz-35d02cd147b4-node5" class="node"><title>app</title><path fill="#eef5ff" stroke="#5b7aa0" d="M283.5,-38C283.5,-38 197.5,-38 197.5,-38 191.5,-38 185.5,-32 185.5,-26 185.5,-26 185.5,-12 185.5,-12 185.5,-6 191.5,0 197.5,0 197.5,0 283.5,0 283.5,0 289.5,0 295.5,-6 295.5,-12 295.5,-12 295.5,-26 295.5,-26 295.5,-32 289.5,-38 283.5,-38" /><text text-anchor="middle" x="240.5" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">Composição</text><text text-anchor="middle" x="240.5" y="-7.8" font-family="Helvetica,sans-Serif" font-size="14.00">de aplicações</text></g><g id="svg-graphviz-35d02cd147b4-edge1" class="edge"><title>app_in-&gt;app</title><path fill="none" stroke="black" d="M105.14,-19C105.14,-19 175.4,-19 175.4,-19" /><polygon fill="black" stroke="black" points="175.4,-22.5 185.4,-19 175.4,-15.5 175.4,-22.5" /></g><g id="svg-graphviz-35d02cd147b4-node2" class="node"><title>fp_in</title><path fill="#f7f2dc" stroke="#9a7b35" d="M93,-112C93,-112 32,-112 32,-112 26,-112 20,-106 20,-100 20,-100 20,-86 20,-86 20,-80 26,-74 32,-74 32,-74 93,-74 93,-74 99,-74 105,-80 105,-86 105,-86 105,-100 105,-100 105,-106 99,-112 93,-112" /><text text-anchor="middle" x="62.5" y="-96.8" font-family="Helvetica,sans-Serif" font-size="14.00">Pontos de</text><text text-anchor="middle" x="62.5" y="-81.8" font-family="Helvetica,sans-Serif" font-size="14.00">função</text></g><g id="svg-graphviz-35d02cd147b4-node6" class="node"><title>prelim</title><path fill="#eef5ff" stroke="#5b7aa0" d="M272,-112C272,-112 209,-112 209,-112 203,-112 197,-106 197,-100 197,-100 197,-86 197,-86 197,-80 203,-74 209,-74 209,-74 272,-74 272,-74 278,-74 284,-80 284,-86 284,-86 284,-100 284,-100 284,-106 278,-112 272,-112" /><text text-anchor="middle" x="240.5" y="-96.8" font-family="Helvetica,sans-Serif" font-size="14.00">Projeto</text><text text-anchor="middle" x="240.5" y="-81.8" font-family="Helvetica,sans-Serif" font-size="14.00">preliminar</text></g><g id="svg-graphviz-35d02cd147b4-edge3" class="edge"><title>fp_in-&gt;prelim</title><path fill="none" stroke="black" d="M105.14,-93C105.14,-93 186.98,-93 186.98,-93" /><polygon fill="black" stroke="black" points="186.98,-96.5 196.98,-93 186.98,-89.5 186.98,-96.5" /></g><g id="svg-graphviz-35d02cd147b4-node3" class="node"><title>reuse_in</title><path fill="#f7f2dc" stroke="#9a7b35" d="M113,-186C113,-186 12,-186 12,-186 6,-186 0,-180 0,-174 0,-174 0,-160 0,-160 0,-154 6,-148 12,-148 12,-148 113,-148 113,-148 119,-148 125,-154 125,-160 125,-160 125,-174 125,-174 125,-180 119,-186 113,-186" /><text text-anchor="middle" x="62.5" y="-170.8" font-family="Helvetica,sans-Serif" font-size="14.00">Código reusado</text><text text-anchor="middle" x="62.5" y="-155.8" font-family="Helvetica,sans-Serif" font-size="14.00">ou gerado</text></g><g id="svg-graphviz-35d02cd147b4-node7" class="node"><title>reuse</title><path fill="#eef5ff" stroke="#5b7aa0" d="M258,-185C258,-185 223,-185 223,-185 217,-185 211,-179 211,-173 211,-173 211,-161 211,-161 211,-155 217,-149 223,-149 223,-149 258,-149 258,-149 264,-149 270,-155 270,-161 270,-161 270,-173 270,-173 270,-179 264,-185 258,-185" /><text text-anchor="middle" x="240.5" y="-163.3" font-family="Helvetica,sans-Serif" font-size="14.00">Reúso</text></g><g id="svg-graphviz-35d02cd147b4-edge5" class="edge"><title>reuse_in-&gt;reuse</title><path fill="none" stroke="black" d="M125.01,-167C125.01,-167 200.57,-167 200.57,-167" /><polygon fill="black" stroke="black" points="200.57,-170.5 210.57,-167 200.57,-163.5 200.57,-170.5" /></g><g id="svg-graphviz-35d02cd147b4-node4" class="node"><title>sloc_in</title><path fill="#f7f2dc" stroke="#9a7b35" d="M102.5,-260C102.5,-260 22.5,-260 22.5,-260 16.5,-260 10.5,-254 10.5,-248 10.5,-248 10.5,-234 10.5,-234 10.5,-228 16.5,-222 22.5,-222 22.5,-222 102.5,-222 102.5,-222 108.5,-222 114.5,-228 114.5,-234 114.5,-234 114.5,-248 114.5,-248 114.5,-254 108.5,-260 102.5,-260" /><text text-anchor="middle" x="62.5" y="-244.8" font-family="Helvetica,sans-Serif" font-size="14.00">Linhas de</text><text text-anchor="middle" x="62.5" y="-229.8" font-family="Helvetica,sans-Serif" font-size="14.00">código-fonte</text></g><g id="svg-graphviz-35d02cd147b4-node8" class="node"><title>post</title><path fill="#eef5ff" stroke="#5b7aa0" d="M290,-259C290,-259 191,-259 191,-259 185,-259 179,-253 179,-247 179,-247 179,-235 179,-235 179,-229 185,-223 191,-223 191,-223 290,-223 290,-223 296,-223 302,-229 302,-235 302,-235 302,-247 302,-247 302,-253 296,-259 290,-259" /><text text-anchor="middle" x="240.5" y="-237.3" font-family="Helvetica,sans-Serif" font-size="14.00">Pós-arquitetura</text></g><g id="svg-graphviz-35d02cd147b4-edge7" class="edge"><title>sloc_in-&gt;post</title><path fill="none" stroke="black" d="M114.94,-241C114.94,-241 168.7,-241 168.7,-241" /><polygon fill="black" stroke="black" points="168.7,-244.5 178.7,-241 168.7,-237.5 168.7,-244.5" /></g><g id="svg-graphviz-35d02cd147b4-node9" class="node"><title>app_out</title><path fill="#f0f6e8" stroke="#6b8f47" d="M513,-38C513,-38 368,-38 368,-38 362,-38 356,-32 356,-26 356,-26 356,-12 356,-12 356,-6 362,0 368,0 368,0 513,0 513,0 519,0 525,-6 525,-12 525,-12 525,-26 525,-26 525,-32 519,-38 513,-38" /><text text-anchor="middle" x="440.5" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">Sistemas com scripts,</text><text text-anchor="middle" x="440.5" y="-7.8" font-family="Helvetica,sans-Serif" font-size="14.00">componentes e DB</text></g><g id="svg-graphviz-35d02cd147b4-edge2" class="edge"><title>app-&gt;app_out</title><path fill="none" stroke="black" d="M295.68,-19C295.68,-19 345.88,-19 345.88,-19" /><polygon fill="black" stroke="black" points="345.88,-22.5 355.88,-19 345.88,-15.5 345.88,-22.5" /></g><g id="svg-graphviz-35d02cd147b4-node10" class="node"><title>prelim_out</title><path fill="#f0f6e8" stroke="#6b8f47" d="M495.5,-112C495.5,-112 385.5,-112 385.5,-112 379.5,-112 373.5,-106 373.5,-100 373.5,-100 373.5,-86 373.5,-86 373.5,-80 379.5,-74 385.5,-74 385.5,-74 495.5,-74 495.5,-74 501.5,-74 507.5,-80 507.5,-86 507.5,-86 507.5,-100 507.5,-100 507.5,-106 501.5,-112 495.5,-112" /><text text-anchor="middle" x="440.5" y="-96.8" font-family="Helvetica,sans-Serif" font-size="14.00">Estimativa inicial</text><text text-anchor="middle" x="440.5" y="-81.8" font-family="Helvetica,sans-Serif" font-size="14.00">após requisitos</text></g><g id="svg-graphviz-35d02cd147b4-edge4" class="edge"><title>prelim-&gt;prelim_out</title><path fill="none" stroke="black" d="M284.39,-93C284.39,-93 363.11,-93 363.11,-93" /><polygon fill="black" stroke="black" points="363.11,-96.5 373.11,-93 363.11,-89.5 363.11,-96.5" /></g><g id="svg-graphviz-35d02cd147b4-node11" class="node"><title>reuse_out</title><path fill="#f0f6e8" stroke="#6b8f47" d="M473.5,-186C473.5,-186 407.5,-186 407.5,-186 401.5,-186 395.5,-180 395.5,-174 395.5,-174 395.5,-160 395.5,-160 395.5,-154 401.5,-148 407.5,-148 407.5,-148 473.5,-148 473.5,-148 479.5,-148 485.5,-154 485.5,-160 485.5,-160 485.5,-174 485.5,-174 485.5,-180 479.5,-186 473.5,-186" /><text text-anchor="middle" x="440.5" y="-170.8" font-family="Helvetica,sans-Serif" font-size="14.00">Esforço de</text><text text-anchor="middle" x="440.5" y="-155.8" font-family="Helvetica,sans-Serif" font-size="14.00">integração</text></g><g id="svg-graphviz-35d02cd147b4-edge6" class="edge"><title>reuse-&gt;reuse_out</title><path fill="none" stroke="black" d="M270.01,-167C270.01,-167 385.3,-167 385.3,-167" /><polygon fill="black" stroke="black" points="385.3,-170.5 395.3,-167 385.3,-163.5 385.3,-170.5" /></g><g id="svg-graphviz-35d02cd147b4-node12" class="node"><title>post_out</title><path fill="#f0f6e8" stroke="#6b8f47" d="M510,-260C510,-260 371,-260 371,-260 365,-260 359,-254 359,-248 359,-248 359,-234 359,-234 359,-228 365,-222 371,-222 371,-222 510,-222 510,-222 516,-222 522,-228 522,-234 522,-234 522,-248 522,-248 522,-254 516,-260 510,-260" /><text text-anchor="middle" x="440.5" y="-244.8" font-family="Helvetica,sans-Serif" font-size="14.00">Estimativa detalhada</text><text text-anchor="middle" x="440.5" y="-229.8" font-family="Helvetica,sans-Serif" font-size="14.00">após arquitetura</text></g><g id="svg-graphviz-35d02cd147b4-edge8" class="edge"><title>post-&gt;post_out</title><path fill="none" stroke="black" d="M302.14,-241C302.14,-241 348.81,-241 348.81,-241" /><polygon fill="black" stroke="black" points="348.81,-244.5 358.81,-241 348.81,-237.5 348.81,-244.5" /></g></g></svg></div></div>
+
+<h3 id="pontos-de-aplicação"><span class="heading-text">Pontos de aplicação</span><span class="heading-arabic">10.13.3</span></h3>
+<p>No modelo de composição de aplicações, o esforço pode ser estimado com base em pontos de aplicação. Esses pontos podem considerar telas, relatórios, módulos e scripts.</p>
+<p>Uma fórmula simplificada apresentada no capítulo é:</p>
+<p>$$
+PM = \frac{NAP \times (1 - \text{\%reúso}/100)}{PROD}
+$$</p>
+<p>Nessa fórmula:</p>
+<ol>
+<li>$PM$ é o esforço em pessoas-mês;</li>
+<li>$NAP$ é o número de pontos de aplicação;</li>
+<li>$\text{\%reúso}$ é a porcentagem estimada de reúso;</li>
+<li>$PROD$ é a produtividade em pontos de aplicação por mês.</li>
+</ol>
+<div class="example">
+  <div class="example-title">Exemplo 18</div>
+  <p>Uma equipe estima um protótipo com 80 pontos de aplicação. Ela acredita que 25% poderá ser obtido por reúso. A produtividade estimada é de 10 pontos de aplicação por pessoa-mês.</p>
+<p>Aplicando a fórmula:</p>
+<p>$$
+PM = \frac{80 \times (1 - 25/100)}{10}
+$$</p>
+<p>$$
+PM = \frac{80 \times 0,75}{10} = \frac{60}{10} = 6
+$$</p>
+<p>A estimativa aproximada é de 6 pessoas-mês.</p>
+<p>Essa conta não encerra o planejamento. Ela ajuda a abrir uma conversa sobre premissas, produtividade, reúso real e riscos.</p>
+</div>
+<h3 id="drivers-de-custo"><span class="heading-text">Drivers de custo</span><span class="heading-arabic">10.13.4</span></h3>
+<p>No COCOMO II, multiplicadores ajustam a estimativa conforme características do projeto. Esses fatores podem aumentar ou reduzir o esforço.</p>
+<p>Exemplos de fatores incluem:</p>
+<ol>
+<li>confiabilidade exigida;</li>
+<li>complexidade do produto;</li>
+<li>restrições de memória ou plataforma;</li>
+<li>capacidade da equipe;</li>
+<li>experiência no domínio;</li>
+<li>maturidade do processo;</li>
+<li>qualidade das ferramentas;</li>
+<li>compressão do cronograma.</li>
+</ol>
+<p>Um sistema crítico, complexo, com alta confiabilidade, plataforma restrita e equipe pouco experiente tende a exigir muito mais esforço do que um sistema simples, familiar e bem apoiado por ferramentas.</p>
+<div class="example">
+  <div class="example-title">Exemplo 19</div>
+  <p>Dois projetos têm o mesmo tamanho estimado em linhas de código.</p>
+<p>O primeiro é um painel administrativo interno, com baixa criticidade, equipe experiente e boas ferramentas.</p>
+<p>O segundo é um sistema de controle de equipamento médico, com requisito alto de segurança, plataforma restrita, necessidade de validação rigorosa e equipe nova no domínio.</p>
+<p>Mesmo com tamanho parecido, o esforço não deve ser parecido. O segundo projeto exige mais análise, testes, documentação, revisão, controle de riscos e validação. Os drivers de custo existem para capturar justamente essas diferenças.</p>
+</div>
+<h2 id="duração-equipe-e-compressão-de-prazo"><span class="heading-text">Duração, equipe e compressão de prazo</span><span class="heading-arabic">10.14</span></h2>
+<p>Depois de estimar esforço, ainda falta estimar duração de calendário e tamanho da equipe. Esse é um dos pontos mais importantes da aula.</p>
+<p>Não basta dividir esforço por prazo.</p>
+<p>Se um projeto exige 60 pessoas-mês, isso não significa que 60 pessoas entregam em um mês. Software exige comunicação, aprendizagem, coordenação e integração. Adicionar pessoas pode aumentar overhead e reduzir produtividade individual.</p>
+<p>Sommerville apresenta uma fórmula do COCOMO para estimar duração nominal:</p>
+<p>$$
+TDEV = 3 \times PM^{(0,33 + 0,2 \times (B - 1,01))}
+$$</p>
+<p>Nessa fórmula:</p>
+<ol>
+<li>$TDEV$ é a duração nominal em meses de calendário;</li>
+<li>$PM$ é o esforço estimado em pessoas-mês;</li>
+<li>$B$ é o expoente associado à complexidade e aos fatores de escala.</li>
+</ol>
+<p>Se $B = 1,17$ e $PM = 60$, o capítulo mostra uma duração nominal próxima de 13 meses.</p>
+<h3 id="prazo-comprimido-aumenta-esforço"><span class="heading-text">Prazo comprimido aumenta esforço</span><span class="heading-arabic">10.14.1</span></h3>
+<p>Se o prazo nominal é 13 meses, mas o cliente exige 11 meses, o projeto não fica automaticamente mais eficiente. Ele fica mais pressionado.</p>
+<p>Para tentar entregar antes, a equipe pode precisar de mais pessoas, mais coordenação, mais paralelismo, mais reuniões, mais integração e mais controle. Isso aumenta esforço.</p>
+<p>Sommerville mostra que uma compressão de cronograma pode exigir esforço significativamente maior. O ponto gerencial é que prazo menor pode custar mais, não menos.</p>
+<div class="example">
+  <div class="example-title">Exemplo 20</div>
+  <p>Uma estimativa indica 52 pessoas-mês em 13 meses, com uma equipe média de quatro pessoas.</p>
+<p>Uma leitura ingênua diria que cinco pessoas entregariam em aproximadamente 11 meses, pois:</p>
+<p>$$
+5 \times 11 = 55\text{ pessoas-mês}
+$$</p>
+<p>Mas essa conta ignora comunicação e coordenação. A quinta pessoa precisa aprender o projeto, conversar com a equipe, dividir interfaces e integrar seu trabalho. Se o cronograma for comprimido, o esforço total pode subir para algo como 66 pessoas-mês.</p>
+<p>O prazo menor não apenas redistribuiu o mesmo trabalho. Ele criou trabalho adicional de coordenação.</p>
+</div>
+<h3 id="a-equipe-não-cresce-de-forma-uniforme"><span class="heading-text">A equipe não cresce de forma uniforme</span><span class="heading-arabic">10.14.2</span></h3>
+<p>Em muitos projetos, a equipe começa pequena, cresce durante desenvolvimento e testes, e diminui perto da implantação.</p>
+<p>No início, poucas pessoas podem definir arquitetura, explorar riscos e preparar bases. Durante implementação e testes, mais pessoas podem contribuir. No final, parte da equipe pode sair enquanto um grupo menor acompanha correções, implantação e transição.</p>
+<p>Adicionar pessoas demais no início pode atrapalhar. Ainda não há tarefas claras para todos, a arquitetura pode estar instável e a comunicação pode se tornar pesada.</p>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner"><br /></span>
+  </div>
+  <div class="callout-content">
+<p>Atraso de projeto raramente é resolvido apenas adicionando pessoas. Em muitos casos, adicionar pessoas tarde demais aumenta comunicação, treinamento e retrabalho, piorando o atraso.</p>
+  </div>
+</div>
+<h2 id="figuras-usadas-do-capítulo"><span class="heading-text">Figuras usadas do capítulo</span><span class="heading-arabic">10.15</span></h2>
+<p>As figuras do Capítulo 23 foram recortadas do PDF e aparecem ao longo da aula nos pontos em que ajudam a visualizar processos, cronogramas e estimativas.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Figura no livro</th>
+  <th style="text-align:left">Conteúdo</th>
+  <th style="text-align:left">Arquivo usado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Figura 23.1</td>
+  <td style="text-align:left">Processo de planejamento de projeto</td>
+  <td style="text-align:left"><code>static/figura-23-1-processo-planejamento-projeto.png</code></td>
+</tr>
+<tr>
+  <td style="text-align:left">Figura 23.2</td>
+  <td style="text-align:left">Processo de programação de projeto</td>
+  <td style="text-align:left"><code>static/figura-23-2-processo-programacao-projeto.png</code></td>
+</tr>
+<tr>
+  <td style="text-align:left">Figura 23.3</td>
+  <td style="text-align:left">Gráfico de barras de atividades</td>
+  <td style="text-align:left"><code>static/figura-23-3-grafico-barras-atividades.png</code></td>
+</tr>
+<tr>
+  <td style="text-align:left">Figura 23.4</td>
+  <td style="text-align:left">Gráfico de alocação de pessoal</td>
+  <td style="text-align:left"><code>static/figura-23-4-grafico-alocacao-pessoal.png</code></td>
+</tr>
+<tr>
+  <td style="text-align:left">Figura 23.5</td>
+  <td style="text-align:left">Planejamento em XP</td>
+  <td style="text-align:left"><code>static/figura-23-5-planejamento-xp.png</code></td>
+</tr>
+<tr>
+  <td style="text-align:left">Figura 23.6</td>
+  <td style="text-align:left">Incerteza de estimativa</td>
+  <td style="text-align:left"><code>static/figura-23-6-incerteza-estimativa.png</code></td>
+</tr>
+<tr>
+  <td style="text-align:left">Figura 23.7</td>
+  <td style="text-align:left">Modelos de estimativa COCOMO</td>
+  <td style="text-align:left"><code>static/figura-23-7-modelos-cocomo.png</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="a-ideia-central-que-organiza-tudo"><span class="heading-text">A ideia central que organiza tudo</span><span class="heading-arabic">10.16</span></h2>
+<p>Planejamento de projeto de software é uma atividade de gestão sob incerteza.</p>
+<p>O gerente não controla o futuro, mas pode tornar visíveis premissas, riscos, dependências, esforço, custos, prazos e responsabilidades. O plano ajuda a equipe a trabalhar com coordenação e ajuda o cliente a entender as consequências de prazo, escopo e orçamento.</p>
+<p>O melhor plano não é o mais detalhado. É o plano que melhora a decisão. Em alguns projetos, isso exige planejamento formal, marcos, entregáveis e cronograma completo. Em outros, exige releases curtas, histórias, velocidade e replanejamento frequente. Em muitos casos, exige uma combinação das duas abordagens.</p>
+<p>Estimativas também precisam ser tratadas com maturidade. Elas não são certezas. Elas dependem de informação, experiência, dados históricos, complexidade, equipe, processo, ferramentas e requisitos. Conforme o projeto avança, as estimativas devem ser revisadas.</p>
+<div class="callout callout-success">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></span>
+    <span class="callout-title-inner"><br /></span>
+  </div>
+  <div class="callout-content">
+<p>Planejar bem não significa prever tudo. Significa criar condições para perceber desvios cedo, decidir com base em evidências e ajustar escopo, prazo, custo e equipe antes que o projeto perca o controle.</p>
+  </div>
+</div>
+<h2 id="questões"><span class="heading-text">Questões</span><span class="heading-arabic">10.17</span></h2>
+<div class="questions">
+  <p><strong>1.</strong> Explique por que o planejamento de projeto de software deve ser tratado como um processo iterativo, e não como uma atividade feita apenas no início.</p>
+<p><strong>2.</strong> Diferencie custo e preço em um projeto de software. Dê um exemplo de fator que pode fazer o preço ficar menor que o custo estimado de desenvolvimento.</p>
+<p><strong>3.</strong> Liste os três principais tipos de custo considerados por Sommerville ao estimar um projeto de software.</p>
+<p><strong>4.</strong> Assinale a alternativa correta sobre desenvolvimento dirigido a planos.</p>
+<ul>
+<li>A) Ele elimina a necessidade de monitorar o progresso durante o projeto.</li>
+<li>B) Ele é sempre melhor que métodos ágeis, independentemente do contexto.</li>
+<li>C) Ele organiza o projeto em torno de um plano com atividades, responsabilidades, cronograma e produtos de trabalho.</li>
+<li>D) Ele só pode ser usado em projetos pequenos e sem contrato formal.</li>
+</ul>
+<p><strong>5.</strong> Explique a diferença entre milestone e entregável. Dê um exemplo de cada um.</p>
+<p><strong>6.</strong> Uma tarefa tem duração de 10 dias e esforço de 20 pessoas-dia. O que isso indica sobre a alocação de pessoas nessa tarefa?</p>
+<p><strong>7.</strong> Por que dependências entre tarefas podem atrasar um projeto mesmo quando algumas tarefas individuais são curtas?</p>
+<p><strong>8.</strong> Em planejamento ágil, explique a relação entre histórias, pontos e velocidade.</p>
+<p><strong>9.</strong> Uma equipe estimou 80 pontos de aplicação, com 25% de reúso e produtividade de 10 pontos de aplicação por pessoa-mês. Calcule o esforço aproximado usando a fórmula $PM = \frac{NAP \times (1 - \text{\%reúso}/100)}{PROD}$.</p>
+<p><strong>10.</strong> Explique por que adicionar pessoas a um projeto atrasado pode não reduzir o prazo na mesma proporção esperada.</p>
+<p><strong>11.</strong> Cite duas limitações das estimativas baseadas apenas em experiência.</p>
+<p><strong>12.</strong> Cite dois fatores de custo que podem aumentar significativamente uma estimativa em um modelo como o COCOMO II.</p>
+</div>
+<div class="example">
+  <div class="example-title">Gabarito</div>
+  <p><strong>1.</strong> Porque o projeto muda conforme a equipe aprende mais sobre requisitos, riscos, tecnologia, capacidade da equipe e progresso real. O plano inicial é feito com informação incompleta e precisa ser revisado quando surgem desvios, mudanças de prioridade ou problemas graves.</p>
+<p><strong>2.</strong> Custo é o gasto necessário para executar o projeto. Preço é o valor negociado com o cliente. O preço pode ficar menor que o custo estimado quando a empresa quer entrar em um novo mercado, manter a equipe ocupada, melhorar fluxo de caixa ou ganhar um contrato estratégico.</p>
+<p><strong>3.</strong> Custos de esforço, custos de hardware e software, e custos de viagens e treinamentos.</p>
+<p><strong>4.</strong> C.</p>
+<p><strong>5.</strong> Milestone é um ponto de controle usado para avaliar progresso, como arquitetura revisada. Entregável é um produto de trabalho entregue ao cliente, como uma versão executável, um relatório de testes ou um documento de requisitos.</p>
+<p><strong>6.</strong> Indica que o trabalho humano total é maior que a duração de calendário. Provavelmente mais de uma pessoa trabalhará na tarefa em paralelo, ou haverá combinação de pessoas em tempo integral e parcial.</p>
+<p><strong>7.</strong> Porque uma tarefa dependente não pode começar antes que suas predecessoras terminem. Assim, uma tarefa curta pode ficar bloqueada por outra atrasada, e esse atraso pode se propagar para marcos e entregáveis posteriores.</p>
+<p><strong>8.</strong> Histórias descrevem funcionalidades ou necessidades do usuário. Pontos estimam esforço relativo, complexidade e incerteza dessas histórias. Velocidade é a quantidade de pontos que a equipe costuma concluir em uma iteração, ajudando a planejar releases e próximas iterações.</p>
+<p><strong>9.</strong> O cálculo é $PM = \frac{80 \times (1 - 25/100)}{10} = \frac{80 \times 0,75}{10} = 6$. O esforço aproximado é de 6 pessoas-mês.</p>
+<p><strong>10.</strong> Porque novas pessoas precisam aprender o projeto, exigem comunicação, aumentam coordenação e podem gerar mais integração e retrabalho. Em software, o esforço não é perfeitamente divisível, e equipes maiores podem reduzir a produtividade individual.</p>
+<p><strong>11.</strong> Elas podem falhar quando o novo projeto usa tecnologias desconhecidas, domínio diferente, equipe diferente ou arquitetura muito distinta de projetos anteriores. Também podem refletir vieses pessoais se não houver dados históricos e discussão em grupo.</p>
+<p><strong>12.</strong> Exemplos: alta confiabilidade exigida, grande complexidade do produto, restrições de plataforma ou memória, equipe pouco experiente, baixa maturidade de processo, ferramentas fracas, necessidade de reúso complexo e compressão agressiva do cronograma.</p>
+</div>
+<h2 id="próximos-passos"><span class="heading-text">Próximos passos</span><span class="heading-arabic">10.18</span></h2>
+<p>Na próxima aula, avançaremos para <strong>Gerenciamento de Qualidade</strong>. Depois de entender como planejar esforço, cronograma, custo e equipe, o próximo passo é estudar como uma organização define padrões, revisões, medições e práticas para aumentar a qualidade do produto e do processo de software.</p>
+
+                </div>
+            </article>
+            <footer class="footer">
+                <p>© 2025 · <a href="#">Gabriel Soares Baptista</a></p>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        const toggle = document.querySelector('.mobile-menu-toggle');
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.querySelector('.mobile-menu-overlay');
+
+        function openMenu() {
+            sidebar.classList.add('open');
+            overlay.classList.add('open');
+            toggle.classList.add('open');
+            toggle.innerHTML = '<i data-lucide="x"></i>';
+            CourseForgeUI.initIcons();
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMenu() {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('open');
+            toggle.classList.remove('open');
+            toggle.innerHTML = '<i data-lucide="menu"></i>';
+            CourseForgeUI.initIcons();
+            document.body.style.overflow = '';
+        }
+
+        toggle.addEventListener('click', () => {
+            if (sidebar.classList.contains('open')) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        overlay.addEventListener('click', closeMenu);
+    </script>
+
+    
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            renderMathInElement(document.body, {
+                output: 'html',
+                delimiters: [
+                    { left: "$$", right: "$$", display: true },
+                    { left: "$", right: "$", display: false },
+                    { left: "\\(", right: "\\)", display: false },
+                    { left: "\\[", right: "\\]", display: true }
+                ],
+                throwOnError: false,
+                strict: false
+            });
+        });
+    </script>
+    
+    
+    <script src="/aulas-faesa/js/vendor/prism/prism.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-c.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-cpp.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-python.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-clike.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-perl.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-java.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-mermaid.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-php.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js" data-no-bundle></script>
+    
+    
+    
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            mermaid.initialize({
+                startOnLoad: true,
+                theme: 'default',
+                securityLevel: 'loose',
+                fontFamily: 'Inter, system-ui, sans-serif',
+                themeVariables: {
+                    fontSize: '16px',
+                    edgeLabelFontSize: '16px',
+                    multiplicityFontSize: '18px'
+                }
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const isSubcourse = false;
+        const courseName = "Engenharia de Software";
+        CourseForgeNav.applyDynamicBreadcrumbs('.breadcrumb', isSubcourse);
+        CourseForgeNav.initScrollSpy();
+        CourseForgeUI.initCopyButtons();
+        CourseForgeUI.initExamples();
+        });
+
+        function handleBackNavigation() {
+            const isSubcourse = false;
+        const dynamic = CourseForgeNav.getBackLink('contents.html', 'Voltar', isSubcourse);
+        window.location.href = dynamic.url;
+        }
+    </script>
+</body>
+
+</html>
