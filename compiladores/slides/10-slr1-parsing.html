@@ -1,0 +1,2240 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <title>Parsing SLR(1)</title>
+    <link rel="icon" href="/aulas-faesa/img/dark-favicon.svg" media="(prefers-color-scheme: light)">
+    <link rel="icon" href="/aulas-faesa/img/light-favicon.svg" media="(prefers-color-scheme: dark)">
+
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/reset.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/reveal.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/theme/white.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/aulas-faesa/css/prism-one-light.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/fonts.css" data-no-bundle>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+            <section><h1>Compiladores</h1>
+<h2>Parsing SLR(1)</h2>
+<p>Professor: Gabriel Soares Baptista</p>
+</section>
+<section><h1>Aula de hoje</h1>
+<ul>
+<li class="fragment fade-up">revisão rápida de LR(0)</li>
+<li class="fragment fade-up">exemplo LR(0) um pouco maior</li>
+<li class="fragment fade-up">conflito <code>shift/reduce</code></li>
+<li class="fragment fade-up">ideia do SLR(1)</li>
+<li class="fragment fade-up">tabela SLR(1) passo a passo</li>
+<li class="fragment fade-up">comparação: LL(1), LR(0), SLR(1)</li>
+</ul>
+
+</section>
+<section><h1>De LR(0) para SLR(1)</h1>
+<p>No LR(0):</p>
+<ul>
+<li class="fragment fade-up">estados são conjuntos de itens LR(0)</li>
+<li class="fragment fade-up"><code>shift</code> vem das transições por terminal</li>
+<li class="fragment fade-up"><code>goto</code> vem das transições por não terminal</li>
+<li class="fragment fade-up">item completo gera <code>reduce</code></li>
+</ul>
+
+</section>
+<section><h1>Problema do LR(0)</h1>
+<p>No LR(0), uma redução entra em todas as colunas.</p>
+<div class="fragment">
+  <p>Se o estado contém:</p>
+<p>$$
+A \to \alpha \cdot
+$$</p>
+</div>
+<div class="fragment">
+  <p>então colocamos:</p>
+<p>$$
+r(A \to \alpha)
+$$</p>
+<p>em todas as colunas de <code>ACTION</code>.</p>
+</div>
+</section>
+<section><h1>Ideia central do SLR(1)</h1>
+<div class="callout callout-abstract">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
+    <span class="callout-title-inner">Ideia central<br /></span>
+  </div>
+  <div class="callout-content">
+<p>SLR(1) usa os mesmos estados LR(0), mas coloca reduções apenas nas colunas de <code>FOLLOW</code>.</p>
+  </div>
+</div>
+<ul>
+<li class="fragment fade-up">autômato: igual ao LR(0)</li>
+<li class="fragment fade-up">transições: iguais ao LR(0)</li>
+<li class="fragment fade-up"><code>shift</code>: igual ao LR(0)</li>
+<li class="fragment fade-up"><code>goto</code>: igual ao LR(0)</li>
+<li class="fragment fade-up"><code>reduce</code>: limitado por <code>FOLLOW</code></li>
+</ul>
+
+</section>
+<section><h1>Aquecimento LR(0)</h1>
+<p>Gramática:</p>
+<p>$$
+\begin{array}{rcl}
+(0) & S' & \to S \\
+(1) & S & \to BB \\
+(2) & B & \to aB \\
+(3) & B & \to b
+\end{array}
+$$</p>
+<ul>
+<li class="fragment fade-up">cada <code>B</code> gera zero ou mais <code>a</code> seguidos de <code>b</code></li>
+<li class="fragment fade-up"><code>S</code> gera dois blocos <code>B B</code></li>
+<li class="fragment fade-up">exemplos: <code>bb</code>, <code>abb</code>, <code>bab</code>, <code>aababb</code></li>
+</ul>
+
+</section>
+<section><h1>Aquecimento: estado inicial</h1>
+<p>$$
+I_0 = \left\{
+\begin{array}{l}
+S' \to \cdot S \\
+S \to \cdot BB \\
+B \to \cdot aB \\
+B \to \cdot b
+\end{array}
+\right\}
+$$</p>
+<div class="fragment">
+  Transições de <code>I0</code>:
+</div>
+<div class="fragment">
+  <table>
+<thead>
+<tr>
+  <th>Símbolo</th>
+  <th>Destino</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>S</code></td>
+  <td><code>I1</code></td>
+</tr>
+<tr>
+  <td><code>B</code></td>
+  <td><code>I2</code></td>
+</tr>
+<tr>
+  <td><code>a</code></td>
+  <td><code>I3</code></td>
+</tr>
+<tr>
+  <td><code>b</code></td>
+  <td><code>I4</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section><h1>Aquecimento: estados</h1>
+<p>$$
+I_1 = \left\{
+\begin{array}{l}
+S' \to S \cdot
+\end{array}
+\right\}
+\qquad
+I_2 = \left\{
+\begin{array}{l}
+S \to B \cdot B \\
+B \to \cdot aB \\
+B \to \cdot b
+\end{array}
+\right\}
+$$</p>
+<p>$$
+I_3 = \left\{
+\begin{array}{l}
+B \to a \cdot B \\
+B \to \cdot aB \\
+B \to \cdot b
+\end{array}
+\right\}
+\qquad
+I_4 = \left\{
+\begin{array}{l}
+B \to b \cdot
+\end{array}
+\right\}
+$$</p>
+</section>
+<section><h1>Aquecimento: mais estados</h1>
+<p>$$
+I_5 = \left\{
+\begin{array}{l}
+S \to BB \cdot
+\end{array}
+\right\}
+\qquad
+I_6 = \left\{
+\begin{array}{l}
+B \to aB \cdot
+\end{array}
+\right\}
+$$</p>
+<div class="fragment">
+  Transições restantes:
+</div>
+<div class="fragment">
+  <table>
+<thead>
+<tr>
+  <th>Origem</th>
+  <th>Símbolo</th>
+  <th>Destino</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>I2</code></td>
+  <td><code>B</code></td>
+  <td><code>I5</code></td>
+</tr>
+<tr>
+  <td><code>I2</code></td>
+  <td><code>a</code></td>
+  <td><code>I3</code></td>
+</tr>
+<tr>
+  <td><code>I2</code></td>
+  <td><code>b</code></td>
+  <td><code>I4</code></td>
+</tr>
+<tr>
+  <td><code>I3</code></td>
+  <td><code>B</code></td>
+  <td><code>I6</code></td>
+</tr>
+<tr>
+  <td><code>I3</code></td>
+  <td><code>a</code></td>
+  <td><code>I3</code></td>
+</tr>
+<tr>
+  <td><code>I3</code></td>
+  <td><code>b</code></td>
+  <td><code>I4</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section><h1>Aquecimento: tabela LR(0)</h1>
+<table>
+<thead>
+<tr>
+  <th>Estado</th>
+  <th>ACTION <code>a</code></th>
+  <th>ACTION <code>b</code></th>
+  <th>ACTION <code>$</code></th>
+  <th>GOTO <code>S</code></th>
+  <th>GOTO <code>B</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>0</code></td>
+  <td><code>s3</code></td>
+  <td><code>s4</code></td>
+  <td></td>
+  <td><code>1</code></td>
+  <td><code>2</code></td>
+</tr>
+<tr>
+  <td><code>1</code></td>
+  <td></td>
+  <td></td>
+  <td><code>acc</code></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>2</code></td>
+  <td><code>s3</code></td>
+  <td><code>s4</code></td>
+  <td></td>
+  <td></td>
+  <td><code>5</code></td>
+</tr>
+<tr>
+  <td><code>3</code></td>
+  <td><code>s3</code></td>
+  <td><code>s4</code></td>
+  <td></td>
+  <td></td>
+  <td><code>6</code></td>
+</tr>
+<tr>
+  <td><code>4</code></td>
+  <td><code>r3</code></td>
+  <td><code>r3</code></td>
+  <td><code>r3</code></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>5</code></td>
+  <td><code>r1</code></td>
+  <td><code>r1</code></td>
+  <td><code>r1</code></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>6</code></td>
+  <td><code>r2</code></td>
+  <td><code>r2</code></td>
+  <td><code>r2</code></td>
+  <td></td>
+  <td></td>
+</tr>
+</tbody>
+</table>
+<div class="fragment">
+  Sem conflito: gramática LR(0).
+</div>
+</section>
+<section><h1>Exercício rápido</h1>
+<p>Entrada:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">abb$
+</code></pre>
+<ul>
+<li class="fragment fade-up">simular usando a tabela LR(0)</li>
+<li class="fragment fade-up">identificar reduções por $B \to b$</li>
+<li class="fragment fade-up">identificar reduções por $B \to aB$</li>
+<li class="fragment fade-up">finalizar com $S \to BB$</li>
+</ul>
+
+</section>
+<section><h1>Simulação: <code>abb$</code></h1>
+<table>
+<thead>
+<tr>
+  <th>Pilha</th>
+  <th>Entrada</th>
+  <th>Ação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>0</code></td>
+  <td><code>a b b $</code></td>
+  <td><code>s3</code></td>
+</tr>
+<tr>
+  <td><code>0 a 3</code></td>
+  <td><code>b b $</code></td>
+  <td><code>s4</code></td>
+</tr>
+<tr>
+  <td><code>0 a 3 b 4</code></td>
+  <td><code>b $</code></td>
+  <td><code>r3</code>, reduz $B \to b$</td>
+</tr>
+<tr>
+  <td><code>0 a 3 B 6</code></td>
+  <td><code>b $</code></td>
+  <td><code>r2</code>, reduz $B \to aB$</td>
+</tr>
+<tr>
+  <td><code>0 B 2</code></td>
+  <td><code>b $</code></td>
+  <td><code>s4</code></td>
+</tr>
+<tr>
+  <td><code>0 B 2 b 4</code></td>
+  <td><code>$</code></td>
+  <td><code>r3</code>, reduz $B \to b$</td>
+</tr>
+<tr>
+  <td><code>0 B 2 B 5</code></td>
+  <td><code>$</code></td>
+  <td><code>r1</code>, reduz $S \to BB$</td>
+</tr>
+<tr>
+  <td><code>0 S 1</code></td>
+  <td><code>$</code></td>
+  <td><code>acc</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section><h1>Agora um problema</h1>
+<p>Gramática:</p>
+<p>$$
+\begin{array}{rcl}
+(0) & S' & \to S \\
+(1) & S & \to Aa \\
+(2) & S & \to bA \\
+(3) & A & \to b
+\end{array}
+$$</p>
+<ul>
+<li class="fragment fade-up">aceita <code>ba</code></li>
+<li class="fragment fade-up">aceita <code>bb</code></li>
+<li class="fragment fade-up">parece pequena</li>
+<li class="fragment fade-up">mas LR(0) entra em conflito</li>
+</ul>
+
+</section>
+<section><h1>Estado inicial</h1>
+<p>$$
+I_0 = \left\{
+\begin{array}{l}
+S' \to \cdot S \\
+S \to \cdot Aa \\
+S \to \cdot bA \\
+A \to \cdot b
+\end{array}
+\right\}
+$$</p>
+<div class="fragment">
+  Transições de <code>I0</code>:
+</div>
+<div class="fragment">
+  <table>
+<thead>
+<tr>
+  <th>Símbolo</th>
+  <th>Destino</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>S</code></td>
+  <td><code>I1</code></td>
+</tr>
+<tr>
+  <td><code>A</code></td>
+  <td><code>I2</code></td>
+</tr>
+<tr>
+  <td><code>b</code></td>
+  <td><code>I3</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section><h1>Estado problemático</h1>
+<p>Ao ler <code>b</code> a partir de <code>I0</code>:</p>
+<p>$$
+I_3 = \left\{
+\begin{array}{l}
+S \to b \cdot A \\
+A \to b \cdot \\
+A \to \cdot b
+\end{array}
+\right\}
+$$</p>
+<div class="fragment">
+  <table>
+<thead>
+<tr>
+  <th>Item</th>
+  <th>Sugestão</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>$S \to b \cdot A$ e $A \to \cdot b$</td>
+  <td>próximo <code>b</code>: fazer <code>shift</code></td>
+</tr>
+<tr>
+  <td>$A \to b \cdot$</td>
+  <td>reduzir $A \to b$</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section><h1>Conflito LR(0)</h1>
+<p>No LR(0), $A \to b \cdot$ reduz em todas as colunas.</p>
+<div class="fragment">
+  <table>
+<thead>
+<tr>
+  <th>Estado</th>
+  <th>ACTION <code>a</code></th>
+  <th>ACTION <code>b</code></th>
+  <th>ACTION <code>$</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>3</code></td>
+  <td><code>r3</code></td>
+  <td><code>s6 / r3</code></td>
+  <td><code>r3</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="fragment">
+  Conflito <code>shift/reduce</code> na coluna <code>b</code>.
+</div>
+</section>
+<section><h1>Intuição da decisão</h1>
+<p>Depois de ler o primeiro <code>b</code>:</p>
+<ul>
+<li class="fragment fade-up">entrada <code>ba$</code>: reduzir o primeiro <code>b</code> para <code>A</code></li>
+<li class="fragment fade-up">entrada <code>bb$</code>: empilhar o segundo <code>b</code></li>
+<li class="fragment fade-up">decisão depende do próximo símbolo</li>
+</ul>
+
+<div class="fragment">
+  LR(0) não consulta o próximo símbolo para reduzir.
+</div>
+</section>
+<section><h1>Regra SLR(1)</h1>
+<p>No LR(0):</p>
+<p>$$
+A \to \alpha \cdot
+\quad \Rightarrow \quad
+\text{reduz em todas as colunas}
+$$</p>
+<div class="fragment">
+  <p>No SLR(1):</p>
+<p>$$
+A \to \alpha \cdot
+\quad \Rightarrow \quad
+\text{reduz apenas em } FOLLOW(A)
+$$</p>
+</div>
+</section>
+<section><h1>FOLLOW do exemplo</h1>
+<p>Gramática:</p>
+<p>$$
+\begin{array}{rcl}
+S & \to Aa \\
+S & \to bA \\
+A & \to b
+\end{array}
+$$</p>
+<div class="fragment">
+  $$
+FOLLOW(S)=\{\$\}
+$$
+</div>
+<div class="fragment">
+  <p>De $S \to Aa$:</p>
+<p>$$
+a \in FOLLOW(A)
+$$</p>
+</div>
+<div class="fragment">
+  <p>De $S \to bA$:</p>
+<p>$$
+FOLLOW(S) \subset FOLLOW(A)
+$$</p>
+</div>
+</section>
+<section><h1>FOLLOW final</h1>
+<p>$$
+FOLLOW(A)=\{a,\$\}
+$$</p>
+<div class="fragment">
+  <p>Então, no estado <code>I3</code>:</p>
+<p>$$
+A \to b \cdot
+$$</p>
+<p>reduz apenas nas colunas <code>a</code> e <code>$</code>.</p>
+</div>
+<div class="fragment">
+  <table>
+<thead>
+<tr>
+  <th>Estado</th>
+  <th>ACTION <code>a</code></th>
+  <th>ACTION <code>b</code></th>
+  <th>ACTION <code>$</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>3</code></td>
+  <td><code>r3</code></td>
+  <td><code>s6</code></td>
+  <td><code>r3</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section><h1>Terminando o exemplo</h1>
+<p>Estados LR(0):</p>
+<p>$$
+I_0 = \left\{
+\begin{array}{l}
+S' \to \cdot S \\
+S \to \cdot Aa \\
+S \to \cdot bA \\
+A \to \cdot b
+\end{array}
+\right\}
+\qquad
+I_1 = \left\{
+\begin{array}{l}
+S' \to S \cdot
+\end{array}
+\right\}
+$$</p>
+<p>$$
+I_2 = \left\{
+\begin{array}{l}
+S \to A \cdot a
+\end{array}
+\right\}
+\qquad
+I_3 = \left\{
+\begin{array}{l}
+S \to b \cdot A \\
+A \to b \cdot \\
+A \to \cdot b
+\end{array}
+\right\}
+$$</p>
+</section>
+<section><h1>Terminando: mais estados</h1>
+<p>$$
+I_4 = \left\{
+\begin{array}{l}
+S \to Aa \cdot
+\end{array}
+\right\}
+\qquad
+I_5 = \left\{
+\begin{array}{l}
+S \to bA \cdot
+\end{array}
+\right\}
+\qquad
+I_6 = \left\{
+\begin{array}{l}
+A \to b \cdot
+\end{array}
+\right\}
+$$</p>
+<div class="fragment">
+  <table>
+<thead>
+<tr>
+  <th>Origem</th>
+  <th>Símbolo</th>
+  <th>Destino</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>I0</code></td>
+  <td><code>S</code></td>
+  <td><code>I1</code></td>
+</tr>
+<tr>
+  <td><code>I0</code></td>
+  <td><code>A</code></td>
+  <td><code>I2</code></td>
+</tr>
+<tr>
+  <td><code>I0</code></td>
+  <td><code>b</code></td>
+  <td><code>I3</code></td>
+</tr>
+<tr>
+  <td><code>I2</code></td>
+  <td><code>a</code></td>
+  <td><code>I4</code></td>
+</tr>
+<tr>
+  <td><code>I3</code></td>
+  <td><code>A</code></td>
+  <td><code>I5</code></td>
+</tr>
+<tr>
+  <td><code>I3</code></td>
+  <td><code>b</code></td>
+  <td><code>I6</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section><h1>Tabela SLR(1)</h1>
+<table>
+<thead>
+<tr>
+  <th>Estado</th>
+  <th>ACTION <code>a</code></th>
+  <th>ACTION <code>b</code></th>
+  <th>ACTION <code>$</code></th>
+  <th>GOTO <code>S</code></th>
+  <th>GOTO <code>A</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>0</code></td>
+  <td></td>
+  <td><code>s3</code></td>
+  <td></td>
+  <td><code>1</code></td>
+  <td><code>2</code></td>
+</tr>
+<tr>
+  <td><code>1</code></td>
+  <td></td>
+  <td></td>
+  <td><code>acc</code></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>2</code></td>
+  <td><code>s4</code></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>3</code></td>
+  <td><code>r3</code></td>
+  <td><code>s6</code></td>
+  <td><code>r3</code></td>
+  <td></td>
+  <td><code>5</code></td>
+</tr>
+<tr>
+  <td><code>4</code></td>
+  <td></td>
+  <td></td>
+  <td><code>r1</code></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>5</code></td>
+  <td></td>
+  <td></td>
+  <td><code>r2</code></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>6</code></td>
+  <td><code>r3</code></td>
+  <td></td>
+  <td><code>r3</code></td>
+  <td></td>
+  <td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section><h1>Simulação: <code>ba$</code></h1>
+<table>
+<thead>
+<tr>
+  <th>Pilha</th>
+  <th>Entrada</th>
+  <th>Ação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>0</code></td>
+  <td><code>b a $</code></td>
+  <td><code>s3</code></td>
+</tr>
+<tr>
+  <td><code>0 b 3</code></td>
+  <td><code>a $</code></td>
+  <td><code>r3</code>, reduz $A \to b$</td>
+</tr>
+<tr>
+  <td><code>0 A 2</code></td>
+  <td><code>a $</code></td>
+  <td><code>s4</code></td>
+</tr>
+<tr>
+  <td><code>0 A 2 a 4</code></td>
+  <td><code>$</code></td>
+  <td><code>r1</code>, reduz $S \to Aa$</td>
+</tr>
+<tr>
+  <td><code>0 S 1</code></td>
+  <td><code>$</code></td>
+  <td><code>acc</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section><h1>Simulação: <code>bb$</code></h1>
+<table>
+<thead>
+<tr>
+  <th>Pilha</th>
+  <th>Entrada</th>
+  <th>Ação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>0</code></td>
+  <td><code>b b $</code></td>
+  <td><code>s3</code></td>
+</tr>
+<tr>
+  <td><code>0 b 3</code></td>
+  <td><code>b $</code></td>
+  <td><code>s6</code></td>
+</tr>
+<tr>
+  <td><code>0 b 3 b 6</code></td>
+  <td><code>$</code></td>
+  <td><code>r3</code>, reduz $A \to b$</td>
+</tr>
+<tr>
+  <td><code>0 b 3 A 5</code></td>
+  <td><code>$</code></td>
+  <td><code>r2</code>, reduz $S \to bA$</td>
+</tr>
+<tr>
+  <td><code>0 S 1</code></td>
+  <td><code>$</code></td>
+  <td><code>acc</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section><h1>Algoritmo SLR(1)</h1>
+<ol>
+<li class="fragment fade-up">aumentar a gramática: $S' \to S$</li>
+<li class="fragment fade-up">numerar produções</li>
+<li class="fragment fade-up">construir estados LR(0)</li>
+<li class="fragment fade-up">calcular <code>FOLLOW</code></li>
+<li class="fragment fade-up">inserir <code>shift</code> por transições terminais</li>
+<li class="fragment fade-up">inserir <code>goto</code> por transições não terminais</li>
+<li class="fragment fade-up">inserir <code>reduce</code> apenas em <code>FOLLOW(A)</code></li>
+<li class="fragment fade-up">inserir <code>acc</code> para $S' \to S \cdot$</li>
+<li class="fragment fade-up">verificar conflitos</li>
+</ol>
+
+</section>
+<section><h1>Exemplo SLR(1) completo</h1>
+<p>Gramática:</p>
+<p>$$
+\begin{array}{rcl}
+(0) & S' & \to S \\
+(1) & S & \to (L) \\
+(2) & S & \to a \\
+(3) & L & \to L,S \\
+(4) & L & \to S
+\end{array}
+$$</p>
+<ul>
+<li class="fragment fade-up"><code>S</code>: expressão</li>
+<li class="fragment fade-up"><code>L</code>: lista de expressões</li>
+<li class="fragment fade-up">exemplos: <code>a</code>, <code>(a)</code>, <code>(a,a)</code>, <code>((a),a)</code></li>
+</ul>
+
+</section>
+<section><h1>Exemplo: estado inicial</h1>
+<p>$$
+I_0 = \left\{
+\begin{array}{l}
+S' \to \cdot S \\
+S \to \cdot (L) \\
+S \to \cdot a
+\end{array}
+\right\}
+$$</p>
+<div class="fragment">
+  <table>
+<thead>
+<tr>
+  <th>Símbolo</th>
+  <th>Destino</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>S</code></td>
+  <td><code>I1</code></td>
+</tr>
+<tr>
+  <td><code>(</code></td>
+  <td><code>I2</code></td>
+</tr>
+<tr>
+  <td><code>a</code></td>
+  <td><code>I3</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section><h1>Estados <code>I1</code>, <code>I2</code>, <code>I3</code></h1>
+<p>$$
+I_1 = \left\{
+\begin{array}{l}
+S' \to S \cdot
+\end{array}
+\right\}
+$$</p>
+<p>$$
+I_2 = \left\{
+\begin{array}{l}
+S \to ( \cdot L) \\
+L \to \cdot L,S \\
+L \to \cdot S \\
+S \to \cdot (L) \\
+S \to \cdot a
+\end{array}
+\right\}
+$$</p>
+<p>$$
+I_3 = \left\{
+\begin{array}{l}
+S \to a \cdot
+\end{array}
+\right\}
+$$</p>
+</section>
+<section><h1>Estados <code>I4</code>, <code>I5</code></h1>
+<p>$$
+I_4 = \left\{
+\begin{array}{l}
+S \to (L \cdot ) \\
+L \to L \cdot ,S
+\end{array}
+\right\}
+$$</p>
+<p>$$
+I_5 = \left\{
+\begin{array}{l}
+L \to S \cdot
+\end{array}
+\right\}
+$$</p>
+<ul>
+<li class="fragment fade-up"><code>I4</code>: depois de reconhecer <code>L</code> dentro de parênteses</li>
+<li class="fragment fade-up">pode fechar com <code>)</code></li>
+<li class="fragment fade-up">pode continuar lista com <code>,S</code></li>
+</ul>
+
+</section>
+<section><h1>Estados <code>I6</code>, <code>I7</code>, <code>I8</code></h1>
+<p>$$
+I_6 = \left\{
+\begin{array}{l}
+S \to (L) \cdot
+\end{array}
+\right\}
+$$</p>
+<p>$$
+I_7 = \left\{
+\begin{array}{l}
+L \to L, \cdot S \\
+S \to \cdot (L) \\
+S \to \cdot a
+\end{array}
+\right\}
+$$</p>
+<p>$$
+I_8 = \left\{
+\begin{array}{l}
+L \to L,S \cdot
+\end{array}
+\right\}
+$$</p>
+</section>
+<section><h1>Transições completas</h1>
+<table>
+<thead>
+<tr>
+  <th>Origem</th>
+  <th>Símbolo</th>
+  <th>Destino</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>I0</code></td>
+  <td><code>S</code></td>
+  <td><code>I1</code></td>
+</tr>
+<tr>
+  <td><code>I0</code></td>
+  <td><code>(</code></td>
+  <td><code>I2</code></td>
+</tr>
+<tr>
+  <td><code>I0</code></td>
+  <td><code>a</code></td>
+  <td><code>I3</code></td>
+</tr>
+<tr>
+  <td><code>I2</code></td>
+  <td><code>L</code></td>
+  <td><code>I4</code></td>
+</tr>
+<tr>
+  <td><code>I2</code></td>
+  <td><code>S</code></td>
+  <td><code>I5</code></td>
+</tr>
+<tr>
+  <td><code>I2</code></td>
+  <td><code>(</code></td>
+  <td><code>I2</code></td>
+</tr>
+<tr>
+  <td><code>I2</code></td>
+  <td><code>a</code></td>
+  <td><code>I3</code></td>
+</tr>
+<tr>
+  <td><code>I4</code></td>
+  <td><code>)</code></td>
+  <td><code>I6</code></td>
+</tr>
+<tr>
+  <td><code>I4</code></td>
+  <td><code>,</code></td>
+  <td><code>I7</code></td>
+</tr>
+<tr>
+  <td><code>I7</code></td>
+  <td><code>S</code></td>
+  <td><code>I8</code></td>
+</tr>
+<tr>
+  <td><code>I7</code></td>
+  <td><code>(</code></td>
+  <td><code>I2</code></td>
+</tr>
+<tr>
+  <td><code>I7</code></td>
+  <td><code>a</code></td>
+  <td><code>I3</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section><h1>FOLLOW: começo</h1>
+<p>Começamos com:</p>
+<p>$$
+FOLLOW(S)=\{\$\}
+$$</p>
+<div class="fragment">
+  <p>Da produção $S \to (L)$:</p>
+<p>$$
+\texttt{)} \in FOLLOW(L)
+$$</p>
+</div>
+<div class="fragment">
+  <p>Da produção $L \to L,S$:</p>
+<p>$$
+\texttt{,} \in FOLLOW(L)
+$$</p>
+</div>
+</section>
+<section><h1>FOLLOW: propagação</h1>
+<p>Em $L \to L,S$:</p>
+<div class="fragment">
+  <ul>
+<li>o <code>S</code> está no fim</li>
+<li>então <code>S</code> herda <code>FOLLOW(L)</code></li>
+</ul>
+</div>
+<div class="fragment">
+  Em $L \to S$:
+</div>
+<div class="fragment">
+  <ul>
+<li>o <code>S</code> está no fim</li>
+<li>então <code>S</code> herda <code>FOLLOW(L)</code></li>
+</ul>
+</div>
+</section>
+<section><h1>FOLLOW final</h1>
+<p>$$
+FOLLOW(L)=\{\texttt{)},\texttt{,}\}
+$$</p>
+<div class="fragment">
+  $$
+FOLLOW(S)=\{\$,\texttt{)},\texttt{,}\}
+$$
+</div>
+<ul>
+<li class="fragment fade-up">depois de <code>L</code>: fecha parêntese ou vírgula</li>
+<li class="fragment fade-up">depois de <code>S</code>: fim, fecha parêntese ou vírgula</li>
+</ul>
+
+</section>
+<section><h1>Tabela SLR(1)</h1>
+<table>
+<thead>
+<tr>
+  <th>Estado</th>
+  <th>ACTION <code>(</code></th>
+  <th>ACTION <code>)</code></th>
+  <th>ACTION <code>a</code></th>
+  <th>ACTION <code>,</code></th>
+  <th>ACTION <code>$</code></th>
+  <th>GOTO <code>S</code></th>
+  <th>GOTO <code>L</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>0</code></td>
+  <td><code>s2</code></td>
+  <td></td>
+  <td><code>s3</code></td>
+  <td></td>
+  <td></td>
+  <td><code>1</code></td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>1</code></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td><code>acc</code></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>2</code></td>
+  <td><code>s2</code></td>
+  <td></td>
+  <td><code>s3</code></td>
+  <td></td>
+  <td></td>
+  <td><code>5</code></td>
+  <td><code>4</code></td>
+</tr>
+<tr>
+  <td><code>3</code></td>
+  <td></td>
+  <td><code>r2</code></td>
+  <td></td>
+  <td><code>r2</code></td>
+  <td><code>r2</code></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>4</code></td>
+  <td></td>
+  <td><code>s6</code></td>
+  <td></td>
+  <td><code>s7</code></td>
+  <td></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>5</code></td>
+  <td></td>
+  <td><code>r4</code></td>
+  <td></td>
+  <td><code>r4</code></td>
+  <td></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>6</code></td>
+  <td></td>
+  <td><code>r1</code></td>
+  <td></td>
+  <td><code>r1</code></td>
+  <td><code>r1</code></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>7</code></td>
+  <td><code>s2</code></td>
+  <td></td>
+  <td><code>s3</code></td>
+  <td></td>
+  <td></td>
+  <td><code>8</code></td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>8</code></td>
+  <td></td>
+  <td><code>r3</code></td>
+  <td></td>
+  <td><code>r3</code></td>
+  <td></td>
+  <td></td>
+  <td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section><h1>De onde vêm as reduções?</h1>
+<table>
+<thead>
+<tr>
+  <th>Estado</th>
+  <th>Item completo</th>
+  <th>Redução</th>
+  <th>Colunas</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>I3</code></td>
+  <td>$S \to a \cdot$</td>
+  <td><code>r2</code></td>
+  <td>$FOLLOW(S)={<span>$</span>,\texttt{)},\texttt{,}}$</td>
+</tr>
+<tr>
+  <td><code>I5</code></td>
+  <td>$L \to S \cdot$</td>
+  <td><code>r4</code></td>
+  <td>$FOLLOW(L)=\{\texttt{)},\texttt{,}\}$</td>
+</tr>
+<tr>
+  <td><code>I6</code></td>
+  <td>$S \to (L) \cdot$</td>
+  <td><code>r1</code></td>
+  <td>$FOLLOW(S)={<span>$</span>,\texttt{)},\texttt{,}}$</td>
+</tr>
+<tr>
+  <td><code>I8</code></td>
+  <td>$L \to L,S \cdot$</td>
+  <td><code>r3</code></td>
+  <td>$FOLLOW(L)=\{\texttt{)},\texttt{,}\}$</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section><h1>Simulação: <code>(a,a)$</code></h1>
+<table>
+<thead>
+<tr>
+  <th>Pilha</th>
+  <th>Entrada</th>
+  <th>Ação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>0</code></td>
+  <td><code>( a , a ) $</code></td>
+  <td><code>s2</code></td>
+</tr>
+<tr>
+  <td><code>0 ( 2</code></td>
+  <td><code>a , a ) $</code></td>
+  <td><code>s3</code></td>
+</tr>
+<tr>
+  <td><code>0 ( 2 a 3</code></td>
+  <td><code>, a ) $</code></td>
+  <td><code>r2</code>, reduz $S \to a$</td>
+</tr>
+<tr>
+  <td><code>0 ( 2 S 5</code></td>
+  <td><code>, a ) $</code></td>
+  <td><code>r4</code>, reduz $L \to S$</td>
+</tr>
+<tr>
+  <td><code>0 ( 2 L 4</code></td>
+  <td><code>, a ) $</code></td>
+  <td><code>s7</code></td>
+</tr>
+<tr>
+  <td><code>0 ( 2 L 4 , 7</code></td>
+  <td><code>a ) $</code></td>
+  <td><code>s3</code></td>
+</tr>
+<tr>
+  <td><code>0 ( 2 L 4 , 7 a 3</code></td>
+  <td><code>) $</code></td>
+  <td><code>r2</code>, reduz $S \to a$</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section><h1>Simulação: continuação</h1>
+<table>
+<thead>
+<tr>
+  <th>Pilha</th>
+  <th>Entrada</th>
+  <th>Ação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>0 ( 2 L 4 , 7 S 8</code></td>
+  <td><code>) $</code></td>
+  <td><code>r3</code>, reduz $L \to L,S$</td>
+</tr>
+<tr>
+  <td><code>0 ( 2 L 4</code></td>
+  <td><code>) $</code></td>
+  <td><code>s6</code></td>
+</tr>
+<tr>
+  <td><code>0 ( 2 L 4 ) 6</code></td>
+  <td><code>$</code></td>
+  <td><code>r1</code>, reduz $S \to (L)$</td>
+</tr>
+<tr>
+  <td><code>0 S 1</code></td>
+  <td><code>$</code></td>
+  <td><code>acc</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section><h1>Comparação</h1>
+<table>
+<thead>
+<tr>
+  <th>Técnica</th>
+  <th>Direção</th>
+  <th>Derivação</th>
+  <th>Decisão</th>
+  <th>Informação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>LL(1)</td>
+  <td>esquerda para direita</td>
+  <td>mais à esquerda</td>
+  <td>expandir produção</td>
+  <td><code>FIRST</code>, <code>FOLLOW</code></td>
+</tr>
+<tr>
+  <td>LR(0)</td>
+  <td>esquerda para direita</td>
+  <td>mais à direita ao contrário</td>
+  <td>empilhar ou reduzir</td>
+  <td>estado LR(0)</td>
+</tr>
+<tr>
+  <td>SLR(1)</td>
+  <td>esquerda para direita</td>
+  <td>mais à direita ao contrário</td>
+  <td>empilhar ou reduzir</td>
+  <td>estado LR(0), <code>FOLLOW</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section><h1>Quando é LL(1)?</h1>
+<p>Para cada não terminal:</p>
+<ul>
+<li class="fragment fade-up">alternativas não podem começar com o mesmo terminal</li>
+<li class="fragment fade-up">conjuntos <code>FIRST</code> das alternativas não podem se sobrepor</li>
+<li class="fragment fade-up">se houver $\epsilon$, usar <code>FOLLOW</code> para decidir</li>
+<li class="fragment fade-up">não pode ter recursão à esquerda</li>
+</ul>
+
+</section>
+<section><h1>Quando é LR(0)?</h1>
+<p>Uma gramática é LR(0) se a tabela LR(0) não tem conflitos.</p>
+<div class="fragment">
+  Conflitos:
+</div>
+<ul>
+<li class="fragment fade-up"><code>shift/reduce</code></li>
+<li class="fragment fade-up"><code>reduce/reduce</code></li>
+</ul>
+
+<div class="fragment">
+  Ponto fraco: redução entra em todas as colunas.
+</div>
+</section>
+<section><h1>Quando é SLR(1)?</h1>
+<p>Uma gramática é SLR(1) se a tabela com estados LR(0) e reduções por <code>FOLLOW</code> não tem conflitos.</p>
+<ul>
+<li class="fragment fade-up">resolve alguns conflitos LR(0)</li>
+<li class="fragment fade-up">usa um símbolo de lookahead indiretamente</li>
+<li class="fragment fade-up"><code>FOLLOW</code> é uma aproximação global</li>
+<li class="fragment fade-up">ainda pode rejeitar gramáticas LR(1)</li>
+</ul>
+
+</section>
+<section><h1>Relação entre classes</h1>
+<p>Dentro da família LR:</p>
+<p>$$
+LR(0) \subset SLR(1) \subset LR(1)
+$$</p>
+<ul>
+<li class="fragment fade-up">todo LR(0) é SLR(1)</li>
+<li class="fragment fade-up">nem todo SLR(1) é LR(0)</li>
+<li class="fragment fade-up">LR(1) é mais preciso que SLR(1)</li>
+</ul>
+
+</section>
+<section><h1>Por que precisamos disso?</h1>
+<ul>
+<li class="fragment fade-up">LL(1): decide cedo demais para muitas gramáticas</li>
+<li class="fragment fade-up">LR(0): reduz cedo demais em muitos estados</li>
+<li class="fragment fade-up">SLR(1): reduz apenas onde o contexto permite</li>
+<li class="fragment fade-up">CLR/LR(1): leva o lookahead para dentro dos itens</li>
+</ul>
+
+</section>
+<section><h1>Exercícios finais</h1>
+<ul>
+<li class="fragment fade-up">montar LR(0) para $S \to aS \mid b$</li>
+<li class="fragment fade-up">refazer o conflito $S \to Aa \mid bA$, $A \to b$</li>
+<li class="fragment fade-up">montar SLR(1) para $S \to (L) \mid a$, $L \to L,S \mid S$</li>
+<li class="fragment fade-up">simular <code>(a,(a,a))$</code></li>
+</ul>
+
+</section>
+<section><h1>Próxima aula</h1>
+<h2>CLR / LR(1) canônico</h2>
+<ul>
+<li class="fragment fade-up">itens com lookahead explícito</li>
+<li class="fragment fade-up">decisões mais precisas que SLR(1)</li>
+<li class="fragment fade-up">menos conflitos falsos</li>
+<li class="fragment fade-up">base conceitual para LR(1) e LALR</li>
+</ul>
+
+</section>
+        </div>
+    </div>
+
+    <script src="/aulas-faesa/js/vendor/reveal/reveal.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/notes/notes.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/markdown/markdown.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/math/math.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/zoom/zoom.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/prism.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-c.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-python.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-clike.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-cpp.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-perl.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-java.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-php.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/toolbar/prism-toolbar.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/show-language/prism-show-language.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/prism-slang.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/mermaid.min.js" data-no-bundle></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            mermaid.initialize({
+                startOnLoad: false,
+                theme: 'default',
+                securityLevel: 'loose',
+                htmlLabels: false,
+                fontFamily: 'Inter, system-ui, sans-serif',
+            });
+        });
+    </script>
+    <script src="/aulas-faesa/js/rough.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/apply_sketch.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/lucide.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/ui.js" data-no-bundle></script>
+    <script>
+        const waitForNextFrame = () => new Promise(resolve => requestAnimationFrame(resolve));
+
+        const initSlideUI = () => {
+            if (!window.CourseForgeUI) {
+                return;
+            }
+
+            window.CourseForgeUI.initCopyButtons();
+            window.CourseForgeUI.initIcons();
+        };
+
+        const renderMermaidsInSlide = async (slide) => {
+            if (!slide) {
+                return;
+            }
+
+            const mermaids = slide.querySelectorAll('.mermaid');
+            if (!mermaids.length) {
+                return;
+            }
+
+            try {
+                if (document.fonts?.ready) {
+                    await document.fonts.ready;
+                }
+
+                await waitForNextFrame();
+                await waitForNextFrame();
+
+                for (const element of mermaids) {
+                    if (element.dataset.mermaidRendered === 'true') {
+                        continue;
+                    }
+
+                    await mermaid.run({
+                        nodes: [element],
+                    });
+                    element.dataset.mermaidRendered = 'true';
+                }
+            } catch (err) {
+                console.warn('Mermaid render failed', err);
+            }
+        };
+
+        const updateMermaidDisplayBounds = (slide) => {
+            const scope = slide || document;
+            const displays = scope.querySelectorAll('.mermaid-display');
+
+            for (const display of displays) {
+                const rect = display.getBoundingClientRect();
+                const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+                const bottomGap = 24;
+                const availableHeight = Math.max(160, Math.floor(viewportHeight - rect.top - bottomGap));
+                display.style.setProperty('--mermaid-max-height', `${availableHeight}px`);
+            }
+        };
+
+        const resetNativeLineNumbers = (pre) => {
+            if (!pre?.classList.contains('line-numbers')) {
+                return;
+            }
+
+            const existingRows = pre.querySelector('.line-numbers-rows');
+            if (existingRows) {
+                existingRows.remove();
+            }
+        };
+
+        const highlightCodeInSlide = (slide) => {
+            const scope = slide || document;
+            const codeBlocks = scope.querySelectorAll('pre[class*="language-"] > code[class*="language-"]');
+
+            for (const code of codeBlocks) {
+                const pre = code.parentElement;
+                resetNativeLineNumbers(pre);
+                Prism.highlightElement(code);
+
+                if (pre?.classList.contains('line-numbers') && Prism.plugins?.lineNumbers?.resize) {
+                    Prism.plugins.lineNumbers.resize(pre);
+                }
+            }
+        };
+
+        const enhanceCurrentSlide = async (slide) => {
+            highlightCodeInSlide(slide);
+            await renderMermaidsInSlide(slide);
+            updateMermaidDisplayBounds(slide);
+            initSlideUI();
+        };
+
+        Reveal.initialize({
+            hash: true,
+            slideNumber: 'c/t',
+            center: false,
+            controls: false,
+            plugins: [RevealMarkdown, RevealNotes, RevealMath.KaTeX, RevealZoom],
+            katex: {
+                local: '/aulas-faesa/js/vendor/katex',
+                output: 'html',
+                throwOnError: false,
+                strict: false,
+            },
+            width: 960,
+            height: 800,
+            margin: 0.15,
+            maxScale: 2.0,
+        });
+
+        Reveal.on('ready', event => {
+            enhanceCurrentSlide(event.currentSlide);
+        });
+
+        Reveal.on('slideready', event => {
+            enhanceCurrentSlide(event.currentSlide);
+        });
+
+        Reveal.on('slidechanged', event => {
+            enhanceCurrentSlide(event.currentSlide);
+        });
+
+        window.addEventListener('resize', () => {
+            updateMermaidDisplayBounds(Reveal.getCurrentSlide());
+        });
+    </script>
+    <style>
+        /* Modern base styles */
+        :root {
+            --callout-note: #448aff;
+            --callout-abstract: #00b0ff;
+            --callout-info: #00b8d4;
+            --callout-todo: #00bfa5;
+            --callout-tip: #00c853;
+            --callout-success: #64dd17;
+            --callout-question: #ffab00;
+            --callout-warning: #ff9100;
+            --callout-failure: #ff5252;
+            --callout-danger: #ff1744;
+            --callout-bug: #f50057;
+            --callout-example: #7c4dff;
+            --callout-quote: #9e9e9e;
+            --code-bg: #f1f5f9;
+            --border: #e2e8f0;
+            --radius: 6px;
+            --radius-sm: 4px;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --text-muted: #64748b;
+            --text: #334155;
+            --bg: #ffffff;
+            --heading: #0f172a;
+            --link: #3b82f6;
+            --font-code: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+        }
+
+        .reveal {
+            font-size: 20px;
+            text-align: left !important;
+        }
+
+        .reveal code:not(pre code) {
+            font-family: var(--font-code) !important;
+            background-color: var(--code-bg) !important;
+            padding: 0.1em 0.35em !important;
+            border-radius: var(--radius-sm) !important;
+            font-size: 0.9em !important;
+            color: var(--link) !important;
+            border: 1px dashed var(--border) !important;
+            white-space: pre-wrap !important;
+            word-break: break-word !important;
+            font-variant-ligatures: none;
+            font-feature-settings: "liga" 0, "calt" 0;
+        }
+
+        .reveal h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px !important;
+            margin-left: 0 !important;
+            /* min-height: 2.3em; */
+            display: flex;
+            align-items: center;
+            justify-content: flex-start !important;
+            text-align: left !important;
+            width: 100% !important;
+            text-shadow: none !important;
+        }
+
+        /* Prism overrides for Reveal.js */
+        .reveal div.code-toolbar {
+            position: relative;
+            width: 100% !important;
+            margin: 1.5rem 0 !important;
+        }
+
+        .reveal pre[class*="language-"] {
+            background: hsl(230, 1%, 98%) !important;
+            margin: 1.5rem 0 !important;
+            padding: 1rem !important;
+            border: 1px solid var(--border) !important;
+            border-radius: var(--radius) !important;
+            box-shadow: var(--shadow-sm) !important;
+            font-family: var(--font-code) !important;
+            font-size: 0.85em !important;
+            position: relative;
+            overflow-x: auto;
+            box-sizing: border-box !important;
+            max-width: 100% !important;
+            font-variant-ligatures: none;
+            font-feature-settings: "liga" 0, "calt" 0;
+        }
+
+        .reveal pre[class*="language-"] > code {
+            background: 0 0 !important;
+            text-shadow: none !important;
+            color: hsl(230, 8%, 24%) !important;
+            position: relative !important;
+            display: block !important;
+        }
+
+        .reveal .line-numbers .line-numbers-rows {
+            border-right: 1px solid #444 !important;
+            padding-right: .5rem !important;
+            margin-bottom: 1.5rem;
+        }
+
+        .reveal .line-numbers-rows>span:before {
+            color: #666 !important;
+        }
+
+        .reveal pre[class*="language-"].line-numbers,
+        .reveal pre[class*="language-"]:has(.line-numbers-rows) {
+            padding-left: 3.8em !important;
+            overflow-y: hidden !important;
+        }
+
+        .reveal .copy-button,
+        .reveal pre[data-lang]::before {
+            position: absolute;
+            top: .5rem;
+            height: 26px;
+            background: hsl(230, 1%, 92%);
+            border: 1px solid hsl(230, 1%, 85%);
+            border-radius: var(--radius-sm);
+            box-sizing: border-box;
+        }
+
+        .reveal .copy-button {
+            right: .5rem;
+            width: 26px;
+            padding: 0;
+            color: hsl(230, 6%, 44%);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all .2s ease;
+            z-index: 20;
+            opacity: .8;
+        }
+
+        .reveal .copy-button:hover {
+            background: hsl(230, 1%, 85%);
+            color: hsl(230, 8%, 24%);
+            opacity: 1;
+        }
+
+        .reveal .copy-button svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Language label styling - hide all Prism toolbar plugins, keep only data-lang label */
+        .reveal div.toolbar,
+        .reveal div.toolbar-item,
+        .reveal button.toolbar-item,
+        .reveal span.toolbar-item {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            height: 0 !important;
+            width: 0 !important;
+            overflow: hidden !important;
+            position: absolute !important;
+            pointer-events: none !important;
+        }
+
+        /* Use the pseudo-element data-lang label only */
+        .reveal pre[data-lang]::before {
+            content: attr(data-lang);
+            right: 2.35rem;
+            padding: 0 .5rem;
+            font-size: .65rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: hsl(230, 6%, 50%);
+            pointer-events: none;
+            z-index: 10;
+            display: inline-flex !important;
+            align-items: center !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            height: 26px !important;
+            width: auto !important;
+            position: absolute !important;
+            overflow: visible !important;
+            line-height: 26px !important;
+        }
+
+        .reveal h2 {
+            font-size: 1.6em;
+            margin-top: 30px !important;
+            margin-bottom: 20px !important;
+            text-align: left !important;
+        }
+
+        .reveal h3 {
+            font-size: 1.3em;
+            margin-top: 20px !important;
+            margin-bottom: 15px !important;
+            text-align: left !important;
+        }
+
+        .reveal p {
+            line-height: 1.5;
+            margin-top: 20px !important;
+            margin-left: 0 !important;
+            text-align: left !important;
+        }
+
+        .reveal ul,
+        .reveal ol,
+        .reveal li {
+            line-height: 1.5;
+            text-align: left !important;
+            margin-left: 0 !important;
+        }
+        
+        .reveal ul, .reveal ol {
+            display: block !important;
+            padding-left: 1.2em !important;
+        }
+
+        /* Slide padding and layout */
+        .reveal .slides section {
+            padding: 40px !important;
+            box-sizing: border-box;
+            text-align: left !important;
+            overflow: visible !important;
+        }
+
+        .reveal .slides {
+            text-align: left !important;
+        }
+
+        /* Centering for Title slides (h1 ONLY, h1 + h2 ONLY, or h1 + h2 + p ONLY) */
+        .reveal .slides section:not(.stack):has(> h1:only-child),
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child),
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) {
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: center !important;
+            align-items: center !important;
+            text-align: center !important;
+            height: 100% !important;
+            top: 0 !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:only-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child) h2,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h2,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) p {
+            justify-content: center !important;
+            text-align: center !important;
+            margin: 0 !important;
+            min-height: auto !important;
+            width: 100% !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h1 {
+            margin-bottom: 0.5em !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h2 {
+            margin-bottom: 0.3em !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) p {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        /* Full screen slide fix */
+        .reveal .slides section:has(.full-screen-image) {
+            padding: 0 !important;
+        }
+
+        /* Full screen slide fix - Garantindo que o fundo do Reveal fique visível e a imagem carregada */
+        .reveal:has(section.present .full-screen-image) {
+            background-image: url('../../slide_end_background.png') !important;
+            background-size: cover !important;
+            background-position: center !important;
+        }
+
+        /* Torna o slide e o container de slides transparentes para mostrar o fundo da .reveal */
+        .reveal:has(section.present .full-screen-image) .slides,
+        .reveal:has(section.present .full-screen-image) .slides section.present {
+            background: transparent !important;
+        }
+
+        .full-screen-image {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 !important;
+            /* Se houver texto, ele centraliza aqui */
+        }
+
+        /* Spacing for diagrams */
+        .reveal .svg-graph {
+            margin-top: 1em !important;
+            margin-bottom: 1em !important;
+            overflow: visible !important; /* Prevent labels from being cut off */
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* Mermaid Diagram Styles */
+        .reveal .mermaid {
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            padding: 0 !important;
+            margin: 1rem 0 !important;
+            font-family: inherit !important;
+            overflow: visible !important;
+            text-align: center;
+            display: block !important;
+            width: auto !important;
+            max-width: 100% !important;
+        }
+
+        .reveal pre.mermaid {
+            white-space: pre;
+            font-family: var(--font-code);
+            color: var(--text-muted);
+            margin: 0 !important;
+            padding: 0 !important;
+            width: auto !important;
+            line-height: 1 !important;
+            border: none !important;
+            box-shadow: none !important;
+            background: transparent !important;
+            overflow: visible !important;
+        }
+
+        .reveal .centered .mermaid {
+            display: block !important;
+            justify-content: center;
+            margin-left: auto !important;
+            margin-right: auto !important;
+        }
+
+        .reveal .mermaid svg {
+            max-width: 100% !important;
+            height: auto !important;
+            display: block !important;
+            overflow: visible !important;
+            vertical-align: top !important;
+            font-family: Inter, system-ui, sans-serif !important;
+            font-style: normal !important;
+            font-variant: normal !important;
+            font-weight: 400 !important;
+            letter-spacing: normal !important;
+            word-spacing: normal !important;
+            text-transform: none !important;
+            text-shadow: none !important;
+            line-height: normal !important;
+            text-rendering: geometricPrecision !important;
+        }
+
+        .reveal .mermaid svg * {
+            font-family: inherit !important;
+            font-style: normal !important;
+            font-variant: normal !important;
+            letter-spacing: normal !important;
+            word-spacing: normal !important;
+            text-transform: none !important;
+            text-shadow: none !important;
+            line-height: normal !important;
+        }
+
+        .reveal .mermaid svg .edgeBadge text,
+        .reveal .mermaid svg .edgeBadge tspan,
+        .reveal .mermaid svg .edgeTerm text,
+        .reveal .mermaid svg .edgeTerm tspan,
+        .reveal .mermaid svg .multiplicity text,
+        .reveal .mermaid svg .multiplicity tspan,
+        .reveal .mermaid svg text.edgeBadge,
+        .reveal .mermaid svg text.edgeTerm {
+            font-size: 18px !important;
+            font-weight: 700 !important;
+            fill: var(--heading) !important;
+        }
+
+        /* Mermaid Source Switcher */
+        .reveal .mermaid-outer-container {
+            margin: 1rem 0;
+            position: relative;
+            width: 100%;
+            max-width: 100%;
+        }
+
+        .reveal .mermaid-switcher {
+            display: flex !important;
+            justify-content: flex-end;
+            margin-bottom: 0.5rem;
+            width: 100%;
+        }
+
+        .reveal .switcher-track {
+            display: inline-flex;
+            align-items: center;
+            background: var(--code-bg);
+            padding: 3px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            position: relative;
+        }
+
+        .reveal .switcher-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            border: none;
+            background: transparent;
+            padding: 0.35rem 1rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            border-radius: calc(var(--radius) - 2px);
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            z-index: 1;
+        }
+
+        .reveal .switcher-btn svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .reveal .switcher-btn:hover {
+            color: var(--text);
+        }
+
+        .reveal .switcher-btn.active {
+            color: var(--heading);
+            background: var(--bg);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        .reveal .mermaid-content {
+            min-height: 50px;
+        }
+
+        /* Mermaid display - respect inline width */
+        .reveal .mermaid-display {
+            transition: opacity 0.2s ease;
+            display: block !important;
+            max-width: 100% !important;
+            max-height: var(--mermaid-max-height, calc(100vh - 140px)) !important;
+            border: none !important;
+            box-shadow: none !important;
+            background: transparent !important;
+            overflow: auto !important;
+        }
+
+        .reveal .mermaid-source pre {
+            margin: 0 !important;
+            background: var(--code-bg) !important;
+            border: 1px dashed var(--border) !important;
+        }
+
+        /* Ensure proper toggle behavior */
+        .reveal .mermaid-source {
+            display: none !important;
+        }
+
+        .reveal .mermaid-source[style*="display: block"],
+        .reveal .mermaid-source[style*="display:block"] {
+            display: block !important;
+        }
+
+        .reveal .mermaid-display[style*="display: none"],
+        .reveal .mermaid-display[style*="display:none"] {
+            display: none !important;
+        }
+
+        .reveal .mermaid-display.centered {
+            margin-left: auto !important;
+            margin-right: auto !important;
+            max-width: 100% !important;
+        }
+
+        .centered:not(.mermaid-display) {
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            width: 100% !important;
+            margin: 1em 0 !important;
+        }
+
+        .no-break {
+            display: block;
+            width: 100%;
+        }
+
+        .reveal blockquote {
+            display: block;
+            position: relative;
+            margin: var(--r-block-margin) auto !important;
+            padding: 5px;
+            font-style: italic;
+            background: rgba(255, 170, 73, 0.2);
+            box-shadow: 0 0 2px rgba(0,0,0,.2);
+            text-align: left !important;
+        }
+
+        .col1 {
+            width: 90%;
+            margin: 0 auto;
+        }
+
+        .col2 {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start;
+            width: 90%;
+            margin: 0 auto;
+            align-items: flex-start;
+        }
+
+        /* Callout Styles */
+        :root {
+            --callout-note: #448aff;
+            --callout-abstract: #00b0ff;
+            --callout-info: #00b8d4;
+            --callout-todo: #00bfa5;
+            --callout-tip: #00c853;
+            --callout-success: #64dd17;
+            --callout-question: #ffab00;
+            --callout-warning: #ff9100;
+            --callout-failure: #ff5252;
+            --callout-danger: #ff1744;
+            --callout-bug: #f50057;
+            --callout-example: #7c4dff;
+            --callout-quote: #9e9e9e;
+            --code-bg: #f8f8f8;
+            --border: #ddd;
+        }
+
+        .reveal .callout {
+            margin: 1rem auto !important;
+            border: 1px solid var(--border);
+            border-left: 6px solid var(--callout-note);
+            border-radius: 4px;
+            overflow: hidden;
+            text-align: left !important;
+            font-size: 0.8em;
+            width: 75% !important;
+            max-width: 100% !important;
+        }
+
+        .reveal .callout-title {
+            padding: 0.5rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            color: var(--callout-note);
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .reveal .callout-icon {
+            display: flex;
+            align-items: center;
+        }
+
+        .reveal .callout-icon svg {
+            width: 1.2em;
+            height: 1.2em;
+        }
+
+        .reveal .callout-content {
+            padding: 0.5rem 1rem;
+        }
+
+        .reveal .callout-content p {
+            margin-top: 0.5rem !important;
+        }
+
+        .reveal .callout-content p:first-child {
+            margin-top: 0 !important;
+        }
+
+        .reveal h1 { text-transform: none !important; }
+
+        .reveal .callout-abstract { border-left-color: var(--callout-abstract); }
+        .reveal .callout-abstract .callout-title { color: var(--callout-abstract); }
+        .reveal .callout-info { border-left-color: var(--callout-info); }
+        .reveal .callout-info .callout-title { color: var(--callout-info); }
+        .reveal .callout-todo { border-left-color: var(--callout-todo); }
+        .reveal .callout-todo .callout-title { color: var(--callout-todo); }
+        .reveal .callout-tip { border-left-color: var(--callout-tip); }
+        .reveal .callout-tip .callout-title { color: var(--callout-tip); }
+        .reveal .callout-success { border-left-color: var(--callout-success); }
+        .reveal .callout-success .callout-title { color: var(--callout-success); }
+        .reveal .callout-question { border-left-color: var(--callout-question); }
+        .reveal .callout-question .callout-title { color: var(--callout-question) ; }
+        .reveal .callout-warning { border-left-color: var(--callout-warning); }
+        .reveal .callout-warning .callout-title { color: var(--callout-warning); }
+        .reveal .callout-failure { border-left-color: var(--callout-failure); }
+        .reveal .callout-failure .callout-title { color: var(--callout-failure); }
+        .reveal .callout-danger { border-left-color: var(--callout-danger); }
+        .reveal .callout-danger .callout-title { color: var(--callout-danger); }
+        .reveal .callout-bug { border-left-color: var(--callout-bug); }
+        .reveal .callout-bug .callout-title { color: var(--callout-bug); }
+        .reveal .callout-example { border-left-color: var(--callout-example); }
+        .reveal .callout-example .callout-title { color: var(--callout-example); }
+        .reveal .callout-quote { border-left-color: var(--callout-quote); }
+        .reveal .callout-quote .callout-title { color: var(--callout-quote); }
+        .red-note { color: var(--callout-failure); }
+
+        .reveal .slide-number {
+            font-size: 0.8em !important;
+            padding: 5px 10px !important;
+            background: rgba(0,0,0,0.1) !important;
+            border-radius: 4px;
+            color: #000000b1 !important;
+        }
+
+        /* Print styles */
+        @media print {
+            .reveal .slides section {
+                display: block !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                position: relative !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+                page-break-after: always !important;
+                overflow: hidden !important;
+            }
+
+            .reveal .slides {
+                transform: none !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+            }
+            
+            .reveal {
+                overflow: visible !important;
+            }
+        }
+    </style>
+</body>
+
+</html>

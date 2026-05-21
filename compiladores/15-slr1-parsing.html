@@ -1,0 +1,1558 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toposia - Compiladores</title>
+    <link rel="icon" href="/aulas-faesa/img/dark-favicon.svg" media="(prefers-color-scheme: light)">
+    <link rel="icon" href="/aulas-faesa/img/light-favicon.svg" media="(prefers-color-scheme: dark)">
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/fonts.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/bundles/katex-base-prism-one-light-b0347952c973.bundle.min.css">
+    
+    
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css" data-no-bundle>
+    <script src="/aulas-faesa/js/bundles/lucide-katex-auto-render-4b36e8bd8642.bundle.min.js"></script>
+</head>
+
+<body>
+    <script>
+        // Restore sidebar state instantly (before first paint) to avoid transition flash
+        (function() {
+            if (localStorage.getItem('cf_sidebar_hidden') === 'true') {
+                document.body.classList.add('sidebar-hidden', 'no-transition');
+            }
+            requestAnimationFrame(function() {
+                requestAnimationFrame(function() {
+                    document.body.classList.remove('no-transition');
+                });
+            });
+        })();
+    </script>
+    <div class="page-wrapper">
+        <nav class="sidebar">
+            <div class="sidebar-content">
+                <header class="sidebar-title-section">
+                    <a href="contents.html" class="course-title-link">
+                        <h1 class="sidebar-course-title">Compiladores</h1>
+                    </a>
+                    <div class="sidebar-ornament">❧</div>
+                </header>
+
+                
+                <section class="sidebar-toc-section">
+                    <h2 class="toc-header">Tabela de Conteúdos</h2>
+                    <ol class="toc-list">
+                        
+                        <li class="toc-item level-2">
+                            <a href="#introdução">15.1. Introdução</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#aquecimento-revisão-de-lr0">15.2. Aquecimento: revisão de LR(0)</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#estados-do-autômato">15.2.1. Estados do autômato</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#tabela-lr0">15.2.2. Tabela LR(0)</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#onde-o-lr0-começa-a-falhar">15.3. Onde o LR(0) começa a falhar</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#a-mudança-do-slr1">15.4. A mudança do SLR(1)</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#resolvendo-o-conflito-anterior">15.4.1. Resolvendo o conflito anterior</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#terminando-o-exemplo">15.4.2. Terminando o exemplo</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#algoritmo-slr1">15.5. Algoritmo SLR(1)</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#exemplo-completo-em-slr1">15.6. Exemplo completo em SLR(1)</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#coleção-canônica-de-itens">15.6.1. Coleção canônica de itens</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#conjuntos-follow">15.6.2. Conjuntos FOLLOW</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#tabela-slr1">15.6.3. Tabela SLR(1)</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#simulação-curta">15.6.4. Simulação curta</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#comparação-ll1-lr0-slr1">15.7. Comparação: LL(1), LR(0), SLR(1)</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#condições-para-ll1">15.7.1. Condições para LL(1)</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#condições-para-lr0">15.7.2. Condições para LR(0)</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#condições-para-slr1">15.7.3. Condições para SLR(1)</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#quem-está-dentro-de-quem">15.7.4. Quem está dentro de quem</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#exercícios-finais">15.8. Exercícios finais</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#exercício-1-lr0-ou-não">15.8.1. Exercício 1: LR(0) ou não?</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#exercício-2-conflito-em-lr0-solução-em-slr1">15.8.2. Exercício 2: conflito em LR(0), solução em SLR(1)</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#exercício-3-tabela-slr1-completa">15.8.3. Exercício 3: tabela SLR(1) completa</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#exercício-4-comparação-conceitual">15.8.4. Exercício 4: comparação conceitual</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#próximos-passos">15.9. Próximos passos</a>
+                        </li>
+                        
+                    </ol>
+                </section>
+                
+
+                <nav class="sidebar-nav-section">
+                    
+                    <a href="15-code-generation-for-the-slang-virtual-machine.html" class="sidebar-nav-link prev"><i data-lucide="chevron-left" class="nav-icon"></i> Lab - Geração de Código I</a>
+                    
+                    
+                    <a href="16-code-generation-for-the-slang-virtual-machine-ii.html" class="sidebar-nav-link next">Lab - Geração de Código II <i data-lucide="chevron-right" class="nav-icon"></i></a>
+                    
+                    <a href="javascript:void(0)" onclick="handleBackNavigation()"
+                        class="sidebar-nav-link back"><i data-lucide="arrow-left" class="nav-icon"></i> Voltar</a>
+                </nav>
+
+            </div>
+        </nav>
+
+        <button class="mobile-menu-toggle" aria-label="Menu">
+            <i data-lucide="menu"></i>
+        </button>
+
+        <button class="sidebar-toggle" onclick="CourseForgeNav.toggleSidebar()" aria-label="Alternar Barra Lateral">
+            <i data-lucide="chevron-left" class="toggle-icon" id="sidebar-toggle-icon"></i>
+        </button>
+
+        <div class="mobile-menu-overlay"></div>
+
+        <main class="main-content">
+            <article class="article">
+                <header class="article-header">
+                    <span class="chapter-number">16</span>
+                    <h1 class="article-title">
+                        <span class="title-ornament left">❧</span>
+                        <span class="title-text">Parsing SLR(1)</span>
+                        <span class="title-ornament right">❧</span>
+                    </h1>
+                    
+                    <p class="article-date">21/05/2026</p>
+                    
+                    
+                    <nav class="breadcrumb" aria-label="Breadcrumb">
+                        
+                        
+                        
+                        <a href="contents.html" class="breadcrumb-link">Compiladores</a>
+                        
+                        <span class="breadcrumb-separator"><i data-lucide="chevron-right" class="breadcrumb-icon"></i></span>
+                        
+                        
+                        
+                        
+                        <a href="contents.html#part-III" class="breadcrumb-link">III - Análise Sintática</a>
+                        
+                        <span class="breadcrumb-separator"><i data-lucide="chevron-right" class="breadcrumb-icon"></i></span>
+                        
+                        
+                        
+                        <span class="breadcrumb-current">Parsing SLR(1)</span>
+                        
+                        
+                    </nav>
+                    
+                </header>
+                <div class="article-body">
+                    <h2 id="introdução"><span class="heading-text">Introdução</span><span class="heading-arabic">15.1</span></h2>
+<p>Na aula anterior, construímos tabelas LR(0). A ideia era simples: montar um autômato de itens, usar <code>shift</code> quando uma transição por terminal existia, usar <code>goto</code> quando uma transição por não terminal existia e usar <code>reduce</code> quando um item estava completo.</p>
+<p>O ponto fraco estava exatamente na última parte. No LR(0), quando um estado contém um item completo, a redução entra em todas as colunas de terminais daquela linha. Isso é forte demais. Às vezes a redução só faz sentido quando o próximo símbolo da entrada pertence a um conjunto específico.</p>
+<div class="callout callout-abstract">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
+    <span class="callout-title-inner">Ideia central<br /></span>
+  </div>
+  <div class="callout-content">
+<p>O SLR(1) usa os mesmos estados LR(0), mas coloca cada redução apenas nas colunas indicadas pelo conjunto <code>FOLLOW</code> do não terminal reduzido.</p>
+  </div>
+</div>
+<p>Por isso o SLR(1) é uma pequena melhoria sobre o LR(0). Ele não muda a construção do autômato. Ele muda a forma de preencher as reduções na tabela.</p>
+<h2 id="aquecimento-revisão-de-lr0"><span class="heading-text">Aquecimento: revisão de LR(0)</span><span class="heading-arabic">15.2</span></h2>
+<p>Antes de introduzir SLR(1), vamos fazer um exercício curto de LR(0) para retomar a mecânica.</p>
+<p>Considere a gramática:</p>
+<p>$$
+\begin{array}{rcl}
+(0) & S' & \to S \\
+(1) & S & \to BB \\
+(2) & B & \to aB \\
+(3) & B & \to b
+\end{array}
+$$</p>
+<p>Essa gramática gera cadeias com dois blocos consecutivos, e cada bloco tem zero ou mais <code>a</code> seguidos de um <code>b</code>.</p>
+<p>Exemplos aceitos:</p>
+<ul>
+<li><code>bb</code></li>
+<li><code>abb</code></li>
+<li><code>bab</code></li>
+<li><code>aababb</code></li>
+</ul>
+<h3 id="estados-do-autômato"><span class="heading-text">Estados do autômato</span><span class="heading-arabic">15.2.1</span></h3>
+<p>O estado inicial é:</p>
+<p>$$
+I_0 = \left\{
+\begin{array}{l}
+S' \to \cdot S \\
+S \to \cdot BB \\
+B \to \cdot aB \\
+B \to \cdot b
+\end{array}
+\right\}
+$$</p>
+<p>As transições a partir de <code>I0</code> são:</p>
+<table>
+<thead>
+<tr>
+  <th>Símbolo</th>
+  <th>Destino</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>S</code></td>
+  <td><code>I1</code></td>
+</tr>
+<tr>
+  <td><code>B</code></td>
+  <td><code>I2</code></td>
+</tr>
+<tr>
+  <td><code>a</code></td>
+  <td><code>I3</code></td>
+</tr>
+<tr>
+  <td><code>b</code></td>
+  <td><code>I4</code></td>
+</tr>
+</tbody>
+</table>
+<p>Os demais estados são:</p>
+<p>$$
+I_1 = \left\{
+\begin{array}{l}
+S' \to S \cdot
+\end{array}
+\right\}
+$$</p>
+<p>$$
+I_2 = \left\{
+\begin{array}{l}
+S \to B \cdot B \\
+B \to \cdot aB \\
+B \to \cdot b
+\end{array}
+\right\}
+$$</p>
+<p>$$
+I_3 = \left\{
+\begin{array}{l}
+B \to a \cdot B \\
+B \to \cdot aB \\
+B \to \cdot b
+\end{array}
+\right\}
+$$</p>
+<p>$$
+I_4 = \left\{
+\begin{array}{l}
+B \to b \cdot
+\end{array}
+\right\}
+$$</p>
+<p>$$
+I_5 = \left\{
+\begin{array}{l}
+S \to BB \cdot
+\end{array}
+\right\}
+$$</p>
+<p>$$
+I_6 = \left\{
+\begin{array}{l}
+B \to aB \cdot
+\end{array}
+\right\}
+$$</p>
+<p>Transições restantes:</p>
+<table>
+<thead>
+<tr>
+  <th>Origem</th>
+  <th>Símbolo</th>
+  <th>Destino</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>I2</code></td>
+  <td><code>B</code></td>
+  <td><code>I5</code></td>
+</tr>
+<tr>
+  <td><code>I2</code></td>
+  <td><code>a</code></td>
+  <td><code>I3</code></td>
+</tr>
+<tr>
+  <td><code>I2</code></td>
+  <td><code>b</code></td>
+  <td><code>I4</code></td>
+</tr>
+<tr>
+  <td><code>I3</code></td>
+  <td><code>B</code></td>
+  <td><code>I6</code></td>
+</tr>
+<tr>
+  <td><code>I3</code></td>
+  <td><code>a</code></td>
+  <td><code>I3</code></td>
+</tr>
+<tr>
+  <td><code>I3</code></td>
+  <td><code>b</code></td>
+  <td><code>I4</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="tabela-lr0"><span class="heading-text">Tabela LR(0)</span><span class="heading-arabic">15.2.2</span></h3>
+<p>Terminais: <code>a</code>, <code>b</code>, <code>$</code>.</p>
+<p>Não terminais: <code>S</code>, <code>B</code>.</p>
+<table>
+<thead>
+<tr>
+  <th>Estado</th>
+  <th>ACTION <code>a</code></th>
+  <th>ACTION <code>b</code></th>
+  <th>ACTION <code>$</code></th>
+  <th>GOTO <code>S</code></th>
+  <th>GOTO <code>B</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>0</code></td>
+  <td><code>s3</code></td>
+  <td><code>s4</code></td>
+  <td></td>
+  <td><code>1</code></td>
+  <td><code>2</code></td>
+</tr>
+<tr>
+  <td><code>1</code></td>
+  <td></td>
+  <td></td>
+  <td><code>acc</code></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>2</code></td>
+  <td><code>s3</code></td>
+  <td><code>s4</code></td>
+  <td></td>
+  <td></td>
+  <td><code>5</code></td>
+</tr>
+<tr>
+  <td><code>3</code></td>
+  <td><code>s3</code></td>
+  <td><code>s4</code></td>
+  <td></td>
+  <td></td>
+  <td><code>6</code></td>
+</tr>
+<tr>
+  <td><code>4</code></td>
+  <td><code>r3</code></td>
+  <td><code>r3</code></td>
+  <td><code>r3</code></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>5</code></td>
+  <td><code>r1</code></td>
+  <td><code>r1</code></td>
+  <td><code>r1</code></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>6</code></td>
+  <td><code>r2</code></td>
+  <td><code>r2</code></td>
+  <td><code>r2</code></td>
+  <td></td>
+  <td></td>
+</tr>
+</tbody>
+</table>
+<p>Essa gramática funciona em LR(0) porque nenhum estado mistura uma redução comum com um <code>shift</code>, nem duas reduções diferentes na mesma linha.</p>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Exercício em sala<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Simule a entrada <code>abb$</code> usando a tabela. Em quais momentos a pilha reduz por $B \to b$, por $B \to aB$ e por $S \to BB$?</p>
+  </div>
+</div>
+<h2 id="onde-o-lr0-começa-a-falhar"><span class="heading-text">Onde o LR(0) começa a falhar</span><span class="heading-arabic">15.3</span></h2>
+<p>Agora vamos usar uma gramática pequena em que o autômato LR(0) produz um conflito <code>shift/reduce</code>.</p>
+<p>$$
+\begin{array}{rcl}
+(0) & S' & \to S \\
+(1) & S & \to Aa \\
+(2) & S & \to bA \\
+(3) & A & \to b
+\end{array}
+$$</p>
+<p>Essa gramática aceita duas cadeias:</p>
+<ul>
+<li><code>ba</code>, pela derivação $S \Rightarrow Aa \Rightarrow ba$;</li>
+<li><code>bb</code>, pela derivação $S \Rightarrow bA \Rightarrow bb$.</li>
+</ul>
+<p>O estado inicial é:</p>
+<p>$$
+I_0 = \left\{
+\begin{array}{l}
+S' \to \cdot S \\
+S \to \cdot Aa \\
+S \to \cdot bA \\
+A \to \cdot b
+\end{array}
+\right\}
+$$</p>
+<p>O problema aparece ao ler <code>b</code> a partir de <code>I0</code>:</p>
+<p>$$
+I_3 = \left\{
+\begin{array}{l}
+S \to b \cdot A \\
+A \to b \cdot \\
+A \to \cdot b
+\end{array}
+\right\}
+$$</p>
+<p>Nesse estado, existem duas ideias ao mesmo tempo.</p>
+<table>
+<thead>
+<tr>
+  <th>Item</th>
+  <th>O que ele sugere</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>$S \to b \cdot A$ e $A \to \cdot b$</td>
+  <td>se o próximo símbolo for <code>b</code>, devemos fazer <code>shift</code></td>
+</tr>
+<tr>
+  <td>$A \to b \cdot$</td>
+  <td>o <code>b</code> já pode ser reduzido para <code>A</code></td>
+</tr>
+</tbody>
+</table>
+<p>No LR(0), a redução $A \to b$ entraria em todas as colunas. Mas também existe <code>shift</code> na coluna <code>b</code>. Resultado:</p>
+<table>
+<thead>
+<tr>
+  <th>Estado</th>
+  <th>ACTION <code>a</code></th>
+  <th>ACTION <code>b</code></th>
+  <th>ACTION <code>$</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>3</code></td>
+  <td><code>r3</code></td>
+  <td><code>s6 / r3</code></td>
+  <td><code>r3</code></td>
+</tr>
+</tbody>
+</table>
+<p>Esse é um conflito <code>shift/reduce</code>.</p>
+<p>Intuitivamente, a decisão correta depende do próximo símbolo:</p>
+<ul>
+<li>se o próximo símbolo é <code>a</code>, a entrada deve ser <code>ba</code>, então reduzimos <code>b</code> para <code>A</code>;</li>
+<li>se o próximo símbolo é <code>b</code>, a entrada deve ser <code>bb</code>, então empilhamos o segundo <code>b</code>;</li>
+<li>se a entrada acabou depois de reconhecer o segundo <code>b</code>, a redução $A \to b$ permite completar $S \to bA$.</li>
+</ul>
+<p>O LR(0) não consegue expressar essa distinção porque não olha o próximo símbolo. O SLR(1) olha o próximo símbolo apenas para limitar reduções.</p>
+<h2 id="a-mudança-do-slr1"><span class="heading-text">A mudança do SLR(1)</span><span class="heading-arabic">15.4</span></h2>
+<p>O SLR(1) reaproveita a coleção canônica de itens LR(0). A diferença está na regra de preenchimento das reduções.</p>
+<p>No LR(0):</p>
+<blockquote><p>Se o estado contém $A \to \alpha \cdot$, colocamos a redução $A \to \alpha$ em todas as colunas de terminais.</p>
+</blockquote>
+<p>No SLR(1):</p>
+<blockquote><p>Se o estado contém $A \to \alpha \cdot$, colocamos a redução $A \to \alpha$ apenas nas colunas dos terminais em $FOLLOW(A)$.</p>
+</blockquote>
+<p>O <code>1</code> em SLR(1) indica que a decisão usa um símbolo de lookahead. Ele não cria itens com lookahead, como o LR(1) completo faria. Ele usa os conjuntos <code>FOLLOW</code>, que já conhecemos do LL(1), como aproximação global dos contextos em que uma variável pode aparecer.</p>
+<h3 id="resolvendo-o-conflito-anterior"><span class="heading-text">Resolvendo o conflito anterior</span><span class="heading-arabic">15.4.1</span></h3>
+<p>Para a gramática:</p>
+<p>$$
+\begin{array}{rcl}
+S & \to Aa \\
+S & \to bA \\
+A & \to b
+\end{array}
+$$</p>
+<p>temos:</p>
+<p>$$
+FOLLOW(S) = \{\$\}
+$$</p>
+<p>Como <code>A</code> aparece em $S \to Aa$, o terminal <code>a</code> entra em $FOLLOW(A)$.</p>
+<p>Como <code>A</code> aparece no fim de $S \to bA$, tudo de $FOLLOW(S)$ entra em $FOLLOW(A)$.</p>
+<p>Logo:</p>
+<p>$$
+FOLLOW(A) = \{a, \$\}
+$$</p>
+<p>No estado problemático:</p>
+<p>$$
+I_3 = \left\{
+\begin{array}{l}
+S \to b \cdot A \\
+A \to b \cdot \\
+A \to \cdot b
+\end{array}
+\right\}
+$$</p>
+<p>A redução $A \to b$ só entra nas colunas <code>a</code> e <code>$</code>, porque essas são as colunas de $FOLLOW(A)$.</p>
+<table>
+<thead>
+<tr>
+  <th>Estado</th>
+  <th>ACTION <code>a</code></th>
+  <th>ACTION <code>b</code></th>
+  <th>ACTION <code>$</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>3</code></td>
+  <td><code>r3</code></td>
+  <td><code>s6</code></td>
+  <td><code>r3</code></td>
+</tr>
+</tbody>
+</table>
+<p>O conflito desaparece. Mas ainda falta terminar a tabela inteira para confirmar que a gramática ficou analisável por SLR(1).</p>
+<h3 id="terminando-o-exemplo"><span class="heading-text">Terminando o exemplo</span><span class="heading-arabic">15.4.2</span></h3>
+<p>Com a gramática aumentada e numerada:</p>
+<p>$$
+\begin{array}{rcl}
+(0) & S' & \to S \\
+(1) & S & \to Aa \\
+(2) & S & \to bA \\
+(3) & A & \to b
+\end{array}
+$$</p>
+<p>os estados LR(0) são:</p>
+<p>$$
+I_0 = \left\{
+\begin{array}{l}
+S' \to \cdot S \\
+S \to \cdot Aa \\
+S \to \cdot bA \\
+A \to \cdot b
+\end{array}
+\right\}
+$$</p>
+<p>$$
+I_1 = \left\{
+\begin{array}{l}
+S' \to S \cdot
+\end{array}
+\right\}
+$$</p>
+<p>$$
+I_2 = \left\{
+\begin{array}{l}
+S \to A \cdot a
+\end{array}
+\right\}
+$$</p>
+<p>$$
+I_3 = \left\{
+\begin{array}{l}
+S \to b \cdot A \\
+A \to b \cdot \\
+A \to \cdot b
+\end{array}
+\right\}
+$$</p>
+<p>$$
+I_4 = \left\{
+\begin{array}{l}
+S \to Aa \cdot
+\end{array}
+\right\}
+$$</p>
+<p>$$
+I_5 = \left\{
+\begin{array}{l}
+S \to bA \cdot
+\end{array}
+\right\}
+$$</p>
+<p>$$
+I_6 = \left\{
+\begin{array}{l}
+A \to b \cdot
+\end{array}
+\right\}
+$$</p>
+<p>As transições são:</p>
+<table>
+<thead>
+<tr>
+  <th>Origem</th>
+  <th>Símbolo</th>
+  <th>Destino</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>I0</code></td>
+  <td><code>S</code></td>
+  <td><code>I1</code></td>
+</tr>
+<tr>
+  <td><code>I0</code></td>
+  <td><code>A</code></td>
+  <td><code>I2</code></td>
+</tr>
+<tr>
+  <td><code>I0</code></td>
+  <td><code>b</code></td>
+  <td><code>I3</code></td>
+</tr>
+<tr>
+  <td><code>I2</code></td>
+  <td><code>a</code></td>
+  <td><code>I4</code></td>
+</tr>
+<tr>
+  <td><code>I3</code></td>
+  <td><code>A</code></td>
+  <td><code>I5</code></td>
+</tr>
+<tr>
+  <td><code>I3</code></td>
+  <td><code>b</code></td>
+  <td><code>I6</code></td>
+</tr>
+</tbody>
+</table>
+<p>Os conjuntos <code>FOLLOW</code> já calculados são:</p>
+<p>$$
+FOLLOW(S) = \{\$\}
+$$</p>
+<p>$$
+FOLLOW(A) = \{a, \$\}
+$$</p>
+<p>Assim, a tabela SLR(1) completa fica:</p>
+<table>
+<thead>
+<tr>
+  <th>Estado</th>
+  <th>ACTION <code>a</code></th>
+  <th>ACTION <code>b</code></th>
+  <th>ACTION <code>$</code></th>
+  <th>GOTO <code>S</code></th>
+  <th>GOTO <code>A</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>0</code></td>
+  <td></td>
+  <td><code>s3</code></td>
+  <td></td>
+  <td><code>1</code></td>
+  <td><code>2</code></td>
+</tr>
+<tr>
+  <td><code>1</code></td>
+  <td></td>
+  <td></td>
+  <td><code>acc</code></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>2</code></td>
+  <td><code>s4</code></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>3</code></td>
+  <td><code>r3</code></td>
+  <td><code>s6</code></td>
+  <td><code>r3</code></td>
+  <td></td>
+  <td><code>5</code></td>
+</tr>
+<tr>
+  <td><code>4</code></td>
+  <td></td>
+  <td></td>
+  <td><code>r1</code></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>5</code></td>
+  <td></td>
+  <td></td>
+  <td><code>r2</code></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>6</code></td>
+  <td><code>r3</code></td>
+  <td></td>
+  <td><code>r3</code></td>
+  <td></td>
+  <td></td>
+</tr>
+</tbody>
+</table>
+<p>Agora simulamos <code>ba$</code>:</p>
+<table>
+<thead>
+<tr>
+  <th>Pilha</th>
+  <th>Entrada</th>
+  <th>Ação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>0</code></td>
+  <td><code>b a $</code></td>
+  <td><code>s3</code></td>
+</tr>
+<tr>
+  <td><code>0 b 3</code></td>
+  <td><code>a $</code></td>
+  <td><code>r3</code>, reduz $A \to b$</td>
+</tr>
+<tr>
+  <td><code>0 A 2</code></td>
+  <td><code>a $</code></td>
+  <td><code>s4</code></td>
+</tr>
+<tr>
+  <td><code>0 A 2 a 4</code></td>
+  <td><code>$</code></td>
+  <td><code>r1</code>, reduz $S \to Aa$</td>
+</tr>
+<tr>
+  <td><code>0 S 1</code></td>
+  <td><code>$</code></td>
+  <td><code>acc</code></td>
+</tr>
+</tbody>
+</table>
+<p>E simulamos <code>bb$</code>:</p>
+<table>
+<thead>
+<tr>
+  <th>Pilha</th>
+  <th>Entrada</th>
+  <th>Ação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>0</code></td>
+  <td><code>b b $</code></td>
+  <td><code>s3</code></td>
+</tr>
+<tr>
+  <td><code>0 b 3</code></td>
+  <td><code>b $</code></td>
+  <td><code>s6</code></td>
+</tr>
+<tr>
+  <td><code>0 b 3 b 6</code></td>
+  <td><code>$</code></td>
+  <td><code>r3</code>, reduz $A \to b$</td>
+</tr>
+<tr>
+  <td><code>0 b 3 A 5</code></td>
+  <td><code>$</code></td>
+  <td><code>r2</code>, reduz $S \to bA$</td>
+</tr>
+<tr>
+  <td><code>0 S 1</code></td>
+  <td><code>$</code></td>
+  <td><code>acc</code></td>
+</tr>
+</tbody>
+</table>
+<p>Esse exemplo mostra exatamente o ganho do SLR(1): no estado <code>3</code>, o mesmo <code>b</code> já poderia formar um <code>A</code>, mas a redução só é feita quando o próximo símbolo pertence a $FOLLOW(A)$. Quando o próximo símbolo é outro <code>b</code>, o parser continua empilhando.</p>
+<h2 id="algoritmo-slr1"><span class="heading-text">Algoritmo SLR(1)</span><span class="heading-arabic">15.5</span></h2>
+<p>O procedimento completo é:</p>
+<ol>
+<li>Aumentar a gramática com $S' \to S$.</li>
+<li>Numerar as produções.</li>
+<li>Construir a coleção canônica de itens LR(0), usando <code>Closure</code> e <code>Goto</code>.</li>
+<li>Calcular <code>FOLLOW</code> de todos os não terminais.</li>
+<li>Preencher <code>ACTION</code> com <code>shift</code> para transições por terminal.</li>
+<li>Preencher <code>GOTO</code> com transições por não terminal.</li>
+<li>Para cada item completo $A \to \alpha \cdot$, colocar <code>rK</code> apenas nas colunas de $FOLLOW(A)$.</li>
+<li>Para o item aumentado $S' \to S \cdot$, colocar <code>acc</code> na coluna <code>$</code>.</li>
+<li>Se alguma célula tiver mais de uma ação, a gramática não é SLR(1).</li>
+</ol>
+<p>O passo novo é o passo 7.</p>
+<h2 id="exemplo-completo-em-slr1"><span class="heading-text">Exemplo completo em SLR(1)</span><span class="heading-arabic">15.6</span></h2>
+<p>Agora vamos resolver a gramática usada no exercício guiado:</p>
+<p>$$
+\begin{array}{rcl}
+(0) & S' & \to S \\
+(1) & S & \to (L) \\
+(2) & S & \to a \\
+(3) & L & \to L,S \\
+(4) & L & \to S
+\end{array}
+$$</p>
+<p>Essa gramática reconhece expressões como:</p>
+<ul>
+<li><code>a</code></li>
+<li><code>(a)</code></li>
+<li><code>(a,a)</code></li>
+<li><code>((a),a)</code></li>
+</ul>
+<p>O não terminal <code>S</code> representa uma expressão. O não terminal <code>L</code> representa uma lista de expressões separadas por vírgula.</p>
+<h3 id="coleção-canônica-de-itens"><span class="heading-text">Coleção canônica de itens</span><span class="heading-arabic">15.6.1</span></h3>
+<p>Estado inicial:</p>
+<p>$$
+I_0 = \left\{
+\begin{array}{l}
+S' \to \cdot S \\
+S \to \cdot (L) \\
+S \to \cdot a
+\end{array}
+\right\}
+$$</p>
+<p>Transições de <code>I0</code>:</p>
+<table>
+<thead>
+<tr>
+  <th>Símbolo</th>
+  <th>Destino</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>S</code></td>
+  <td><code>I1</code></td>
+</tr>
+<tr>
+  <td><code>(</code></td>
+  <td><code>I2</code></td>
+</tr>
+<tr>
+  <td><code>a</code></td>
+  <td><code>I3</code></td>
+</tr>
+</tbody>
+</table>
+<p>Os estados são:</p>
+<p>$$
+I_1 = \left\{
+\begin{array}{l}
+S' \to S \cdot
+\end{array}
+\right\}
+$$</p>
+<p>$$
+I_2 = \left\{
+\begin{array}{l}
+S \to ( \cdot L) \\
+L \to \cdot L,S \\
+L \to \cdot S \\
+S \to \cdot (L) \\
+S \to \cdot a
+\end{array}
+\right\}
+$$</p>
+<p>$$
+I_3 = \left\{
+\begin{array}{l}
+S \to a \cdot
+\end{array}
+\right\}
+$$</p>
+<p>$$
+I_4 = \left\{
+\begin{array}{l}
+S \to (L \cdot ) \\
+L \to L \cdot ,S
+\end{array}
+\right\}
+$$</p>
+<p>$$
+I_5 = \left\{
+\begin{array}{l}
+L \to S \cdot
+\end{array}
+\right\}
+$$</p>
+<p>$$
+I_6 = \left\{
+\begin{array}{l}
+S \to (L) \cdot
+\end{array}
+\right\}
+$$</p>
+<p>$$
+I_7 = \left\{
+\begin{array}{l}
+L \to L, \cdot S \\
+S \to \cdot (L) \\
+S \to \cdot a
+\end{array}
+\right\}
+$$</p>
+<p>$$
+I_8 = \left\{
+\begin{array}{l}
+L \to L,S \cdot
+\end{array}
+\right\}
+$$</p>
+<p>Transições completas:</p>
+<table>
+<thead>
+<tr>
+  <th>Origem</th>
+  <th>Símbolo</th>
+  <th>Destino</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>I0</code></td>
+  <td><code>S</code></td>
+  <td><code>I1</code></td>
+</tr>
+<tr>
+  <td><code>I0</code></td>
+  <td><code>(</code></td>
+  <td><code>I2</code></td>
+</tr>
+<tr>
+  <td><code>I0</code></td>
+  <td><code>a</code></td>
+  <td><code>I3</code></td>
+</tr>
+<tr>
+  <td><code>I2</code></td>
+  <td><code>L</code></td>
+  <td><code>I4</code></td>
+</tr>
+<tr>
+  <td><code>I2</code></td>
+  <td><code>S</code></td>
+  <td><code>I5</code></td>
+</tr>
+<tr>
+  <td><code>I2</code></td>
+  <td><code>(</code></td>
+  <td><code>I2</code></td>
+</tr>
+<tr>
+  <td><code>I2</code></td>
+  <td><code>a</code></td>
+  <td><code>I3</code></td>
+</tr>
+<tr>
+  <td><code>I4</code></td>
+  <td><code>)</code></td>
+  <td><code>I6</code></td>
+</tr>
+<tr>
+  <td><code>I4</code></td>
+  <td><code>,</code></td>
+  <td><code>I7</code></td>
+</tr>
+<tr>
+  <td><code>I7</code></td>
+  <td><code>S</code></td>
+  <td><code>I8</code></td>
+</tr>
+<tr>
+  <td><code>I7</code></td>
+  <td><code>(</code></td>
+  <td><code>I2</code></td>
+</tr>
+<tr>
+  <td><code>I7</code></td>
+  <td><code>a</code></td>
+  <td><code>I3</code></td>
+</tr>
+</tbody>
+</table>
+<p>Repare em uma coisa importante: a transição de <code>I2</code> por <code>(</code> volta para <code>I2</code>. Isso acontece porque, depois de abrir um novo parêntese, estamos novamente no mesmo tipo de situação: precisamos reconhecer uma lista <code>L</code> dentro dos parênteses.</p>
+<h3 id="conjuntos-follow"><span class="heading-text">Conjuntos FOLLOW</span><span class="heading-arabic">15.6.2</span></h3>
+<p>Agora calculamos os <code>FOLLOW</code>, porque eles serão usados para inserir as reduções.</p>
+<p>Começamos com:</p>
+<p>$$
+FOLLOW(S) = \{\$\}
+$$</p>
+<p>Pela produção $S \to (L)$, o símbolo <code>)</code> aparece logo depois de <code>L</code>:</p>
+<p>$$
+\texttt{)} \in FOLLOW(L)
+$$</p>
+<p>Pela produção $L \to L,S$, o primeiro <code>L</code> é seguido por vírgula:</p>
+<p>$$
+\texttt{,} \in FOLLOW(L)
+$$</p>
+<p>Ainda em $L \to L,S$, o <code>S</code> aparece no fim da produção, então <code>S</code> herda $FOLLOW(L)$.</p>
+<p>Pela produção $L \to S$, o <code>S</code> também aparece no fim da produção, então <code>S</code> herda $FOLLOW(L)$.</p>
+<p>Logo:</p>
+<p>$$
+FOLLOW(L) = \{\texttt{)}, \texttt{,}\}
+$$</p>
+<p>$$
+FOLLOW(S) = \{\$, \texttt{)}, \texttt{,}\}
+$$</p>
+<p>Lendo o segundo conjunto: depois de um <code>S</code>, pode aparecer fim da entrada, fecha parêntese ou vírgula.</p>
+<h3 id="tabela-slr1"><span class="heading-text">Tabela SLR(1)</span><span class="heading-arabic">15.6.3</span></h3>
+<p>Terminais: <code>(</code>, <code>)</code>, <code>a</code>, <code>,</code>, <code>$</code>.</p>
+<p>Não terminais: <code>S</code>, <code>L</code>.</p>
+<table>
+<thead>
+<tr>
+  <th>Estado</th>
+  <th>ACTION <code>(</code></th>
+  <th>ACTION <code>)</code></th>
+  <th>ACTION <code>a</code></th>
+  <th>ACTION <code>,</code></th>
+  <th>ACTION <code>$</code></th>
+  <th>GOTO <code>S</code></th>
+  <th>GOTO <code>L</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>0</code></td>
+  <td><code>s2</code></td>
+  <td></td>
+  <td><code>s3</code></td>
+  <td></td>
+  <td></td>
+  <td><code>1</code></td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>1</code></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td><code>acc</code></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>2</code></td>
+  <td><code>s2</code></td>
+  <td></td>
+  <td><code>s3</code></td>
+  <td></td>
+  <td></td>
+  <td><code>5</code></td>
+  <td><code>4</code></td>
+</tr>
+<tr>
+  <td><code>3</code></td>
+  <td></td>
+  <td><code>r2</code></td>
+  <td></td>
+  <td><code>r2</code></td>
+  <td><code>r2</code></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>4</code></td>
+  <td></td>
+  <td><code>s6</code></td>
+  <td></td>
+  <td><code>s7</code></td>
+  <td></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>5</code></td>
+  <td></td>
+  <td><code>r4</code></td>
+  <td></td>
+  <td><code>r4</code></td>
+  <td></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>6</code></td>
+  <td></td>
+  <td><code>r1</code></td>
+  <td></td>
+  <td><code>r1</code></td>
+  <td><code>r1</code></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>7</code></td>
+  <td><code>s2</code></td>
+  <td></td>
+  <td><code>s3</code></td>
+  <td></td>
+  <td></td>
+  <td><code>8</code></td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>8</code></td>
+  <td></td>
+  <td><code>r3</code></td>
+  <td></td>
+  <td><code>r3</code></td>
+  <td></td>
+  <td></td>
+  <td></td>
+</tr>
+</tbody>
+</table>
+<p>As reduções foram colocadas assim:</p>
+<table>
+<thead>
+<tr>
+  <th>Estado</th>
+  <th>Item completo</th>
+  <th>Redução</th>
+  <th>Colunas usadas</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>I3</code></td>
+  <td>$S \to a \cdot$</td>
+  <td><code>r2</code></td>
+  <td>$FOLLOW(S) = {<span>$</span>, \texttt{)}, \texttt{,}}$</td>
+</tr>
+<tr>
+  <td><code>I5</code></td>
+  <td>$L \to S \cdot$</td>
+  <td><code>r4</code></td>
+  <td>$FOLLOW(L) = \{\texttt{)}, \texttt{,}\}$</td>
+</tr>
+<tr>
+  <td><code>I6</code></td>
+  <td>$S \to (L) \cdot$</td>
+  <td><code>r1</code></td>
+  <td>$FOLLOW(S) = {<span>$</span>, \texttt{)}, \texttt{,}}$</td>
+</tr>
+<tr>
+  <td><code>I8</code></td>
+  <td>$L \to L,S \cdot$</td>
+  <td><code>r3</code></td>
+  <td>$FOLLOW(L) = \{\texttt{)}, \texttt{,}\}$</td>
+</tr>
+</tbody>
+</table>
+<p>Essa é a diferença central entre LR(0) e SLR(1). O autômato é o mesmo tipo de autômato. A tabela é preenchida com mais cuidado.</p>
+<h3 id="simulação-curta"><span class="heading-text">Simulação curta</span><span class="heading-arabic">15.6.4</span></h3>
+<p>Vamos simular a entrada <code>(a,a)$</code>.</p>
+<table>
+<thead>
+<tr>
+  <th>Pilha</th>
+  <th>Entrada</th>
+  <th>Ação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>0</code></td>
+  <td><code>( a , a ) $</code></td>
+  <td><code>s2</code></td>
+</tr>
+<tr>
+  <td><code>0 ( 2</code></td>
+  <td><code>a , a ) $</code></td>
+  <td><code>s3</code></td>
+</tr>
+<tr>
+  <td><code>0 ( 2 a 3</code></td>
+  <td><code>, a ) $</code></td>
+  <td><code>r2</code>, reduz $S \to a$</td>
+</tr>
+<tr>
+  <td><code>0 ( 2 S 5</code></td>
+  <td><code>, a ) $</code></td>
+  <td><code>r4</code>, reduz $L \to S$</td>
+</tr>
+<tr>
+  <td><code>0 ( 2 L 4</code></td>
+  <td><code>, a ) $</code></td>
+  <td><code>s7</code></td>
+</tr>
+<tr>
+  <td><code>0 ( 2 L 4 , 7</code></td>
+  <td><code>a ) $</code></td>
+  <td><code>s3</code></td>
+</tr>
+<tr>
+  <td><code>0 ( 2 L 4 , 7 a 3</code></td>
+  <td><code>) $</code></td>
+  <td><code>r2</code>, reduz $S \to a$</td>
+</tr>
+<tr>
+  <td><code>0 ( 2 L 4 , 7 S 8</code></td>
+  <td><code>) $</code></td>
+  <td><code>r3</code>, reduz $L \to L,S$</td>
+</tr>
+<tr>
+  <td><code>0 ( 2 L 4</code></td>
+  <td><code>) $</code></td>
+  <td><code>s6</code></td>
+</tr>
+<tr>
+  <td><code>0 ( 2 L 4 ) 6</code></td>
+  <td><code>$</code></td>
+  <td><code>r1</code>, reduz $S \to (L)$</td>
+</tr>
+<tr>
+  <td><code>0 S 1</code></td>
+  <td><code>$</code></td>
+  <td><code>acc</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="comparação-ll1-lr0-slr1"><span class="heading-text">Comparação: LL(1), LR(0), SLR(1)</span><span class="heading-arabic">15.7</span></h2>
+<p>Agora podemos organizar as técnicas vistas até aqui.</p>
+<table>
+<thead>
+<tr>
+  <th>Técnica</th>
+  <th>Direção</th>
+  <th>Derivação</th>
+  <th>Decisão principal</th>
+  <th>Informação usada</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>LL(1)</td>
+  <td>esquerda para direita</td>
+  <td>mais à esquerda</td>
+  <td>qual produção expandir</td>
+  <td><code>FIRST</code> e <code>FOLLOW</code></td>
+</tr>
+<tr>
+  <td>LR(0)</td>
+  <td>esquerda para direita</td>
+  <td>mais à direita ao contrário</td>
+  <td>empilhar ou reduzir</td>
+  <td>estado LR(0), sem lookahead</td>
+</tr>
+<tr>
+  <td>SLR(1)</td>
+  <td>esquerda para direita</td>
+  <td>mais à direita ao contrário</td>
+  <td>empilhar ou reduzir</td>
+  <td>estado LR(0) e <code>FOLLOW</code> nas reduções</td>
+</tr>
+</tbody>
+</table>
+<h3 id="condições-para-ll1"><span class="heading-text">Condições para LL(1)</span><span class="heading-arabic">15.7.1</span></h3>
+<p>Uma gramática é LL(1) quando, para cada não terminal, o parser consegue escolher uma única produção olhando apenas um símbolo da entrada.</p>
+<p>Para produções $A \to \alpha_1 \mid \alpha_2 \mid \cdots \mid \alpha_n$:</p>
+<ul>
+<li>os conjuntos $FIRST(\alpha_i)$ não podem se sobrepor;</li>
+<li>se alguma alternativa deriva $\epsilon$, então $FOLLOW(A)$ não pode se sobrepor aos <code>FIRST</code> das outras alternativas;</li>
+<li>a gramática não pode ter recursão à esquerda direta ou indireta.</li>
+</ul>
+<p>O LL(1) é bom para parsers descendentes. Ele é simples de implementar manualmente, mas exige decisões muito cedo.</p>
+<h3 id="condições-para-lr0"><span class="heading-text">Condições para LR(0)</span><span class="heading-arabic">15.7.2</span></h3>
+<p>Uma gramática é LR(0) quando a tabela construída a partir dos itens LR(0) não tem conflitos.</p>
+<p>Os conflitos possíveis são:</p>
+<ul>
+<li><code>shift/reduce</code>: a mesma célula pede empilhar e reduzir;</li>
+<li><code>reduce/reduce</code>: a mesma célula pede duas reduções diferentes.</li>
+</ul>
+<p>No LR(0), qualquer item completo reduz em todas as colunas. Por isso ele falha em muitas gramáticas onde a decisão depende do próximo token.</p>
+<h3 id="condições-para-slr1"><span class="heading-text">Condições para SLR(1)</span><span class="heading-arabic">15.7.3</span></h3>
+<p>Uma gramática é SLR(1) quando a tabela construída com estados LR(0) e reduções limitadas por <code>FOLLOW</code> não tem conflitos.</p>
+<p>O SLR(1) resolve alguns conflitos do LR(0), especialmente quando a redução só é válida em certos contextos globais.</p>
+<p>Mas ele ainda é uma aproximação. Como usa <code>FOLLOW(A)</code> inteiro, e não o lookahead específico de cada item, pode rejeitar gramáticas que um LR(1) completo aceitaria.</p>
+<h3 id="quem-está-dentro-de-quem"><span class="heading-text">Quem está dentro de quem</span><span class="heading-arabic">15.7.4</span></h3>
+<p>Dentro da família LR, a relação importante é:</p>
+<p>$$
+LR(0) \subset SLR(1) \subset LR(1)
+$$</p>
+<p>Todo problema resolvido por LR(0) também é resolvido por SLR(1), porque o SLR(1) só restringe reduções que o LR(0) colocaria em todas as colunas.</p>
+<p>Nem todo problema resolvido por SLR(1) é resolvido por LR(0), como vimos no exemplo do conflito <code>shift/reduce</code>.</p>
+<p>O LL(1) pertence à família descendente, então a comparação não é simplesmente uma escada operacional com LR(0) e SLR(1). O que podemos dizer em aula sem perder a intuição é:</p>
+<ul>
+<li>LL(1) decide antes de consumir a estrutura, expandindo não terminais;</li>
+<li>LR(0) e SLR(1) decidem depois de reconhecer pedaços da entrada, reduzindo corpos de produção;</li>
+<li>LR(1) é, em geral, mais poderoso que LL(1), mas SLR(1) ainda é uma versão simplificada de LR.</li>
+</ul>
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">Moral da comparação<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Precisamos de LR e SLR porque nem toda gramática boa para análise sintática permite decisão preditiva cedo como o LL(1). Precisamos de SLR porque o LR(0) reduz cedo demais, sem olhar o próximo símbolo.</p>
+  </div>
+</div>
+<h2 id="exercícios-finais"><span class="heading-text">Exercícios finais</span><span class="heading-arabic">15.8</span></h2>
+<h3 id="exercício-1-lr0-ou-não"><span class="heading-text">Exercício 1: LR(0) ou não?</span><span class="heading-arabic">15.8.1</span></h3>
+<p>Considere:</p>
+<p>$$
+\begin{array}{rcl}
+S' & \to S \\
+S & \to aS \\
+S & \to b
+\end{array}
+$$</p>
+<p>Tarefas:</p>
+<ol>
+<li>Construa a coleção de itens LR(0).</li>
+<li>Monte a tabela LR(0).</li>
+<li>Verifique se há conflito.</li>
+<li>Simule a entrada <code>aab$</code>.</li>
+</ol>
+<h3 id="exercício-2-conflito-em-lr0-solução-em-slr1"><span class="heading-text">Exercício 2: conflito em LR(0), solução em SLR(1)</span><span class="heading-arabic">15.8.2</span></h3>
+<p>Use a gramática:</p>
+<p>$$
+\begin{array}{rcl}
+S' & \to S \\
+S & \to Aa \\
+S & \to bA \\
+A & \to b
+\end{array}
+$$</p>
+<p>Tarefas:</p>
+<ol>
+<li>Construa os estados LR(0).</li>
+<li>Identifique o estado com conflito <code>shift/reduce</code>.</li>
+<li>Calcule $FOLLOW(A)$.</li>
+<li>Monte a tabela SLR(1).</li>
+<li>Simule <code>ba$</code> e <code>bb$</code>.</li>
+</ol>
+<h3 id="exercício-3-tabela-slr1-completa"><span class="heading-text">Exercício 3: tabela SLR(1) completa</span><span class="heading-arabic">15.8.3</span></h3>
+<p>Para a gramática:</p>
+<p>$$
+\begin{array}{rcl}
+S' & \to S \\
+S & \to (L) \\
+S & \to a \\
+L & \to L,S \\
+L & \to S
+\end{array}
+$$</p>
+<p>Tarefas:</p>
+<ol>
+<li>Reconstrua a coleção canônica de itens.</li>
+<li>Recalcule $FOLLOW(S)$ e $FOLLOW(L)$.</li>
+<li>Monte a tabela SLR(1) sem consultar a tabela da nota.</li>
+<li>Simule <code>(a,(a,a))$</code>.</li>
+</ol>
+<h3 id="exercício-4-comparação-conceitual"><span class="heading-text">Exercício 4: comparação conceitual</span><span class="heading-arabic">15.8.4</span></h3>
+<p>Explique com suas palavras:</p>
+<ol>
+<li>Por que uma redução em LR(0) entra em todas as colunas?</li>
+<li>Por que uma redução em SLR(1) entra apenas em <code>FOLLOW(A)</code>?</li>
+<li>Qual conflito o SLR(1) consegue resolver que o LR(0) não resolve?</li>
+<li>Por que o SLR(1) ainda não é tão preciso quanto o LR(1)?</li>
+</ol>
+<h2 id="próximos-passos"><span class="heading-text">Próximos passos</span><span class="heading-arabic">15.9</span></h2>
+<p>O SLR(1) é uma ponte natural entre LR(0) e LR(1). Ele mantém a parte mecânica que já conhecemos, a coleção canônica de itens LR(0), mas usa <code>FOLLOW</code> para evitar reduções fora de contexto.</p>
+<p>Em termos práticos:</p>
+<ul>
+<li>LR(0) pergunta apenas: o estado atual permite reduzir?</li>
+<li>SLR(1) pergunta: o estado atual permite reduzir e o próximo símbolo pode aparecer depois dessa variável?</li>
+</ul>
+<p>Essa pequena pergunta extra remove vários conflitos sem tornar o algoritmo muito mais complexo.</p>
+<p>Na próxima aula, veremos o <strong>CLR</strong>, também chamado de <strong>LR(1) canônico</strong>. A diferença principal será levar o lookahead para dentro dos próprios itens, em vez de usar apenas o <code>FOLLOW</code> global do não terminal.</p>
+
+                </div>
+            </article>
+            <footer class="footer">
+                <p>© 2025 · <a href="#">Gabriel Soares Baptista</a></p>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        const toggle = document.querySelector('.mobile-menu-toggle');
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.querySelector('.mobile-menu-overlay');
+
+        function openMenu() {
+            sidebar.classList.add('open');
+            overlay.classList.add('open');
+            toggle.classList.add('open');
+            toggle.innerHTML = '<i data-lucide="x"></i>';
+            CourseForgeUI.initIcons();
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMenu() {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('open');
+            toggle.classList.remove('open');
+            toggle.innerHTML = '<i data-lucide="menu"></i>';
+            CourseForgeUI.initIcons();
+            document.body.style.overflow = '';
+        }
+
+        toggle.addEventListener('click', () => {
+            if (sidebar.classList.contains('open')) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        overlay.addEventListener('click', closeMenu);
+    </script>
+
+    
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            renderMathInElement(document.body, {
+                output: 'html',
+                delimiters: [
+                    { left: "$$", right: "$$", display: true },
+                    { left: "$", right: "$", display: false },
+                    { left: "\\(", right: "\\)", display: false },
+                    { left: "\\[", right: "\\]", display: true }
+                ],
+                throwOnError: false,
+                strict: false
+            });
+        });
+    </script>
+    
+    
+    <script src="/aulas-faesa/js/vendor/prism/prism.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-c.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-cpp.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-python.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-clike.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-perl.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-java.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-mermaid.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-php.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js" data-no-bundle></script>
+    
+    
+    
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            mermaid.initialize({
+                startOnLoad: true,
+                theme: 'default',
+                securityLevel: 'loose',
+                fontFamily: 'Inter, system-ui, sans-serif',
+                themeVariables: {
+                    fontSize: '16px',
+                    edgeLabelFontSize: '16px',
+                    multiplicityFontSize: '18px'
+                }
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const isSubcourse = false;
+        const courseName = "Compiladores";
+        CourseForgeNav.applyDynamicBreadcrumbs('.breadcrumb', isSubcourse);
+        CourseForgeNav.initScrollSpy();
+        CourseForgeUI.initCopyButtons();
+        CourseForgeUI.initExamples();
+        });
+
+        function handleBackNavigation() {
+            const isSubcourse = false;
+        const dynamic = CourseForgeNav.getBackLink('contents.html', 'Voltar', isSubcourse);
+        window.location.href = dynamic.url;
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,1331 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <title>Camada de Transporte Completa: UDP e TCP</title>
+    <link rel="icon" href="/aulas-faesa/img/dark-favicon.svg" media="(prefers-color-scheme: light)">
+    <link rel="icon" href="/aulas-faesa/img/light-favicon.svg" media="(prefers-color-scheme: dark)">
+
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/reset.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/reveal.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/theme/white.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/aulas-faesa/css/prism-one-light.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/fonts.css" data-no-bundle>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+            <section><h1>Camada de Transporte Completa: UDP e TCP</h1>
+<h2>Fundamentos, portas, conexão e controle</h2>
+<p>Professor: Gabriel Soares Baptista</p>
+</section>
+<section><h1>Da Aula Anterior Para Hoje</h1>
+<p>Na aula passada, o IP entregava pacotes entre <strong>hosts</strong>.</p>
+<p>Hoje a pergunta muda.</p>
+<h3>Pergunta central</h3>
+<p>Como entregar dados ao <strong>processo certo</strong> dentro do host?</p>
+</section>
+<section><h1>Ideia Central</h1>
+<p>A camada de transporte oferece comunicação <strong>processo a processo</strong>.</p>
+<h3>Nesta aula</h3>
+<ul>
+<li>portas e multiplexação</li>
+<li>UDP como transporte mínimo</li>
+<li>TCP como fluxo confiável</li>
+<li>conexão, fluxo, erro e congestionamento</li>
+</ul>
+<div class="callout callout-abstract">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
+    <span class="callout-title-inner">Base da aula<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Forouzan capítulo 23 e Tanenbaum capítulo 6.</p>
+  </div>
+</div>
+</section>
+<section><h1>Mapa de Leitura</h1>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Livro</th>
+  <th style="text-align:left">Trecho</th>
+  <th style="text-align:left">Assunto</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Forouzan 23.1</td>
+  <td style="text-align:left">703-708</td>
+  <td style="text-align:left">processos e portas</td>
+</tr>
+<tr>
+  <td style="text-align:left">Forouzan 23.2</td>
+  <td style="text-align:left">709-715</td>
+  <td style="text-align:left">UDP</td>
+</tr>
+<tr>
+  <td style="text-align:left">Forouzan 23.3</td>
+  <td style="text-align:left">715-735</td>
+  <td style="text-align:left">TCP</td>
+</tr>
+<tr>
+  <td style="text-align:left">Tanenbaum 6.1-6.5</td>
+  <td style="text-align:left">310-365</td>
+  <td style="text-align:left">serviço, sockets, UDP e TCP</td>
+</tr>
+</tbody>
+</table>
+<h3>Recorte</h3>
+<p>SCTP fica fora da aula de hoje.</p>
+</section>
+<section><h1>O Problema</h1>
+<p>Um host executa vários programas ao mesmo tempo.</p>
+<h3>Exemplo</h3>
+<ul>
+<li>navegador</li>
+<li>DNS</li>
+<li>e-mail</li>
+<li>sincronização de arquivos</li>
+</ul>
+<p>O IP entrega ao host. A camada de transporte entrega ao processo.</p>
+</section>
+<section><h1>Enlace, Rede e Transporte</h1>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Camada</th>
+  <th style="text-align:left">Unidade</th>
+  <th style="text-align:left">Comunicação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Enlace</td>
+  <td style="text-align:left">quadro</td>
+  <td style="text-align:left">nó a nó</td>
+</tr>
+<tr>
+  <td style="text-align:left">Rede</td>
+  <td style="text-align:left">pacote</td>
+  <td style="text-align:left">host a host</td>
+</tr>
+<tr>
+  <td style="text-align:left">Transporte</td>
+  <td style="text-align:left">segmento/datagrama</td>
+  <td style="text-align:left">processo a processo</td>
+</tr>
+</tbody>
+</table>
+<h3>Regra prática</h3>
+<p>IP identifica a máquina. Porta identifica o serviço/processo.</p>
+</section>
+<section><h1>Ambiente da Camada de Transporte</h1>
+<img src="../static/fig6_4_ambiente_enlace_transporte_tanenbaum.png" width="85%" style="display: block; margin: 0 auto;">
+
+<h3>Leitura</h3>
+<p>No enlace, há um canal direto.</p>
+<p>No transporte, as pontas conversam através de uma rede inteira.</p>
+</section>
+<section><h1>Portas</h1>
+<p>Uma porta é um número de <strong>16 bits</strong>.</p>
+<h3>Intervalo</h3>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">0 a 65535
+</code></pre>
+<h3>Ideia</h3>
+<p>Portas separam conversas dentro do mesmo host.</p>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Erro comum<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Porta não identifica máquina. Quem identifica máquina é o IP.</p>
+  </div>
+</div>
+</section>
+<section><h1>Portas Conhecidas e Efêmeras</h1>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Tipo</th>
+  <th style="text-align:left">Uso</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Porta conhecida</td>
+  <td style="text-align:left">serviço do servidor</td>
+</tr>
+<tr>
+  <td style="text-align:left">Porta efêmera</td>
+  <td style="text-align:left">conversa temporária do cliente</td>
+</tr>
+</tbody>
+</table>
+<h3>Exemplo</h3>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">Cliente: 10.0.0.8:53144
+Servidor: 200.10.1.5:443
+</code></pre>
+</section>
+<section><h1>Multiplexação</h1>
+<p>Na origem, vários processos usam a rede ao mesmo tempo.</p>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="760" viewBox="0.00 0.00 328.00 158.00" class="svg-graph graphviz-img"><g id="svg-graphviz-dda83cc9c700-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 154)"><title>Mux</title><g id="svg-graphviz-dda83cc9c700-node1" class="node"><title>a</title><path fill="#eef4ff" stroke="#5b7bbb" d="M91,-150C91,-150 12,-150 12,-150 6,-150 0,-144 0,-138 0,-138 0,-124 0,-124 0,-118 6,-112 12,-112 12,-112 91,-112 91,-112 97,-112 103,-118 103,-124 103,-124 103,-138 103,-138 103,-144 97,-150 91,-150" /><text text-anchor="middle" x="51.5" y="-134.8" font-family="Helvetica,sans-Serif" font-size="14.00">Navegador</text><text text-anchor="middle" x="51.5" y="-119.8" font-family="Helvetica,sans-Serif" font-size="14.00">porta 53144</text></g><g id="svg-graphviz-dda83cc9c700-node4" class="node"><title>t</title><path fill="#eef4ff" stroke="#5b7bbb" d="M218,-94C218,-94 151,-94 151,-94 145,-94 139,-88 139,-82 139,-82 139,-68 139,-68 139,-62 145,-56 151,-56 151,-56 218,-56 218,-56 224,-56 230,-62 230,-68 230,-68 230,-82 230,-82 230,-88 224,-94 218,-94" /><text text-anchor="middle" x="184.5" y="-78.8" font-family="Helvetica,sans-Serif" font-size="14.00">Transporte</text><text text-anchor="middle" x="184.5" y="-63.8" font-family="Helvetica,sans-Serif" font-size="14.00">multiplexa</text></g><g id="svg-graphviz-dda83cc9c700-edge1" class="edge"><title>a-&gt;t</title><path fill="none" stroke="black" d="M97.22,-111.88C107.65,-107.42 118.87,-102.63 129.65,-98.02" /><polygon fill="black" stroke="black" points="131.17,-101.18 138.99,-94.03 128.41,-94.74 131.17,-101.18" /></g><g id="svg-graphviz-dda83cc9c700-node2" class="node"><title>b</title><path fill="#eef4ff" stroke="#5b7bbb" d="M91,-94C91,-94 12,-94 12,-94 6,-94 0,-88 0,-82 0,-82 0,-68 0,-68 0,-62 6,-56 12,-56 12,-56 91,-56 91,-56 97,-56 103,-62 103,-68 103,-68 103,-82 103,-82 103,-88 97,-94 91,-94" /><text text-anchor="middle" x="51.5" y="-78.8" font-family="Helvetica,sans-Serif" font-size="14.00">DNS</text><text text-anchor="middle" x="51.5" y="-63.8" font-family="Helvetica,sans-Serif" font-size="14.00">porta 53145</text></g><g id="svg-graphviz-dda83cc9c700-edge2" class="edge"><title>b-&gt;t</title><path fill="none" stroke="black" d="M103.15,-75C111.54,-75 120.28,-75 128.77,-75" /><polygon fill="black" stroke="black" points="128.96,-78.5 138.96,-75 128.96,-71.5 128.96,-78.5" /></g><g id="svg-graphviz-dda83cc9c700-node3" class="node"><title>c</title><path fill="#eef4ff" stroke="#5b7bbb" d="M91,-38C91,-38 12,-38 12,-38 6,-38 0,-32 0,-26 0,-26 0,-12 0,-12 0,-6 6,0 12,0 12,0 91,0 91,0 97,0 103,-6 103,-12 103,-12 103,-26 103,-26 103,-32 97,-38 91,-38" /><text text-anchor="middle" x="51.5" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">SSH</text><text text-anchor="middle" x="51.5" y="-7.8" font-family="Helvetica,sans-Serif" font-size="14.00">porta 53146</text></g><g id="svg-graphviz-dda83cc9c700-edge3" class="edge"><title>c-&gt;t</title><path fill="none" stroke="black" d="M97.22,-38.12C107.65,-42.58 118.87,-47.37 129.65,-51.98" /><polygon fill="black" stroke="black" points="128.41,-55.26 138.99,-55.97 131.17,-48.82 128.41,-55.26" /></g><g id="svg-graphviz-dda83cc9c700-node5" class="node"><title>ip</title><path fill="#eef4ff" stroke="#5b7bbb" d="M308,-93C308,-93 278,-93 278,-93 272,-93 266,-87 266,-81 266,-81 266,-69 266,-69 266,-63 272,-57 278,-57 278,-57 308,-57 308,-57 314,-57 320,-63 320,-69 320,-69 320,-81 320,-81 320,-87 314,-93 308,-93" /><text text-anchor="middle" x="293" y="-71.3" font-family="Helvetica,sans-Serif" font-size="14.00">IP</text></g><g id="svg-graphviz-dda83cc9c700-edge4" class="edge"><title>t-&gt;ip</title><path fill="none" stroke="black" d="M230.05,-75C238.63,-75 247.51,-75 255.78,-75" /><polygon fill="black" stroke="black" points="255.87,-78.5 265.87,-75 255.87,-71.5 255.87,-78.5" /></g></g></svg></div></div>
+
+<h3>No destino</h3>
+<p>A camada de transporte faz a demultiplexação pela porta.</p>
+</section>
+<section><h1>UDP</h1>
+<p>UDP significa <strong>User Datagram Protocol</strong>.</p>
+<h3>Características</h3>
+<ul>
+<li>sem conexão</li>
+<li>não confiável no sentido técnico</li>
+<li>cabeçalho pequeno</li>
+<li>não controla fluxo</li>
+<li>não retransmite perdas</li>
+</ul>
+<h3>Ideia</h3>
+<p>Entrega processo a processo com mínimo controle.</p>
+</section>
+<section><h1>Cabeçalho UDP</h1>
+<img src="../static/fig23_9_formato_datagrama_udp_forouzan.png" width="75%" style="display: block; margin: 0 auto;">
+
+<h3>Quatro campos</h3>
+<ul>
+<li>porta de origem</li>
+<li>porta de destino</li>
+<li>comprimento</li>
+<li>checksum</li>
+</ul>
+</section>
+<section><h1>Checksum UDP</h1>
+<img src="../static/fig23_10_pseudocabecalho_checksum_udp_forouzan.png" width="78%" style="display: block; margin: 0 auto;">
+
+<h3>Por que pseudocabeçalho?</h3>
+<p>Para detectar erro envolvendo IP de origem, IP de destino e protocolo.</p>
+</section>
+<section><h1>O Que o UDP Não Faz</h1>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Necessidade</th>
+  <th style="text-align:left">UDP faz?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">estabelecer conexão</td>
+  <td style="text-align:left">não</td>
+</tr>
+<tr>
+  <td style="text-align:left">confirmar recebimento</td>
+  <td style="text-align:left">não</td>
+</tr>
+<tr>
+  <td style="text-align:left">retransmitir</td>
+  <td style="text-align:left">não</td>
+</tr>
+<tr>
+  <td style="text-align:left">ordenar</td>
+  <td style="text-align:left">não</td>
+</tr>
+<tr>
+  <td style="text-align:left">controlar fluxo</td>
+  <td style="text-align:left">não</td>
+</tr>
+<tr>
+  <td style="text-align:left">detectar erro simples</td>
+  <td style="text-align:left">sim</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section><h1>Quando UDP Faz Sentido</h1>
+<h3>Bom para</h3>
+<ul>
+<li>perguntas curtas</li>
+<li>tempo real</li>
+<li>multicast</li>
+<li>aplicações com controle próprio</li>
+</ul>
+<h3>Exemplos</h3>
+<ul>
+<li>DNS comum</li>
+<li>NTP</li>
+<li>SNMP</li>
+<li>voz/vídeo em tempo real</li>
+</ul>
+</section>
+<section><h1>TCP</h1>
+<p>TCP significa <strong>Transmission Control Protocol</strong>.</p>
+<h3>Características</h3>
+<ul>
+<li>orientado a conexão</li>
+<li>confiável</li>
+<li>fluxo de bytes</li>
+<li>entrega em ordem</li>
+<li>controla fluxo</li>
+<li>reage a congestionamento</li>
+</ul>
+</section>
+<section><h1>Segmento TCP</h1>
+<img src="../static/fig23_16_formato_segmento_tcp_forouzan.png" width="82%" style="display: block; margin: 0 auto;">
+
+<h3>Ideia</h3>
+<p>O cabeçalho TCP é maior porque o TCP assume mais responsabilidades.</p>
+</section>
+<section><h1>TCP é Fluxo de Bytes</h1>
+<p>TCP não entrega mensagens.</p>
+<p>TCP entrega uma sequência contínua de bytes.</p>
+<h3>Exemplo</h3>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">Aplicação escreve: A | B | C
+Outra ponta pode ler: ABC
+</code></pre>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Erro comum<br /></span>
+  </div>
+  <div class="callout-content">
+<p>TCP não é “UDP confiável”. Ele tem outra abstração.</p>
+  </div>
+</div>
+</section>
+<section><h1>Segmentos e Sequência</h1>
+<p>O número de sequência indica o <strong>primeiro byte</strong> do segmento.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Segmento</th>
+  <th style="text-align:left">Bytes</th>
+  <th style="text-align:left">Seq</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">1</td>
+  <td style="text-align:left">1001-2000</td>
+  <td style="text-align:left">1001</td>
+</tr>
+<tr>
+  <td style="text-align:left">2</td>
+  <td style="text-align:left">2001-3000</td>
+  <td style="text-align:left">2001</td>
+</tr>
+<tr>
+  <td style="text-align:left">3</td>
+  <td style="text-align:left">3001-4000</td>
+  <td style="text-align:left">3001</td>
+</tr>
+</tbody>
+</table>
+<h3>ACK</h3>
+<p><code>ACK = 4001</code> significa: espero o byte 4001.</p>
+</section>
+<section><h1>Handshake de Três Vias</h1>
+<img src="../static/fig23_18_three_way_handshaking_forouzan.png" width="82%" style="display: block; margin: 0 auto;">
+
+<h3>Função</h3>
+<p>Sincronizar números iniciais e abrir a conexão.</p>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Segurança<br /></span>
+  </div>
+  <div class="callout-content">
+<p>SYN flood explora conexões iniciadas e não completadas.</p>
+  </div>
+</div>
+</section>
+<section><h1>Controle de Fluxo</h1>
+<p>Controle de fluxo protege o <strong>receptor</strong>.</p>
+<h3>Janela de recepção</h3>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">rwnd = espaço livre anunciado pelo receptor
+</code></pre>
+<p>Se <code>rwnd = 0</code>, o transmissor deve parar de enviar novos dados.</p>
+</section>
+<section><h1>Controle de Erro</h1>
+<p>Controle de erro protege a confiabilidade do fluxo.</p>
+<h3>Ferramentas</h3>
+<ul>
+<li>checksum</li>
+<li>ACKs</li>
+<li>temporizadores</li>
+<li>retransmissões</li>
+<li>descarte de duplicatas</li>
+</ul>
+<h3>Regra</h3>
+<p>Segmento corrompido é descartado.</p>
+</section>
+<section><h1>Perda e ACK Duplicado</h1>
+<p>Se faltam bytes no meio, o receptor não avança o ACK.</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">Recebido: 501-600, 601-700, 801-900
+Faltando: 701-800
+ACK: 701
+</code></pre>
+<h3>Leitura</h3>
+<p>Continuo esperando o byte 701.</p>
+</section>
+<section><h1>Controle de Congestionamento</h1>
+<p>Controle de congestionamento protege a <strong>rede</strong>.</p>
+<h3>Dois limites</h3>
+<p>$$
+janela\ efetiva = \min(rwnd, cwnd)
+$$</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Janela</th>
+  <th style="text-align:left">Protege</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><code>rwnd</code></td>
+  <td style="text-align:left">receptor</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>cwnd</code></td>
+  <td style="text-align:left">rede</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section><h1>Encerramento TCP</h1>
+<img src="../static/fig23_20_encerramento_conexao_tcp_forouzan.png" width="72%" style="display: block; margin: 0 auto;">
+
+<h3>Ideia</h3>
+<p><code>FIN</code> informa: não enviarei mais dados nessa direção.</p>
+</section>
+<section><h1>Semi-encerramento</h1>
+<img src="../static/fig23_21_semi_encerramento_forouzan.png" width="55%" style="display: block; margin: 0 auto;">
+
+<p>Um lado para de enviar, mas ainda pode receber.</p>
+</section>
+<section><h1>UDP x TCP</h1>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">UDP</th>
+  <th style="text-align:left">TCP</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">sem conexão</td>
+  <td style="text-align:left">orientado a conexão</td>
+</tr>
+<tr>
+  <td style="text-align:left">datagramas</td>
+  <td style="text-align:left">fluxo de bytes</td>
+</tr>
+<tr>
+  <td style="text-align:left">cabeçalho pequeno</td>
+  <td style="text-align:left">cabeçalho maior</td>
+</tr>
+<tr>
+  <td style="text-align:left">sem retransmissão</td>
+  <td style="text-align:left">retransmite</td>
+</tr>
+<tr>
+  <td style="text-align:left">sem ordem garantida</td>
+  <td style="text-align:left">entrega em ordem</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section><h1>Como Escolher?</h1>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Se a aplicação precisa...</th>
+  <th style="text-align:left">Use provavelmente</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">todos os bytes em ordem</td>
+  <td style="text-align:left">TCP</td>
+</tr>
+<tr>
+  <td style="text-align:left">pergunta curta repetível</td>
+  <td style="text-align:left">UDP</td>
+</tr>
+<tr>
+  <td style="text-align:left">atraso baixo</td>
+  <td style="text-align:left">UDP ou QUIC</td>
+</tr>
+<tr>
+  <td style="text-align:left">sessão confiável</td>
+  <td style="text-align:left">TCP</td>
+</tr>
+<tr>
+  <td style="text-align:left">controle próprio</td>
+  <td style="text-align:left">UDP</td>
+</tr>
+</tbody>
+</table>
+<h3>Critério</h3>
+<p>Não é moderno versus antigo. É serviço necessário.</p>
+</section>
+<section><h1>Relação Com a Próxima Aula</h1>
+<p>Na camada de aplicação veremos protocolos reais usando transporte.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Aplicação</th>
+  <th style="text-align:left">Transporte comum</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">DNS</td>
+  <td style="text-align:left">UDP/TCP</td>
+</tr>
+<tr>
+  <td style="text-align:left">HTTP/1.1 e HTTP/2</td>
+  <td style="text-align:left">TCP</td>
+</tr>
+<tr>
+  <td style="text-align:left">HTTP/3</td>
+  <td style="text-align:left">QUIC sobre UDP</td>
+</tr>
+<tr>
+  <td style="text-align:left">E-mail</td>
+  <td style="text-align:left">TCP</td>
+</tr>
+<tr>
+  <td style="text-align:left">NTP</td>
+  <td style="text-align:left">UDP</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section><h1>Questões Rápidas</h1>
+<ol>
+<li>Por que IP sozinho não basta?</li>
+<li>O que uma porta identifica?</li>
+<li>O que significa <code>ACK = 4001</code>?</li>
+<li>Qual a diferença entre <code>rwnd</code> e <code>cwnd</code>?</li>
+</ol>
+</section>
+        </div>
+    </div>
+
+    <script src="/aulas-faesa/js/vendor/reveal/reveal.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/notes/notes.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/markdown/markdown.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/math/math.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/zoom/zoom.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/prism.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-c.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-python.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-clike.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-cpp.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-perl.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-java.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-php.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/toolbar/prism-toolbar.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/show-language/prism-show-language.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/prism-slang.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/mermaid.min.js" data-no-bundle></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            mermaid.initialize({
+                startOnLoad: false,
+                theme: 'default',
+                securityLevel: 'loose',
+                htmlLabels: false,
+                fontFamily: 'Inter, system-ui, sans-serif',
+            });
+        });
+    </script>
+    <script src="/aulas-faesa/js/rough.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/apply_sketch.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/lucide.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/ui.js" data-no-bundle></script>
+    <script>
+        const waitForNextFrame = () => new Promise(resolve => requestAnimationFrame(resolve));
+
+        const initSlideUI = () => {
+            if (!window.CourseForgeUI) {
+                return;
+            }
+
+            window.CourseForgeUI.initCopyButtons();
+            window.CourseForgeUI.initIcons();
+        };
+
+        const renderMermaidsInSlide = async (slide) => {
+            if (!slide) {
+                return;
+            }
+
+            const mermaids = slide.querySelectorAll('.mermaid');
+            if (!mermaids.length) {
+                return;
+            }
+
+            try {
+                if (document.fonts?.ready) {
+                    await document.fonts.ready;
+                }
+
+                await waitForNextFrame();
+                await waitForNextFrame();
+
+                for (const element of mermaids) {
+                    if (element.dataset.mermaidRendered === 'true') {
+                        continue;
+                    }
+
+                    await mermaid.run({
+                        nodes: [element],
+                    });
+                    element.dataset.mermaidRendered = 'true';
+                }
+            } catch (err) {
+                console.warn('Mermaid render failed', err);
+            }
+        };
+
+        const updateMermaidDisplayBounds = (slide) => {
+            const scope = slide || document;
+            const displays = scope.querySelectorAll('.mermaid-display');
+
+            for (const display of displays) {
+                const rect = display.getBoundingClientRect();
+                const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+                const bottomGap = 24;
+                const availableHeight = Math.max(160, Math.floor(viewportHeight - rect.top - bottomGap));
+                display.style.setProperty('--mermaid-max-height', `${availableHeight}px`);
+            }
+        };
+
+        const resetNativeLineNumbers = (pre) => {
+            if (!pre?.classList.contains('line-numbers')) {
+                return;
+            }
+
+            const existingRows = pre.querySelector('.line-numbers-rows');
+            if (existingRows) {
+                existingRows.remove();
+            }
+        };
+
+        const highlightCodeInSlide = (slide) => {
+            const scope = slide || document;
+            const codeBlocks = scope.querySelectorAll('pre[class*="language-"] > code[class*="language-"]');
+
+            for (const code of codeBlocks) {
+                const pre = code.parentElement;
+                resetNativeLineNumbers(pre);
+                Prism.highlightElement(code);
+
+                if (pre?.classList.contains('line-numbers') && Prism.plugins?.lineNumbers?.resize) {
+                    Prism.plugins.lineNumbers.resize(pre);
+                }
+            }
+        };
+
+        const enhanceCurrentSlide = async (slide) => {
+            highlightCodeInSlide(slide);
+            await renderMermaidsInSlide(slide);
+            updateMermaidDisplayBounds(slide);
+            initSlideUI();
+        };
+
+        Reveal.initialize({
+            hash: true,
+            slideNumber: 'c/t',
+            center: false,
+            controls: false,
+            plugins: [RevealMarkdown, RevealNotes, RevealMath.KaTeX, RevealZoom],
+            katex: {
+                local: '/aulas-faesa/js/vendor/katex',
+                output: 'html',
+                throwOnError: false,
+                strict: false,
+            },
+            width: 960,
+            height: 800,
+            margin: 0.15,
+            maxScale: 2.0,
+        });
+
+        Reveal.on('ready', event => {
+            enhanceCurrentSlide(event.currentSlide);
+        });
+
+        Reveal.on('slideready', event => {
+            enhanceCurrentSlide(event.currentSlide);
+        });
+
+        Reveal.on('slidechanged', event => {
+            enhanceCurrentSlide(event.currentSlide);
+        });
+
+        window.addEventListener('resize', () => {
+            updateMermaidDisplayBounds(Reveal.getCurrentSlide());
+        });
+    </script>
+    <style>
+        /* Modern base styles */
+        :root {
+            --callout-note: #448aff;
+            --callout-abstract: #00b0ff;
+            --callout-info: #00b8d4;
+            --callout-todo: #00bfa5;
+            --callout-tip: #00c853;
+            --callout-success: #64dd17;
+            --callout-question: #ffab00;
+            --callout-warning: #ff9100;
+            --callout-failure: #ff5252;
+            --callout-danger: #ff1744;
+            --callout-bug: #f50057;
+            --callout-example: #7c4dff;
+            --callout-quote: #9e9e9e;
+            --code-bg: #f1f5f9;
+            --border: #e2e8f0;
+            --radius: 6px;
+            --radius-sm: 4px;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --text-muted: #64748b;
+            --text: #334155;
+            --bg: #ffffff;
+            --heading: #0f172a;
+            --link: #3b82f6;
+            --font-code: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+        }
+
+        .reveal {
+            font-size: 20px;
+            text-align: left !important;
+        }
+
+        .reveal code:not(pre code) {
+            font-family: var(--font-code) !important;
+            background-color: var(--code-bg) !important;
+            padding: 0.1em 0.35em !important;
+            border-radius: var(--radius-sm) !important;
+            font-size: 0.9em !important;
+            color: var(--link) !important;
+            border: 1px dashed var(--border) !important;
+            white-space: pre-wrap !important;
+            word-break: break-word !important;
+            font-variant-ligatures: none;
+            font-feature-settings: "liga" 0, "calt" 0;
+        }
+
+        .reveal h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px !important;
+            margin-left: 0 !important;
+            /* min-height: 2.3em; */
+            display: flex;
+            align-items: center;
+            justify-content: flex-start !important;
+            text-align: left !important;
+            width: 100% !important;
+            text-shadow: none !important;
+        }
+
+        /* Prism overrides for Reveal.js */
+        .reveal div.code-toolbar {
+            position: relative;
+            width: 100% !important;
+            margin: 1.5rem 0 !important;
+        }
+
+        .reveal pre[class*="language-"] {
+            background: hsl(230, 1%, 98%) !important;
+            margin: 1.5rem 0 !important;
+            padding: 1rem !important;
+            border: 1px solid var(--border) !important;
+            border-radius: var(--radius) !important;
+            box-shadow: var(--shadow-sm) !important;
+            font-family: var(--font-code) !important;
+            font-size: 0.85em !important;
+            position: relative;
+            overflow-x: auto;
+            box-sizing: border-box !important;
+            max-width: 100% !important;
+            font-variant-ligatures: none;
+            font-feature-settings: "liga" 0, "calt" 0;
+        }
+
+        .reveal pre[class*="language-"] > code {
+            background: 0 0 !important;
+            text-shadow: none !important;
+            color: hsl(230, 8%, 24%) !important;
+            position: relative !important;
+            display: block !important;
+        }
+
+        .reveal .line-numbers .line-numbers-rows {
+            border-right: 1px solid #444 !important;
+            padding-right: .5rem !important;
+            margin-bottom: 1.5rem;
+        }
+
+        .reveal .line-numbers-rows>span:before {
+            color: #666 !important;
+        }
+
+        .reveal pre[class*="language-"].line-numbers,
+        .reveal pre[class*="language-"]:has(.line-numbers-rows) {
+            padding-left: 3.8em !important;
+            overflow-y: hidden !important;
+        }
+
+        .reveal .copy-button,
+        .reveal pre[data-lang]::before {
+            position: absolute;
+            top: .5rem;
+            height: 26px;
+            background: hsl(230, 1%, 92%);
+            border: 1px solid hsl(230, 1%, 85%);
+            border-radius: var(--radius-sm);
+            box-sizing: border-box;
+        }
+
+        .reveal .copy-button {
+            right: .5rem;
+            width: 26px;
+            padding: 0;
+            color: hsl(230, 6%, 44%);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all .2s ease;
+            z-index: 20;
+            opacity: .8;
+        }
+
+        .reveal .copy-button:hover {
+            background: hsl(230, 1%, 85%);
+            color: hsl(230, 8%, 24%);
+            opacity: 1;
+        }
+
+        .reveal .copy-button svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Language label styling - hide all Prism toolbar plugins, keep only data-lang label */
+        .reveal div.toolbar,
+        .reveal div.toolbar-item,
+        .reveal button.toolbar-item,
+        .reveal span.toolbar-item {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            height: 0 !important;
+            width: 0 !important;
+            overflow: hidden !important;
+            position: absolute !important;
+            pointer-events: none !important;
+        }
+
+        /* Use the pseudo-element data-lang label only */
+        .reveal pre[data-lang]::before {
+            content: attr(data-lang);
+            right: 2.35rem;
+            padding: 0 .5rem;
+            font-size: .65rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: hsl(230, 6%, 50%);
+            pointer-events: none;
+            z-index: 10;
+            display: inline-flex !important;
+            align-items: center !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            height: 26px !important;
+            width: auto !important;
+            position: absolute !important;
+            overflow: visible !important;
+            line-height: 26px !important;
+        }
+
+        .reveal h2 {
+            font-size: 1.6em;
+            margin-top: 30px !important;
+            margin-bottom: 20px !important;
+            text-align: left !important;
+        }
+
+        .reveal h3 {
+            font-size: 1.3em;
+            margin-top: 20px !important;
+            margin-bottom: 15px !important;
+            text-align: left !important;
+        }
+
+        .reveal p {
+            line-height: 1.5;
+            margin-top: 20px !important;
+            margin-left: 0 !important;
+            text-align: left !important;
+        }
+
+        .reveal ul,
+        .reveal ol,
+        .reveal li {
+            line-height: 1.5;
+            text-align: left !important;
+            margin-left: 0 !important;
+        }
+        
+        .reveal ul, .reveal ol {
+            display: block !important;
+            padding-left: 1.2em !important;
+        }
+
+        /* Slide padding and layout */
+        .reveal .slides section {
+            padding: 40px !important;
+            box-sizing: border-box;
+            text-align: left !important;
+            overflow: visible !important;
+        }
+
+        .reveal .slides {
+            text-align: left !important;
+        }
+
+        /* Centering for Title slides (h1 ONLY, h1 + h2 ONLY, or h1 + h2 + p ONLY) */
+        .reveal .slides section:not(.stack):has(> h1:only-child),
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child),
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) {
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: center !important;
+            align-items: center !important;
+            text-align: center !important;
+            height: 100% !important;
+            top: 0 !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:only-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child) h2,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h2,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) p {
+            justify-content: center !important;
+            text-align: center !important;
+            margin: 0 !important;
+            min-height: auto !important;
+            width: 100% !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h1 {
+            margin-bottom: 0.5em !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h2 {
+            margin-bottom: 0.3em !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) p {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        /* Full screen slide fix */
+        .reveal .slides section:has(.full-screen-image) {
+            padding: 0 !important;
+        }
+
+        /* Full screen slide fix - Garantindo que o fundo do Reveal fique visível e a imagem carregada */
+        .reveal:has(section.present .full-screen-image) {
+            background-image: url('../../slide_end_background.png') !important;
+            background-size: cover !important;
+            background-position: center !important;
+        }
+
+        /* Torna o slide e o container de slides transparentes para mostrar o fundo da .reveal */
+        .reveal:has(section.present .full-screen-image) .slides,
+        .reveal:has(section.present .full-screen-image) .slides section.present {
+            background: transparent !important;
+        }
+
+        .full-screen-image {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 !important;
+            /* Se houver texto, ele centraliza aqui */
+        }
+
+        /* Spacing for diagrams */
+        .reveal .svg-graph {
+            margin-top: 1em !important;
+            margin-bottom: 1em !important;
+            overflow: visible !important; /* Prevent labels from being cut off */
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* Mermaid Diagram Styles */
+        .reveal .mermaid {
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            padding: 0 !important;
+            margin: 1rem 0 !important;
+            font-family: inherit !important;
+            overflow: visible !important;
+            text-align: center;
+            display: block !important;
+            width: auto !important;
+            max-width: 100% !important;
+        }
+
+        .reveal pre.mermaid {
+            white-space: pre;
+            font-family: var(--font-code);
+            color: var(--text-muted);
+            margin: 0 !important;
+            padding: 0 !important;
+            width: auto !important;
+            line-height: 1 !important;
+            border: none !important;
+            box-shadow: none !important;
+            background: transparent !important;
+            overflow: visible !important;
+        }
+
+        .reveal .centered .mermaid {
+            display: block !important;
+            justify-content: center;
+            margin-left: auto !important;
+            margin-right: auto !important;
+        }
+
+        .reveal .mermaid svg {
+            max-width: 100% !important;
+            height: auto !important;
+            display: block !important;
+            overflow: visible !important;
+            vertical-align: top !important;
+            font-family: Inter, system-ui, sans-serif !important;
+            font-style: normal !important;
+            font-variant: normal !important;
+            font-weight: 400 !important;
+            letter-spacing: normal !important;
+            word-spacing: normal !important;
+            text-transform: none !important;
+            text-shadow: none !important;
+            line-height: normal !important;
+            text-rendering: geometricPrecision !important;
+        }
+
+        .reveal .mermaid svg * {
+            font-family: inherit !important;
+            font-style: normal !important;
+            font-variant: normal !important;
+            letter-spacing: normal !important;
+            word-spacing: normal !important;
+            text-transform: none !important;
+            text-shadow: none !important;
+            line-height: normal !important;
+        }
+
+        .reveal .mermaid svg .edgeBadge text,
+        .reveal .mermaid svg .edgeBadge tspan,
+        .reveal .mermaid svg .edgeTerm text,
+        .reveal .mermaid svg .edgeTerm tspan,
+        .reveal .mermaid svg .multiplicity text,
+        .reveal .mermaid svg .multiplicity tspan,
+        .reveal .mermaid svg text.edgeBadge,
+        .reveal .mermaid svg text.edgeTerm {
+            font-size: 18px !important;
+            font-weight: 700 !important;
+            fill: var(--heading) !important;
+        }
+
+        /* Mermaid Source Switcher */
+        .reveal .mermaid-outer-container {
+            margin: 1rem 0;
+            position: relative;
+            width: 100%;
+            max-width: 100%;
+        }
+
+        .reveal .mermaid-switcher {
+            display: flex !important;
+            justify-content: flex-end;
+            margin-bottom: 0.5rem;
+            width: 100%;
+        }
+
+        .reveal .switcher-track {
+            display: inline-flex;
+            align-items: center;
+            background: var(--code-bg);
+            padding: 3px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            position: relative;
+        }
+
+        .reveal .switcher-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            border: none;
+            background: transparent;
+            padding: 0.35rem 1rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            border-radius: calc(var(--radius) - 2px);
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            z-index: 1;
+        }
+
+        .reveal .switcher-btn svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .reveal .switcher-btn:hover {
+            color: var(--text);
+        }
+
+        .reveal .switcher-btn.active {
+            color: var(--heading);
+            background: var(--bg);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        .reveal .mermaid-content {
+            min-height: 50px;
+        }
+
+        /* Mermaid display - respect inline width */
+        .reveal .mermaid-display {
+            transition: opacity 0.2s ease;
+            display: block !important;
+            max-width: 100% !important;
+            max-height: var(--mermaid-max-height, calc(100vh - 140px)) !important;
+            border: none !important;
+            box-shadow: none !important;
+            background: transparent !important;
+            overflow: auto !important;
+        }
+
+        .reveal .mermaid-source pre {
+            margin: 0 !important;
+            background: var(--code-bg) !important;
+            border: 1px dashed var(--border) !important;
+        }
+
+        /* Ensure proper toggle behavior */
+        .reveal .mermaid-source {
+            display: none !important;
+        }
+
+        .reveal .mermaid-source[style*="display: block"],
+        .reveal .mermaid-source[style*="display:block"] {
+            display: block !important;
+        }
+
+        .reveal .mermaid-display[style*="display: none"],
+        .reveal .mermaid-display[style*="display:none"] {
+            display: none !important;
+        }
+
+        .reveal .mermaid-display.centered {
+            margin-left: auto !important;
+            margin-right: auto !important;
+            max-width: 100% !important;
+        }
+
+        .centered:not(.mermaid-display) {
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            width: 100% !important;
+            margin: 1em 0 !important;
+        }
+
+        .no-break {
+            display: block;
+            width: 100%;
+        }
+
+        .reveal blockquote {
+            display: block;
+            position: relative;
+            margin: var(--r-block-margin) auto !important;
+            padding: 5px;
+            font-style: italic;
+            background: rgba(255, 170, 73, 0.2);
+            box-shadow: 0 0 2px rgba(0,0,0,.2);
+            text-align: left !important;
+        }
+
+        .col1 {
+            width: 90%;
+            margin: 0 auto;
+        }
+
+        .col2 {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start;
+            width: 90%;
+            margin: 0 auto;
+            align-items: flex-start;
+        }
+
+        /* Callout Styles */
+        :root {
+            --callout-note: #448aff;
+            --callout-abstract: #00b0ff;
+            --callout-info: #00b8d4;
+            --callout-todo: #00bfa5;
+            --callout-tip: #00c853;
+            --callout-success: #64dd17;
+            --callout-question: #ffab00;
+            --callout-warning: #ff9100;
+            --callout-failure: #ff5252;
+            --callout-danger: #ff1744;
+            --callout-bug: #f50057;
+            --callout-example: #7c4dff;
+            --callout-quote: #9e9e9e;
+            --code-bg: #f8f8f8;
+            --border: #ddd;
+        }
+
+        .reveal .callout {
+            margin: 1rem auto !important;
+            border: 1px solid var(--border);
+            border-left: 6px solid var(--callout-note);
+            border-radius: 4px;
+            overflow: hidden;
+            text-align: left !important;
+            font-size: 0.8em;
+            width: 75% !important;
+            max-width: 100% !important;
+        }
+
+        .reveal .callout-title {
+            padding: 0.5rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            color: var(--callout-note);
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .reveal .callout-icon {
+            display: flex;
+            align-items: center;
+        }
+
+        .reveal .callout-icon svg {
+            width: 1.2em;
+            height: 1.2em;
+        }
+
+        .reveal .callout-content {
+            padding: 0.5rem 1rem;
+        }
+
+        .reveal .callout-content p {
+            margin-top: 0.5rem !important;
+        }
+
+        .reveal .callout-content p:first-child {
+            margin-top: 0 !important;
+        }
+
+        .reveal h1 { text-transform: none !important; }
+
+        .reveal .callout-abstract { border-left-color: var(--callout-abstract); }
+        .reveal .callout-abstract .callout-title { color: var(--callout-abstract); }
+        .reveal .callout-info { border-left-color: var(--callout-info); }
+        .reveal .callout-info .callout-title { color: var(--callout-info); }
+        .reveal .callout-todo { border-left-color: var(--callout-todo); }
+        .reveal .callout-todo .callout-title { color: var(--callout-todo); }
+        .reveal .callout-tip { border-left-color: var(--callout-tip); }
+        .reveal .callout-tip .callout-title { color: var(--callout-tip); }
+        .reveal .callout-success { border-left-color: var(--callout-success); }
+        .reveal .callout-success .callout-title { color: var(--callout-success); }
+        .reveal .callout-question { border-left-color: var(--callout-question); }
+        .reveal .callout-question .callout-title { color: var(--callout-question) ; }
+        .reveal .callout-warning { border-left-color: var(--callout-warning); }
+        .reveal .callout-warning .callout-title { color: var(--callout-warning); }
+        .reveal .callout-failure { border-left-color: var(--callout-failure); }
+        .reveal .callout-failure .callout-title { color: var(--callout-failure); }
+        .reveal .callout-danger { border-left-color: var(--callout-danger); }
+        .reveal .callout-danger .callout-title { color: var(--callout-danger); }
+        .reveal .callout-bug { border-left-color: var(--callout-bug); }
+        .reveal .callout-bug .callout-title { color: var(--callout-bug); }
+        .reveal .callout-example { border-left-color: var(--callout-example); }
+        .reveal .callout-example .callout-title { color: var(--callout-example); }
+        .reveal .callout-quote { border-left-color: var(--callout-quote); }
+        .reveal .callout-quote .callout-title { color: var(--callout-quote); }
+        .red-note { color: var(--callout-failure); }
+
+        .reveal .slide-number {
+            font-size: 0.8em !important;
+            padding: 5px 10px !important;
+            background: rgba(0,0,0,0.1) !important;
+            border-radius: 4px;
+            color: #000000b1 !important;
+        }
+
+        /* Print styles */
+        @media print {
+            .reveal .slides section {
+                display: block !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                position: relative !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+                page-break-after: always !important;
+                overflow: hidden !important;
+            }
+
+            .reveal .slides {
+                transform: none !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+            }
+            
+            .reveal {
+                overflow: visible !important;
+            }
+        }
+    </style>
+</body>
+
+</html>
