@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toposia - Sistemas Operacionais</title>
+    <link rel="icon" href="/aulas-faesa/img/dark-favicon.svg" media="(prefers-color-scheme: light)">
+    <link rel="icon" href="/aulas-faesa/img/light-favicon.svg" media="(prefers-color-scheme: dark)">
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/fonts.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/bundles/katex-base-prism-one-light-b0347952c973.bundle.min.css">
+    
+    
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css" data-no-bundle>
+    <script src="/aulas-faesa/js/bundles/lucide-katex-auto-render-4b36e8bd8642.bundle.min.js"></script>
+</head>
+
+<body>
+    <script>
+        // Restore sidebar state instantly (before first paint) to avoid transition flash
+        (function() {
+            if (localStorage.getItem('cf_sidebar_hidden') === 'true') {
+                document.body.classList.add('sidebar-hidden', 'no-transition');
+            }
+            requestAnimationFrame(function() {
+                requestAnimationFrame(function() {
+                    document.body.classList.remove('no-transition');
+                });
+            });
+        })();
+    </script>
+    <div class="page-wrapper">
+        <nav class="sidebar">
+            <div class="sidebar-content">
+                <header class="sidebar-title-section">
+                    <a href="contents.html" class="course-title-link">
+                        <h1 class="sidebar-course-title">Sistemas Operacionais</h1>
+                    </a>
+                    <div class="sidebar-ornament">❧</div>
+                </header>
+
+                
+                <section class="sidebar-toc-section">
+                    <h2 class="toc-header">Tabela de Conteúdos</h2>
+                    <ol class="toc-list">
+                        
+                        <li class="toc-item level-2">
+                            <a href="#introdução">9.1. Introdução</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#por-que-memória-virtual-existe">9.2. Por que memória virtual existe</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#paginação-e-tradução-de-endereços">9.3. Paginação e tradução de endereços</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#falta-de-página">9.3.1. Falta de página</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#entradas-da-tabela-de-páginas">9.4. Entradas da tabela de páginas</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#acelerando-a-paginação-com-tlb">9.5. Acelerando a paginação com TLB</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#tabelas-de-páginas-para-memórias-grandes">9.6. Tabelas de páginas para memórias grandes</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#tabelas-de-páginas-multinível">9.6.1. Tabelas de páginas multinível</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#tabelas-de-páginas-invertidas">9.6.2. Tabelas de páginas invertidas</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#substituição-de-páginas">9.7. Substituição de páginas</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#algoritmo-ótimo">9.7.1. Algoritmo ótimo</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#nru-não-usada-recentemente">9.7.2. NRU: não usada recentemente</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#fifo-primeiro-a-entrar-primeiro-a-sair">9.7.3. FIFO: primeiro a entrar, primeiro a sair</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#segunda-chance">9.7.4. Segunda chance</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#relógio">9.7.5. Relógio</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#questões">9.8. Questões</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#próximos-passos">9.9. Próximos passos</a>
+                        </li>
+                        
+                    </ol>
+                </section>
+                
+
+                <nav class="sidebar-nav-section">
+                    
+                    <a href="8-memory-management.html" class="sidebar-nav-link prev"><i data-lucide="chevron-left" class="nav-icon"></i> Gerência de Memória</a>
+                    
+                    
+                    <a href="javascript:void(0)" onclick="handleBackNavigation()"
+                        class="sidebar-nav-link back"><i data-lucide="arrow-left" class="nav-icon"></i> Voltar</a>
+                </nav>
+
+            </div>
+        </nav>
+
+        <button class="mobile-menu-toggle" aria-label="Menu">
+            <i data-lucide="menu"></i>
+        </button>
+
+        <button class="sidebar-toggle" onclick="CourseForgeNav.toggleSidebar()" aria-label="Alternar Barra Lateral">
+            <i data-lucide="chevron-left" class="toggle-icon" id="sidebar-toggle-icon"></i>
+        </button>
+
+        <div class="mobile-menu-overlay"></div>
+
+        <main class="main-content">
+            <article class="article">
+                <header class="article-header">
+                    <span class="chapter-number">9</span>
+                    <h1 class="article-title">
+                        <span class="title-ornament left">❧</span>
+                        <span class="title-text">Memória Virtual</span>
+                        <span class="title-ornament right">❧</span>
+                    </h1>
+                    
+                    <p class="article-date">25/05/2026</p>
+                    
+                    
+                    <nav class="breadcrumb" aria-label="Breadcrumb">
+                        
+                        
+                        
+                        <a href="contents.html" class="breadcrumb-link">Sistemas Operacionais</a>
+                        
+                        <span class="breadcrumb-separator"><i data-lucide="chevron-right" class="breadcrumb-icon"></i></span>
+                        
+                        
+                        
+                        
+                        <a href="contents.html#part-III" class="breadcrumb-link">III - Memória e Arquivos</a>
+                        
+                        <span class="breadcrumb-separator"><i data-lucide="chevron-right" class="breadcrumb-icon"></i></span>
+                        
+                        
+                        
+                        <span class="breadcrumb-current">Memória Virtual</span>
+                        
+                        
+                    </nav>
+                    
+                </header>
+                <div class="article-body">
+                    <h2 id="introdução"><span class="heading-text">Introdução</span><span class="heading-arabic">9.1</span></h2>
+<p>Hoje veremos como o sistema operacional cria a ilusão de uma memória grande, contínua e privada, mesmo quando a RAM física é menor, compartilhada e disputada por vários processos.</p>
+<p>Na aula anterior, vimos que registradores de base e limite já ajudam a separar processos e proteger regiões de memória, e que o swapping permite tirar processos inteiros da RAM e colocá-los temporariamente em disco. Essas ideias resolvem parte do problema, mas ainda deixam uma limitação pesada: se um programa inteiro precisa caber na RAM para executar, programas grandes demais continuam impossíveis ou muito caros de alternar.</p>
+<p>O problema central desta aula é este: <strong>como executar programas cujo espaço de endereçamento é maior que a memória física disponível, sem obrigar o programador a dividir tudo manualmente?</strong></p>
+<p>Esta aula usa como base o capítulo 3 do livro de Sistemas Operacionais. A progressão será: por que overlays eram trabalhosos, como a paginação resolve esse problema, como tabelas de páginas e TLB tornam a tradução viável, como páginas são substituídas, quais decisões de projeto importam e por que a segmentação aparece como uma abstração complementar. Os algoritmos serão trabalhados com passo a passo e exemplos.</p>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="350" viewBox="0.00 0.00 331.00 554.00" class="svg-graph graphviz-img"><g id="svg-graphviz-92f101990ae7-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 550)"><title>VirtualMemoryOverview</title><polygon fill="white" stroke="transparent" points="-4,4 -4,-550 327,-550 327,4 -4,4" /><g id="svg-graphviz-92f101990ae7-node1" class="node"><title>Program</title><path fill="#ffe3c2" stroke="black" d="M196,-546C196,-546 12,-546 12,-546 6,-546 0,-540 0,-534 0,-534 0,-500 0,-500 0,-494 6,-488 12,-488 12,-488 196,-488 196,-488 202,-488 208,-494 208,-500 208,-500 208,-534 208,-534 208,-540 202,-546 196,-546" /><text text-anchor="middle" x="104" y="-520.8" font-family="Helvetica,sans-Serif" font-size="14.00">Processo</text><text text-anchor="middle" x="104" y="-505.8" font-family="Helvetica,sans-Serif" font-size="14.00">gera endereços virtuais</text></g><g id="svg-graphviz-92f101990ae7-node2" class="node"><title>MMU</title><path fill="#d9ecff" stroke="black" d="M171,-424C171,-424 37,-424 37,-424 31,-424 25,-418 25,-412 25,-412 25,-378 25,-378 25,-372 31,-366 37,-366 37,-366 171,-366 171,-366 177,-366 183,-372 183,-378 183,-378 183,-412 183,-412 183,-418 177,-424 171,-424" /><text text-anchor="middle" x="104" y="-398.8" font-family="Helvetica,sans-Serif" font-size="14.00">MMU</text><text text-anchor="middle" x="104" y="-383.8" font-family="Helvetica,sans-Serif" font-size="14.00">traduz e verifica</text></g><g id="svg-graphviz-92f101990ae7-edge1" class="edge"><title>Program-&gt;MMU</title><path fill="none" stroke="black" d="M104,-487.87C104,-472.03 104,-452.03 104,-434.73" /><polygon fill="black" stroke="black" points="107.5,-434.37 104,-424.37 100.5,-434.37 107.5,-434.37" /><text text-anchor="middle" x="158.5" y="-452.6" font-family="Times,serif" font-size="13.00">endereço virtual</text></g><g id="svg-graphviz-92f101990ae7-node3" class="node"><title>RAM</title><path fill="#e9f7df" stroke="black" d="M179,-58C179,-58 29,-58 29,-58 23,-58 17,-52 17,-46 17,-46 17,-12 17,-12 17,-6 23,0 29,0 29,0 179,0 179,0 185,0 191,-6 191,-12 191,-12 191,-46 191,-46 191,-52 185,-58 179,-58" /><text text-anchor="middle" x="104" y="-32.8" font-family="Helvetica,sans-Serif" font-size="14.00">RAM</text><text text-anchor="middle" x="104" y="-17.8" font-family="Helvetica,sans-Serif" font-size="14.00">quadros de página</text></g><g id="svg-graphviz-92f101990ae7-edge2" class="edge"><title>MMU-&gt;RAM</title><path fill="none" stroke="black" d="M104,-365.74C104,-301.02 104,-141.99 104,-68.45" /><polygon fill="black" stroke="black" points="107.5,-68.24 104,-58.24 100.5,-68.24 107.5,-68.24" /><text text-anchor="middle" x="154" y="-208.6" font-family="Times,serif" font-size="13.00">endereço físico</text></g><g id="svg-graphviz-92f101990ae7-node5" class="node"><title>OS</title><path fill="#ffd6d6" stroke="black" d="M311,-302C311,-302 141,-302 141,-302 135,-302 129,-296 129,-290 129,-290 129,-256 129,-256 129,-250 135,-244 141,-244 141,-244 311,-244 311,-244 317,-244 323,-250 323,-256 323,-256 323,-290 323,-290 323,-296 317,-302 311,-302" /><text text-anchor="middle" x="226" y="-276.8" font-family="Helvetica,sans-Serif" font-size="14.00">Sistema operacional</text><text text-anchor="middle" x="226" y="-261.8" font-family="Helvetica,sans-Serif" font-size="14.00">trata faltas de página</text></g><g id="svg-graphviz-92f101990ae7-edge3" class="edge"><title>MMU-&gt;OS</title><path fill="none" stroke="black" d="M132.6,-365.87C149.61,-349.14 171.35,-327.75 189.58,-309.82" /><polygon fill="black" stroke="black" points="192.48,-311.88 197.15,-302.37 187.57,-306.89 192.48,-311.88" /><text text-anchor="middle" x="218.5" y="-330.6" font-family="Times,serif" font-size="13.00">falta de página</text></g><g id="svg-graphviz-92f101990ae7-node4" class="node"><title>Disk</title><path fill="#f5f5f5" stroke="black" d="M287.5,-180C287.5,-180 144.5,-180 144.5,-180 138.5,-180 132.5,-174 132.5,-168 132.5,-168 132.5,-134 132.5,-134 132.5,-128 138.5,-122 144.5,-122 144.5,-122 287.5,-122 287.5,-122 293.5,-122 299.5,-128 299.5,-134 299.5,-134 299.5,-168 299.5,-168 299.5,-174 293.5,-180 287.5,-180" /><text text-anchor="middle" x="216" y="-154.8" font-family="Helvetica,sans-Serif" font-size="14.00">Disco</text><text text-anchor="middle" x="216" y="-139.8" font-family="Helvetica,sans-Serif" font-size="14.00">páginas ausentes</text></g><g id="svg-graphviz-92f101990ae7-edge5" class="edge"><title>Disk-&gt;RAM</title><path fill="none" stroke="black" d="M189.74,-121.87C174.13,-105.14 154.17,-83.75 137.43,-65.82" /><polygon fill="black" stroke="black" points="139.86,-63.3 130.48,-58.37 134.75,-68.07 139.86,-63.3" /><text text-anchor="middle" x="214" y="-86.6" font-family="Times,serif" font-size="13.00">carrega página</text></g><g id="svg-graphviz-92f101990ae7-edge4" class="edge"><title>OS-&gt;Disk</title><path fill="none" stroke="black" d="M223.66,-243.87C222.34,-228.03 220.67,-208.03 219.23,-190.73" /><polygon fill="black" stroke="black" points="222.68,-190.05 218.36,-180.37 215.71,-190.63 222.68,-190.05" /><text text-anchor="middle" x="266" y="-208.6" font-family="Times,serif" font-size="13.00">busca página</text></g></g></svg></div></div>
+
+<h2 id="por-que-memória-virtual-existe"><span class="heading-text">Por que memória virtual existe</span><span class="heading-arabic">9.2</span></h2>
+<p>A primeira motivação para memória virtual é simples, mas suas consequências são profundas. Programas crescem, bibliotecas crescem, e interfaces gráficas, navegadores, jogos, compiladores, bancos de dados e ambientes de desenvolvimento usam muito mais memória do que computadores antigos poderiam oferecer. O crescimento da memória física não elimina o problema, porque o software também cresce, e além disso, o sistema normalmente executa muitos processos ao mesmo tempo. Mesmo que cada processo caiba sozinho na RAM, a soma de todos pode exceder a memória física.</p>
+<p>O swapping de processos inteiros é uma resposta possível, mas tem custo alto: mover um processo grande inteiro para o disco e depois trazê-lo de volta pode levar segundos. A memória virtual muda a unidade de transferência. Em vez de mover o processo inteiro, o sistema move <strong>pedaços</strong> do espaço de endereçamento, e essa diferença é o que torna tudo viável.</p>
+<p>Antes da memória virtual, uma solução histórica era usar <strong>sobreposições</strong>, também chamadas de overlays: o programa era dividido em módulos, o programador decidia qual módulo ficava na memória em cada momento, e quando uma parte terminava, outra podia ser carregada por cima. Essa técnica funcionava, mas colocava o trabalho no lugar errado. O programador precisava prever quais partes do programa podiam coexistir e organizar manualmente a entrada e saída desses módulos, algo cansativo, sujeito a erro e pouco escalável.</p>
+<p>A memória virtual automatiza essa ideia. O processo enxerga um espaço de endereçamento próprio, dividido em páginas. Algumas páginas estão na RAM; outras ficam apenas no disco até serem necessárias.</p>
+<div class="example">
+  <div class="example-title">Exemplo 1</div>
+  <p>Imagine um editor de vídeo que possui um espaço virtual de $8$ GB.<br />
+A máquina tem apenas $4$ GB de RAM livre.</p>
+<p>Sem memória virtual, o programa só poderia executar se tudo que ele precisa coubesse simultaneamente na RAM.<br />
+Com memória virtual, o sistema pode manter na RAM apenas as páginas realmente usadas no momento.</p>
+<p>Se o editor está renderizando um trecho curto, páginas do código do renderizador, buffers recentes e estruturas da interface podem estar presentes.<br />
+Páginas de recursos não usados naquele instante podem continuar no disco.</p>
+<p>O programa não precisa saber disso.<br />
+Ele continua gerando endereços virtuais como se seu espaço fosse inteiro e próprio.</p>
+</div>
+<h2 id="paginação-e-tradução-de-endereços"><span class="heading-text">Paginação e tradução de endereços</span><span class="heading-arabic">9.3</span></h2>
+<p>A técnica mais comum para implementar memória virtual é a <strong>paginação</strong>: o espaço de endereçamento virtual é dividido em blocos de tamanho fixo chamados <strong>páginas</strong>, e a memória física é dividida em blocos do mesmo tamanho chamados <strong>quadros de página</strong>. O endereço gerado pelo programa é um <strong>endereço virtual</strong>, o endereço enviado à memória física é um <strong>endereço físico</strong>, e a tradução entre eles é feita pela <strong>MMU</strong>, a unidade de gerenciamento de memória.</p>
+<img src="static/fig_3_8_mmu.png" width="70%">
+
+<p>Nessa figura, a CPU envia endereços virtuais para a MMU, que traduz esses endereços para endereços físicos e envia o resultado à memória. Se a página necessária não estiver presente, o sistema operacional entra em cena.</p>
+<p>Vamos usar um exemplo pequeno para tornar a ideia visível. Suponha um computador com endereços virtuais de $16$ bits, o que dá um espaço virtual de $64$ KB, pois $2^{16} = 65536$ endereços. Se a memória física tem apenas $32$ KB e cada página tem $4$ KB, então temos $\frac{64\text{ KB}}{4\text{ KB}} = 16$ páginas virtuais e $\frac{32\text{ KB}}{4\text{ KB}} = 8$ quadros físicos. Logo, existem mais páginas virtuais do que quadros físicos, portanto nem todas as páginas podem estar na RAM ao mesmo tempo.</p>
+<img src="static/fig_3_9_mapeamento_paginas.png" width="65%">
+
+<p>Na Figura 3.9, algumas páginas virtuais apontam para quadros físicos e outras aparecem com $X$, indicando que não estão presentes na memória física. No hardware real, essa informação aparece por meio de um bit <strong>presente/ausente</strong>.</p>
+<p>Quando usamos páginas de $4$ KB, cada página contém $4096$ bytes. Como $4096 = 2^{12}$, os $12$ bits menos significativos do endereço representam o <strong>deslocamento dentro da página</strong>. Se o endereço virtual tem $16$ bits, sobram $4$ bits para o número da página virtual: $\text{endereço virtual} = \text{número da página virtual} + \text{deslocamento}$. Em termos de bits, $16\text{ bits} = 4\text{ bits de página} + 12\text{ bits de deslocamento}$. A página virtual é usada como índice na tabela de páginas; o deslocamento é copiado sem alteração; o que muda é o número da página, que é substituído pelo número do quadro físico.</p>
+<img src="static/fig_3_10_operacao_mmu.png" width="90%">
+
+<div class="example">
+  <div class="example-title">Exemplo 2</div>
+  <p>Considere páginas de $4$ KB.<br />
+O endereço virtual $8196$ deve ser traduzido.</p>
+<p>Primeiro, identificamos o tamanho da página.</p>
+<p>$$
+4\text{ KB} = 4096\text{ bytes}
+$$</p>
+<p>Depois calculamos a página virtual.</p>
+<p>$$
+\left\lfloor \frac{8196}{4096} \right\rfloor = 2
+$$</p>
+<p>Então o endereço está na página virtual $2$.</p>
+<p>Agora calculamos o deslocamento.</p>
+<p>$$
+8196 - 2 \cdot 4096 = 4
+$$</p>
+<p>Logo, o endereço virtual $8196$ significa: página virtual $2$, deslocamento $4$.</p>
+<p>Se a tabela de páginas diz que a página virtual $2$ está no quadro físico $6$, então o endereço físico será:</p>
+<p>$$
+6 \cdot 4096 + 4 = 24580
+$$</p>
+<p>A tradução final é:</p>
+<p>$$
+8196_{virtual} \rightarrow 24580_{físico}
+$$</p>
+</div>
+<h3 id="falta-de-página"><span class="heading-text">Falta de página</span><span class="heading-arabic">9.3.1</span></h3>
+<p>Uma <strong>falta de página</strong> ocorre quando o processo acessa uma página virtual que não está presente na RAM. A MMU percebe isso pelo bit presente/ausente e, em vez de produzir um endereço físico, desvia para o sistema operacional.</p>
+<p>O tratamento básico é:</p>
+<ol>
+<li>A CPU tenta acessar um endereço virtual.</li>
+<li>A MMU encontra a entrada da página virtual.</li>
+<li>O bit presente/ausente indica que a página não está na RAM.</li>
+<li>O hardware gera uma falta de página.</li>
+<li>O sistema operacional escolhe um quadro físico livre ou escolhe uma página vítima.</li>
+<li>Se a vítima foi modificada, ela é escrita de volta no disco.</li>
+<li>A página necessária é lida do disco para o quadro escolhido.</li>
+<li>A tabela de páginas é atualizada.</li>
+<li>A instrução que falhou é reiniciada.</li>
+</ol>
+<h2 id="entradas-da-tabela-de-páginas"><span class="heading-text">Entradas da tabela de páginas</span><span class="heading-arabic">9.4</span></h2>
+<p>A tabela de páginas mapeia páginas virtuais para quadros físicos. Cada entrada precisa guardar informações suficientes para a MMU decidir o que fazer, e a Figura 3.11 mostra a estrutura típica de uma dessas entradas.</p>
+<img src="static/fig_3_11_entrada_tabela_paginas.png" width="90%">
+
+<p>O campo principal é o <strong>número do quadro de página</strong>, que permite substituir o número da página virtual pelo número do quadro físico. O bit <strong>presente/ausente</strong> indica se a página está na RAM: quando vale $1$, a tradução pode continuar; quando vale $0$, ocorre falta de página. Os bits de <strong>proteção</strong> determinam quais operações são permitidas: uma página pode ser somente leitura, leitura e escrita, ou leitura, escrita e execução, dependendo da arquitetura.</p>
+<p>O bit <strong>modificada</strong>, também chamado de bit sujo, é ativado quando a página recebe uma escrita. Se uma página suja for removida da RAM, precisa ser gravada de volta no disco; se estiver limpa, pode ser descartada, pois sua cópia em disco ainda é válida. O bit <strong>referenciada</strong> indica que a página foi lida ou escrita recentemente e é essencial para vários algoritmos de substituição.</p>
+<p>O bit de <strong>cache desabilitado</strong> aparece em arquiteturas que precisam impedir cache em páginas associadas a dispositivos de E/S. Se uma página representa registradores de um dispositivo, usar uma cópia antiga em cache pode produzir comportamento incorreto.</p>
+<h2 id="acelerando-a-paginação-com-tlb"><span class="heading-text">Acelerando a paginação com TLB</span><span class="heading-arabic">9.5</span></h2>
+<p>A tradução precisa ser rápida porque acontece em praticamente todo acesso à memória. Buscar uma instrução, ler um operando ou escrever um resultado, tudo exige memória. Se cada acesso normal precisasse consultar a tabela de páginas na RAM antes de acessar o dado real, o custo poderia dobrar. Essa é a motivação para a <strong>TLB</strong>, ou Translation Lookaside Buffer: uma pequena memória associativa dentro da MMU que guarda traduções recentes de páginas virtuais para quadros físicos. Como programas tendem a usar repetidamente um pequeno conjunto de páginas, uma TLB pequena pode evitar muitas consultas à tabela completa.</p>
+<img src="static/fig_3_12_tlb.png" width="65%">
+
+<p>Quando a MMU recebe um endereço virtual, ela procura o número da página virtual na TLB, comparando com todas as entradas em paralelo. Se a tradução está na TLB, ocorre um <strong>TLB hit</strong> e a MMU obtém o quadro físico imediatamente. Se a tradução não está na TLB, ocorre um <strong>TLB miss</strong>: nesse caso, a MMU ou o sistema operacional precisa buscar a entrada na tabela de páginas, e depois a tradução pode ser colocada na TLB para acessos futuros.</p>
+<p>Também é importante distinguir tipos de ausência. Uma ausência leve ocorre quando a página está na RAM, mas não está na TLB, e resolver isso pode custar poucas instruções. Uma ausência completa ocorre quando a própria página não está na RAM, exigindo acesso ao disco, o que pode custar milhões de ciclos de CPU. A diferença prática, portanto, é enorme.</p>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">TLB miss e page fault não são a mesma coisa<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Um TLB miss significa que a tradução não está na TLB. Uma page fault significa que a página não está presente na RAM ou que o acesso não pode ser atendido como está. O TLB miss pode ser resolvido sem disco.</p>
+  </div>
+</div>
+<h2 id="tabelas-de-páginas-para-memórias-grandes"><span class="heading-text">Tabelas de páginas para memórias grandes</span><span class="heading-arabic">9.6</span></h2>
+<p>O segundo problema da paginação é o tamanho da tabela de páginas. Com endereços virtuais grandes e páginas pequenas, o número de páginas virtuais pode ser enorme. Em um espaço virtual de $32$ bits com páginas de $4$ KB, temos $\frac{2^{32}}{2^{12}} = 2^{20}$ páginas, mais de um milhão de entradas por processo. Em espaços de $64$ bits, o problema fica muito maior. Duas soluções clássicas aparecem aqui: tabelas de páginas multinível e tabelas de páginas invertidas.</p>
+<h3 id="tabelas-de-páginas-multinível"><span class="heading-text">Tabelas de páginas multinível</span><span class="heading-arabic">9.6.1</span></h3>
+<p>A ideia da tabela multinível é não manter toda a tabela de páginas detalhada na memória se grandes regiões do espaço virtual não são usadas.</p>
+<img src="static/fig_3_13_tabelas_multinivel.png" width="90%">
+
+<p>No exemplo de $32$ bits, o endereço virtual é dividido em três campos: $\text{PT1} = 10\text{ bits}$, $\text{PT2} = 10\text{ bits}$ e $\text{deslocamento} = 12\text{ bits}$. O campo PT1 escolhe uma entrada da tabela de nível 1, que aponta para uma tabela de nível 2. O campo PT2 escolhe uma entrada nessa tabela de nível 2, que finalmente aponta para o quadro físico. O ganho aparece quando boa parte do espaço virtual está vazia. Se o processo usa código no início, dados logo depois e pilha no topo, as regiões do meio podem não precisar de tabelas de nível 2.</p>
+<div class="example">
+  <div class="example-title">Exemplo 3</div>
+  <p>Considere o endereço virtual $0x00403004$.<br />
+Nesse exemplo, ele é interpretado assim:</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Campo</th>
+  <th style="text-align:left">Valor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">PT1</td>
+  <td style="text-align:left">$1$</td>
+</tr>
+<tr>
+  <td style="text-align:left">PT2</td>
+  <td style="text-align:left">$3$</td>
+</tr>
+<tr>
+  <td style="text-align:left">Deslocamento</td>
+  <td style="text-align:left">$4$</td>
+</tr>
+</tbody>
+</table>
+<p>O passo a passo é:</p>
+<ol>
+<li>A MMU usa PT1 $= 1$ para acessar a tabela de nível 1.</li>
+<li>A entrada encontrada aponta para uma tabela de nível 2.</li>
+<li>A MMU usa PT2 $= 3$ nessa tabela de nível 2.</li>
+<li>A entrada encontrada fornece o quadro físico.</li>
+<li>O deslocamento $4$ é anexado ao quadro físico.</li>
+</ol>
+<p>Se a entrada de nível 2 estiver ausente, ocorre falta de página.<br />
+Se a entrada estiver presente, o endereço físico é montado.</p>
+</div>
+<h3 id="tabelas-de-páginas-invertidas"><span class="heading-text">Tabelas de páginas invertidas</span><span class="heading-arabic">9.6.2</span></h3>
+<p>Até aqui, toda tabela de páginas seguia a mesma lógica: para cada página virtual de cada processo, existe uma entrada dizendo em qual quadro físico ela está. Isso funciona, mas o tamanho da tabela cresce com o espaço virtual, e em arquiteturas de $64$ bits esse crescimento é proibitivo.</p>
+<p>A tabela de páginas invertida resolve isso virando a pergunta de cabeça para baixo.</p>
+<p><strong>Na tabela tradicional</strong>, a pergunta é: <em>a página virtual $X$ do processo $Y$ está em qual quadro físico?</em> A resposta está indexada pelo número da página virtual.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Página virtual</th>
+  <th style="text-align:left">Quadro físico</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">$0$</td>
+  <td style="text-align:left">$12$</td>
+</tr>
+<tr>
+  <td style="text-align:left">$1$</td>
+  <td style="text-align:left">$5$</td>
+</tr>
+<tr>
+  <td style="text-align:left">$2$</td>
+  <td style="text-align:left">$18$</td>
+</tr>
+</tbody>
+</table>
+<p>Cada processo possui sua própria tabela assim.</p>
+<p><strong>Na tabela invertida</strong>, a pergunta muda para: <em>cada quadro físico da RAM pertence a qual processo e a qual página virtual?</em> A tabela é indexada pelos quadros físicos, não pelas páginas virtuais.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Quadro físico</th>
+  <th style="text-align:left">Processo</th>
+  <th style="text-align:left">Página virtual</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">$0$</td>
+  <td style="text-align:left">$P_1$</td>
+  <td style="text-align:left">$8$</td>
+</tr>
+<tr>
+  <td style="text-align:left">$1$</td>
+  <td style="text-align:left">$P_3$</td>
+  <td style="text-align:left">$2$</td>
+</tr>
+<tr>
+  <td style="text-align:left">$2$</td>
+  <td style="text-align:left">$P_1$</td>
+  <td style="text-align:left">$15$</td>
+</tr>
+</tbody>
+</table>
+<p>Agora existe uma única tabela para o sistema inteiro, com exatamente uma entrada por quadro físico, e não uma entrada por página virtual de cada processo.</p>
+<p>O que muda na prática é o seguinte. Na tabela tradicional, para traduzir o endereço $(P_1, 15)$, basta usar $15$ como índice e encontrar direto o quadro $2$. Na invertida, você tem o processo e a página virtual, mas precisa procurar qual quadro contém esse par. Sem uma TLB, essa busca seria lenta demais, porque exigiria varrer a tabela inteira a cada acesso. É por isso que tabelas invertidas dependem tanto da TLB: quando a tradução está na TLB, o acesso é instantâneo; quando não está, o sistema recorre a uma tabela de espalhamento para encontrar a entrada correspondente sem percorrer tudo.</p>
+<img src="static/fig_3_14_tabela_invertida.png" width="90%">
+
+<table>
+<thead>
+<tr>
+  <th style="text-align:left"></th>
+  <th style="text-align:left">Tradicional</th>
+  <th style="text-align:left">Invertida</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Indexada por</td>
+  <td style="text-align:left">página virtual</td>
+  <td style="text-align:left">quadro físico</td>
+</tr>
+<tr>
+  <td style="text-align:left">Entradas por</td>
+  <td style="text-align:left">página virtual de cada processo</td>
+  <td style="text-align:left">quadro físico da RAM</td>
+</tr>
+<tr>
+  <td style="text-align:left">Quantas tabelas</td>
+  <td style="text-align:left">uma por processo</td>
+  <td style="text-align:left">uma para o sistema</td>
+</tr>
+<tr>
+  <td style="text-align:left">Tamanho depende de</td>
+  <td style="text-align:left">espaço virtual</td>
+  <td style="text-align:left">memória física</td>
+</tr>
+<tr>
+  <td style="text-align:left">Tradução</td>
+  <td style="text-align:left">usa número da página como índice direto</td>
+  <td style="text-align:left">precisa buscar o par (processo, página)</td>
+</tr>
+</tbody>
+</table>
+<p>A grande vantagem da invertida é a economia de memória. Se a máquina tem espaço virtual de $64$ bits mas apenas $1$ GB de RAM, a tabela tradicional precisaria representar um número astronômico de páginas, enquanto a invertida precisa de apenas uma entrada por quadro físico, cerca de $2^{18}$ entradas para páginas de $4$ KB. A diferença é ordens de grandeza. Por isso, tabelas invertidas são comuns em arquiteturas de $64$ bits.</p>
+<h2 id="substituição-de-páginas"><span class="heading-text">Substituição de páginas</span><span class="heading-arabic">9.7</span></h2>
+<p>Quando ocorre uma falta de página e não há quadro físico livre, o sistema precisa escolher uma página para remover, e essa decisão é chamada de <strong>substituição de página</strong>. Se a página removida está limpa, ela pode ser descartada; se está suja, precisa ser escrita no disco antes de o quadro ser reutilizado.</p>
+<p>A pergunta central é: <strong>qual página deve sair?</strong> Uma escolha ruim pode causar uma nova falta quase imediatamente; uma escolha boa tenta remover uma página que provavelmente não será usada tão cedo.</p>
+<h3 id="algoritmo-ótimo"><span class="heading-text">Algoritmo ótimo</span><span class="heading-arabic">9.7.1</span></h3>
+<p>O algoritmo ótimo remove a página cujo próximo uso ocorrerá mais tarde no futuro: se uma página nunca mais for usada, ela é a melhor vítima possível. O problema é óbvio: o sistema operacional real não conhece o futuro. Mesmo assim, esse algoritmo é útil como referência para comparar algoritmos implementáveis.</p>
+<p><strong>Passo a passo do ótimo:</strong></p>
+<ol>
+<li>Quando ocorre uma falta, observe as páginas atualmente na memória.</li>
+<li>Para cada página, descubra quando ela será referenciada novamente no futuro.</li>
+<li>Escolha a página com uso mais distante.</li>
+<li>Se alguma página nunca mais for usada, escolha essa.</li>
+<li>Carregue a página faltante no quadro liberado.</li>
+</ol>
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">Uso do algoritmo ótimo<br /></span>
+  </div>
+  <div class="callout-content">
+<p>O ótimo não é usado em sistemas reais, mas serve para avaliar outros algoritmos. Se um algoritmo real fica muito perto do ótimo em simulações, talvez não valha a pena buscar algo muito mais complexo.</p>
+  </div>
+</div>
+<h3 id="nru-não-usada-recentemente"><span class="heading-text">NRU: não usada recentemente</span><span class="heading-arabic">9.7.2</span></h3>
+<p>O NRU explora dois bits que o hardware já mantém em cada entrada da tabela de páginas. O bit $R$ (referenciada) é ligado sempre que a página é lida ou escrita. O bit $M$ (modificada) é ligado apenas quando a página recebe uma escrita. O sistema periodicamente, a cada interrupção de relógio, limpa o bit $R$ de todas as páginas, mas não limpa o bit $M$, porque a informação de sujeira é essencial para decidir se a página precisa ser salva em disco antes de sair da RAM.</p>
+<p>O NRU classifica cada página em uma de quatro classes, baseando-se nos valores atuais desses dois bits:</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Classe</th>
+  <th style="text-align:left">$R$</th>
+  <th style="text-align:left">$M$</th>
+  <th style="text-align:left">Significado</th>
+  <th style="text-align:left">O que significa na prática</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">0</td>
+  <td style="text-align:left">$0$</td>
+  <td style="text-align:left">$0$</td>
+  <td style="text-align:left">não referenciada e limpa</td>
+  <td style="text-align:left">ninguém usou e não precisa gravar</td>
+</tr>
+<tr>
+  <td style="text-align:left">1</td>
+  <td style="text-align:left">$0$</td>
+  <td style="text-align:left">$1$</td>
+  <td style="text-align:left">não referenciada e suja</td>
+  <td style="text-align:left">ninguém usou recentemente, mas foi modificada antes</td>
+</tr>
+<tr>
+  <td style="text-align:left">2</td>
+  <td style="text-align:left">$1$</td>
+  <td style="text-align:left">$0$</td>
+  <td style="text-align:left">referenciada e limpa</td>
+  <td style="text-align:left">foi usada recentemente e está limpa</td>
+</tr>
+<tr>
+  <td style="text-align:left">3</td>
+  <td style="text-align:left">$1$</td>
+  <td style="text-align:left">$1$</td>
+  <td style="text-align:left">referenciada e suja</td>
+  <td style="text-align:left">foi usada recentemente e está modificada</td>
+</tr>
+</tbody>
+</table>
+<p>A classe 1 merece atenção porque parece contraditória: como uma página pode estar suja mas não referenciada? A resposta está na interrupção de relógio. Imagine que uma página de classe 3 (referenciada e suja) seja usada intensamente. Quando a interrupção de relógio chega, o sistema limpa o bit $R$, mas deixa o bit $M$ intacto. A página cai para a classe 1. Isso é útil porque distingue páginas que estavam ativas há pouco (e ainda estão sujas) daquelas que estão ativas agora.</p>
+<p>Quando ocorre uma falta de página, o NRU varre as páginas residentes e escolhe uma página aleatória da classe de menor número que não esteja vazia. A lógica é: prefira remover páginas que não foram referenciadas (classes 0 e 1) e, entre as não referenciadas, prefira as limpas (classe 0), porque páginas sujas exigem escrita em disco antes da remoção. Remover uma página de classe 3, referenciada e suja, é a pior escolha.</p>
+<p><strong>Passo a passo do NRU:</strong></p>
+<ol>
+<li>Em uma falta de página, examine as páginas residentes.</li>
+<li>Classifique cada página usando os bits $R$ e $M$.</li>
+<li>Procure a menor classe não vazia (0, depois 1, depois 2, depois 3).</li>
+<li>Escolha uma página aleatória dentro dessa classe.</li>
+<li>Remova essa página e carregue a página faltante.</li>
+</ol>
+<h3 id="fifo-primeiro-a-entrar-primeiro-a-sair"><span class="heading-text">FIFO: primeiro a entrar, primeiro a sair</span><span class="heading-arabic">9.7.3</span></h3>
+<p>O FIFO mantém as páginas em ordem de chegada à memória: quando precisa remover uma página, remove a mais antiga. É simples, mas pode remover uma página muito usada, pois idade não é o mesmo que inutilidade.</p>
+<p><strong>Passo a passo do FIFO:</strong></p>
+<ol>
+<li>Mantenha uma fila de páginas na memória.</li>
+<li>A página mais antiga fica na frente da fila.</li>
+<li>A página mais recente fica no fim da fila.</li>
+<li>Em uma falta com memória cheia, remova a página da frente.</li>
+<li>Coloque a nova página no fim da fila.</li>
+</ol>
+<h3 id="segunda-chance"><span class="heading-text">Segunda chance</span><span class="heading-arabic">9.7.4</span></h3>
+<p>O algoritmo de segunda chance melhora o FIFO olhando o bit $R$ da página mais antiga. Se $R = 0$, a página sai. Se $R = 1$, ela recebe uma segunda chance: o sistema zera $R$ e move essa página para o fim da fila.</p>
+<img src="static/fig_3_15_segunda_chance.png" width="90%">
+
+<p><strong>Passo a passo da segunda chance:</strong></p>
+<ol>
+<li>Olhe a página mais antiga da fila.</li>
+<li>Se $R = 0$, remova essa página.</li>
+<li>Se $R = 1$, zere $R$.</li>
+<li>Mova a página para o fim da fila.</li>
+<li>Continue examinando a próxima página antiga.</li>
+<li>Repita até encontrar uma página com $R = 0$.</li>
+</ol>
+<h3 id="relógio"><span class="heading-text">Relógio</span><span class="heading-arabic">9.7.5</span></h3>
+<p>O algoritmo do relógio implementa a mesma ideia da segunda chance, mas sem ficar movendo páginas em uma fila. Ele organiza os quadros em uma lista circular, com um ponteiro que percorre os quadros como o ponteiro de um relógio.</p>
+<img src="static/fig_3_16_relogio.png" width="65%">
+
+<p><strong>Passo a passo do relógio:</strong></p>
+<ol>
+<li>O ponteiro aponta para uma página candidata.</li>
+<li>Se $R = 0$, essa página é removida.</li>
+<li>A nova página entra no quadro liberado.</li>
+<li>O ponteiro avança.</li>
+<li>Se $R = 1$, o sistema zera $R$.</li>
+<li>O ponteiro avança para a próxima página.</li>
+<li>O processo continua até encontrar $R = 0$.</li>
+</ol>
+<h2 id="questões"><span class="heading-text">Questões</span><span class="heading-arabic">9.8</span></h2>
+<div class="questions">
+  <p><strong>1.</strong> Qual problema principal levou ao desenvolvimento da memória virtual?</p>
+<ul>
+<li>A) Eliminar totalmente o uso de disco.</li>
+<li>B) Permitir que programas e conjuntos de processos excedam a RAM física disponível.</li>
+<li>C) Impedir a execução de múltiplos processos.</li>
+<li>D) Substituir completamente a proteção por base e limite.</li>
+</ul>
+<p><strong>2.</strong> Com páginas de $4$ KB, calcule a página virtual e o deslocamento do endereço virtual $12300$.</p>
+<p><strong>3.</strong> O que é uma falta de página? Ela sempre indica erro do programa?</p>
+<p><strong>4.</strong> Diferencie os bits $R$ e $M$ de uma entrada da tabela de páginas.</p>
+<p><strong>5.</strong> Explique por que a TLB melhora o desempenho da paginação.</p>
+<p><strong>6.</strong> Descreva o algoritmo ótimo de substituição de páginas e explique por que ele não é implementável em sistemas reais.</p>
+<p><strong>7.</strong> Por que FIFO pode ter desempenho ruim mesmo sendo simples? Como o algoritmo de segunda chance tenta resolver isso?</p>
+<p><strong>8.</strong> O que é conjunto de trabalho e como ele se relaciona com thrashing?</p>
+<p><strong>9.</strong> O que é copy-on-write e por que ele melhora o desempenho após <code>fork</code>?</p>
+<p><strong>10.</strong> Explique a diferença conceitual entre paginação e segmentação.</p>
+</div>
+<div class="example">
+  <div class="example-title">Gabarito</div>
+  <p><strong>1.</strong> B.</p>
+<p><strong>2.</strong> Como $4$ KB $= 4096$ bytes, $\lfloor 12300/4096 \rfloor = 3$. O início da página $3$ é $12288$, então o deslocamento é $12$.</p>
+<p><strong>3.</strong> É o evento em que uma página necessária não está presente na RAM ou não pode ser acessada como solicitado. Nem sempre é erro, pois pode ser apenas uma página válida que precisa ser carregada.</p>
+<p><strong>4.</strong> $R$ indica que a página foi referenciada (lida ou escrita). $M$ indica que a página foi modificada por escrita e, portanto, está suja.</p>
+<p><strong>5.</strong> A TLB guarda traduções recentes de páginas virtuais para quadros físicos, evitando consultar a tabela de páginas completa a cada acesso à memória.</p>
+<p><strong>6.</strong> Ele remove a página cujo próximo uso está mais distante no futuro. Não é implementável porque o sistema não conhece a sequência futura de referências.</p>
+<p><strong>7.</strong> FIFO remove a página mais antiga, mas a mais antiga pode continuar sendo muito usada. A segunda chance verifica o bit $R$: se a página antiga foi referenciada, ela recebe nova chance e não é removida imediatamente.</p>
+<p><strong>8.</strong> Conjunto de trabalho é o conjunto de páginas usado recentemente por um processo. Se ele não cabe na RAM, o processo sofre faltas contínuas e entra em thrashing.</p>
+<p><strong>9.</strong> É compartilhar páginas de dados entre pai e filho marcadas como somente leitura após <code>fork</code>. A cópia física só ocorre na primeira escrita, evitando copiar páginas que nunca são alteradas.</p>
+<p><strong>10.</strong> Paginação divide o espaço em páginas de tamanho fixo, normalmente invisível ao programador. Segmentação divide em regiões lógicas de tamanho variável, como código, pilha e tabelas, visíveis como unidades independentes.</p>
+</div>
+<h2 id="próximos-passos"><span class="heading-text">Próximos passos</span><span class="heading-arabic">9.9</span></h2>
+<p>Vimos como a memória virtual permite executar processos com espaços de endereçamento maiores que a RAM física, usando paginação, tabelas de páginas, TLB, algoritmos de substituição, políticas de projeto e segmentação. Na próxima parte da disciplina, essa base será útil para entender como sistemas de arquivos e E/S dependem da mesma tensão entre abstração, desempenho, cache e persistência.</p>
+
+                </div>
+            </article>
+            <footer class="footer">
+                <p>© 2025 · <a href="#">Gabriel Soares Baptista</a></p>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        const toggle = document.querySelector('.mobile-menu-toggle');
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.querySelector('.mobile-menu-overlay');
+
+        function openMenu() {
+            sidebar.classList.add('open');
+            overlay.classList.add('open');
+            toggle.classList.add('open');
+            toggle.innerHTML = '<i data-lucide="x"></i>';
+            CourseForgeUI.initIcons();
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMenu() {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('open');
+            toggle.classList.remove('open');
+            toggle.innerHTML = '<i data-lucide="menu"></i>';
+            CourseForgeUI.initIcons();
+            document.body.style.overflow = '';
+        }
+
+        toggle.addEventListener('click', () => {
+            if (sidebar.classList.contains('open')) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        overlay.addEventListener('click', closeMenu);
+    </script>
+
+    
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            renderMathInElement(document.body, {
+                output: 'html',
+                delimiters: [
+                    { left: "$$", right: "$$", display: true },
+                    { left: "$", right: "$", display: false },
+                    { left: "\\(", right: "\\)", display: false },
+                    { left: "\\[", right: "\\]", display: true }
+                ],
+                throwOnError: false,
+                strict: false
+            });
+        });
+    </script>
+    
+    
+    <script src="/aulas-faesa/js/vendor/prism/prism.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-c.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-cpp.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-python.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-clike.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-perl.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-java.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-mermaid.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-php.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js" data-no-bundle></script>
+    
+    
+    
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            mermaid.initialize({
+                startOnLoad: true,
+                theme: 'default',
+                securityLevel: 'loose',
+                fontFamily: 'Inter, system-ui, sans-serif',
+                themeVariables: {
+                    fontSize: '16px',
+                    edgeLabelFontSize: '16px',
+                    multiplicityFontSize: '18px'
+                }
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const isSubcourse = false;
+        const courseName = "Sistemas Operacionais";
+        CourseForgeNav.applyDynamicBreadcrumbs('.breadcrumb', isSubcourse);
+        CourseForgeNav.initScrollSpy();
+        CourseForgeUI.initCopyButtons();
+        CourseForgeUI.initExamples();
+        });
+
+        function handleBackNavigation() {
+            const isSubcourse = false;
+        const dynamic = CourseForgeNav.getBackLink('contents.html', 'Voltar', isSubcourse);
+        window.location.href = dynamic.url;
+        }
+    </script>
+</body>
+
+</html>

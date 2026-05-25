@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
-    <title>Aritmética Digital - II</title>
+    <title>Módulos MSI Combinacionais</title>
     <link rel="icon" href="/aulas-faesa/img/dark-favicon.svg" media="(prefers-color-scheme: light)">
     <link rel="icon" href="/aulas-faesa/img/light-favicon.svg" media="(prefers-color-scheme: dark)">
 
@@ -21,417 +21,699 @@
     <div class="reveal">
         <div class="slides">
             <section><h1>Sistemas Digitais e Microprocessados</h1>
-<h2>Aritmética Digital - II</h2>
+<h2>Módulos MSI Combinacionais</h2>
 <p>Professor: Gabriel Soares Baptista</p>
 </section>
 <section><h1>Introdução</h1>
-<p>Hoje avançamos de soma e subtração para a multiplicação binária.</p>
-<p>O circuito parece mais complexo à primeira vista, mas nasce da combinação de blocos que você já conhece:</p>
-<ul>
-<li>portas lógicas</li>
-<li>somadores</li>
-<li>splitters, extensores e deslocadores</li>
-<li>barramentos</li>
-</ul>
+<p>Aulas anteriores: portas lógicas individuais → tabela-verdade → expressão → circuito.</p>
+<p>Hoje subimos um nível de abstração.</p>
 <div class="callout callout-note">
   <div class="callout-title">
     <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
     <span class="callout-title-inner">Ideia central<br /></span>
   </div>
   <div class="callout-content">
-<p>Um multiplicador digital é uma rede de portas AND que gera produtos parciais e de somadores que combinam essas linhas.</p>
+<p>Blocos MSI (Medium-Scale Integration) encapsulam funções prontas — decodificadores, codificadores, multiplexadores e demultiplexadores — evitando redesenhar dezenas de portas a cada projeto.</p>
+  </div>
+</div>
+<p>Base: Capítulo 9 de <strong>Sistemas Digitais: Princípios e Aplicações</strong> (Tocci, Widmer, Moss).</p>
+</section>
+<section><h1>O Que Muda com MSI</h1>
+<p>SSI (<em>Small-Scale Integration</em>): poucas portas por chip (AND, OR, NOT).</p>
+<p>MSI (<em>Medium-Scale Integration</em>): dezenas de portas por chip, funções completas.</p>
+<table>
+<thead>
+<tr>
+  <th></th>
+  <th>SSI</th>
+  <th>MSI</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Componentes</td>
+  <td>portas avulsas</td>
+  <td>blocos funcionais</td>
+</tr>
+<tr>
+  <td>Exemplo</td>
+  <td>7408 (4 ANDs)</td>
+  <td>74ALS138 (decodificador 3→8)</td>
+</tr>
+<tr>
+  <td>Projeto</td>
+  <td>monta cada porta</td>
+  <td>insere o CI e conecta</td>
+</tr>
+</tbody>
+</table>
+<p>Eles foram os &quot;tijolos e cimento&quot; dos sistemas digitais e revelam funções essenciais usadas até hoje em FPGAs e PLDs.</p>
+</section>
+<section><h1>Os Quatro Blocos de Hoje</h1>
+<p>Blocos combinacionais que resolvem <strong>seleção e roteamento</strong>:</p>
+<ul>
+<li><strong>Decodificador</strong>: código binário → uma linha ativa</li>
+<li><strong>Codificador</strong>: uma linha ativa → código binário</li>
+<li><strong>Multiplexador (MUX)</strong>: várias fontes de dados → uma saída</li>
+<li><strong>Demultiplexador (DEMUX)</strong>: um dado de entrada → distribuído para várias saídas</li>
+</ul>
+</section>
+<section><h1>Decodificadores</h1>
+<h2>O Conceito</h2>
+<p>Recebe um código binário de entrada e ativa <strong>apenas a saída</strong> correspondente.</p>
+<ul>
+<li>3 bits de entrada → $2^3 = 8$ saídas → decodificador <strong>3 para 8</strong> ou <strong>1 de 8</strong></li>
+<li>4 bits → 16 saídas → decodificador <strong>4 para 16</strong> ou <strong>1 de 16</strong></li>
+</ul>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Se a entrada binária vale $110_2$, qual saída é ativada em um decodificador 3 para 8?</p>
   </div>
 </div>
 </section>
-<section><h1>Transição da Aula Anterior</h1>
-<p>Na aula anterior, cada coluna resolvia uma soma ou subtração local e repassava carry ou borrow.</p>
-<p>Agora a ideia cresce em outra direção:</p>
-<ul>
-<li>várias linhas de <strong>produtos parciais</strong> são geradas</li>
-<li>essas linhas são <strong>deslocadas</strong></li>
-<li>depois são <strong>somadas</strong> para formar o resultado</li>
-</ul>
-<p>Multiplicadores maiores são construídos de forma <strong>hierárquica</strong>, reutilizando blocos menores.</p>
+<section><h1>Saídas Ativas em Nível Alto × Nível Baixo</h1>
+<p>Nem todo decodificador ativa a saída com $1$.</p>
+<table>
+<thead>
+<tr>
+  <th>Tipo</th>
+  <th>Saída ativa</th>
+  <th>Demais saídas</th>
+  <th>Exemplo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Ativa em ALTO</td>
+  <td>$1$</td>
+  <td>$0$</td>
+  <td>AND direto</td>
+</tr>
+<tr>
+  <td>Ativa em BAIXO</td>
+  <td>$0$</td>
+  <td>$1$</td>
+  <td>74ALS138</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Erro comum<br /></span>
+  </div>
+  <div class="callout-content">
+<p>A bolinha no símbolo do CI indica ativação em nível baixo. Sempre verifique a convenção antes de interpretar a saída.</p>
+  </div>
+</div>
 </section>
-<section><h1>Revisão de Álgebra Booleana</h1>
-<p>Duas identidades fundamentais para a multiplicação digital:</p>
-<p>$$
-A \cdot 0 = 0
-$$</p>
-<p>Se uma entrada de uma AND vale $0$, a saída obrigatoriamente vale $0$.</p>
-<p>$$
-A \cdot 1 = A
-$$</p>
-<p>Se uma entrada de uma AND vale $1$, a saída copia a outra entrada.</p>
-</section>
-<section><h1>Interpretação em Hardware</h1>
-<p>Suponha que $A$ seja um bit do <strong>multiplicando</strong> e o outro sinal seja um bit do <strong>multiplicador</strong>:</p>
-<ul>
-<li>se o bit do multiplicador for $0$, o produto parcial desaparece</li>
-<li>se o bit do multiplicador for $1$, o produto parcial copia o bit de $A$</li>
-</ul>
-<p>É por isso que a geração de produtos parciais é feita com <strong>portas AND</strong>.</p>
-</section>
-<section><h1>Distributiva</h1>
-<p>$$
-A(B + C) = AB + AC
-$$</p>
-<p>Um mesmo sinal pode influenciar dois caminhos ao mesmo tempo.</p>
-<p>O inverso também vale:</p>
-<p>$$
-AB + AC = A(B + C)
-$$</p>
-<p>Isso aparece quando reorganizamos a lógica de controle ou fatoramos expressões.</p>
-</section>
-<section><h1>Identidades de Combinação</h1>
-<p>$$
-A + 0 = A
-$$</p>
-<p>Somar logicamente com $0$ não altera a informação.</p>
-<p>$$
-A + A = A
-$$</p>
-<p>Repetir o mesmo termo em uma OR não cria um novo comportamento.</p>
-<p>Isso evita duplicação desnecessária de portas.</p>
-</section>
-<section><h1>Multiplicação Binária por Produtos Parciais</h1>
-<p>Multiplicar no papel gera linhas parciais que depois são somadas.</p>
-<p>Em binário, cada dígito só pode ser $0$ ou $1$, o que simplifica a leitura.</p>
-<p>Considere $101_2 \times 11_2$:</p>
-<p>$$
-\begin{array}{r}
-\phantom{+}101 \\
-\times\ 011 \\
-\hline
-\phantom{+}101 \\
-+1010 \\
-\hline
-\phantom{+}1111
-\end{array}
-$$</p>
-</section>
-<section><h1>Leitura Linha por Linha</h1>
-<ul>
-<li>o bit menos significativo do multiplicador vale $1$, então copia $101$</li>
-<li>o bit seguinte também vale $1$, copia $101$ deslocado uma posição</li>
-<li>a soma gera $1111_2 = 15_{10}$</li>
-</ul>
-<p>Confirmação em decimal:</p>
-<p>$$
-5 \times 3 = 15
-$$</p>
-<p>A estrutura importa mais que o resultado: a multiplicação apareceu como <strong>soma de linhas simples</strong>.</p>
-</section>
-<section><h1>Regra Geral</h1>
-<p>Se o multiplicando for $A$ e o multiplicador for $B$, cada bit $B_j$ gera uma linha parcial:</p>
-<p>$$
-p_{ij} = A_i \cdot B_j
-$$</p>
-<ul>
-<li>se $B_j = 0$, então $p_{ij} = 0$</li>
-<li>se $B_j = 1$, então $p_{ij} = A_i$</li>
-</ul>
-<p>Cada bit do multiplicador funciona como um <strong>seletor</strong> que decide se uma cópia do multiplicando entra na soma final.</p>
-</section>
-<section><h1>Produto Parcial Elementar</h1>
-<p>$$
-p_{ij} = A_i \cdot B_j
-$$</p>
-<p>$$
-\begin{array}{c|c||c}
-A_i & B_j & p_{ij} \\
-\hline
-0 & 0 & 0 \\
-0 & 1 & 0 \\
-1 & 0 & 0 \\
-1 & 1 & 1
-\end{array}
-$$</p>
-<p>Essa é exatamente a tabela de uma <strong>AND</strong>. Nenhuma porta especial é necessária.</p>
-<p>O que torna um multiplicador maior é a necessidade de somar muitos produtos nas colunas corretas.</p>
-</section>
-<section><h1>Multiplicador 2 x 2 Bits</h1>
-<p>Sejam:</p>
-<p>$$
-A = A_1A_0
-\qquad \text{e} \qquad
-B = B_1B_0
-$$</p>
-<p>O produto terá até 4 bits:</p>
-<p>$$
-P = P_3P_2P_1P_0
-$$</p>
-<p>Os quatro produtos parciais elementares são:</p>
-<p>$$
-\begin{aligned}
-p_{00} &= A_0B_0 \\
-p_{10} &= A_1B_0 \\
-p_{01} &= A_0B_1 \\
-p_{11} &= A_1B_1
-\end{aligned}
-$$</p>
-</section>
-<section><h1>Célula Básica</h1>
-<div class="no-break"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:ns2="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" width="180" viewBox="0 0 109.872 45.36" version="1.1" class="svg-graph"> <metadata>  <rdf:RDF>   <ns2:Work>    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage" />    <dc:date>2026-04-28T17:33:07.306519</dc:date>    <dc:format>image/svg+xml</dc:format>    <dc:creator>     <ns2:Agent>      <dc:title>Matplotlib v3.10.8, https://matplotlib.org/</dc:title>     </ns2:Agent>    </dc:creator>   </ns2:Work>  </rdf:RDF> </metadata> <defs>  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style> </defs> <g id="figure_1">  <g id="patch_1">   <path d="M 0 45.36  L 109.872 45.36  L 109.872 0  L 0 0  L 0 45.36  z " style="fill: none" />  </g>  <g id="axes_1">   <g id="line2d_1">    <path d="M 56.796 40.68  L 57.949264 40.643017  L 59.097789 40.53222  L 60.236855 40.348065  L 61.361783 40.091308  L 62.467948 39.763003  L 63.550806 39.364502  L 64.605907 38.89744  L 65.628916 38.363737  L 66.615628 37.765586  L 67.56199 37.105445  L 68.464111 36.386027  L 69.318286 35.610288  L 70.121004 34.781416  L 70.868967 33.902816  L 71.559101 32.9781  L 72.18857 32.011066  L 72.754788 31.005689  L 73.255427 29.9661  L 73.688432 28.896571  L 74.052021 27.801497  L 74.344702 26.685377  L 74.565272 25.552798  L 74.712824 24.408414  L 74.786752 23.256928  L 74.786752 22.103072  L 74.712824 20.951586  L 74.565272 19.807202  L 74.344702 18.674623  L 74.052021 17.558503  L 73.688432 16.463429  L 73.255427 15.3939  L 72.754788 14.354311  L 72.18857 13.348934  L 71.559101 12.3819  L 70.868967 11.457184  L 70.121004 10.578584  L 69.318286 9.749712  L 68.464111 8.973973  L 67.56199 8.254555  L 66.615628 7.594414  L 65.628916 6.996263  L 64.605907 6.46256  L 63.550806 5.995498  L 62.467948 5.596997  L 61.361783 5.268692  L 60.236855 5.011935  L 59.097789 4.82778  L 57.949264 4.716983  L 56.796 4.68  L 56.796 4.68  L 33.396 4.68  L 33.396 22.68  L 33.396 40.68  L 56.796 40.68  " clip-path="url(#p544e7b39db)" style="fill: none; stroke: #000000; stroke-width: 2; stroke-linecap: round" />   </g>   <g id="line2d_2">    <path d="M 20.796 31.68  L 33.396 31.68  " clip-path="url(#p544e7b39db)" style="fill: none; stroke: #000000; stroke-width: 2; stroke-linecap: round" />   </g>   <g id="line2d_3">    <path d="M 20.796 13.68  L 33.396 13.68  " clip-path="url(#p544e7b39db)" style="fill: none; stroke: #000000; stroke-width: 2; stroke-linecap: round" />   </g>   <g id="line2d_4">    <path d="M 74.796 22.68  L 87.396 22.68  " clip-path="url(#p544e7b39db)" style="fill: none; stroke: #000000; stroke-width: 2; stroke-linecap: round" />   </g>   <g id="text_1">    <text style="font-size: 14px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start" x="90.996" y="26.543125" transform="rotate(-0 90.996 26.543125)">pij</text>   </g>   <g id="text_2">    <text style="font-size: 14px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end" x="17.196" y="17.543125" transform="rotate(-0 17.196 17.543125)">Ai</text>   </g>   <g id="text_3">    <text style="font-size: 14px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end" x="17.196" y="35.543125" transform="rotate(-0 17.196 35.543125)">Bj</text>   </g>  </g> </g> <defs>  <clipPath id="p544e7b39db">   <rect x="0" y="0" width="109.872" height="45.36" />  </clipPath> </defs></svg></div></div>
+<section><h1>Decodificador 3 Para 8</h1>
+<p>Notação: entradas $CBA$ (C = MSB, A = LSB), saídas $O_0$ a $O_7$.</p>
+<img src="../static/tocci_fig_9_2_decoder_3_to_8.png" width="85%" style="display: block; margin: 0 auto;">
 
-<p>Cada produto parcial é uma porta AND.</p>
-<p>O circuito completo aparece quando colocamos esses produtos nas colunas corretas do resultado.</p>
+<p>Cada saída é um mintermo: $O_0 = \overline{C}\,\overline{B}\,\overline{A}$, $O_1 = \overline{C}\,\overline{B}\,A$, ..., $O_7 = C\,B\,A$.</p>
 </section>
-<section><h1>Distribuição nas Colunas</h1>
-<p>$$
-\begin{array}{c|c|c|c|l}
-P_3 & P_2 & P_1 & P_0 & \text{linha parcial} \\
-\hline
-0 & 0 & A_1B_0 & A_0B_0 & \text{multiplicação por } B_0 \\
-0 & A_1B_1 & A_0B_1 & 0 & \text{multiplicação por } B_1 \text{, deslocada}
-\end{array}
-$$</p>
-<ul>
-<li>$B_0$ (menos significativo): produtos caem nas colunas mais à direita</li>
-<li>$B_1$: linha entra deslocada uma casa para a esquerda</li>
-</ul>
+<section><h1>Tabela-Verdade do Decodificador 3→8</h1>
+<p>Saídas ativas em nível ALTO:</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:center">C</th>
+  <th style="text-align:center">B</th>
+  <th style="text-align:center">A</th>
+  <th style="text-align:center">O₇</th>
+  <th style="text-align:center">O₆</th>
+  <th style="text-align:center">O₅</th>
+  <th style="text-align:center">O₄</th>
+  <th style="text-align:center">O₃</th>
+  <th style="text-align:center">O₂</th>
+  <th style="text-align:center">O₁</th>
+  <th style="text-align:center">O₀</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:center">0</td>
+  <td style="text-align:center">0</td>
+  <td style="text-align:center">0</td>
+  <td style="text-align:center">0</td>
+  <td style="text-align:center">0</td>
+  <td style="text-align:center">0</td>
+  <td style="text-align:center">0</td>
+  <td style="text-align:center">0</td>
+  <td style="text-align:center">0</td>
+  <td style="text-align:center">0</td>
+  <td style="text-align:center">1</td>
+</tr>
+<tr>
+  <td style="text-align:center">0</td>
+  <td style="text-align:center">0</td>
+  <td style="text-align:center">1</td>
+  <td style="text-align:center">0</td>
+  <td style="text-align:center">0</td>
+  <td style="text-align:center">0</td>
+  <td style="text-align:center">0</td>
+  <td style="text-align:center">0</td>
+  <td style="text-align:center">0</td>
+  <td style="text-align:center">1</td>
+  <td style="text-align:center">0</td>
+</tr>
+<tr>
+  <td style="text-align:center">0</td>
+  <td style="text-align:center">1</td>
+  <td style="text-align:center">0</td>
+  <td style="text-align:center">0</td>
+  <td style="text-align:center">0</td>
+  <td style="text-align:center">0</td>
+  <td style="text-align:center">0</td>
+  <td style="text-align:center">0</td>
+  <td style="text-align:center">1</td>
+  <td style="text-align:center">0</td>
+  <td style="text-align:center">0</td>
+</tr>
+<tr>
+  <td style="text-align:center">0</td>
+  <td style="text-align:center">1</td>
+  <td style="text-align:center">1</td>
+  <td style="text-align:center">0</td>
+  <td style="text-align:center">0</td>
+  <td style="text-align:center">0</td>
+  <td style="text-align:center">0</td>
+  <td style="text-align:center">1</td>
+  <td style="text-align:center">0</td>
+  <td style="text-align:center">0</td>
+  <td style="text-align:center">0</td>
+</tr>
+<tr>
+  <td style="text-align:center">1</td>
+  <td style="text-align:center">0</td>
+  <td style="text-align:center">0</td>
+  <td style="text-align:center">0</td>
+  <td style="text-align:center">0</td>
+  <td style="text-align:center">0</td>
+  <td style="text-align:center">1</td>
+  <td style="text-align:center">0</td>
+  <td style="text-align:center">0</td>
+  <td style="text-align:center">0</td>
+  <td style="text-align:center">0</td>
+</tr>
+<tr>
+  <td style="text-align:center">1</td>
+  <td style="text-align:center">0</td>
+  <td style="text-align:center">1</td>
+  <td style="text-align:center">0</td>
+  <td style="text-align:center">0</td>
+  <td style="text-align:center">1</td>
+  <td style="text-align:center">0</td>
+  <td style="text-align:center">0</td>
+  <td style="text-align:center">0</td>
+  <td style="text-align:center">0</td>
+  <td style="text-align:center">0</td>
+</tr>
+<tr>
+  <td style="text-align:center">1</td>
+  <td style="text-align:center">1</td>
+  <td style="text-align:center">0</td>
+  <td style="text-align:center">0</td>
+  <td style="text-align:center">1</td>
+  <td style="text-align:center">0</td>
+  <td style="text-align:center">0</td>
+  <td style="text-align:center">0</td>
+  <td style="text-align:center">0</td>
+  <td style="text-align:center">0</td>
+  <td style="text-align:center">0</td>
+</tr>
+<tr>
+  <td style="text-align:center">1</td>
+  <td style="text-align:center">1</td>
+  <td style="text-align:center">1</td>
+  <td style="text-align:center">1</td>
+  <td style="text-align:center">0</td>
+  <td style="text-align:center">0</td>
+  <td style="text-align:center">0</td>
+  <td style="text-align:center">0</td>
+  <td style="text-align:center">0</td>
+  <td style="text-align:center">0</td>
+  <td style="text-align:center">0</td>
+</tr>
+</tbody>
+</table>
+<p>Índice da saída = valor decimal do código de entrada.</p>
 </section>
-<section><h1>Leitura por Coluna</h1>
-<ul>
-<li><strong>coluna 0:</strong> apenas $A_0B_0$</li>
-<li><strong>coluna 1:</strong> os termos $A_1B_0$ e $A_0B_1$</li>
-<li><strong>coluna 2:</strong> o termo $A_1B_1$ e o carry vindo da coluna anterior</li>
-<li><strong>coluna 3:</strong> apenas o carry final</li>
-</ul>
-<p>A coluna intermediária precisa somar dois produtos parciais — isso é um <strong>Meio Somador</strong>.</p>
-</section>
-<section><h1>Derivação das Saídas</h1>
-<p><strong>Coluna 0:</strong></p>
-<p>$$
-P_0 = A_0B_0
-$$</p>
-<p><strong>Coluna 1</strong> (Meio Somador):</p>
-<p>$$
-\begin{aligned}
-P_1 &= (A_1B_0) \oplus (A_0B_1) \\
-C_1 &= (A_1B_0)(A_0B_1)
-\end{aligned}
-$$</p>
-</section>
-<section><h1>Derivação das Saídas (cont.)</h1>
-<p><strong>Coluna 2 e 3</strong> (soma de $A_1B_1$ com $C_1$):</p>
-<p>$$
-\begin{aligned}
-P_2 &= (A_1B_1) \oplus C_1 \\
-P_3 &= (A_1B_1) \cdot C_1
-\end{aligned}
-$$</p>
-<p>A lógica repete o princípio da aula 12:</p>
-<ul>
-<li>portas AND geram resultados locais</li>
-<li>uma coluna soma os termos que caem nela</li>
-<li>o carry alimenta a coluna seguinte</li>
-</ul>
-</section>
-<section><h1>Leitura Algébrica Final</h1>
-<p>$$
-\begin{aligned}
-P_0 &= A_0B_0 \\
-P_1 &= (A_1B_0) \oplus (A_0B_1) \\
-P_2 &= (A_1B_1) \oplus C_1 \\
-P_3 &= (A_1B_1)C_1
-\end{aligned}
-$$</p>
-<p>com</p>
-<p>$$
-C_1 = (A_1B_0)(A_0B_1)
-$$</p>
-</section>
-<section><h1>Montagem no Logisim</h1>
-<img src="../static/multiplicador_2x2.png" width="90%" style="display: block; margin: 0 auto;" alt="Multiplicador 2 por 2 bits montado no Logisim-evolution.">
-
-<p>Quatro portas AND geram os produtos parciais, e duas pequenas somas combinam as colunas internas.</p>
-</section>
-<section><h1>Leitura do Circuito por Etapas</h1>
+<section><h1>Como Ler um Decodificador</h1>
 <ol>
-<li>$A_0B_0$ sai diretamente como $P_0$</li>
-<li>$A_1B_0$ e $A_0B_1$ são somados por uma XOR, gerando $P_1$, e por uma AND, gerando $C_1$</li>
-<li>$A_1B_1$ é somado com $C_1$ para produzir $P_2$ e $P_3$</li>
+<li>Identifique a ordem dos bits de entrada.</li>
+<li>Converta o código binário para decimal.</li>
+<li>Ative a saída com esse índice.</li>
+<li>Mantenha as outras saídas inativas.</li>
+<li>Ajuste o valor conforme ativa em ALTO ou BAIXO.</li>
 </ol>
+<p>Exemplo: $CBA = 110$ → $110_2 = 6_{10}$ → $O_6$ ativa.</p>
 </section>
-<section><h1>Como a Ideia Escala</h1>
-<p>O multiplicador $2 \times 2$ é a primeira célula de uma técnica que cresce por <strong>hierarquia</strong>.</p>
-<p>Em vez de desenhar todas as portas AND de um multiplicador grande, montamos multiplicadores maiores a partir de:</p>
+<section><h1>Entradas de Habilitação (Enable)</h1>
+<p>Permitem ou bloqueiam o funcionamento do decodificador.</p>
 <ul>
-<li>multiplicadores menores</li>
-<li>deslocamentos</li>
-<li>somadores</li>
+<li>Habilitado: responde ao código de entrada.</li>
+<li>Desabilitado: todas as saídas ficam no estado inativo.</li>
 </ul>
-<p>Essa ideia é uma aplicação direta da <strong>distributiva</strong>.</p>
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">74ALS138<br /></span>
+  </div>
+  <div class="callout-content">
+<p>3 entradas de enable: $E_1$ (BAIXO), $E_2$ (BAIXO), $E_3$ (ALTO).</p>
+<p>Habilitado quando: $E_1 = 0$, $E_2 = 0$, $E_3 = 1$.</p>
+  </div>
+</div>
 </section>
-<section><h1>Multiplicador 4 x 4 Usando Blocos 2 x 2</h1>
-<p>Operandos de 4 bits:</p>
-<p>$$
-A = A_3A_2A_1A_0
-\qquad \text{e} \qquad
-B = B_3B_2B_1B_0
-$$</p>
-<p>Separamos cada um em dois blocos de 2 bits:</p>
-<p>$$
-A = A_H \cdot 2^2 + A_L
-\qquad \text{e} \qquad
-B = B_H \cdot 2^2 + B_L
-$$</p>
-<p>onde:</p>
-<p>$$
-A_H = A_3A_2, \quad A_L = A_1A_0
-\qquad
-B_H = B_3B_2, \quad B_L = B_1B_0
-$$</p>
+<section><h1>Por Que Três Entradas de Enable?</h1>
+<p>Facilitar o <strong>cascateamento</strong> sem lógica externa adicional.</p>
+<p>Com entradas de polaridades diferentes, você conecta o bit de seleção mais significativo:</p>
+<ul>
+<li>em $E_3$ de um chip (ativo em ALTO)</li>
+<li>em $E_1$ do outro (ativo em BAIXO)</li>
+</ul>
+<p>As entradas não usadas são amarradas no valor ativo. <strong>Sem inversores extras.</strong></p>
 </section>
-<section><h1>Aplicando a Distributiva</h1>
-<p>$$
-\begin{aligned}
-A \cdot B
-&= (A_H \cdot 2^2 + A_L)(B_H \cdot 2^2 + B_L) \\
-&= A_LB_L + (A_HB_L \ll 2) + (A_LB_H \ll 2) + (A_HB_H \ll 4)
-\end{aligned}
-$$</p>
-<p>O símbolo $\ll 2$ significa deslocar 2 posições para a esquerda (multiplicar por $2^2$).</p>
+<section><h1>Exemplo: Decodificador com Enable</h1>
+<p>Um <code>74ALS138</code> recebe:</p>
+<ul>
+<li>$E_3 = 1$, $E_2 = 0$, $E_1 = 0$ → habilitado</li>
+<li>$A_2A_1A_0 = 011$</li>
+</ul>
 </section>
-<section><h1>Quatro Multiplicadores 2 x 2</h1>
-<p>$$
-\begin{array}{c|c|c}
-\text{produto} & \text{deslocamento} & \text{papel no resultado} \\
-\hline
-A_LB_L & \ll 0 & \text{parte menos significativa} \\
-A_HB_L & \ll 2 & \text{contribuição cruzada} \\
-A_LB_H & \ll 2 & \text{contribuição cruzada} \\
-A_HB_H & \ll 4 & \text{parte mais significativa}
-\end{array}
-$$</p>
+<section><p><strong>Resolução:</strong></p>
+<p>$011_2 = 3_{10}$ → saída ativa é $O_3$.</p>
+<p>Saídas ativas em BAIXO: $O_3 = 0$, demais em $1$.</p>
 </section>
-<section><h1>Montagem no Logisim (4 x 4)</h1>
-<p>Etapas da construção:</p>
-<ol>
-<li><strong>Splitters</strong> separam $A$ e $B$ em $A_H, A_L$ e $B_H, B_L$</li>
-<li>Quatro blocos <code>multiplicador_2x2</code> geram $P_{LL}, P_{HL}, P_{LH}, P_{HH}$</li>
-<li><strong>Bit Extender</strong> expande cada produto de 4 para 8 bits</li>
-<li><strong>Shifters</strong> alinham os produtos parciais</li>
-<li>Três <strong>somadores</strong> de 8 bits combinam tudo</li>
-</ol>
+<section><h1>Exemplo: Decodificador Desabilitado</h1>
+<p>Um <code>74ALS138</code> recebe:</p>
+<ul>
+<li>$E_3 = 1$, $E_2 = 1$, $E_1 = 0$</li>
+</ul>
 </section>
-<section><h1>Alinhamento dos Produtos Parciais</h1>
-<p>$$
-\begin{array}{c|c|c}
-\text{produto parcial} & \text{operação no Logisim} & \text{valor alinhado} \\
-\hline
-P_{LL} & \text{sem shifter} & P_{LL} \\
-P_{HL} & \text{shifter com constante } 2 & P_{HL} \ll 2 \\
-P_{LH} & \text{shifter com constante } 2 & P_{LH} \ll 2 \\
-P_{HH} & \text{shifter com constante } 4 & P_{HH} \ll 4
-\end{array}
-$$</p>
+<section><p><strong>Resolução:</strong></p>
+<p>$E_2 = 1$ (deveria ser $0$): decodificador <strong>desabilitado</strong>.</p>
+<p>Todas as saídas vão para o estado inativo em ALTO ($1$).</p>
+<p>O código $A_2A_1A_0$ não importa.</p>
 </section>
-<section><h1>Soma Final</h1>
-<p>$$
-\begin{aligned}
-S_1 &= P_{LL} + (P_{HL} \ll 2) \\
-S_2 &= S_1 + (P_{LH} \ll 2) \\
-P &= S_2 + (P_{HH} \ll 4)
-\end{aligned}
-$$</p>
-<p>Resultado final em barramento de 8 bits:</p>
-<p>$$
-P = P_7P_6P_5P_4P_3P_2P_1P_0
-$$</p>
+<section><h1>Cascateamento de Decodificadores</h1>
+<p>Quatro CIs <code>74ALS138</code> formam um decodificador <strong>1 de 32</strong> (5 bits de entrada).</p>
+<ul>
+<li>$A_2A_1A_0$ → escolhem a saída dentro do CI habilitado</li>
+<li>$A_4A_3$ → escolhem qual CI é habilitado</li>
+</ul>
+<table>
+<thead>
+<tr>
+  <th>A₄A₃</th>
+  <th>CI</th>
+  <th>Faixa de saídas</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>00</td>
+  <td>Z₁</td>
+  <td>O₀ a O₇</td>
+</tr>
+<tr>
+  <td>01</td>
+  <td>Z₂</td>
+  <td>O₈ a O₁₅</td>
+</tr>
+<tr>
+  <td>10</td>
+  <td>Z₃</td>
+  <td>O₁₆ a O₂₃</td>
+</tr>
+<tr>
+  <td>11</td>
+  <td>Z₄</td>
+  <td>O₂₄ a O₃₁</td>
+</tr>
+</tbody>
+</table>
+<p>Bits mais altos escolhem o bloco; bits mais baixos escolhem a saída dentro dele.</p>
 </section>
-<section><h1>Montagem do 4 x 4 no Logisim</h1>
-<img src="../static/multiplicador_4x4.png" width="95%" style="display: block; margin: 0 auto;" alt="Multiplicador 4 por 4 bits montado no Logisim-evolution usando quatro multiplicadores 2 por 2.">
+<section><h1>Decodificadores BCD</h1>
+<p>Nem todo decodificador usa todas as $2^n$ combinações.</p>
+<p><strong>7442</strong> (BCD para decimal): 4 bits de entrada, mas apenas 10 saídas.</p>
+<p>BCD usa $0000$ a $1001$. Códigos $1010$ a $1111$ são inválidos e não ativam nenhuma saída.</p>
+<p><strong>Drivers BCD para 7 segmentos</strong> acionam displays de LED/LCD a partir de um dígito BCD.</p>
+</section>
+<section><h1>Decodificadores em Memória</h1>
+<p>O processador coloca um endereço no barramento e o decodificador seleciona uma posição ou um CI de memória:</p>
+<ul>
+<li>bits mais significativos → selecionam o chip</li>
+<li>bits menos significativos → selecionam a posição interna</li>
+<li>sinal de habilitação → impede que chips não selecionados respondam</li>
+</ul>
+</section>
+<section><h1>Codificadores</h1>
+<h2>O Conceito</h2>
+<p>Oposto do decodificador: recebe uma linha de entrada ativa e gera o código binário correspondente.</p>
+<ul>
+<li>8 entradas → 3 saídas (codificador <strong>8 para 3</strong>)</li>
+<li>Entrada 5 ativa → saída $101_2$</li>
+</ul>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Um teclado decimal com 10 teclas: melhor levar 10 fios ou gerar um código BCD?</p>
+  </div>
+</div>
+</section>
+<section><h1>O Problema de Múltiplas Entradas</h1>
+<p>Codificador simples só funciona com <strong>uma única entrada ativa</strong> por vez.</p>
+<p>Se $A_3$ e $A_5$ forem ativadas simultaneamente → saída pode ser ambígua ($111$, que não representa nenhuma delas corretamente).</p>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Erro comum<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Um codificador simples não &quot;escolhe&quot; uma entrada. Sem lógica de prioridade, duas entradas ativas geram saída ambígua.</p>
+  </div>
+</div>
+</section>
+<section><h1>Codificadores de Prioridade</h1>
+<p>Resolvem o conflito: se duas ou mais entradas forem ativadas, a saída representa a de <strong>maior prioridade</strong> (maior número).</p>
+<p>Exemplos:</p>
+<ul>
+<li>$A_3$ e $A_5$ ativas → saída = $A_5$</li>
+<li>$A_2$, $A_6$ e $A_0$ ativas → saída = $A_6$</li>
+</ul>
+<p>CIs: <code>74148</code>, <code>74LS148</code>, <code>74HC148</code> (prioridade octal para binário).</p>
+</section>
+<section><h1>Codificador 74147</h1>
+<p>Prioridade decimal para BCD. Entradas ativas em BAIXO (dígitos 1 a 9). Saída: BCD <strong>invertido</strong>.</p>
+<img src="../static/tocci_fig_9_14_priority_encoder_74147.png" width="85%" style="display: block; margin: 0 auto;">
 
-<p>Não criamos uma técnica nova para 4 bits. Apenas reutilizamos o multiplicador $2 \times 2$ quatro vezes.</p>
+<ul>
+<li>Sem entrada $A_0$: ausência de entradas ativas já representa o decimal 0.</li>
+<li>$A_7$ ativa → saída invertida $1000$ → inverso = $0111$ (BCD 7).</li>
+</ul>
 </section>
-<section><h1>Multiplicador 8 x 8 Usando Blocos 4 x 4</h1>
-<p>Operandos de 8 bits:</p>
-<p>$$
-A = A_7A_6A_5A_4A_3A_2A_1A_0
-\qquad \text{e} \qquad
-B = B_7B_6B_5B_4B_3B_2B_1B_0
-$$</p>
-<p>Separamos em dois blocos de 4 bits:</p>
-<p>$$
-A = A_H \cdot 2^4 + A_L
-\qquad \text{e} \qquad
-B = B_H \cdot 2^4 + B_L
-$$</p>
-<p>onde:</p>
-<p>$$
-A_H = A_7A_6A_5A_4, \quad A_L = A_3A_2A_1A_0
-\qquad
-B_H = B_7B_6B_5B_4, \quad B_L = B_3B_2B_1B_0
-$$</p>
+<section><h1>Exemplo: Codificador 74147</h1>
+<p>Entradas $A_5$, $A_7$ e $A_3$ em BAIXO. Demais em ALTO. Qual dígito?</p>
 </section>
-<section><h1>Aplicando a Distributiva (8 x 8)</h1>
-<p>$$
-\begin{aligned}
-A \cdot B
-&= (A_H \cdot 2^4 + A_L)(B_H \cdot 2^4 + B_L) \\
-&= A_LB_L + (A_HB_L \ll 4) + (A_LB_H \ll 4) + (A_HB_H \ll 8)
-\end{aligned}
-$$</p>
+<section><p>Vence a entrada de maior número: $A_7$ → dígito 7.</p>
+<p>BCD normal: $0111$. BCD invertido (saída do CI): $1000$.</p>
+<p>Após inversores externos: $0111$.</p>
 </section>
-<section><h1>Quatro Multiplicadores 4 x 4</h1>
-<p>$$
-\begin{array}{c|c|c}
-\text{produto} & \text{deslocamento} & \text{papel no resultado} \\
-\hline
-A_LB_L & \ll 0 & \text{parte menos significativa} \\
-A_HB_L & \ll 4 & \text{contribuição cruzada} \\
-A_LB_H & \ll 4 & \text{contribuição cruzada} \\
-A_HB_H & \ll 8 & \text{parte mais significativa}
-\end{array}
-$$</p>
+<section><h1>Codificador de Chaves</h1>
+<p>Aplicação: teclado de calculadora.</p>
+<ul>
+<li>Entradas em ALTO por resistores de pull-up.</li>
+<li>Tecla pressionada → entrada vai para BAIXO.</li>
+<li><code>74147</code> gera BCD invertido → inversores externos geram BCD normal.</li>
+<li>Duas teclas pressionadas juntas: código da de <strong>maior número</strong>.</li>
+</ul>
 </section>
-<section><h1>Montagem no Logisim (8 x 8)</h1>
-<p>A montagem repete o mesmo modelo do $4 \times 4$:</p>
-<ol>
-<li><strong>Splitters</strong> separam cada entrada de 8 bits em duas partes de 4 bits</li>
-<li>Quatro multiplicadores $4 \times 4$ geram $P_{LL}, P_{HL}, P_{LH}, P_{HH}$</li>
-<li><strong>Bit Extender</strong> expande cada produto de 8 para 16 bits</li>
-<li><strong>Shifters</strong> alinham os produtos parciais</li>
-<li>Três <strong>somadores</strong> de 16 bits combinam tudo</li>
-</ol>
+<section><h1>Multiplexadores (MUX)</h1>
+<h2>O Conceito</h2>
+<p>Seleciona uma entre várias entradas de dados e a transfere para <strong>uma única saída</strong>.</p>
+<p>Analogia: seletor de áudio (MP3, rádio, TV, DVD).</p>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>8 fontes de dados, uma saída. Quantos bits de seleção?</p>
+  </div>
+</div>
+<p>$n$ seletores → $2^n$ entradas de dados.</p>
 </section>
-<section><h1>Alinhamento dos Produtos Parciais (8 x 8)</h1>
-<p>$$
-\begin{array}{c|c|c}
-\text{produto parcial} & \text{operação no Logisim} & \text{valor alinhado} \\
-\hline
-P_{LL} & \text{sem shifter} & P_{LL} \\
-P_{HL} & \text{shifter com constante } 4 & P_{HL} \ll 4 \\
-P_{LH} & \text{shifter com constante } 4 & P_{LH} \ll 4 \\
-P_{HH} & \text{shifter com constante } 8 & P_{HH} \ll 8
-\end{array}
-$$</p>
-</section>
-<section><h1>Soma Final (8 x 8)</h1>
-<p>$$
-\begin{aligned}
-S_1 &= P_{LL} + (P_{HL} \ll 4) \\
-S_2 &= S_1 + (P_{LH} \ll 4) \\
-P &= S_2 + (P_{HH} \ll 8)
-\end{aligned}
-$$</p>
-<p>Resultado final em barramento de 16 bits:</p>
-<p>$$
-P = P_{15}P_{14}\ldots P_1P_0
-$$</p>
-</section>
-<section><h1>Montagem do 8 x 8 no Logisim</h1>
-<img src="../static/multiplicador_8x8.png" width="95%" style="display: block; margin: 0 auto;" alt="Multiplicador 8 por 8 bits montado no Logisim-evolution usando quatro multiplicadores 4 por 4.">
+<section><h1>MUX 2 Para 1</h1>
+<p>Duas entradas ($I_0$, $I_1$), um seletor ($S$), uma saída ($Z$).</p>
+<img src="../static/tocci_fig_9_19_mux_2_input.png" width="60%" style="display: block; margin: 0 auto;">
 
-<p>A estrutura é a mesma do $4 \times 4$: splitters, quatro blocos menores, extensores, deslocadores e somadores.</p>
+<table>
+<thead>
+<tr>
+  <th>S</th>
+  <th>Z</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>0</td>
+  <td>I₀</td>
+</tr>
+<tr>
+  <td>1</td>
+  <td>I₁</td>
+</tr>
+</tbody>
+</table>
+<p>$$
+Z = I_0\overline{S} + I_1S
+$$</p>
 </section>
-<section><h1>Próximos passos</h1>
-<p>Nesta aula vimos como a multiplicação binária pode ser construída com produtos parciais, deslocamentos e somadores.</p>
-<p>A divisão binária exige uma lógica de decisão: comparar valores, escolher entre manter ou subtrair, e encadear restos parciais.</p>
-<p>Por isso, vamos deixar a divisão para depois de estudar blocos de seleção e comparação.</p>
-<p>No próximo capítulo, <a href="14-msi-combinational-modules.html">Módulos MSI Combinacionais: Decodificadores, Encoders, Mux e Demux (Cap. 9)</a>, vamos estudar blocos funcionais prontos para uso em sistemas maiores.</p>
+<section><h1>MUX 4 Para 1</h1>
+<p>Quatro entradas, dois seletores ($S_1$, $S_0$).</p>
+<img src="../static/tocci_fig_9_20_mux_4_input.png" width="85%" style="display: block; margin: 0 auto;">
+
+<table>
+<thead>
+<tr>
+  <th>S₁</th>
+  <th>S₀</th>
+  <th>Z</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>0</td>
+  <td>0</td>
+  <td>I₀</td>
+</tr>
+<tr>
+  <td>0</td>
+  <td>1</td>
+  <td>I₁</td>
+</tr>
+<tr>
+  <td>1</td>
+  <td>0</td>
+  <td>I₂</td>
+</tr>
+<tr>
+  <td>1</td>
+  <td>1</td>
+  <td>I₃</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section><h1>MUX 4 Para 1: Implementação</h1>
+<p>Duas formas:</p>
+<ul>
+<li><strong>Soma de produtos</strong>: portas AND + OR</li>
+<li><strong>Buffers tristate</strong> controlados por decodificador: apenas um buffer habilitado por vez</li>
+</ul>
+<p>$$
+Z = I_0\overline{S_1}\overline{S_0} + I_1\overline{S_1}S_0 + I_2S_1\overline{S_0} + I_3S_1S_0
+$$</p>
+</section>
+<section><h1>MUX de Oito Entradas (74HC151)</h1>
+<table>
+<thead>
+<tr>
+  <th>Sinal</th>
+  <th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>I₀–I₇</td>
+  <td>entradas de dados</td>
+</tr>
+<tr>
+  <td>S₂S₁S₀</td>
+  <td>seletores</td>
+</tr>
+<tr>
+  <td>E</td>
+  <td>enable</td>
+</tr>
+<tr>
+  <td>Z, Z̄</td>
+  <td>saída normal e invertida</td>
+</tr>
+</tbody>
+</table>
+<p>$E = 0$ → habilitado. $E = 1$ → desabilitado ($Z = 0$).</p>
+</section>
+<section><h1>Exemplo: MUX 74HC151</h1>
+<p>$S_2S_1S_0 = 101$, $E = 0$. Dados: $I_0=I_2=I_5=I_6=1$, demais $0$.</p>
+</section>
+<section><p>$101_2 = 5_{10}$ → entrada $I_5$ selecionada.</p>
+<p>Como $I_5 = 1$ → $Z = 1$.</p>
+</section>
+<section><h1>Construindo um MUX Maior</h1>
+<p>Dois <code>74HC151</code> → MUX de 16 entradas:</p>
+<ul>
+<li>$S_2S_1S_0$ vão para ambos os CIs.</li>
+<li>$S_3$ decide qual CI é habilitado.</li>
+<li>Saídas combinadas.</li>
+<li>Mesmo princípio do cascateamento de decodificadores.</li>
+</ul>
+</section>
+<section><h1>Aplicações de Multiplexadores</h1>
+<ul>
+<li><strong>Roteamento de dados</strong>: vários contadores BCD compartilham um único display.</li>
+<li><strong>Conversão paralelo-série</strong>: 8 bits paralelos → saída serial bit a bit.</li>
+<li><strong>Implementação de funções lógicas</strong>: variáveis nos seletores, entradas de dados recebem $0$ ou $1$ conforme a tabela-verdade.</li>
+</ul>
+</section>
+<section><h1>MUX Como Gerador de Função Lógica</h1>
+<img src="../static/tocci_fig_9_27_mux_as_logic_function.png" width="85%" style="display: block; margin: 0 auto;">
+
+<p>As variáveis $A$, $B$, $C$ vão para os seletores. Cada entrada de dados do MUX recebe $0$ ou $1$ conforme a saída desejada para aquela combinação.</p>
+</section>
+<section><h1>Demultiplexadores (DEMUX)</h1>
+<h2>O Conceito</h2>
+<p>Operação inversa do MUX: recebe <strong>uma entrada de dados</strong> e distribui para <strong>várias saídas</strong>.</p>
+<p>O código de seleção determina para qual saída o dado é transmitido.</p>
+<p>MUX concentra. DEMUX distribui.</p>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Se o MUX escolhe uma entre muitas entradas e leva para uma saída, o que o DEMUX faz?</p>
+  </div>
+</div>
+</section>
+<section><h1>DEMUX 1 Para 8</h1>
+<p>Uma entrada de dados $I$, três seletores $S_2S_1S_0$, oito saídas $O_0$ a $O_7$.</p>
+<img src="../static/tocci_fig_9_29_demux_1_to_8.png" width="72%" style="display: block; margin: 0 auto;">
+
+<p>Para cada combinação dos seletores, $I$ aparece em <strong>apenas uma</strong> saída.</p>
+</section>
+<section><h1>DEMUX e Decodificador</h1>
+<p>O circuito de um DEMUX é quase idêntico ao de um decodificador.</p>
+<p>A diferença: DEMUX acrescenta a entrada de dados em cada porta.</p>
+<p>Um decodificador com enable pode funcionar como DEMUX: a entrada de habilitação recebe o dado $I$, e os seletores determinam o destino.</p>
+<img src="../static/tocci_fig_9_30_74138_as_demux.png" width="68%" style="display: block; margin: 0 auto;">
+
+</section>
+<section><h1>Exemplo: DEMUX</h1>
+<p>DEMUX 1 para 8 com saídas ativas em ALTO. $S_2S_1S_0 = 101$, $I = 1$.</p>
+</section>
+<section><p>$101_2 = 5_{10}$ → saída escolhida: $O_5$.</p>
+<p>$I = 1$ → $O_5 = 1$. Demais saídas = $0$.</p>
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">Diferença chave<br /></span>
+  </div>
+  <div class="callout-content">
+<p>No decoder, a saída selecionada ativa independentemente do dado. No DEMUX, a saída selecionada <strong>recebe o valor do dado</strong>.</p>
+  </div>
+</div>
+</section>
+<section><h1>Comparação Entre os Blocos</h1>
+<table>
+<thead>
+<tr>
+  <th>Bloco</th>
+  <th>Entrada</th>
+  <th>Saída</th>
+  <th>Pergunta</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Decoder</td>
+  <td>código binário</td>
+  <td>uma linha ativa</td>
+  <td>qual saída para este código?</td>
+</tr>
+<tr>
+  <td>Encoder</td>
+  <td>uma linha ativa</td>
+  <td>código binário</td>
+  <td>qual entrada foi ativada?</td>
+</tr>
+<tr>
+  <td>MUX</td>
+  <td>vários dados</td>
+  <td>um dado</td>
+  <td>qual entrada vai para a saída?</td>
+</tr>
+<tr>
+  <td>DEMUX</td>
+  <td>um dado</td>
+  <td>uma saída</td>
+  <td>para qual destino?</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">Atalho mental<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Decoder: código → linha. Encoder: linha → código. MUX: dados → seleciona um. DEMUX: dado → distribui.</p>
+  </div>
+</div>
+</section>
+<section><h1>Como Escolher o Bloco Certo</h1>
+<ol>
+<li>&quot;Tenho um código e quero ativar uma saída&quot; → <strong>Decoder</strong></li>
+<li>&quot;Tenho uma linha ativa e quero saber seu número&quot; → <strong>Encoder</strong></li>
+<li>&quot;Tenho várias fontes e quero escolher uma&quot; → <strong>MUX</strong></li>
+<li>&quot;Tenho um sinal e quero enviá-lo para um destino&quot; → <strong>DEMUX</strong></li>
+</ol>
+<p>Dimensionamento: número de seletores = $\log_2(\text{opções})$.</p>
+<p>Se não for potência de 2, use bits suficientes para cobrir todas as opções.</p>
+</section>
+<section><h1>Exemplo de Escolha de Bloco</h1>
+<p>Um processador precisa escolher uma entre 16 fontes de dados para a ALU.</p>
+</section>
+<section><p>Várias fontes, uma saída única → <strong>multiplexação</strong>.</p>
+<p>$2^4 = 16$ → MUX 16 para 1 com <strong>4 bits de seleção</strong>.</p>
+</section>
+<section><h1>Atividade Prática — Varredura de Sensores</h1>
+<p>Monte no Logisim-evolution um circuito que combina MUX e DEMUX para inspecionar 4 sensores com <strong>chaves manuais de seleção</strong>.</p>
+<ul>
+<li>4 chaves simulam sensores ($I_0$ a $I_3$)</li>
+<li>3 chaves manuais controlam os seletores ($S_2S_1S_0$)</li>
+<li>MUX lê o sensor correspondente ao endereço</li>
+<li>DEMUX roteia o estado para o LED daquela posição</li>
+</ul>
+<p>Todo o circuito é <strong>combinacional</strong> — não usa contador nem memória.</p>
+</section>
+<section><h1>Atividade — O Que Fazer</h1>
+<p><strong>Componentes:</strong> 4 <code>Pin</code> de entrada (sensores), 3 <code>Pin</code> para os seletores, MUX 8→1, Decoder 3→8 (com enable = entrada de dados), 8 <code>LED</code> de saída.</p>
+<p><strong>Conexões:</strong></p>
+<ol>
+<li>Chaves I₀–I₇ nas entradas de dados do MUX.</li>
+<li>Seletores manuais no MUX e no decoder.</li>
+<li>Saída do MUX no enable do decoder.</li>
+<li>Saídas do decoder nos LEDs.</li>
+</ol>
+<p><strong>Teste:</strong> Varie manualmente os seletores de $000$ a $111$. Altere as chaves. Observe qual LED acende a cada endereço.</p>
+<p><strong>Economia:</strong> 1 fio de dados em vez de 8 fios paralelos.</p>
+</section>
+<section><h1>Próximos Passos</h1>
+<p>Vimos quatro blocos MSI combinacionais: decodificador, codificador, MUX e DEMUX.</p>
+<p>Cada um resolve um problema diferente de seleção, codificação ou roteamento.</p>
+<p><strong>Na próxima aula:</strong> lógica sequencial — a saída passa a depender também do estado armazenado. Começa com <strong>latches e flip-flops</strong>.</p>
 </section>
         </div>
     </div>

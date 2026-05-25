@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toposia - Sistemas Digitais e Microprocessados</title>
+    <link rel="icon" href="/aulas-faesa/img/dark-favicon.svg" media="(prefers-color-scheme: light)">
+    <link rel="icon" href="/aulas-faesa/img/light-favicon.svg" media="(prefers-color-scheme: dark)">
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/fonts.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/bundles/katex-base-prism-one-light-b0347952c973.bundle.min.css">
+    
+    
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css" data-no-bundle>
+    <script src="/aulas-faesa/js/bundles/lucide-katex-auto-render-4b36e8bd8642.bundle.min.js"></script>
+</head>
+
+<body>
+    <script>
+        // Restore sidebar state instantly (before first paint) to avoid transition flash
+        (function() {
+            if (localStorage.getItem('cf_sidebar_hidden') === 'true') {
+                document.body.classList.add('sidebar-hidden', 'no-transition');
+            }
+            requestAnimationFrame(function() {
+                requestAnimationFrame(function() {
+                    document.body.classList.remove('no-transition');
+                });
+            });
+        })();
+    </script>
+    <div class="page-wrapper">
+        <nav class="sidebar">
+            <div class="sidebar-content">
+                <header class="sidebar-title-section">
+                    <a href="contents.html" class="course-title-link">
+                        <h1 class="sidebar-course-title">Sistemas Digitais e Microprocessados</h1>
+                    </a>
+                    <div class="sidebar-ornament">❧</div>
+                </header>
+
+                
+                <section class="sidebar-toc-section">
+                    <h2 class="toc-header">Tabela de Conteúdos</h2>
+                    <ol class="toc-list">
+                        
+                        <li class="toc-item level-2">
+                            <a href="#introdução">14.1. Introdução</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#o-que-muda-quando-usamos-msi">14.2. O Que Muda Quando Usamos MSI</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#decodificadores">14.3. Decodificadores</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#entradas-de-habilitação">14.3.1. Entradas de Habilitação</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#cascateamento-de-decodificadores">14.3.2. Cascateamento de Decodificadores</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#decodificadores-e-suas-aplicações">14.3.3. Decodificadores e suas Aplicações</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#codificadores">14.4. Codificadores</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#o-problema-da-codificação">14.4.1. O Problema da Codificação</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#codificador-de-chaves">14.4.2. Codificador de Chaves</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#multiplexadores">14.5. Multiplexadores</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#demultiplexadores">14.6. Demultiplexadores</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#comparação-entre-decoder-encoder-mux-e-demux">14.7. Comparação Entre Decoder, Encoder, MUX e DEMUX</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#questões">14.8. Questões</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#próximos-passos">14.9. Próximos passos</a>
+                        </li>
+                        
+                    </ol>
+                </section>
+                
+
+                <nav class="sidebar-nav-section">
+                    
+                    <a href="13-digital-arithmetic-ii.html" class="sidebar-nav-link prev"><i data-lucide="chevron-left" class="nav-icon"></i> Aritmética Digital - II</a>
+                    
+                    
+                    <a href="javascript:void(0)" onclick="handleBackNavigation()"
+                        class="sidebar-nav-link back"><i data-lucide="arrow-left" class="nav-icon"></i> Voltar</a>
+                </nav>
+
+            </div>
+        </nav>
+
+        <button class="mobile-menu-toggle" aria-label="Menu">
+            <i data-lucide="menu"></i>
+        </button>
+
+        <button class="sidebar-toggle" onclick="CourseForgeNav.toggleSidebar()" aria-label="Alternar Barra Lateral">
+            <i data-lucide="chevron-left" class="toggle-icon" id="sidebar-toggle-icon"></i>
+        </button>
+
+        <div class="mobile-menu-overlay"></div>
+
+        <main class="main-content">
+            <article class="article">
+                <header class="article-header">
+                    <span class="chapter-number">14</span>
+                    <h1 class="article-title">
+                        <span class="title-ornament left">❧</span>
+                        <span class="title-text">Módulos MSI Combinacionais</span>
+                        <span class="title-ornament right">❧</span>
+                    </h1>
+                    
+                    <p class="article-date">25/05/2026</p>
+                    
+                    
+                    <nav class="breadcrumb" aria-label="Breadcrumb">
+                        
+                        
+                        
+                        <a href="contents.html" class="breadcrumb-link">Sistemas Digitais e Microprocessados</a>
+                        
+                        <span class="breadcrumb-separator"><i data-lucide="chevron-right" class="breadcrumb-icon"></i></span>
+                        
+                        
+                        
+                        
+                        <a href="contents.html#part-IV" class="breadcrumb-link">IV - Lógica Combinacional - II</a>
+                        
+                        <span class="breadcrumb-separator"><i data-lucide="chevron-right" class="breadcrumb-icon"></i></span>
+                        
+                        
+                        
+                        <span class="breadcrumb-current">Módulos MSI Combinacionais</span>
+                        
+                        
+                    </nav>
+                    
+                </header>
+                <div class="article-body">
+                    <h2 id="introdução"><span class="heading-text">Introdução</span><span class="heading-arabic">14.1</span></h2>
+<p>Nas aulas anteriores, você construiu circuitos combinacionais a partir de portas lógicas individuais , primeiro tabela-verdade, depois expressão, depois circuito. Agora vamos subir um nível de abstração.</p>
+<p>Esta aula usa como base o Capítulo 9 de <strong>Sistemas Digitais: Princípios e Aplicações</strong>, de Ronald J. Tocci, Neal S. Widmer e Gregory L. Moss. A ideia central é a mudança de escala: em vez de montar tudo com portas SSI (Small-Scale Integration, poucas portas por chip) separadas, passamos a usar blocos MSI (Medium-Scale Integration, dezenas de portas por chip) prontos, como decodificadores, codificadores, multiplexadores e demultiplexadores. Esses blocos continuam sendo circuitos combinacionais , a saída depende apenas das entradas atuais , mas encapsulam funções comuns que aparecem repetidamente em sistemas digitais.</p>
+<div class="callout callout-abstract">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
+    <span class="callout-title-inner">Ideia central<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Um circuito MSI combinacional é um bloco funcional pronto para selecionar, codificar, rotear ou distribuir sinais digitais. Ele não guarda memória e evita que você redesenhe dezenas de portas sempre que precisar da mesma função.</p>
+  </div>
+</div>
+<p>A aula será organizada em torno de operações muito frequentes em sistemas digitais: decodificação e codificação, multiplexação e demultiplexação, comparação, conversão de código e barramentos de dados. Vamos focar nos quatro blocos principais: <strong>decodificadores</strong>, <strong>codificadores</strong>, <strong>multiplexadores</strong> e <strong>demultiplexadores</strong>. O ponto mais importante não é decorar CIs, mas entender o comportamento de cada bloco. Quando você reconhece a função, consegue usar tanto um CI TTL/CMOS clássico, como <code>74ALS138</code>, <code>74HC151</code> ou <code>74HC147</code>, quanto uma megafunção em uma ferramenta moderna de projeto digital.</p>
+<h2 id="o-que-muda-quando-usamos-msi"><span class="heading-text">O Que Muda Quando Usamos MSI</span><span class="heading-arabic">14.2</span></h2>
+<p>Um circuito SSI, como uma porta AND ou OR, resolve uma operação lógica pequena. Um circuito MSI resolve uma função maior. Um decodificador 3 para 8, por exemplo, contém internamente inversores e portas AND organizadas para ativar uma única saída entre oito possíveis. Se você montasse esse decodificador manualmente, precisaria de inversores para obter as versões complementadas das entradas, uma porta AND para cada saída e conexões cuidadosas para garantir que cada saída correspondesse a uma combinação binária diferente. O MSI empacota essa lógica em um componente único, reduzindo fios, chances de erro e deixando o projeto mais legível.</p>
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">SSI, MSI e a ideia de bloco<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Os CIs SSI e MSI foram por muito tempo os &quot;tijolos e cimento&quot; dos sistemas digitais. Mesmo com FPGAs e PLDs modernos, esses blocos continuam importantes porque revelam funções básicas usadas em projetos maiores.</p>
+  </div>
+</div>
+<p>Agora pense no papel desses blocos dentro de um sistema microprocessado: um endereço pode selecionar uma memória, um teclado pode ser codificado em BCD, um barramento pode receber dados de uma entre várias fontes, um único sinal pode ser distribuído para um entre vários destinos. Todos esses problemas são problemas de seleção e roteamento , e é por isso que decodificadores, codificadores, MUX e DEMUX aparecem tão cedo em projetos digitais reais.</p>
+<h2 id="decodificadores"><span class="heading-text">Decodificadores</span><span class="heading-arabic">14.3</span></h2>
+<p>Suponha que um sistema tenha 8 dispositivos e você não queira usar 8 fios de controle independentes para selecioná-los. Em vez disso, você usa 3 bits de endereço. Com 3 bits, existem $2^3 = 8$ combinações possíveis, e a ideia do decodificador é transformar cada combinação binária em uma linha de saída diferente.</p>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Se a entrada binária vale $110_2$, qual saída deveria ser ativada em um decodificador 3 para 8? E por que só uma saída deve ficar ativa por vez?</p>
+  </div>
+</div>
+<p>Um <strong>decodificador</strong> recebe um código binário de entrada e ativa a saída correspondente ao valor desse código. No caso ideal, apenas uma saída fica ativa por vez. Em outras palavras, o circuito analisa as entradas, determina o número binário presente e ativa a saída correspondente; todas as outras saídas permanecem desativadas.</p>
+<p>Um decodificador com $n$ entradas pode reconhecer $2^n$ combinações diferentes. Quando todas as combinações são usadas, ele pode ter $2^n$ saídas:</p>
+<p>$$
+\text{n entradas} \quad \Rightarrow \quad 2^n \text{ combinações} \quad \Rightarrow \quad 2^n \text{ saídas possíveis}
+$$</p>
+<p>Alguns exemplos:</p>
+<p>$$
+\begin{array}{c|c|c}
+\text{Entradas} & \text{Combinações} & \text{Nome comum} \\
+\hline
+2 & 4 & \text{decodificador 2 para 4} \\
+3 & 8 & \text{decodificador 3 para 8 ou 1 de 8} \\
+4 & 16 & \text{decodificador 4 para 16 ou 1 de 16}
+\end{array}
+$$</p>
+<p>O nome &quot;1 de 8&quot; significa exatamente isto: uma entre oito saídas fica ativa.</p>
+<p>Antes de escrever a tabela, precisamos tomar cuidado com uma convenção prática: nem todo decodificador ativa a saída colocando-a em $1$. Alguns decodificadores têm saídas <strong>ativas em nível ALTO</strong> , a saída selecionada vai para $1$ e as demais ficam em $0$. Outros têm saídas <strong>ativas em nível BAIXO</strong> , a saída selecionada vai para $0$ e as demais ficam em $1$. Essa diferença aparece muito em CIs reais. Um decodificador 3 para 8 construído diretamente com portas AND costuma ter saídas ativas em nível ALTO; já o <code>74ALS138</code> usa saídas ativas em nível BAIXO.</p>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Erro comum<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Não basta olhar para a saída e perguntar se ela vale $0$ ou $1$. Você precisa saber se a saída é ativa em nível alto ou ativa em nível baixo. Em muitos CIs, a bolinha no símbolo indica inversão ou ativação em nível baixo.</p>
+  </div>
+</div>
+<p>Vamos usar a notação $CBA$, com $C$ como MSB e $A$ como LSB, e as saídas $O_0$ a $O_7$. Quando $CBA = 000$, a saída ativada é $O_0$; quando $CBA = 001$, é $O_1$; quando $CBA = 110$, é $O_6$; e quando $CBA = 111$, é $O_7$.</p>
+<p>A figura abaixo mostra essa estrutura com portas AND e a tabela correspondente.</p>
+<img src="static/tocci_fig_9_2_decoder_3_to_8.png" width="92%" style="display: block; margin: 0 auto;" alt="Decodificador de 3 linhas para 8 linhas.">
+
+<p>A tabela-verdade para saídas ativas em nível ALTO é:</p>
+<p>$$
+\begin{array}{c|c|c||c|c|c|c|c|c|c|c}
+C & B & A & O_7 & O_6 & O_5 & O_4 & O_3 & O_2 & O_1 & O_0 \\
+\hline
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 \\
+0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 \\
+0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 \\
+0 & 1 & 1 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 \\
+1 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 \\
+1 & 0 & 1 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 \\
+1 & 1 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 \\
+1 & 1 & 1 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0
+\end{array}
+$$</p>
+<p>As expressões de saída são simplesmente os mintermos das três variáveis , cada saída corresponde a uma linha da tabela.</p>
+<p>Quando você estiver diante de um decodificador, não tente memorizar a tabela inteira. O procedimento é simples: primeiro identifique a ordem dos bits de entrada; depois converta o código binário para decimal; ative a saída com esse índice, mantendo as outras inativas; e por fim ajuste o valor elétrico conforme a saída seja ativa em nível alto ou baixo.</p>
+<h3 id="entradas-de-habilitação"><span class="heading-text">Entradas de Habilitação</span><span class="heading-arabic">14.3.1</span></h3>
+<p>Muitos decodificadores reais têm entradas de <strong>habilitação</strong>, cujo papel é permitir ou bloquear o funcionamento do componente. Se o decodificador estiver habilitado, ele responde ao código de entrada; se estiver desabilitado, suas saídas ficam no estado inativo, independentemente do código.</p>
+<p>Um exemplo clássico é o <code>74ALS138</code>: um decodificador 3 para 8 com saídas ativas em nível BAIXO e três entradas de habilitação , $E_1$ ativa em nível BAIXO, $E_2$ ativa em nível BAIXO e $E_3$ ativa em nível ALTO.</p>
+<p>Por que três entradas, e não apenas uma? A resposta está no cascateamento. Quando você precisa montar um decodificador maior com vários CIs iguais, o ideal é que o sinal que seleciona qual chip será habilitado não exija lógica externa adicional. Com duas entradas ativas em nível baixo e uma ativa em nível alto, você pode conectar sinais diferentes em cada uma delas sem precisar de inversores extras. Por exemplo, ao cascatear dois <code>74ALS138</code>, você liga o bit de seleção mais significativo diretamente em $E_3$ de um chip e em $E_1$ do outro, aproveitando que um responde a nível alto e o outro a nível baixo. As entradas não usadas são simplesmente amarradas no valor que as mantém no estado ativo.</p>
+<p>Para o CI ficar habilitado, a condição precisa ser:</p>
+<p>$$
+E_1 = 0, \qquad E_2 = 0, \qquad E_3 = 1
+$$</p>
+<p>Se qualquer uma dessas condições falhar, todas as saídas permanecem inativas em nível ALTO.</p>
+<div class="example">
+  <div class="example-title">Exemplo 1</div>
+  <p>Um <code>74ALS138</code> recebe $E_3=1$, $E_2=0$, $E_1=0$ e $A_2A_1A_0=011$. Qual saída é ativada?</p>
+<hr />
+<p>Verificamos a habilitação: $E_1=0$, $E_2=0$, $E_3=1$, todas as entradas no estado ativo. Convertendo $011_2 = 3_{10}$, a saída selecionada é $O_3$. Como o CI tem saídas ativas em nível BAIXO, $O_3 = 0$ e as demais saídas ficam em nível ALTO.</p>
+</div>
+<h3 id="cascateamento-de-decodificadores"><span class="heading-text">Cascateamento de Decodificadores</span><span class="heading-arabic">14.3.2</span></h3>
+<p>Um decodificador maior pode ser montado com vários decodificadores menores. Por exemplo, quatro CIs <code>74ALS138</code> podem formar um decodificador 1 de 32. A ideia é separar os bits de entrada em dois grupos: os bits menos significativos escolhem uma saída dentro do CI habilitado; os bits mais significativos escolhem qual CI será habilitado.</p>
+<p>Para um decodificador 1 de 32, temos 5 bits de entrada, $A_4A_3A_2A_1A_0$. Os bits $A_2A_1A_0$ entram em todos os decodificadores 3 para 8 e escolhem uma das 8 saídas internas. Já os bits $A_4A_3$ determinam qual dos quatro CIs fica habilitado:</p>
+<p>$$
+\begin{array}{c|c|c}
+A_4A_3 & \text{CI habilitado} & \text{faixa de saídas} \\
+\hline
+00 & Z_1 & O_0 \text{ a } O_7 \\
+01 & Z_2 & O_8 \text{ a } O_{15} \\
+10 & Z_3 & O_{16} \text{ a } O_{23} \\
+11 & Z_4 & O_{24} \text{ a } O_{31}
+\end{array}
+$$</p>
+<p>O raciocínio geral do cascateamento é sempre o mesmo: os bits mais altos escolhem o bloco e os bits mais baixos escolhem a saída dentro dele.</p>
+<h3 id="decodificadores-e-suas-aplicações"><span class="heading-text">Decodificadores e suas Aplicações</span><span class="heading-arabic">14.3.3</span></h3>
+<p>Nem todo decodificador usa todas as $2^n$ combinações possíveis. Um decodificador BCD para decimal, como o <code>7442</code>, recebe 4 bits, mas ativa apenas uma entre 10 saídas , porque o BCD usa apenas os códigos de $0000$ a $1001$. Os códigos de $1010$ a $1111$ não são válidos em BCD e, em muitos decodificadores desse tipo, quando um desses códigos inválidos é aplicado, nenhuma saída é ativada.</p>
+<p>Também são muito comuns os decodificadores/drivers BCD para 7 segmentos. Eles recebem um dígito BCD e acionam os segmentos corretos de um display. Essa aplicação é mais rica que um decodificador simples, porque cada saída de segmento pode estar ativa para vários dígitos diferentes , por exemplo, o segmento $a$ acende para $0$, $2$, $3$, $5$, $6$, $7$, $8$ e $9$. Ainda assim, a ideia central é a mesma: converter um código de entrada em sinais de saída úteis para um dispositivo.</p>
+<p>Uma aplicação muito importante aparece em sistemas de memória. O processador coloca um endereço no barramento e o decodificador usa parte desse endereço para selecionar uma posição ou um CI de memória. Em termos práticos, os bits mais significativos do endereço selecionam o chip, os bits menos significativos selecionam a posição interna dentro do chip, e o sinal de habilitação impede que chips não selecionados respondam. Essa ideia voltará quando estudarmos barramentos e memória. Por enquanto, guarde a estrutura: endereço entra, uma linha de seleção sai.</p>
+<h2 id="codificadores"><span class="heading-text">Codificadores</span><span class="heading-arabic">14.4</span></h2>
+<h3 id="o-problema-da-codificação"><span class="heading-text">O Problema da Codificação</span><span class="heading-arabic">14.4.1</span></h3>
+<p>O codificador faz o caminho inverso do decodificador: em vez de receber um código binário e ativar uma saída, ele recebe uma linha de entrada ativa e gera o código binário correspondente. Em outras palavras, o codificador pode ser lido como o oposto da decodificação , um circuito com certo número de linhas de entrada, em que somente uma é ativada por vez, produzindo um código de saída de $N$ bits.</p>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Se um teclado decimal tem 10 teclas, faria sentido levar 10 fios até o processador? Ou seria melhor gerar um código binário que represente a tecla pressionada?</p>
+  </div>
+</div>
+<p>Um codificador octal para binário recebe 8 entradas e gera 3 saídas. Se a entrada 5 estiver ativa, a saída deve ser $101_2$. Em forma geral, a entrada ativa 0 produz $000$, a entrada 1 produz $001$, e assim por diante até a entrada 7 produzindo $111$.</p>
+<p>Em muitos CIs, as entradas são ativas em nível BAIXO, o que significa que a entrada pressionada ou selecionada aparece como $0$ enquanto as demais ficam em $1$. Essa convenção é muito comum em teclados com resistores de pull-up: enquanto a tecla está solta, a entrada fica em nível ALTO; quando a tecla é pressionada, ela é conectada ao terra e vai para nível BAIXO.</p>
+<p>O codificador simples só funciona corretamente quando uma única entrada está ativa. Se duas entradas forem ativadas ao mesmo tempo, a saída pode virar um código sem significado claro. Esse problema aparece claramente em um codificador octal para binário: se $A_3$ e $A_5$ forem simultaneamente ativadas em nível BAIXO, a saída pode se tornar $111$, que não representa adequadamente nenhuma das duas entradas ativas.</p>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Erro comum<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Não assuma que um codificador simples &quot;escolhe&quot; uma das entradas. Se ele não tiver lógica de prioridade, duas entradas ativas podem produzir uma saída ambígua.</p>
+  </div>
+</div>
+<p>Para resolver o conflito de múltiplas entradas ativas, usamos um <strong>codificador de prioridade</strong>. Nesse circuito, se duas ou mais entradas forem ativadas, a saída representa a entrada de maior prioridade , na maioria dos casos, a maior prioridade fica com a entrada de maior número. Por exemplo, se $A_3$ e $A_5$ forem ativadas, a saída representa $A_5$; se $A_2$, $A_6$ e $A_0$ forem ativadas, a saída representa $A_6$. Os CIs <code>74148</code>, <code>74LS148</code> e <code>74HC148</code> são exemplos clássicos de codificadores de prioridade octal para binário.</p>
+<p>O <code>74147</code> é um codificador de prioridade decimal para BCD, com entradas ativas em nível BAIXO para os dígitos de 1 a 9 e saída em código BCD invertido.</p>
+<img src="static/tocci_fig_9_14_priority_encoder_74147.png" width="92%" style="display: block; margin: 0 auto;" alt="Codificador de prioridade decimal para BCD 74147.">
+
+<p>Há três detalhes importantes na leitura desse CI: as entradas são ativas em nível BAIXO, as saídas são BCD invertido e não há entrada $A_0$, porque a ausência de qualquer entrada ativa de 1 a 9 já representa o decimal 0. Se nenhuma tecla estiver ativa, as saídas ficam em $1111$; passando por inversores, isso vira $0000$, o BCD normal para 0. Se a entrada $A_7$ estiver ativa em nível BAIXO, a saída invertida será $1000$, cujo inverso é $0111$, o BCD normal para 7.</p>
+<div class="example">
+  <div class="example-title">Exemplo 2</div>
+  <p>No <code>74147</code>, as entradas $A_5$, $A_7$ e $A_3$ estão em nível BAIXO e todas as demais estão em nível ALTO. Qual dígito é codificado?</p>
+<hr />
+<p>Como o <code>74147</code> é um codificador de prioridade, vence a entrada ativa de maior número: $A_7$. O dígito codificado é 7 e, como o CI gera BCD invertido, a saída será $\overline{0111} = 1000$. Esse é o raciocínio essencial para interpretar codificadores de prioridade com saídas invertidas.</p>
+</div>
+<h3 id="codificador-de-chaves"><span class="heading-text">Codificador de Chaves</span><span class="heading-arabic">14.4.2</span></h3>
+<p>Uma aplicação direta é o <strong>codificador de chaves</strong>. Imagine um teclado de calculadora com teclas de 0 a 9: quando uma tecla é pressionada, o circuito precisa transformar essa ação em um código BCD. O <code>74147</code> pode ser usado nessa aplicação com as entradas normalmente em nível ALTO por resistores de pull-up. Quando uma tecla é pressionada, a entrada correspondente vai para nível BAIXO, o codificador gera o código BCD invertido e inversores externos podem transformá-lo em BCD normal. Esse circuito também explica por que a prioridade importa: se duas teclas forem pressionadas simultaneamente, o código gerado será o da tecla de maior número.</p>
+<h2 id="multiplexadores"><span class="heading-text">Multiplexadores</span><span class="heading-arabic">14.5</span></h2>
+<p>Um multiplexador, ou <strong>MUX</strong>, seleciona uma entre várias entradas de dados e a transfere para uma única saída. Uma analogia simples é um sistema de som que seleciona entre MP3 player, rádio, TV ou DVD: a chave escolhe uma fonte e envia o sinal ao amplificador. O MUX faz isso digitalmente.</p>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Se você tem 8 fontes de dados e quer escolher uma delas, quantos bits de seleção são necessários?</p>
+  </div>
+</div>
+<p>Com $n$ entradas de seleção, um MUX consegue escolher uma entre $2^n$ entradas de dados , um seletor cobre 2 entradas, dois seletores cobrem 4, três seletores cobrem 8 e quatro seletores cobrem 16.</p>
+<p>O MUX 2 para 1 tem duas entradas de dados, $I_0$ e $I_1$, uma entrada de seleção $S$ e uma saída $Z$.</p>
+<img src="static/tocci_fig_9_19_mux_2_input.png" width="70%" style="display: block; margin: 0 auto;" alt="Multiplexador de duas entradas.">
+
+<p>A tabela funcional e a expressão são:</p>
+<p>$$
+\begin{array}{c||c}
+S & Z \\
+\hline
+0 & I_0 \\
+1 & I_1
+\end{array}
+\qquad
+Z = I_0\overline{S} + I_1S
+$$</p>
+<p>Avaliando a expressão: quando $S=0$, temos $Z = I_0 \cdot 1 + I_1 \cdot 0 = I_0$; quando $S=1$, temos $Z = I_0 \cdot 0 + I_1 \cdot 1 = I_1$. O seletor não é o dado , ele decide qual dado passa.</p>
+<div class="no-break"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:ns2="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" width="260" viewBox="0 0 249.948 99.36" version="1.1" class="svg-graph"> <metadata>  <rdf:RDF>   <ns2:Work>    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage" />    <dc:date>2026-05-25T14:49:00.866221</dc:date>    <dc:format>image/svg+xml</dc:format>    <dc:creator>     <ns2:Agent>      <dc:title>Matplotlib v3.10.8, https://matplotlib.org/</dc:title>     </ns2:Agent>    </dc:creator>   </ns2:Work>  </rdf:RDF> </metadata> <defs>  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style> </defs> <g id="figure_1">  <g id="patch_1">   <path d="M 0 99.36  L 249.948 99.36  L 249.948 0  L 0 0  L 0 99.36  z " style="fill: none" />  </g>  <g id="axes_1">   <g id="patch_2">    <path d="M 65.388 40.5  C 66.533677 40.5 67.632585 40.044818 68.442701 39.234701  C 69.252818 38.424585 69.708 37.325677 69.708 36.18  C 69.708 35.034323 69.252818 33.935415 68.442701 33.125299  C 67.632585 32.315182 66.533677 31.86 65.388 31.86  C 64.242323 31.86 63.143415 32.315182 62.333299 33.125299  C 61.523182 33.935415 61.068 35.034323 61.068 36.18  C 61.068 37.325677 61.523182 38.424585 62.333299 39.234701  C 63.143415 40.044818 64.242323 40.5 65.388 40.5  L 65.388 40.5  z " clip-path="url(#pc2cb57c143)" style="fill: none; stroke: #333333; stroke-width: 2; stroke-linejoin: miter" />   </g>   <g id="line2d_1">    <path d="M 177.888 67.32  L 197.430857 67.253878  L 199.488 66.96  L 201.545143 66.43102  L 203.602286 65.666939  L 205.659429 64.667755  L 207.716571 63.433469  L 209.773714 61.964082  L 211.830857 60.259592  L 214.402286 57.798367  L 216.973714 54.969796  L 219.545143 51.773878  L 221.088 49.68  L 221.088 49.68  L 218.516571 46.263673  L 215.945143 43.214694  L 213.373714 40.533061  L 210.802286 38.218776  L 208.745143 36.631837  L 206.688 35.28  L 204.630857 34.163265  L 202.573714 33.281633  L 200.516571 32.635102  L 198.459429 32.223673  L 196.402286 32.047347  L 195.888 32.04  L 177.888 32.04  L 177.888 32.04  L 179.8752 34.2  L 181.6032 36.36  L 183.072 38.52  L 184.2816 40.68  L 185.232 42.84  L 185.9232 45  L 186.3552 47.16  L 186.528 49.32  L 186.4416 51.48  L 186.096 53.64  L 185.4912 55.8  L 184.6272 57.96  L 183.504 60.12  L 182.1216 62.28  L 180.48 64.44  L 178.5792 66.6  L 177.888 67.32  L 177.888 67.32  " clip-path="url(#pc2cb57c143)" style="fill: none; stroke: #333333; stroke-width: 2; stroke-linecap: round" />   </g>   <g id="line2d_2">    <path d="M 165.288 58.68  L 184.2816 58.68  " clip-path="url(#pc2cb57c143)" style="fill: none; stroke: #333333; stroke-width: 2; stroke-linecap: round" />   </g>   <g id="line2d_3">    <path d="M 165.288 40.68  L 184.2816 40.68  " clip-path="url(#pc2cb57c143)" style="fill: none; stroke: #333333; stroke-width: 2; stroke-linecap: round" />   </g>   <g id="line2d_4">    <path d="M 221.088 49.68  L 233.688 49.68  " clip-path="url(#pc2cb57c143)" style="fill: none; stroke: #333333; stroke-width: 2; stroke-linecap: round" />   </g>   <g id="line2d_5">    <path d="M 131.088 40.68  L 132.241264 40.643017  L 133.389789 40.53222  L 134.528855 40.348065  L 135.653783 40.091308  L 136.759948 39.763003  L 137.842806 39.364502  L 138.897907 38.89744  L 139.920916 38.363737  L 140.907628 37.765586  L 141.85399 37.105445  L 142.756111 36.386027  L 143.610286 35.610288  L 144.413004 34.781416  L 145.160967 33.902816  L 145.851101 32.9781  L 146.48057 32.011066  L 147.046788 31.005689  L 147.547427 29.9661  L 147.980432 28.896571  L 148.344021 27.801497  L 148.636702 26.685377  L 148.857272 25.552798  L 149.004824 24.408414  L 149.078752 23.256928  L 149.078752 22.103072  L 149.004824 20.951586  L 148.857272 19.807202  L 148.636702 18.674623  L 148.344021 17.558503  L 147.980432 16.463429  L 147.547427 15.3939  L 147.046788 14.354311  L 146.48057 13.348934  L 145.851101 12.3819  L 145.160967 11.457184  L 144.413004 10.578584  L 143.610286 9.749712  L 142.756111 8.973973  L 141.85399 8.254555  L 140.907628 7.594414  L 139.920916 6.996263  L 138.897907 6.46256  L 137.842806 5.995498  L 136.759948 5.596997  L 135.653783 5.268692  L 134.528855 5.011935  L 133.389789 4.82778  L 132.241264 4.716983  L 131.088 4.68  L 131.088 4.68  L 107.688 4.68  L 107.688 22.68  L 107.688 40.68  L 131.088 40.68  " clip-path="url(#pc2cb57c143)" style="fill: none; stroke: #333333; stroke-width: 2; stroke-linecap: round" />   </g>   <g id="line2d_6">    <path d="M 95.088 31.68  L 107.688 31.68  " clip-path="url(#pc2cb57c143)" style="fill: none; stroke: #333333; stroke-width: 2; stroke-linecap: round" />   </g>   <g id="line2d_7">    <path d="M 95.088 13.68  L 107.688 13.68  " clip-path="url(#pc2cb57c143)" style="fill: none; stroke: #333333; stroke-width: 2; stroke-linecap: round" />   </g>   <g id="line2d_8">    <path d="M 149.088 22.68  L 161.688 22.68  " clip-path="url(#pc2cb57c143)" style="fill: none; stroke: #333333; stroke-width: 2; stroke-linecap: round" />   </g>   <g id="line2d_9">    <path d="M 17.688 36.18  L 37.668 36.18  M 69.708 36.18  L 89.688 36.18  " clip-path="url(#pc2cb57c143)" style="fill: none; stroke: #333333; stroke-width: 2; stroke-linecap: round" />   </g>   <g id="line2d_10">    <path d="M 37.668 18.18  L 61.068 36.18  L 37.668 54.18  L 37.668 18.18  " clip-path="url(#pc2cb57c143)" style="fill: none; stroke: #333333; stroke-width: 2; stroke-linecap: round" />   </g>   <g id="line2d_11">    <path d="M 95.088 31.68  L 89.688 31.68  L 89.688 36.18  " clip-path="url(#pc2cb57c143)" style="fill: none; stroke: #000000; stroke-width: 2; stroke-linecap: round" />   </g>   <g id="line2d_12">    <path d="M 165.288 40.68  L 161.688 40.68  L 161.688 22.68  " clip-path="url(#pc2cb57c143)" style="fill: none; stroke: #000000; stroke-width: 2; stroke-linecap: round" />   </g>   <g id="line2d_13">    <path d="M 131.088 94.68  L 132.241264 94.643017  L 133.389789 94.53222  L 134.528855 94.348065  L 135.653783 94.091308  L 136.759948 93.763003  L 137.842806 93.364502  L 138.897907 92.89744  L 139.920916 92.363737  L 140.907628 91.765586  L 141.85399 91.105445  L 142.756111 90.386027  L 143.610286 89.610288  L 144.413004 88.781416  L 145.160967 87.902816  L 145.851101 86.9781  L 146.48057 86.011066  L 147.046788 85.005689  L 147.547427 83.9661  L 147.980432 82.896571  L 148.344021 81.801497  L 148.636702 80.685377  L 148.857272 79.552798  L 149.004824 78.408414  L 149.078752 77.256928  L 149.078752 76.103072  L 149.004824 74.951586  L 148.857272 73.807202  L 148.636702 72.674623  L 148.344021 71.558503  L 147.980432 70.463429  L 147.547427 69.3939  L 147.046788 68.354311  L 146.48057 67.348934  L 145.851101 66.3819  L 145.160967 65.457184  L 144.413004 64.578584  L 143.610286 63.749712  L 142.756111 62.973973  L 141.85399 62.254555  L 140.907628 61.594414  L 139.920916 60.996263  L 138.897907 60.46256  L 137.842806 59.995498  L 136.759948 59.596997  L 135.653783 59.268692  L 134.528855 59.011935  L 133.389789 58.82778  L 132.241264 58.716983  L 131.088 58.68  L 131.088 58.68  L 107.688 58.68  L 107.688 76.68  L 107.688 94.68  L 131.088 94.68  " clip-path="url(#pc2cb57c143)" style="fill: none; stroke: #333333; stroke-width: 2; stroke-linecap: round" />   </g>   <g id="line2d_14">    <path d="M 95.088 85.68  L 107.688 85.68  " clip-path="url(#pc2cb57c143)" style="fill: none; stroke: #333333; stroke-width: 2; stroke-linecap: round" />   </g>   <g id="line2d_15">    <path d="M 95.088 67.68  L 107.688 67.68  " clip-path="url(#pc2cb57c143)" style="fill: none; stroke: #333333; stroke-width: 2; stroke-linecap: round" />   </g>   <g id="line2d_16">    <path d="M 149.088 76.68  L 161.688 76.68  " clip-path="url(#pc2cb57c143)" style="fill: none; stroke: #333333; stroke-width: 2; stroke-linecap: round" />   </g>   <g id="line2d_17">    <path d="M 165.288 58.68  L 161.688 58.68  L 161.688 76.68  " clip-path="url(#pc2cb57c143)" style="fill: none; stroke: #000000; stroke-width: 2; stroke-linecap: round" />   </g>   <g id="text_1">    <text style="font-size: 14px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #333333" x="237.288" y="53.543125" transform="rotate(-0 237.288 53.543125)">Z</text>   </g>   <g id="text_2">    <text style="font-size: 14px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end; fill: #333333" x="91.488" y="17.543125" transform="rotate(-0 91.488 17.543125)">I0</text>   </g>   <g id="text_3">    <text style="font-size: 14px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end; fill: #333333" x="14.088" y="40.043125" transform="rotate(-0 14.088 40.043125)">S</text>   </g>   <g id="text_4">    <text style="font-size: 14px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end; fill: #333333" x="91.488" y="71.543125" transform="rotate(-0 91.488 71.543125)">I1</text>   </g>   <g id="text_5">    <text style="font-size: 14px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end; fill: #333333" x="91.488" y="89.543125" transform="rotate(-0 91.488 89.543125)">S</text>   </g>  </g> </g> <defs>  <clipPath id="pc2cb57c143">   <rect x="0" y="-0" width="249.948" height="99.36" />  </clipPath> </defs></svg></div></div>
+
+<p>O MUX 4 para 1 usa dois seletores, $S_1$ e $S_0$, para escolher entre $I_0$, $I_1$, $I_2$ e $I_3$.</p>
+<img src="static/tocci_fig_9_20_mux_4_input.png" width="90%" style="display: block; margin: 0 auto;" alt="Multiplexador de quatro entradas.">
+
+<p>Essa função pode ser implementada com lógica de soma de produtos (portas AND e OR) ou com buffers tristate controlados por um decodificador. A segunda forma é útil porque o decodificador garante que apenas um buffer seja habilitado por vez.</p>
+<p>O <code>74ALS151</code> ou <code>74HC151</code> é um MUX de oito entradas, com entradas de dados $I_0$ a $I_7$, seletores $S_2S_1S_0$, entrada de habilitação $E$, saída normal $Z$ e saída invertida $\overline{Z}$. Quando $E=0$, o MUX está habilitado e as entradas de seleção escolhem uma das entradas de dados; quando $E=1$, o MUX fica desabilitado.</p>
+<div class="example">
+  <div class="example-title">Exemplo 3</div>
+  <p>Um <code>74HC151</code> recebe $S_2S_1S_0 = 101$, $E=0$, e as entradas de dados são $I_0=0$, $I_1=1$, $I_2=0$, $I_3=1$, $I_4=0$, $I_5=1$, $I_6=1$, $I_7=0$. Determine $Z$.</p>
+<hr />
+<p>Com $E=0$, o MUX está habilitado. Convertendo o seletor, $101_2 = 5_{10}$, portanto a entrada escolhida é $I_5$. Como $I_5=1$, temos $Z=1$.</p>
+</div>
+<p>Dois CIs <code>74HC151</code> podem ser combinados para formar um MUX de 16 entradas. A estratégia é hierárquica e muito parecida com o cascateamento de decodificadores: cada <code>74HC151</code> seleciona uma entre 8 entradas; os seletores $S_2S_1S_0$ vão para ambos os CIs; o seletor mais significativo $S_3$ decide qual dos dois CIs fica habilitado; as saídas são combinadas para formar uma saída única. Bits menos significativos escolhem dentro do bloco; bit mais significativo escolhe o bloco.</p>
+<p>Multiplexadores aparecem em várias aplicações importantes: seleção de dados, roteamento de dados, sequenciamento de operações, conversão paralelo-série, geração de formas de onda e implementação de funções lógicas.</p>
+<p>Um MUX pode escolher qual fonte de dados será enviada a um destino. Uma aplicação típica usa dois contadores BCD e um único conjunto de decodificadores/drivers e displays: em vez de duplicar os displays, o sistema usa MUXes para escolher qual contador será exibido. Isso economiza hardware, fios e consumo de potência, mas impõe uma limitação , apenas um contador é mostrado por vez. Essa troca é comum em projeto digital: muitas vezes aceitamos multiplexar no tempo para economizar hardware físico.</p>
+<p>Muitos sistemas processam dados em paralelo, mas transmitem em série para economizar fios. Uma conversão paralelo-série pode ser feita usando um MUX de 8 entradas e um contador módulo 8. Os 8 bits paralelos entram em $I_0$ a $I_7$, um contador gera $S_2S_1S_0$, e a cada pulso de clock o seletor avança, colocando na saída $X_0$, depois $X_1$, até $X_7$. A saída vira uma sequência serial.</p>
+<p>Um dos usos mais interessantes do MUX é implementar uma função lógica diretamente da tabela-verdade. A ideia é usar as variáveis da função como entradas de seleção e, para cada linha da tabela-verdade, ligar a entrada correspondente do MUX em $0$ ou $1$ conforme a saída desejada. A saída do MUX será a função.</p>
+<img src="static/tocci_fig_9_27_mux_as_logic_function.png" width="90%" style="display: block; margin: 0 auto;" alt="Multiplexador usado para implementar uma função lógica conforme tabela-verdade.">
+
+<p>No exemplo da figura, as variáveis $A$, $B$ e $C$ são conectadas aos seletores, e as entradas de dados do MUX recebem constantes $0$ ou $1$ conforme a saída desejada para cada combinação.</p>
+<h2 id="demultiplexadores"><span class="heading-text">Demultiplexadores</span><span class="heading-arabic">14.6</span></h2>
+<p>O demultiplexador faz a operação inversa do MUX: ele recebe uma única entrada de dados e distribui esse sinal para uma entre várias saídas. O DEMUX pode ser lido como uma chave de várias posições , o código de seleção determina para qual saída o dado será transmitido. Enquanto o MUX concentra, o DEMUX distribui.</p>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Se o MUX escolhe uma entrada entre muitas e leva para uma saída, o que o DEMUX deve fazer com uma entrada única e várias saídas?</p>
+  </div>
+</div>
+<p>Um DEMUX 1 para 8 tem uma entrada de dados $I$, três seletores $S_2S_1S_0$ e oito saídas $O_0$ a $O_7$.</p>
+<img src="static/tocci_fig_9_29_demux_1_to_8.png" width="78%" style="display: block; margin: 0 auto;" alt="Demultiplexador de 1 para 8 linhas.">
+
+<p>A tabela funcional mostra que, para cada combinação dos seletores, a entrada $I$ aparece em apenas uma das saídas:</p>
+<p>$$
+\begin{array}{c|c|c||c|c|c|c|c|c|c|c}
+S_2 & S_1 & S_0 & O_7 & O_6 & O_5 & O_4 & O_3 & O_2 & O_1 & O_0 \\
+\hline
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & I \\
+0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & I & 0 \\
+0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & I & 0 & 0 \\
+0 & 1 & 1 & 0 & 0 & 0 & 0 & I & 0 & 0 & 0 \\
+1 & 0 & 0 & 0 & 0 & 0 & I & 0 & 0 & 0 & 0 \\
+1 & 0 & 1 & 0 & 0 & I & 0 & 0 & 0 & 0 & 0 \\
+1 & 1 & 0 & 0 & I & 0 & 0 & 0 & 0 & 0 & 0 \\
+1 & 1 & 1 & I & 0 & 0 & 0 & 0 & 0 & 0 & 0
+\end{array}
+$$</p>
+<p>As expressões seguem o mesmo padrão do decodificador, mas cada uma é multiplicada pela entrada de dados $I$:</p>
+<p>$$
+\begin{aligned}
+O_0 &= I\,\overline{S_2}\,\overline{S_1}\,\overline{S_0} &
+O_1 &= I\,\overline{S_2}\,\overline{S_1}\,S_0 &
+O_2 &= I\,\overline{S_2}\,S_1\,\overline{S_0} &
+O_3 &= I\,\overline{S_2}\,S_1\,S_0 \\
+O_4 &= I\,S_2\,\overline{S_1}\,\overline{S_0} &
+O_5 &= I\,S_2\,\overline{S_1}\,S_0 &
+O_6 &= I\,S_2\,S_1\,\overline{S_0} &
+O_7 &= I\,S_2\,S_1\,S_0
+\end{aligned}
+$$</p>
+<p>Há uma relação importante aqui: o circuito de um DEMUX é muito parecido com o circuito de um decodificador. A única diferença é que o DEMUX acrescenta a entrada de dados em cada porta. Por isso, um decodificador com entrada de habilitação pode funcionar como DEMUX. No <code>74ALS138</code>, por exemplo, uma das entradas de habilitação pode receber o dado $I$, enquanto as entradas $A_2A_1A_0$ funcionam como seletores. Como o <code>74ALS138</code> tem saídas ativas em nível BAIXO, a leitura precisa ser cuidadosa: quando a saída $O_0$ é selecionada, ela acompanha a entrada de dados aplicada em $E_1$, mas considerando a lógica ativa em nível baixo do componente.</p>
+<img src="static/tocci_fig_9_30_74138_as_demux.png" width="75%" style="display: block; margin: 0 auto;" alt="74ALS138 usado como demultiplexador.">
+
+<div class="example">
+  <div class="example-title">Exemplo 4</div>
+  <p>Um DEMUX 1 para 8 com saídas ativas em nível ALTO recebe $S_2S_1S_0=101$ e $I=1$. Determine as saídas.</p>
+<hr />
+<p>O seletor é $101_2 = 5_{10}$, portanto a saída escolhida é $O_5$. Como $I=1$, temos $O_5=1$ e todas as demais saídas ficam em $0$. Esse exemplo mostra uma diferença importante entre decoder e DEMUX: no decoder, a saída selecionada ativa independentemente de um dado externo; no DEMUX, a saída selecionada simplesmente recebe o valor do dado.</p>
+</div>
+<h2 id="comparação-entre-decoder-encoder-mux-e-demux"><span class="heading-text">Comparação Entre Decoder, Encoder, MUX e DEMUX</span><span class="heading-arabic">14.7</span></h2>
+<p>Esses quatro blocos se parecem porque todos lidam com seleção, mas resolvem problemas diferentes. A tabela abaixo organiza o que cada um faz:</p>
+<table>
+<thead>
+<tr>
+  <th>Bloco</th>
+  <th>Entrada principal</th>
+  <th>Saída principal</th>
+  <th>Pergunta que responde</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Decoder</td>
+  <td>código binário</td>
+  <td>uma linha ativa</td>
+  <td>qual saída corresponde a este código?</td>
+</tr>
+<tr>
+  <td>Encoder</td>
+  <td>uma linha ativa</td>
+  <td>código binário</td>
+  <td>qual entrada foi ativada?</td>
+</tr>
+<tr>
+  <td>MUX</td>
+  <td>vários dados</td>
+  <td>um dado escolhido</td>
+  <td>qual entrada deve ir para a saída?</td>
+</tr>
+<tr>
+  <td>DEMUX</td>
+  <td>um dado</td>
+  <td>uma saída recebe o dado</td>
+  <td>para qual saída o dado deve ir?</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">Uma forma curta de lembrar<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Decoder transforma código em linha. Encoder transforma linha em código. MUX escolhe uma entrada de dados. DEMUX distribui uma entrada de dados.</p>
+  </div>
+</div>
+<p>Quando um problema pedir um desses blocos, comece pela pergunta certa. Se o problema diz &quot;tenho um código e quero ativar uma saída&quot;, use decoder. Se diz &quot;tenho uma linha ativa e quero saber seu número&quot;, use encoder. Se diz &quot;tenho várias fontes e quero escolher uma para a saída&quot;, use MUX. Se diz &quot;tenho um sinal e quero enviá-lo para um destino selecionado&quot;, use DEMUX.</p>
+<p>Depois dimensione os seletores: o número de seletores é $\log_2(\text{número de opções})$. Se o número de opções não for potência de 2, você ainda usa bits suficientes para cobrir todas as opções, mas alguns códigos ficam sem uso.</p>
+<div class="example">
+  <div class="example-title">Exemplo 5</div>
+  <p>Um processador precisa escolher uma entre 16 fontes de dados para colocar em uma entrada da ALU. Qual bloco é adequado e quantos seletores são necessários?</p>
+<hr />
+<p>O sistema tem várias fontes de dados e uma saída única , isso é multiplexação. Como $2^4 = 16$, é necessário um MUX 16 para 1 com 4 bits de seleção.</p>
+</div>
+<h2 id="questões"><span class="heading-text">Questões</span><span class="heading-arabic">14.8</span></h2>
+<div class="questions">
+  <p><strong>1.</strong> Em um decodificador 3 para 8 com saídas ativas em nível ALTO, determine as saídas para $CBA=101$. Repita para saídas ativas em nível BAIXO.</p>
+<p><strong>2.</strong> O <code>74ALS138</code> tem $E_1$ e $E_2$ ativos em nível BAIXO e $E_3$ ativo em nível ALTO. Diga se ele está habilitado para $E_1=0$, $E_2=1$ e $E_3=1$.</p>
+<p><strong>3.</strong> Usando a lógica de cascateamento, determine a saída ativada em um decodificador 1 de 32 para $A_4A_3A_2A_1A_0=10011$.</p>
+<p><strong>4.</strong> Explique por que um decodificador BCD para decimal usa apenas 10 das 16 combinações possíveis de uma entrada de 4 bits.</p>
+<p><strong>5.</strong> Qual é a diferença entre um codificador simples e um codificador de prioridade?</p>
+<p><strong>6.</strong> Em um codificador de prioridade decimal para BCD, as entradas $A_4$, $A_8$ e $A_6$ estão ativas. Qual dígito deve ser codificado? Por que o <code>74147</code> não precisa de uma entrada $A_0$?</p>
+<p><strong>7.</strong> Escreva a expressão de saída de um MUX 2 para 1 e determine qual entrada é selecionada em um MUX 8 para 1 quando $S_2S_1S_0=011$.</p>
+<p><strong>8.</strong> Explique como um MUX 8 para 1 pode implementar uma função de três variáveis a partir de uma tabela-verdade.</p>
+<p><strong>9.</strong> Em um DEMUX 1 para 8 com saídas ativas em nível ALTO, determine as saídas para $S_2S_1S_0=010$ e $I=1$. Explique por que um decodificador com entrada de habilitação pode ser usado como DEMUX.</p>
+<p><strong>10.</strong> Por que o <code>74ALS138</code> possui três entradas de habilitação em vez de apenas uma?</p>
+</div>
+<div class="example">
+  <div class="example-title">Gabarito</div>
+  <p><strong>1.</strong> Com saídas ativas em nível ALTO, $101_2=5_{10}$, logo $O_5=1$ e as demais valem $0$. Com saídas ativas em nível BAIXO, $O_5=0$ e as demais ficam em $1$. O que muda é a convenção de ativação, não a saída escolhida.</p>
+<p><strong>2.</strong> Não está habilitado, porque $E_2$ deveria estar em $0$ para ficar ativo. Como $E_2=1$, todas as saídas permanecem inativas.</p>
+<p><strong>3.</strong> Separe os bits: $A_4A_3=10$ habilita o terceiro bloco, que cobre $O_{16}$ a $O_{23}$. Os bits $A_2A_1A_0=011$ selecionam a saída interna 3. Logo, a saída ativada é $O_{19}$.</p>
+<p><strong>4.</strong> Porque BCD representa apenas os dígitos decimais de 0 a 9, correspondentes a $0000$ até $1001$. As combinações $1010$ a $1111$ não são códigos BCD válidos.</p>
+<p><strong>5.</strong> O codificador simples pressupõe que apenas uma entrada esteja ativa por vez e pode produzir saída ambígua quando duas ou mais entradas são ativadas. O codificador de prioridade resolve esse conflito escolhendo a entrada de maior prioridade.</p>
+<p><strong>6.</strong> A entrada de maior prioridade é $A_8$, portanto o dígito codificado é 8. O <code>74147</code> não precisa de entrada $A_0$ porque a ausência de qualquer entrada ativa de 1 a 9 já representa o decimal 0.</p>
+<p><strong>7.</strong> A expressão do MUX 2 para 1 é $Z = I_0\overline{S} + I_1S$. No MUX 8 para 1, com $S_2S_1S_0=011$, temos $011_2=3_{10}$, portanto a entrada enviada à saída é $I_3$.</p>
+<p><strong>8.</strong> Use as três variáveis como seletores. Cada entrada de dados do MUX recebe $0$ ou $1$ conforme a linha correspondente da tabela-verdade. Assim, quando os seletores escolhem uma linha, a saída do MUX reproduz o valor da função naquela linha.</p>
+<p><strong>9.</strong> Com $010_2=2_{10}$, a saída selecionada é $O_2$. Como $I=1$ e as saídas são ativas em nível ALTO, $O_2=1$ e as demais valem $0$. Um decodificador com enable pode funcionar como DEMUX porque as entradas de seleção escolhem a saída e a entrada de habilitação transporta o dado, que aparece apenas na saída selecionada.</p>
+<p><strong>10.</strong> Para facilitar o cascateamento sem lógica externa adicional. Com entradas de polaridades diferentes, você conecta bits de seleção diretamente nos enables de cada chip, sem precisar de inversores.</p>
+</div>
+<h2 id="próximos-passos"><span class="heading-text">Próximos passos</span><span class="heading-arabic">14.9</span></h2>
+<p>Nesta aula, você viu quatro blocos MSI fundamentais: decodificadores, codificadores, multiplexadores e demultiplexadores. Todos são combinacionais, mas cada um resolve um problema diferente de seleção, codificação ou roteamento. Você aprendeu a ler tabelas-verdade de cada bloco, a interpretar sinais ativos em nível alto ou baixo, a lidar com entradas de habilitação e a montar blocos maiores por cascateamento.</p>
+<p>No próximo capítulo, vamos entrar em lógica sequencial. A diferença será essencial: nos circuitos sequenciais, a saída não depende apenas das entradas atuais, mas também de estado armazenado. Esse caminho começa pelos latches e flip-flops.</p>
+
+                </div>
+            </article>
+            <footer class="footer">
+                <p>© 2025 · <a href="#">Gabriel Soares Baptista</a></p>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        const toggle = document.querySelector('.mobile-menu-toggle');
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.querySelector('.mobile-menu-overlay');
+
+        function openMenu() {
+            sidebar.classList.add('open');
+            overlay.classList.add('open');
+            toggle.classList.add('open');
+            toggle.innerHTML = '<i data-lucide="x"></i>';
+            CourseForgeUI.initIcons();
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMenu() {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('open');
+            toggle.classList.remove('open');
+            toggle.innerHTML = '<i data-lucide="menu"></i>';
+            CourseForgeUI.initIcons();
+            document.body.style.overflow = '';
+        }
+
+        toggle.addEventListener('click', () => {
+            if (sidebar.classList.contains('open')) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        overlay.addEventListener('click', closeMenu);
+    </script>
+
+    
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            renderMathInElement(document.body, {
+                output: 'html',
+                delimiters: [
+                    { left: "$$", right: "$$", display: true },
+                    { left: "$", right: "$", display: false },
+                    { left: "\\(", right: "\\)", display: false },
+                    { left: "\\[", right: "\\]", display: true }
+                ],
+                throwOnError: false,
+                strict: false
+            });
+        });
+    </script>
+    
+    
+    <script src="/aulas-faesa/js/vendor/prism/prism.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-c.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-cpp.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-python.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-clike.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-perl.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-java.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-mermaid.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-php.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js" data-no-bundle></script>
+    
+    
+    
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            mermaid.initialize({
+                startOnLoad: true,
+                theme: 'default',
+                securityLevel: 'loose',
+                fontFamily: 'Inter, system-ui, sans-serif',
+                themeVariables: {
+                    fontSize: '16px',
+                    edgeLabelFontSize: '16px',
+                    multiplicityFontSize: '18px'
+                }
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const isSubcourse = false;
+        const courseName = "Sistemas Digitais e Microprocessados";
+        CourseForgeNav.applyDynamicBreadcrumbs('.breadcrumb', isSubcourse);
+        CourseForgeNav.initScrollSpy();
+        CourseForgeUI.initCopyButtons();
+        CourseForgeUI.initExamples();
+        });
+
+        function handleBackNavigation() {
+            const isSubcourse = false;
+        const dynamic = CourseForgeNav.getBackLink('contents.html', 'Voltar', isSubcourse);
+        window.location.href = dynamic.url;
+        }
+    </script>
+</body>
+
+</html>
