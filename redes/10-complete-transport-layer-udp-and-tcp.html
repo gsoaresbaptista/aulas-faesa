@@ -141,15 +141,35 @@
                         </li>
                         
                         <li class="toc-item level-2">
-                            <a href="#fechando-a-ideia">10.11. Fechando a ideia</a>
+                            <a href="#mini-laboratório-no-linux">10.11. Mini-laboratório no Linux</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#ver-portas-e-sockets-abertos">10.11.1. . Ver portas e sockets abertos</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#enviar-uma-mensagem-udp-local">10.11.2. . Enviar uma mensagem UDP local</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#abrir-uma-conexão-tcp-local">10.11.3. . Abrir uma conexão TCP local</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#observar-o-handshake-e-o-encerramento">10.11.4. . Observar o handshake e o encerramento</a>
                         </li>
                         
                         <li class="toc-item level-2">
-                            <a href="#questões">10.12. Questões</a>
+                            <a href="#fechando-a-ideia">10.12. Fechando a ideia</a>
                         </li>
                         
                         <li class="toc-item level-2">
-                            <a href="#próximos-passos">10.13. Próximos passos</a>
+                            <a href="#questões">10.13. Questões</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#próximos-passos">10.14. Próximos passos</a>
                         </li>
                         
                     </ol>
@@ -567,8 +587,8 @@ Aba 2: 10.0.0.8:53145 -&gt; 200.10.1.5:443
 </tr>
 <tr>
   <td style="text-align:left">Detectar erro simples</td>
-  <td style="text-align:left">Sim</td>
-  <td style="text-align:left">Usa checksum</td>
+  <td style="text-align:left">Sim, quando o checksum é usado</td>
+  <td style="text-align:left">No IPv4 o checksum UDP pode ser zero; no IPv6 ele é obrigatório</td>
 </tr>
 </tbody>
 </table>
@@ -858,10 +878,10 @@ Aba 2: 10.0.0.8:53145 -&gt; 200.10.1.5:443
     <span class="callout-title-inner">Reflita<br /></span>
   </div>
   <div class="callout-content">
-<p>Se o checksum do UDP é opcional e o do TCP é obrigatório, o que essa diferença revela sobre o projeto de cada protocolo?</p>
+<p>Se o checksum do UDP pode ser desabilitado no IPv4 e o do TCP é obrigatório, o que essa diferença revela sobre o projeto de cada protocolo?</p>
   </div>
 </div>
-<p>Revela que a confiabilidade é estrutural no TCP, não um extra. O TCP não pode delegar a detecção de corrupção para a aplicação porque sua tarefa é justamente entregar um fluxo confiável. Se um segmento silenciosamente corrompido fosse aceito, toda a abstração de &quot;fluxo de bytes confiável&quot; ruiria. No UDP, a aplicação pode optar por não verificar checksum se tiver seu próprio mecanismo ou se a corrupção for tolerável. Mas o TCP não tem essa liberdade.</p>
+<p>Revela que a confiabilidade é estrutural no TCP, não um extra. O TCP não pode abrir mão da detecção de corrupção porque sua tarefa é justamente entregar um fluxo confiável. Se um segmento silenciosamente corrompido fosse aceito, toda a abstração de &quot;fluxo de bytes confiável&quot; ruiria. No UDP sobre IPv4, o checksum pode ser enviado como zero, deixando essa proteção fora do UDP; no UDP sobre IPv6, o checksum é obrigatório. O ponto conceitual continua sendo que o TCP não tem essa liberdade.</p>
 <p>O controle de erro protege a confiabilidade do fluxo. O TCP usa checksum para detectar corrupção, confirmações para indicar progresso, temporizadores para detectar ausência de resposta e retransmissões para reenviar dados provavelmente perdidos.</p>
 <p>Um segmento corrompido é descartado e tratado como perdido. Um segmento fora de ordem pode ser armazenado temporariamente, mas não deve ser entregue à aplicação antes dos bytes faltantes.</p>
 <div class="example">
@@ -1174,7 +1194,91 @@ $$</p>
 </table>
 <p>O critério não é “qual é mais moderno”. O critério é o que a aplicação precisa da camada de transporte.</p>
 </div>
-<h2 id="fechando-a-ideia"><span class="heading-text">Fechando a ideia</span><span class="heading-arabic">10.11</span></h2>
+<h2 id="mini-laboratório-no-linux"><span class="heading-text">Mini-laboratório no Linux</span><span class="heading-arabic">10.11</span></h2>
+<p>Os comandos abaixo servem para transformar a discussão conceitual em observação prática durante a aula. Eles não dependem de Internet externa quando usam <code>127.0.0.1</code>, pois tudo acontece na própria máquina pelo loopback.</p>
+<h3 id="ver-portas-e-sockets-abertos"><span class="heading-text">. Ver portas e sockets abertos</span><span class="heading-arabic">10.11.1</span></h3>
+<pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">ss -tulpen
+</code></pre>
+<p>O que observar:</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Coluna ou informação</th>
+  <th style="text-align:left">Como interpretar</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><code>tcp</code> ou <code>udp</code></td>
+  <td style="text-align:left">Protocolo de transporte usado pelo socket</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>LISTEN</code> ou <code>UNCONN</code></td>
+  <td style="text-align:left">TCP esperando conexões ou UDP esperando datagramas de entrada</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>Local Address:Port</code></td>
+  <td style="text-align:left">Endereço local e porta associados ao socket</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>users:(...)</code></td>
+  <td style="text-align:left">Processo dono do socket, quando disponível</td>
+</tr>
+</tbody>
+</table>
+<p>Esse comando conecta a ideia de <strong>porta</strong> à implementação real do sistema operacional. A porta não é apenas um número no slide; ela aparece em uma tabela mantida pelo kernel para demultiplexar dados para processos.</p>
+<h3 id="enviar-uma-mensagem-udp-local"><span class="heading-text">. Enviar uma mensagem UDP local</span><span class="heading-arabic">10.11.2</span></h3>
+<p>Em um terminal, abra um receptor UDP.</p>
+<pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">nc -u -l 9999
+</code></pre>
+<p>Em outro terminal, envie uma mensagem.</p>
+<pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">printf 'consulta\n' | nc -u -w1 127.0.0.1 9999
+</code></pre>
+<p>O ponto didático é observar que não há abertura de conexão antes da mensagem. O datagrama é enviado diretamente para <code>127.0.0.1:9999</code>. Se o receptor não estiver escutando, o UDP não cria uma sessão persistente esperando que alguém apareça.</p>
+<h3 id="abrir-uma-conexão-tcp-local"><span class="heading-text">. Abrir uma conexão TCP local</span><span class="heading-arabic">10.11.3</span></h3>
+<p>Em um terminal, abra um servidor TCP simples.</p>
+<pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">nc -l 9998
+</code></pre>
+<p>Em outro terminal, conecte no servidor.</p>
+<pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">nc -v 127.0.0.1 9998
+</code></pre>
+<p>Enquanto a conexão estiver aberta, observe o estado com <code>ss</code>.</p>
+<pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">ss -tn '( sport = :9998 or dport = :9998 )'
+</code></pre>
+<p>O estado <code>ESTAB</code> mostra a diferença prática em relação ao UDP. O TCP mantém estado de conexão nas pontas.</p>
+<h3 id="observar-o-handshake-e-o-encerramento"><span class="heading-text">. Observar o handshake e o encerramento</span><span class="heading-arabic">10.11.4</span></h3>
+<p>Se houver <code>tcpdump</code> instalado e permissão de <code>sudo</code>, rode antes de abrir a conexão TCP.</p>
+<pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">sudo tcpdump -i lo -nn 'tcp port 9998'
+</code></pre>
+<p>Depois abra a conexão com <code>nc</code> como no exemplo anterior. Na saída do <code>tcpdump</code>, procure as flags:</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Flag no tcpdump</th>
+  <th style="text-align:left">Significado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><code>[S]</code></td>
+  <td style="text-align:left"><code>SYN</code></td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>[S.]</code></td>
+  <td style="text-align:left"><code>SYN + ACK</code></td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>[.]</code></td>
+  <td style="text-align:left"><code>ACK</code></td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>[F.]</code></td>
+  <td style="text-align:left"><code>FIN + ACK</code>, comum no encerramento</td>
+</tr>
+</tbody>
+</table>
+<p>Esse exemplo é útil para reforçar que o handshake não é uma metáfora. Ele aparece como segmentos TCP reais passando pela interface de loopback.</p>
+<h2 id="fechando-a-ideia"><span class="heading-text">Fechando a ideia</span><span class="heading-arabic">10.12</span></h2>
 <p>A camada de transporte existe porque a comunicação real acontece entre processos, não apenas entre máquinas. O UDP resolve o problema com o mínimo de controle: portas, checksum e nada mais. O TCP resolve o mesmo problema com uma abstração mais rica: conexão virtual, numeração de bytes, confirmações, retransmissões, controle de fluxo e reação a congestionamento.</p>
 <p>A escolha entre os dois não é questão de &quot;qual é melhor&quot;. É questão de qual combinação de simplicidade, confiabilidade, ordem e controle a aplicação realmente precisa.</p>
 <div class="callout callout-success">
@@ -1186,7 +1290,7 @@ $$</p>
 <p>Quando você vê uma aplicação usando TCP, entenda que há uma conexão lógica sendo mantida, com estado, buffers, timers e janelas. Quando vê UDP, entenda que a aplicação assumiu para si parte dessas responsabilidades ou deliberadamente não precisa delas.</p>
   </div>
 </div>
-<h2 id="questões"><span class="heading-text">Questões</span><span class="heading-arabic">10.12</span></h2>
+<h2 id="questões"><span class="heading-text">Questões</span><span class="heading-arabic">10.13</span></h2>
 <div class="questions">
   <p><strong>1.</strong> Explique a diferença entre comunicação nó a nó, host a host e processo a processo.</p>
 <p><strong>2.</strong> Por que o endereço IP sozinho não basta para entregar dados ao programa correto?</p>
@@ -1258,7 +1362,7 @@ $$</p>
 <p><strong>25.</strong> Controle de fluxo protege o receptor contra excesso de dados no buffer. Controle de congestionamento protege a rede contra excesso de tráfego em trânsito.</p>
 <p><strong>26.</strong> Consultas DNS comuns são pequenas e podem ser repetidas se a resposta não chegar, o que combina com UDP. TCP é usado quando a resposta é maior, quando há transferência de zonas ou quando o cenário exige sessão confiável.</p>
 </div>
-<h2 id="próximos-passos"><span class="heading-text">Próximos passos</span><span class="heading-arabic">10.13</span></h2>
+<h2 id="próximos-passos"><span class="heading-text">Próximos passos</span><span class="heading-arabic">10.14</span></h2>
 <p>Na próxima aula, o passo natural é subir para a camada de aplicação e observar como protocolos como DNS, HTTP e e-mail usam UDP e TCP para oferecer serviços concretos aos usuários.</p>
 <p>Você verá que muitas decisões da aplicação dependem diretamente do transporte escolhido.</p>
 

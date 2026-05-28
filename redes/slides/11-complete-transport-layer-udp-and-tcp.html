@@ -32,6 +32,8 @@
 </section>
 <section><h1>Ideia Central</h1>
 <p>A camada de transporte oferece comunicação <strong>processo a processo</strong>.</p>
+<h3>Frase-guia</h3>
+<p>IP entrega na máquina. Transporte entrega na aplicação.</p>
 <h3>Nesta aula</h3>
 <ul>
 <li>portas e multiplexação</li>
@@ -172,6 +174,29 @@
 <pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">Cliente: 10.0.0.8:53144
 Servidor: 200.10.1.5:443
 </code></pre>
+<h3>Leitura</h3>
+<p><code>443</code> identifica o serviço. <code>53144</code> identifica aquela conversa no cliente.</p>
+</section>
+<section><h1>Mini-lab: Portas no Linux</h1>
+<h3>Ver sockets abertos</h3>
+<pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">ss -tulpen
+</code></pre>
+<h3>O que observar</h3>
+<ul>
+<li><code>tcp</code> ou <code>udp</code></li>
+<li>endereço local e porta</li>
+<li>estado <code>LISTEN</code> ou <code>UNCONN</code></li>
+<li>processo dono do socket</li>
+</ul>
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">Ideia<br /></span>
+  </div>
+  <div class="callout-content">
+<p>O sistema operacional mantém a tabela que liga portas a processos.</p>
+  </div>
+</div>
 </section>
 <section><h1>Multiplexação</h1>
 <p>Na origem, vários processos usam a rede ao mesmo tempo.</p>
@@ -203,12 +228,16 @@ Servidor: 200.10.1.5:443
 <li>comprimento</li>
 <li>checksum</li>
 </ul>
+<h3>Tamanho</h3>
+<p>Cabeçalho fixo de <strong>8 bytes</strong>.</p>
 </section>
 <section><h1>Checksum UDP</h1>
 <img src="../static/fig23_10_pseudocabecalho_checksum_udp_forouzan.png" width="78%" style="display: block; margin: 0 auto;">
 
 <h3>Por que pseudocabeçalho?</h3>
 <p>Para detectar erro envolvendo IP de origem, IP de destino e protocolo.</p>
+<h3>Nuance</h3>
+<p>No IPv4, checksum UDP pode ser zero. No IPv6, é obrigatório.</p>
 </section>
 <section><h1>O Que o UDP Não Faz</h1>
 <table>
@@ -241,10 +270,20 @@ Servidor: 200.10.1.5:443
 </tr>
 <tr>
   <td style="text-align:left">detectar erro simples</td>
-  <td style="text-align:left">sim</td>
+  <td style="text-align:left">sim, via checksum</td>
 </tr>
 </tbody>
 </table>
+</section>
+<section><h1>Mini-lab: UDP no Linux</h1>
+<h3>Terminal 1: servidor UDP</h3>
+<pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">nc -u -l 9999
+</code></pre>
+<h3>Terminal 2: cliente UDP</h3>
+<pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">printf 'consulta\n' | nc -u -w1 127.0.0.1 9999
+</code></pre>
+<h3>O que observar</h3>
+<p>Não há handshake nem conexão persistente antes da mensagem.</p>
 </section>
 <section><h1>Quando UDP Faz Sentido</h1>
 <h3>Bom para</h3>
@@ -273,12 +312,161 @@ Servidor: 200.10.1.5:443
 <li>controla fluxo</li>
 <li>reage a congestionamento</li>
 </ul>
+<h3>Ideia</h3>
+<p>Cria uma conexão lógica com estado nas pontas.</p>
+</section>
+<section><h1>Sockets na Aplicação</h1>
+<p>Aplicações não manipulam diretamente <code>SYN</code>, <code>ACK</code>, janela e timers.</p>
+<h3>Primitivas típicas</h3>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Cliente</th>
+  <th style="text-align:left">Servidor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><code>socket</code></td>
+  <td style="text-align:left"><code>socket</code></td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>connect</code></td>
+  <td style="text-align:left"><code>bind</code>, <code>listen</code>, <code>accept</code></td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>send</code> / <code>recv</code></td>
+  <td style="text-align:left"><code>send</code> / <code>recv</code></td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>close</code></td>
+  <td style="text-align:left"><code>close</code></td>
+</tr>
+</tbody>
+</table>
 </section>
 <section><h1>Segmento TCP</h1>
 <img src="../static/fig23_16_formato_segmento_tcp_forouzan.png" width="82%" style="display: block; margin: 0 auto;">
 
 <h3>Ideia</h3>
 <p>O cabeçalho TCP é maior porque o TCP assume mais responsabilidades.</p>
+</section>
+<section><h1>Segmento TCP: Campos</h1>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Campo</th>
+  <th style="text-align:left">O que significa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Cabeçalho</td>
+  <td style="text-align:left">controle da conversa TCP</td>
+</tr>
+<tr>
+  <td style="text-align:left">Dados</td>
+  <td style="text-align:left">bytes da aplicação</td>
+</tr>
+<tr>
+  <td style="text-align:left">Portas</td>
+  <td style="text-align:left">processos de origem e destino</td>
+</tr>
+<tr>
+  <td style="text-align:left">Sequência</td>
+  <td style="text-align:left">primeiro byte carregado no segmento</td>
+</tr>
+<tr>
+  <td style="text-align:left">Confirmação</td>
+  <td style="text-align:left">próximo byte esperado pelo receptor</td>
+</tr>
+<tr>
+  <td style="text-align:left">HLEN</td>
+  <td style="text-align:left">tamanho do cabeçalho TCP</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Erro comum<br /></span>
+  </div>
+  <div class="callout-content">
+<code>seq</code> e <code>ack</code> contam bytes, não segmentos.</p>
+  </div>
+</div>
+</section>
+<section><h1>Segmento TCP: Mais Campos</h1>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Campo</th>
+  <th style="text-align:left">O que significa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Reservado</td>
+  <td style="text-align:left">bits guardados para uso futuro</td>
+</tr>
+<tr>
+  <td style="text-align:left">Flags</td>
+  <td style="text-align:left">ações de controle da conexão</td>
+</tr>
+<tr>
+  <td style="text-align:left">Janela</td>
+  <td style="text-align:left">quanto o receptor ainda aceita</td>
+</tr>
+<tr>
+  <td style="text-align:left">Checksum</td>
+  <td style="text-align:left">detecção de corrupção</td>
+</tr>
+<tr>
+  <td style="text-align:left">Urgent pointer</td>
+  <td style="text-align:left">fim dos dados urgentes, se <code>URG = 1</code></td>
+</tr>
+<tr>
+  <td style="text-align:left">Opções</td>
+  <td style="text-align:left">extensões como MSS, escala de janela e timestamps</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section><h1>Segmento TCP: Flags</h1>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Flag</th>
+  <th style="text-align:left">Ideia</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><code>URG</code></td>
+  <td style="text-align:left">campo urgente válido</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>ACK</code></td>
+  <td style="text-align:left">confirmação válida</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>PSH</code></td>
+  <td style="text-align:left">entregar logo à aplicação</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>RST</code></td>
+  <td style="text-align:left">resetar/abortar conexão</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>SYN</code></td>
+  <td style="text-align:left">abrir conexão e sincronizar sequência</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>FIN</code></td>
+  <td style="text-align:left">encerrar envio nessa direção</td>
+</tr>
+</tbody>
+</table>
 </section>
 <section><h1>TCP é Fluxo de Bytes</h1>
 <p>TCP não entrega mensagens.</p>
@@ -287,6 +475,8 @@ Servidor: 200.10.1.5:443
 <pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">Aplicação escreve: A | B | C
 Outra ponta pode ler: ABC
 </code></pre>
+<h3>Consequência</h3>
+<p>A aplicação precisa separar mensagens: <code>\n</code>, tamanho, delimitador ou protocolo.</p>
 <div class="callout callout-warning">
   <div class="callout-title">
     <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
@@ -333,6 +523,10 @@ Outra ponta pode ler: ABC
 
 <h3>Função</h3>
 <p>Sincronizar números iniciais e abrir a conexão.</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">1. SYN
+2. SYN + ACK
+3. ACK
+</code></pre>
 <div class="callout callout-warning">
   <div class="callout-title">
     <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
@@ -342,6 +536,30 @@ Outra ponta pode ler: ABC
 <p>SYN flood explora conexões iniciadas e não completadas.</p>
   </div>
 </div>
+</section>
+<section><h1>Mini-lab: TCP no Linux</h1>
+<h3>Terminal 1: servidor TCP</h3>
+<pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">nc -l 9998
+</code></pre>
+<h3>Terminal 2: cliente TCP</h3>
+<pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">nc -v 127.0.0.1 9998
+</code></pre>
+<h3>Em outro terminal</h3>
+<pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">ss -tn '( sport = :9998 or dport = :9998 )'
+</code></pre>
+<p>Procure o estado <code>ESTAB</code>: TCP mantém conexão.</p>
+</section>
+<section><h1>Mini-lab: Handshake com tcpdump</h1>
+<h3>Antes de conectar</h3>
+<pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">sudo tcpdump -i lo -nn 'tcp port 9998'
+</code></pre>
+<h3>O que observar</h3>
+<ul>
+<li><code>[S]</code> = SYN</li>
+<li><code>[S.]</code> = SYN + ACK</li>
+<li><code>[.]</code> = ACK</li>
+<li><code>[F.]</code> = FIN + ACK no encerramento</li>
+</ul>
 </section>
 <section><h1>Controle de Fluxo</h1>
 <p>Controle de fluxo protege o <strong>receptor</strong>.</p>
@@ -402,6 +620,8 @@ $$</p>
 
 <h3>Ideia</h3>
 <p><code>FIN</code> informa: não enviarei mais dados nessa direção.</p>
+<h3>Lembrete</h3>
+<p>Como TCP é full-duplex, cada direção pode encerrar separadamente.</p>
 </section>
 <section><h1>Semi-encerramento</h1>
 <img src="../static/fig23_21_semi_encerramento_forouzan.png" width="55%" style="display: block; margin: 0 auto;">
@@ -507,13 +727,13 @@ $$</p>
 </tbody>
 </table>
 </section>
-<section><h1>Questões Rápidas</h1>
-<ol>
-<li>Por que IP sozinho não basta?</li>
-<li>O que uma porta identifica?</li>
-<li>O que significa <code>ACK = 4001</code>?</li>
-<li>Qual a diferença entre <code>rwnd</code> e <code>cwnd</code>?</li>
-</ol>
+<section><h1>Próximos Passos</h1>
+<p>Na próxima aula subimos para a <strong>camada de aplicação</strong>.</p>
+<ul>
+<li>DNS</li>
+<li>e-mail</li>
+<li>HTTPS</li>
+</ul>
 </section>
         </div>
     </div>
