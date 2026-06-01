@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toposia - Sistemas Digitais e Microprocessados</title>
+    <link rel="icon" href="/aulas-faesa/img/dark-favicon.svg" media="(prefers-color-scheme: light)">
+    <link rel="icon" href="/aulas-faesa/img/light-favicon.svg" media="(prefers-color-scheme: dark)">
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/fonts.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/bundles/katex-base-prism-one-light-b0347952c973.bundle.min.css">
+    
+    
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css" data-no-bundle>
+    <script src="/aulas-faesa/js/bundles/lucide-katex-auto-render-4b36e8bd8642.bundle.min.js"></script>
+</head>
+
+<body>
+    <script>
+        // Restore sidebar state instantly (before first paint) to avoid transition flash
+        (function() {
+            if (localStorage.getItem('cf_sidebar_hidden') === 'true') {
+                document.body.classList.add('sidebar-hidden', 'no-transition');
+            }
+            requestAnimationFrame(function() {
+                requestAnimationFrame(function() {
+                    document.body.classList.remove('no-transition');
+                });
+            });
+        })();
+    </script>
+    <div class="page-wrapper">
+        <nav class="sidebar">
+            <div class="sidebar-content">
+                <header class="sidebar-title-section">
+                    <a href="contents.html" class="course-title-link">
+                        <h1 class="sidebar-course-title">Sistemas Digitais e Microprocessados</h1>
+                    </a>
+                    <div class="sidebar-ornament">❧</div>
+                </header>
+
+                
+                <section class="sidebar-toc-section">
+                    <h2 class="toc-header">Tabela de Conteúdos</h2>
+                    <ol class="toc-list">
+                        
+                        <li class="toc-item level-2">
+                            <a href="#introdução">15.1. Introdução</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#quando-um-circuito-precisa-lembrar">15.2. Quando Um Circuito Precisa Lembrar</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#latch-s-r-com-portas-nand">15.3. Latch S-R Com Portas NAND</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#latch-s-r-com-portas-nor">15.4. Latch S-R Com Portas NOR</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#pulsos-clock-e-bordas">15.5. Pulsos, Clock E Bordas</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#flip-flop-s-r-com-clock">15.6. Flip-Flop S-R Com Clock</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#flip-flop-j-k">15.7. Flip-Flop J-K</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#flip-flop-d">15.8. Flip-Flop D</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#latch-d-transparente">15.9. Latch D Transparente</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#entradas-assíncronas">15.10. Entradas Assíncronas</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#comparando-os-elementos-de-memória">15.11. Comparando Os Elementos de Memória</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#questões">15.12. Questões</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#próximos-passos">15.13. Próximos passos</a>
+                        </li>
+                        
+                    </ol>
+                </section>
+                
+
+                <nav class="sidebar-nav-section">
+                    
+                    <a href="14-msi-combinational-modules.html" class="sidebar-nav-link prev"><i data-lucide="chevron-left" class="nav-icon"></i> Módulos MSI Combinacionais</a>
+                    
+                    
+                    <a href="javascript:void(0)" onclick="handleBackNavigation()"
+                        class="sidebar-nav-link back"><i data-lucide="arrow-left" class="nav-icon"></i> Voltar</a>
+                </nav>
+
+            </div>
+        </nav>
+
+        <button class="mobile-menu-toggle" aria-label="Menu">
+            <i data-lucide="menu"></i>
+        </button>
+
+        <button class="sidebar-toggle" onclick="CourseForgeNav.toggleSidebar()" aria-label="Alternar Barra Lateral">
+            <i data-lucide="chevron-left" class="toggle-icon" id="sidebar-toggle-icon"></i>
+        </button>
+
+        <div class="mobile-menu-overlay"></div>
+
+        <main class="main-content">
+            <article class="article">
+                <header class="article-header">
+                    <span class="chapter-number">15</span>
+                    <h1 class="article-title">
+                        <span class="title-ornament left">❧</span>
+                        <span class="title-text">Latches e Flip-Flops</span>
+                        <span class="title-ornament right">❧</span>
+                    </h1>
+                    
+                    <p class="article-date">01/06/2026</p>
+                    
+                    
+                    <nav class="breadcrumb" aria-label="Breadcrumb">
+                        
+                        
+                        
+                        <a href="contents.html" class="breadcrumb-link">Sistemas Digitais e Microprocessados</a>
+                        
+                        <span class="breadcrumb-separator"><i data-lucide="chevron-right" class="breadcrumb-icon"></i></span>
+                        
+                        
+                        
+                        
+                        <a href="contents.html#part-V" class="breadcrumb-link">V - Lógica Sequencial</a>
+                        
+                        <span class="breadcrumb-separator"><i data-lucide="chevron-right" class="breadcrumb-icon"></i></span>
+                        
+                        
+                        
+                        <span class="breadcrumb-current">Latches e Flip-Flops</span>
+                        
+                        
+                    </nav>
+                    
+                </header>
+                <div class="article-body">
+                    <h2 id="introdução"><span class="heading-text">Introdução</span><span class="heading-arabic">15.1</span></h2>
+<p>Até agora, os circuitos que estudamos eram combinacionais: para uma mesma combinação de entradas, a saída era sempre a mesma. Nesta aula isso muda. Vamos estudar circuitos que conseguem <strong>lembrar</strong> um valor anterior.</p>
+<p>Esta aula usa como base o Capítulo 5, seções 5.1 a 5.10, de <strong>Sistemas Digitais: Princípios e Aplicações</strong>, de Ronald J. Tocci, Neal S. Widmer e Gregory L. Moss. O recorte principal vai dos latches com portas NAND e NOR até os flip-flops S-R, J-K e D, incluindo pulsos digitais, clock, latch D transparente e entradas assíncronas.</p>
+<div class="callout callout-abstract">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
+    <span class="callout-title-inner">Ideia central<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Um latch ou flip-flop é um elemento de memória de 1 bit. Ele mantém um estado interno, normalmente representado por $Q$, e só muda esse estado quando suas entradas são ativadas de uma forma específica.</p>
+  </div>
+</div>
+<p>O ponto mais importante da aula não é decorar tabelas. O ponto é entender a mudança de raciocínio: em circuitos sequenciais, a saída atual depende das entradas atuais <strong>e também</strong> do estado armazenado anteriormente.</p>
+<h2 id="quando-um-circuito-precisa-lembrar"><span class="heading-text">Quando Um Circuito Precisa Lembrar</span><span class="heading-arabic">15.2</span></h2>
+<p>Imagine um alarme simples. Um sensor detecta que uma porta foi aberta por um instante e depois volta ao normal. Se o circuito fosse puramente combinacional, a saída do alarme voltaria ao normal assim que o sensor voltasse ao normal. Mas talvez você queira outro comportamento: depois que o evento aconteceu, o alarme deve continuar ligado até alguém resetar o sistema.</p>
+<p>Esse é o tipo de problema que exige memória. O circuito precisa guardar que algo aconteceu, mesmo que a entrada que causou o evento já tenha desaparecido.</p>
+<img src="static/tocci_fig_5_1_sequential_system.png" width="70%" style="display: block; margin: 0 auto;" alt="Diagrama geral de um sistema digital com lógica combinacional e elementos de memória.">
+
+<p>Em um sistema sequencial, a lógica combinacional ainda existe. A diferença é que algumas saídas alimentam elementos de memória e algumas saídas desses elementos voltam para a lógica combinacional. Essa realimentação faz com que o comportamento atual dependa de algo que ficou armazenado.</p>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Se duas situações têm exatamente as mesmas entradas externas agora, mas chegaram a esse ponto por histórias diferentes, o circuito deve sempre responder igual?</p>
+  </div>
+</div>
+<p>Em circuitos combinacionais, a resposta é sim. Em circuitos sequenciais, a resposta pode ser não, porque o estado armazenado entra na decisão.</p>
+<p>O elemento de memória mais básico é o <strong>flip-flop</strong>, frequentemente abreviado como <strong>FF</strong>. Ele possui duas saídas complementares:</p>
+<p>$$
+Q \qquad \text{e} \qquad \overline{Q}
+$$</p>
+<p>A saída $Q$ é a saída normal. Quando dizemos que o flip-flop está em $1$, queremos dizer que $Q=1$. Quando dizemos que ele está em $0$, queremos dizer que $Q=0$. A saída $\overline{Q}$ normalmente tem o valor oposto.</p>
+<p>$$
+\begin{array}{c|c|c}
+Q & \overline{Q} & \text{Estado do elemento de memória} \\
+\hline
+1 & 0 & \text{setado ou armazenando } 1 \\
+0 & 1 & \text{resetado ou armazenando } 0
+\end{array}
+$$</p>
+<p>As palavras <strong>setar</strong> e <strong>resetar</strong> aparecem o tempo todo:</p>
+<ul>
+<li>setar significa levar $Q$ para $1$</li>
+<li>resetar ou limpar significa levar $Q$ para $0$</li>
+</ul>
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">Estado inicial<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Quando um latch ou flip-flop é energizado, nem sempre é possível prever se ele começará em $Q=0$ ou $Q=1$. Se o circuito precisa começar em um estado específico, ele deve receber um sinal de inicialização, como reset ou preset.</p>
+  </div>
+</div>
+<h2 id="latch-s-r-com-portas-nand"><span class="heading-text">Latch S-R Com Portas NAND</span><span class="heading-arabic">15.3</span></h2>
+<p>O latch mais simples pode ser construído com duas portas NAND realimentadas. A saída de uma porta volta para a entrada da outra, e essa realimentação é o que cria a capacidade de manter um estado.</p>
+<img src="static/tocci_fig_5_6_latch_nand.png" width="75%" style="display: block; margin: 0 auto;" alt="Latch com portas NAND e tabela-verdade.">
+
+<p>No latch NAND, as entradas são ativas em nível BAIXO. Para deixar isso explícito, vamos chamá-las de $\overline{S}$ e $\overline{R}$:</p>
+<ul>
+<li>$\overline{S}$ é a entrada de set ativa em $0$</li>
+<li>$\overline{R}$ é a entrada de reset ativa em $0$</li>
+</ul>
+<p>A barra não significa que o sinal está sempre em $0$. Ela indica que a ação acontece quando o sinal vai para $0$.</p>
+<p>$$
+\begin{array}{c|c||c}
+\overline{S} & \overline{R} & \text{Efeito em } Q \\
+\hline
+1 & 1 & \text{mantém o estado anterior} \\
+0 & 1 & Q = 1 \,\text{ set} \\
+1 & 0 & Q = 0 \,\text{ reset} \\
+0 & 0 & \text{condição inválida}
+\end{array}
+$$</p>
+<p>A linha mais importante da tabela é a primeira. Quando $\overline{S}=1$ e $\overline{R}=1$, nenhuma entrada está ativa. Mesmo assim, a saída não vira um valor aleatório a cada instante. Ela mantém o valor anterior. Essa é a característica de memória.</p>
+<p>Agora observe a lógica de cada ação:</p>
+<ul>
+<li>se $\overline{S}=0$ e $\overline{R}=1$, a entrada de set é ativada e $Q$ vai para $1$</li>
+<li>se $\overline{S}=1$ e $\overline{R}=0$, a entrada de reset é ativada e $Q$ vai para $0$</li>
+<li>se $\overline{S}=0$ e $\overline{R}=0$, as duas ações são pedidas ao mesmo tempo e a condição não deve ser usada</li>
+</ul>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Erro comum<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Em latch NAND, repouso não é $0,0$. Repouso é $1,1$, porque as entradas são ativas em nível BAIXO. Se você esquecer isso, trocará completamente a leitura do circuito.</p>
+  </div>
+</div>
+<div class="example">
+  <div class="example-title">Exemplo 1</div>
+  <p>Um latch NAND começa com $Q=0$. As entradas passam pela sequência abaixo. Determine o valor de $Q$ após cada passo.</p>
+<p>$$
+\begin{array}{c|c|c}
+\text{Passo} & \overline{S} & \overline{R} \\
+\hline
+1 & 1 & 1 \\
+2 & 0 & 1 \\
+3 & 1 & 1 \\
+4 & 1 & 0 \\
+5 & 1 & 1
+\end{array}
+$$</p>
+<hr />
+<p>No passo 1, as duas entradas estão inativas, então o latch mantém $Q=0$. No passo 2, $\overline{S}=0$, então a entrada de set é ativada e $Q$ vai para $1$. No passo 3, o circuito volta ao repouso e mantém $Q=1$. No passo 4, $\overline{R}=0$, então a entrada de reset é ativada e $Q$ vai para $0$. No passo 5, o circuito volta ao repouso e mantém $Q=0$.</p>
+<p>Esse exemplo mostra a ideia central do latch: a entrada ativa muda o estado, e a condição de repouso preserva o último estado válido.</p>
+</div>
+<h2 id="latch-s-r-com-portas-nor"><span class="heading-text">Latch S-R Com Portas NOR</span><span class="heading-arabic">15.4</span></h2>
+<p>Também é possível construir um latch S-R com duas portas NOR realimentadas. O comportamento geral é parecido com o do latch NAND, mas a convenção das entradas muda.</p>
+<img src="static/tocci_fig_5_10_latch_nor.png" width="88%" style="display: block; margin: 0 auto;" alt="Latch com portas NOR e tabela-verdade.">
+
+<p>No latch NOR, as entradas $S$ e $R$ são ativas em nível ALTO. Por isso, o estado de repouso é $S=0$ e $R=0$.</p>
+<p>$$
+\begin{array}{c|c||c}
+S & R & \text{Efeito em } Q \\
+\hline
+0 & 0 & \text{mantém o estado anterior} \\
+1 & 0 & Q = 1 \,\text{ set} \\
+0 & 1 & Q = 0 \,\text{ reset} \\
+1 & 1 & \text{condição inválida}
+\end{array}
+$$</p>
+<p>Repare na diferença de leitura. No latch NOR, aplicar $1$ em $S$ seta o latch. Aplicar $1$ em $R$ reseta o latch. No latch NAND, acontecia o contrário em termos de nível elétrico, porque as entradas eram ativas em $0$.</p>
+<div class="col2"><div>
+
+<p><strong>Latch NAND</strong></p>
+<p>$$
+\begin{array}{c|c|c}
+\overline{S} & \overline{R} & \text{ação} \\
+\hline
+1 & 1 & \text{mantém} \\
+0 & 1 & \text{set} \\
+1 & 0 & \text{reset} \\
+0 & 0 & \text{inválida}
+\end{array}
+$$</p>
+</div><div>
+
+<p><strong>Latch NOR</strong></p>
+<p>$$
+\begin{array}{c|c|c}
+S & R & \text{ação} \\
+\hline
+0 & 0 & \text{mantém} \\
+1 & 0 & \text{set} \\
+0 & 1 & \text{reset} \\
+1 & 1 & \text{inválida}
+\end{array}
+$$</p>
+</div></div>
+
+<p>O erro mais comum é tentar decorar apenas a palavra set ou reset e esquecer o nível ativo da entrada. A pergunta correta é sempre: <strong>esta entrada é ativa em nível alto ou em nível baixo?</strong></p>
+<h2 id="pulsos-clock-e-bordas"><span class="heading-text">Pulsos, Clock E Bordas</span><span class="heading-arabic">15.5</span></h2>
+<p>Os latches que acabamos de estudar mudam de estado assim que uma entrada ativa aparece. Isso é útil em alguns casos, mas pode ser difícil de controlar em sistemas maiores. Se vários sinais mudam em momentos ligeiramente diferentes, a saída pode mudar em instantes indesejados.</p>
+<p>Para organizar a mudança de estado, sistemas digitais usam <strong>pulsos</strong> e, principalmente, um sinal de <strong>clock</strong>.</p>
+<img src="static/tocci_fig_5_14_pulses.png" width="78%" style="display: block; margin: 0 auto;" alt="Pulso positivo e pulso negativo.">
+
+<p>Um pulso positivo é ativo quando vai para nível ALTO. Um pulso negativo é ativo quando vai para nível BAIXO. As transições são chamadas de bordas:</p>
+<ul>
+<li>borda de subida é a transição de $0$ para $1$</li>
+<li>borda de descida é a transição de $1$ para $0$</li>
+</ul>
+<p>Em um clock periódico, o intervalo de um ciclo completo é o período $T$. A frequência $f$ indica quantos ciclos ocorrem por segundo.</p>
+<p>$$
+f = \frac{1}{T}
+$$</p>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Se as entradas de um circuito mudam várias vezes enquanto o clock está em nível ALTO, é melhor que a saída acompanhe todas essas mudanças ou que ela mude apenas em um instante bem definido?</p>
+  </div>
+</div>
+<p>Na maior parte dos sistemas síncronos, queremos que a mudança ocorra apenas em instantes definidos. Para isso usamos flip-flops com clock. Neles, as entradas de controle dizem <strong>o que</strong> deve acontecer, mas o clock diz <strong>quando</strong> isso pode acontecer.</p>
+<p>Há dois parâmetros de temporização importantes:</p>
+<ul>
+<li><strong>tempo de setup</strong>, que é o tempo mínimo em que a entrada precisa estar estável antes da borda ativa</li>
+<li><strong>tempo de hold</strong>, que é o tempo mínimo em que a entrada precisa permanecer estável depois da borda ativa</li>
+</ul>
+<img src="static/tocci_fig_5_18_setup_hold.png" width="82%" style="display: block; margin: 0 auto;" alt="Tempo de setup e tempo de hold em flip-flops.">
+
+<p>Se esses tempos forem violados, o flip-flop pode responder de forma não confiável. Em uma aula introdutória, o mais importante é guardar a ideia: a borda do clock não é mágica. O circuito interno precisa que os sinais de controle estejam estáveis perto da borda ativa.</p>
+<h2 id="flip-flop-s-r-com-clock"><span class="heading-text">Flip-Flop S-R Com Clock</span><span class="heading-arabic">15.6</span></h2>
+<p>O flip-flop S-R com clock é uma versão sincronizada da ideia do latch S-R. As entradas $S$ e $R$ continuam indicando set e reset, mas elas só afetam $Q$ quando ocorre a borda ativa do clock.</p>
+<img src="static/tocci_fig_5_19_sr_flipflop.png" width="88%" style="display: block; margin: 0 auto;" alt="Flip-flop S-R com clock, tabela e formas de onda.">
+
+<p>Vamos considerar um flip-flop S-R disparado na borda de subida. A tabela funcional é:</p>
+<p>$$
+\begin{array}{c|c|c||c}
+S & R & CLK & Q^+ \\
+\hline
+0 & 0 & \uparrow & Q_0 \\
+1 & 0 & \uparrow & 1 \\
+0 & 1 & \uparrow & 0 \\
+1 & 1 & \uparrow & \text{ambíguo}
+\end{array}
+$$</p>
+<p>Aqui, $Q_0$ representa o estado anterior e $Q^+$ representa o novo estado depois da borda ativa. A seta $\uparrow$ indica que a ação ocorre na borda de subida do clock.</p>
+<p>Observe que $S=1$ e $R=0$ não setam a saída imediatamente. Eles deixam o flip-flop preparado para setar. A mudança só acontece quando ocorre a borda ativa de $CLK$.</p>
+<div class="example">
+  <div class="example-title">Exemplo 2</div>
+  <p>Um flip-flop S-R disparado na borda de subida começa com $Q=0$. Nas quatro bordas de subida consecutivas, as entradas têm os valores abaixo. Determine $Q$ após cada borda.</p>
+<p>$$
+\begin{array}{c|c|c}
+\text{Borda} & S & R \\
+\hline
+1 & 0 & 0 \\
+2 & 1 & 0 \\
+3 & 1 & 0 \\
+4 & 0 & 1
+\end{array}
+$$</p>
+<hr />
+<p>Na primeira borda, $S=0$ e $R=0$, então o flip-flop mantém $Q=0$. Na segunda borda, $S=1$ e $R=0$, então $Q$ vai para $1$. Na terceira borda, a condição continua sendo set, então $Q$ permanece em $1$. Na quarta borda, $S=0$ e $R=1$, então $Q$ vai para $0$.</p>
+<p>A saída resultante após as quatro bordas é:</p>
+<p>$$
+Q: \quad 0,\ 1,\ 1,\ 0
+$$</p>
+</div>
+<p>O flip-flop S-R é didático porque mostra claramente o papel do clock. Mas ele ainda carrega um problema: a condição $S=R=1$ é ambígua e não deve ser usada.</p>
+<h2 id="flip-flop-j-k"><span class="heading-text">Flip-Flop J-K</span><span class="heading-arabic">15.7</span></h2>
+<p>O flip-flop J-K resolve a condição ambígua do S-R. Ele se comporta de forma parecida com o S-R nas três primeiras combinações, mas quando $J=1$ e $K=1$, ele não entra em estado inválido. Ele <strong>comuta</strong>.</p>
+<img src="static/tocci_fig_5_23_jk_flipflop.png" width="88%" style="display: block; margin: 0 auto;" alt="Flip-flop J-K com clock, tabela e formas de onda.">
+
+<p>A tabela funcional do flip-flop J-K disparado na borda de subida é:</p>
+<p>$$
+\begin{array}{c|c|c||c}
+J & K & CLK & Q^+ \\
+\hline
+0 & 0 & \uparrow & Q_0 \\
+1 & 0 & \uparrow & 1 \\
+0 & 1 & \uparrow & 0 \\
+1 & 1 & \uparrow & \overline{Q_0}
+\end{array}
+$$</p>
+<p>A última linha é a principal diferença. Se $J=K=1$, o novo estado será o inverso do estado anterior. Se $Q_0=0$, então $Q^+=1$. Se $Q_0=1$, então $Q^+=0$.</p>
+<p>Essa operação é chamada de <strong>toggle</strong> ou <strong>comutação</strong>. Ela é muito importante porque permite construir contadores. Um flip-flop que comuta a cada borda ativa alterna entre $0$ e $1$ continuamente.</p>
+<div class="example">
+  <div class="example-title">Exemplo 3</div>
+  <p>Um flip-flop J-K começa com $Q=0$. As entradas ficam fixas em $J=1$ e $K=1$. Determine $Q$ após quatro bordas ativas do clock.</p>
+<hr />
+<p>Como $J=K=1$, cada borda ativa inverte o estado anterior.</p>
+<p>$$
+\begin{array}{c|c|c}
+\text{Borda} & \text{Estado anterior} & \text{Novo estado} \\
+\hline
+1 & 0 & 1 \\
+2 & 1 & 0 \\
+3 & 0 & 1 \\
+4 & 1 & 0
+\end{array}
+$$</p>
+<p>Portanto, a sequência de $Q$ é:</p>
+<p>$$
+1,\ 0,\ 1,\ 0
+$$</p>
+<p>Esse é o comportamento que depois será usado para construir contadores binários.</p>
+</div>
+<h2 id="flip-flop-d"><span class="heading-text">Flip-Flop D</span><span class="heading-arabic">15.8</span></h2>
+<p>O flip-flop D é o mais direto para armazenamento de dados. Ele possui uma única entrada de controle síncrona, chamada $D$. Na borda ativa do clock, a saída $Q$ recebe o valor que estava em $D$ naquele instante.</p>
+<img src="static/tocci_fig_5_26_d_flipflop.png" width="72%" style="display: block; margin: 0 auto;" alt="Flip-flop D com clock e formas de onda.">
+
+<p>A tabela funcional é pequena:</p>
+<p>$$
+\begin{array}{c|c||c}
+D & CLK & Q^+ \\
+\hline
+0 & \uparrow & 0 \\
+1 & \uparrow & 1
+\end{array}
+$$</p>
+<p>O flip-flop D pode ser lido como um amostrador de 1 bit. Ele olha para $D$ apenas no instante da borda ativa e guarda esse valor em $Q$ até a próxima borda ativa.</p>
+<p>Isso explica por que $D$ e $Q$ não são simplesmente o mesmo sinal. Se $D$ mudar entre duas bordas de clock, $Q$ não precisa mudar. $Q$ só será atualizado quando chegar a próxima borda ativa.</p>
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">Leitura prática<br /></span>
+  </div>
+  <div class="callout-content">
+<p>O flip-flop D é a base de registradores. Se você coloca vários flip-flops D lado a lado e aplica o mesmo clock a todos eles, consegue armazenar vários bits simultaneamente.</p>
+  </div>
+</div>
+<h2 id="latch-d-transparente"><span class="heading-text">Latch D Transparente</span><span class="heading-arabic">15.9</span></h2>
+<p>O latch D parece com o flip-flop D porque também armazena um dado. A diferença está no momento em que a saída pode mudar. O flip-flop D é sensível à borda do clock. O latch D é sensível ao nível da entrada de habilitação $EN$.</p>
+<img src="static/tocci_fig_5_29_d_latch.png" width="88%" style="display: block; margin: 0 auto;" alt="Latch D com estrutura, tabela e símbolo.">
+
+<p>A tabela funcional do latch D é:</p>
+<p>$$
+\begin{array}{c|c||c}
+EN & D & Q^+ \\
+\hline
+0 & X & Q_0 \\
+1 & 0 & 0 \\
+1 & 1 & 1
+\end{array}
+$$</p>
+<p>Quando $EN=1$, o latch está <strong>transparente</strong>. Isso significa que $Q$ acompanha $D$. Se $D$ mudar, $Q$ muda junto. Quando $EN=0$, o latch fecha e mantém o último valor armazenado.</p>
+<img src="static/tocci_fig_5_30_d_latch_waveforms.png" width="80%" style="display: block; margin: 0 auto;" alt="Formas de onda de um latch D transparente.">
+
+<div class="example">
+  <div class="example-title">Exemplo 4</div>
+  <p>Compare um flip-flop D disparado na borda de subida com um latch D. Nos dois casos, considere que $Q$ começa em $0$.</p>
+<p>No primeiro intervalo, $D$ vai para $1$. Depois, ainda antes da próxima borda de clock, $D$ volta para $0$. O que acontece em cada dispositivo?</p>
+<hr />
+<p>No flip-flop D, $Q$ só muda na borda ativa. Se a borda de subida ocorrer depois que $D$ já voltou para $0$, o flip-flop armazenará $0$. A mudança temporária de $D$ para $1$ não será capturada.</p>
+<p>No latch D, se $EN=1$ durante esse intervalo, $Q$ acompanhará $D$. Ele irá para $1$ enquanto $D=1$ e voltará para $0$ quando $D$ voltar para $0$. Se $EN$ depois cair para $0$, o latch manterá o valor que $Q$ tinha naquele instante.</p>
+<p>A diferença é esta: o flip-flop D amostra em uma borda, enquanto o latch D fica transparente durante um nível de habilitação.</p>
+</div>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Cuidado de projeto<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Um latch transparente pode deixar mudanças indesejadas passarem enquanto $EN=1$. Em sistemas síncronos, flip-flops disparados por borda costumam ser mais fáceis de controlar.</p>
+  </div>
+</div>
+<h2 id="entradas-assíncronas"><span class="heading-text">Entradas Assíncronas</span><span class="heading-arabic">15.10</span></h2>
+<p>As entradas $S$, $R$, $J$, $K$ e $D$ que vimos nos flip-flops com clock são entradas <strong>síncronas</strong>, porque só afetam a saída quando ocorre a borda ativa do clock.</p>
+<p>Muitos flip-flops também possuem entradas <strong>assíncronas</strong>. Elas são chamadas assim porque atuam independentemente do clock. As mais comuns são:</p>
+<ul>
+<li>$PRE$, de preset, que força $Q=1$</li>
+<li>$CLR$, de clear, que força $Q=0$</li>
+</ul>
+<p>Em muitos circuitos integrados, essas entradas são ativas em nível BAIXO. Nesse caso, podemos representá-las como $\overline{PRE}$ e $\overline{CLR}$.</p>
+<img src="static/tocci_fig_5_31_async_inputs.png" width="85%" style="display: block; margin: 0 auto;" alt="Flip-flop J-K com entradas assíncronas preset e clear.">
+
+<p>A tabela essencial das entradas assíncronas ativas em nível BAIXO é:</p>
+<p>$$
+\begin{array}{c|c||c}
+\overline{PRE} & \overline{CLR} & \text{Efeito em } Q \\
+\hline
+1 & 1 & \text{operação síncrona normal} \\
+0 & 1 & Q = 1 \,\text{ imediatamente} \\
+1 & 0 & Q = 0 \,\text{ imediatamente} \\
+0 & 0 & \text{condição inválida}
+\end{array}
+$$</p>
+<p>A palavra importante é <strong>imediatamente</strong>. Se $\overline{CLR}=0$, o flip-flop vai para $Q=0$ sem esperar a próxima borda de clock. Se $\overline{PRE}=0$, ele vai para $Q=1$ sem esperar a próxima borda de clock.</p>
+<div class="example">
+  <div class="example-title">Exemplo 5</div>
+  <p>Um flip-flop J-K tem entradas assíncronas ativas em nível BAIXO. Inicialmente, $Q=1$, $J=1$, $K=1$, $\overline{PRE}=1$ e $\overline{CLR}=1$. Em seguida, $\overline{CLR}$ vai momentaneamente para $0$. O que acontece com $Q$?</p>
+<hr />
+<p>Como $\overline{CLR}=0$, a entrada assíncrona de clear está ativa. Portanto, $Q$ vai imediatamente para $0$, independentemente de $J$, $K$ e $CLK$.</p>
+<p>Enquanto $\overline{CLR}=0$, o clock não consegue fazer o flip-flop comutar, mesmo com $J=K=1$. Quando $\overline{CLR}$ volta para $1$, a operação síncrona normal é liberada. A partir daí, nas próximas bordas ativas, $J=K=1$ fará o flip-flop comutar.</p>
+</div>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Erro comum<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Não trate $PRE$ e $CLR$ como se fossem entradas normais de dados. Elas se sobrepõem à lógica síncrona e são usadas principalmente para inicialização, reset ou controle emergencial de estado.</p>
+  </div>
+</div>
+<h2 id="comparando-os-elementos-de-memória"><span class="heading-text">Comparando Os Elementos de Memória</span><span class="heading-arabic">15.11</span></h2>
+<p>A tabela abaixo resume a leitura prática dos principais dispositivos desta aula.</p>
+<p>$$
+\begin{array}{c|c|c|c}
+\text{Dispositivo} & \text{Tipo de disparo} & \text{Entrada principal} & \text{Ideia central} \\
+\hline
+\text{Latch NAND S-R} & \text{nível} & \overline{S},\overline{R} & \text{set/reset ativos em }0 \\
+\text{Latch NOR S-R} & \text{nível} & S,R & \text{set/reset ativos em }1 \\
+\text{FF S-R} & \text{borda de clock} & S,R & \text{set/reset sincronizados} \\
+\text{FF J-K} & \text{borda de clock} & J,K & \text{S-R sem condição ambígua, com toggle} \\
+\text{FF D} & \text{borda de clock} & D & \text{armazena }D\text{ na borda ativa} \\
+\text{Latch D} & \text{nível de }EN & D,EN & \text{transparente quando }EN=1
+\end{array}
+$$</p>
+<p>Se você precisar decidir qual usar, comece pela pergunta funcional:</p>
+<ul>
+<li>preciso lembrar um set ou reset simples? Latch S-R pode resolver</li>
+<li>preciso sincronizar a mudança com clock? Use flip-flop</li>
+<li>preciso alternar estado a cada pulso? O J-K em toggle é adequado</li>
+<li>preciso armazenar um bit de dado em um instante específico? O D é o mais natural</li>
+<li>preciso que a saída siga a entrada enquanto habilitada? Use latch D</li>
+</ul>
+<h2 id="questões"><span class="heading-text">Questões</span><span class="heading-arabic">15.12</span></h2>
+<div class="questions">
+  <p><strong>1.</strong> Explique a diferença entre um circuito combinacional e um circuito sequencial.</p>
+<p><strong>2.</strong> Um elemento de memória tem $Q=1$ e $\overline{Q}=0$. Como esse estado é chamado? O que significa resetar esse elemento?</p>
+<p><strong>3.</strong> Em um latch NAND, as entradas são $\overline{S}$ e $\overline{R}$. Partindo de $Q=0$, determine $Q$ após a sequência: $(1,1)$, $(0,1)$, $(1,1)$, $(1,0)$, $(1,1)$.</p>
+<p><strong>4.</strong> Em um latch NOR, qual é a condição de repouso? Qual é a condição inválida?</p>
+<p><strong>5.</strong> Explique a diferença entre borda de subida, borda de descida e nível ativo de um pulso.</p>
+<p><strong>6.</strong> Um flip-flop S-R disparado na borda de subida começa com $Q=1$. Nas três bordas seguintes, as entradas são $(S,R)=(0,0)$, $(0,1)$ e $(1,0)$. Determine $Q$ após cada borda.</p>
+<p><strong>7.</strong> Um flip-flop J-K começa com $Q=1$ e recebe cinco bordas ativas com $J=K=1$. Qual será a sequência de valores de $Q$ após cada borda?</p>
+<p><strong>8.</strong> Em um flip-flop D disparado na borda de subida, $D$ muda de $0$ para $1$ e depois volta para $0$ antes da próxima borda. Se no instante da borda $D=0$, qual valor será armazenado em $Q$?</p>
+<p><strong>9.</strong> Explique a diferença entre um latch D transparente e um flip-flop D disparado por borda.</p>
+<p><strong>10.</strong> Um flip-flop possui $\overline{PRE}$ e $\overline{CLR}$ ativos em nível BAIXO. O que acontece quando $\overline{CLR}=0$? O clock ainda consegue alterar $Q$ enquanto $\overline{CLR}=0$?</p>
+</div>
+<div class="example">
+  <div class="example-title">Gabarito</div>
+  <p><strong>1.</strong> Em um circuito combinacional, a saída depende apenas das entradas atuais. Em um circuito sequencial, a saída depende das entradas atuais e também do estado armazenado anteriormente.</p>
+<p><strong>2.</strong> Esse é o estado setado, ou estado $1$. Resetar significa levar $Q$ para $0$ e, normalmente, $\overline{Q}$ para $1$.</p>
+<p><strong>3.</strong> No latch NAND, $(1,1)$ mantém o estado, $(0,1)$ seta e $(1,0)$ reseta. A sequência de $Q$ é $0$, $1$, $1$, $0$, $0$.</p>
+<p><strong>4.</strong> No latch NOR, a condição de repouso é $S=0$ e $R=0$. A condição inválida é $S=1$ e $R=1$.</p>
+<p><strong>5.</strong> Borda de subida é a transição de $0$ para $1$. Borda de descida é a transição de $1$ para $0$. Nível ativo indica se a ação do pulso ocorre enquanto o sinal está em $1$ ou enquanto está em $0$.</p>
+<p><strong>6.</strong> Inicialmente $Q=1$. Na primeira borda, $(0,0)$ mantém $Q=1$. Na segunda, $(0,1)$ reseta e $Q=0$. Na terceira, $(1,0)$ seta e $Q=1$. A sequência é $1$, $0$, $1$.</p>
+<p><strong>7.</strong> Com $J=K=1$, cada borda comuta o estado. Partindo de $Q=1$, a sequência após cinco bordas é $0$, $1$, $0$, $1$, $0$.</p>
+<p><strong>8.</strong> Será armazenado $0$, porque o flip-flop D captura o valor presente em $D$ no instante da borda ativa. Mudanças entre bordas não alteram $Q$ diretamente.</p>
+<p><strong>9.</strong> O latch D é sensível ao nível de habilitação. Quando $EN=1$, $Q$ acompanha $D$. O flip-flop D é sensível à borda do clock. Ele copia $D$ apenas no instante da borda ativa.</p>
+<p><strong>10.</strong> Quando $\overline{CLR}=0$, a entrada clear assíncrona está ativa e força $Q=0$ imediatamente. Enquanto $\overline{CLR}=0$, o clock não consegue alterar $Q$.</p>
+</div>
+<h2 id="próximos-passos"><span class="heading-text">Próximos passos</span><span class="heading-arabic">15.13</span></h2>
+<p>Nesta aula, você viu como a realimentação permite armazenar 1 bit e como o clock controla o momento em que esse bit muda. Latches e flip-flops são a base da lógica sequencial. Na próxima aula, vamos usar esses blocos para construir estruturas maiores, como registradores e contadores.</p>
+
+                </div>
+            </article>
+            <footer class="footer">
+                <p>© 2025 · <a href="#">Gabriel Soares Baptista</a></p>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        const toggle = document.querySelector('.mobile-menu-toggle');
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.querySelector('.mobile-menu-overlay');
+
+        function openMenu() {
+            sidebar.classList.add('open');
+            overlay.classList.add('open');
+            toggle.classList.add('open');
+            toggle.innerHTML = '<i data-lucide="x"></i>';
+            CourseForgeUI.initIcons();
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMenu() {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('open');
+            toggle.classList.remove('open');
+            toggle.innerHTML = '<i data-lucide="menu"></i>';
+            CourseForgeUI.initIcons();
+            document.body.style.overflow = '';
+        }
+
+        toggle.addEventListener('click', () => {
+            if (sidebar.classList.contains('open')) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        overlay.addEventListener('click', closeMenu);
+    </script>
+
+    
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            renderMathInElement(document.body, {
+                output: 'html',
+                delimiters: [
+                    { left: "$$", right: "$$", display: true },
+                    { left: "$", right: "$", display: false },
+                    { left: "\\(", right: "\\)", display: false },
+                    { left: "\\[", right: "\\]", display: true }
+                ],
+                throwOnError: false,
+                strict: false
+            });
+        });
+    </script>
+    
+    
+    <script src="/aulas-faesa/js/vendor/prism/prism.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-c.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-cpp.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-python.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-clike.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-perl.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-java.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-mermaid.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-php.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js" data-no-bundle></script>
+    
+    
+    
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            mermaid.initialize({
+                startOnLoad: true,
+                theme: 'default',
+                securityLevel: 'loose',
+                fontFamily: 'Inter, system-ui, sans-serif',
+                themeVariables: {
+                    fontSize: '16px',
+                    edgeLabelFontSize: '16px',
+                    multiplicityFontSize: '18px'
+                }
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const isSubcourse = false;
+        const courseName = "Sistemas Digitais e Microprocessados";
+        CourseForgeNav.applyDynamicBreadcrumbs('.breadcrumb', isSubcourse);
+        CourseForgeNav.initScrollSpy();
+        CourseForgeUI.initCopyButtons();
+        CourseForgeUI.initExamples();
+        });
+
+        function handleBackNavigation() {
+            const isSubcourse = false;
+        const dynamic = CourseForgeNav.getBackLink('contents.html', 'Voltar', isSubcourse);
+        window.location.href = dynamic.url;
+        }
+    </script>
+</body>
+
+</html>

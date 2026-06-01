@@ -1,0 +1,1517 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <title>Latches e Flip-Flops</title>
+    <link rel="icon" href="/aulas-faesa/img/dark-favicon.svg" media="(prefers-color-scheme: light)">
+    <link rel="icon" href="/aulas-faesa/img/light-favicon.svg" media="(prefers-color-scheme: dark)">
+
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/reset.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/reveal.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/theme/white.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/aulas-faesa/css/prism-one-light.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/fonts.css" data-no-bundle>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+            <section><h1>Sistemas Digitais e Microprocessados</h1>
+<h2>Latches e Flip-Flops</h2>
+<p>Professor: Gabriel Soares Baptista</p>
+</section>
+<section><h1>Introdução</h1>
+<p>Até agora: circuitos <strong>combinacionais</strong>.</p>
+<ul>
+<li>mesma combinação de entradas → mesma saída</li>
+<li>nenhuma entrada anterior influencia a saída atual</li>
+<li>tabela-verdade descreve todo o comportamento</li>
+</ul>
+<p>Hoje: circuitos que conseguem <strong>lembrar</strong>.</p>
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">Ideia central<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Um latch ou flip-flop é um elemento de memória de 1 bit. Ele mantém um estado interno, normalmente representado por $Q$.</p>
+  </div>
+</div>
+<p>Base: Capítulo 5.1 a 5.10 de <strong>Sistemas Digitais: Princípios e Aplicações</strong> (Tocci, Widmer, Moss).</p>
+</section>
+<section><h1>A Quebra Conceitual</h1>
+<p>Em circuitos sequenciais, a saída atual depende de duas coisas:</p>
+<ul>
+<li>entradas atuais</li>
+<li>estado armazenado anteriormente</li>
+</ul>
+<p>Isso muda a pergunta de projeto.</p>
+<p>Antes:</p>
+<p>$$
+\text{saída} = f(\text{entradas atuais})
+$$</p>
+<p>Agora:</p>
+<p>$$
+\text{saída} = f(\text{entradas atuais},\ \text{estado anterior})
+$$</p>
+</section>
+<section><h1>Quando Um Circuito Precisa Lembrar</h1>
+<p>Exemplo mental: alarme de porta.</p>
+<ul>
+<li>sensor detecta porta aberta por um instante</li>
+<li>depois o sensor volta ao normal</li>
+<li>o alarme deve continuar ligado até alguém resetar</li>
+</ul>
+<p>Circuito combinacional:</p>
+<ul>
+<li>evento desaparece → saída desaparece</li>
+</ul>
+<p>Circuito sequencial:</p>
+<ul>
+<li>evento desaparece → estado armazenado mantém o alarme ligado</li>
+</ul>
+</section>
+<section><h1>Sistema Digital Com Memória</h1>
+<img src="../static/tocci_fig_5_1_sequential_system.png" width="50%" style="display: block; margin: 0 auto;">
+
+<p>Leitura do diagrama:</p>
+<ul>
+<li>lógica combinacional ainda existe</li>
+<li>elementos de memória armazenam bits</li>
+<li>saídas da memória voltam para a lógica combinacional</li>
+<li>essa realimentação cria dependência do histórico</li>
+</ul>
+</section>
+<section><h1>Pergunta Para a Aula</h1>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Se duas situações têm as mesmas entradas externas agora, mas chegaram a esse ponto por histórias diferentes, o circuito deve responder igual?</p>
+  </div>
+</div>
+<p>Circuitos combinacionais:</p>
+<ul>
+<li>sim, sempre</li>
+</ul>
+<p>Circuitos sequenciais:</p>
+<ul>
+<li>não necessariamente</li>
+<li>o estado armazenado também entra na decisão</li>
+</ul>
+</section>
+<section><h1>Saídas de Um Elemento de Memória</h1>
+<p>Um flip-flop costuma ter duas saídas complementares:</p>
+<p>$$
+Q \qquad \text{e} \qquad \overline{Q}
+$$</p>
+<ul>
+<li>$Q$ é a saída normal</li>
+<li>$\overline{Q}$ é a saída invertida</li>
+<li>quando dizemos que o FF está em $1$, queremos dizer $Q=1$</li>
+<li>quando dizemos que o FF está em $0$, queremos dizer $Q=0$</li>
+</ul>
+<p>$$
+\begin{array}{c|c|c}
+Q & \overline{Q} & \text{Estado} \\
+\hline
+1 & 0 & \text{setado ou armazenando }1 \\
+0 & 1 & \text{resetado ou armazenando }0
+\end{array}
+$$</p>
+</section>
+<section><h1>Setar, Resetar e Estado Inicial</h1>
+<p>Terminologia básica:</p>
+<ul>
+<li><strong>setar</strong>: levar $Q$ para $1$</li>
+<li><strong>resetar</strong> ou <strong>limpar</strong>: levar $Q$ para $0$</li>
+</ul>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Estado inicial<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Quando um latch ou flip-flop é energizado, nem sempre é possível prever se começará em $Q=0$ ou $Q=1$.</p>
+  </div>
+</div>
+<p>Se o circuito precisa começar em um estado específico:</p>
+<ul>
+<li>aplique reset inicial</li>
+<li>ou aplique preset inicial</li>
+<li>não dependa do acaso da energização</li>
+</ul>
+</section>
+<section><h1>Latch S-R Com Portas NAND</h1>
+<p>O latch mais simples pode ser feito com duas portas NAND realimentadas.</p>
+<img src="../static/tocci_fig_5_6_latch_nand.png" width="74%" style="display: block; margin: 0 auto;">
+
+<p>Ideia do circuito:</p>
+<ul>
+<li>saída de uma porta volta para a entrada da outra</li>
+<li>essa realimentação permite manter estado</li>
+<li>entradas são ativas em nível <strong>BAIXO</strong></li>
+</ul>
+</section>
+<section><h1>Latch NAND: Entradas Ativas em Baixo</h1>
+<p>No latch NAND, usamos:</p>
+<ul>
+<li>$\overline{S}$: set ativo em $0$</li>
+<li>$\overline{R}$: reset ativo em $0$</li>
+</ul>
+<p>A barra indica <strong>nível ativo baixo</strong>.</p>
+<p>$$
+\begin{array}{c|c||c}
+\overline{S} & \overline{R} & \text{Efeito em }Q \\
+\hline
+1 & 1 & \text{mantém estado anterior} \\
+0 & 1 & Q=1\ \text{set} \\
+1 & 0 & Q=0\ \text{reset} \\
+0 & 0 & \text{condição inválida}
+\end{array}
+$$</p>
+</section>
+<section><h1>Latch NAND: Como Ler</h1>
+<p>Linha mais importante:</p>
+<p>$$
+\overline{S}=1,\ \overline{R}=1 \Rightarrow \text{mantém}
+$$</p>
+<p>Isso é a memória.</p>
+<p>Leitura por ação:</p>
+<ul>
+<li>$\overline{S}=0$ e $\overline{R}=1$ → set → $Q=1$</li>
+<li>$\overline{S}=1$ e $\overline{R}=0$ → reset → $Q=0$</li>
+<li>$\overline{S}=0$ e $\overline{R}=0$ → ação contraditória</li>
+</ul>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Erro comum<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Em latch NAND, repouso não é $0,0$. Repouso é $1,1$.</p>
+  </div>
+</div>
+</section>
+<section><h1>Exemplo 1: Latch NAND</h1>
+<p>Latch NAND começa com $Q=0$.</p>
+<p>$$
+\begin{array}{c|c|c}
+\text{Passo} & \overline{S} & \overline{R} \\
+\hline
+1 & 1 & 1 \\
+2 & 0 & 1 \\
+3 & 1 & 1 \\
+4 & 1 & 0 \\
+5 & 1 & 1
+\end{array}
+$$</p>
+<p>Pergunta:</p>
+<ul>
+<li>qual é $Q$ após cada passo?</li>
+</ul>
+</section>
+<section><h1>Exemplo 1: Resolução</h1>
+<ul>
+<li>passo 1: $(1,1)$ → mantém $Q=0$</li>
+<li>passo 2: $(0,1)$ → set → $Q=1$</li>
+<li>passo 3: $(1,1)$ → mantém $Q=1$</li>
+<li>passo 4: $(1,0)$ → reset → $Q=0$</li>
+<li>passo 5: $(1,1)$ → mantém $Q=0$</li>
+</ul>
+<p>Sequência final:</p>
+<p>$$
+Q: \quad 0,\ 1,\ 1,\ 0,\ 0
+$$</p>
+<p>Moral: entrada ativa muda o estado; repouso preserva o último estado válido.</p>
+</section>
+<section><h1>Latch S-R Com Portas NOR</h1>
+<p>Também podemos construir um latch S-R com duas portas NOR realimentadas.</p>
+<img src="../static/tocci_fig_5_10_latch_nor.png" width="88%" style="display: block; margin: 0 auto;">
+
+<p>Diferença principal:</p>
+<ul>
+<li>latch NAND: entradas ativas em <strong>BAIXO</strong></li>
+<li>latch NOR: entradas ativas em <strong>ALTO</strong></li>
+</ul>
+</section>
+<section><h1>Latch NOR: Tabela Funcional</h1>
+<p>No latch NOR, o repouso é $S=0$ e $R=0$.</p>
+<p>$$
+\begin{array}{c|c||c}
+S & R & \text{Efeito em }Q \\
+\hline
+0 & 0 & \text{mantém estado anterior} \\
+1 & 0 & Q=1\ \text{set} \\
+0 & 1 & Q=0\ \text{reset} \\
+1 & 1 & \text{condição inválida}
+\end{array}
+$$</p>
+<p>Leitura:</p>
+<ul>
+<li>$S=1$ seta</li>
+<li>$R=1$ reseta</li>
+<li>$S=R=1$ pede duas ações incompatíveis</li>
+</ul>
+</section>
+<section><h1>NAND × NOR</h1>
+<div class="col2"><div>
+
+<p><strong>Latch NAND</strong></p>
+<p>$$
+\begin{array}{c|c|c}
+\overline{S} & \overline{R} & \text{ação} \\
+\hline
+1 & 1 & \text{mantém} \\
+0 & 1 & \text{set} \\
+1 & 0 & \text{reset} \\
+0 & 0 & \text{inválida}
+\end{array}
+$$</p>
+</div><div>
+
+<p><strong>Latch NOR</strong></p>
+<p>$$
+\begin{array}{c|c|c}
+S & R & \text{ação} \\
+\hline
+0 & 0 & \text{mantém} \\
+1 & 0 & \text{set} \\
+0 & 1 & \text{reset} \\
+1 & 1 & \text{inválida}
+\end{array}
+$$</p>
+</div></div>
+
+<p>Pergunta correta:</p>
+<p><strong>esta entrada é ativa em nível alto ou baixo?</strong></p>
+</section>
+<section><h1>Por Que Usar Clock?</h1>
+<p>Latches mudam assim que uma entrada ativa aparece.</p>
+<p>Isso pode ser ruim em sistemas maiores:</p>
+<ul>
+<li>sinais chegam em tempos diferentes</li>
+<li>atrasos de portas não são idênticos</li>
+<li>uma saída pode mudar em instante indesejado</li>
+</ul>
+<p>Solução em sistemas síncronos:</p>
+<ul>
+<li>usar um sinal de <strong>clock</strong></li>
+<li>controlar exatamente quando o estado pode mudar</li>
+</ul>
+</section>
+<section><h1>Pulsos Digitais</h1>
+<img src="../static/tocci_fig_5_14_pulses.png" width="50%" style="display: block; margin: 0 auto;">
+
+<p>Termos importantes:</p>
+<ul>
+<li>pulso positivo: ativo em nível ALTO</li>
+<li>pulso negativo: ativo em nível BAIXO</li>
+<li>borda de subida: $0 \rightarrow 1$</li>
+<li>borda de descida: $1 \rightarrow 0$</li>
+<li>largura do pulso: duração do nível ativo</li>
+</ul>
+</section>
+<section><h1>Clock</h1>
+<p>Um clock é um trem periódico de pulsos.</p>
+<p>Período:</p>
+<p>$$
+T = \text{tempo de um ciclo completo}
+$$</p>
+<p>Frequência:</p>
+<p>$$
+f = \frac{1}{T}
+$$</p>
+<p>Em sistemas síncronos:</p>
+<ul>
+<li>as entradas de controle dizem <strong>o que</strong> deve acontecer</li>
+<li>o clock diz <strong>quando</strong> a mudança pode acontecer</li>
+</ul>
+</section>
+<section><h1>Setup e Hold</h1>
+<p>&lt;img src=&quot;../static/tocci_fig_5_18_setup_hold.png&quot; width=50%&quot; style=&quot;display: block; margin: 0 auto;&quot;&gt;</p>
+<p>Para um flip-flop responder de forma confiável:</p>
+<ul>
+<li>entrada precisa estar estável antes da borda ativa</li>
+<li>entrada precisa continuar estável depois da borda ativa</li>
+</ul>
+<p>Termos:</p>
+<ul>
+<li>$t_S$: tempo de setup</li>
+<li>$t_H$: tempo de hold</li>
+</ul>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Cuidado<br /></span>
+  </div>
+  <div class="callout-content">
+<p>A borda do clock não é mágica. O circuito interno precisa de sinais estáveis perto da borda ativa.</p>
+  </div>
+</div>
+</section>
+<section><h1>Flip-Flop S-R Com Clock</h1>
+<p>Versão sincronizada do latch S-R.</p>
+<img src="../static/tocci_fig_5_19_sr_flipflop.png" width="52%" style="display: block; margin: 0 auto;">
+
+<p>Ideia:</p>
+<ul>
+<li>$S$ e $R$ indicam a ação desejada</li>
+<li>$CLK$ determina quando a ação ocorre</li>
+<li>entradas só afetam $Q$ na borda ativa</li>
+</ul>
+</section>
+<section><h1>FF S-R: Tabela Funcional</h1>
+<p>Considerando disparo na borda de subida:</p>
+<p>$$
+\begin{array}{c|c|c||c}
+S & R & CLK & Q^+ \\
+\hline
+0 & 0 & \uparrow & Q_0 \\
+1 & 0 & \uparrow & 1 \\
+0 & 1 & \uparrow & 0 \\
+1 & 1 & \uparrow & \text{ambíguo}
+\end{array}
+$$</p>
+<p>Onde:</p>
+<ul>
+<li>$Q_0$ é o estado anterior</li>
+<li>$Q^+$ é o novo estado após a borda</li>
+<li>$\uparrow$ indica borda de subida</li>
+</ul>
+</section>
+<section><h1>FF S-R: Leitura Didática</h1>
+<p>Importante:</p>
+<ul>
+<li>$S=1$, $R=0$ não seta imediatamente</li>
+<li>deixa o flip-flop preparado para setar</li>
+<li>a mudança só ocorre na borda ativa de $CLK$</li>
+</ul>
+<p>Problema mantido do S-R:</p>
+<p>$$
+S=R=1 \Rightarrow \text{condição ambígua}
+$$</p>
+<p>O S-R é didático, mas não é o mais versátil.</p>
+</section>
+<section><h1>Exemplo 2: FF S-R</h1>
+<p>FF S-R disparado na borda de subida começa com $Q=0$.</p>
+<p>$$
+\begin{array}{c|c|c}
+\text{Borda} & S & R \\
+\hline
+1 & 0 & 0 \\
+2 & 1 & 0 \\
+3 & 1 & 0 \\
+4 & 0 & 1
+\end{array}
+$$</p>
+<p>Resolução:</p>
+<ul>
+<li>borda 1: mantém $Q=0$</li>
+<li>borda 2: set → $Q=1$</li>
+<li>borda 3: set novamente → $Q=1$</li>
+<li>borda 4: reset → $Q=0$</li>
+</ul>
+<p>$$
+Q: \quad 0,\ 1,\ 1,\ 0
+$$</p>
+</section>
+<section><h1>Flip-Flop J-K</h1>
+<p>O J-K resolve a condição ambígua do S-R.</p>
+<img src="../static/tocci_fig_5_23_jk_flipflop.png" width="52%" style="display: block; margin: 0 auto;">
+
+<p>Semelhança:</p>
+<ul>
+<li>$J$ funciona como set</li>
+<li>$K$ funciona como reset</li>
+</ul>
+<p>Diferença:</p>
+<ul>
+<li>$J=K=1$ não é inválido</li>
+<li>nessa condição o FF <strong>comuta</strong></li>
+</ul>
+</section>
+<section><h1>FF J-K: Tabela Funcional</h1>
+<p>Considerando borda de subida:</p>
+<p>$$
+\begin{array}{c|c|c||c}
+J & K & CLK & Q^+ \\
+\hline
+0 & 0 & \uparrow & Q_0 \\
+1 & 0 & \uparrow & 1 \\
+0 & 1 & \uparrow & 0 \\
+1 & 1 & \uparrow & \overline{Q_0}
+\end{array}
+$$</p>
+<p>Última linha:</p>
+<ul>
+<li>se $Q_0=0$, então $Q^+=1$</li>
+<li>se $Q_0=1$, então $Q^+=0$</li>
+</ul>
+<p>Essa operação é chamada <strong>toggle</strong> ou <strong>comutação</strong>.</p>
+</section>
+<section><h1>Por Que o J-K É Importante?</h1>
+<p>Com $J=K=1$:</p>
+<ul>
+<li>cada borda ativa inverte $Q$</li>
+<li>$Q$ alterna entre $0$ e $1$</li>
+<li>isso é base para contadores binários</li>
+</ul>
+<p>Comparação rápida:</p>
+<ul>
+<li>S-R: tem condição ambígua</li>
+<li>J-K: reaproveita essa condição como comutação</li>
+</ul>
+</section>
+<section><h1>Exemplo 3: Modo Toggle</h1>
+<p>FF J-K começa com $Q=0$.</p>
+<p>Entradas fixas:</p>
+<p>$$
+J=1, \qquad K=1
+$$</p>
+<p>Como $J=K=1$, cada borda inverte o estado.</p>
+<p>$$
+\begin{array}{c|c|c}
+\text{Borda} & \text{Estado anterior} & \text{Novo estado} \\
+\hline
+1 & 0 & 1 \\
+2 & 1 & 0 \\
+3 & 0 & 1 \\
+4 & 1 & 0
+\end{array}
+$$</p>
+<p>Sequência:</p>
+<p>$$
+Q: \quad 1,\ 0,\ 1,\ 0
+$$</p>
+</section>
+<section><h1>Flip-Flop D</h1>
+<p>O flip-flop D é o mais direto para armazenar dados.</p>
+<img src="../static/tocci_fig_5_26_d_flipflop.png" width="52%" style="display: block; margin: 0 auto;">
+
+<p>Ideia:</p>
+<ul>
+<li>uma entrada de controle: $D$</li>
+<li>na borda ativa, $Q$ recebe o valor de $D$</li>
+<li>depois, $Q$ mantém esse valor até a próxima borda ativa</li>
+</ul>
+</section>
+<section><h1>FF D: Tabela Funcional</h1>
+<p>Considerando borda de subida:</p>
+<p>$$
+\begin{array}{c|c||c}
+D & CLK & Q^+ \\
+\hline
+0 & \uparrow & 0 \\
+1 & \uparrow & 1
+\end{array}
+$$</p>
+<p>Leitura prática:</p>
+<ul>
+<li>o FF D amostra $D$ em um instante específico</li>
+<li>$D$ pode mudar entre bordas sem alterar $Q$</li>
+<li>$D$ e $Q$ não são o mesmo sinal</li>
+</ul>
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">Uso típico<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Vários flip-flops D lado a lado formam um registrador. O mesmo clock armazena vários bits simultaneamente.</p>
+  </div>
+</div>
+</section>
+<section><h1>Latch D Transparente</h1>
+<p>O latch D também armazena dados, mas não é disparado por borda.</p>
+<img src="../static/tocci_fig_5_29_d_latch.png" width="86%" style="display: block; margin: 0 auto;">
+
+<p>Diferença principal:</p>
+<ul>
+<li>FF D: sensível à borda do clock</li>
+<li>latch D: sensível ao nível de habilitação $EN$</li>
+</ul>
+</section>
+<section><h1>Latch D: Tabela Funcional</h1>
+<p>$$
+\begin{array}{c|c||c}
+EN & D & Q^+ \\
+\hline
+0 & X & Q_0 \\
+1 & 0 & 0 \\
+1 & 1 & 1
+\end{array}
+$$</p>
+<p>Quando $EN=1$:</p>
+<ul>
+<li>latch está <strong>transparente</strong></li>
+<li>$Q$ acompanha $D$</li>
+</ul>
+<p>Quando $EN=0$:</p>
+<ul>
+<li>latch fecha</li>
+<li>$Q$ mantém o último valor armazenado</li>
+</ul>
+</section>
+<section><h1>Latch D: Formas de Onda</h1>
+<img src="../static/tocci_fig_5_30_d_latch_waveforms.png" width="82%" style="display: block; margin: 0 auto;">
+
+<p>Leitura:</p>
+<ul>
+<li>regiões cinzas: $EN=1$</li>
+<li>nessas regiões, $Q=D$</li>
+<li>fora delas, $Q$ mantém o valor anterior</li>
+</ul>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Cuidado de projeto<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Enquanto $EN=1$, mudanças em $D$ passam para $Q$. Isso pode deixar mudanças indesejadas atravessarem o latch.</p>
+  </div>
+</div>
+</section>
+<section><h1>Exemplo 4: FF D × Latch D</h1>
+<p>Situação:</p>
+<ul>
+<li>$Q$ começa em $0$</li>
+<li>$D$ vai para $1$</li>
+<li>antes da próxima borda, $D$ volta para $0$</li>
+</ul>
+<p>Flip-flop D:</p>
+<ul>
+<li>só olha $D$ na borda ativa</li>
+<li>se na borda $D=0$, armazena $0$</li>
+<li>a passagem temporária por $1$ não é capturada</li>
+</ul>
+<p>Latch D com $EN=1$:</p>
+<ul>
+<li>$Q$ acompanha $D$</li>
+<li>vai para $1$ enquanto $D=1$</li>
+<li>volta para $0$ quando $D=0$</li>
+</ul>
+</section>
+<section><h1>Entradas Síncronas e Assíncronas</h1>
+<p>Entradas síncronas:</p>
+<ul>
+<li>$S$, $R$, $J$, $K$, $D$</li>
+<li>só afetam $Q$ junto com a borda ativa do clock</li>
+</ul>
+<p>Entradas assíncronas:</p>
+<ul>
+<li>atuam independentemente do clock</li>
+<li>forçam um estado imediatamente</li>
+</ul>
+<p>Mais comuns:</p>
+<ul>
+<li>$PRE$: preset → força $Q=1$</li>
+<li>$CLR$: clear → força $Q=0$</li>
+</ul>
+</section>
+<section><h1>Entradas Assíncronas</h1>
+<img src="../static/tocci_fig_5_31_async_inputs.png" width="84%" style="display: block; margin: 0 auto;">
+
+<p>Muitos CIs usam entradas assíncronas ativas em nível BAIXO:</p>
+<ul>
+<li>$\overline{PRE}$</li>
+<li>$\overline{CLR}$</li>
+</ul>
+<p>Bolinha no símbolo:</p>
+<ul>
+<li>indica ativação em nível baixo</li>
+</ul>
+</section>
+<section><h1>Tabela Essencial de PRE e CLR</h1>
+<p>Entradas assíncronas ativas em nível BAIXO:</p>
+<p>$$
+\begin{array}{c|c||c}
+\overline{PRE} & \overline{CLR} & \text{Efeito em }Q \\
+\hline
+1 & 1 & \text{operação síncrona normal} \\
+0 & 1 & Q=1\ \text{imediatamente} \\
+1 & 0 & Q=0\ \text{imediatamente} \\
+0 & 0 & \text{condição inválida}
+\end{array}
+$$</p>
+<p>Palavra-chave:</p>
+<p><strong>imediatamente</strong>.</p>
+<p>Não espera borda de clock.</p>
+</section>
+<section><h1>Exemplo 5: Clear Assíncrono</h1>
+<p>FF J-K com entradas assíncronas ativas em baixo.</p>
+<p>Estado inicial:</p>
+<p>$$
+Q=1,\quad J=1,\quad K=1,\quad \overline{PRE}=1,\quad \overline{CLR}=1
+$$</p>
+<p>Agora $\overline{CLR}$ vai momentaneamente para $0$.</p>
+<p>Resultado:</p>
+<ul>
+<li>$\overline{CLR}=0$ ativa clear</li>
+<li>$Q$ vai imediatamente para $0$</li>
+<li>$J$, $K$ e $CLK$ não importam enquanto clear está ativo</li>
+<li>quando $\overline{CLR}$ volta para $1$, a operação síncrona normal retorna</li>
+</ul>
+</section>
+<section><h1>Não Confunda PRE/CLR Com Dados</h1>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Erro comum<br /></span>
+  </div>
+  <div class="callout-content">
+<p>$PRE$ e $CLR$ não são entradas normais de dados. Elas se sobrepõem à lógica síncrona.</p>
+  </div>
+</div>
+<p>Usos típicos:</p>
+<ul>
+<li>inicialização do circuito</li>
+<li>reset global</li>
+<li>forçar estado seguro</li>
+<li>controle emergencial de estado</li>
+</ul>
+<p>Se $\overline{CLR}=0$:</p>
+<ul>
+<li>$Q=0$ imediatamente</li>
+<li>clock não consegue alterar $Q$</li>
+</ul>
+</section>
+<section><h1>Comparação Final</h1>
+<p>$$
+\begin{array}{c|c|c|c}
+\text{Dispositivo} & \text{Disparo} & \text{Entrada} & \text{Ideia central} \\
+\hline
+\text{Latch NAND S-R} & \text{nível} & \overline{S},\overline{R} & \text{ativos em }0 \\
+\text{Latch NOR S-R} & \text{nível} & S,R & \text{ativos em }1 \\
+\text{FF S-R} & \text{borda} & S,R & \text{set/reset sincronizados} \\
+\text{FF J-K} & \text{borda} & J,K & \text{S-R com toggle} \\
+\text{FF D} & \text{borda} & D & \text{armazena }D \\
+\text{Latch D} & \text{nível} & D,EN & \text{transparente com }EN=1
+\end{array}
+$$</p>
+</section>
+<section><h1>Próximos Passos</h1>
+<ul>
+<li>Usar esses blocos para construir <strong>registradores</strong> e <strong>contadores</strong></li>
+</ul>
+</section>
+        </div>
+    </div>
+
+    <script src="/aulas-faesa/js/vendor/reveal/reveal.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/notes/notes.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/markdown/markdown.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/math/math.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/zoom/zoom.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/prism.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-c.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-python.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-clike.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-cpp.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-perl.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-java.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-php.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/toolbar/prism-toolbar.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/show-language/prism-show-language.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/prism-slang.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/mermaid.min.js" data-no-bundle></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            mermaid.initialize({
+                startOnLoad: false,
+                theme: 'default',
+                securityLevel: 'loose',
+                htmlLabels: false,
+                fontFamily: 'Inter, system-ui, sans-serif',
+            });
+        });
+    </script>
+    <script src="/aulas-faesa/js/rough.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/apply_sketch.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/lucide.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/ui.js" data-no-bundle></script>
+    <script>
+        const waitForNextFrame = () => new Promise(resolve => requestAnimationFrame(resolve));
+
+        const initSlideUI = () => {
+            if (!window.CourseForgeUI) {
+                return;
+            }
+
+            window.CourseForgeUI.initCopyButtons();
+            window.CourseForgeUI.initIcons();
+        };
+
+        const renderMermaidsInSlide = async (slide) => {
+            if (!slide) {
+                return;
+            }
+
+            const mermaids = slide.querySelectorAll('.mermaid');
+            if (!mermaids.length) {
+                return;
+            }
+
+            try {
+                if (document.fonts?.ready) {
+                    await document.fonts.ready;
+                }
+
+                await waitForNextFrame();
+                await waitForNextFrame();
+
+                for (const element of mermaids) {
+                    if (element.dataset.mermaidRendered === 'true') {
+                        continue;
+                    }
+
+                    await mermaid.run({
+                        nodes: [element],
+                    });
+                    element.dataset.mermaidRendered = 'true';
+                }
+            } catch (err) {
+                console.warn('Mermaid render failed', err);
+            }
+        };
+
+        const updateMermaidDisplayBounds = (slide) => {
+            const scope = slide || document;
+            const displays = scope.querySelectorAll('.mermaid-display');
+
+            for (const display of displays) {
+                const rect = display.getBoundingClientRect();
+                const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+                const bottomGap = 24;
+                const availableHeight = Math.max(160, Math.floor(viewportHeight - rect.top - bottomGap));
+                display.style.setProperty('--mermaid-max-height', `${availableHeight}px`);
+            }
+        };
+
+        const resetNativeLineNumbers = (pre) => {
+            if (!pre?.classList.contains('line-numbers')) {
+                return;
+            }
+
+            const existingRows = pre.querySelector('.line-numbers-rows');
+            if (existingRows) {
+                existingRows.remove();
+            }
+        };
+
+        const highlightCodeInSlide = (slide) => {
+            const scope = slide || document;
+            const codeBlocks = scope.querySelectorAll('pre[class*="language-"] > code[class*="language-"]');
+
+            for (const code of codeBlocks) {
+                const pre = code.parentElement;
+                resetNativeLineNumbers(pre);
+                Prism.highlightElement(code);
+
+                if (pre?.classList.contains('line-numbers') && Prism.plugins?.lineNumbers?.resize) {
+                    Prism.plugins.lineNumbers.resize(pre);
+                }
+            }
+        };
+
+        const enhanceCurrentSlide = async (slide) => {
+            highlightCodeInSlide(slide);
+            await renderMermaidsInSlide(slide);
+            updateMermaidDisplayBounds(slide);
+            initSlideUI();
+        };
+
+        Reveal.initialize({
+            hash: true,
+            slideNumber: 'c/t',
+            center: false,
+            controls: false,
+            plugins: [RevealMarkdown, RevealNotes, RevealMath.KaTeX, RevealZoom],
+            katex: {
+                local: '/aulas-faesa/js/vendor/katex',
+                output: 'html',
+                throwOnError: false,
+                strict: false,
+            },
+            width: 960,
+            height: 800,
+            margin: 0.15,
+            maxScale: 2.0,
+        });
+
+        Reveal.on('ready', event => {
+            enhanceCurrentSlide(event.currentSlide);
+        });
+
+        Reveal.on('slideready', event => {
+            enhanceCurrentSlide(event.currentSlide);
+        });
+
+        Reveal.on('slidechanged', event => {
+            enhanceCurrentSlide(event.currentSlide);
+        });
+
+        window.addEventListener('resize', () => {
+            updateMermaidDisplayBounds(Reveal.getCurrentSlide());
+        });
+    </script>
+    <style>
+        /* Modern base styles */
+        :root {
+            --callout-note: #448aff;
+            --callout-abstract: #00b0ff;
+            --callout-info: #00b8d4;
+            --callout-todo: #00bfa5;
+            --callout-tip: #00c853;
+            --callout-success: #64dd17;
+            --callout-question: #ffab00;
+            --callout-warning: #ff9100;
+            --callout-failure: #ff5252;
+            --callout-danger: #ff1744;
+            --callout-bug: #f50057;
+            --callout-example: #7c4dff;
+            --callout-quote: #9e9e9e;
+            --code-bg: #f1f5f9;
+            --border: #e2e8f0;
+            --radius: 6px;
+            --radius-sm: 4px;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --text-muted: #64748b;
+            --text: #334155;
+            --bg: #ffffff;
+            --heading: #0f172a;
+            --link: #3b82f6;
+            --font-code: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+        }
+
+        .reveal {
+            font-size: 20px;
+            text-align: left !important;
+        }
+
+        .reveal code:not(pre code) {
+            font-family: var(--font-code) !important;
+            background-color: var(--code-bg) !important;
+            padding: 0.1em 0.35em !important;
+            border-radius: var(--radius-sm) !important;
+            font-size: 0.9em !important;
+            color: var(--link) !important;
+            border: 1px dashed var(--border) !important;
+            white-space: pre-wrap !important;
+            word-break: break-word !important;
+            font-variant-ligatures: none;
+            font-feature-settings: "liga" 0, "calt" 0;
+        }
+
+        .reveal h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px !important;
+            margin-left: 0 !important;
+            /* min-height: 2.3em; */
+            display: flex;
+            align-items: center;
+            justify-content: flex-start !important;
+            text-align: left !important;
+            width: 100% !important;
+            text-shadow: none !important;
+        }
+
+        /* Prism overrides for Reveal.js */
+        .reveal div.code-toolbar {
+            position: relative;
+            width: 100% !important;
+            margin: 1.5rem 0 !important;
+        }
+
+        .reveal pre[class*="language-"] {
+            background: hsl(230, 1%, 98%) !important;
+            margin: 1.5rem 0 !important;
+            padding: 1rem !important;
+            border: 1px solid var(--border) !important;
+            border-radius: var(--radius) !important;
+            box-shadow: var(--shadow-sm) !important;
+            font-family: var(--font-code) !important;
+            font-size: 0.85em !important;
+            position: relative;
+            overflow-x: auto;
+            box-sizing: border-box !important;
+            max-width: 100% !important;
+            font-variant-ligatures: none;
+            font-feature-settings: "liga" 0, "calt" 0;
+        }
+
+        .reveal pre[class*="language-"] > code {
+            background: 0 0 !important;
+            text-shadow: none !important;
+            color: hsl(230, 8%, 24%) !important;
+            position: relative !important;
+            display: block !important;
+        }
+
+        .reveal .line-numbers .line-numbers-rows {
+            border-right: 1px solid #444 !important;
+            padding-right: .5rem !important;
+            margin-bottom: 1.5rem;
+        }
+
+        .reveal .line-numbers-rows>span:before {
+            color: #666 !important;
+        }
+
+        .reveal pre[class*="language-"].line-numbers,
+        .reveal pre[class*="language-"]:has(.line-numbers-rows) {
+            padding-left: 3.8em !important;
+            overflow-y: hidden !important;
+        }
+
+        .reveal .copy-button,
+        .reveal pre[data-lang]::before {
+            position: absolute;
+            top: .5rem;
+            height: 26px;
+            background: hsl(230, 1%, 92%);
+            border: 1px solid hsl(230, 1%, 85%);
+            border-radius: var(--radius-sm);
+            box-sizing: border-box;
+        }
+
+        .reveal .copy-button {
+            right: .5rem;
+            width: 26px;
+            padding: 0;
+            color: hsl(230, 6%, 44%);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all .2s ease;
+            z-index: 20;
+            opacity: .8;
+        }
+
+        .reveal .copy-button:hover {
+            background: hsl(230, 1%, 85%);
+            color: hsl(230, 8%, 24%);
+            opacity: 1;
+        }
+
+        .reveal .copy-button svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Language label styling - hide all Prism toolbar plugins, keep only data-lang label */
+        .reveal div.toolbar,
+        .reveal div.toolbar-item,
+        .reveal button.toolbar-item,
+        .reveal span.toolbar-item {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            height: 0 !important;
+            width: 0 !important;
+            overflow: hidden !important;
+            position: absolute !important;
+            pointer-events: none !important;
+        }
+
+        /* Use the pseudo-element data-lang label only */
+        .reveal pre[data-lang]::before {
+            content: attr(data-lang);
+            right: 2.35rem;
+            padding: 0 .5rem;
+            font-size: .65rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: hsl(230, 6%, 50%);
+            pointer-events: none;
+            z-index: 10;
+            display: inline-flex !important;
+            align-items: center !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            height: 26px !important;
+            width: auto !important;
+            position: absolute !important;
+            overflow: visible !important;
+            line-height: 26px !important;
+        }
+
+        .reveal h2 {
+            font-size: 1.6em;
+            margin-top: 30px !important;
+            margin-bottom: 20px !important;
+            text-align: left !important;
+        }
+
+        .reveal h3 {
+            font-size: 1.3em;
+            margin-top: 20px !important;
+            margin-bottom: 15px !important;
+            text-align: left !important;
+        }
+
+        .reveal p {
+            line-height: 1.5;
+            margin-top: 20px !important;
+            margin-left: 0 !important;
+            text-align: left !important;
+        }
+
+        .reveal ul,
+        .reveal ol,
+        .reveal li {
+            line-height: 1.5;
+            text-align: left !important;
+            margin-left: 0 !important;
+        }
+        
+        .reveal ul, .reveal ol {
+            display: block !important;
+            padding-left: 1.2em !important;
+        }
+
+        /* Slide padding and layout */
+        .reveal .slides section {
+            padding: 40px !important;
+            box-sizing: border-box;
+            text-align: left !important;
+            overflow: visible !important;
+        }
+
+        .reveal .slides {
+            text-align: left !important;
+        }
+
+        /* Centering for Title slides (h1 ONLY, h1 + h2 ONLY, or h1 + h2 + p ONLY) */
+        .reveal .slides section:not(.stack):has(> h1:only-child),
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child),
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) {
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: center !important;
+            align-items: center !important;
+            text-align: center !important;
+            height: 100% !important;
+            top: 0 !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:only-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child) h2,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h2,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) p {
+            justify-content: center !important;
+            text-align: center !important;
+            margin: 0 !important;
+            min-height: auto !important;
+            width: 100% !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h1 {
+            margin-bottom: 0.5em !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h2 {
+            margin-bottom: 0.3em !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) p {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        /* Full screen slide fix */
+        .reveal .slides section:has(.full-screen-image) {
+            padding: 0 !important;
+        }
+
+        /* Full screen slide fix - Garantindo que o fundo do Reveal fique visível e a imagem carregada */
+        .reveal:has(section.present .full-screen-image) {
+            background-image: url('../../slide_end_background.png') !important;
+            background-size: cover !important;
+            background-position: center !important;
+        }
+
+        /* Torna o slide e o container de slides transparentes para mostrar o fundo da .reveal */
+        .reveal:has(section.present .full-screen-image) .slides,
+        .reveal:has(section.present .full-screen-image) .slides section.present {
+            background: transparent !important;
+        }
+
+        .full-screen-image {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 !important;
+            /* Se houver texto, ele centraliza aqui */
+        }
+
+        /* Spacing for diagrams */
+        .reveal .svg-graph {
+            margin-top: 1em !important;
+            margin-bottom: 1em !important;
+            overflow: visible !important; /* Prevent labels from being cut off */
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* Mermaid Diagram Styles */
+        .reveal .mermaid {
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            padding: 0 !important;
+            margin: 1rem 0 !important;
+            font-family: inherit !important;
+            overflow: visible !important;
+            text-align: center;
+            display: block !important;
+            width: auto !important;
+            max-width: 100% !important;
+        }
+
+        .reveal pre.mermaid {
+            white-space: pre;
+            font-family: var(--font-code);
+            color: var(--text-muted);
+            margin: 0 !important;
+            padding: 0 !important;
+            width: auto !important;
+            line-height: 1 !important;
+            border: none !important;
+            box-shadow: none !important;
+            background: transparent !important;
+            overflow: visible !important;
+        }
+
+        .reveal .centered .mermaid {
+            display: block !important;
+            justify-content: center;
+            margin-left: auto !important;
+            margin-right: auto !important;
+        }
+
+        .reveal .mermaid svg {
+            max-width: 100% !important;
+            height: auto !important;
+            display: block !important;
+            overflow: visible !important;
+            vertical-align: top !important;
+            font-family: Inter, system-ui, sans-serif !important;
+            font-style: normal !important;
+            font-variant: normal !important;
+            font-weight: 400 !important;
+            letter-spacing: normal !important;
+            word-spacing: normal !important;
+            text-transform: none !important;
+            text-shadow: none !important;
+            line-height: normal !important;
+            text-rendering: geometricPrecision !important;
+        }
+
+        .reveal .mermaid svg * {
+            font-family: inherit !important;
+            font-style: normal !important;
+            font-variant: normal !important;
+            letter-spacing: normal !important;
+            word-spacing: normal !important;
+            text-transform: none !important;
+            text-shadow: none !important;
+            line-height: normal !important;
+        }
+
+        .reveal .mermaid svg .edgeBadge text,
+        .reveal .mermaid svg .edgeBadge tspan,
+        .reveal .mermaid svg .edgeTerm text,
+        .reveal .mermaid svg .edgeTerm tspan,
+        .reveal .mermaid svg .multiplicity text,
+        .reveal .mermaid svg .multiplicity tspan,
+        .reveal .mermaid svg text.edgeBadge,
+        .reveal .mermaid svg text.edgeTerm {
+            font-size: 18px !important;
+            font-weight: 700 !important;
+            fill: var(--heading) !important;
+        }
+
+        /* Mermaid Source Switcher */
+        .reveal .mermaid-outer-container {
+            margin: 1rem 0;
+            position: relative;
+            width: 100%;
+            max-width: 100%;
+        }
+
+        .reveal .mermaid-switcher {
+            display: flex !important;
+            justify-content: flex-end;
+            margin-bottom: 0.5rem;
+            width: 100%;
+        }
+
+        .reveal .switcher-track {
+            display: inline-flex;
+            align-items: center;
+            background: var(--code-bg);
+            padding: 3px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            position: relative;
+        }
+
+        .reveal .switcher-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            border: none;
+            background: transparent;
+            padding: 0.35rem 1rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            border-radius: calc(var(--radius) - 2px);
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            z-index: 1;
+        }
+
+        .reveal .switcher-btn svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .reveal .switcher-btn:hover {
+            color: var(--text);
+        }
+
+        .reveal .switcher-btn.active {
+            color: var(--heading);
+            background: var(--bg);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        .reveal .mermaid-content {
+            min-height: 50px;
+        }
+
+        /* Mermaid display - respect inline width */
+        .reveal .mermaid-display {
+            transition: opacity 0.2s ease;
+            display: block !important;
+            max-width: 100% !important;
+            max-height: var(--mermaid-max-height, calc(100vh - 140px)) !important;
+            border: none !important;
+            box-shadow: none !important;
+            background: transparent !important;
+            overflow: auto !important;
+        }
+
+        .reveal .mermaid-source pre {
+            margin: 0 !important;
+            background: var(--code-bg) !important;
+            border: 1px dashed var(--border) !important;
+        }
+
+        /* Ensure proper toggle behavior */
+        .reveal .mermaid-source {
+            display: none !important;
+        }
+
+        .reveal .mermaid-source[style*="display: block"],
+        .reveal .mermaid-source[style*="display:block"] {
+            display: block !important;
+        }
+
+        .reveal .mermaid-display[style*="display: none"],
+        .reveal .mermaid-display[style*="display:none"] {
+            display: none !important;
+        }
+
+        .reveal .mermaid-display.centered {
+            margin-left: auto !important;
+            margin-right: auto !important;
+            max-width: 100% !important;
+        }
+
+        .centered:not(.mermaid-display) {
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            width: 100% !important;
+            margin: 1em 0 !important;
+        }
+
+        .no-break {
+            display: block;
+            width: 100%;
+        }
+
+        .reveal blockquote {
+            display: block;
+            position: relative;
+            margin: var(--r-block-margin) auto !important;
+            padding: 5px;
+            font-style: italic;
+            background: rgba(255, 170, 73, 0.2);
+            box-shadow: 0 0 2px rgba(0,0,0,.2);
+            text-align: left !important;
+        }
+
+        .col1 {
+            width: 90%;
+            margin: 0 auto;
+        }
+
+        .col2 {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start;
+            width: 90%;
+            margin: 0 auto;
+            align-items: flex-start;
+        }
+
+        /* Callout Styles */
+        :root {
+            --callout-note: #448aff;
+            --callout-abstract: #00b0ff;
+            --callout-info: #00b8d4;
+            --callout-todo: #00bfa5;
+            --callout-tip: #00c853;
+            --callout-success: #64dd17;
+            --callout-question: #ffab00;
+            --callout-warning: #ff9100;
+            --callout-failure: #ff5252;
+            --callout-danger: #ff1744;
+            --callout-bug: #f50057;
+            --callout-example: #7c4dff;
+            --callout-quote: #9e9e9e;
+            --code-bg: #f8f8f8;
+            --border: #ddd;
+        }
+
+        .reveal .callout {
+            margin: 1rem auto !important;
+            border: 1px solid var(--border);
+            border-left: 6px solid var(--callout-note);
+            border-radius: 4px;
+            overflow: hidden;
+            text-align: left !important;
+            font-size: 0.8em;
+            width: 75% !important;
+            max-width: 100% !important;
+        }
+
+        .reveal .callout-title {
+            padding: 0.5rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            color: var(--callout-note);
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .reveal .callout-icon {
+            display: flex;
+            align-items: center;
+        }
+
+        .reveal .callout-icon svg {
+            width: 1.2em;
+            height: 1.2em;
+        }
+
+        .reveal .callout-content {
+            padding: 0.5rem 1rem;
+        }
+
+        .reveal .callout-content p {
+            margin-top: 0.5rem !important;
+        }
+
+        .reveal .callout-content p:first-child {
+            margin-top: 0 !important;
+        }
+
+        .reveal h1 { text-transform: none !important; }
+
+        .reveal .callout-abstract { border-left-color: var(--callout-abstract); }
+        .reveal .callout-abstract .callout-title { color: var(--callout-abstract); }
+        .reveal .callout-info { border-left-color: var(--callout-info); }
+        .reveal .callout-info .callout-title { color: var(--callout-info); }
+        .reveal .callout-todo { border-left-color: var(--callout-todo); }
+        .reveal .callout-todo .callout-title { color: var(--callout-todo); }
+        .reveal .callout-tip { border-left-color: var(--callout-tip); }
+        .reveal .callout-tip .callout-title { color: var(--callout-tip); }
+        .reveal .callout-success { border-left-color: var(--callout-success); }
+        .reveal .callout-success .callout-title { color: var(--callout-success); }
+        .reveal .callout-question { border-left-color: var(--callout-question); }
+        .reveal .callout-question .callout-title { color: var(--callout-question) ; }
+        .reveal .callout-warning { border-left-color: var(--callout-warning); }
+        .reveal .callout-warning .callout-title { color: var(--callout-warning); }
+        .reveal .callout-failure { border-left-color: var(--callout-failure); }
+        .reveal .callout-failure .callout-title { color: var(--callout-failure); }
+        .reveal .callout-danger { border-left-color: var(--callout-danger); }
+        .reveal .callout-danger .callout-title { color: var(--callout-danger); }
+        .reveal .callout-bug { border-left-color: var(--callout-bug); }
+        .reveal .callout-bug .callout-title { color: var(--callout-bug); }
+        .reveal .callout-example { border-left-color: var(--callout-example); }
+        .reveal .callout-example .callout-title { color: var(--callout-example); }
+        .reveal .callout-quote { border-left-color: var(--callout-quote); }
+        .reveal .callout-quote .callout-title { color: var(--callout-quote); }
+        .red-note { color: var(--callout-failure); }
+
+        .reveal .slide-number {
+            font-size: 0.8em !important;
+            padding: 5px 10px !important;
+            background: rgba(0,0,0,0.1) !important;
+            border-radius: 4px;
+            color: #000000b1 !important;
+        }
+
+        /* Print styles */
+        @media print {
+            .reveal .slides section {
+                display: block !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                position: relative !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+                page-break-after: always !important;
+                overflow: hidden !important;
+            }
+
+            .reveal .slides {
+                transform: none !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+            }
+            
+            .reveal {
+                overflow: visible !important;
+            }
+        }
+    </style>
+</body>
+
+</html>

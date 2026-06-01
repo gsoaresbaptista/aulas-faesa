@@ -1,0 +1,1186 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toposia - Sistemas Operacionais</title>
+    <link rel="icon" href="/aulas-faesa/img/dark-favicon.svg" media="(prefers-color-scheme: light)">
+    <link rel="icon" href="/aulas-faesa/img/light-favicon.svg" media="(prefers-color-scheme: dark)">
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/fonts.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/bundles/katex-base-prism-one-light-b0347952c973.bundle.min.css">
+    
+    
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css" data-no-bundle>
+    <script src="/aulas-faesa/js/bundles/lucide-katex-auto-render-4b36e8bd8642.bundle.min.js"></script>
+</head>
+
+<body>
+    <script>
+        // Restore sidebar state instantly (before first paint) to avoid transition flash
+        (function() {
+            if (localStorage.getItem('cf_sidebar_hidden') === 'true') {
+                document.body.classList.add('sidebar-hidden', 'no-transition');
+            }
+            requestAnimationFrame(function() {
+                requestAnimationFrame(function() {
+                    document.body.classList.remove('no-transition');
+                });
+            });
+        })();
+    </script>
+    <div class="page-wrapper">
+        <nav class="sidebar">
+            <div class="sidebar-content">
+                <header class="sidebar-title-section">
+                    <a href="contents.html" class="course-title-link">
+                        <h1 class="sidebar-course-title">Sistemas Operacionais</h1>
+                    </a>
+                    <div class="sidebar-ornament">❧</div>
+                </header>
+
+                
+                <section class="sidebar-toc-section">
+                    <h2 class="toc-header">Tabela de Conteúdos</h2>
+                    <ol class="toc-list">
+                        
+                        <li class="toc-item level-2">
+                            <a href="#introdução">10.1. Introdução</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#arquivos-como-abstração-persistente">10.2. Arquivos como abstração persistente</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#nomes-extensões-e-tipos">10.2.1. Nomes, extensões e tipos</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#estrutura-interna-dos-arquivos">10.2.2. Estrutura interna dos arquivos</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#acesso-sequencial-e-acesso-aleatório">10.2.3. Acesso sequencial e acesso aleatório</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#atributos-e-operações">10.2.4. Atributos e operações</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#diretórios-transformam-nomes-em-localização">10.3. Diretórios transformam nomes em localização</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#diretórios-hierárquicos">10.3.1. Diretórios hierárquicos</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#operações-com-diretórios">10.3.2. Operações com diretórios</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#links-rígidos-e-simbólicos">10.3.3. Links rígidos e simbólicos</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#como-arquivos-são-implementados-no-disco">10.4. Como arquivos são implementados no disco</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#esquema-geral-de-uma-partição">10.4.1. Esquema geral de uma partição</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#alocação-contígua">10.4.2. Alocação contígua</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#lista-encadeada-e-fat">10.4.3. Lista encadeada e FAT</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#i-nodes">10.4.4. I-nodes</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#implementando-diretórios">10.4.5. Implementando diretórios</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#gerenciamento-de-espaço-em-disco">10.5. Gerenciamento de espaço em disco</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#tamanho-de-bloco">10.5.1. Tamanho de bloco</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#lista-livre-e-mapa-de-bits">10.5.2. Lista livre e mapa de bits</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#confiabilidade-e-journaling">10.6. Confiabilidade e journaling</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#verificação-de-consistência">10.6.1. Verificação de consistência</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#o-papel-do-journaling">10.6.2. O papel do journaling</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#desempenho-do-sistema-de-arquivos">10.7. Desempenho do sistema de arquivos</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#cache-de-blocos">10.7.1. Cache de blocos</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#leitura-antecipada">10.7.2. Leitura antecipada</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#localidade-e-desfragmentação">10.7.3. Localidade e desfragmentação</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#entrada-e-saída-o-caminho-até-o-hardware">10.8. Entrada e saída: o caminho até o hardware</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#dispositivos-de-bloco-e-de-caractere">10.8.1. Dispositivos de bloco e de caractere</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#controladores-de-dispositivos">10.8.2. Controladores de dispositivos</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#es-mapeada-em-memória">10.8.3. E/S mapeada em memória</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#es-programada-interrupções-e-dma">10.8.4. E/S programada, interrupções e DMA</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#camadas-do-software-de-es">10.9. Camadas do software de E/S</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#drivers">10.9.1. Drivers</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#software-independente-de-dispositivo">10.9.2. Software independente de dispositivo</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#buffers-e-spooling">10.9.3. Buffers e spooling</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#questões">10.10. Questões</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#próximos-passos">10.11. Próximos passos</a>
+                        </li>
+                        
+                    </ol>
+                </section>
+                
+
+                <nav class="sidebar-nav-section">
+                    
+                    <a href="9-virtual-memory.html" class="sidebar-nav-link prev"><i data-lucide="chevron-left" class="nav-icon"></i> Memória Virtual</a>
+                    
+                    
+                    <a href="javascript:void(0)" onclick="handleBackNavigation()"
+                        class="sidebar-nav-link back"><i data-lucide="arrow-left" class="nav-icon"></i> Voltar</a>
+                </nav>
+
+            </div>
+        </nav>
+
+        <button class="mobile-menu-toggle" aria-label="Menu">
+            <i data-lucide="menu"></i>
+        </button>
+
+        <button class="sidebar-toggle" onclick="CourseForgeNav.toggleSidebar()" aria-label="Alternar Barra Lateral">
+            <i data-lucide="chevron-left" class="toggle-icon" id="sidebar-toggle-icon"></i>
+        </button>
+
+        <div class="mobile-menu-overlay"></div>
+
+        <main class="main-content">
+            <article class="article">
+                <header class="article-header">
+                    <span class="chapter-number">10</span>
+                    <h1 class="article-title">
+                        <span class="title-ornament left">❧</span>
+                        <span class="title-text">Sistemas de Arquivos e Entrada/Saída</span>
+                        <span class="title-ornament right">❧</span>
+                    </h1>
+                    
+                    <p class="article-date">01/06/2026</p>
+                    
+                    
+                    <nav class="breadcrumb" aria-label="Breadcrumb">
+                        
+                        
+                        
+                        <a href="contents.html" class="breadcrumb-link">Sistemas Operacionais</a>
+                        
+                        <span class="breadcrumb-separator"><i data-lucide="chevron-right" class="breadcrumb-icon"></i></span>
+                        
+                        
+                        
+                        
+                        <a href="contents.html#part-III" class="breadcrumb-link">III - Memória e Arquivos</a>
+                        
+                        <span class="breadcrumb-separator"><i data-lucide="chevron-right" class="breadcrumb-icon"></i></span>
+                        
+                        
+                        
+                        <span class="breadcrumb-current">Sistemas de Arquivos e Entrada/Saída</span>
+                        
+                        
+                    </nav>
+                    
+                </header>
+                <div class="article-body">
+                    <h2 id="introdução"><span class="heading-text">Introdução</span><span class="heading-arabic">10.1</span></h2>
+<p>Hoje veremos como o sistema operacional transforma blocos crus de armazenamento e dispositivos lentos em uma interface que parece simples: arquivos, diretórios, <code>read</code>, <code>write</code>, <code>open</code>, <code>close</code> e operações de entrada e saída.</p>
+<p>Na aula anterior, vimos que a memória virtual cria uma ilusão poderosa. Cada processo acredita ter um espaço grande, contínuo e privado, mesmo que a RAM real seja limitada e compartilhada. Agora aparece um problema diferente. A memória do processo desaparece quando o processo termina, mas muitos dados precisam sobreviver por dias, meses ou anos.</p>
+<p>O problema central desta aula é este: <strong>como armazenar informações de forma persistente, encontrável, compartilhável e eficiente, mesmo quando o hardware real só entende blocos, controladores, interrupções e erros?</strong></p>
+<p>Esta aula usa como base o Tanenbaum, capítulo 4, seções 4.1 a 4.4, e capítulo 5, seções 5.1 a 5.3. A progressão será: primeiro veremos a interface de arquivos e diretórios, depois como essa interface é implementada no disco, em seguida como o sistema tenta manter consistência e desempenho, e por fim como tudo isso depende do subsistema de E/S.</p>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="760" viewBox="0.00 0.00 1678.00 64.00" class="svg-graph graphviz-img"><g id="svg-graphviz-0eb998d5d87e-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 60)"><title>FileIoOverview</title><polygon fill="white" stroke="transparent" points="-4,4 -4,-60 1674,-60 1674,4 -4,4" /><g id="svg-graphviz-0eb998d5d87e-node1" class="node"><title>App</title><path fill="#ffe3c2" stroke="black" d="M133,-56C133,-56 12,-56 12,-56 6,-56 0,-50 0,-44 0,-44 0,-12 0,-12 0,-6 6,0 12,0 12,0 133,0 133,0 139,0 145,-6 145,-12 145,-12 145,-44 145,-44 145,-50 139,-56 133,-56" /><text text-anchor="middle" x="72.5" y="-31.8" font-family="Helvetica,sans-Serif" font-size="14.00">Programa</text><text text-anchor="middle" x="72.5" y="-16.8" font-family="Helvetica,sans-Serif" font-size="14.00">open/read/write</text></g><g id="svg-graphviz-0eb998d5d87e-node2" class="node"><title>FS</title><path fill="#d9ecff" stroke="black" d="M466,-56C466,-56 279,-56 279,-56 273,-56 267,-50 267,-44 267,-44 267,-12 267,-12 267,-6 273,0 279,0 279,0 466,0 466,0 472,0 478,-6 478,-12 478,-12 478,-44 478,-44 478,-50 472,-56 466,-56" /><text text-anchor="middle" x="372.5" y="-31.8" font-family="Helvetica,sans-Serif" font-size="14.00">Sistema de arquivos</text><text text-anchor="middle" x="372.5" y="-16.8" font-family="Helvetica,sans-Serif" font-size="14.00">nomes, diretórios, blocos</text></g><g id="svg-graphviz-0eb998d5d87e-edge1" class="edge"><title>App-&gt;FS</title><path fill="none" stroke="black" d="M145.26,-28C178.55,-28 218.96,-28 256.36,-28" /><polygon fill="black" stroke="black" points="256.82,-31.5 266.82,-28 256.82,-24.5 256.82,-31.5" /><text text-anchor="middle" x="206" y="-31.8" font-family="Times,serif" font-size="14.00">interface</text></g><g id="svg-graphviz-0eb998d5d87e-node3" class="node"><title>Cache</title><path fill="#e9f7df" stroke="black" d="M891,-56C891,-56 686,-56 686,-56 680,-56 674,-50 674,-44 674,-44 674,-12 674,-12 674,-6 680,0 686,0 686,0 891,0 891,0 897,0 903,-6 903,-12 903,-12 903,-44 903,-44 903,-50 897,-56 891,-56" /><text text-anchor="middle" x="788.5" y="-31.8" font-family="Helvetica,sans-Serif" font-size="14.00">Cache e journal</text><text text-anchor="middle" x="788.5" y="-16.8" font-family="Helvetica,sans-Serif" font-size="14.00">desempenho e recuperação</text></g><g id="svg-graphviz-0eb998d5d87e-edge2" class="edge"><title>FS-&gt;Cache</title><path fill="none" stroke="black" d="M478.24,-28C534.62,-28 604.53,-28 663.6,-28" /><polygon fill="black" stroke="black" points="663.74,-31.5 673.74,-28 663.74,-24.5 663.74,-31.5" /><text text-anchor="middle" x="576" y="-31.8" font-family="Times,serif" font-size="14.00">metadados e dados</text></g><g id="svg-graphviz-0eb998d5d87e-node4" class="node"><title>IO</title><path fill="#fff2cc" stroke="black" d="M1305,-56C1305,-56 1106,-56 1106,-56 1100,-56 1094,-50 1094,-44 1094,-44 1094,-12 1094,-12 1094,-6 1100,0 1106,0 1106,0 1305,0 1305,0 1311,0 1317,-6 1317,-12 1317,-12 1317,-44 1317,-44 1317,-50 1311,-56 1305,-56" /><text text-anchor="middle" x="1205.5" y="-31.8" font-family="Helvetica,sans-Serif" font-size="14.00">Camadas de E/S</text><text text-anchor="middle" x="1205.5" y="-16.8" font-family="Helvetica,sans-Serif" font-size="14.00">drivers, interrupções, DMA</text></g><g id="svg-graphviz-0eb998d5d87e-edge3" class="edge"><title>Cache-&gt;IO</title><path fill="none" stroke="black" d="M903.17,-28C959.2,-28 1026.79,-28 1083.75,-28" /><polygon fill="black" stroke="black" points="1083.89,-31.5 1093.89,-28 1083.89,-24.5 1083.89,-31.5" /><text text-anchor="middle" x="998.5" y="-31.8" font-family="Times,serif" font-size="14.00">requisições de E/S</text></g><g id="svg-graphviz-0eb998d5d87e-node5" class="node"><title>Disk</title><path fill="#f5f5f5" stroke="black" d="M1658,-56C1658,-56 1553,-56 1553,-56 1547,-56 1541,-50 1541,-44 1541,-44 1541,-12 1541,-12 1541,-6 1547,0 1553,0 1553,0 1658,0 1658,0 1664,0 1670,-6 1670,-12 1670,-12 1670,-44 1670,-44 1670,-50 1664,-56 1658,-56" /><text text-anchor="middle" x="1605.5" y="-31.8" font-family="Helvetica,sans-Serif" font-size="14.00">Dispositivo</text><text text-anchor="middle" x="1605.5" y="-16.8" font-family="Helvetica,sans-Serif" font-size="14.00">blocos físicos</text></g><g id="svg-graphviz-0eb998d5d87e-edge4" class="edge"><title>IO-&gt;Disk</title><path fill="none" stroke="black" d="M1317.1,-28C1385.27,-28 1470.81,-28 1530.78,-28" /><polygon fill="black" stroke="black" points="1530.92,-31.5 1540.92,-28 1530.92,-24.5 1530.92,-31.5" /><text text-anchor="middle" x="1429" y="-31.8" font-family="Times,serif" font-size="14.00">comandos ao hardware</text></g></g></svg></div></div>
+
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Quando você salva um arquivo chamado <code>relatorio.txt</code>, o que exatamente precisa ser lembrado pelo sistema? O nome do arquivo basta, ou o sistema também precisa registrar onde estão os bytes, quem pode acessá-los, quando foram alterados e quais blocos ainda estão livres?</p>
+  </div>
+</div>
+<h2 id="arquivos-como-abstração-persistente"><span class="heading-text">Arquivos como abstração persistente</span><span class="heading-arabic">10.2</span></h2>
+<p>Um arquivo é uma unidade lógica de informação criada por processos e gerenciada pelo sistema operacional. Ele permite guardar dados em um dispositivo de armazenamento sem obrigar o programa a lidar diretamente com cilindros, setores, blocos físicos, controladores ou temporização de hardware.</p>
+<p>Essa abstração atende a três necessidades que a memória principal não resolve sozinha.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Necessidade</th>
+  <th style="text-align:left">Por que importa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Armazenar muita informação</td>
+  <td style="text-align:left">O espaço de endereçamento de um processo não é o lugar certo para guardar todos os dados de uma aplicação.</td>
+</tr>
+<tr>
+  <td style="text-align:left">Sobreviver ao processo</td>
+  <td style="text-align:left">O arquivo continua existindo depois que o processo que o criou termina.</td>
+</tr>
+<tr>
+  <td style="text-align:left">Permitir compartilhamento</td>
+  <td style="text-align:left">Vários processos podem acessar a mesma informação usando uma interface comum.</td>
+</tr>
+</tbody>
+</table>
+<p>Do ponto de vista de quem programa, o arquivo parece um objeto com nome, conteúdo e operações. Do ponto de vista do sistema operacional, ele também tem metadados, blocos associados, permissões e relação com algum diretório.</p>
+<h3 id="nomes-extensões-e-tipos"><span class="heading-text">Nomes, extensões e tipos</span><span class="heading-arabic">10.2.1</span></h3>
+<p>Quando um processo cria um arquivo, ele dá um nome a esse arquivo. Depois que o processo termina, o arquivo pode continuar existindo e ser acessado por outros processos usando esse nome.</p>
+<p>As regras exatas variam entre sistemas. Alguns distinguem maiúsculas e minúsculas, como UNIX e Linux. Outros historicamente não distinguiam, como MS-DOS. Muitos sistemas usam extensões, como <code>.c</code>, <code>.txt</code>, <code>.jpg</code> e <code>.pdf</code>, para indicar uma convenção sobre o conteúdo do arquivo.</p>
+<p>Há uma diferença importante aqui. Em sistemas como UNIX, a extensão costuma ser convenção. Um arquivo chamado <code>dados.txt</code> não é magicamente obrigado pelo kernel a conter texto. Já em ambientes gráficos, como Windows, a extensão frequentemente é usada para escolher qual programa será aberto quando o usuário clica no arquivo.</p>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Extensão não é garantia de conteúdo<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Um nome como <code>foto.jpg</code> sugere uma imagem JPEG, mas o sistema de arquivos pode não verificar isso. O conteúdo real é determinado pelos bytes armazenados e pelo programa que tenta interpretá-los.</p>
+  </div>
+</div>
+<h3 id="estrutura-interna-dos-arquivos"><span class="heading-text">Estrutura interna dos arquivos</span><span class="heading-arabic">10.2.2</span></h3>
+<p>Tanenbaum apresenta três formas clássicas de enxergar a estrutura de um arquivo.</p>
+<img src="static/fig_4_2_estruturas_arquivos.png" width="95%">
+
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Estrutura</th>
+  <th style="text-align:left">Ideia</th>
+  <th style="text-align:left">Onde aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Sequência de bytes</td>
+  <td style="text-align:left">O sistema não interpreta o conteúdo. Ele apenas armazena bytes.</td>
+  <td style="text-align:left">UNIX, Linux, Windows modernos.</td>
+</tr>
+<tr>
+  <td style="text-align:left">Sequência de registros</td>
+  <td style="text-align:left">O arquivo é lido e escrito em unidades de registro.</td>
+  <td style="text-align:left">Sistemas antigos de grande porte.</td>
+</tr>
+<tr>
+  <td style="text-align:left">Árvore de registros</td>
+  <td style="text-align:left">Registros são buscados por chave, não apenas por posição.</td>
+  <td style="text-align:left">Sistemas voltados a processamento comercial.</td>
+</tr>
+</tbody>
+</table>
+<p>A opção mais flexível é a sequência de bytes. Nesse modelo, o sistema operacional enxerga o arquivo como uma sequência linear de bytes numerados: byte 0, byte 1, byte 2, e assim por diante. Ele não tenta entender se esses bytes representam texto, imagem, banco de dados, vídeo ou código executável. Essa decisão fica para os programas de usuário.</p>
+<p>Na sequência de registros, o sistema operacional já reconhece uma unidade lógica maior que o byte: o registro. Em vez de apenas ler &quot;os próximos 200 bytes&quot;, o programa pode ler &quot;o próximo registro&quot;. Isso fazia sentido em sistemas nos quais arquivos eram compostos por entradas de tamanho fixo ou por registros com estrutura conhecida, como cadastros comerciais. A diferença para a sequência de bytes é que, nesse modelo, o sistema sabe que existem fronteiras entre registros; no modelo de bytes, essas fronteiras só existem se o programa decidir interpretá-las.</p>
+<p>Na árvore de registros, a organização vai além da ordem linear. Cada registro possui uma chave, e o arquivo é estruturado para permitir busca por essa chave. Em vez de percorrer registros em sequência até encontrar um cliente, por exemplo, o sistema pode navegar por uma árvore e localizar diretamente o registro desejado. A diferença para a sequência de registros é que a sequência preserva uma ordem simples de leitura, enquanto a árvore adiciona uma estrutura de busca dentro do próprio arquivo.</p>
+<p>Essa flexibilidade da sequência de bytes é uma vantagem porque permite usos inesperados. O sistema não precisa ser alterado toda vez que surge um novo formato de arquivo. A desvantagem é que o sistema também ajuda menos. Se um programa interpreta bytes errados como se fossem uma imagem ou um executável, o erro precisa ser tratado em outro nível.</p>
+<h3 id="acesso-sequencial-e-acesso-aleatório"><span class="heading-text">Acesso sequencial e acesso aleatório</span><span class="heading-arabic">10.2.3</span></h3>
+<p>Os primeiros sistemas operacionais ofereciam principalmente acesso sequencial. O processo lia o arquivo em ordem, do início para o fim. Essa ideia combinava bem com fitas magnéticas, nas quais avançar até uma posição distante era naturalmente caro.</p>
+<p>Com discos, passou a ser possível acessar partes diferentes do arquivo fora de ordem. Esse é o acesso aleatório. Ele é essencial para bancos de dados, sistemas de reservas, índices e qualquer aplicação que precise saltar diretamente para um registro específico.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Tipo de acesso</th>
+  <th style="text-align:left">Como funciona</th>
+  <th style="text-align:left">Exemplo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Sequencial</td>
+  <td style="text-align:left">Lê ou escreve na ordem atual do arquivo.</td>
+  <td style="text-align:left">Processar um arquivo de log linha por linha.</td>
+</tr>
+<tr>
+  <td style="text-align:left">Aleatório</td>
+  <td style="text-align:left">Move a posição atual e lê ou escreve dali.</td>
+  <td style="text-align:left">Buscar o registro de um cliente em uma base de dados.</td>
+</tr>
+</tbody>
+</table>
+<p>Em sistemas como UNIX e Windows, o acesso aleatório costuma aparecer por meio de uma operação como <code>seek</code>, que altera a posição atual do arquivo. Depois disso, as próximas leituras ou escritas partem da nova posição.</p>
+<h3 id="atributos-e-operações"><span class="heading-text">Atributos e operações</span><span class="heading-arabic">10.2.4</span></h3>
+<p>Além do conteúdo, arquivos têm atributos. Esses atributos são metadados, ou seja, informações sobre o arquivo.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Atributo</th>
+  <th style="text-align:left">O que representa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Proteção</td>
+  <td style="text-align:left">Quem pode ler, escrever ou executar.</td>
+</tr>
+<tr>
+  <td style="text-align:left">Proprietário</td>
+  <td style="text-align:left">Usuário responsável pelo arquivo.</td>
+</tr>
+<tr>
+  <td style="text-align:left">Tamanho</td>
+  <td style="text-align:left">Quantidade atual de bytes.</td>
+</tr>
+<tr>
+  <td style="text-align:left">Tempos</td>
+  <td style="text-align:left">Criação, último acesso e última modificação.</td>
+</tr>
+<tr>
+  <td style="text-align:left">Flags</td>
+  <td style="text-align:left">Somente leitura, oculto, temporário, sistema e outros.</td>
+</tr>
+</tbody>
+</table>
+<p>As operações mais comuns são <code>create</code>, <code>delete</code>, <code>open</code>, <code>close</code>, <code>read</code>, <code>write</code>, <code>append</code>, <code>seek</code>, <code>get attributes</code>, <code>set attributes</code> e <code>rename</code>.</p>
+<p><code>open</code> merece atenção. Abrir um arquivo não significa necessariamente ler seus dados naquele instante. Significa preparar o sistema para acessos futuros. O sistema localiza o arquivo, carrega metadados relevantes, cria uma entrada interna e devolve ao processo um descritor de arquivo.</p>
+<div class="example">
+  <div class="example-title">Exemplo 1</div>
+  <p>Imagine um programa que copia <code>entrada.txt</code> para <code>saida.txt</code>.</p>
+<p>O comportamento conceitual é:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">abrir entrada.txt para leitura
+criar saida.txt para escrita
+enquanto houver bytes na entrada:
+    ler um bloco da entrada
+    escrever esse bloco na saída
+fechar os dois arquivos
+</code></pre>
+<p>O ponto importante é que o programa não precisa saber onde estão os blocos físicos de <code>entrada.txt</code>. Ele pede bytes ao sistema operacional. O sistema de arquivos converte essa operação em leituras de blocos, uso de cache, chamadas ao driver e operações de E/S.</p>
+</div>
+<h2 id="diretórios-transformam-nomes-em-localização"><span class="heading-text">Diretórios transformam nomes em localização</span><span class="heading-arabic">10.3</span></h2>
+<p>Um sistema com milhares de arquivos não pode deixar tudo em uma única lista plana. Diretórios organizam nomes e permitem agrupar arquivos relacionados.</p>
+<p>Tecnicamente, um diretório é uma estrutura gerenciada pelo sistema de arquivos que associa nomes a informações necessárias para localizar o arquivo. Dependendo do sistema, essa informação pode ser o primeiro bloco do arquivo, um conjunto de atributos ou o número de um i-node.</p>
+<h3 id="diretórios-hierárquicos"><span class="heading-text">Diretórios hierárquicos</span><span class="heading-arabic">10.3.1</span></h3>
+<p>Sistemas modernos usam diretórios hierárquicos, formando uma árvore. Isso permite que cada usuário, aplicação ou projeto tenha sua própria organização interna.</p>
+<img src="static/fig_4_8_arvore_diretorios_unix.png" width="85%">
+
+<p>Em uma árvore de diretórios, um arquivo pode ser identificado por um caminho absoluto ou relativo.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Tipo de caminho</th>
+  <th style="text-align:left">Ideia</th>
+  <th style="text-align:left">Exemplo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Absoluto</td>
+  <td style="text-align:left">Começa na raiz do sistema de arquivos.</td>
+  <td style="text-align:left"><code>/usr/ast/caixapostal</code></td>
+</tr>
+<tr>
+  <td style="text-align:left">Relativo</td>
+  <td style="text-align:left">Começa no diretório de trabalho atual.</td>
+  <td style="text-align:left"><code>caixapostal</code></td>
+</tr>
+</tbody>
+</table>
+<p>O diretório de trabalho é o ponto de referência usado por caminhos relativos. Se o diretório atual é <code>/usr/ast</code>, então <code>caixapostal</code> e <code>/usr/ast/caixapostal</code> apontam para o mesmo arquivo.</p>
+<p>Dois nomes especiais aparecem em muitos sistemas.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Nome</th>
+  <th style="text-align:left">Significado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><code>.</code></td>
+  <td style="text-align:left">O diretório atual.</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>..</code></td>
+  <td style="text-align:left">O diretório pai.</td>
+</tr>
+</tbody>
+</table>
+<p>Assim, se o diretório atual é <code>/usr/ast</code>, o caminho <code>../lib/dictionary</code> sobe para <code>/usr</code> e depois desce para <code>/usr/lib/dictionary</code>.</p>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Se dois processos têm diretórios de trabalho diferentes e ambos abrem <code>config.txt</code>, eles necessariamente abrem o mesmo arquivo? O que teria de ser igual para isso acontecer?</p>
+  </div>
+</div>
+<h3 id="operações-com-diretórios"><span class="heading-text">Operações com diretórios</span><span class="heading-arabic">10.3.2</span></h3>
+<p>As operações com diretórios lembram operações com arquivos, mas o objetivo é gerenciar nomes e organização.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Operação</th>
+  <th style="text-align:left">Função</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><code>create</code></td>
+  <td style="text-align:left">Cria um diretório vazio.</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>delete</code></td>
+  <td style="text-align:left">Remove um diretório, geralmente apenas se estiver vazio.</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>opendir</code></td>
+  <td style="text-align:left">Abre um diretório para leitura.</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>readdir</code></td>
+  <td style="text-align:left">Retorna a próxima entrada do diretório.</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>closedir</code></td>
+  <td style="text-align:left">Fecha o diretório.</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>rename</code></td>
+  <td style="text-align:left">Renomeia uma entrada.</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>link</code></td>
+  <td style="text-align:left">Faz um arquivo aparecer por outro nome.</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>unlink</code></td>
+  <td style="text-align:left">Remove uma entrada de diretório.</td>
+</tr>
+</tbody>
+</table>
+<p>Em UNIX, remover um arquivo é conceitualmente remover uma ligação entre um nome de diretório e o arquivo. Por isso a operação se chama <code>unlink</code>.</p>
+<h3 id="links-rígidos-e-simbólicos"><span class="heading-text">Links rígidos e simbólicos</span><span class="heading-arabic">10.3.3</span></h3>
+<p>Quando um arquivo precisa aparecer em mais de um lugar, o sistema pode usar links.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Tipo</th>
+  <th style="text-align:left">Como funciona</th>
+  <th style="text-align:left">Consequência</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Link rígido</td>
+  <td style="text-align:left">Duas entradas de diretório apontam para a mesma estrutura interna do arquivo.</td>
+  <td style="text-align:left">O arquivo só desaparece quando o último nome é removido.</td>
+</tr>
+<tr>
+  <td style="text-align:left">Link simbólico</td>
+  <td style="text-align:left">Um pequeno arquivo guarda o caminho para outro arquivo.</td>
+  <td style="text-align:left">Pode atravessar sistemas de arquivos, mas pode quebrar se o alvo sumir.</td>
+</tr>
+</tbody>
+</table>
+<p>Links rígidos tornam o sistema de arquivos mais parecido com um grafo acíclico do que com uma árvore pura. Isso aumenta a flexibilidade, mas também exige mais cuidado em contagem de referências, backups e remoção.</p>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Link simbólico quebrado não é arquivo corrompido<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Um link simbólico pode apontar para um caminho que não existe mais. Nesse caso, o link ainda existe, mas a resolução do caminho falha.</p>
+  </div>
+</div>
+<h2 id="como-arquivos-são-implementados-no-disco"><span class="heading-text">Como arquivos são implementados no disco</span><span class="heading-arabic">10.4</span></h2>
+<p>Até agora olhamos o sistema de arquivos pelo lado de quem usa. Agora precisamos olhar pelo lado de quem implementa.</p>
+<p>O disco pode ser visto, de forma simplificada, como uma sequência de blocos. O sistema de arquivos precisa responder perguntas como estas:</p>
+<ol>
+<li>Quais blocos pertencem a cada arquivo?</li>
+<li>Quais blocos estão livres?</li>
+<li>Onde ficam os metadados?</li>
+<li>Como encontrar o diretório-raiz?</li>
+<li>Como recuperar o sistema após uma queda?</li>
+</ol>
+<h3 id="esquema-geral-de-uma-partição"><span class="heading-text">Esquema geral de uma partição</span><span class="heading-arabic">10.4.1</span></h3>
+<p>Tanenbaum mostra um esquema típico com MBR, bloco de inicialização, superbloco, informação de espaço livre, i-nodes, diretório-raiz e dados.</p>
+<img src="static/fig_4_9_esquema_sistema_arquivos.png" width="95%">
+
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Estrutura</th>
+  <th style="text-align:left">Papel</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">MBR</td>
+  <td style="text-align:left">Contém código inicial e tabela de partições do disco.</td>
+</tr>
+<tr>
+  <td style="text-align:left">Bloco de inicialização</td>
+  <td style="text-align:left">Carrega o sistema operacional daquela partição, quando aplicável.</td>
+</tr>
+<tr>
+  <td style="text-align:left">Superbloco</td>
+  <td style="text-align:left">Guarda parâmetros fundamentais do sistema de arquivos.</td>
+</tr>
+<tr>
+  <td style="text-align:left">Gerenciamento de espaço livre</td>
+  <td style="text-align:left">Informa quais blocos ainda podem ser usados.</td>
+</tr>
+<tr>
+  <td style="text-align:left">I-nodes</td>
+  <td style="text-align:left">Guardam metadados e endereços dos blocos dos arquivos.</td>
+</tr>
+<tr>
+  <td style="text-align:left">Diretório-raiz</td>
+  <td style="text-align:left">Ponto inicial da árvore de diretórios.</td>
+</tr>
+<tr>
+  <td style="text-align:left">Arquivos e diretórios</td>
+  <td style="text-align:left">Região principal com dados e estruturas de diretório.</td>
+</tr>
+</tbody>
+</table>
+<p>O superbloco é especialmente importante. Se ele for perdido ou corrompido, o sistema pode perder informações essenciais para interpretar o restante da partição.</p>
+<h3 id="alocação-contígua"><span class="heading-text">Alocação contígua</span><span class="heading-arabic">10.4.2</span></h3>
+<p>Na alocação contígua, cada arquivo ocupa uma sequência contínua de blocos no disco.</p>
+<img src="static/fig_4_10_alocacao_contigua.png" width="95%">
+
+<p>Essa técnica tem duas vantagens claras. Primeiro, é simples. Para localizar o arquivo, basta saber o bloco inicial e o tamanho. Segundo, a leitura sequencial é rápida, porque os blocos estão juntos.</p>
+<p>O problema aparece quando arquivos são removidos e criados ao longo do tempo. Surgem lacunas. Um arquivo novo pode não caber em nenhuma lacuna, mesmo que o espaço livre total seja suficiente. Esse é o problema da fragmentação externa.</p>
+<p>Além disso, a alocação contígua exige saber antecipadamente o tamanho final do arquivo, ou mover o arquivo quando ele cresce. Para arquivos que mudam constantemente, isso é ruim. Para mídias gravadas de uma vez, como CD-ROMs, a ideia volta a fazer sentido.</p>
+<h3 id="lista-encadeada-e-fat"><span class="heading-text">Lista encadeada e FAT</span><span class="heading-arabic">10.4.3</span></h3>
+<p>Outra opção é armazenar o arquivo como uma lista encadeada de blocos. Cada bloco aponta para o próximo. Isso elimina a exigência de blocos contíguos.</p>
+<p>A lista encadeada simples tem um problema grave para acesso aleatório. Para chegar ao bloco $n$, é preciso começar no primeiro bloco e seguir ponteiro por ponteiro.</p>
+<p>A FAT, File Allocation Table, melhora isso colocando os ponteiros em uma tabela global do sistema de arquivos. Essa tabela tem uma entrada para cada bloco do disco. Se o bloco $4$ aponta para o bloco $7$, essa informação fica na entrada $4$ da FAT. Assim, o encadeamento pode ser seguido sem ler cada bloco de dados no disco. O custo é que a tabela cresce com o tamanho do disco e precisa ficar disponível na memória para funcionar bem.</p>
+<h3 id="i-nodes"><span class="heading-text">I-nodes</span><span class="heading-arabic">10.4.4</span></h3>
+<p>Em sistemas baseados em i-nodes, cada arquivo possui sua própria estrutura de metadados. Essa estrutura guarda atributos do arquivo e os endereços dos blocos que pertencem a ele. Ou seja, em vez de uma tabela global dizer qual é o próximo bloco de todos os arquivos do disco, cada arquivo carrega o seu próprio mapa de blocos.</p>
+<img src="static/fig_4_13_inode.png" width="55%">
+
+<p>A vantagem é que o sistema precisa carregar apenas os i-nodes dos arquivos em uso. Se um processo abre três arquivos, o sistema trabalha principalmente com os i-nodes desses três arquivos. Em uma FAT, a estrutura importante é a tabela global do disco, que cresce com o número total de blocos, mesmo que poucos arquivos estejam abertos.</p>
+<p>O i-node pode conter alguns ponteiros diretos para blocos de dados e, quando o arquivo cresce, ponteiros para blocos de ponteiros adicionais. Assim, arquivos pequenos são baratos e arquivos grandes continuam possíveis.</p>
+<div class="example">
+  <div class="example-title">Exemplo 2</div>
+  <p>Considere um arquivo de três blocos armazenado nos blocos físicos $4$, $7$ e $12$.</p>
+<p>Na alocação contígua, esse arquivo não poderia ser representado desse jeito, porque os blocos não estão lado a lado.</p>
+<p>Em uma FAT, a tabela poderia registrar:</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Bloco</th>
+  <th style="text-align:left">Próximo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">$4$</td>
+  <td style="text-align:left">$7$</td>
+</tr>
+<tr>
+  <td style="text-align:left">$7$</td>
+  <td style="text-align:left">$12$</td>
+</tr>
+<tr>
+  <td style="text-align:left">$12$</td>
+  <td style="text-align:left">fim</td>
+</tr>
+</tbody>
+</table>
+<p>Em um i-node, a própria estrutura daquele arquivo poderia guardar a lista de blocos usados por ele:</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Ponteiro do i-node</th>
+  <th style="text-align:left">Bloco apontado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">direto 1</td>
+  <td style="text-align:left">$4$</td>
+</tr>
+<tr>
+  <td style="text-align:left">direto 2</td>
+  <td style="text-align:left">$7$</td>
+</tr>
+<tr>
+  <td style="text-align:left">direto 3</td>
+  <td style="text-align:left">$12$</td>
+</tr>
+</tbody>
+</table>
+<p>O que o exemplo mostra é que FAT e i-node aceitam arquivos espalhados. A diferença está em onde fica a estrutura que permite encontrar os blocos do arquivo. Na FAT, a relação entre blocos fica em uma tabela global indexada pelos blocos do disco. No i-node, os endereços dos blocos ficam na estrutura do próprio arquivo.</p>
+<p>Isso muda o custo de uso. Para seguir um arquivo na FAT, o sistema consulta uma tabela comum a todos os arquivos. Para seguir um arquivo com i-node, o sistema consulta o i-node daquele arquivo. Por isso i-nodes escalam melhor em discos grandes e combinam bem com a ideia de carregar metadados apenas dos arquivos abertos.</p>
+</div>
+<h3 id="implementando-diretórios"><span class="heading-text">Implementando diretórios</span><span class="heading-arabic">10.4.5</span></h3>
+<p>Um diretório precisa mapear nomes para a informação que localiza o arquivo.</p>
+<p>Há duas estratégias comuns.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Estratégia</th>
+  <th style="text-align:left">Como funciona</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Atributos na entrada do diretório</td>
+  <td style="text-align:left">A entrada guarda nome, atributos e endereços de disco.</td>
+</tr>
+<tr>
+  <td style="text-align:left">Entrada aponta para i-node</td>
+  <td style="text-align:left">A entrada guarda nome e número do i-node. Os atributos ficam no i-node.</td>
+</tr>
+</tbody>
+</table>
+<p>Com nomes longos e variáveis, há outro problema. Se cada entrada reservar espaço para 255 caracteres, a maioria desperdiçará espaço. Por isso, sistemas reais podem usar entradas de tamanho variável, armazenar nomes em uma área separada ou usar estruturas de busca para acelerar diretórios grandes.</p>
+<p>Diretórios pequenos podem ser pesquisados linearmente. Diretórios com milhares de arquivos podem usar tabelas de espalhamento ou caches de busca.</p>
+<h2 id="gerenciamento-de-espaço-em-disco"><span class="heading-text">Gerenciamento de espaço em disco</span><span class="heading-arabic">10.5</span></h2>
+<p>Depois de decidir como representar arquivos, o sistema precisa decidir como dividir e reutilizar o espaço livre.</p>
+<h3 id="tamanho-de-bloco"><span class="heading-text">Tamanho de bloco</span><span class="heading-arabic">10.5.1</span></h3>
+<p>Quase todos os sistemas dividem arquivos em blocos de tamanho fixo. O tamanho do bloco é uma decisão de projeto importante.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Bloco pequeno</th>
+  <th style="text-align:left">Bloco grande</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Desperdiça menos espaço no último bloco de arquivos pequenos.</td>
+  <td style="text-align:left">Reduz a quantidade de blocos por arquivo e melhora a leitura sequencial.</td>
+</tr>
+<tr>
+  <td style="text-align:left">Pode exigir mais buscas e mais metadados.</td>
+  <td style="text-align:left">Pode desperdiçar espaço em arquivos pequenos.</td>
+</tr>
+</tbody>
+</table>
+<p>Esse é um conflito clássico entre espaço e tempo. Blocos pequenos economizam espaço, mas podem piorar desempenho. Blocos grandes melhoram transferência, mas aumentam fragmentação interna.</p>
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">O melhor tamanho depende do uso<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Um servidor com muitos vídeos grandes e um sistema com milhões de arquivos pequenos não têm o mesmo perfil. Decisões de sistemas de arquivos dependem da carga de trabalho esperada.</p>
+  </div>
+</div>
+<h3 id="lista-livre-e-mapa-de-bits"><span class="heading-text">Lista livre e mapa de bits</span><span class="heading-arabic">10.5.2</span></h3>
+<p>Para reutilizar espaço, o sistema precisa saber quais blocos estão livres.</p>
+<img src="static/fig_4_22_blocos_livres.png" width="95%">
+
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Técnica</th>
+  <th style="text-align:left">Ideia</th>
+  <th style="text-align:left">Vantagem</th>
+  <th style="text-align:left">Custo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Lista encadeada de blocos livres</td>
+  <td style="text-align:left">Blocos livres são listados em estruturas encadeadas.</td>
+  <td style="text-align:left">Pode usar os próprios blocos livres para guardar a lista.</td>
+  <td style="text-align:left">Pode dificultar encontrar blocos próximos.</td>
+</tr>
+<tr>
+  <td style="text-align:left">Mapa de bits</td>
+  <td style="text-align:left">Um bit indica se cada bloco está livre ou ocupado.</td>
+  <td style="text-align:left">Compacto e facilita achar sequências próximas.</td>
+  <td style="text-align:left">O mapa precisa ser mantido e consultado.</td>
+</tr>
+</tbody>
+</table>
+<p>O mapa de bits costuma ser mais compacto. Um disco com $n$ blocos precisa de $n$ bits. Já uma lista precisa guardar números de blocos, normalmente com vários bytes por entrada.</p>
+<p>Também é possível gerenciar cotas. Em sistemas multiusuário, uma cota limita quantos blocos ou arquivos cada usuário pode consumir. Isso evita que um usuário use todo o disco e prejudique os demais.</p>
+<h2 id="confiabilidade-e-journaling"><span class="heading-text">Confiabilidade e journaling</span><span class="heading-arabic">10.6</span></h2>
+<p>Sistemas de arquivos precisam ser rápidos, mas também precisam sobreviver a falhas. O problema é que muitas operações conceitualmente simples exigem várias escritas reais no disco.</p>
+<p>Remover um arquivo em um sistema parecido com UNIX pode exigir pelo menos três ações:</p>
+<ol>
+<li>Remover a entrada do diretório.</li>
+<li>Liberar o i-node.</li>
+<li>Liberar os blocos de dados.</li>
+</ol>
+<p>Se o sistema cai depois da primeira ação, o arquivo deixa de aparecer no diretório, mas seus blocos podem continuar marcados como ocupados. Se cai depois de liberar blocos, mas antes de remover a entrada do diretório, uma entrada válida pode apontar para blocos que o sistema acredita estarem livres. Isso pode causar corrupção séria.</p>
+<h3 id="verificação-de-consistência"><span class="heading-text">Verificação de consistência</span><span class="heading-arabic">10.6.1</span></h3>
+<p>Ferramentas como <code>fsck</code> examinam redundâncias do sistema de arquivos para encontrar inconsistências.</p>
+<img src="static/fig_4_27_consistencia_sistema_arquivos.png" width="95%">
+
+<p>A verificação pode encontrar blocos desaparecidos, blocos duplicados na lista livre e blocos de dados atribuídos a mais de um arquivo. Alguns problemas desperdiçam espaço. Outros podem destruir dados se não forem tratados.</p>
+<p>Essa estratégia funciona, mas pode ser lenta em discos grandes, porque precisa varrer muitas estruturas.</p>
+<h3 id="o-papel-do-journaling"><span class="heading-text">O papel do journaling</span><span class="heading-arabic">10.6.2</span></h3>
+<p>Um sistema de arquivos com journaling registra no diário o que pretende fazer antes de modificar as estruturas principais. Se o sistema cair no meio da operação, ao reiniciar ele consulta o diário e completa ou desfaz a operação de forma controlada.</p>
+<div class="example">
+  <div class="example-title">Exemplo 3</div>
+  <p>Suponha que o sistema vai remover <code>temp.log</code>.</p>
+<p>Antes de alterar o diretório, o i-node e os blocos livres, ele grava no journal uma entrada dizendo:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">transação: remover temp.log
+ação 1: remover entrada do diretório
+ação 2: liberar i-node k
+ação 3: marcar blocos b1, b2, b3 como livres
+</code></pre>
+<p>Depois que essa entrada está segura no disco, o sistema executa as ações reais.</p>
+<p>Se houver queda antes de terminar, a recuperação lê o journal. Se a transação estava pendente, o sistema sabe quais ações precisam ser completadas ou verificadas.</p>
+<p>O ganho é que a recuperação não precisa adivinhar qual operação estava em andamento.</p>
+</div>
+<p>Para que essa ideia funcione bem, as operações registradas precisam ser idempotentes. Uma operação idempotente pode ser repetida sem mudar o resultado além da primeira execução. Marcar o bloco $n$ como livre é idempotente se repetir essa marcação não adiciona o mesmo bloco duas vezes a uma lista.</p>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Journaling não é backup<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Journaling ajuda a recuperar consistência após queda ou desligamento inesperado. Ele não protege contra apagar um arquivo por engano, sobrescrever dados importantes ou perder fisicamente o disco.</p>
+  </div>
+</div>
+<h2 id="desempenho-do-sistema-de-arquivos"><span class="heading-text">Desempenho do sistema de arquivos</span><span class="heading-arabic">10.7</span></h2>
+<p>Disco é muito mais lento que memória. Mesmo quando a taxa de transferência parece alta, há latência de busca, rotação, fila e controlador. Por isso sistemas de arquivos usam várias otimizações.</p>
+<h3 id="cache-de-blocos"><span class="heading-text">Cache de blocos</span><span class="heading-arabic">10.7.1</span></h3>
+<p>A cache de blocos mantém em RAM blocos que logicamente pertencem ao disco.</p>
+<img src="static/fig_4_28_cache_buffer.png" width="95%">
+
+<p>Quando um processo lê um bloco, o sistema verifica se ele já está na cache. Se estiver, a leitura é atendida sem acesso ao disco. Se não estiver, o bloco é lido do disco e guardado para acessos futuros.</p>
+<p>Algoritmos como LRU podem ser usados para decidir quais blocos remover da cache, mas sistemas de arquivos têm uma preocupação extra. Blocos de metadados, como i-nodes, diretórios e mapas de espaço livre, são críticos para consistência. Se ficam sujos na cache e o sistema cai antes de gravá-los, o sistema de arquivos pode ficar inconsistente.</p>
+<p>Por isso, a política de cache não é apenas desempenho. Ela também precisa considerar risco.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Estratégia</th>
+  <th style="text-align:left">Ideia</th>
+  <th style="text-align:left">Consequência</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Escrita adiada</td>
+  <td style="text-align:left">Junta alterações e grava depois.</td>
+  <td style="text-align:left">Melhora desempenho, mas aumenta risco de perda recente.</td>
+</tr>
+<tr>
+  <td style="text-align:left">Escrita direta</td>
+  <td style="text-align:left">Grava blocos modificados imediatamente.</td>
+  <td style="text-align:left">Aumenta segurança, mas pode gerar muito mais E/S.</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>sync</code> periódico</td>
+  <td style="text-align:left">Força blocos sujos para o disco em intervalos.</td>
+  <td style="text-align:left">Limita a janela de perda.</td>
+</tr>
+<tr>
+  <td style="text-align:left">Journaling</td>
+  <td style="text-align:left">Registra transações antes de aplicar mudanças.</td>
+  <td style="text-align:left">Recupera consistência com mais rapidez.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="leitura-antecipada"><span class="heading-text">Leitura antecipada</span><span class="heading-arabic">10.7.2</span></h3>
+<p>Se o sistema percebe que um arquivo está sendo lido sequencialmente, pode carregar o próximo bloco antes que ele seja pedido. Essa técnica é chamada de leitura antecipada.</p>
+<p>Ela ajuda quando o padrão é previsível, como ler um vídeo ou percorrer um arquivo grande. Ela atrapalha quando o acesso é aleatório, porque pode ocupar largura de banda e cache com blocos que não serão usados.</p>
+<h3 id="localidade-e-desfragmentação"><span class="heading-text">Localidade e desfragmentação</span><span class="heading-arabic">10.7.3</span></h3>
+<p>Outra otimização é colocar blocos relacionados próximos uns dos outros. Se blocos de um mesmo arquivo ficam próximos, o braço do disco se move menos e a leitura sequencial melhora.</p>
+<p>Com o tempo, arquivos podem ficar fragmentados. A desfragmentação tenta mover blocos para tornar arquivos e espaço livre mais contíguos.</p>
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">SSD muda parte da história<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Em SSDs, não há braço mecânico nem latência rotacional. Por isso a fragmentação tem impacto diferente. Desfragmentar SSDs geralmente não traz ganho relevante e ainda pode gastar ciclos de escrita do dispositivo.</p>
+  </div>
+</div>
+<h2 id="entrada-e-saída-o-caminho-até-o-hardware"><span class="heading-text">Entrada e saída: o caminho até o hardware</span><span class="heading-arabic">10.8</span></h2>
+<p>O sistema de arquivos depende de E/S. Para ler um bloco, ele precisa conversar com camadas mais baixas que sabem lidar com controladores, interrupções, DMA e dispositivos reais.</p>
+<h3 id="dispositivos-de-bloco-e-de-caractere"><span class="heading-text">Dispositivos de bloco e de caractere</span><span class="heading-arabic">10.8.1</span></h3>
+<p>Tanenbaum divide dispositivos de E/S em duas categorias principais.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Tipo</th>
+  <th style="text-align:left">Característica</th>
+  <th style="text-align:left">Exemplos</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Dispositivo de bloco</td>
+  <td style="text-align:left">Armazena dados em blocos endereçáveis independentemente.</td>
+  <td style="text-align:left">Disco, SSD, Blu-ray, pendrive.</td>
+</tr>
+<tr>
+  <td style="text-align:left">Dispositivo de caractere</td>
+  <td style="text-align:left">Produz ou consome fluxo de caracteres ou bytes.</td>
+  <td style="text-align:left">Teclado, impressora, mouse, interface serial.</td>
+</tr>
+</tbody>
+</table>
+<p>Essa classificação não é perfeita. Relógios e telas de toque não se encaixam tão bem. Ainda assim, ela é útil porque o sistema de arquivos normalmente conversa com dispositivos de bloco abstratos.</p>
+<h3 id="controladores-de-dispositivos"><span class="heading-text">Controladores de dispositivos</span><span class="heading-arabic">10.8.2</span></h3>
+<p>Um dispositivo geralmente tem uma parte mecânica ou física e uma parte eletrônica. A parte eletrônica é o controlador. O sistema operacional não conversa diretamente com cada detalhe do hardware físico. Ele escreve e lê registradores do controlador.</p>
+<p>Esses registradores permitem enviar comandos, consultar estado e transferir dados. Por exemplo, o sistema pode perguntar se o dispositivo está pronto, mandar iniciar uma leitura ou verificar se houve erro.</p>
+<h3 id="es-mapeada-em-memória"><span class="heading-text">E/S mapeada em memória</span><span class="heading-arabic">10.8.3</span></h3>
+<p>Há duas formas clássicas de acessar registradores de dispositivos.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Abordagem</th>
+  <th style="text-align:left">Como funciona</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Espaço de E/S separado</td>
+  <td style="text-align:left">Instruções especiais acessam portas de E/S.</td>
+</tr>
+<tr>
+  <td style="text-align:left">E/S mapeada em memória</td>
+  <td style="text-align:left">Registradores do dispositivo aparecem como endereços de memória.</td>
+</tr>
+</tbody>
+</table>
+<p>Na E/S mapeada em memória, um driver pode acessar registradores como se fossem posições especiais de memória. Isso simplifica a programação, mas exige cuidado com cache. Colocar registradores de dispositivo em cache seria perigoso, porque o software poderia ler um valor antigo e nunca perceber que o dispositivo mudou de estado.</p>
+<h3 id="es-programada-interrupções-e-dma"><span class="heading-text">E/S programada, interrupções e DMA</span><span class="heading-arabic">10.8.4</span></h3>
+<p>Há três maneiras principais de executar E/S do ponto de vista do sistema operacional.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Técnica</th>
+  <th style="text-align:left">Quem faz o trabalho</th>
+  <th style="text-align:left">Vantagem</th>
+  <th style="text-align:left">Problema</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">E/S programada</td>
+  <td style="text-align:left">A CPU verifica e transfere dados.</td>
+  <td style="text-align:left">Simples.</td>
+  <td style="text-align:left">Pode desperdiçar CPU em espera ocupada.</td>
+</tr>
+<tr>
+  <td style="text-align:left">E/S por interrupção</td>
+  <td style="text-align:left">O dispositivo interrompe a CPU quando precisa de atenção.</td>
+  <td style="text-align:left">Libera a CPU entre eventos.</td>
+  <td style="text-align:left">Muitas interrupções podem custar caro.</td>
+</tr>
+<tr>
+  <td style="text-align:left">DMA</td>
+  <td style="text-align:left">Controlador de DMA transfere blocos entre dispositivo e memória.</td>
+  <td style="text-align:left">Reduz cópias feitas pela CPU e reduz interrupções.</td>
+  <td style="text-align:left">Exige hardware e coordenação com memória.</td>
+</tr>
+</tbody>
+</table>
+<img src="static/fig_5_4_dma.png" width="95%">
+
+<p>No DMA, a CPU programa o controlador de DMA com endereço, tamanho e direção da transferência. Depois, o controlador move dados entre o dispositivo e a memória. A CPU só precisa ser interrompida quando a transferência termina.</p>
+<div class="example">
+  <div class="example-title">Exemplo 4</div>
+  <p>Imagine imprimir uma sequência de caracteres.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Método</th>
+  <th style="text-align:left">O que acontece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">E/S programada</td>
+  <td style="text-align:left">A CPU envia um caractere e fica perguntando se a impressora já aceita o próximo.</td>
+</tr>
+<tr>
+  <td style="text-align:left">Interrupção</td>
+  <td style="text-align:left">A CPU envia um caractere e executa outro processo. A impressora interrompe quando estiver pronta.</td>
+</tr>
+<tr>
+  <td style="text-align:left">DMA</td>
+  <td style="text-align:left">A CPU prepara um buffer inteiro. O controlador transfere os dados e interrompe apenas ao final.</td>
+</tr>
+</tbody>
+</table>
+<p>O exemplo mostra a diferença entre ocupar a CPU com espera, reagir a eventos e delegar uma transferência inteira ao hardware.</p>
+</div>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Interrupção não é gratuita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Uma interrupção salva estado, troca contexto, executa tratador e depois retorna. Ela evita espera ocupada, mas se ocorrer a cada byte pode se tornar cara. Por isso DMA costuma ser melhor para transferências maiores.</p>
+  </div>
+</div>
+<h2 id="camadas-do-software-de-es"><span class="heading-text">Camadas do software de E/S</span><span class="heading-arabic">10.9</span></h2>
+<p>O software de E/S costuma ser organizado em camadas. Cada camada esconde detalhes da camada inferior e oferece uma interface mais regular para a camada superior.</p>
+<img src="static/fig_5_17_camadas_io.png" width="95%">
+
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Camada</th>
+  <th style="text-align:left">Responsabilidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Processo do usuário</td>
+  <td style="text-align:left">Chama E/S, formata dados, usa bibliotecas e spooling.</td>
+</tr>
+<tr>
+  <td style="text-align:left">Software independente de dispositivo</td>
+  <td style="text-align:left">Nomeia dispositivos, protege acesso, gerencia buffer e alocação.</td>
+</tr>
+<tr>
+  <td style="text-align:left">Driver do dispositivo</td>
+  <td style="text-align:left">Traduz operações abstratas em comandos específicos do controlador.</td>
+</tr>
+<tr>
+  <td style="text-align:left">Tratador de interrupção</td>
+  <td style="text-align:left">Acorda o driver ou processo quando a operação termina.</td>
+</tr>
+<tr>
+  <td style="text-align:left">Hardware</td>
+  <td style="text-align:left">Executa a operação física.</td>
+</tr>
+</tbody>
+</table>
+<p>Essa separação é essencial para a independência de dispositivo. Um programa que chama <code>read</code> não deveria precisar saber se os dados vêm de um SSD, de um HD, de um pendrive ou de um sistema de arquivos remoto.</p>
+<h3 id="drivers"><span class="heading-text">Drivers</span><span class="heading-arabic">10.9.1</span></h3>
+<p>Drivers contêm o conhecimento específico de cada dispositivo ou classe de dispositivos. Um driver de disco entende blocos, filas, controladores, erros e comandos do dispositivo. Um driver de teclado entende eventos de teclas.</p>
+<p>Drivers podem ser carregados dinamicamente. Isso é importante em sistemas modernos, nos quais dispositivos são adicionados e removidos com frequência.</p>
+<p>Um bom sistema operacional tenta padronizar a interface com os drivers. Assim, o restante do kernel não precisa ser reescrito para cada dispositivo novo.</p>
+<h3 id="software-independente-de-dispositivo"><span class="heading-text">Software independente de dispositivo</span><span class="heading-arabic">10.9.2</span></h3>
+<p>Essa camada cuida de funções comuns:</p>
+<ol>
+<li>nomeação uniforme,</li>
+<li>proteção,</li>
+<li>utilização de buffers,</li>
+<li>relatório de erros,</li>
+<li>alocação e liberação de dispositivos dedicados,</li>
+<li>tamanho de bloco lógico independente do dispositivo.</li>
+</ol>
+<p>No UNIX, dispositivos podem aparecer como arquivos especiais em <code>/dev</code>. Isso permite aplicar mecanismos de nomeação e proteção parecidos com os usados para arquivos comuns.</p>
+<h3 id="buffers-e-spooling"><span class="heading-text">Buffers e spooling</span><span class="heading-arabic">10.9.3</span></h3>
+<p>Buffers suavizam diferenças de velocidade entre produtor e consumidor. Um dispositivo pode produzir dados em uma taxa diferente daquela em que o processo consegue consumi-los. O sistema usa buffers para desacoplar esses ritmos.</p>
+<p>Spooling é usado quando um dispositivo dedicado, como uma impressora, não deve ser entregue diretamente a qualquer processo. Em vez disso, processos colocam trabalhos em um diretório de spool, e um daemon autorizado envia esses trabalhos ao dispositivo em ordem.</p>
+<h2 id="questões"><span class="heading-text">Questões</span><span class="heading-arabic">10.10</span></h2>
+<div class="questions">
+  <p><strong>1.</strong> Qual é a principal diferença entre guardar dados na memória de um processo e guardar dados em um arquivo?</p>
+<ul>
+<li>A) Arquivos só podem guardar texto.</li>
+<li>B) Arquivos persistem após o término do processo.</li>
+<li>C) Memória é sempre mais lenta que disco.</li>
+<li>D) Arquivos não precisam de sistema operacional.</li>
+</ul>
+<p><strong>2.</strong> Explique por que tratar um arquivo como sequência de bytes oferece mais flexibilidade ao sistema operacional.</p>
+<p><strong>3.</strong> Diferencie acesso sequencial e acesso aleatório a arquivos.</p>
+<p><strong>4.</strong> Se o diretório atual é <code>/usr/ast</code>, qual é o caminho absoluto correspondente a <code>../lib/dictionary</code>?</p>
+<p><strong>5.</strong> O que um diretório precisa mapear para que um arquivo seja encontrado?</p>
+<p><strong>6.</strong> Compare alocação contígua e i-nodes quanto a crescimento de arquivos e acesso sequencial.</p>
+<p><strong>7.</strong> Um arquivo usa blocos físicos $8$, $20$ e $9$, nessa ordem. Por que esse arquivo não se encaixa naturalmente em alocação contígua?</p>
+<p><strong>8.</strong> Diferencie lista encadeada de blocos livres e mapa de bits no gerenciamento de espaço livre.</p>
+<p><strong>9.</strong> Por que remover um arquivo pode deixar o sistema inconsistente se houver queda no meio da operação?</p>
+<p><strong>10.</strong> O que o journaling registra e por que isso acelera a recuperação após uma falha?</p>
+<p><strong>11.</strong> Explique por que uma cache de blocos melhora desempenho, mas pode criar risco de consistência.</p>
+<p><strong>12.</strong> Diferencie E/S programada, E/S orientada a interrupções e E/S usando DMA.</p>
+<p><strong>13.</strong> Qual é o papel de um driver de dispositivo?</p>
+<p><strong>14.</strong> Por que o software de E/S independente de dispositivo é importante para a portabilidade das aplicações?</p>
+</div>
+<div class="example">
+  <div class="example-title">Gabarito</div>
+  <p><strong>1.</strong> B.</p>
+<p><strong>2.</strong> Porque o sistema operacional não precisa conhecer todos os formatos possíveis. Ele armazena bytes e deixa a interpretação para os programas, permitindo novos formatos sem alterar o kernel.</p>
+<p><strong>3.</strong> No acesso sequencial, os dados são lidos ou escritos em ordem. No acesso aleatório, o processo pode saltar para uma posição específica, por exemplo usando <code>seek</code>, e acessar dados dali.</p>
+<p><strong>4.</strong> <code>/usr/lib/dictionary</code>.</p>
+<p><strong>5.</strong> Ele precisa mapear o nome do arquivo para a informação usada para localizar seus dados, como número de i-node, primeiro bloco ou metadados equivalentes.</p>
+<p><strong>6.</strong> A alocação contígua tem leitura sequencial eficiente, mas lida mal com crescimento e fragmentação. I-nodes permitem blocos não contíguos e crescimento mais flexível, mas exigem estruturas de metadados para localizar os blocos.</p>
+<p><strong>7.</strong> Porque os blocos $8$, $20$ e $9$ não formam uma sequência contínua no disco. Na alocação contígua, os blocos do arquivo deveriam ficar lado a lado.</p>
+<p><strong>8.</strong> A lista encadeada guarda referências aos blocos livres, possivelmente usando os próprios blocos livres. O mapa de bits usa um bit por bloco para indicar livre ou ocupado, sendo compacto e útil para encontrar sequências próximas.</p>
+<p><strong>9.</strong> Porque remover um arquivo exige várias atualizações, como diretório, i-node e blocos livres. Se apenas parte delas for gravada antes da queda, as estruturas passam a discordar.</p>
+<p><strong>10.</strong> O journaling registra as operações planejadas antes de aplicá-las às estruturas principais. Após uma falha, o sistema consulta o diário e sabe o que completar ou recuperar, sem precisar varrer tudo.</p>
+<p><strong>11.</strong> A cache evita acessos repetidos ao disco e melhora desempenho. O risco é que blocos modificados podem ainda estar apenas na memória quando ocorre uma queda, deixando dados ou metadados sem gravação persistente.</p>
+<p><strong>12.</strong> Na E/S programada, a CPU faz a transferência e espera o dispositivo. Na E/S por interrupção, o dispositivo avisa quando precisa de atenção. No DMA, um controlador transfere blocos entre dispositivo e memória com pouca intervenção da CPU.</p>
+<p><strong>13.</strong> O driver traduz operações abstratas do sistema operacional em comandos específicos do controlador do dispositivo, verifica estado, trata erros e coordena a operação física.</p>
+<p><strong>14.</strong> Porque permite que programas usem uma interface uniforme, como <code>read</code> e <code>write</code>, sem conhecer os detalhes de cada dispositivo específico.</p>
+</div>
+<h2 id="próximos-passos"><span class="heading-text">Próximos passos</span><span class="heading-arabic">10.11</span></h2>
+<p>Vimos como arquivos, diretórios, alocação de blocos, journaling, cache e camadas de E/S se conectam. Na próxima aula, a continuação natural é olhar com mais detalhe para dispositivos específicos, especialmente discos, algoritmos de escalonamento de disco, tratamento de erros e armazenamento estável.</p>
+
+                </div>
+            </article>
+            <footer class="footer">
+                <p>© 2025 · <a href="#">Gabriel Soares Baptista</a></p>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        const toggle = document.querySelector('.mobile-menu-toggle');
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.querySelector('.mobile-menu-overlay');
+
+        function openMenu() {
+            sidebar.classList.add('open');
+            overlay.classList.add('open');
+            toggle.classList.add('open');
+            toggle.innerHTML = '<i data-lucide="x"></i>';
+            CourseForgeUI.initIcons();
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMenu() {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('open');
+            toggle.classList.remove('open');
+            toggle.innerHTML = '<i data-lucide="menu"></i>';
+            CourseForgeUI.initIcons();
+            document.body.style.overflow = '';
+        }
+
+        toggle.addEventListener('click', () => {
+            if (sidebar.classList.contains('open')) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        overlay.addEventListener('click', closeMenu);
+    </script>
+
+    
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            renderMathInElement(document.body, {
+                output: 'html',
+                delimiters: [
+                    { left: "$$", right: "$$", display: true },
+                    { left: "$", right: "$", display: false },
+                    { left: "\\(", right: "\\)", display: false },
+                    { left: "\\[", right: "\\]", display: true }
+                ],
+                throwOnError: false,
+                strict: false
+            });
+        });
+    </script>
+    
+    
+    <script src="/aulas-faesa/js/vendor/prism/prism.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-c.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-cpp.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-python.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-clike.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-perl.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-java.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-mermaid.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-php.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js" data-no-bundle></script>
+    
+    
+    
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            mermaid.initialize({
+                startOnLoad: true,
+                theme: 'default',
+                securityLevel: 'loose',
+                fontFamily: 'Inter, system-ui, sans-serif',
+                themeVariables: {
+                    fontSize: '16px',
+                    edgeLabelFontSize: '16px',
+                    multiplicityFontSize: '18px'
+                }
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const isSubcourse = false;
+        const courseName = "Sistemas Operacionais";
+        CourseForgeNav.applyDynamicBreadcrumbs('.breadcrumb', isSubcourse);
+        CourseForgeNav.initScrollSpy();
+        CourseForgeUI.initCopyButtons();
+        CourseForgeUI.initExamples();
+        });
+
+        function handleBackNavigation() {
+            const isSubcourse = false;
+        const dynamic = CourseForgeNav.getBackLink('contents.html', 'Voltar', isSubcourse);
+        window.location.href = dynamic.url;
+        }
+    </script>
+</body>
+
+</html>
