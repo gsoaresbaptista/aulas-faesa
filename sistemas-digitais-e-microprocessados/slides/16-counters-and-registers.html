@@ -1,0 +1,1338 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <title>Contadores e Registradores</title>
+    <link rel="icon" href="/aulas-faesa/img/dark-favicon.svg" media="(prefers-color-scheme: light)">
+    <link rel="icon" href="/aulas-faesa/img/light-favicon.svg" media="(prefers-color-scheme: dark)">
+
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/reset.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/reveal.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/theme/white.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/aulas-faesa/css/prism-one-light.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/fonts.css" data-no-bundle>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+            <section><h1>Sistemas Digitais e Microprocessados</h1>
+<h2>Contadores e Registradores</h2>
+<p>Professor: Gabriel Soares Baptista</p>
+</section>
+<section><h1>Introdução</h1>
+<p>Na aula anterior, vimos que um flip-flop armazena <strong>1 bit</strong>.</p>
+<p>Hoje vamos conectar vários flip-flops para construir circuitos que:</p>
+<ul>
+<li>contam eventos</li>
+<li>dividem frequência</li>
+<li>armazenam palavras digitais</li>
+<li>deslocam dados bit a bit</li>
+</ul>
+<p>Base: Capítulo 7 de <strong>Sistemas Digitais: Princípios e Aplicações</strong> (Tocci, Widmer, Moss).</p>
+</section>
+<section><h1>Ideia Central</h1>
+<div class="callout callout-abstract">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
+    <span class="callout-title-inner">Ideia central<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Um contador percorre uma sequência de estados a cada pulso de clock. Um registrador armazena ou desloca vários bits. Nos dois casos, o comportamento depende do estado anterior.</p>
+  </div>
+</div>
+<p>O ponto principal não é decorar CIs.</p>
+<p>O ponto é reconhecer o padrão:</p>
+<p>$$
+\text{estado atual} \xrightarrow{\text{clock}} \text{próximo estado}
+$$</p>
+</section>
+<section><h1>De Um Flip-Flop Para Um Contador</h1>
+<p>No flip-flop J-K:</p>
+<p>$$
+J=K=1
+$$</p>
+<p>Essa condição faz o flip-flop <strong>comutar</strong>.</p>
+<p>$$
+Q^+ = \overline{Q_0}
+$$</p>
+<p>Se começa em $0$ e recebe pulsos sucessivos:</p>
+<p>$$
+0 \rightarrow 1 \rightarrow 0 \rightarrow 1 \rightarrow 0 \rightarrow \cdots
+$$</p>
+</section>
+<section><h1>A Primeira Contagem</h1>
+<p>Essa alternância já é uma contagem de 1 bit.</p>
+<p>$$
+\begin{array}{c|c}
+\text{Pulsos} & Q \\
+\hline
+0 & 0 \\
+1 & 1 \\
+2 & 0 \\
+3 & 1
+\end{array}
+$$</p>
+<p>Com vários flip-flops:</p>
+<ul>
+<li>2 flip-flops representam 4 estados</li>
+<li>3 flip-flops representam 8 estados</li>
+<li>4 flip-flops representam 16 estados</li>
+</ul>
+</section>
+<section><h1>Contadores Assíncronos</h1>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Se um flip-flop alterna a cada pulso, o que acontece se usarmos a saída dele como clock de outro flip-flop?</p>
+  </div>
+</div>
+<p>Um <strong>contador assíncrono</strong> também é chamado de <strong>contador ondulante</strong> ou <strong>ripple counter</strong>.</p>
+<ul>
+<li>o primeiro flip-flop recebe o clock externo</li>
+<li>a saída do primeiro aciona o clock do segundo</li>
+<li>a saída do segundo aciona o clock do terceiro</li>
+<li>a mudança se propaga em cadeia</li>
+</ul>
+<img src="../static/tocci_fig_7_1_async_counter.png" width="50%" style="display: block; margin: 0 auto;" alt="Contador assíncrono de quatro bits e suas formas de onda.">
+
+</section>
+<section><h1>Como Ler a Contagem</h1>
+<p>Todos os flip-flops J-K estão em modo toggle ($J=K=1$).</p>
+<p>Os bits são lidos como $D C B A$.</p>
+<ul>
+<li>$A$ é o LSB</li>
+<li>$D$ é o MSB</li>
+</ul>
+<p>$$
+\begin{array}{c|c}
+\text{Pulsos aplicados} & D C B A \\
+\hline
+0 & 0000 \\
+1 & 0001 \\
+2 & 0010 \\
+3 & 0011 \\
+4 & 0100 \\
+15 & 1111 \\
+16 & 0000
+\end{array}
+$$</p>
+</section>
+<section><h1>Exemplo 1</h1>
+<p>Um contador assíncrono de 4 bits começa em $0000$.</p>
+<p>Determine o estado $D C B A$ após $6$, $15$, $16$ e $19$ pulsos de clock.</p>
+</section>
+<section><p>O contador tem 4 bits, então possui $2^4 = 16$ estados. Depois de $1111$, ele volta para $0000$.</p>
+<p>$$
+\begin{array}{c|c}
+\text{Pulsos} & D C B A \\
+\hline
+6 & 0110 \\
+15 & 1111 \\
+16 & 0000 \\
+19 & 0011
+\end{array}
+$$</p>
+<p>No caso de 19 pulsos, contamos $16 + 3$.</p>
+</section>
+<section><h1>Módulo de Um Contador</h1>
+<p>O <strong>módulo</strong> é o número de estados diferentes antes de voltar ao início.</p>
+<p>Para um contador binário simples com $N$ flip-flops:</p>
+<p>$$
+M = 2^N
+$$</p>
+<p>$$
+\begin{array}{c|c|c}
+\text{Flip-flops} & \text{Estados} & \text{Módulo} \\
+\hline
+1 & 0,1 & 2 \\
+2 & 00 \text{ até } 11 & 4 \\
+3 & 000 \text{ até } 111 & 8 \\
+4 & 0000 \text{ até } 1111 & 16
+\end{array}
+$$</p>
+</section>
+<section><h1>Divisão de Frequência</h1>
+<p>Em um contador binário, cada flip-flop alterna com metade da frequência do sinal que o alimenta.</p>
+<p>Para o ciclo completo:</p>
+<p>$$
+f_{out} = \frac{f_{clk}}{M}
+$$</p>
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">Leitura prática<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Se um contador de módulo 16 recebe $16\,\text{kHz}$, um sinal que marca a repetição do ciclo terá frequência de $1\,\text{kHz}$.</p>
+  </div>
+</div>
+</section>
+<section><h1>Exemplo 2</h1>
+<p>Um sistema precisa transformar um sinal de $60\,\text{Hz}$ em um sinal de $1\,\text{Hz}$.</p>
+<ul>
+<li>qual módulo o contador deve ter?</li>
+<li>quantos flip-flops seriam suficientes para cobrir esse módulo?</li>
+</ul>
+</section>
+<section><p>Queremos $f_{out} = f_{clk}/M$. Substituindo:</p>
+<p>$$
+1 = \frac{60}{M}
+\qquad \Rightarrow \qquad
+M = 60
+$$</p>
+<p>Agora escolhemos $N$:</p>
+<p>$$
+2^5 = 32
+\qquad
+2^6 = 64
+$$</p>
+<p>Logo, 6 flip-flops cobrem 60 estados. Como queremos módulo 60, e não 64, será necessário reciclar antes de completar todos os estados.</p>
+</section>
+<section><h1>Atraso no Contador Assíncrono</h1>
+<p>O contador assíncrono é simples, mas tem um problema importante: os flip-flops <strong>não mudam todos ao mesmo tempo</strong>. A mudança se propaga de um estágio para o próximo.</p>
+<img src="../static/tocci_fig_7_4_ripple_delay.png" width="50%" style="display: block; margin: 0 auto;" alt="Atrasos de propagação em contador ondulante.">
+
+</section>
+<section><h1>Estimando a Frequência Máxima</h1>
+<p>Se cada flip-flop tem atraso $t_{pd}$, o último estágio só estabiliza depois que a mudança atravessa os anteriores.</p>
+<p>Para $N$ flip-flops:</p>
+<p>$$
+T_{clk} \geq N \cdot t_{pd}
+\qquad\Rightarrow\qquad
+f_{max} = \frac{1}{N \cdot t_{pd}}
+$$</p>
+<p>Quanto mais estágios, maior o atraso acumulado e menor a frequência máxima segura.</p>
+</section>
+<section><h1>Estados Temporários e Glitches</h1>
+<p>Durante alguns nanossegundos, o contador pode passar por estados intermediários que não fazem parte da sequência correta.</p>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Erro comum<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Não assuma que a saída de um contador assíncrono muda instantaneamente de um número binário para o próximo.</p>
+  </div>
+</div>
+<p>Esses estados temporários podem gerar pulsos indesejados, chamados <strong>glitches</strong>.</p>
+</section>
+<section><h1>Exemplo 3</h1>
+<p>Um contador assíncrono de 4 bits usa flip-flops com atraso de propagação de $24\,\text{ns}$.</p>
+<p>Estime a frequência máxima de clock.</p>
+</section>
+<section><p>Usamos $f_{max} = 1/(N \cdot t_{pd})$.</p>
+<p>Como $N=4$ e $t_{pd}=24\,\text{ns}$:</p>
+<p>$$
+f_{max} = \frac{1}{4 \cdot 24\,\text{ns}}
+= \frac{1}{96\,\text{ns}}
+\approx 10{,}4\,\text{MHz}
+$$</p>
+<p>Esse limite vem da propagação em cascata. Se aumentarmos o número de bits, o limite cai.</p>
+</section>
+<section><h1>Contadores Síncronos</h1>
+<p>Um <strong>contador síncrono</strong> resolve o principal problema do contador assíncrono: todos os flip-flops recebem o mesmo clock, a lógica decide quais comutam, e as mudanças ocorrem na mesma borda ativa.</p>
+<img src="../static/tocci_fig_7_5_sync_counter.png" width="88%" style="display: block; margin: 0 auto;" alt="Contador síncrono de módulo 16.">
+
+</section>
+<section><h1>Quem Deve Comutar?</h1>
+<p>Para um contador binário crescente de 4 bits:</p>
+<p>$$
+\begin{array}{c|c}
+\text{Flip-flop} & \text{Condição para comutar} \\
+\hline
+A & \text{sempre} \\
+B & A=1 \\
+C & A B = 1 \\
+D & A B C = 1
+\end{array}
+$$</p>
+<p>Padrão:</p>
+<p><strong>um bit só muda quando todos os bits menos significativos estão em $1$.</strong></p>
+</section>
+<section><h1>Por Que o Bit C Muda?</h1>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Por que o bit $C$ só deve alternar quando $A=1$ e $B=1$?</p>
+  </div>
+</div>
+<p>Observe duas transições:</p>
+<p>$$
+0011 \rightarrow 0100
+\qquad
+0111 \rightarrow 1000
+$$</p>
+<p>Nos dois casos, antes da mudança, os bits $B$ e $A$ valem $1$.</p>
+</section>
+<section><h1>Exemplo 4</h1>
+<p>Em um contador síncrono crescente de 4 bits, determine quais flip-flops comutam na transição $0111 \rightarrow 1000$.</p>
+</section>
+<section><p>Comparando bit a bit:</p>
+<p>$$
+\begin{array}{c|c|c|c}
+\text{Bit} & \text{Antes} & \text{Depois} & \text{Ação} \\
+\hline
+A & 1 & 0 & \text{comuta} \\
+B & 1 & 0 & \text{comuta} \\
+C & 1 & 0 & \text{comuta} \\
+D & 0 & 1 & \text{comuta}
+\end{array}
+$$</p>
+<p>Todos os flip-flops comutam nessa borda. Isso acontece porque, antes da transição, os bits menos significativos de cada estágio estão em $1$.</p>
+</section>
+<section><h1>Assíncrono × Síncrono</h1>
+<div class="col2"><div>
+
+<p><strong>Contador assíncrono</strong></p>
+<p>$$
+\begin{array}{c|c}
+\text{Clock} & \text{só no primeiro FF} \\
+\hline
+\text{Atraso} & \text{acumulado} \\
+\text{Risco} & \text{glitches} \\
+\text{Vantagem} & \text{simples}
+\end{array}
+$$</p>
+</div><div>
+
+<p><strong>Contador síncrono</strong></p>
+<p>$$
+\begin{array}{c|c}
+\text{Clock} & \text{em todos os FFs} \\
+\hline
+\text{Atraso} & t_{pd,FF}+t_{pd,porta} \\
+\text{Risco} & \text{menor ripple} \\
+\text{Custo} & \text{mais lógica}
+\end{array}
+$$</p>
+</div></div>
+
+</section>
+<section><h1>Módulo Menor Que $2^N$</h1>
+<p>Nem sempre queremos contar todos os estados possíveis. Um contador com 4 flip-flops naturalmente tem 16 estados, mas um contador decimal precisa de 10.</p>
+<p>Técnica comum: detectar um estado específico e forçar o contador a voltar ao início.</p>
+<img src="../static/tocci_fig_7_6_mod6_counter.png" width="50%" style="display: block; margin: 0 auto;" alt="Contador de módulo 6 usando reset ao detectar 110.">
+
+</section>
+<section><h1>Como o Módulo 6 Funciona</h1>
+<p>O contador de 3 bits iria naturalmente de $000$ até $111$.</p>
+<p>A porta NAND detecta $B=C=1$, que ocorre em $110_2 = 6_{10}$.</p>
+<p>Estados estáveis:</p>
+<p>$$
+000,\ 001,\ 010,\ 011,\ 100,\ 101
+$$</p>
+<p>O estado $110$ aparece apenas por um tempo muito curto, como estado temporário de reset.</p>
+</section>
+<section><h1>Procedimento Geral</h1>
+<p>Para construir um contador de módulo $M$:</p>
+<ol>
+<li>escolha o menor $N$ tal que $2^N \geq M$</li>
+<li>monte um contador com $N$ flip-flops</li>
+<li>detecte o estado $M$</li>
+<li>use essa detecção para limpar o contador e voltar a $0$</li>
+</ol>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Estado temporário<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Quando o reset é assíncrono, o estado detectado pode existir por alguns nanossegundos e gerar glitches nas saídas.</p>
+  </div>
+</div>
+</section>
+<section><h1>Exemplo 5</h1>
+<p>Projete a ideia de um contador módulo 10 que conte de $0000$ até $1001$ e depois volte para $0000$. Qual estado deve ser detectado?</p>
+</section>
+<section><p>Estados estáveis do módulo 10:</p>
+<p>$$
+0000,\ 0001,\ 0010,\ 0011,\ 0100,\ 0101,\ 0110,\ 0111,\ 1000,\ 1001
+$$</p>
+<p>O próximo estado natural seria $1010_2 = 10_{10}$.</p>
+<p>Esse é o estado que deve ser detectado para acionar o reset. Na notação $D C B A$, isso significa $D=1$ e $B=1$. Esse contador também é chamado de <strong>contador decádico</strong> ou <strong>BCD</strong>.</p>
+</section>
+<section><h1>Crescente e Decrescente</h1>
+<p>Um contador crescente percorre:</p>
+<p>$$
+0,\ 1,\ 2,\ 3,\ \ldots
+$$</p>
+<p>Um contador decrescente percorre a sequência inversa.</p>
+<p>Em um contador síncrono decrescente, um bit muda quando os bits menos significativos estão em $0$. Também existem contadores <strong>crescentes/decrescentes</strong> com uma entrada de controle que escolhe a direção.</p>
+</section>
+<section><h1>Carga Paralela</h1>
+<p>Um contador carregável pode receber diretamente um valor inicial.</p>
+<p>Exemplo: em vez de começar em $0000$, carregar $0101$ e continuar contando:</p>
+<p>$$
+0101 \rightarrow 0110 \rightarrow 0111 \rightarrow 1000 \rightarrow \cdots
+$$</p>
+<p>A carga pode ser:</p>
+<ul>
+<li><strong>assíncrona</strong>, quando ocorre imediatamente, sem esperar o clock</li>
+<li><strong>síncrona</strong>, quando ocorre apenas na borda ativa do clock</li>
+</ul>
+</section>
+<section><h1>Registradores</h1>
+<p>Um <strong>registrador</strong> é um conjunto de flip-flops usado para armazenar vários bits ao mesmo tempo.</p>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Se quatro flip-flops D recebem o mesmo clock, e cada um recebe um bit diferente em sua entrada $D$, o que acontece na próxima borda ativa?</p>
+  </div>
+</div>
+<p>Na borda ativa, todos armazenam seus bits simultaneamente. Esse é o registrador paralelo mais simples.</p>
+<img src="../static/tocci_fig_7_66_register_transfer_types.png" width="35%" style="display: block; margin: 0 auto;" alt="Tipos de transferência em registradores PIPO, SISO, PISO e SIPO.">
+
+</section>
+<section><h1>PIPO, SISO, PISO e SIPO</h1>
+<p>$$
+\begin{array}{c|c|c|c}
+\text{Tipo} & \text{Entrada} & \text{Saída} & \text{Ideia} \\
+\hline
+\text{PIPO} & \text{paralela} & \text{paralela} & \text{armazena palavra} \\
+\text{SISO} & \text{serial} & \text{serial} & \text{desloca bits} \\
+\text{PISO} & \text{paralela} & \text{serial} & \text{paralelo para serial} \\
+\text{SIPO} & \text{serial} & \text{paralela} & \text{serial para paralelo}
+\end{array}
+$$</p>
+<p>No registrador paralelo, vários bits entram juntos. No registrador serial, os bits entram um por vez, a cada pulso de clock.</p>
+</section>
+<section><h1>Registradores de Deslocamento</h1>
+<p>Um <strong>registrador de deslocamento</strong> move os bits de um flip-flop para o próximo a cada borda de clock.</p>
+<p>Para deslocamento à direita:</p>
+<p>$$
+\text{SER\_IN} \rightarrow Q_3 \rightarrow Q_2 \rightarrow Q_1 \rightarrow Q_0 \rightarrow \text{SER\_OUT}
+$$</p>
+<p>Se o registrador tem 8 flip-flops, um bit aplicado na entrada leva 8 bordas para aparecer na saída. Esse circuito pode ser usado para <strong>atrasar</strong> um sinal digital.</p>
+</section>
+<section><h1>Exemplo 6</h1>
+<p>Um registrador de deslocamento de 4 bits começa em $Q_3Q_2Q_1Q_0=0000$. A entrada serial recebe, em quatro bordas consecutivas: $1$, $0$, $1$, $1$. O novo bit entra em $Q_3$ e os demais deslocam para a direita.</p>
+</section>
+<section><p>Regra: $Q_3Q_2Q_1Q_0 \leftarrow \text{novo bit}, Q_3, Q_2, Q_1$</p>
+<p>$$
+\begin{array}{c|c|c}
+\text{Borda} & \text{Bit de entrada} & Q_3Q_2Q_1Q_0 \\
+\hline
+0 & - & 0000 \\
+1 & 1 & 1000 \\
+2 & 0 & 0100 \\
+3 & 1 & 1010 \\
+4 & 1 & 1101
+\end{array}
+$$</p>
+<p>Após quatro bordas, os bits recebidos estão armazenados em paralelo no registrador.</p>
+</section>
+<section><h1>Contadores Por Deslocamento</h1>
+<p>Se realimentarmos a saída de um registrador de deslocamento para a entrada, obtemos um contador por deslocamento.</p>
+<p>Dois casos importantes: <strong>contador em anel</strong> e <strong>contador Johnson</strong>.</p>
+<img src="../static/tocci_fig_7_75_ring_counter.png" width="74%" style="display: block; margin: 0 auto;" alt="Contador em anel de quatro bits e suas formas de onda.">
+
+</section>
+<section><h1>Sequência do Anel</h1>
+<p>No contador em anel, normalmente existe apenas um bit em $1$ circulando pelo registrador.</p>
+<p>Se o estado inicial for $1000$:</p>
+<p>$$
+1000 \rightarrow 0100 \rightarrow 0010 \rightarrow 0001 \rightarrow 1000
+$$</p>
+<p>Módulo 4 (igual ao número de flip-flops).</p>
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">Inicialização<br /></span>
+  </div>
+  <div class="callout-content">
+<p>O contador em anel precisa começar com exatamente um flip-flop em $1$ e os demais em $0$. Usa-se preset e clear para definir o estado inicial.</p>
+  </div>
+</div>
+</section>
+<section><h1>Contador Johnson</h1>
+<p>O contador Johnson também é chamado de <strong>contador em anel torcido</strong>. A diferença é que a saída <strong>invertida</strong> do último flip-flop volta para a entrada do primeiro.</p>
+<img src="../static/tocci_fig_7_77_johnson_counter.png" width="68%" style="display: block; margin: 0 auto;" alt="Formas de onda e diagrama de estados de um contador Johnson de três bits.">
+
+</section>
+<section><h1>Sequência Johnson</h1>
+<p>Para 3 flip-flops, começando em $000$:</p>
+<p>$$
+000 \rightarrow 100 \rightarrow 110 \rightarrow 111 \rightarrow 011 \rightarrow 001 \rightarrow 000
+$$</p>
+<p>O módulo é 6. Em geral, para $N$ flip-flops:</p>
+<p>$$
+M = 2N
+$$</p>
+<p>Isso coloca o Johnson entre o contador em anel e o contador binário em uso de flip-flops.</p>
+</section>
+<section><h1>Comparação de Módulos</h1>
+<p>$$
+\begin{array}{c|c|c}
+\text{Tipo} & \text{Flip-flops} & \text{Módulo típico} \\
+\hline
+\text{contador em anel} & N & N \\
+\text{contador Johnson} & N & 2N \\
+\text{contador binário} & N & 2^N
+\end{array}
+$$</p>
+<p>Leitura prática:</p>
+<ul>
+<li>anel é fácil de decodificar (cada estado ativa um flip-flop)</li>
+<li>Johnson usa menos flip-flops que o anel, mas precisa de decodificação</li>
+<li>binário é o mais compacto em número de estados</li>
+</ul>
+</section>
+<section><h1>Exemplo 7</h1>
+<p>Quantos flip-flops são necessários para construir um contador em anel de módulo 8? E um contador Johnson de módulo 8?</p>
+</section>
+<section><p>No contador em anel: $M=N$, logo $N=8$.</p>
+<p>No contador Johnson: $M=2N$, logo $8=2N \Rightarrow N=4$.</p>
+<p>O Johnson usa metade dos flip-flops do anel para o mesmo módulo. Em compensação, a decodificação dos estados não é tão direta.</p>
+</section>
+<section><h1>Juntando As Ideias</h1>
+<p>$$
+\begin{array}{c|c|c}
+\text{Circuito} & \text{O que faz} & \text{Pergunta principal} \\
+\hline
+\text{contador} & \text{percorre estados} & \text{qual é o próximo estado?} \\
+\text{registrador} & \text{armazena bits} & \text{quais bits serão guardados?} \\
+\text{registrador de deslocamento} & \text{move bits} & \text{para onde cada bit vai?} \\
+\text{anel ou Johnson} & \text{conta por deslocamento} & \text{qual realimentação fecha o ciclo?}
+\end{array}
+$$</p>
+<p>O bloco básico é sempre o mesmo: <strong>flip-flops sincronizados por clock</strong>. A diferença está nas conexões e na lógica que decide o próximo estado.</p>
+</section>
+<section><h1>Próximos Passos</h1>
+<p>Nesta aula, usamos flip-flops para construir:</p>
+<ul>
+<li>contadores assíncronos e síncronos</li>
+<li>contadores com módulo controlado</li>
+<li>registradores e registradores de deslocamento</li>
+<li>contadores em anel e Johnson</li>
+</ul>
+<p>Próxima etapa:</p>
+<p><strong>análise e projeto de contadores síncronos com sequências arbitrárias, usando tabelas de estado e lógica de excitação.</strong></p>
+</section>
+        </div>
+    </div>
+
+    <script src="/aulas-faesa/js/vendor/reveal/reveal.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/notes/notes.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/markdown/markdown.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/math/math.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/zoom/zoom.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/prism.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-c.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-python.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-clike.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-cpp.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-perl.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-java.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-php.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/toolbar/prism-toolbar.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/show-language/prism-show-language.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/prism-slang.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/mermaid.min.js" data-no-bundle></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            mermaid.initialize({
+                startOnLoad: false,
+                theme: 'default',
+                securityLevel: 'loose',
+                htmlLabels: false,
+                fontFamily: 'Inter, system-ui, sans-serif',
+            });
+        });
+    </script>
+    <script src="/aulas-faesa/js/rough.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/apply_sketch.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/lucide.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/ui.js" data-no-bundle></script>
+    <script>
+        const waitForNextFrame = () => new Promise(resolve => requestAnimationFrame(resolve));
+
+        const initSlideUI = () => {
+            if (!window.CourseForgeUI) {
+                return;
+            }
+
+            window.CourseForgeUI.initCopyButtons();
+            window.CourseForgeUI.initIcons();
+        };
+
+        const renderMermaidsInSlide = async (slide) => {
+            if (!slide) {
+                return;
+            }
+
+            const mermaids = slide.querySelectorAll('.mermaid');
+            if (!mermaids.length) {
+                return;
+            }
+
+            try {
+                if (document.fonts?.ready) {
+                    await document.fonts.ready;
+                }
+
+                await waitForNextFrame();
+                await waitForNextFrame();
+
+                for (const element of mermaids) {
+                    if (element.dataset.mermaidRendered === 'true') {
+                        continue;
+                    }
+
+                    await mermaid.run({
+                        nodes: [element],
+                    });
+                    element.dataset.mermaidRendered = 'true';
+                }
+            } catch (err) {
+                console.warn('Mermaid render failed', err);
+            }
+        };
+
+        const updateMermaidDisplayBounds = (slide) => {
+            const scope = slide || document;
+            const displays = scope.querySelectorAll('.mermaid-display');
+
+            for (const display of displays) {
+                const rect = display.getBoundingClientRect();
+                const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+                const bottomGap = 24;
+                const availableHeight = Math.max(160, Math.floor(viewportHeight - rect.top - bottomGap));
+                display.style.setProperty('--mermaid-max-height', `${availableHeight}px`);
+            }
+        };
+
+        const resetNativeLineNumbers = (pre) => {
+            if (!pre?.classList.contains('line-numbers')) {
+                return;
+            }
+
+            const existingRows = pre.querySelector('.line-numbers-rows');
+            if (existingRows) {
+                existingRows.remove();
+            }
+        };
+
+        const highlightCodeInSlide = (slide) => {
+            const scope = slide || document;
+            const codeBlocks = scope.querySelectorAll('pre[class*="language-"] > code[class*="language-"]');
+
+            for (const code of codeBlocks) {
+                const pre = code.parentElement;
+                resetNativeLineNumbers(pre);
+                Prism.highlightElement(code);
+
+                if (pre?.classList.contains('line-numbers') && Prism.plugins?.lineNumbers?.resize) {
+                    Prism.plugins.lineNumbers.resize(pre);
+                }
+            }
+        };
+
+        const enhanceCurrentSlide = async (slide) => {
+            highlightCodeInSlide(slide);
+            await renderMermaidsInSlide(slide);
+            updateMermaidDisplayBounds(slide);
+            initSlideUI();
+        };
+
+        Reveal.initialize({
+            hash: true,
+            slideNumber: 'c/t',
+            center: false,
+            controls: false,
+            plugins: [RevealMarkdown, RevealNotes, RevealMath.KaTeX, RevealZoom],
+            katex: {
+                local: '/aulas-faesa/js/vendor/katex',
+                output: 'html',
+                throwOnError: false,
+                strict: false,
+            },
+            width: 960,
+            height: 800,
+            margin: 0.15,
+            maxScale: 2.0,
+        });
+
+        Reveal.on('ready', event => {
+            enhanceCurrentSlide(event.currentSlide);
+        });
+
+        Reveal.on('slideready', event => {
+            enhanceCurrentSlide(event.currentSlide);
+        });
+
+        Reveal.on('slidechanged', event => {
+            enhanceCurrentSlide(event.currentSlide);
+        });
+
+        window.addEventListener('resize', () => {
+            updateMermaidDisplayBounds(Reveal.getCurrentSlide());
+        });
+    </script>
+    <style>
+        /* Modern base styles */
+        :root {
+            --callout-note: #448aff;
+            --callout-abstract: #00b0ff;
+            --callout-info: #00b8d4;
+            --callout-todo: #00bfa5;
+            --callout-tip: #00c853;
+            --callout-success: #64dd17;
+            --callout-question: #ffab00;
+            --callout-warning: #ff9100;
+            --callout-failure: #ff5252;
+            --callout-danger: #ff1744;
+            --callout-bug: #f50057;
+            --callout-example: #7c4dff;
+            --callout-quote: #9e9e9e;
+            --code-bg: #f1f5f9;
+            --border: #e2e8f0;
+            --radius: 6px;
+            --radius-sm: 4px;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --text-muted: #64748b;
+            --text: #334155;
+            --bg: #ffffff;
+            --heading: #0f172a;
+            --link: #3b82f6;
+            --font-code: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+        }
+
+        .reveal {
+            font-size: 20px;
+            text-align: left !important;
+        }
+
+        .reveal code:not(pre code) {
+            font-family: var(--font-code) !important;
+            background-color: var(--code-bg) !important;
+            padding: 0.1em 0.35em !important;
+            border-radius: var(--radius-sm) !important;
+            font-size: 0.9em !important;
+            color: var(--link) !important;
+            border: 1px dashed var(--border) !important;
+            white-space: pre-wrap !important;
+            word-break: break-word !important;
+            font-variant-ligatures: none;
+            font-feature-settings: "liga" 0, "calt" 0;
+        }
+
+        .reveal h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px !important;
+            margin-left: 0 !important;
+            /* min-height: 2.3em; */
+            display: flex;
+            align-items: center;
+            justify-content: flex-start !important;
+            text-align: left !important;
+            width: 100% !important;
+            text-shadow: none !important;
+        }
+
+        /* Prism overrides for Reveal.js */
+        .reveal div.code-toolbar {
+            position: relative;
+            width: 100% !important;
+            margin: 1.5rem 0 !important;
+        }
+
+        .reveal pre[class*="language-"] {
+            background: hsl(230, 1%, 98%) !important;
+            margin: 1.5rem 0 !important;
+            padding: 1rem !important;
+            border: 1px solid var(--border) !important;
+            border-radius: var(--radius) !important;
+            box-shadow: var(--shadow-sm) !important;
+            font-family: var(--font-code) !important;
+            font-size: 0.85em !important;
+            position: relative;
+            overflow-x: auto;
+            box-sizing: border-box !important;
+            max-width: 100% !important;
+            font-variant-ligatures: none;
+            font-feature-settings: "liga" 0, "calt" 0;
+        }
+
+        .reveal pre[class*="language-"] > code {
+            background: 0 0 !important;
+            text-shadow: none !important;
+            color: hsl(230, 8%, 24%) !important;
+            position: relative !important;
+            display: block !important;
+        }
+
+        .reveal .line-numbers .line-numbers-rows {
+            border-right: 1px solid #444 !important;
+            padding-right: .5rem !important;
+            margin-bottom: 1.5rem;
+        }
+
+        .reveal .line-numbers-rows>span:before {
+            color: #666 !important;
+        }
+
+        .reveal pre[class*="language-"].line-numbers,
+        .reveal pre[class*="language-"]:has(.line-numbers-rows) {
+            padding-left: 3.8em !important;
+            overflow-y: hidden !important;
+        }
+
+        .reveal .copy-button,
+        .reveal pre[data-lang]::before {
+            position: absolute;
+            top: .5rem;
+            height: 26px;
+            background: hsl(230, 1%, 92%);
+            border: 1px solid hsl(230, 1%, 85%);
+            border-radius: var(--radius-sm);
+            box-sizing: border-box;
+        }
+
+        .reveal .copy-button {
+            right: .5rem;
+            width: 26px;
+            padding: 0;
+            color: hsl(230, 6%, 44%);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all .2s ease;
+            z-index: 20;
+            opacity: .8;
+        }
+
+        .reveal .copy-button:hover {
+            background: hsl(230, 1%, 85%);
+            color: hsl(230, 8%, 24%);
+            opacity: 1;
+        }
+
+        .reveal .copy-button svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Language label styling - hide all Prism toolbar plugins, keep only data-lang label */
+        .reveal div.toolbar,
+        .reveal div.toolbar-item,
+        .reveal button.toolbar-item,
+        .reveal span.toolbar-item {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            height: 0 !important;
+            width: 0 !important;
+            overflow: hidden !important;
+            position: absolute !important;
+            pointer-events: none !important;
+        }
+
+        /* Use the pseudo-element data-lang label only */
+        .reveal pre[data-lang]::before {
+            content: attr(data-lang);
+            right: 2.35rem;
+            padding: 0 .5rem;
+            font-size: .65rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: hsl(230, 6%, 50%);
+            pointer-events: none;
+            z-index: 10;
+            display: inline-flex !important;
+            align-items: center !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            height: 26px !important;
+            width: auto !important;
+            position: absolute !important;
+            overflow: visible !important;
+            line-height: 26px !important;
+        }
+
+        .reveal h2 {
+            font-size: 1.6em;
+            margin-top: 30px !important;
+            margin-bottom: 20px !important;
+            text-align: left !important;
+        }
+
+        .reveal h3 {
+            font-size: 1.3em;
+            margin-top: 20px !important;
+            margin-bottom: 15px !important;
+            text-align: left !important;
+        }
+
+        .reveal p {
+            line-height: 1.5;
+            margin-top: 20px !important;
+            margin-left: 0 !important;
+            text-align: left !important;
+        }
+
+        .reveal ul,
+        .reveal ol,
+        .reveal li {
+            line-height: 1.5;
+            text-align: left !important;
+            margin-left: 0 !important;
+        }
+        
+        .reveal ul, .reveal ol {
+            display: block !important;
+            padding-left: 1.2em !important;
+        }
+
+        /* Slide padding and layout */
+        .reveal .slides section {
+            padding: 40px !important;
+            box-sizing: border-box;
+            text-align: left !important;
+            overflow: visible !important;
+        }
+
+        .reveal .slides {
+            text-align: left !important;
+        }
+
+        /* Centering for Title slides (h1 ONLY, h1 + h2 ONLY, or h1 + h2 + p ONLY) */
+        .reveal .slides section:not(.stack):has(> h1:only-child),
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child),
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) {
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: center !important;
+            align-items: center !important;
+            text-align: center !important;
+            height: 100% !important;
+            top: 0 !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:only-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child) h2,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h2,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) p {
+            justify-content: center !important;
+            text-align: center !important;
+            margin: 0 !important;
+            min-height: auto !important;
+            width: 100% !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h1 {
+            margin-bottom: 0.5em !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h2 {
+            margin-bottom: 0.3em !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) p {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        /* Full screen slide fix */
+        .reveal .slides section:has(.full-screen-image) {
+            padding: 0 !important;
+        }
+
+        /* Full screen slide fix - Garantindo que o fundo do Reveal fique visível e a imagem carregada */
+        .reveal:has(section.present .full-screen-image) {
+            background-image: url('../../slide_end_background.png') !important;
+            background-size: cover !important;
+            background-position: center !important;
+        }
+
+        /* Torna o slide e o container de slides transparentes para mostrar o fundo da .reveal */
+        .reveal:has(section.present .full-screen-image) .slides,
+        .reveal:has(section.present .full-screen-image) .slides section.present {
+            background: transparent !important;
+        }
+
+        .full-screen-image {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 !important;
+            /* Se houver texto, ele centraliza aqui */
+        }
+
+        /* Spacing for diagrams */
+        .reveal .svg-graph {
+            margin-top: 1em !important;
+            margin-bottom: 1em !important;
+            overflow: visible !important; /* Prevent labels from being cut off */
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* Mermaid Diagram Styles */
+        .reveal .mermaid {
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            padding: 0 !important;
+            margin: 1rem 0 !important;
+            font-family: inherit !important;
+            overflow: visible !important;
+            text-align: center;
+            display: block !important;
+            width: auto !important;
+            max-width: 100% !important;
+        }
+
+        .reveal pre.mermaid {
+            white-space: pre;
+            font-family: var(--font-code);
+            color: var(--text-muted);
+            margin: 0 !important;
+            padding: 0 !important;
+            width: auto !important;
+            line-height: 1 !important;
+            border: none !important;
+            box-shadow: none !important;
+            background: transparent !important;
+            overflow: visible !important;
+        }
+
+        .reveal .centered .mermaid {
+            display: block !important;
+            justify-content: center;
+            margin-left: auto !important;
+            margin-right: auto !important;
+        }
+
+        .reveal .mermaid svg {
+            max-width: 100% !important;
+            height: auto !important;
+            display: block !important;
+            overflow: visible !important;
+            vertical-align: top !important;
+            font-family: Inter, system-ui, sans-serif !important;
+            font-style: normal !important;
+            font-variant: normal !important;
+            font-weight: 400 !important;
+            letter-spacing: normal !important;
+            word-spacing: normal !important;
+            text-transform: none !important;
+            text-shadow: none !important;
+            line-height: normal !important;
+            text-rendering: geometricPrecision !important;
+        }
+
+        .reveal .mermaid svg * {
+            font-family: inherit !important;
+            font-style: normal !important;
+            font-variant: normal !important;
+            letter-spacing: normal !important;
+            word-spacing: normal !important;
+            text-transform: none !important;
+            text-shadow: none !important;
+            line-height: normal !important;
+        }
+
+        .reveal .mermaid svg .edgeBadge text,
+        .reveal .mermaid svg .edgeBadge tspan,
+        .reveal .mermaid svg .edgeTerm text,
+        .reveal .mermaid svg .edgeTerm tspan,
+        .reveal .mermaid svg .multiplicity text,
+        .reveal .mermaid svg .multiplicity tspan,
+        .reveal .mermaid svg text.edgeBadge,
+        .reveal .mermaid svg text.edgeTerm {
+            font-size: 18px !important;
+            font-weight: 700 !important;
+            fill: var(--heading) !important;
+        }
+
+        /* Mermaid Source Switcher */
+        .reveal .mermaid-outer-container {
+            margin: 1rem 0;
+            position: relative;
+            width: 100%;
+            max-width: 100%;
+        }
+
+        .reveal .mermaid-switcher {
+            display: flex !important;
+            justify-content: flex-end;
+            margin-bottom: 0.5rem;
+            width: 100%;
+        }
+
+        .reveal .switcher-track {
+            display: inline-flex;
+            align-items: center;
+            background: var(--code-bg);
+            padding: 3px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            position: relative;
+        }
+
+        .reveal .switcher-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            border: none;
+            background: transparent;
+            padding: 0.35rem 1rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            border-radius: calc(var(--radius) - 2px);
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            z-index: 1;
+        }
+
+        .reveal .switcher-btn svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .reveal .switcher-btn:hover {
+            color: var(--text);
+        }
+
+        .reveal .switcher-btn.active {
+            color: var(--heading);
+            background: var(--bg);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        .reveal .mermaid-content {
+            min-height: 50px;
+        }
+
+        /* Mermaid display - respect inline width */
+        .reveal .mermaid-display {
+            transition: opacity 0.2s ease;
+            display: block !important;
+            max-width: 100% !important;
+            max-height: var(--mermaid-max-height, calc(100vh - 140px)) !important;
+            border: none !important;
+            box-shadow: none !important;
+            background: transparent !important;
+            overflow: auto !important;
+        }
+
+        .reveal .mermaid-source pre {
+            margin: 0 !important;
+            background: var(--code-bg) !important;
+            border: 1px dashed var(--border) !important;
+        }
+
+        /* Ensure proper toggle behavior */
+        .reveal .mermaid-source {
+            display: none !important;
+        }
+
+        .reveal .mermaid-source[style*="display: block"],
+        .reveal .mermaid-source[style*="display:block"] {
+            display: block !important;
+        }
+
+        .reveal .mermaid-display[style*="display: none"],
+        .reveal .mermaid-display[style*="display:none"] {
+            display: none !important;
+        }
+
+        .reveal .mermaid-display.centered {
+            margin-left: auto !important;
+            margin-right: auto !important;
+            max-width: 100% !important;
+        }
+
+        .centered:not(.mermaid-display) {
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            width: 100% !important;
+            margin: 1em 0 !important;
+        }
+
+        .no-break {
+            display: block;
+            width: 100%;
+        }
+
+        .reveal blockquote {
+            display: block;
+            position: relative;
+            margin: var(--r-block-margin) auto !important;
+            padding: 5px;
+            font-style: italic;
+            background: rgba(255, 170, 73, 0.2);
+            box-shadow: 0 0 2px rgba(0,0,0,.2);
+            text-align: left !important;
+        }
+
+        .col1 {
+            width: 90%;
+            margin: 0 auto;
+        }
+
+        .col2 {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start;
+            width: 90%;
+            margin: 0 auto;
+            align-items: flex-start;
+        }
+
+        /* Callout Styles */
+        :root {
+            --callout-note: #448aff;
+            --callout-abstract: #00b0ff;
+            --callout-info: #00b8d4;
+            --callout-todo: #00bfa5;
+            --callout-tip: #00c853;
+            --callout-success: #64dd17;
+            --callout-question: #ffab00;
+            --callout-warning: #ff9100;
+            --callout-failure: #ff5252;
+            --callout-danger: #ff1744;
+            --callout-bug: #f50057;
+            --callout-example: #7c4dff;
+            --callout-quote: #9e9e9e;
+            --code-bg: #f8f8f8;
+            --border: #ddd;
+        }
+
+        .reveal .callout {
+            margin: 1rem auto !important;
+            border: 1px solid var(--border);
+            border-left: 6px solid var(--callout-note);
+            border-radius: 4px;
+            overflow: hidden;
+            text-align: left !important;
+            font-size: 0.8em;
+            width: 75% !important;
+            max-width: 100% !important;
+        }
+
+        .reveal .callout-title {
+            padding: 0.5rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            color: var(--callout-note);
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .reveal .callout-icon {
+            display: flex;
+            align-items: center;
+        }
+
+        .reveal .callout-icon svg {
+            width: 1.2em;
+            height: 1.2em;
+        }
+
+        .reveal .callout-content {
+            padding: 0.5rem 1rem;
+        }
+
+        .reveal .callout-content p {
+            margin-top: 0.5rem !important;
+        }
+
+        .reveal .callout-content p:first-child {
+            margin-top: 0 !important;
+        }
+
+        .reveal h1 { text-transform: none !important; }
+
+        .reveal .callout-abstract { border-left-color: var(--callout-abstract); }
+        .reveal .callout-abstract .callout-title { color: var(--callout-abstract); }
+        .reveal .callout-info { border-left-color: var(--callout-info); }
+        .reveal .callout-info .callout-title { color: var(--callout-info); }
+        .reveal .callout-todo { border-left-color: var(--callout-todo); }
+        .reveal .callout-todo .callout-title { color: var(--callout-todo); }
+        .reveal .callout-tip { border-left-color: var(--callout-tip); }
+        .reveal .callout-tip .callout-title { color: var(--callout-tip); }
+        .reveal .callout-success { border-left-color: var(--callout-success); }
+        .reveal .callout-success .callout-title { color: var(--callout-success); }
+        .reveal .callout-question { border-left-color: var(--callout-question); }
+        .reveal .callout-question .callout-title { color: var(--callout-question) ; }
+        .reveal .callout-warning { border-left-color: var(--callout-warning); }
+        .reveal .callout-warning .callout-title { color: var(--callout-warning); }
+        .reveal .callout-failure { border-left-color: var(--callout-failure); }
+        .reveal .callout-failure .callout-title { color: var(--callout-failure); }
+        .reveal .callout-danger { border-left-color: var(--callout-danger); }
+        .reveal .callout-danger .callout-title { color: var(--callout-danger); }
+        .reveal .callout-bug { border-left-color: var(--callout-bug); }
+        .reveal .callout-bug .callout-title { color: var(--callout-bug); }
+        .reveal .callout-example { border-left-color: var(--callout-example); }
+        .reveal .callout-example .callout-title { color: var(--callout-example); }
+        .reveal .callout-quote { border-left-color: var(--callout-quote); }
+        .reveal .callout-quote .callout-title { color: var(--callout-quote); }
+        .red-note { color: var(--callout-failure); }
+
+        .reveal .slide-number {
+            font-size: 0.8em !important;
+            padding: 5px 10px !important;
+            background: rgba(0,0,0,0.1) !important;
+            border-radius: 4px;
+            color: #000000b1 !important;
+        }
+
+        /* Print styles */
+        @media print {
+            .reveal .slides section {
+                display: block !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                position: relative !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+                page-break-after: always !important;
+                overflow: hidden !important;
+            }
+
+            .reveal .slides {
+                transform: none !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+            }
+            
+            .reveal {
+                overflow: visible !important;
+            }
+        }
+    </style>
+</body>
+
+</html>

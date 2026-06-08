@@ -1,0 +1,206 @@
+// Arquivo CSV UTF-8 para importação de questões objetivas de Sistemas Operacionais,,,,
+// Revisão C3 - memória; memória virtual; sistemas de arquivos e E/S,,,,
+,,,,
+NewQuestion,MC,,,
+ID,SO-C3-001,,,
+Title,Realocação proteção e base limite,,,
+QuestionText,"Um programa foi compilado como se seus endereços começassem em zero. Durante a execução, o sistema operacional decide carregá-lo a partir do endereço físico 10000. O programa tenta acessar o endereço lógico 350.
+
+Em um sistema com registradores de base e limite, o processo não acessa diretamente o endereço físico. O hardware verifica se o endereço lógico está dentro do limite permitido e, se estiver, soma a base para obter o endereço físico real.
+
+Qual alternativa descreve corretamente a função desse mecanismo?",,,
+Points,1,,,
+Difficulty,3,,,
+Option,0,"Ele transforma todos os acessos à memória em acessos ao disco, permitindo memória virtual.",,"Incorreto. Base e limite fazem tradução simples e proteção de acesso; não transformam todo acesso em acesso ao disco."
+Option,0,"Ele impede que programas usem endereços lógicos menores que o endereço base.",,"Incorreto. O endereço lógico é comparado com o limite; a base é somada depois para chegar ao endereço físico."
+Option,100,"Ele permite realocação e proteção, traduzindo endereços lógicos para físicos e bloqueando acessos fora do limite.",,"Correto. A base realoca o processo e o limite impede acesso fora da região permitida."
+Option,0,"Ele elimina a necessidade de MMU, pois a tradução passa a ser feita pelo compilador.",,"Incorreto. A tradução e a verificação dependem de suporte de hardware, como a MMU."
+Feedback,"Base e limite resolvem dois problemas juntos: realocação, ao somar a base, e proteção, ao bloquear endereços lógicos fora do limite.",,,
+,,,,
+NewQuestion,MC,,,
+ID,SO-C3-002,,,
+Title,Fragmentação e alocação de memória,,,
+QuestionText,"Um sistema possui 120 KB livres no total, mas esse espaço está dividido em três lacunas separadas: 40 KB, 30 KB e 50 KB. Um novo processo precisa de 90 KB contíguos para ser carregado.
+
+Apesar de haver memória livre suficiente na soma total, nenhuma lacuna isolada comporta o processo. O sistema poderia resolver isso movendo processos para juntar as lacunas, mas essa compactação tem custo.
+
+Qual conceito aparece nesse cenário?",,,
+Points,1,,,
+Difficulty,3,,,
+Option,0,"Fragmentação interna, pois o processo recebeu mais memória do que usou.",,"Incorreto. Fragmentação interna ocorre dentro da área alocada, não entre lacunas separadas."
+Option,100,"Fragmentação externa, pois a memória livre existe, mas está espalhada em pedaços pequenos.",,"Correto. Há memória livre total suficiente, mas ela não está contígua."
+Option,0,"Falta de página, pois uma página válida não está presente na RAM.",,"Incorreto. Falta de página pertence ao contexto de memória virtual paginada."
+Option,0,"TLB miss, pois a tradução recente não está na cache da MMU.",,"Incorreto. TLB miss é uma falha de cache de tradução, não um problema de lacunas contíguas."
+Feedback,"Fragmentação externa acontece quando o espaço livre total existe, mas está dividido em lacunas pequenas demais para a solicitação.",,,
+,,,,
+NewQuestion,MC,,,
+ID,SO-C3-003,,,
+Title,Paginação e tradução de endereço,,,
+QuestionText,"Considere um sistema com páginas de 4 KB, ou seja, 4096 bytes. Um processo tenta acessar o endereço virtual 8196.
+
+Na paginação, o endereço virtual é dividido em número da página e deslocamento. O número da página é usado para consultar a tabela de páginas. O deslocamento indica a posição dentro da página e permanece igual durante a tradução.
+
+Qual é a página virtual e o deslocamento desse endereço?",,,
+Points,1,,,
+Difficulty,4,,,
+Option,0,"Página 0, deslocamento 8196.",,"Incorreto. O deslocamento não pode ultrapassar o tamanho da página."
+Option,0,"Página 1, deslocamento 4096.",,"Incorreto. Deslocamento 4096 já inicia a próxima página quando o tamanho da página é 4096 bytes."
+Option,0,"Página 4, deslocamento 2.",,"Incorreto. A divisão inteira de 8196 por 4096 resulta em página 2."
+Option,100,"Página 2, deslocamento 4.",,"Correto. 8196 = 2 * 4096 + 4."
+Feedback,"Com páginas de 4096 bytes, o endereço 8196 pertence à página 2 e tem deslocamento 4.",,,
+,,,,
+NewQuestion,MC,,,
+ID,SO-C3-004,,,
+Title,Falta de página e TLB,,,
+QuestionText,"Um processo acessa um endereço virtual válido. A MMU consulta a tradução e percebe que a página correspondente não está presente na RAM. Nesse caso, o hardware gera uma interrupção para que o sistema operacional trate a situação.
+
+Esse evento é diferente de um simples TLB miss. No TLB miss, a tradução pode não estar na TLB, mas a página ainda pode estar na RAM. Na falta de página, a página precisa ser carregada do disco ou de outro armazenamento de apoio.
+
+Qual alternativa está correta?",,,
+Points,1,,,
+Difficulty,4,,,
+Option,100,"Falta de página ocorre quando uma página virtual válida não está presente na RAM e precisa ser trazida pelo SO.",,"Correto. A MMU sinaliza a falta e o SO carrega a página ou escolhe uma vítima."
+Option,0,"TLB miss e falta de página são exatamente o mesmo evento, apenas com nomes diferentes.",,"Incorreto. TLB miss pode ser resolvido consultando a tabela se a página já estiver na RAM."
+Option,0,"Falta de página sempre indica acesso ilegal e obriga o sistema a encerrar o processo.",,"Incorreto. Pode ser um acesso válido a uma página que está fora da RAM no momento."
+Option,0,"A TLB armazena arquivos abertos para evitar chamadas open.",,"Incorreto. A TLB guarda traduções recentes de endereços virtuais para físicos."
+Feedback,"TLB miss é falha de cache de tradução. Falta de página ocorre quando a página virtual válida não está presente na RAM.",,,
+,,,,
+NewQuestion,MS,,,
+ID,SO-C3-005,,,
+Title,Substituição de páginas bits R M e thrashing,,,
+QuestionText,"Em memória virtual, quando a RAM está cheia e ocorre uma falta de página, o sistema operacional precisa escolher uma página vítima. Essa decisão pode usar bits como R, que indica referência recente, e M, que indica modificação.
+
+Se a escolha de vítimas for ruim, ou se os conjuntos de trabalho dos processos não couberem na RAM, o sistema pode passar tempo demais trocando páginas entre RAM e disco.
+
+Marque as alternativas corretas.",,,
+Points,1,,,
+Difficulty,5,,,
+Scoring,RightAnswers,,,
+Option,1,"Uma página com M = 1 está suja e precisa ser gravada no disco antes de ser removida, caso seja escolhida como vítima.",,"Correto. Página modificada não pode ser descartada sem preservar suas alterações."
+Option,0,"O algoritmo ótimo é implementado diretamente porque o SO conhece todas as referências futuras.",,"Incorreto. O algoritmo ótimo usa o futuro e serve como referência teórica."
+Option,1,"O bit R pode ser zerado periodicamente para diferenciar uso recente de uso antigo.",,"Correto. Essa limpeza periódica ajuda algoritmos como NRU e envelhecimento."
+Option,0,"FIFO sempre remove a melhor página, pois a página mais antiga nunca será usada novamente.",,"Incorreto. Uma página antiga pode continuar sendo muito usada."
+Option,1,"Thrashing ocorre quando o sistema gasta tempo excessivo trocando páginas, com pouco progresso real dos processos.",,"Correto. Nesse caso, o custo de paginação domina a execução útil."
+Feedback,"Bits R e M ajudam a estimar uso recente e custo de remoção. Thrashing aparece quando a memória física não comporta os conjuntos de trabalho ativos.",,,
+,,,,
+NewQuestion,MC,,,
+ID,SO-C3-006,,,
+Title,Arquivos como abstração persistente,,,
+QuestionText,"Quando um programa salva relatório.txt, o usuário enxerga um nome e um conteúdo. Mas o sistema operacional precisa manter muito mais informação: tamanho, permissões, datas, blocos ocupados, metadados e entrada de diretório.
+
+A abstração de arquivo evita que o programa lide diretamente com setores, controladores, interrupções e detalhes físicos do armazenamento.
+
+Qual alternativa descreve melhor um arquivo nesse contexto?",,,
+Points,1,,,
+Difficulty,2,,,
+Option,100,"Uma unidade lógica persistente gerenciada pelo SO, acessada por operações como open, read, write, seek e close.",,"Correto. O arquivo é a abstração persistente oferecida pelo sistema operacional."
+Option,0,"Uma região temporária da RAM que desaparece assim que o processo termina.",,"Incorreto. A persistência é justamente uma característica central dos arquivos."
+Option,0,"Um registrador especial usado pela MMU para traduzir endereços virtuais.",,"Incorreto. Isso está relacionado à gerência de memória, não a arquivos."
+Option,0,"Uma técnica de substituição de páginas baseada nos bits R e M.",,"Incorreto. Bits R e M pertencem à memória virtual."
+Feedback,"Arquivo é uma unidade lógica persistente que esconde detalhes físicos do armazenamento e oferece operações uniformes aos programas.",,,
+,,,,
+NewQuestion,MC,,,
+ID,SO-C3-007,,,
+Title,Diretórios caminhos e links,,,
+QuestionText,"Em sistemas semelhantes ao UNIX, diretórios organizam nomes e associam esses nomes a estruturas internas do sistema de arquivos. Um caminho absoluto começa na raiz, enquanto um caminho relativo começa no diretório atual.
+
+Além disso, um arquivo pode aparecer por mais de um nome. Isso pode ocorrer por link rígido, quando outra entrada aponta para a mesma estrutura interna, ou por link simbólico, quando um pequeno arquivo guarda um caminho para outro.
+
+Qual alternativa está correta?",,,
+Points,1,,,
+Difficulty,3,,,
+Option,0,"Um caminho relativo sempre começa com /.",,"Incorreto. Caminhos absolutos começam na raiz, indicada por /."
+Option,0,"O nome .. representa o próprio diretório atual.",,"Incorreto. .. representa o diretório pai; . representa o diretório atual."
+Option,0,"Remover um link simbólico sempre remove também o arquivo apontado.",,"Incorreto. Remover o link simbólico remove o próprio link, não necessariamente o alvo."
+Option,100,"Um link rígido cria outro nome para a mesma estrutura interna, e o arquivo só desaparece quando o último nome é removido.",,"Correto. Links rígidos compartilham a mesma estrutura interna do arquivo."
+Feedback,"Diretórios mapeiam nomes para localização. Links rígidos criam nomes adicionais para a mesma estrutura interna; links simbólicos guardam caminhos.",,,
+,,,,
+NewQuestion,M,,,
+ID,SO-C3-008,,,
+Title,Estruturas de implementação do sistema de arquivos,,,
+QuestionText,"Um sistema de arquivos não guarda apenas os dados dos usuários. Ele também precisa manter estruturas que permitam interpretar a partição, localizar arquivos, descobrir blocos livres e encontrar o ponto inicial da árvore de diretórios.
+
+Associe cada estrutura ao seu papel.",,,
+Points,1,,,
+Difficulty,4,,,
+Scoring,EquallyWeighted,,,
+Choice,1,Superbloco,,
+Choice,2,I-node,,
+Choice,3,Mapa ou lista de espaço livre,,
+Choice,4,Diretório-raiz,,
+Choice,5,Área de dados,,
+Match,3,Indica quais blocos ainda podem ser alocados,,
+Match,1,"Guarda parâmetros fundamentais, como tamanho de bloco e localização das estruturas principais",,
+Match,5,Região onde ficam conteúdos de arquivos e diretórios,,
+Match,2,Guarda metadados e ponteiros para os blocos de um arquivo,,
+Match,4,Serve como ponto inicial para localizar nomes no sistema de arquivos,,
+Feedback,"Superbloco interpreta a partição; i-nodes localizam metadados e blocos; estruturas de espaço livre controlam alocação; o diretório-raiz inicia a árvore; a área de dados guarda conteúdos.",,,
+,,,,
+NewQuestion,MC,,,
+ID,SO-C3-009,,,
+Title,FAT i-node e tamanho de bloco,,,
+QuestionText,"Considere um arquivo espalhado nos blocos físicos 4, 7 e 12. Em um sistema baseado em FAT, uma tabela global indica, para cada bloco, qual é o próximo bloco do arquivo. Em um sistema baseado em i-node, os ponteiros para os blocos ficam em uma estrutura associada ao próprio arquivo.
+
+Além disso, o sistema precisa escolher um tamanho de bloco. Blocos pequenos reduzem desperdício no último bloco, mas podem exigir mais metadados. Blocos grandes favorecem transferências sequenciais, mas podem desperdiçar espaço em arquivos pequenos.
+
+Qual alternativa está correta?",,,
+Points,1,,,
+Difficulty,4,,,
+Option,0,"FAT e i-node exigem que todos os arquivos sejam armazenados de forma contígua.",,"Incorreto. Ambas as técnicas podem representar arquivos espalhados em blocos não contíguos."
+Option,100,"Na FAT, o encadeamento fica em uma tabela global; no i-node, os ponteiros ficam associados ao arquivo.",,"Correto. A diferença central é onde fica o mapa dos blocos do arquivo."
+Option,0,"Blocos grandes sempre economizam espaço, independentemente do tamanho dos arquivos.",,"Incorreto. Blocos grandes podem desperdiçar espaço em arquivos pequenos."
+Option,0,"O tamanho de bloco não afeta desempenho nem desperdício de espaço.",,"Incorreto. O tamanho de bloco afeta metadados, transferência sequencial e desperdício interno."
+Feedback,"FAT usa uma tabela global por blocos. I-nodes guardam ponteiros associados ao arquivo. O tamanho de bloco expressa um trade-off entre espaço e desempenho.",,,
+,,,,
+NewQuestion,MS,,,
+ID,SO-C3-010,,,
+Title,Journaling cache e consistência,,,
+QuestionText,"Ao remover um arquivo, o sistema pode precisar alterar entrada de diretório, i-node, mapa de blocos livres e outros metadados. Se o computador desligar no meio dessas escritas, as estruturas podem discordar entre si.
+
+Sistemas com journaling registram previamente as intenções de alteração. Já a cache de blocos melhora desempenho, mas pode aumentar o risco se metadados modificados ficarem apenas na memória por tempo demais.
+
+Marque as alternativas corretas.",,,
+Points,1,,,
+Difficulty,5,,,
+Scoring,RightAnswers,,,
+Option,0,"Journaling é equivalente a backup, pois recupera arquivos apagados por engano.",,"Incorreto. Journaling recupera consistência estrutural; não substitui backup."
+Option,1,"Journaling registra transações para facilitar a recuperação de consistência após falhas.",,"Correto. O diário ajuda a completar ou verificar operações interrompidas."
+Option,0,"Escrita adiada elimina qualquer risco, pois evita gravar metadados no disco.",,"Incorreto. Escrita adiada melhora desempenho, mas aumenta a janela de risco."
+Option,1,"sync periódico reduz a janela de risco ao forçar blocos sujos para o disco em intervalos.",,"Correto. A sincronização periódica limita por quanto tempo dados sujos ficam apenas na cache."
+Option,1,"Cache de blocos melhora desempenho, mas metadados sujos em cache exigem cuidado em caso de queda.",,"Correto. Metadados alterados apenas na memória podem deixar estruturas inconsistentes após falha."
+Feedback,"Journaling, sync e políticas de cache equilibram desempenho e consistência. Nenhuma dessas técnicas substitui backup.",,,
+,,,,
+NewQuestion,MC,,,
+ID,SO-C3-011,,,
+Title,E/S programada interrupções e DMA,,,
+QuestionText,"Considere uma transferência grande de dados entre um disco e a memória. Se a CPU precisar verificar continuamente o estado do dispositivo e transferir os dados diretamente, ela pode desperdiçar muito tempo em espera ocupada.
+
+Interrupções melhoram essa situação porque permitem que o dispositivo avise quando precisa de atenção. Para transferências maiores, existe uma técnica em que o controlador move dados diretamente entre dispositivo e memória, com menor participação da CPU.
+
+Qual técnica é essa?",,,
+Points,1,,,
+Difficulty,3,,,
+Option,0,Spooling.,,"Incorreto. Spooling coloca trabalhos em fila para dispositivos dedicados, como impressoras."
+Option,0,Segmentação.,,"Incorreto. Segmentação é uma técnica de organização da memória."
+Option,100,DMA.,,"Correto. DMA permite que o controlador transfira dados entre dispositivo e memória com menor participação da CPU."
+Option,0,Link simbólico.,,"Incorreto. Link simbólico pertence à interface de sistemas de arquivos."
+Feedback,"DMA é especialmente útil em transferências maiores, pois reduz a participação direta da CPU na movimentação dos dados.",,,
+,,,,
+NewQuestion,M,,,
+ID,SO-C3-012,,,
+Title,Camadas de E/S e caminho de uma leitura,,,
+QuestionText,"Quando um processo executa read(fd, buffer, n), a chamada passa por várias camadas. O kernel localiza o arquivo aberto, o sistema de arquivos descobre os blocos, a cache pode ser consultada, o driver pode programar o controlador e uma interrupção pode avisar o fim da operação.
+
+Associe cada camada de E/S ao seu papel principal.",,,
+Points,1,,,
+Difficulty,4,,,
+Scoring,EquallyWeighted,,,
+Choice,1,Software independente de dispositivo,,
+Choice,2,Driver de dispositivo,,
+Choice,3,Tratador de interrupção,,
+Choice,4,Hardware,,
+Match,2,Traduz operações abstratas em comandos específicos do controlador,,
+Match,4,Realiza a operação física solicitada,,
+Match,1,"Oferece serviços gerais como nomeação, proteção, buffers e tratamento uniforme de erros",,
+Match,3,Executa quando o dispositivo sinaliza fim de operação ou necessidade de atenção,,
+Feedback,"A pilha de E/S separa responsabilidades: software independente uniformiza, driver conhece o dispositivo, tratador responde interrupções e hardware executa a operação física.",,,

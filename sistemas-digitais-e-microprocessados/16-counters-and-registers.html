@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toposia - Sistemas Digitais e Microprocessados</title>
+    <link rel="icon" href="/aulas-faesa/img/dark-favicon.svg" media="(prefers-color-scheme: light)">
+    <link rel="icon" href="/aulas-faesa/img/light-favicon.svg" media="(prefers-color-scheme: dark)">
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/fonts.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/bundles/katex-base-prism-one-light-b0347952c973.bundle.min.css">
+    
+    
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css" data-no-bundle>
+    <script src="/aulas-faesa/js/bundles/lucide-katex-auto-render-4b36e8bd8642.bundle.min.js"></script>
+</head>
+
+<body>
+    <script>
+        // Restore sidebar state instantly (before first paint) to avoid transition flash
+        (function() {
+            if (localStorage.getItem('cf_sidebar_hidden') === 'true') {
+                document.body.classList.add('sidebar-hidden', 'no-transition');
+            }
+            requestAnimationFrame(function() {
+                requestAnimationFrame(function() {
+                    document.body.classList.remove('no-transition');
+                });
+            });
+        })();
+    </script>
+    <div class="page-wrapper">
+        <nav class="sidebar">
+            <div class="sidebar-content">
+                <header class="sidebar-title-section">
+                    <a href="contents.html" class="course-title-link">
+                        <h1 class="sidebar-course-title">Sistemas Digitais e Microprocessados</h1>
+                    </a>
+                    <div class="sidebar-ornament">❧</div>
+                </header>
+
+                
+                <section class="sidebar-toc-section">
+                    <h2 class="toc-header">Tabela de Conteúdos</h2>
+                    <ol class="toc-list">
+                        
+                        <li class="toc-item level-2">
+                            <a href="#introdução">16.1. Introdução</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#de-um-flip-flop-para-um-contador">16.2. De Um Flip-Flop Para Um Contador</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#contadores-assíncronos">16.3. Contadores Assíncronos</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#módulo-e-divisão-de-frequência">16.4. Módulo e Divisão de Frequência</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#o-problema-do-atraso-no-contador-assíncrono">16.5. O Problema Do Atraso No Contador Assíncrono</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#contadores-síncronos">16.6. Contadores Síncronos</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#contadores-com-módulo-menor-que">16.7. Contadores Com Módulo Menor Que $2^N$</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#contagem-crescente-decrescente-e-carga-paralela">16.8. Contagem Crescente, Decrescente e Carga Paralela</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#registradores">16.9. Registradores</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#registradores-de-deslocamento">16.10. Registradores de Deslocamento</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#contadores-com-registradores-de-deslocamento">16.11. Contadores Com Registradores de Deslocamento</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#juntando-as-ideias">16.12. Juntando As Ideias</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#questões">16.13. Questões</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#próximos-passos">16.14. Próximos passos</a>
+                        </li>
+                        
+                    </ol>
+                </section>
+                
+
+                <nav class="sidebar-nav-section">
+                    
+                    <a href="15-latches-and-flip-flops.html" class="sidebar-nav-link prev"><i data-lucide="chevron-left" class="nav-icon"></i> Latches e Flip-Flops</a>
+                    
+                    
+                    <a href="javascript:void(0)" onclick="handleBackNavigation()"
+                        class="sidebar-nav-link back"><i data-lucide="arrow-left" class="nav-icon"></i> Voltar</a>
+                </nav>
+
+            </div>
+        </nav>
+
+        <button class="mobile-menu-toggle" aria-label="Menu">
+            <i data-lucide="menu"></i>
+        </button>
+
+        <button class="sidebar-toggle" onclick="CourseForgeNav.toggleSidebar()" aria-label="Alternar Barra Lateral">
+            <i data-lucide="chevron-left" class="toggle-icon" id="sidebar-toggle-icon"></i>
+        </button>
+
+        <div class="mobile-menu-overlay"></div>
+
+        <main class="main-content">
+            <article class="article">
+                <header class="article-header">
+                    <span class="chapter-number">16</span>
+                    <h1 class="article-title">
+                        <span class="title-ornament left">❧</span>
+                        <span class="title-text">Contadores e Registradores</span>
+                        <span class="title-ornament right">❧</span>
+                    </h1>
+                    
+                    <p class="article-date">08/06/2026</p>
+                    
+                    
+                    <nav class="breadcrumb" aria-label="Breadcrumb">
+                        
+                        
+                        
+                        <a href="contents.html" class="breadcrumb-link">Sistemas Digitais e Microprocessados</a>
+                        
+                        <span class="breadcrumb-separator"><i data-lucide="chevron-right" class="breadcrumb-icon"></i></span>
+                        
+                        
+                        
+                        
+                        <a href="contents.html#part-V" class="breadcrumb-link">V - Lógica Sequencial</a>
+                        
+                        <span class="breadcrumb-separator"><i data-lucide="chevron-right" class="breadcrumb-icon"></i></span>
+                        
+                        
+                        
+                        <span class="breadcrumb-current">Contadores e Registradores</span>
+                        
+                        
+                    </nav>
+                    
+                </header>
+                <div class="article-body">
+                    <h2 id="introdução"><span class="heading-text">Introdução</span><span class="heading-arabic">16.1</span></h2>
+<p>Na aula anterior, você viu que um flip-flop consegue armazenar 1 bit. Hoje vamos usar vários flip-flops juntos para construir circuitos que <strong>contam eventos</strong>, <strong>dividem frequência</strong> e <strong>movem dados bit a bit</strong>.</p>
+<p>Esta aula usa como base o Capítulo 7 de <strong>Sistemas Digitais: Princípios e Aplicações</strong>, de Ronald J. Tocci, Neal S. Widmer e Gregory L. Moss. O recorte principal cobre contadores assíncronos e síncronos, contadores de módulo menor que $2^N$, carga paralela, registradores, registradores de deslocamento e contadores por deslocamento.</p>
+<div class="callout callout-abstract">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
+    <span class="callout-title-inner">Ideia central<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Um contador é um circuito sequencial que percorre uma sequência de estados a cada pulso de clock. Um registrador é um conjunto de flip-flops usado para armazenar ou deslocar vários bits. Nos dois casos, o comportamento depende do estado anterior.</p>
+  </div>
+</div>
+<p>O ponto mais importante da aula não é decorar CIs. O ponto é reconhecer o padrão: quando conectamos flip-flops, cada borda de clock pode transformar o estado armazenado em um novo estado.</p>
+<h2 id="de-um-flip-flop-para-um-contador"><span class="heading-text">De Um Flip-Flop Para Um Contador</span><span class="heading-arabic">16.2</span></h2>
+<p>Na aula passada, o flip-flop J-K com $J=K=1$ apareceu como um caso especial. Nessa condição, cada borda ativa inverte o valor armazenado.</p>
+<p>$$
+Q^+ = \overline{Q_0}
+$$</p>
+<p>Esse comportamento é chamado de <strong>toggle</strong> ou <strong>comutação</strong>. Se um flip-flop começa em $0$ e recebe pulsos sucessivos, sua saída alterna entre $0$ e $1$.</p>
+<p>$$
+0 \rightarrow 1 \rightarrow 0 \rightarrow 1 \rightarrow 0 \rightarrow \cdots
+$$</p>
+<p>Essa alternância já parece uma contagem de 1 bit. Com dois flip-flops, podemos representar quatro estados. Com três, oito estados. Com quatro, dezesseis estados.</p>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Se um flip-flop alterna a cada pulso, o que acontece se usarmos a saída dele como clock de outro flip-flop?</p>
+  </div>
+</div>
+<p>A resposta leva diretamente ao contador assíncrono. O primeiro flip-flop responde ao clock externo. O segundo responde à saída do primeiro. O terceiro responde à saída do segundo. O efeito se propaga em cadeia.</p>
+<h2 id="contadores-assíncronos"><span class="heading-text">Contadores Assíncronos</span><span class="heading-arabic">16.3</span></h2>
+<p>Um <strong>contador assíncrono</strong>, também chamado de <strong>contador ondulante</strong> ou <strong>ripple counter</strong>, é construído conectando a saída de um flip-flop à entrada de clock do próximo.</p>
+<img src="static/tocci_fig_7_1_async_counter.png" width="95%" style="display: block; margin: 0 auto;" alt="Contador assíncrono de quatro bits e suas formas de onda.">
+
+<p>No contador da figura, todos os flip-flops J-K estão em modo toggle, com $J=K=1$. A diferença está no clock de cada um:</p>
+<ul>
+<li>o flip-flop $A$ recebe o clock externo</li>
+<li>o flip-flop $B$ recebe como clock a saída de $A$</li>
+<li>o flip-flop $C$ recebe como clock a saída de $B$</li>
+<li>o flip-flop $D$ recebe como clock a saída de $C$</li>
+</ul>
+<p>Assim, os bits $D C B A$ formam a contagem binária. O bit $A$ é o menos significativo, ou LSB. O bit $D$ é o mais significativo, ou MSB.</p>
+<p>$$
+\begin{array}{c|c}
+\text{Pulsos aplicados} & D C B A \\
+\hline
+0 & 0000 \\
+1 & 0001 \\
+2 & 0010 \\
+3 & 0011 \\
+4 & 0100 \\
+\vdots & \vdots \\
+15 & 1111 \\
+16 & 0000
+\end{array}
+$$</p>
+<p>Depois de $1111$, o próximo pulso leva o contador de volta para $0000$. Dizemos que o contador <strong>recicla</strong>.</p>
+<div class="example">
+  <div class="example-title">Exemplo 1</div>
+  <p>Um contador assíncrono de 4 bits começa em $0000$. Determine o estado $D C B A$ após 6, 15, 16 e 19 pulsos de clock.</p>
+<hr />
+<p>Como o contador tem 4 bits, ele possui $2^4=16$ estados. A sequência vai de $0000$ até $1111$ e depois volta para $0000$.</p>
+<p>$$
+\begin{array}{c|c}
+\text{Pulsos} & D C B A \\
+\hline
+6 & 0110 \\
+15 & 1111 \\
+16 & 0000 \\
+19 & 0011
+\end{array}
+$$</p>
+<p>O caso dos 19 pulsos mostra a reciclagem. Depois de 16 pulsos o contador volta para $0000$. Os três pulsos restantes levam a $0011$.</p>
+</div>
+<h2 id="módulo-e-divisão-de-frequência"><span class="heading-text">Módulo e Divisão de Frequência</span><span class="heading-arabic">16.4</span></h2>
+<p>O <strong>módulo</strong> de um contador é o número de estados diferentes que ele percorre antes de voltar ao estado inicial.</p>
+<p>Para um contador binário simples com $N$ flip-flops, o módulo é:</p>
+<p>$$
+M = 2^N
+$$</p>
+<p>Alguns exemplos:</p>
+<p>$$
+\begin{array}{c|c|c}
+\text{Número de flip-flops} & \text{Estados} & \text{Módulo} \\
+\hline
+1 & 0,1 & 2 \\
+2 & 00 \text{ até } 11 & 4 \\
+3 & 000 \text{ até } 111 & 8 \\
+4 & 0000 \text{ até } 1111 & 16
+\end{array}
+$$</p>
+<p>Além de contar eventos, um contador também divide frequência. Em um contador binário, cada flip-flop alterna com metade da frequência do sinal que o alimenta. Por isso, a saída do último flip-flop tem frequência igual à frequência de entrada dividida pelo módulo.</p>
+<p>$$
+f_{out} = \frac{f_{clk}}{M}
+$$</p>
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">Leitura prática<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Se um contador de módulo 16 recebe um clock de $16\,\text{kHz}$, a saída do último flip-flop terá frequência de $1\,\text{kHz}$.</p>
+  </div>
+</div>
+<div class="example">
+  <div class="example-title">Exemplo 2</div>
+  <p>Um sistema precisa transformar um sinal de $60\,\text{Hz}$ em um sinal de $1\,\text{Hz}$. Qual módulo o contador deve ter? Quantos flip-flops seriam suficientes para cobrir esse módulo em um contador binário?</p>
+<hr />
+<p>Queremos:</p>
+<p>$$
+f_{out} = \frac{f_{clk}}{M}
+$$</p>
+<p>Substituindo os valores:</p>
+<p>$$
+1 = \frac{60}{M}
+\qquad \Rightarrow \qquad
+M = 60
+$$</p>
+<p>O contador deve ser de módulo 60. Agora precisamos de $N$ flip-flops suficientes para representar pelo menos 60 estados.</p>
+<p>$$
+2^5 = 32
+\qquad
+2^6 = 64
+$$</p>
+<p>Cinco flip-flops não bastam. Seis flip-flops cobrem 64 estados, então são suficientes. Como queremos módulo 60, e não módulo 64, será necessário fazer o contador reciclar antes de completar todos os estados.</p>
+</div>
+<h2 id="o-problema-do-atraso-no-contador-assíncrono"><span class="heading-text">O Problema Do Atraso No Contador Assíncrono</span><span class="heading-arabic">16.5</span></h2>
+<p>O contador assíncrono é simples, mas tem uma limitação importante. Os flip-flops não mudam todos ao mesmo tempo. A mudança se propaga de um estágio para o próximo.</p>
+<img src="static/tocci_fig_7_4_ripple_delay.png" width="78%" style="display: block; margin: 0 auto;" alt="Atrasos de propagação em contador ondulante.">
+
+<p>Se cada flip-flop tem atraso de propagação $t_{pd}$, o último flip-flop só estabiliza depois que a mudança atravessa todos os estágios anteriores. Para um contador assíncrono de $N$ flip-flops, uma estimativa útil é:</p>
+<p>$$
+T_{clk} \geq N \cdot t_{pd}
+$$</p>
+<p>Portanto:</p>
+<p>$$
+f_{max} = \frac{1}{N \cdot t_{pd}}
+$$</p>
+<p>Quanto mais flip-flops em cascata, maior o atraso acumulado e menor a frequência máxima segura.</p>
+<p>Há outro efeito importante. Durante alguns nanossegundos, o contador pode passar por estados intermediários que não fazem parte da sequência correta. Esses estados temporários podem gerar pulsos indesejados, chamados <strong>glitches</strong>.</p>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Erro comum<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Não assuma que a saída de um contador assíncrono muda instantaneamente de um número binário para o próximo. Durante a transição, alguns bits já mudaram e outros ainda não.</p>
+  </div>
+</div>
+<div class="example">
+  <div class="example-title">Exemplo 3</div>
+  <p>Um contador assíncrono de 4 bits usa flip-flops com atraso de propagação de $24\,\text{ns}$. Estime a frequência máxima de clock.</p>
+<hr />
+<p>Usamos:</p>
+<p>$$
+f_{max} = \frac{1}{N \cdot t_{pd}}
+$$</p>
+<p>Como $N=4$ e $t_{pd}=24\,\text{ns}$:</p>
+<p>$$
+f_{max} = \frac{1}{4 \cdot 24\,\text{ns}}
+= \frac{1}{96\,\text{ns}}
+\approx 10{,}4\,\text{MHz}
+$$</p>
+<p>Esse valor mostra o limite imposto pela propagação em cascata. Se aumentarmos o número de bits, o limite cai.</p>
+</div>
+<h2 id="contadores-síncronos"><span class="heading-text">Contadores Síncronos</span><span class="heading-arabic">16.6</span></h2>
+<p>Um <strong>contador síncrono</strong> resolve o principal problema do contador assíncrono. Em vez de passar o clock de um flip-flop para outro, todos os flip-flops recebem o mesmo clock.</p>
+<img src="static/tocci_fig_7_5_sync_counter.png" width="92%" style="display: block; margin: 0 auto;" alt="Contador síncrono de módulo 16.">
+
+<p>Agora a pergunta muda. Se todos recebem a mesma borda de clock, como decidir quais flip-flops devem comutar em cada instante?</p>
+<p>A resposta está nas entradas $J$ e $K$. Cada flip-flop só deve receber $J=K=1$ quando ele precisa alternar no próximo pulso.</p>
+<p>Para um contador binário crescente de 4 bits:</p>
+<p>$$
+\begin{array}{c|c}
+\text{Flip-flop} & \text{Condição para comutar} \\
+\hline
+A & \text{sempre} \\
+B & A=1 \\
+C & A B = 1 \\
+D & A B C = 1
+\end{array}
+$$</p>
+<p>O padrão é simples: um bit só muda quando todos os bits menos significativos estão em $1$.</p>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Por que o bit $C$ só deve alternar quando $A=1$ e $B=1$?</p>
+  </div>
+</div>
+<p>Observe a contagem binária. O bit $C$ muda de $0$ para $1$ na passagem de $0011$ para $0100$, e muda de $1$ para $0$ na passagem de $0111$ para $1000$. Nos dois casos, antes da mudança, os bits menos significativos $B$ e $A$ valem $1$.</p>
+<div class="example">
+  <div class="example-title">Exemplo 4</div>
+  <p>Em um contador síncrono crescente de 4 bits, determine quais flip-flops comutam na transição de $0111$ para $1000$.</p>
+<hr />
+<p>O estado atual é:</p>
+<p>$$
+D C B A = 0111
+$$</p>
+<p>Na próxima contagem, o estado será:</p>
+<p>$$
+D C B A = 1000
+$$</p>
+<p>Comparando bit a bit:</p>
+<p>$$
+\begin{array}{c|c|c|c}
+\text{Bit} & \text{Antes} & \text{Depois} & \text{Ação} \\
+\hline
+A & 1 & 0 & \text{comuta} \\
+B & 1 & 0 & \text{comuta} \\
+C & 1 & 0 & \text{comuta} \\
+D & 0 & 1 & \text{comuta}
+\end{array}
+$$</p>
+<p>Todos os flip-flops comutam nessa borda. Isso acontece porque, antes da transição, os bits menos significativos de cada estágio estão em $1$.</p>
+</div>
+<p>Comparando os dois tipos:</p>
+<div class="col2"><div>
+
+<p><strong>Contador assíncrono</strong></p>
+<p>$$
+\begin{array}{c|c}
+\text{Vantagem} & \text{circuito simples} \\
+\hline
+\text{Clock} & \text{só no primeiro FF} \\
+\text{Atraso} & \text{acumulado} \\
+\text{Risco} & \text{glitches e estados temporários}
+\end{array}
+$$</p>
+</div><div>
+
+<p><strong>Contador síncrono</strong></p>
+<p>$$
+\begin{array}{c|c}
+\text{Vantagem} & \text{mais rápido e controlável} \\
+\hline
+\text{Clock} & \text{em todos os FFs} \\
+\text{Atraso} & t_{pd,FF} + t_{pd,porta} \\
+\text{Custo} & \text{mais lógica de controle}
+\end{array}
+$$</p>
+</div></div>
+
+<h2 id="contadores-com-módulo-menor-que"><span class="heading-text">Contadores Com Módulo Menor Que $2^N$</span><span class="heading-arabic">16.7</span></h2>
+<p>Nem sempre queremos contar todos os estados possíveis. Um contador com 4 flip-flops naturalmente tem 16 estados, mas talvez o projeto precise de apenas 10. Esse é o caso de um contador decimal ou BCD.</p>
+<p>Para construir um contador com módulo menor que $2^N$, uma técnica comum é detectar um estado específico e forçar o contador a voltar ao início.</p>
+<img src="static/tocci_fig_7_6_mod6_counter.png" width="78%" style="display: block; margin: 0 auto;" alt="Contador de módulo 6 usando reset ao detectar 110.">
+
+<p>No exemplo da figura, o contador de 3 bits normalmente iria de $000$ até $111$. Mas a porta NAND detecta a condição $B=C=1$, que acontece quando a contagem chega a $110_2=6_{10}$. Nesse instante, o contador é limpo e volta para $000$.</p>
+<p>Assim, os estados estáveis são:</p>
+<p>$$
+000,\ 001,\ 010,\ 011,\ 100,\ 101
+$$</p>
+<p>O estado $110$ aparece apenas por um tempo muito curto, como estado temporário de reset. Por isso, o contador tem módulo 6.</p>
+<p>O procedimento geral é:</p>
+<ol>
+<li>escolha o menor $N$ tal que $2^N \geq M$</li>
+<li>monte um contador com $N$ flip-flops</li>
+<li>detecte o estado $M$</li>
+<li>use essa detecção para limpar o contador e voltar a $0$</li>
+</ol>
+<div class="example">
+  <div class="example-title">Exemplo 5</div>
+  <p>Projete a ideia de um contador módulo 10 que conte de $0000$ até $1001$ e depois volte para $0000$. Qual estado deve ser detectado para resetar o contador?</p>
+<hr />
+<p>Um contador módulo 10 deve ter dez estados estáveis:</p>
+<p>$$
+0000,\ 0001,\ 0010,\ 0011,\ 0100,\ 0101,\ 0110,\ 0111,\ 1000,\ 1001
+$$</p>
+<p>O próximo estado natural seria:</p>
+<p>$$
+1010_2 = 10_{10}
+$$</p>
+<p>Esse é o estado que deve ser detectado para acionar o reset. Na notação $D C B A$, o estado $1010$ tem $D=1$ e $B=1$. Portanto, a lógica de detecção pode usar as saídas $D$ e $B$ para gerar o sinal de limpeza.</p>
+<p>Esse contador também é chamado de contador decádico. Se a sequência for exatamente de $0000$ a $1001$, ele também é um contador BCD.</p>
+</div>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Estado temporário<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Quando o reset é assíncrono, o estado detectado pode existir por alguns nanossegundos. Isso pode gerar glitches nas saídas. Em circuitos rápidos ou sensíveis, prefira soluções síncronas ou trate esses pulsos com cuidado.</p>
+  </div>
+</div>
+<h2 id="contagem-crescente-decrescente-e-carga-paralela"><span class="heading-text">Contagem Crescente, Decrescente e Carga Paralela</span><span class="heading-arabic">16.8</span></h2>
+<p>Até aqui pensamos principalmente em contadores crescentes. Um contador crescente percorre a sequência:</p>
+<p>$$
+0,\ 1,\ 2,\ 3,\ \ldots
+$$</p>
+<p>Um contador decrescente percorre a sequência inversa:</p>
+<p>$$
+\ldots,\ 3,\ 2,\ 1,\ 0
+$$</p>
+<p>Em um contador síncrono decrescente, a lógica de controle usa as saídas complementadas dos flip-flops de ordem mais baixa. A leitura conceitual é parecida com a contagem crescente, mas agora um bit muda quando os bits menos significativos estão em $0$.</p>
+<p>Também existem contadores <strong>crescentes/decrescentes</strong>, nos quais uma entrada de controle escolhe a direção da contagem. Se a entrada selecionar modo crescente, a próxima borda soma 1. Se selecionar modo decrescente, a próxima borda subtrai 1.</p>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Cuidado de temporização<br /></span>
+  </div>
+  <div class="callout-content">
+<p>A entrada que escolhe a direção não deve mudar exatamente na borda ativa do clock. Se isso acontecer, alguns sinais internos podem chegar tarde demais às entradas dos flip-flops.</p>
+  </div>
+</div>
+<p>Outra função comum é a <strong>carga paralela</strong>. Um contador carregável pode receber diretamente um valor inicial.</p>
+<p>Por exemplo, em vez de começar em $0000$, o contador pode ser carregado com $0101$ e continuar contando a partir de 5.</p>
+<p>$$
+0101 \rightarrow 0110 \rightarrow 0111 \rightarrow 1000 \rightarrow \cdots
+$$</p>
+<p>A carga pode ser:</p>
+<ul>
+<li><strong>assíncrona</strong>, quando ocorre imediatamente, sem esperar o clock</li>
+<li><strong>síncrona</strong>, quando ocorre apenas na borda ativa do clock</li>
+</ul>
+<p>Essa distinção é a mesma que vimos com $PRE$ e $CLR$ em flip-flops. Entradas assíncronas têm efeito imediato. Entradas síncronas respeitam o clock.</p>
+<h2 id="registradores"><span class="heading-text">Registradores</span><span class="heading-arabic">16.9</span></h2>
+<p>Um <strong>registrador</strong> é um conjunto de flip-flops usado para armazenar vários bits ao mesmo tempo. Se um flip-flop guarda 1 bit, então um registrador de 4 bits guarda uma palavra de 4 bits.</p>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Se quatro flip-flops D recebem o mesmo clock, e cada um recebe um bit diferente em sua entrada $D$, o que acontece na próxima borda ativa?</p>
+  </div>
+</div>
+<p>Na próxima borda ativa, todos armazenam seus bits simultaneamente. Esse é o registrador paralelo mais simples.</p>
+<p>Os registradores podem ser classificados pela forma como os dados entram e saem.</p>
+<img src="static/tocci_fig_7_66_register_transfer_types.png" width="82%" style="display: block; margin: 0 auto;" alt="Tipos de transferência em registradores PIPO, SISO, PISO e SIPO.">
+
+<p>$$
+\begin{array}{c|c|c|c}
+\text{Tipo} & \text{Entrada} & \text{Saída} & \text{Ideia} \\
+\hline
+\text{PIPO} & \text{paralela} & \text{paralela} & \text{armazena uma palavra inteira} \\
+\text{SISO} & \text{serial} & \text{serial} & \text{desloca bits em sequência} \\
+\text{PISO} & \text{paralela} & \text{serial} & \text{converte paralelo para serial} \\
+\text{SIPO} & \text{serial} & \text{paralela} & \text{converte serial para paralelo}
+\end{array}
+$$</p>
+<p>No registrador paralelo, vários bits entram juntos. No registrador serial, os bits entram um por vez, a cada pulso de clock.</p>
+<h2 id="registradores-de-deslocamento"><span class="heading-text">Registradores de Deslocamento</span><span class="heading-arabic">16.10</span></h2>
+<p>Um <strong>registrador de deslocamento</strong> move os bits de um flip-flop para o próximo a cada borda de clock. Essa operação é chamada de deslocamento.</p>
+<p>Considere um registrador de 4 bits com deslocamento para a direita. Um bit serial entra em $Q_3$, o valor antigo de $Q_3$ vai para $Q_2$, o de $Q_2$ vai para $Q_1$, e o de $Q_1$ vai para $Q_0$.</p>
+<p>$$
+\text{SER\_IN} \rightarrow Q_3 \rightarrow Q_2 \rightarrow Q_1 \rightarrow Q_0 \rightarrow \text{SER\_OUT}
+$$</p>
+<p>Esse circuito pode ser usado para atrasar um sinal digital. Se o registrador tem 8 flip-flops, um bit aplicado na entrada serial levará 8 bordas de clock para aparecer na saída serial.</p>
+<div class="example">
+  <div class="example-title">Exemplo 6</div>
+  <p>Um registrador de deslocamento de 4 bits começa em $Q_3Q_2Q_1Q_0=0000$. A entrada serial recebe, em quatro bordas consecutivas, os bits $1$, $0$, $1$ e $1$. Considere que o novo bit entra em $Q_3$ e que os demais deslocam para a direita. Determine o estado após cada borda.</p>
+<hr />
+<p>Vamos aplicar a regra de deslocamento:</p>
+<p>$$
+Q_3Q_2Q_1Q_0 \leftarrow \text{novo bit}, Q_3, Q_2, Q_1
+$$</p>
+<p>$$
+\begin{array}{c|c|c}
+\text{Borda} & \text{Bit de entrada} & Q_3Q_2Q_1Q_0 \\
+\hline
+0 & - & 0000 \\
+1 & 1 & 1000 \\
+2 & 0 & 0100 \\
+3 & 1 & 1010 \\
+4 & 1 & 1101
+\end{array}
+$$</p>
+<p>Após quatro bordas, os quatro bits recebidos estão armazenados em paralelo no registrador. A ordem final depende da direção escolhida para o deslocamento.</p>
+</div>
+<h2 id="contadores-com-registradores-de-deslocamento"><span class="heading-text">Contadores Com Registradores de Deslocamento</span><span class="heading-arabic">16.11</span></h2>
+<p>Se pegarmos um registrador de deslocamento e realimentarmos a saída do último flip-flop para a entrada do primeiro, obtemos um contador por deslocamento.</p>
+<p>O primeiro caso é o <strong>contador em anel</strong>. Nele, normalmente existe apenas um bit em $1$, que circula pelo registrador.</p>
+<img src="static/tocci_fig_7_75_ring_counter.png" width="78%" style="display: block; margin: 0 auto;" alt="Contador em anel de quatro bits e suas formas de onda.">
+
+<p>Se o estado inicial for $1000$, a sequência é:</p>
+<p>$$
+1000 \rightarrow 0100 \rightarrow 0010 \rightarrow 0001 \rightarrow 1000
+$$</p>
+<p>Esse contador tem módulo 4, porque percorre quatro estados antes de repetir.</p>
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">Inicialização<br /></span>
+  </div>
+  <div class="callout-content">
+<p>O contador em anel precisa começar com exatamente um flip-flop em $1$ e os demais em $0$. Se energizar em outro estado, a sequência pode não ser a desejada. Por isso, usa-se preset e clear para definir o estado inicial.</p>
+  </div>
+</div>
+<p>O segundo caso é o <strong>contador Johnson</strong>, também chamado de contador em anel torcido. A diferença é que a saída invertida do último flip-flop volta para a entrada do primeiro.</p>
+<img src="static/tocci_fig_7_77_johnson_counter.png" width="72%" style="display: block; margin: 0 auto;" alt="Formas de onda e diagrama de estados de um contador Johnson de três bits.">
+
+<p>Para um contador Johnson de 3 flip-flops, começando em $000$, a sequência é:</p>
+<p>$$
+000 \rightarrow 100 \rightarrow 110 \rightarrow 111 \rightarrow 011 \rightarrow 001 \rightarrow 000
+$$</p>
+<p>Ele tem módulo 6. Em geral, um contador Johnson com $N$ flip-flops tem módulo:</p>
+<p>$$
+M = 2N
+$$</p>
+<p>Isso o coloca entre o contador em anel e o contador binário em termos de uso de flip-flops.</p>
+<p>$$
+\begin{array}{c|c|c}
+\text{Tipo} & \text{Flip-flops} & \text{Módulo típico} \\
+\hline
+\text{contador em anel} & N & N \\
+\text{contador Johnson} & N & 2N \\
+\text{contador binário} & N & 2^N
+\end{array}
+$$</p>
+<p>O contador em anel é fácil de decodificar porque cada estado ativa diretamente um flip-flop. O contador Johnson usa menos flip-flops que o anel para o mesmo módulo, mas precisa de alguma lógica de decodificação.</p>
+<div class="example">
+  <div class="example-title">Exemplo 7</div>
+  <p>Quantos flip-flops são necessários para construir um contador em anel de módulo 8? E um contador Johnson de módulo 8?</p>
+<hr />
+<p>No contador em anel:</p>
+<p>$$
+M = N
+$$</p>
+<p>Logo, para módulo 8:</p>
+<p>$$
+N = 8
+$$</p>
+<p>No contador Johnson:</p>
+<p>$$
+M = 2N
+$$</p>
+<p>Então:</p>
+<p>$$
+8 = 2N
+\qquad \Rightarrow \qquad
+N = 4
+$$</p>
+<p>O contador Johnson usa metade dos flip-flops do contador em anel para o mesmo módulo. Em compensação, a decodificação dos estados não é tão direta quanto no anel.</p>
+</div>
+<h2 id="juntando-as-ideias"><span class="heading-text">Juntando As Ideias</span><span class="heading-arabic">16.12</span></h2>
+<p>Contadores e registradores são aplicações diretas dos flip-flops.</p>
+<p>$$
+\begin{array}{c|c|c}
+\text{Circuito} & \text{O que faz} & \text{Pergunta principal} \\
+\hline
+\text{contador} & \text{percorre estados} & \text{qual é o próximo estado?} \\
+\text{registrador} & \text{armazena bits} & \text{quais bits serão guardados?} \\
+\text{registrador de deslocamento} & \text{move bits} & \text{para onde cada bit vai?} \\
+\text{contador em anel ou Johnson} & \text{conta por deslocamento} & \text{qual realimentação fecha o ciclo?}
+\end{array}
+$$</p>
+<p>O mesmo bloco básico aparece em todos eles: flip-flops sincronizados por clock. A diferença está nas conexões e na lógica que decide o próximo estado.</p>
+<h2 id="questões"><span class="heading-text">Questões</span><span class="heading-arabic">16.13</span></h2>
+<div class="questions">
+  <p><strong>1.</strong> Explique por que o flip-flop J-K com $J=K=1$ é útil para construir contadores.</p>
+<p><strong>2.</strong> Um contador assíncrono de 3 bits começa em $000$. Determine o estado após 5, 7 e 8 pulsos de clock.</p>
+<p><strong>3.</strong> Qual é o módulo natural de um contador binário com 5 flip-flops? Se o clock de entrada for $32\,\text{kHz}$, qual é a frequência na saída do último flip-flop?</p>
+<p><strong>4.</strong> Um contador assíncrono tem 6 flip-flops, cada um com $t_{pd}=20\,\text{ns}$. Estime a frequência máxima de clock.</p>
+<p><strong>5.</strong> Compare contadores assíncronos e síncronos quanto ao clock, atraso e complexidade.</p>
+<p><strong>6.</strong> Em um contador síncrono crescente de 4 bits, quais flip-flops devem comutar quando o estado atual é $0011$?</p>
+<p><strong>7.</strong> Para construir um contador módulo 12 com 4 flip-flops e reset assíncrono, qual estado deve ser detectado para limpar o contador?</p>
+<p><strong>8.</strong> Explique a diferença entre carga paralela síncrona e carga paralela assíncrona.</p>
+<p><strong>9.</strong> Classifique cada registrador: entrada paralela/saída paralela, entrada serial/saída serial, entrada paralela/saída serial e entrada serial/saída paralela. Dê uma aplicação possível para PISO ou SIPO.</p>
+<p><strong>10.</strong> Um registrador de deslocamento de 4 bits começa em $0000$. A entrada serial recebe $1$, $1$, $0$, $1$, com deslocamento para a direita e entrada em $Q_3$. Determine o estado após cada borda.</p>
+<p><strong>11.</strong> Escreva a sequência de um contador em anel de 4 bits que começa em $1000$.</p>
+<p><strong>12.</strong> Quantos flip-flops são necessários para um contador Johnson de módulo 10? Escreva a relação geral entre módulo e número de flip-flops.</p>
+</div>
+<div class="example">
+  <div class="example-title">Gabarito</div>
+  <p><strong>1.</strong> Porque com $J=K=1$ o flip-flop comuta a cada borda ativa. Essa alternância cria uma contagem de 1 bit e permite formar contadores com vários flip-flops.</p>
+<p><strong>2.</strong> Um contador de 3 bits tem módulo $8$. Após 5 pulsos, o estado é $101$. Após 7 pulsos, é $111$. Após 8 pulsos, recicla para $000$.</p>
+<p><strong>3.</strong> O módulo natural é $2^5=32$. A saída do último flip-flop tem frequência $32\,\text{kHz}/32 = 1\,\text{kHz}$.</p>
+<p><strong>4.</strong> Usando $f_{max}=1/(N\cdot t_{pd})$, temos $f_{max}=1/(6\cdot20\,\text{ns})=1/(120\,\text{ns})\approx8{,}33\,\text{MHz}$.</p>
+<p><strong>5.</strong> No assíncrono, o clock entra no primeiro flip-flop e se propaga pelos demais, gerando atraso acumulado e possíveis glitches. No síncrono, todos os flip-flops recebem o mesmo clock, o atraso não se acumula da mesma forma, mas o circuito exige mais lógica de controle.</p>
+<p><strong>6.</strong> O estado atual é $D C B A=0011$. Na próxima contagem será $0100$. Os bits $A$, $B$ e $C$ comutam. O bit $D$ permanece em $0$.</p>
+<p><strong>7.</strong> Um contador módulo 12 deve ter estados estáveis de $0000$ até $1011$. O estado a detectar para limpar é $1100_2=12_{10}$.</p>
+<p><strong>8.</strong> Na carga paralela assíncrona, o valor é carregado imediatamente, sem esperar a borda do clock. Na carga paralela síncrona, o valor só é carregado na borda ativa do clock.</p>
+<p><strong>9.</strong> PIPO tem entrada paralela e saída paralela. SISO tem entrada serial e saída serial. PISO tem entrada paralela e saída serial. SIPO tem entrada serial e saída paralela. Um PISO pode converter uma palavra paralela para transmissão serial. Um SIPO pode receber bits seriais e disponibilizá-los como uma palavra paralela.</p>
+<p><strong>10.</strong> Aplicando a regra $Q_3Q_2Q_1Q_0 \leftarrow \text{novo bit},Q_3,Q_2,Q_1$, a sequência é $1000$, $1100$, $0110$, $1011$.</p>
+<p><strong>11.</strong> A sequência é $1000 \rightarrow 0100 \rightarrow 0010 \rightarrow 0001 \rightarrow 1000$.</p>
+<p><strong>12.</strong> No contador Johnson, $M=2N$. Para módulo 10, $10=2N$, então $N=5$ flip-flops.</p>
+</div>
+<h2 id="próximos-passos"><span class="heading-text">Próximos passos</span><span class="heading-arabic">16.14</span></h2>
+<p>Nesta aula, você viu como vários flip-flops podem formar contadores, registradores e registradores de deslocamento. A ideia central foi acompanhar o próximo estado a cada borda de clock. Na próxima etapa, podemos avançar para análise e projeto de contadores síncronos com sequências arbitrárias, usando tabelas de estado e lógica de excitação.</p>
+
+                </div>
+            </article>
+            <footer class="footer">
+                <p>© 2025 · <a href="#">Gabriel Soares Baptista</a></p>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        const toggle = document.querySelector('.mobile-menu-toggle');
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.querySelector('.mobile-menu-overlay');
+
+        function openMenu() {
+            sidebar.classList.add('open');
+            overlay.classList.add('open');
+            toggle.classList.add('open');
+            toggle.innerHTML = '<i data-lucide="x"></i>';
+            CourseForgeUI.initIcons();
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMenu() {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('open');
+            toggle.classList.remove('open');
+            toggle.innerHTML = '<i data-lucide="menu"></i>';
+            CourseForgeUI.initIcons();
+            document.body.style.overflow = '';
+        }
+
+        toggle.addEventListener('click', () => {
+            if (sidebar.classList.contains('open')) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        overlay.addEventListener('click', closeMenu);
+    </script>
+
+    
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            renderMathInElement(document.body, {
+                output: 'html',
+                delimiters: [
+                    { left: "$$", right: "$$", display: true },
+                    { left: "$", right: "$", display: false },
+                    { left: "\\(", right: "\\)", display: false },
+                    { left: "\\[", right: "\\]", display: true }
+                ],
+                throwOnError: false,
+                strict: false
+            });
+        });
+    </script>
+    
+    
+    <script src="/aulas-faesa/js/vendor/prism/prism.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-c.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-cpp.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-python.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-clike.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-perl.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-java.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-mermaid.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-php.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js" data-no-bundle></script>
+    
+    
+    
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            mermaid.initialize({
+                startOnLoad: true,
+                theme: 'default',
+                securityLevel: 'loose',
+                fontFamily: 'Inter, system-ui, sans-serif',
+                themeVariables: {
+                    fontSize: '16px',
+                    edgeLabelFontSize: '16px',
+                    multiplicityFontSize: '18px'
+                }
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const isSubcourse = false;
+        const courseName = "Sistemas Digitais e Microprocessados";
+        CourseForgeNav.applyDynamicBreadcrumbs('.breadcrumb', isSubcourse);
+        CourseForgeNav.initScrollSpy();
+        CourseForgeUI.initCopyButtons();
+        CourseForgeUI.initExamples();
+        });
+
+        function handleBackNavigation() {
+            const isSubcourse = false;
+        const dynamic = CourseForgeNav.getBackLink('contents.html', 'Voltar', isSubcourse);
+        window.location.href = dynamic.url;
+        }
+    </script>
+</body>
+
+</html>
