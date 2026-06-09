@@ -217,7 +217,7 @@
 <p>Risco não é o mesmo que problema. Risco é algo que <strong>pode</strong> acontecer. Problema é algo que <strong>já</strong> aconteceu. A gerência de riscos tenta agir enquanto ainda há tempo para prevenir, reduzir ou preparar uma resposta. Depois que o problema se materializa, já não há mais o que gerenciar como risco, há o que resolver como incidente.</p>
   </div>
 </div>
-<p>Pense em um exemplo cotidiano. Quando você sai de casa com guarda-chuva porque a previsão indica 70% de chance de chuva, você está gerenciando um risco. A chuva ainda não caiu. Você não tem certeza de que vai cair. Mas você decide carregar o guarda-chuva porque o impacto de se molhar antes de uma reunião importante justifica o incômodo de carregá-lo. Se você esperar a chuva começar para comprar um guarda-chuva, já estará molhado. O mesmo raciocínio vale para projetos de software: a hora de agir é antes da crise, não durante ela.</p>
+<p>Considere um exemplo cotidiano. Quando alguém sai de casa com guarda-chuva porque a previsão indica 70% de chance de chuva, essa pessoa está gerenciando um risco. A chuva ainda não caiu. Não há certeza de que vai cair. Mas carregar o guarda-chuva se justifica porque o impacto de se molhar antes de uma reunião importante supera o incômodo de carregá-lo. Esperar a chuva começar para então comprar um guarda-chuva significa já estar molhado. O mesmo raciocínio vale para projetos de software: a hora de agir é antes da crise, não durante ela.</p>
 <h2 id="por-que-projetos-de-software-são-especialmente-arriscados"><span class="heading-text">Por que projetos de software são especialmente arriscados?</span><span class="heading-arabic">11.2</span></h2>
 <p>Projetos de software têm características que os tornam mais difíceis de controlar do que outros tipos de projeto. Entender essas características ajuda a perceber por que a gerência de riscos não é um luxo, é uma necessidade.</p>
 <p><strong>O trabalho é invisível.</strong> Em uma obra de engenharia civil, um gerente pode olhar para uma parede, uma fundação ou uma estrutura metálica e ter alguma noção de avanço. Em software, o progresso depende de decisões de projeto, código-fonte, testes automatizados, integrações, documentação, entendimento de domínio e aprendizado técnico, nada disso é visível para um observador externo. O gerente depende de relatos, demonstrações e evidências indiretas. Isso torna mais difícil perceber que um risco está se materializando.</p>
@@ -275,12 +275,12 @@
   <div class="example-title">Exemplo 1</div>
   <p>Imagine um sistema acadêmico sendo desenvolvido por uma equipe de cinco pessoas. Uma dessas pessoas é a única que entende profundamente a integração com o sistema de autenticação institucional. No meio do projeto, essa pessoa pede demissão.</p>
 <p>Esse evento é um <strong>risco de projeto</strong>, porque o cronograma provavelmente vai atrasar. Encontrar um substituto leva tempo, e o substituto precisa aprender o que já foi feito antes de produzir. Também é um <strong>risco de produto</strong>, porque a pessoa substituta pode não ter a mesma familiaridade com os detalhes de segurança da autenticação, aumentando a chance de erros. E pode ser um <strong>risco de negócio</strong>, porque um atraso na entrega pode comprometer a confiança da instituição, afetar renovações de contrato ou prejudicar a reputação da empresa desenvolvedora.</p>
-<p>Perceba que o mesmo evento, a saída de uma pessoa, muda de gravidade conforme o contexto. Se a equipe mantinha documentação atualizada, testes automatizados, revisões de código e sobreposição deliberada de conhecimento entre os membros, o impacto pode ser controlado. Se todo o conhecimento crítico estava concentrado em uma única pessoa, o impacto pode ser grave ou até catastrófico.</p>
+<p>O mesmo evento, a saída de uma pessoa, muda de gravidade conforme o contexto. Se a equipe mantinha documentação atualizada, testes automatizados, revisões de código e sobreposição deliberada de conhecimento entre os membros, o impacto pode ser controlado. Se todo o conhecimento crítico estava concentrado em uma única pessoa, o impacto pode ser grave ou até catastrófico.</p>
 </div>
 <img src="static/figura-22-1-exemplos-riscos-comuns.png" width="90%">
 
-<p>A tabela acima (Tabela 22.1 do livro) mostra riscos comuns que podem aparecer em qualquer projeto de software, independentemente do domínio ou da tecnologia. Observe a variedade: rotatividade de pessoal, mudança de gerência, indisponibilidade de hardware, alterações excessivas de requisitos, atrasos em especificações de interfaces, tamanho subestimado do sistema, ferramentas com baixo desempenho, mudança de tecnologia e concorrência de produto. Cada um desses riscos afeta uma combinação de projeto, produto e negócio.</p>
-<p>Note que nenhum desses riscos é um defeito de código. São condições organizacionais, técnicas e de mercado que podem atrapalhar o projeto antes mesmo de uma linha específica falhar. Essa é uma distinção importante: um bug é um problema de qualidade. Um risco é uma condição que pode gerar bugs, atrasos, estouros de orçamento ou perda de valor do produto.</p>
+<p>A tabela acima (Tabela 22.1 do livro) mostra riscos comuns que podem aparecer em qualquer projeto de software, independentemente do domínio ou da tecnologia. Entre eles estão rotatividade de pessoal, mudança de gerência, indisponibilidade de hardware, alterações excessivas de requisitos, atrasos em especificações de interfaces, tamanho subestimado do sistema, ferramentas com baixo desempenho, mudança de tecnologia e concorrência de produto. Cada um desses riscos afeta uma combinação de projeto, produto e negócio.</p>
+<p>Nenhum desses riscos é um defeito de código. São condições organizacionais, técnicas e de mercado que podem atrapalhar o projeto antes mesmo de uma linha específica falhar. Essa é uma distinção importante: um bug é um problema de qualidade. Um risco é uma condição que pode gerar bugs, atrasos, estouros de orçamento ou perda de valor do produto.</p>
 <div class="example">
   <div class="example-title">Exemplo 2</div>
   <p>Considere uma empresa que está desenvolvendo um sistema de vendas on-line para o varejo. A Tabela 22.1 lista &quot;concorrência de produto&quot; como risco de negócio. O que isso significa na prática?</p>
@@ -324,7 +324,7 @@
 <p>Essas quatro atividades formam um ciclo. Depois de monitorar, a equipe pode descobrir riscos que não existiam antes, reavaliar riscos que mudaram de probabilidade ou impacto, e ajustar suas estratégias.</p>
 <img src="static/figura-22-2-processo-gerenciamento-riscos.png" width="90%">
 
-<p>A figura acima (Figura 22.1 do livro) mostra o fluxo. Observe com atenção a seta de retorno entre &quot;Monitoração de riscos&quot; e &quot;Identificação de riscos&quot;. Ela é a parte mais importante do desenho. Significa que o processo não termina quando a lista inicial fica pronta. Durante o projeto, a equipe coleta informação nova sobre a tecnologia, o cliente, o mercado e sua própria capacidade, e essa informação pode revelar riscos que não eram visíveis no início.</p>
+<p>A figura acima (Figura 22.1 do livro) mostra o fluxo. A seta de retorno entre &quot;Monitoração de riscos&quot; e &quot;Identificação de riscos&quot;. Ela é a parte mais importante do desenho. Significa que o processo não termina quando a lista inicial fica pronta. Durante o projeto, a equipe coleta informação nova sobre a tecnologia, o cliente, o mercado e sua própria capacidade, e essa informação pode revelar riscos que não eram visíveis no início.</p>
 <p>O mesmo vale para a seta entre &quot;Avaliação de riscos&quot; (que aparece após o monitoramento) e as etapas anteriores. Se um risco que era moderado passa a ser alto, a equipe precisa rever o plano de resposta. Se um risco que era grave some porque a causa foi eliminada, a equipe pode redirecionar energia para outros riscos.</p>
 <div class="callout callout-note">
   <div class="callout-title">
@@ -424,7 +424,7 @@
 <p><strong>Ferramentas.</strong> O ambiente de homologação depende de um servidor que é compartilhado com outro projeto e fica indisponível com frequência.</p>
 <p><strong>Requisitos.</strong> As regras de matrícula especial (alunos com deficiência, atletas, intercambistas) nunca foram formalizadas. A equipe depende de entrevistas informais com a secretaria. O cliente mencionou &quot;relatórios gerenciais&quot;, mas ninguém especificou quais relatórios, com quais filtros e em qual formato.</p>
 <p><strong>Estimativas.</strong> A equipe estimou &quot;cadastro de disciplinas&quot; como uma tarefa simples, mas cada disciplina tem pré-requisitos, co-requisitos, equivalências, turmas, horários, vagas e docentes vinculados. O cronograma assume que a migração de dados históricos levará uma semana, mas ninguém olhou a base atual para ver inconsistências.</p>
-<p>Observe como a lista é longa, 12 riscos potenciais. Isso é normal. A identificação inicial deve ser abrangente. Depois, a análise vai filtrar e priorizar.</p>
+<p>A lista contém 12 riscos potenciais. Isso é normal. A identificação inicial deve ser abrangente. Depois, a análise vai filtrar e priorizar.</p>
 </div>
 <h3 id="de-onde-vêm-os-riscos-mais-comuns"><span class="heading-text">De onde vêm os riscos mais comuns?</span><span class="heading-arabic">11.5.2</span></h3>
 <p>Além de usar categorias, ajuda conhecer riscos que aparecem com frequência em projetos de software, independentemente do domínio. A Tabela 22.1, que já vimos, lista oito riscos comuns. Vale a pena comentar cada um, porque entender o padrão ajuda a reconhecê-lo quando ele surgir no seu projeto.</p>
@@ -433,7 +433,7 @@
 <p><strong>Indisponibilidade de hardware.</strong> Se o projeto depende de equipamento específico (servidores, dispositivos embarcados, terminais) e esse equipamento atrasa, tarefas inteiras podem ficar bloqueadas.</p>
 <p><strong>Mudanças de requisitos.</strong> Este talvez seja o risco mais frequente em software. O cliente descobre novas necessidades, o mercado muda, uma lei é publicada. Se o processo não tiver um mecanismo para avaliar impacto antes de aceitar mudanças, o escopo cresce sem controle.</p>
 <p><strong>Atrasos de especificação.</strong> Se o sistema depende de interfaces externas (APIs, protocolos, formatos de dados) e essas especificações atrasam, a equipe pode precisar trabalhar com suposições ou interromper o desenvolvimento.</p>
-<p><strong>Tamanho subestimado.</strong> A equipe acha que o sistema é menor do que realmente é. Isso é comum quando o domínio é novo para a equipe ou quando os requisitos estão incompletos.</p>
+<p><strong>Tamanho subestimado.</strong> A equipe estima que o sistema é menor do que realmente é. Isso é comum quando o domínio é novo para a equipe ou quando os requisitos estão incompletos.</p>
 <p><strong>Baixo desempenho de ferramenta CASE.</strong> Ferramentas que prometem gerar código, modelos ou documentação podem não entregar a produtividade esperada, especialmente em contextos diferentes daqueles para os quais foram projetadas.</p>
 <p><strong>Mudança de tecnologia.</strong> Uma tecnologia nova substitui a que estava sendo usada, tornando obsoleta parte do trabalho já feito ou exigindo migração.</p>
 <p><strong>Concorrência de produto.</strong> Um concorrente lança algo similar antes, mudando as expectativas do mercado e do cliente.</p>
@@ -634,7 +634,7 @@
 </tbody>
 </table>
 <p>Agora a equipe consegue decidir com clareza. R1 (login instável) e R2 (banco não suporta pico) são críticos, precisam de ação imediata. R3 (API desconhecida), R7 (pessoas podem sair) e R8 (orçamento incerto) são altos, exigem plano de resposta. R4 (relatórios não validados) e R6 (ferramenta de PDF limitada) são médios, basta monitorar e ter uma alternativa em mente. R5 (reajuste de hospedagem) é baixo, registre e siga em frente.</p>
-<p>Observe que R8 tem probabilidade baixa mas impacto catastrófico, e por isso foi classificado como <strong>Alto</strong>, não como Baixo ou Médio. Isso ilustra exatamente o alerta anterior: impacto catastrófico merece atenção mesmo quando a probabilidade é baixa. Se a emenda não for aprovada, o projeto simplesmente para. Esse risco não pode ser ignorado.</p>
+<p>R8 tem probabilidade baixa mas impacto catastrófico, e por isso foi classificado como <strong>Alto</strong>, não como Baixo ou Médio. Isso confirma o alerta anterior: impacto catastrófico merece atenção mesmo quando a probabilidade é baixa. Se a emenda não for aprovada, o projeto é interrompido. Esse risco não pode ser ignorado.</p>
 <div class="callout callout-question">
   <div class="callout-title">
     <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
@@ -681,7 +681,7 @@
 <p><strong>Prevenção:</strong> agendar uma reunião técnica com a equipe de infraestrutura do governo para entender os períodos de instabilidade e negociar um ambiente de testes dedicado. Isso reduz a probabilidade de ficar sem serviço durante os testes.</p>
 <p><strong>Minimização:</strong> desenvolver um simulador do serviço de login que permita à equipe continuar testando o restante do sistema mesmo quando o serviço real está fora do ar. Isso reduz o impacto: se o serviço cair, o desenvolvimento não para completamente.</p>
 <p><strong>Contingência:</strong> se o serviço real estiver indisponível na semana da homologação final, o plano é executar a homologação com o simulador e agendar uma janela extra de testes com o serviço real na semana seguinte. A equipe já tem o ambiente preparado, o roteiro de testes e a aprovação do cliente para esse plano B.</p>
-<p>Observe que a contingência não é improviso. É uma resposta pensada, documentada e acordada antes da crise.</p>
+<p>A contingência não é improviso. É uma resposta pensada, documentada e acordada antes da crise.</p>
 </div>
 <div class="example">
   <div class="example-title">Exemplo 5</div>
@@ -749,10 +749,10 @@
 </tr>
 </tbody>
 </table>
-<p>Observe um padrão importante: várias estratégias envolvem <strong>comunicação com a alta gerência</strong>. Isso revela algo que nem sempre é óbvio para desenvolvedores: uma parte significativa da gerência de riscos não é técnica, é política e organizacional. O gerente de projeto precisa defender o projeto dentro da organização, mostrar seu valor, alertar sobre riscos e negociar condições.</p>
+<p>Há um padrão: várias estratégias envolvem <strong>comunicação com a alta gerência</strong>. Isso revela que uma parte significativa da gerência de riscos não é técnica, é política e organizacional. O gerente de projeto precisa defender o projeto dentro da organização, mostrar seu valor, alertar sobre riscos e negociar condições.</p>
 <h3 id="as-três-categorias-em-perspectiva"><span class="heading-text">As três categorias em perspectiva</span><span class="heading-arabic">11.7.2</span></h3>
 <p>Vale a pena fixar a diferença entre as três categorias com uma analogia simples.</p>
-<p>Pense em um motorista dirigindo em uma estrada com previsão de tempestade.</p>
+<p>Considere um motorista dirigindo em uma estrada com previsão de tempestade.</p>
 <p><strong>Prevenção:</strong> sair mais cedo, antes da tempestade. (Reduz a probabilidade de enfrentá-la.)<br />
 <strong>Minimização:</strong> revisar os pneus, colocar correntes, verificar os freios. (Se a tempestade chegar, o carro está mais preparado. Reduz o impacto.)<br />
 <strong>Contingência:</strong> saber onde ficam os postos de parada ao longo da estrada, ter o número do guincho, levar um cobertor. (Se a tempestade for forte demais, você sabe o que fazer. Resposta preparada.)</p>
@@ -911,7 +911,7 @@
 <p>Uma equipe de quatro pessoas deve desenvolver um sistema de agendamento de consultas para uma clínica médica de médio porte. O sistema terá cadastro de pacientes (dados pessoais, convênio, histórico simples), agenda de médicos (horários, especialidades, bloqueios de férias), agendamento com verificação de conflitos de horário, confirmação de consulta por mensagem (WhatsApp e e-mail), controle de faltas e reagendamento, relatórios administrativos (consultas por período, por médico, taxa de falta) e integração com um serviço externo de pagamento (convênios e particulares). O prazo de entrega é de 4 meses.</p>
 <p>A equipe é júnior (média de 2 anos de experiência) e ninguém trabalhou antes com integração de pagamento nem com envio de mensagens via WhatsApp Business API.</p>
 <p><strong>Etapa 1: Identificação</strong></p>
-<p>Preencha a tabela abaixo com pelo menos um risco por categoria. Seja específico: em vez de &quot;problemas técnicos&quot;, descreva exatamente o que pode dar errado.</p>
+<p>Preencha a tabela abaixo com pelo menos um risco por categoria. Descreva de forma específica. Em vez de &quot;problemas técnicos&quot;, descreva exatamente o que pode dar errado.</p>
 <table>
 <thead>
 <tr>
@@ -1092,7 +1092,7 @@
 <p><strong>6.</strong> Probabilidade baixa + Impacto catastrófico = Prioridade <strong>Alto</strong>. Embora a probabilidade seja baixa, o impacto é tão grave (ameaça a sobrevivência do projeto) que o risco não pode ser ignorado. A célula correspondente na matriz é &quot;Alto&quot;.</p>
 <p><strong>7.</strong> Prevenção reduz a probabilidade de o risco ocorrer. Minimização reduz o impacto caso o risco ocorra. Contingência é um plano de reação se o risco se concretizar. Exemplo para o risco &quot;a API de pagamento pode não ser homologada a tempo&quot;: prevenção = iniciar a homologação no primeiro mês do projeto, minimização = projetar o checkout com baixo acoplamento para trocar de provedor com facilidade, contingência = se a homologação atrasar, entregar a primeira versão com checkout e pagamento manual, migrando para a API na versão seguinte.</p>
 <p><strong>8.</strong> Três indicadores de que um risco de requisitos está se agravando: aumento súbito no número de solicitações de mudança, reclamações frequentes dos clientes sobre o que foi entregue, decisões de escopo pendentes por várias semanas sem definição.</p>
-<p><strong>9.</strong> Porque o cronograma descreve o que a equipe fará se tudo der certo, mas não prepara a equipe para o que fazer quando algo der errado. Se uma tarefa depende de uma integração externa que atrasa, o cronograma &quot;perfeito&quot; simplesmente quebra, e a equipe não tem um plano B. Um cronograma que reconhece riscos inclui folgas, dependências explícitas, tarefas de validação antecipada e planos de contingência.</p>
+<p><strong>9.</strong> Porque o cronograma descreve o que a equipe fará se tudo der certo, mas não prepara a equipe para o que fazer quando algo der errado. Se uma tarefa depende de uma integração externa que atrasa, o cronograma &quot;perfeito&quot; torna-se inviável, e a equipe não tem um plano B. Um cronograma que reconhece riscos inclui folgas, dependências explícitas, tarefas de validação antecipada e planos de contingência.</p>
 <p><strong>10.</strong> A resposta esperada é que daily e retrospectiva ajudam a identificar riscos operacionais e de curto prazo, mas não substituem completamente uma análise estruturada de riscos. Riscos estratégicos (orçamento, contrato, mercado, dependências externas de longo prazo) podem não aparecer em reuniões curtas e focadas no dia a dia. Além disso, a retrospectiva olha para trás (o que deu errado), enquanto a gerência de riscos também olha para frente (o que pode dar errado). O ideal é combinar as duas abordagens: práticas ágeis para riscos do dia a dia e análise periódica para riscos estratégicos.</p>
 </div>
 <h2 id="próximos-passos"><span class="heading-text">Próximos passos</span><span class="heading-arabic">11.13</span></h2>

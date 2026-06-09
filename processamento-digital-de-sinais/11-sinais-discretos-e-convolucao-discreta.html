@@ -202,9 +202,9 @@
                 </header>
                 <div class="article-body">
                     <h2 id="introdução"><span class="heading-text">Introdução</span><span class="heading-arabic">11.1</span></h2>
-<p>Hoje você vai trabalhar pela primeira vez não com funções do tempo contínuo, mas com sequências. A diferença é brutal.</p>
+<p>Esta aula apresenta os sinais discretos e as operações fundamentais para processá-los, em especial, a convolução discreta e as equações de diferenças.</p>
 <p>Nas últimas aulas, você viu a Transformada de Fourier, o teorema da amostragem e a conversão A/D, TDF e FFT. A pergunta central era: como sair de um sinal físico e chegar a uma lista de números que um computador possa processar?</p>
-<p>Agora a pergunta muda. Você já tem as amostras. Como processá-las?</p>
+<p>Agora a pergunta é: você já tem as amostras. Como processá-las?</p>
 <p>Quando você escreve</p>
 <p>$$
 x[n]=x(nT)
@@ -280,7 +280,7 @@ $$</p>
 <p>vale $1$ para $n=0,1,2,3,4$ e $0$ nos demais índices. É um pulso retangular discreto de largura $5$.</p>
 <p>A Figura 11.1 mostra o impulso e o degrau discretos lado a lado.</p>
 <p><img src="static/figura-11-1-impulso-degrau-discretos.png" alt="Figura 11.1: Impulso e degrau discretos" /></p>
-<p>Existe uma relação muito útil entre os dois. O degrau pode ser escrito como soma acumulada de impulsos:</p>
+<p>Existe uma relação direta entre os dois. O degrau pode ser escrito como soma acumulada de impulsos:</p>
 <p>$$
 u[n]=\sum_{k=-\infty}^{n}\delta[k]
 $$</p>
@@ -330,7 +330,7 @@ $$</p>
 <p>Se $\gamma$ é real e negativo, a sequência alterna sinal a cada amostra. Por exemplo, $(-0{,}8)^n$ tem módulo decrescente, mas muda de positivo para negativo sucessivamente: $(-0{,}8)^0=1$, $(-0{,}8)^1=-0{,}8$, $(-0{,}8)^2=0{,}64$, $(-0{,}8)^3=-0{,}512$ e assim por diante.</p>
 <p>A Figura 11.3 mostra três exponenciais discretas com comportamentos diferentes.</p>
 <p><img src="static/figura-11-3-exponenciais-discretas.png" alt="Figura 11.3: Exponenciais discretas" /></p>
-<p>Para sinais e sistemas discretos, é muito útil enxergar $\gamma$ no plano complexo. O círculo unitário separa crescimento e decaimento:</p>
+<p>Para sinais e sistemas discretos, a interpretação de $\gamma$ no plano complexo é central. O círculo unitário separa crescimento e decaimento:</p>
 <table>
 <thead>
 <tr>
@@ -358,7 +358,7 @@ $$</p>
 <div class="callout callout-question">
   <div class="callout-title">
     <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
-    <span class="callout-title-inner">Pare e pense<br /></span>
+    <span class="callout-title-inner">Pergunta<br /></span>
   </div>
   <div class="callout-content">
 <p>Em tempo contínuo, a região de decaimento era o semiplano esquerdo. Por que em tempo discreto a região é o interior do círculo unitário? O que muda na natureza do sistema quando você troca equações diferenciais por equações de diferenças?</p>
@@ -431,7 +431,7 @@ $$</p>
     <span class="callout-title-inner">A intuição engana?<br /></span>
   </div>
   <div class="callout-content">
-<p>$\cos(1{,}2n)$ — esta sequência parece oscilar, mas ela é periódica ou não? Antes de calcular, responda com base na condição $\Omega/2\pi = m/N_0$.</p>
+<p>$\cos(1{,}2n)$: esta sequência parece oscilar, mas ela é periódica ou não? Antes de calcular, responda com base na condição $\Omega/2\pi = m/N_0$.</p>
   </div>
 </div>
 <div class="example">
@@ -459,7 +459,7 @@ $$</p>
 <p>Moral da história: em tempo discreto, a periodicidade é exceção, não regra.</p>
 </div>
 <h3 id="equivalência-de-frequências-discretas"><span class="heading-text">Equivalência de frequências discretas</span><span class="heading-arabic">11.5.2</span></h3>
-<p>Outra propriedade surpreendente: duas frequências diferentes podem produzir exatamente a mesma sequência.</p>
+<p>Outra propriedade relevante: duas frequências diferentes podem produzir exatamente a mesma sequência.</p>
 <p>Isso acontece porque o índice $n$ é inteiro, e</p>
 <p>$$
 \cos((\Omega+2\pi k)n)=\cos(\Omega n+2\pi kn)=\cos(\Omega n)
@@ -470,7 +470,7 @@ $$</p>
 -\pi<\Omega\le\pi
 $$</p>
 <p>Qualquer frequência fora desse intervalo é equivalente a alguma frequência dentro dele.</p>
-<p>Frequências próximas de $\Omega=0$ (ou $\Omega=2\pi$) oscilam lentamente. Frequências próximas de $\Omega=\pi$ oscilam rapidamente — alternam sinal a cada amostra. $\Omega=\pi$ é a maior frequência discreta possível. Em tempo contínuo, a frequência pode crescer indefinidamente. Em tempo discreto, não.</p>
+<p>Frequências próximas de $\Omega=0$ (ou $\Omega=2\pi$) oscilam lentamente. Frequências próximas de $\Omega=\pi$ oscilam rapidamente, alternando sinal a cada amostra. $\Omega=\pi$ é a maior frequência discreta possível. Em tempo contínuo, a frequência pode crescer indefinidamente. Em tempo discreto, não.</p>
 <div class="example">
   <div class="example-title">Exemplo 3</div>
   <p>Mostre que $\cos(0{,}2\pi n)$ e $\cos(2{,}2\pi n)$ são a mesma sequência.</p>
@@ -882,7 +882,7 @@ $$</p>
     <span class="callout-title-inner">Por que o impulso é tão útil<br /></span>
   </div>
   <div class="callout-content">
-<p>A propriedade do impulso deslocado é a mais usada na prática. Convoluir com um impulso em $n_0$ apenas desloca o sinal em $n_0$ posições. Isso simplifica o cálculo de convoluções quando um dos sinais é uma soma de impulsos — exatamente o que você fez no Exemplo 7.</p>
+<p>A propriedade do impulso deslocado é a mais usada na prática. Convoluir com um impulso em $n_0$ apenas desloca o sinal em $n_0$ posições. Isso simplifica o cálculo de convoluções quando um dos sinais é uma soma de impulsos, exatamente como no Exemplo 7 no Exemplo 7.</p>
   </div>
 </div>
 <div class="example">
@@ -913,7 +913,7 @@ $$</p>
 y[n]=(0{,}5)^n-0{,}5\cdot(0{,}5)^{n-1}=(0{,}5)^n-(0{,}5)^n=0
 $$</p>
 <p>Portanto, $y[n]=\delta[n]$.</p>
-<p>Os sistemas $h[n]=(0{,}5)^n u[n]$ e $h_{\text{inv}}[n]=\delta[n]-0{,}5\delta[n-1]$ são inversos um do outro. A convolução dos dois produz o impulso unitário — a identidade do sistema.</p>
+<p>Os sistemas $h[n]=(0{,}5)^n u[n]$ e $h_{\text{inv}}[n]=\delta[n]-0{,}5\delta[n-1]$ são inversos um do outro. A convolução dos dois produz o impulso unitário, a identidade do sistema.</p>
 </div>
 <h2 id="sistemas-interconectados"><span class="heading-text">Sistemas interconectados</span><span class="heading-arabic">11.11</span></h2>
 <p>Assim como no tempo contínuo, sistemas discretos podem ser conectados em paralelo ou em cascata.</p>
@@ -948,7 +948,7 @@ $$</p>
 <p><strong>(a)</strong> $\sum_{n=0}^{\infty}(0{,}8)^n = \dfrac{1}{1-0{,}8}=5<\infty$. Sistema estável.</p>
 <p><strong>(b)</strong> $\sum_{n=0}^{\infty}1 \to \infty$. Sistema instável. Esse sistema é o acumulador, que soma todas as amostras passadas. Mesmo com entrada limitada, a saída pode divergir.</p>
 <p><strong>(c)</strong> Somamos apenas $5$ termos não nulos: $\sum_{n=0}^{4}1=5<\infty$. Sistema estável. Todo sistema FIR (resposta ao impulso finita) é automaticamente BIBO estável.</p>
-<p>Por que o acumulador é instável mas parece inofensivo? Porque se você colocar um degrau na entrada, a saída é uma rampa que cresce para sempre — e uma rampa não é limitada.</p>
+<p>Por que o acumulador é instável mas parece inofensivo? Porque se você colocar um degrau na entrada, a saída é uma rampa que cresce para sempre, e uma rampa não é limitada.</p>
 </div>
 <p><strong>Sistema sem memória.</strong> Um sistema LIT discreto não tem memória se, e somente se,</p>
 <p>$$

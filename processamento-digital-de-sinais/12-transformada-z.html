@@ -188,7 +188,7 @@
                 </header>
                 <div class="article-body">
                     <h2 id="introdução"><span class="heading-text">Introdução</span><span class="heading-arabic">12.1</span></h2>
-<p>Hoje você vai trocar o domínio do tempo discreto pelo domínio Z. A mudança é tão profunda quanto foi a passagem para Laplace no contínuo.</p>
+<p>Esta aula apresenta a Transformada Z, a ferramenta que leva sequências discretas do domínio do tempo para o domínio da variável complexa $z$, com ganhos análogos aos da Transformada de Laplace para sistemas contínuos.</p>
 <p>Na aula anterior, você estudou sinais discretos, equações de diferenças, resposta ao impulso e convolução discreta. Esse conjunto já permite analisar sistemas no domínio do tempo: se você conhece $h[n]$, calcula a saída por</p>
 <p>$$
 y[n]=x[n]*h[n]
@@ -278,7 +278,7 @@ $$</p>
     <span class="callout-title-inner">A RDC não é um detalhe<br /></span>
   </div>
   <div class="callout-content">
-<p>A mesma expressão algébrica pode representar sinais diferentes se a região de convergência mudar. Nesta aula, você trabalhará principalmente com sinais causais, em que a RDC normalmente fica fora do polo de maior módulo. Mas nunca descarte a RDC como um formalismo — ela carrega a informação de causalidade.</p>
+<p>A mesma expressão algébrica pode representar sinais diferentes se a região de convergência mudar. Nesta aula, você trabalhará principalmente com sinais causais, em que a RDC normalmente fica fora do polo de maior módulo. Mas nunca descarte a RDC como um formalismo: ela carrega a informação de causalidade.</p>
   </div>
 </div>
 <div class="example">
@@ -351,7 +351,7 @@ $$</p>
 <h2 id="transformada-z-inversa"><span class="heading-text">Transformada Z inversa</span><span class="heading-arabic">12.6</span></h2>
 <p>Quando você tem $X(z)$ e quer voltar para $x[n]$, calcula a Transformada Z inversa. Na prática, evita-se a integral de inversão. Você usa tabelas, frações parciais ou expansão em série.</p>
 <p>O método mais comum nesta etapa é a decomposição em frações parciais: escreva $X(z)$ como soma de termos simples, cada um associado a um par conhecido.</p>
-<p>Em Transformada Z, é conveniente expandir $X(z)/z$, não apenas $X(z)$. Isso ocorre porque muitos pares possuem um fator $z$ no numerador — expandir $X(z)/z$ elimina esse fator e simplifica as contas.</p>
+<p>Em Transformada Z, é conveniente expandir $X(z)/z$, não apenas $X(z)$. Isso ocorre porque muitos pares possuem um fator $z$ no numerador. Expandir $X(z)/z$ elimina esse fator e simplifica as contas.</p>
 <div class="example">
   <div class="example-title">Exemplo 3</div>
   <p>Determine a Transformada Z inversa de</p>
@@ -385,7 +385,7 @@ $$</p>
 <p>$$
 x[n]=\frac{10}{3}\left[(0{,}5)^n-(0{,}2)^n\right]u[n]
 $$</p>
-<p>Observe que esta é exatamente a resposta ao degrau do sistema do Exemplo 5 da aula 11 — lá apareceram os mesmos modos $0{,}4^n$ e $0{,}2^n$. A Transformada Z unifica tudo.</p>
+<p>Observe que esta é exatamente a resposta ao degrau do sistema do Exemplo 5 da aula 11: lá apareceram os mesmos modos $0{,}4^n$ e $0{,}2^n$. A Transformada Z unifica tudo.</p>
 </div>
 <h2 id="propriedades-importantes"><span class="heading-text">Propriedades importantes</span><span class="heading-arabic">12.7</span></h2>
 <p>A Transformada Z possui muitas propriedades. As mais importantes para analisar sistemas discretos são estas três.</p>
@@ -419,7 +419,7 @@ $$</p>
     <span class="callout-title-inner">Convolução $\to$ multiplicação<br /></span>
   </div>
   <div class="callout-content">
-<p>Esta é a propriedade mais libertadora da Transformada Z. Toda a trabalheira de somatórios da aula 11 desaparece: $y[n]=x[n]*h[n]$ no tempo vira $Y(z)=X(z)H(z)$ em Z. Você resolve o sistema algebricamente e depois volta ao tempo com frações parciais. É exatamente o mesmo ganho que Laplace deu sobre a convolução contínua.</p>
+<p>Esta propriedade resume o ganho central da Transformada Z: $y[n]=x[n]*h[n]$ no tempo se torna $Y(z)=X(z)H(z)$ no domínio Z. O sistema é resolvido algebricamente e a inversão é feita por frações parciais, o mesmo princípio da Transformada de Laplace para sistemas contínuos.</p>
   </div>
 </div>
 <h2 id="função-de-transferência"><span class="heading-text">Função de transferência</span><span class="heading-arabic">12.8</span></h2>
@@ -499,7 +499,7 @@ $$</p>
 <p>$$
 y[n]=\left[2-(0{,}5)^n\right]u[n]
 $$</p>
-<p>Agora você tem a expressão fechada prometida no início da aula. Para $n=0,1,2,3$, isso dá $1$, $1{,}5$, $1{,}75$, $1{,}875$ — exatamente os valores do Exemplo 4 da aula 11. E você vê de imediato que $y[n]\to 2$ quando $n\to\infty$.</p>
+<p>Agora você tem a expressão fechada prometida no início da aula. Para $n=0,1,2,3$, isso dá $1$, $1{,}5$, $1{,}75$, $1{,}875$, exatamente os valores do Exemplo 4 da aula 11. E você vê de imediato que $y[n]\to 2$ quando $n\to\infty$.</p>
 </div>
 <h2 id="polos-e-zeros"><span class="heading-text">Polos e zeros</span><span class="heading-arabic">12.10</span></h2>
 <p>Uma função de transferência racional pode ser escrita como razão de polinômios:</p>
@@ -525,7 +525,7 @@ $$</p>
     <span class="callout-title-inner">O que um polo negativo significa?<br /></span>
   </div>
   <div class="callout-content">
-<p>O polo em $z=-0{,}8$ não parece familiar? Lembre-se de que $(-0{,}8)^n$ alterna de sinal a cada amostra. Um polo real negativo produz um modo natural que oscila entre positivo e negativo. É a versão discreta de um par de polos complexos conjugados no contínuo — só que aqui um único polo real já produz alternância.</p>
+<p>O polo em $z=-0{,}8$ não parece familiar? Lembre-se de que $(-0{,}8)^n$ alterna de sinal a cada amostra. Um polo real negativo produz um modo natural que oscila entre positivo e negativo. É a versão discreta de um par de polos complexos conjugados no contínuo, só que aqui um único polo real já produz alternância.</p>
   </div>
 </div>
 <h2 id="estabilidade-no-plano-z"><span class="heading-text">Estabilidade no plano Z</span><span class="heading-arabic">12.11</span></h2>
@@ -564,7 +564,7 @@ $$</p>
     <span class="callout-title-inner">Cuidado com cancelamentos<br /></span>
   </div>
   <div class="callout-content">
-<p>Se um polo e um zero estão no mesmo ponto, eles podem se cancelar na função de transferência. Esse cancelamento pode esconder modos internos do sistema. A estabilidade BIBO é lida pelos polos de $H(z)$ após cancelamentos. A estabilidade interna depende da realização completa do sistema — e essa distinção será importante em controle.</p>
+<p>Se um polo e um zero estão no mesmo ponto, eles podem se cancelar na função de transferência. Esse cancelamento pode esconder modos internos do sistema. A estabilidade BIBO é lida pelos polos de $H(z)$ após cancelamentos. A estabilidade interna depende da realização completa do sistema, e essa distinção será importante em controle.</p>
   </div>
 </div>
 <div class="example">
@@ -583,7 +583,7 @@ $$</p>
 <p>$H_1(z)$: polo em $z=0{,}7$. $|0{,}7|<1$. <strong>Estável.</strong></p>
 <p>$H_2(z)$: polo em $z=1{,}2$. $|1{,}2|>1$. <strong>Instável.</strong></p>
 <p>$H_3(z)$: polo em $z=1$. $|1|=1$ (polo sobre o círculo unitário). <strong>Marginalmente estável</strong>, mas não BIBO estável. É o acumulador ($h[n]=u[n]$), cuja soma absoluta diverge.</p>
-<p>Se você encontrasse $H(z)=z/(z+1)$, o polo estaria em $z=-1$, também sobre o círculo unitário. O modo natural $(-1)^n$ não cresce nem decai — apenas alterna. Também marginalmente estável.</p>
+<p>Se você encontrasse $H(z)=z/(z+1)$, o polo estaria em $z=-1$, também sobre o círculo unitário. O modo natural $(-1)^n$ não cresce nem decai: apenas alterna. Também marginalmente estável.</p>
 </div>
 <h2 id="sistemas-inversos"><span class="heading-text">Sistemas inversos</span><span class="heading-arabic">12.12</span></h2>
 <p>Se um sistema tem função de transferência $H(z)$, seu sistema inverso deve desfazer o efeito do primeiro. No domínio Z, sistemas em cascata multiplicam suas funções. Para que a cascata seja o sistema identidade $(h[n]=\delta[n])$, precisamos de</p>
@@ -624,7 +624,7 @@ $$</p>
     <span class="callout-title-inner">Frequência discreta $\Omega$ é ângulo no plano Z<br /></span>
   </div>
   <div class="callout-content">
-<p>Em $z=e^{j\Omega}$, o ângulo de $z$ é exatamente a frequência discreta $\Omega$. Uma volta completa no círculo ($\Omega$ de $0$ a $2\pi$) corresponde a percorrer todas as frequências possíveis. E como você viu na aula 11, $\Omega$ e $\Omega+2\pi$ são equivalentes — por isso uma volta já cobre todas as frequências distintas.</p>
+<p>Em $z=e^{j\Omega}$, o ângulo de $z$ é exatamente a frequência discreta $\Omega$. Uma volta completa no círculo ($\Omega$ de $0$ a $2\pi$) corresponde a percorrer todas as frequências possíveis. E como você viu na aula 11, $\Omega$ e $\Omega+2\pi$ são equivalentes: por isso uma volta já cobre todas as frequências distintas.</p>
   </div>
 </div>
 <p>Se a entrada é uma senoide discreta $\cos(\Omega n)$, a saída em regime permanente de um sistema estável terá a mesma frequência. O sistema só altera amplitude e fase:</p>
@@ -640,7 +640,7 @@ $$</p>
 <p>$$
 |H(e^{j\Omega})|=K\frac{\text{produto das distâncias aos zeros}}{\text{produto das distâncias aos polos}}
 $$</p>
-<p>Essa leitura geométrica é poderosa demais para ficar só na teoria:</p>
+<p>A leitura geométrica permite interpretar a resposta em frequência diretamente do diagrama de polos e zeros.</p>
 <p>Um zero próximo do círculo unitário <strong>reduz</strong> o ganho naquela frequência. Um zero exatamente sobre o círculo <strong>zera</strong> o ganho. Um polo próximo do círculo unitário <strong>aumenta</strong> o ganho. Um polo exatamente sobre o círculo torna o sistema problemático (ganho infinito ou instabilidade).</p>
 <p>A Figura 12.5, correspondente à Figura 5.20 do Lathi, mostra configurações típicas e seus efeitos.</p>
 <p><img src="static/figura-12-5-configuracoes-polos-zeros.png" alt="Figura 12.5: Configurações de polos e zeros" /></p>
