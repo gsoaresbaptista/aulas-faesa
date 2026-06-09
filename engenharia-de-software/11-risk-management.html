@@ -1,0 +1,1211 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toposia - Engenharia de Software</title>
+    <link rel="icon" href="/aulas-faesa/img/dark-favicon.svg" media="(prefers-color-scheme: light)">
+    <link rel="icon" href="/aulas-faesa/img/light-favicon.svg" media="(prefers-color-scheme: dark)">
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/fonts.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/bundles/katex-base-prism-one-light-b0347952c973.bundle.min.css">
+    
+    
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css" data-no-bundle>
+    <script src="/aulas-faesa/js/bundles/lucide-katex-auto-render-4b36e8bd8642.bundle.min.js"></script>
+</head>
+
+<body>
+    <script>
+        // Restore sidebar state instantly (before first paint) to avoid transition flash
+        (function() {
+            if (localStorage.getItem('cf_sidebar_hidden') === 'true') {
+                document.body.classList.add('sidebar-hidden', 'no-transition');
+            }
+            requestAnimationFrame(function() {
+                requestAnimationFrame(function() {
+                    document.body.classList.remove('no-transition');
+                });
+            });
+        })();
+    </script>
+    <div class="page-wrapper">
+        <nav class="sidebar">
+            <div class="sidebar-content">
+                <header class="sidebar-title-section">
+                    <a href="contents.html" class="course-title-link">
+                        <h1 class="sidebar-course-title">Engenharia de Software</h1>
+                    </a>
+                    <div class="sidebar-ornament">❧</div>
+                </header>
+
+                
+                <section class="sidebar-toc-section">
+                    <h2 class="toc-header">Tabela de Conteúdos</h2>
+                    <ol class="toc-list">
+                        
+                        <li class="toc-item level-2">
+                            <a href="#introdução">11.1. Introdução</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#por-que-projetos-de-software-são-especialmente-arriscados">11.2. Por que projetos de software são especialmente arriscados?</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#riscos-de-projeto-de-produto-e-de-negócio">11.3. Riscos de projeto, de produto e de negócio</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#o-processo-de-gerência-de-riscos">11.4. O processo de gerência de riscos</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#identificação-de-riscos">11.5. Identificação de riscos</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#categorias-para-guiar-a-identificação">11.5.1. Categorias para guiar a identificação</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#de-onde-vêm-os-riscos-mais-comuns">11.5.2. De onde vêm os riscos mais comuns?</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#da-lista-à-análise-probabilidade-e-impacto">11.6. Da lista à análise: probabilidade e impacto</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#as-duas-perguntas-da-análise">11.6.1. As duas perguntas da análise</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#a-matriz-de-riscos">11.6.2. A matriz de riscos</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#exemplo-completo-de-análise">11.6.3. Exemplo completo de análise</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#planejamento-de-respostas">11.7. Planejamento de respostas</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#estratégias-comuns-para-riscos-frequentes">11.7.1. Estratégias comuns para riscos frequentes</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#as-três-categorias-em-perspectiva">11.7.2. As três categorias em perspectiva</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#monitoramento-de-riscos">11.8. Monitoramento de riscos</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#indicadores-os-sinais-de-alerta">11.8.1. Indicadores: os sinais de alerta</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#o-monitoramento-deve-produzir-decisão">11.8.2. O monitoramento deve produzir decisão</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#riscos-e-o-planejamento-do-projeto">11.9. Riscos e o planejamento do projeto</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#o-custo-de-ignorar-riscos">11.9.1. O custo de ignorar riscos</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#riscos-em-projetos-ágeis">11.10. Riscos em projetos ágeis</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#exercício-guiado">11.11. Exercício guiado</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#questões">11.12. Questões</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#próximos-passos">11.13. Próximos passos</a>
+                        </li>
+                        
+                    </ol>
+                </section>
+                
+
+                <nav class="sidebar-nav-section">
+                    
+                    <a href="10-software-project-planning.html" class="sidebar-nav-link prev"><i data-lucide="chevron-left" class="nav-icon"></i> Planejamento e Gerência de Projetos de Software</a>
+                    
+                    
+                    <a href="12-concepts-estimates-schedule-deadlines.html" class="sidebar-nav-link next">Conceitos, Estimativas, Cronograma e Prazos <i data-lucide="chevron-right" class="nav-icon"></i></a>
+                    
+                    <a href="javascript:void(0)" onclick="handleBackNavigation()"
+                        class="sidebar-nav-link back"><i data-lucide="arrow-left" class="nav-icon"></i> Voltar</a>
+                </nav>
+
+            </div>
+        </nav>
+
+        <button class="mobile-menu-toggle" aria-label="Menu">
+            <i data-lucide="menu"></i>
+        </button>
+
+        <button class="sidebar-toggle" onclick="CourseForgeNav.toggleSidebar()" aria-label="Alternar Barra Lateral">
+            <i data-lucide="chevron-left" class="toggle-icon" id="sidebar-toggle-icon"></i>
+        </button>
+
+        <div class="mobile-menu-overlay"></div>
+
+        <main class="main-content">
+            <article class="article">
+                <header class="article-header">
+                    <span class="chapter-number">11</span>
+                    <h1 class="article-title">
+                        <span class="title-ornament left">❧</span>
+                        <span class="title-text">Gerência de Riscos em Projetos de Software</span>
+                        <span class="title-ornament right">❧</span>
+                    </h1>
+                    
+                    <p class="article-date">13/05/2026</p>
+                    
+                    
+                    <nav class="breadcrumb" aria-label="Breadcrumb">
+                        
+                        
+                        
+                        <a href="contents.html" class="breadcrumb-link">Engenharia de Software</a>
+                        
+                        <span class="breadcrumb-separator"><i data-lucide="chevron-right" class="breadcrumb-icon"></i></span>
+                        
+                        
+                        
+                        
+                        <a href="contents.html#part-III" class="breadcrumb-link">III - Gerenciamento de Software</a>
+                        
+                        <span class="breadcrumb-separator"><i data-lucide="chevron-right" class="breadcrumb-icon"></i></span>
+                        
+                        
+                        
+                        <span class="breadcrumb-current">Gerência de Riscos em Projetos de Software</span>
+                        
+                        
+                    </nav>
+                    
+                </header>
+                <div class="article-body">
+                    <h2 id="introdução"><span class="heading-text">Introdução</span><span class="heading-arabic">11.1</span></h2>
+<p>Hoje você vai estudar uma ideia simples, mas decisiva para qualquer projeto profissional de software: <strong>um problema previsto custa menos do que um problema descoberto tarde</strong>.</p>
+<p>Na aula anterior, mergulhamos no planejamento de projetos. Vimos que planejar não é adivinhar o futuro, é reduzir a incerteza o suficiente para tomar decisões responsáveis. Estudamos como um plano organiza escopo, esforço, cronograma, recursos e entregas. Vimos que estimativas iniciais são frágeis, que cronogramas precisam de contingência, que tarefas têm dependências e que o plano deve ser revisado conforme a equipe aprende. Também estudamos a diferença entre custo e preço, a lógica do planejamento ágil e as limitações dos modelos de estimativa.</p>
+<p>Em todos esses tópicos, uma pergunta apareceu várias vezes nas entrelinhas: <strong>e se algo der errado?</strong></p>
+<p>É exatamente essa pergunta que organiza a aula de hoje. Vamos estudar <strong>gerência de riscos</strong>: como identificar o que pode ameaçar um projeto, como avaliar a gravidade dessas ameaças, como planejar respostas antes que os problemas aconteçam e como monitorar sinais de perigo durante toda a execução.</p>
+<p>Quando uma equipe monta um cronograma, estima esforço ou define marcos, ela está assumindo que algumas condições serão verdadeiras. Assume que os requisitos não mudarão demais. Assume que as pessoas certas estarão disponíveis. Assume que a tecnologia funcionará como esperado. Assume que o cliente responderá dúvidas no prazo. Assume que as integrações externas estarão prontas. Assume que o orçamento não será cortado.</p>
+<p>O problema é que essas suposições podem falhar. E quando falham, o plano pode deixar de representar a realidade. Um risco é exatamente isso: um evento ou condição incerta que, se acontecer, pode afetar negativamente o projeto, o produto ou a organização. O risco ainda não é um problema real. Ele é uma possibilidade. Mas uma possibilidade ignorada pode virar crise.</p>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Risco não é problema<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Risco não é o mesmo que problema. Risco é algo que <strong>pode</strong> acontecer. Problema é algo que <strong>já</strong> aconteceu. A gerência de riscos tenta agir enquanto ainda há tempo para prevenir, reduzir ou preparar uma resposta. Depois que o problema se materializa, já não há mais o que gerenciar como risco, há o que resolver como incidente.</p>
+  </div>
+</div>
+<p>Pense em um exemplo cotidiano. Quando você sai de casa com guarda-chuva porque a previsão indica 70% de chance de chuva, você está gerenciando um risco. A chuva ainda não caiu. Você não tem certeza de que vai cair. Mas você decide carregar o guarda-chuva porque o impacto de se molhar antes de uma reunião importante justifica o incômodo de carregá-lo. Se você esperar a chuva começar para comprar um guarda-chuva, já estará molhado. O mesmo raciocínio vale para projetos de software: a hora de agir é antes da crise, não durante ela.</p>
+<h2 id="por-que-projetos-de-software-são-especialmente-arriscados"><span class="heading-text">Por que projetos de software são especialmente arriscados?</span><span class="heading-arabic">11.2</span></h2>
+<p>Projetos de software têm características que os tornam mais difíceis de controlar do que outros tipos de projeto. Entender essas características ajuda a perceber por que a gerência de riscos não é um luxo, é uma necessidade.</p>
+<p><strong>O trabalho é invisível.</strong> Em uma obra de engenharia civil, um gerente pode olhar para uma parede, uma fundação ou uma estrutura metálica e ter alguma noção de avanço. Em software, o progresso depende de decisões de projeto, código-fonte, testes automatizados, integrações, documentação, entendimento de domínio e aprendizado técnico, nada disso é visível para um observador externo. O gerente depende de relatos, demonstrações e evidências indiretas. Isso torna mais difícil perceber que um risco está se materializando.</p>
+<p><strong>Cada projeto grande tende a ser único.</strong> Diferente da construção civil, onde muitas técnicas são repetíveis, projetos de software frequentemente envolvem combinações novas de tecnologia, domínio, equipe e restrições. Um gerente experiente pode ter enfrentado situações parecidas, mas raramente idênticas. As lições do projeto anterior podem não se transferir diretamente.</p>
+<p><strong>Os processos de software variam entre organizações.</strong> Não existe um processo universal que funcione para qualquer empresa, qualquer equipe e qualquer produto. Mesmo dentro de uma mesma organização, projetos diferentes podem exigir abordagens diferentes. Essa variabilidade torna mais difícil prever quando um problema de processo vai gerar um risco real.</p>
+<p><strong>As mudanças tecnológicas são rápidas.</strong> Uma ferramenta que era padrão há dois anos pode estar obsoleta. Uma biblioteca pode ser descontinuada. Um serviço de plataforma pode mudar sua API. A experiência acumulada em uma tecnologia pode perder valor quando o projeto migra para outra.</p>
+<p>Além dessas características estruturais, projetos de software enfrentam fontes persistentes de incerteza:</p>
+<ol>
+<li><strong>Requisitos vagamente definidos</strong> desde o início, o cliente sabe que precisa de um sistema, mas não consegue descrever todas as regras, exceções e integrações.</li>
+<li><strong>Mudanças de requisitos</strong> durante o desenvolvimento, o cliente descobre novas necessidades, o mercado muda, uma lei é alterada, um concorrente lança algo que força ajuste de escopo.</li>
+<li><strong>Dificuldade de estimar tempo e recursos</strong>, como vimos na aula anterior, estimativas iniciais podem variar por um fator de 4× ou mais, porque a equipe ainda não conhece a arquitetura, os riscos reais e sua própria velocidade.</li>
+<li><strong>Diferenças de habilidades individuais</strong>, duas pessoas com o mesmo cargo podem ter produtividade muito diferente em tipos diferentes de tarefa.</li>
+<li><strong>Dependências externas</strong>, fornecedores, APIs, serviços de plataforma, homologações, aprovações regulatórias: tudo isso está fora do controle direto da equipe.</li>
+</ol>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Você está gerenciando um projeto que depende de uma API de pagamento de terceiros. O fornecedor prometeu acesso ao ambiente de homologação em duas semanas. Já se passaram quatro semanas e o acesso não chegou. Isso era um risco ou já é um problema? O que deveria ter sido feito quando o risco foi identificado pela primeira vez?</p>
+  </div>
+</div>
+<p>Era um risco quando o projeto foi planejado. Agora é um problema. O que deveria ter sido feito: registrar o risco no plano, preparar uma alternativa (como simular a API com dados fictícios para não bloquear o desenvolvimento) e acompanhar o prazo do fornecedor desde o início.</p>
+<h2 id="riscos-de-projeto-de-produto-e-de-negócio"><span class="heading-text">Riscos de projeto, de produto e de negócio</span><span class="heading-arabic">11.3</span></h2>
+<p>Uma forma útil de começar a organizar riscos é perguntar <strong>o que será afetado</strong> caso o risco se concretize. Essa pergunta separa os riscos em três categorias que se complementam.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Tipo de risco</th>
+  <th style="text-align:left">Afeta principalmente</th>
+  <th style="text-align:left">Exemplo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><strong>Risco de projeto</strong></td>
+  <td style="text-align:left">Cronograma, custo, equipe ou recursos</td>
+  <td style="text-align:left">Uma pessoa experiente sai do projeto no meio do desenvolvimento</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Risco de produto</strong></td>
+  <td style="text-align:left">Qualidade, desempenho, segurança, confiabilidade ou usabilidade do software</td>
+  <td style="text-align:left">Um componente de terceiros não suporta o volume de transações esperado</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Risco de negócio</strong></td>
+  <td style="text-align:left">Objetivos comerciais, estratégicos ou institucionais da organização</td>
+  <td style="text-align:left">Um concorrente lança um produto similar antes da entrega</td>
+</tr>
+</tbody>
+</table>
+<p>Essa separação é útil para raciocinar, mas não deve ser tratada como uma divisão rígida. Na prática, um mesmo evento frequentemente afeta mais de uma dimensão ao mesmo tempo, e entender essa sobreposição é parte do trabalho do gerente.</p>
+<div class="example">
+  <div class="example-title">Exemplo 1</div>
+  <p>Imagine um sistema acadêmico sendo desenvolvido por uma equipe de cinco pessoas. Uma dessas pessoas é a única que entende profundamente a integração com o sistema de autenticação institucional. No meio do projeto, essa pessoa pede demissão.</p>
+<p>Esse evento é um <strong>risco de projeto</strong>, porque o cronograma provavelmente vai atrasar. Encontrar um substituto leva tempo, e o substituto precisa aprender o que já foi feito antes de produzir. Também é um <strong>risco de produto</strong>, porque a pessoa substituta pode não ter a mesma familiaridade com os detalhes de segurança da autenticação, aumentando a chance de erros. E pode ser um <strong>risco de negócio</strong>, porque um atraso na entrega pode comprometer a confiança da instituição, afetar renovações de contrato ou prejudicar a reputação da empresa desenvolvedora.</p>
+<p>Perceba que o mesmo evento, a saída de uma pessoa, muda de gravidade conforme o contexto. Se a equipe mantinha documentação atualizada, testes automatizados, revisões de código e sobreposição deliberada de conhecimento entre os membros, o impacto pode ser controlado. Se todo o conhecimento crítico estava concentrado em uma única pessoa, o impacto pode ser grave ou até catastrófico.</p>
+</div>
+<img src="static/figura-22-1-exemplos-riscos-comuns.png" width="90%">
+
+<p>A tabela acima (Tabela 22.1 do livro) mostra riscos comuns que podem aparecer em qualquer projeto de software, independentemente do domínio ou da tecnologia. Observe a variedade: rotatividade de pessoal, mudança de gerência, indisponibilidade de hardware, alterações excessivas de requisitos, atrasos em especificações de interfaces, tamanho subestimado do sistema, ferramentas com baixo desempenho, mudança de tecnologia e concorrência de produto. Cada um desses riscos afeta uma combinação de projeto, produto e negócio.</p>
+<p>Note que nenhum desses riscos é um defeito de código. São condições organizacionais, técnicas e de mercado que podem atrapalhar o projeto antes mesmo de uma linha específica falhar. Essa é uma distinção importante: um bug é um problema de qualidade. Um risco é uma condição que pode gerar bugs, atrasos, estouros de orçamento ou perda de valor do produto.</p>
+<div class="example">
+  <div class="example-title">Exemplo 2</div>
+  <p>Considere uma empresa que está desenvolvendo um sistema de vendas on-line para o varejo. A Tabela 22.1 lista &quot;concorrência de produto&quot; como risco de negócio. O que isso significa na prática?</p>
+<p>Imagine que a equipe estima seis meses para entregar a primeira versão funcional. No terceiro mês, um concorrente lança uma plataforma parecida, com funcionalidades que o sistema ainda não tem. De repente, o que era uma oportunidade de mercado vira uma corrida. O escopo original pode precisar mudar. Funcionalidades que estavam previstas para o segundo semestre podem precisar ser antecipadas. O cronograma pode ser comprimido, e, como vimos na aula anterior, comprimir cronograma aumenta esforço.</p>
+<p>Se a equipe tivesse identificado &quot;concorrência de produto&quot; como risco desde o início, poderia ter planejado uma primeira entrega mais enxuta, mas com diferenciais claros, ou ter reservado contingência de cronograma para reagir a esse cenário. Sem isso, a equipe é pega de surpresa e precisa improvisar sob pressão.</p>
+</div>
+<h2 id="o-processo-de-gerência-de-riscos"><span class="heading-text">O processo de gerência de riscos</span><span class="heading-arabic">11.4</span></h2>
+<p>A gerência de riscos não é uma reunião isolada no início do projeto. Ela é um processo contínuo que acompanha o projeto do começo ao fim. A equipe identifica riscos, analisa sua importância, planeja respostas e monitora sinais de mudança, e depois recomeça, porque novos riscos podem surgir e riscos antigos podem mudar de gravidade.</p>
+<p>O processo pode ser organizado em quatro atividades principais:</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Atividade</th>
+  <th style="text-align:left">Pergunta que responde</th>
+  <th style="text-align:left">Resultado que produz</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><strong>Identificação de riscos</strong></td>
+  <td style="text-align:left">O que pode dar errado?</td>
+  <td style="text-align:left">Lista de riscos potenciais</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Análise de riscos</strong></td>
+  <td style="text-align:left">Qual é a probabilidade e qual seria o impacto?</td>
+  <td style="text-align:left">Lista priorizada de riscos</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Planejamento de riscos</strong></td>
+  <td style="text-align:left">O que faremos para evitar, reduzir ou reagir?</td>
+  <td style="text-align:left">Estratégias de prevenção, minimização e planos de contingência</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Monitoramento de riscos</strong></td>
+  <td style="text-align:left">O risco está mudando? Ficou mais provável ou mais grave?</td>
+  <td style="text-align:left">Avaliação atualizada e decisões de resposta</td>
+</tr>
+</tbody>
+</table>
+<p>Essas quatro atividades formam um ciclo. Depois de monitorar, a equipe pode descobrir riscos que não existiam antes, reavaliar riscos que mudaram de probabilidade ou impacto, e ajustar suas estratégias.</p>
+<img src="static/figura-22-2-processo-gerenciamento-riscos.png" width="90%">
+
+<p>A figura acima (Figura 22.1 do livro) mostra o fluxo. Observe com atenção a seta de retorno entre &quot;Monitoração de riscos&quot; e &quot;Identificação de riscos&quot;. Ela é a parte mais importante do desenho. Significa que o processo não termina quando a lista inicial fica pronta. Durante o projeto, a equipe coleta informação nova sobre a tecnologia, o cliente, o mercado e sua própria capacidade, e essa informação pode revelar riscos que não eram visíveis no início.</p>
+<p>O mesmo vale para a seta entre &quot;Avaliação de riscos&quot; (que aparece após o monitoramento) e as etapas anteriores. Se um risco que era moderado passa a ser alto, a equipe precisa rever o plano de resposta. Se um risco que era grave some porque a causa foi eliminada, a equipe pode redirecionar energia para outros riscos.</p>
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">Plano de riscos envelhece<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Um plano de riscos envelhece. Se ele for escrito no início do projeto e nunca mais revisado, passa a representar o que a equipe temia no passado, não o que realmente ameaça o projeto agora. Isso cria uma falsa sensação de controle. O documento existe, mas não serve para decidir.</p>
+  </div>
+</div>
+<h2 id="identificação-de-riscos"><span class="heading-text">Identificação de riscos</span><span class="heading-arabic">11.5</span></h2>
+<p>Identificar riscos é produzir uma lista honesta e específica do que pode ameaçar o projeto. Essa atividade pode ser feita pelo gerente sozinho, mas costuma ser muito melhor quando envolve a equipe. Desenvolvedores, testadores, analistas, arquitetos, pessoas de operação e até representantes do cliente enxergam riscos diferentes, porque cada um lida com partes diferentes do problema.</p>
+<p>Uma boa identificação de riscos evita dois extremos igualmente perigosos:</p>
+<ol>
+<li><p><strong>Otimismo excessivo.</strong> A equipe descreve apenas o cenário em que tudo funciona, todas as pessoas ficam, todas as tecnologias entregam o prometido e todos os prazos são cumpridos. Esse cenário é uma ficção perigosa, porque não prepara a equipe para o que provavelmente vai acontecer.</p>
+</li>
+<li><p><strong>Generalidade excessiva.</strong> A equipe escreve riscos tão vagos que não ajudam a decidir nada. &quot;Pode haver problemas técnicos&quot; não é um risco gerenciável. &quot;Atrasos podem ocorrer&quot; não orienta nenhuma ação.</p>
+</li>
+</ol>
+<p>Compare dois estilos de registro:</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Registro vago (não ajuda)</th>
+  <th style="text-align:left">Registro específico (permite agir)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Pode haver problemas técnicos.</td>
+  <td style="text-align:left">A biblioteca de geração de PDF ainda não foi testada com o volume de relatórios que o cliente espera (500 páginas por lote).</td>
+</tr>
+<tr>
+  <td style="text-align:left">O cliente pode atrasar.</td>
+  <td style="text-align:left">A validação das regras de matrícula especial depende de reunião com a pró-reitoria, que se reúne apenas uma vez por mês. Se a pauta de abril for perdida, a validação atrasa 30 dias.</td>
+</tr>
+<tr>
+  <td style="text-align:left">O sistema pode ficar lento.</td>
+  <td style="text-align:left">A consulta de histórico escolar carrega disciplinas, equivalências, dispensas e pendências em uma única requisição. Com 50 mil alunos, o tempo de resposta pode ultrapassar 5 segundos.</td>
+</tr>
+<tr>
+  <td style="text-align:left">Pode faltar gente.</td>
+  <td style="text-align:left">A única pessoa que entende o barramento de integração com sistemas legados está de férias nas semanas 6 e 7, exatamente quando a integração está planejada.</td>
+</tr>
+</tbody>
+</table>
+<p>O segundo tipo de registro é mais útil porque é <strong>acionável</strong>. Quando o risco é específico, a equipe pode pensar em ações concretas: fazer uma prova de conceito, agendar uma reunião com antecedência, executar um teste de carga, treinar uma segunda pessoa, simplificar o escopo da entrega ou preparar um plano alternativo.</p>
+<h3 id="categorias-para-guiar-a-identificação"><span class="heading-text">Categorias para guiar a identificação</span><span class="heading-arabic">11.5.1</span></h3>
+<p>Uma técnica prática para não esquecer áreas importantes durante a identificação é usar categorias como um roteiro de perguntas. Em vez de perguntar &quot;existem riscos?&quot; de forma genérica, a equipe percorre cada categoria e faz perguntas específicas.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Categoria</th>
+  <th style="text-align:left">O que procurar</th>
+  <th style="text-align:left">Exemplos de perguntas</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><strong>Tecnologia</strong></td>
+  <td style="text-align:left">Riscos ligados ao hardware, software, bancos de dados, linguagens e plataformas usados</td>
+  <td style="text-align:left">O banco de dados suporta o volume de transações esperado? A linguagem tem bibliotecas maduras para o que precisamos? Há dependência de tecnologia muito nova ou pouco documentada?</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Pessoas</strong></td>
+  <td style="text-align:left">Riscos ligados à equipe de desenvolvimento</td>
+  <td style="text-align:left">Temos as habilidades necessárias? O conhecimento crítico está concentrado em uma só pessoa? Há risco de saída de pessoas-chave? A equipe está motivada?</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Organizacionais</strong></td>
+  <td style="text-align:left">Riscos ligados ao ambiente da organização</td>
+  <td style="text-align:left">O orçamento está garantido? A prioridade do projeto pode mudar com troca de gestão? Há disputa entre setores que afete o projeto?</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Ferramentas</strong></td>
+  <td style="text-align:left">Riscos ligados ao ambiente de desenvolvimento</td>
+  <td style="text-align:left">As ferramentas funcionam bem integradas? O ambiente de build é estável? Há risco de incompatibilidade entre versões?</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Requisitos</strong></td>
+  <td style="text-align:left">Riscos ligados à definição e mudança do escopo</td>
+  <td style="text-align:left">Os requisitos estão claros e validados? O cliente entende o impacto de mudanças? Há regras de negócio não documentadas que só aparecerão durante o desenvolvimento?</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Estimativas</strong></td>
+  <td style="text-align:left">Riscos ligados a prazos, esforço e recursos</td>
+  <td style="text-align:left">O tamanho do sistema foi subestimado? O cronograma depende de suposições otimistas? A complexidade de integração foi considerada?</td>
+</tr>
+</tbody>
+</table>
+<div class="example">
+  <div class="example-title">Exemplo 3</div>
+  <p>Uma equipe vai construir um módulo de matrícula on-line para uma universidade. Usando as seis categorias, a equipe levanta os seguintes riscos:</p>
+<p><strong>Tecnologia.</strong> O sistema de autenticação institucional usa um protocolo antigo (SAML 1.0) que a equipe nunca integrou. Ninguém sabe quanto tempo levará. Além disso, o serviço de boletos bancários tem histórico de instabilidade em períodos de pico de matrícula.</p>
+<p><strong>Pessoas.</strong> Apenas uma pessoa da equipe conhece as regras de pré-requisito, equivalência e co-requisito. Se essa pessoa sair ou adoecer, o conhecimento some. Dois desenvolvedores estão terminando a graduação e podem sair antes do fim do projeto.</p>
+<p><strong>Organizacionais.</strong> A coordenação do curso planeja mudar o calendário acadêmico no próximo semestre. Se a mudança for aprovada, as datas de matrícula mudam. Também há discussão sobre unificar o sistema acadêmico de três campi. Se isso acontecer, o escopo dobra.</p>
+<p><strong>Ferramentas.</strong> O ambiente de homologação depende de um servidor que é compartilhado com outro projeto e fica indisponível com frequência.</p>
+<p><strong>Requisitos.</strong> As regras de matrícula especial (alunos com deficiência, atletas, intercambistas) nunca foram formalizadas. A equipe depende de entrevistas informais com a secretaria. O cliente mencionou &quot;relatórios gerenciais&quot;, mas ninguém especificou quais relatórios, com quais filtros e em qual formato.</p>
+<p><strong>Estimativas.</strong> A equipe estimou &quot;cadastro de disciplinas&quot; como uma tarefa simples, mas cada disciplina tem pré-requisitos, co-requisitos, equivalências, turmas, horários, vagas e docentes vinculados. O cronograma assume que a migração de dados históricos levará uma semana, mas ninguém olhou a base atual para ver inconsistências.</p>
+<p>Observe como a lista é longa, 12 riscos potenciais. Isso é normal. A identificação inicial deve ser abrangente. Depois, a análise vai filtrar e priorizar.</p>
+</div>
+<h3 id="de-onde-vêm-os-riscos-mais-comuns"><span class="heading-text">De onde vêm os riscos mais comuns?</span><span class="heading-arabic">11.5.2</span></h3>
+<p>Além de usar categorias, ajuda conhecer riscos que aparecem com frequência em projetos de software, independentemente do domínio. A Tabela 22.1, que já vimos, lista oito riscos comuns. Vale a pena comentar cada um, porque entender o padrão ajuda a reconhecê-lo quando ele surgir no seu projeto.</p>
+<p><strong>Rotatividade de pessoal.</strong> Pessoas saem de projetos por motivos pessoais, profissionais ou organizacionais. Quando a pessoa que sai detém conhecimento crítico não documentado, o impacto vai além do atraso na substituição, a equipe perde contexto, decisões de projeto e entendimento tácito do domínio.</p>
+<p><strong>Mudança de gerência.</strong> Um novo gestor pode trazer prioridades diferentes, mudar a alocação de recursos, questionar decisões anteriores ou redirecionar o orçamento. Isso afeta principalmente o cronograma, mas também pode afetar o escopo e a moral da equipe.</p>
+<p><strong>Indisponibilidade de hardware.</strong> Se o projeto depende de equipamento específico (servidores, dispositivos embarcados, terminais) e esse equipamento atrasa, tarefas inteiras podem ficar bloqueadas.</p>
+<p><strong>Mudanças de requisitos.</strong> Este talvez seja o risco mais frequente em software. O cliente descobre novas necessidades, o mercado muda, uma lei é publicada. Se o processo não tiver um mecanismo para avaliar impacto antes de aceitar mudanças, o escopo cresce sem controle.</p>
+<p><strong>Atrasos de especificação.</strong> Se o sistema depende de interfaces externas (APIs, protocolos, formatos de dados) e essas especificações atrasam, a equipe pode precisar trabalhar com suposições ou interromper o desenvolvimento.</p>
+<p><strong>Tamanho subestimado.</strong> A equipe acha que o sistema é menor do que realmente é. Isso é comum quando o domínio é novo para a equipe ou quando os requisitos estão incompletos.</p>
+<p><strong>Baixo desempenho de ferramenta CASE.</strong> Ferramentas que prometem gerar código, modelos ou documentação podem não entregar a produtividade esperada, especialmente em contextos diferentes daqueles para os quais foram projetadas.</p>
+<p><strong>Mudança de tecnologia.</strong> Uma tecnologia nova substitui a que estava sendo usada, tornando obsoleta parte do trabalho já feito ou exigindo migração.</p>
+<p><strong>Concorrência de produto.</strong> Um concorrente lança algo similar antes, mudando as expectativas do mercado e do cliente.</p>
+<h2 id="da-lista-à-análise-probabilidade-e-impacto"><span class="heading-text">Da lista à análise: probabilidade e impacto</span><span class="heading-arabic">11.6</span></h2>
+<p>Depois de identificar riscos, a equipe normalmente terá uma lista com dezenas de itens. Tratar todos como igualmente importantes é um erro. Alguns riscos são muito prováveis mas pouco graves. Outros são remotíssimos mas teriam consequências catastróficas. Outros são moderados em ambas as dimensões.</p>
+<p>A função da <strong>análise de riscos</strong> é classificar essa lista para que a equipe concentre energia no que realmente merece atenção.</p>
+<h3 id="as-duas-perguntas-da-análise"><span class="heading-text">As duas perguntas da análise</span><span class="heading-arabic">11.6.1</span></h3>
+<p>Para cada risco, a equipe precisa responder duas perguntas:</p>
+<ol>
+<li><strong>Probabilidade:</strong> qual é a chance de esse risco se concretizar?</li>
+<li><strong>Impacto:</strong> se ele se concretizar, qual será a consequência?</li>
+</ol>
+<p>Em projetos reais, raramente temos números exatos. Não sabemos dizer &quot;a probabilidade é 34%&quot;. Por isso, é comum usar faixas qualitativas que orientam a decisão sem fingir precisão.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Probabilidade</th>
+  <th style="text-align:left">O que significa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><strong>Muito baixa</strong> (menos de 10%)</td>
+  <td style="text-align:left">É improvável, mas não impossível. Nenhum sinal concreto sugere que vá acontecer.</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Baixa</strong> (10% a 25%)</td>
+  <td style="text-align:left">Pode acontecer, mas não há evidências fortes no momento.</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Moderada</strong> (25% a 50%)</td>
+  <td style="text-align:left">Há chance real. Existem alguns sinais de atenção.</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Alta</strong> (50% a 75%)</td>
+  <td style="text-align:left">Há bons motivos para acreditar que vai acontecer se nada for feito.</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Muito alta</strong> (mais de 75%)</td>
+  <td style="text-align:left">É provável que aconteça. Os sinais são claros e persistentes.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Impacto</th>
+  <th style="text-align:left">O que significa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><strong>Insignificante</strong></td>
+  <td style="text-align:left">Efeito pequeno, absorvido pela rotina da equipe sem afetar entregas.</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Tolerável</strong></td>
+  <td style="text-align:left">Causa algum incômodo ou atraso pequeno, mas cabe dentro da margem de contingência do plano.</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Grave</strong></td>
+  <td style="text-align:left">Causa atraso relevante, retrabalho significativo ou perda de qualidade que afeta o cliente.</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Catastrófico</strong></td>
+  <td style="text-align:left">Ameaça a entrega do projeto, a viabilidade do contrato, a saúde financeira da organização ou a continuidade do negócio.</td>
+</tr>
+</tbody>
+</table>
+<p>Com essas duas dimensões avaliadas para cada risco, a equipe pode priorizar.</p>
+<h3 id="a-matriz-de-riscos"><span class="heading-text">A matriz de riscos</span><span class="heading-arabic">11.6.2</span></h3>
+<p>A <strong>matriz de riscos</strong> (ou matriz de probabilidade e impacto) é uma ferramenta visual simples que cruza as duas dimensões e atribui um nível de prioridade a cada combinação.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Impacto / Probabilidade</th>
+  <th style="text-align:center">Baixa</th>
+  <th style="text-align:center">Moderada</th>
+  <th style="text-align:center">Alta</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><strong>Catastrófico</strong></td>
+  <td style="text-align:center">Alto</td>
+  <td style="text-align:center">Crítico</td>
+  <td style="text-align:center">Crítico</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Grave</strong></td>
+  <td style="text-align:center">Médio</td>
+  <td style="text-align:center">Alto</td>
+  <td style="text-align:center">Crítico</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Tolerável</strong></td>
+  <td style="text-align:center">Baixo</td>
+  <td style="text-align:center">Médio</td>
+  <td style="text-align:center">Alto</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Insignificante</strong></td>
+  <td style="text-align:center">Baixo</td>
+  <td style="text-align:center">Baixo</td>
+  <td style="text-align:center">Médio</td>
+</tr>
+</tbody>
+</table>
+<p>A leitura da matriz é direta. Um risco de <strong>probabilidade alta</strong> e <strong>impacto catastrófico</strong> é <strong>crítico</strong>: exige resposta imediata e explícita. Um risco de <strong>probabilidade moderada</strong> e <strong>impacto grave</strong> é <strong>alto</strong>: deve ser planejado com cuidado e monitorado de perto. Um risco <strong>tolerável</strong> com <strong>probabilidade baixa</strong> é <strong>baixo</strong>: pode ser registrado, mas não deve consumir energia desproporcional.</p>
+<p>A matriz não é uma fórmula matemática. Ela é uma ferramenta de conversa. Ajuda a equipe a discutir prioridade com mais clareza, em vez de tratar todos os riscos como se tivessem o mesmo peso.</p>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>O que acontece quando uma equipe classifica todos os riscos como &quot;Alto&quot; ou &quot;Crítico&quot;? A matriz ainda serve para alguma coisa?</p>
+  </div>
+</div>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Matriz não substitui julgamento<br /></span>
+  </div>
+  <div class="callout-content">
+<p>A matriz não substitui julgamento. Um risco de baixa probabilidade e impacto catastrófico pode merecer atenção mesmo parecendo distante, especialmente em sistemas críticos (saúde, financeiro, infraestrutura, aviação), em contratos com multas pesadas ou em projetos com margem de atraso muito pequena. A decisão final é do gerente, não da matriz.</p>
+  </div>
+</div>
+<h3 id="exemplo-completo-de-análise"><span class="heading-text">Exemplo completo de análise</span><span class="heading-arabic">11.6.3</span></h3>
+<p>Vamos aplicar a análise a um conjunto de riscos realistas. Imagine que a equipe identificou os seguintes riscos para um sistema de atendimento ao cidadão (agendamento de serviços, protocolo digital, consulta de processos):</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">#</th>
+  <th style="text-align:left">Risco</th>
+  <th style="text-align:left">Probabilidade</th>
+  <th style="text-align:left">Impacto</th>
+  <th style="text-align:left">Prioridade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">R1</td>
+  <td style="text-align:left">O serviço de login único do governo fica indisponível com frequência, atrasando testes de integração</td>
+  <td style="text-align:left">Alta</td>
+  <td style="text-align:left">Grave</td>
+  <td style="text-align:left"><strong>Crítico</strong></td>
+</tr>
+<tr>
+  <td style="text-align:left">R2</td>
+  <td style="text-align:left">O banco de dados atual não suporta o pico de consultas no dia seguinte à abertura de vagas</td>
+  <td style="text-align:left">Moderada</td>
+  <td style="text-align:left">Catastrófico</td>
+  <td style="text-align:left"><strong>Crítico</strong></td>
+</tr>
+<tr>
+  <td style="text-align:left">R3</td>
+  <td style="text-align:left">A equipe não conhece a API de protocolo externo e a documentação está desatualizada</td>
+  <td style="text-align:left">Moderada</td>
+  <td style="text-align:left">Grave</td>
+  <td style="text-align:left"><strong>Alto</strong></td>
+</tr>
+<tr>
+  <td style="text-align:left">R4</td>
+  <td style="text-align:left">Os requisitos de relatórios gerenciais não foram validados com os diretores</td>
+  <td style="text-align:left">Moderada</td>
+  <td style="text-align:left">Tolerável</td>
+  <td style="text-align:left"><strong>Médio</strong></td>
+</tr>
+<tr>
+  <td style="text-align:left">R5</td>
+  <td style="text-align:left">O fornecedor de hospedagem pode reajustar o preço no meio do contrato</td>
+  <td style="text-align:left">Baixa</td>
+  <td style="text-align:left">Tolerável</td>
+  <td style="text-align:left"><strong>Baixo</strong></td>
+</tr>
+<tr>
+  <td style="text-align:left">R6</td>
+  <td style="text-align:left">A ferramenta de geração de relatórios em PDF não suporta alguns layouts exigidos</td>
+  <td style="text-align:left">Moderada</td>
+  <td style="text-align:left">Tolerável</td>
+  <td style="text-align:left"><strong>Médio</strong></td>
+</tr>
+<tr>
+  <td style="text-align:left">R7</td>
+  <td style="text-align:left">Duas pessoas da equipe estão terminando a faculdade e podem sair no meio do projeto</td>
+  <td style="text-align:left">Moderada</td>
+  <td style="text-align:left">Grave</td>
+  <td style="text-align:left"><strong>Alto</strong></td>
+</tr>
+<tr>
+  <td style="text-align:left">R8</td>
+  <td style="text-align:left">O orçamento do projeto depende de uma emenda parlamentar que ainda não foi aprovada</td>
+  <td style="text-align:left">Baixa</td>
+  <td style="text-align:left">Catastrófico</td>
+  <td style="text-align:left"><strong>Alto</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Agora a equipe consegue decidir com clareza. R1 (login instável) e R2 (banco não suporta pico) são críticos, precisam de ação imediata. R3 (API desconhecida), R7 (pessoas podem sair) e R8 (orçamento incerto) são altos, exigem plano de resposta. R4 (relatórios não validados) e R6 (ferramenta de PDF limitada) são médios, basta monitorar e ter uma alternativa em mente. R5 (reajuste de hospedagem) é baixo, registre e siga em frente.</p>
+<p>Observe que R8 tem probabilidade baixa mas impacto catastrófico, e por isso foi classificado como <strong>Alto</strong>, não como Baixo ou Médio. Isso ilustra exatamente o alerta anterior: impacto catastrófico merece atenção mesmo quando a probabilidade é baixa. Se a emenda não for aprovada, o projeto simplesmente para. Esse risco não pode ser ignorado.</p>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Por que R2 (banco de dados não suporta pico) é crítico mesmo tendo probabilidade apenas moderada?</p>
+<p>Porque o impacto é <strong>catastrófico</strong>. Se o sistema cair no dia seguinte à abertura de vagas, o momento de maior uso, a credibilidade do projeto desaba, o cidadão fica sem atendimento e a secretaria pode cancelar o contrato. Um impacto catastrófico com probabilidade moderada ainda é crítico. A matriz mostra isso: a célula (Catastrófico, Moderada) é &quot;Crítico&quot;.</p>
+  </div>
+</div>
+<h2 id="planejamento-de-respostas"><span class="heading-text">Planejamento de respostas</span><span class="heading-arabic">11.7</span></h2>
+<p>Analisar riscos sem planejar o que fazer a respeito transforma a análise em uma lista de preocupações. O próximo passo é decidir <strong>como agir</strong>. Para cada risco que merece atenção (crítico ou alto), a equipe precisa definir uma estratégia.</p>
+<p>As estratégias de resposta se dividem em três categorias, que podem ser combinadas para o mesmo risco:</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Estratégia</th>
+  <th style="text-align:left">Ideia central</th>
+  <th style="text-align:left">Quando usar</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><strong>Prevenção</strong></td>
+  <td style="text-align:left">Reduzir a <strong>probabilidade</strong> de o risco acontecer</td>
+  <td style="text-align:left">Quando há ações concretas que tornam o risco menos provável</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Minimização</strong></td>
+  <td style="text-align:left">Reduzir o <strong>impacto</strong> caso o risco aconteça</td>
+  <td style="text-align:left">Quando não é possível eliminar a probabilidade, mas é possível limitar o dano</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Contingência</strong></td>
+  <td style="text-align:left">Ter um plano pronto para <strong>reagir</strong> se o risco se materializar</td>
+  <td style="text-align:left">Quando o risco não pode ser evitado nem seu impacto totalmente reduzido</td>
+</tr>
+</tbody>
+</table>
+<p>Essas estratégias não são excludentes. Para um mesmo risco, a equipe pode combinar ações de prevenção (tornar menos provável), minimização (tornar menos doloroso se acontecer) e contingência (saber o que fazer se acontecer mesmo assim).</p>
+<div class="example">
+  <div class="example-title">Exemplo 4</div>
+  <p>Retome o risco R1 do exemplo anterior: o serviço de login único do governo fica indisponível com frequência.</p>
+<p><strong>Prevenção:</strong> agendar uma reunião técnica com a equipe de infraestrutura do governo para entender os períodos de instabilidade e negociar um ambiente de testes dedicado. Isso reduz a probabilidade de ficar sem serviço durante os testes.</p>
+<p><strong>Minimização:</strong> desenvolver um simulador do serviço de login que permita à equipe continuar testando o restante do sistema mesmo quando o serviço real está fora do ar. Isso reduz o impacto: se o serviço cair, o desenvolvimento não para completamente.</p>
+<p><strong>Contingência:</strong> se o serviço real estiver indisponível na semana da homologação final, o plano é executar a homologação com o simulador e agendar uma janela extra de testes com o serviço real na semana seguinte. A equipe já tem o ambiente preparado, o roteiro de testes e a aprovação do cliente para esse plano B.</p>
+<p>Observe que a contingência não é improviso. É uma resposta pensada, documentada e acordada antes da crise.</p>
+</div>
+<div class="example">
+  <div class="example-title">Exemplo 5</div>
+  <p>Agora considere o risco R7: duas pessoas estão terminando a faculdade e podem sair.</p>
+<p><strong>Prevenção:</strong> conversar com as duas pessoas para entender seus planos e, se possível, oferecer condições que as mantenham no projeto (flexibilidade de horário, contrato renovado, participação em decisões técnicas). Isso pode reduzir a probabilidade de saída.</p>
+<p><strong>Minimização:</strong> garantir que o conhecimento delas não fique concentrado. Colocar uma terceira pessoa para acompanhar o trabalho, revisar código, participar das reuniões técnicas e documentar decisões. Se elas saírem, o impacto é menor porque o conhecimento já está distribuído.</p>
+<p><strong>Contingência:</strong> identificar antecipadamente pelo menos um profissional no mercado que poderia substituir cada uma delas, com contato prévio e estimativa de custo e prazo de contratação.</p>
+</div>
+<div class="example">
+  <div class="example-title">Exemplo 6</div>
+  <p>Considere o risco R4 (relatórios gerenciais não validados) e R6 (ferramenta de PDF limitada). Esses riscos são <strong>médios</strong>, não críticos nem altos. Isso significa que não exigem um plano pesado, mas também não devem ser ignorados.</p>
+<p>Para R4, a ação pode ser simples: agendar uma reunião de 30 minutos com um diretor para mostrar formatos possíveis e confirmar os relatórios essenciais. Isso reduz a incerteza com pouco esforço.</p>
+<p>Para R6, a ação pode ser: manter uma lista de duas ferramentas alternativas de geração de PDF, com estimativa de esforço de troca, caso a ferramenta atual se mostre limitada. Isso é um plano de contingência leve.</p>
+</div>
+<h3 id="estratégias-comuns-para-riscos-frequentes"><span class="heading-text">Estratégias comuns para riscos frequentes</span><span class="heading-arabic">11.7.1</span></h3>
+<p>O livro de Sommerville apresenta uma tabela (Tabela 22.4) com estratégias sugeridas para os riscos mais comuns. A tabela abaixo resume e comenta essas estratégias.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Risco</th>
+  <th style="text-align:left">Estratégia sugerida</th>
+  <th style="text-align:left">Tipo de estratégia</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Problemas financeiros organizacionais (corte de orçamento)</td>
+  <td style="text-align:left">Preparar documento mostrando a contribuição do projeto para os objetivos estratégicos da organização</td>
+  <td style="text-align:left">Prevenção (tenta evitar o corte)</td>
+</tr>
+<tr>
+  <td style="text-align:left">Dificuldade de recrutar pessoal</td>
+  <td style="text-align:left">Alertar o cliente sobre possíveis atrasos, investigar compra de componentes prontos para reduzir a necessidade de desenvolvimento</td>
+  <td style="text-align:left">Minimização + Contingência</td>
+</tr>
+<tr>
+  <td style="text-align:left">Doença ou ausência de pessoal-chave</td>
+  <td style="text-align:left">Reorganizar a equipe para aumentar a sobreposição de conhecimento entre as pessoas</td>
+  <td style="text-align:left">Minimização</td>
+</tr>
+<tr>
+  <td style="text-align:left">Componentes reusáveis com defeitos</td>
+  <td style="text-align:left">Substituir por componentes de fornecedores com confiabilidade comprovada</td>
+  <td style="text-align:left">Prevenção</td>
+</tr>
+<tr>
+  <td style="text-align:left">Mudanças excessivas de requisitos</td>
+  <td style="text-align:left">Manter rastreabilidade entre requisitos e componentes, maximizar ocultamento de informação no projeto</td>
+  <td style="text-align:left">Minimização</td>
+</tr>
+<tr>
+  <td style="text-align:left">Reestruturação organizacional</td>
+  <td style="text-align:left">Preparar documento mostrando a importância do projeto para os objetivos de negócio</td>
+  <td style="text-align:left">Prevenção</td>
+</tr>
+<tr>
+  <td style="text-align:left">Desempenho de banco de dados abaixo do esperado</td>
+  <td style="text-align:left">Investigar a possibilidade de comprar um banco de dados de maior desempenho</td>
+  <td style="text-align:left">Prevenção + Contingência</td>
+</tr>
+<tr>
+  <td style="text-align:left">Prazo de desenvolvimento subestimado</td>
+  <td style="text-align:left">Investigar compra de componentes prontos, investigar uso de geradores de código</td>
+  <td style="text-align:left">Contingência</td>
+</tr>
+</tbody>
+</table>
+<p>Observe um padrão importante: várias estratégias envolvem <strong>comunicação com a alta gerência</strong>. Isso revela algo que nem sempre é óbvio para desenvolvedores: uma parte significativa da gerência de riscos não é técnica, é política e organizacional. O gerente de projeto precisa defender o projeto dentro da organização, mostrar seu valor, alertar sobre riscos e negociar condições.</p>
+<h3 id="as-três-categorias-em-perspectiva"><span class="heading-text">As três categorias em perspectiva</span><span class="heading-arabic">11.7.2</span></h3>
+<p>Vale a pena fixar a diferença entre as três categorias com uma analogia simples.</p>
+<p>Pense em um motorista dirigindo em uma estrada com previsão de tempestade.</p>
+<p><strong>Prevenção:</strong> sair mais cedo, antes da tempestade. (Reduz a probabilidade de enfrentá-la.)<br />
+<strong>Minimização:</strong> revisar os pneus, colocar correntes, verificar os freios. (Se a tempestade chegar, o carro está mais preparado. Reduz o impacto.)<br />
+<strong>Contingência:</strong> saber onde ficam os postos de parada ao longo da estrada, ter o número do guincho, levar um cobertor. (Se a tempestade for forte demais, você sabe o que fazer. Resposta preparada.)</p>
+<p>Nenhuma dessas ações garante que a viagem será tranquila. Mas juntas, elas aumentam muito a chance de chegar ao destino, e, se algo der errado, o dano será menor e a recuperação mais rápida.</p>
+<h2 id="monitoramento-de-riscos"><span class="heading-text">Monitoramento de riscos</span><span class="heading-arabic">11.8</span></h2>
+<p>Monitorar riscos significa observar, durante todo o projeto, sinais de que a probabilidade ou o impacto de um risco está mudando. Essa é a atividade que fecha o ciclo e alimenta a próxima iteração do processo.</p>
+<p>Um erro comum, e grave, é registrar riscos no plano inicial e nunca mais olhar para eles. Isso cria uma falsa sensação de controle. O gerente acha que está gerenciando riscos porque tem uma planilha, mas a planilha está desatualizada. Enquanto isso, riscos que eram baixos se tornaram altos, riscos novos surgiram e riscos antigos desapareceram. A planilha parou no tempo, mas o projeto continuou andando.</p>
+<h3 id="indicadores-os-sinais-de-alerta"><span class="heading-text">Indicadores: os sinais de alerta</span><span class="heading-arabic">11.8.1</span></h3>
+<p>Cada tipo de risco tem <strong>indicadores</strong>, sinais observáveis que sugerem que o risco está ficando mais provável ou mais grave. A Tabela 22.5 do livro, reproduzida na figura abaixo, organiza esses indicadores por categoria.</p>
+<img src="static/figura-22-3-indicadores-riscos.png" width="90%">
+
+<p>Indicadores são pistas, não provas. O fato de a equipe relatar &quot;muitos problemas com determinada tecnologia&quot; não significa que o sistema vai falhar, mas significa que o risco de tecnologia deve ser reavaliado. O fato de haver &quot;muitas solicitações de mudança de requisitos&quot; não prova que o escopo saiu do controle, mas acende um alerta.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Tipo de risco</th>
+  <th style="text-align:left">Sinal de alerta (indicador)</th>
+  <th style="text-align:left">O que fazer quando o sinal aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><strong>Tecnologia</strong></td>
+  <td style="text-align:left">Muitos problemas relatados com uma biblioteca ou plataforma, atraso na entrega de hardware ou software de suporte</td>
+  <td style="text-align:left">Investigar alternativas, fazer prova de conceito, reavaliar a viabilidade técnica</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Pessoas</strong></td>
+  <td style="text-align:left">Baixa motivação, conflitos entre membros, saída de pessoas, pessoas-chave ausentes em momentos críticos</td>
+  <td style="text-align:left">Conversar com a equipe, redistribuir conhecimento, investigar causas da desmotivação</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Organizacional</strong></td>
+  <td style="text-align:left">Rumores de reestruturação, falta de ação ou comunicação da alta gerência, orçamento sendo questionado</td>
+  <td style="text-align:left">Comunicar o valor do projeto, preparar justificativas, antecipar cenários de corte</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Ferramentas</strong></td>
+  <td style="text-align:left">Relutância da equipe em usar ferramentas, reclamações sobre desempenho, demanda por máquinas mais potentes</td>
+  <td style="text-align:left">Avaliar se as ferramentas são adequadas, considerar substituição ou treinamento</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Requisitos</strong></td>
+  <td style="text-align:left">Aumento de solicitações de mudança, reclamações de clientes sobre o que foi entregue, decisões de escopo pendentes há semanas</td>
+  <td style="text-align:left">Revisar o processo de controle de mudanças, priorizar com o cliente, congelar uma baseline</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Estimativa</strong></td>
+  <td style="text-align:left">Tarefas simples atrasando repetidamente, defeitos reabertos várias vezes, velocidade da equipe abaixo da esperada</td>
+  <td style="text-align:left">Revisar estimativas, investigar causas dos atrasos, ajustar cronograma e comunicar</td>
+</tr>
+</tbody>
+</table>
+<div class="example">
+  <div class="example-title">Exemplo 7</div>
+  <p>Imagine uma reunião mensal de acompanhamento de riscos em um projeto de sistema de gestão de clínicas. A equipe revisa os riscos identificados no início do projeto:</p>
+<p><strong>Risco: rotatividade de pessoal (probabilidade original: baixa).</strong><br />
+<em>Indicadores observados neste mês:</em> um desenvolvedor sênior mencionou que está insatisfeito com a carga de trabalho, outro recebeu uma proposta de outra empresa, o clima na equipe está mais tenso do que no mês anterior.<br />
+<em>Reavaliação:</em> a probabilidade sobe de <em>baixa</em> para <em>moderada</em>.<br />
+<em>Ação:</em> o gerente agenda conversas individuais, revisa a distribuição de tarefas e começa a documentar conhecimento crítico que estava concentrado.</p>
+<p><strong>Risco: mudanças de requisitos (probabilidade original: moderada).</strong><br />
+<em>Indicadores observados:</em> nas últimas duas semanas, o cliente solicitou sete alterações em funcionalidades já implementadas, três dessas alterações afetam a mesma tela de prontuário médico.<br />
+<em>Reavaliação:</em> o impacto sobe de <em>tolerável</em> para <em>grave</em>, porque as mudanças estão gerando retrabalho em cascata.<br />
+<em>Ação:</em> o gerente propõe congelar a baseline atual e agrupar as mudanças para uma versão seguinte, em vez de aplicar cada alteração isoladamente.</p>
+<p><strong>Risco: ferramentas de geração de relatórios (probabilidade original: moderada).</strong><br />
+<em>Indicadores observados:</em> a equipe de front-end não relatou problemas e conseguiu gerar todos os relatórios pedidos até agora.<br />
+<em>Reavaliação:</em> a probabilidade cai de <em>moderada</em> para <em>baixa</em>.<br />
+<em>Ação:</em> nenhuma ação nova, o risco continua registrado, mas deixa de consumir atenção mensal.</p>
+<p>Esse exemplo mostra o ciclo completo de monitoramento aplicado a três riscos. Um risco piorou (pessoas), um ficou mais grave (requisitos), um melhorou (ferramentas). A reunião produziu decisões diferentes para cada caso.</p>
+</div>
+<h3 id="o-monitoramento-deve-produzir-decisão"><span class="heading-text">O monitoramento deve produzir decisão</span><span class="heading-arabic">11.8.2</span></h3>
+<p>O propósito do monitoramento não é preencher relatórios. É <strong>produzir decisão</strong>. Se um risco crítico está piorando, o gerente deve agir, não apenas registrar o fato na ata. As ações podem incluir renegociar escopo ou prazo com o cliente, antecipar uma validação técnica que estava prevista para depois, mudar a alocação de pessoas para reforçar uma área ou treinar alguém, criar uma prova de conceito para reduzir incerteza, dividir uma entrega grande em entregas menores para isolar o risco, acionar um plano de contingência já preparado, ou rever o cronograma para refletir a nova realidade.</p>
+<p>Se a reunião de riscos termina com todo mundo concordando que &quot;os riscos estão estáveis&quot;, mas ninguém tomou nenhuma decisão, provavelmente a reunião foi apenas um ritual.</p>
+<h2 id="riscos-e-o-planejamento-do-projeto"><span class="heading-text">Riscos e o planejamento do projeto</span><span class="heading-arabic">11.9</span></h2>
+<p>Na aula anterior, estudamos que cronogramas e planos precisam ser monitoráveis. A gerência de riscos reforça e aprofunda essa ideia. Um cronograma que não reconhece riscos importantes pode parecer limpo e organizado, mas é frágil, ele descreve o que a equipe fará se tudo der certo, não o que fará quando algo der errado.</p>
+<p>Considere duas formas de planejar a mesma entrega:</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Planejamento frágil (ignora riscos)</th>
+  <th style="text-align:left">Planejamento que reconhece riscos</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">&quot;Implementar integração de pagamento na semana 8&quot;</td>
+  <td style="text-align:left">&quot;Validar API de pagamento com sandbox na semana 2, implementar fluxo completo entre semanas 5 e 8, se a homologação atrasar, entregar versão com checkout e pagamento manual&quot;</td>
+</tr>
+<tr>
+  <td style="text-align:left">&quot;Fazer relatórios no último mês&quot;</td>
+  <td style="text-align:left">&quot;Validar consultas mais pesadas na semana 4, antes de fechar o modelo de dados, se o desempenho for ruim, limitar o escopo dos relatórios da primeira versão&quot;</td>
+</tr>
+<tr>
+  <td style="text-align:left">&quot;Uma pessoa cuida da autenticação&quot;</td>
+  <td style="text-align:left">&quot;Duas pessoas acompanham a autenticação desde o início, a segunda pessoa documenta decisões e faz revisão de código, se a primeira pessoa sair, a segunda assume com atraso controlado&quot;</td>
+</tr>
+<tr>
+  <td style="text-align:left">&quot;Cliente aprova tudo na entrega final&quot;</td>
+  <td style="text-align:left">&quot;Cliente valida protótipos a cada duas semanas e aprova regras críticas antes da implementação, se houver divergência, ela é descoberta cedo&quot;</td>
+</tr>
+</tbody>
+</table>
+<p>A segunda coluna não elimina riscos. Nenhum plano elimina riscos completamente. Mas a segunda coluna torna os riscos <strong>visíveis e gerenciáveis</strong>. A equipe sabe quais são as dependências frágeis, tem alternativas preparadas e consegue reagir antes que o atraso se torne irreversível.</p>
+<p>Essa é uma das funções mais importantes da gerência de projeto: <strong>trocar surpresa tardia por aprendizado antecipado</strong>. Quando um gerente diz &quot;estamos atrasados, mas já tínhamos previsto esse risco e temos um plano B&quot;, a situação é muito diferente de &quot;estamos atrasados e não sabemos o que fazer&quot;.</p>
+<h3 id="o-custo-de-ignorar-riscos"><span class="heading-text">O custo de ignorar riscos</span><span class="heading-arabic">11.9.1</span></h3>
+<p>Ignorar riscos não torna o projeto mais ágil. Apenas empurra decisões difíceis para um momento em que a equipe terá menos tempo, menos margem de manobra e menos opções.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Abordagem</th>
+  <th style="text-align:left">O que acontece na prática</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Ignorar riscos</td>
+  <td style="text-align:left">A equipe descobre problemas quando eles já aconteceram. Precisa improvisar sob pressão. O cliente é pego de surpresa. A confiança cai. O custo de correção é alto.</td>
+</tr>
+<tr>
+  <td style="text-align:left">Gerenciar riscos</td>
+  <td style="text-align:left">A equipe antecipa cenários, prepara respostas e monitora sinais. Quando algo dá errado, já existe um plano. O cliente é informado com antecedência. A confiança se mantém.</td>
+</tr>
+</tbody>
+</table>
+<p>Em projetos de software, a diferença entre esses dois cenários frequentemente determina se um projeto será lembrado como sucesso ou como fracasso, mesmo que a qualidade técnica do código seja a mesma.</p>
+<h2 id="riscos-em-projetos-ágeis"><span class="heading-text">Riscos em projetos ágeis</span><span class="heading-arabic">11.10</span></h2>
+<p>Métodos ágeis não eliminam a necessidade de gerência de riscos, eles mudam a forma como ela é praticada. Em vez de uma análise formal registrada em um documento extenso, equipes ágeis frequentemente tratam riscos de forma mais orgânica.</p>
+<p>No Scrum, por exemplo, alguns riscos são identificados e discutidos:</p>
+<ol>
+<li><strong>Na planning da sprint</strong>, quando a equipe avalia se consegue entregar as histórias selecionadas. Se há incerteza técnica em uma história, isso aparece na discussão de estimativa.</li>
+<li><strong>Na daily</strong>, quando impedimentos são relatados. Um impedimento que persiste por vários dias pode ser um sinal de que um risco está se materializando.</li>
+<li><strong>Na retrospectiva</strong>, quando a equipe discute o que deu errado e o que pode ser melhorado. Vários itens de melhoria são, na prática, estratégias de prevenção ou minimização de riscos para a próxima sprint.</li>
+<li><strong>Na refinement</strong>, quando histórias são detalhadas e a equipe percebe complexidade, dependências ou falta de informação que representam riscos.</li>
+</ol>
+<p>Mesmo em contextos ágeis, riscos estratégicos (orçamento, contrato, pessoas-chave, mudanças de mercado) geralmente precisam de atenção explícita. Uma daily de 15 minutos não substitui uma conversa franca sobre o risco de o projeto perder o patrocinador ou de o principal cliente mudar de ideia sobre o escopo.</p>
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">Disciplina acima da ferramenta<br /></span>
+  </div>
+  <div class="callout-content">
+<p>A ferramenta (matriz, planilha, ata, quadro visual) é menos importante que a <strong>disciplina</strong> de olhar para os riscos regularmente e tomar decisões a partir do que se vê. Um post-it no quadro da equipe pode ser tão útil quanto uma planilha sofisticada, desde que seja olhado e gere ação.</p>
+  </div>
+</div>
+<div class="callout callout-success">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></span>
+    <span class="callout-title-inner">Gerenciar riscos é ganhar tempo de reação<br /></span>
+  </div>
+  <div class="callout-content">
+<p>A diferença entre uma equipe que sofre uma crise e uma equipe que enfrenta uma crise está no preparo. Um risco identificado cedo permite conversar com o cliente, ajustar o plano e preparar alternativas. Um risco ignorado só aparece quando já virou problema, e aí as opções são poucas, caras e dolorosas.</p>
+  </div>
+</div>
+<h2 id="exercício-guiado"><span class="heading-text">Exercício guiado</span><span class="heading-arabic">11.11</span></h2>
+<p>Considere o seguinte projeto:</p>
+<p>Uma equipe de quatro pessoas deve desenvolver um sistema de agendamento de consultas para uma clínica médica de médio porte. O sistema terá cadastro de pacientes (dados pessoais, convênio, histórico simples), agenda de médicos (horários, especialidades, bloqueios de férias), agendamento com verificação de conflitos de horário, confirmação de consulta por mensagem (WhatsApp e e-mail), controle de faltas e reagendamento, relatórios administrativos (consultas por período, por médico, taxa de falta) e integração com um serviço externo de pagamento (convênios e particulares). O prazo de entrega é de 4 meses.</p>
+<p>A equipe é júnior (média de 2 anos de experiência) e ninguém trabalhou antes com integração de pagamento nem com envio de mensagens via WhatsApp Business API.</p>
+<p><strong>Etapa 1: Identificação</strong></p>
+<p>Preencha a tabela abaixo com pelo menos um risco por categoria. Seja específico: em vez de &quot;problemas técnicos&quot;, descreva exatamente o que pode dar errado.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Categoria</th>
+  <th style="text-align:left">Risco identificado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Tecnologia</td>
+  <td style="text-align:left">A equipe nunca integrou WhatsApp Business API. A documentação muda com frequência e a aprovação do número comercial (Business Verification) pode levar semanas, bloqueando os testes de envio.</td>
+</tr>
+<tr>
+  <td style="text-align:left">Pessoas</td>
+  <td style="text-align:left">Com apenas 4 pessoas juniores, se uma sair ou adoecer por período prolongado, 25% da capacidade desaparece. Nenhuma pessoa domina integração de pagamentos, então a equipe depende de aprendizado durante o projeto.</td>
+</tr>
+<tr>
+  <td style="text-align:left">Organizacional</td>
+  <td style="text-align:left">A clínica pode mudar de ideia sobre quais convênios aceitar no meio do projeto, forçando alteração no módulo de pagamento já implementado.</td>
+</tr>
+<tr>
+  <td style="text-align:left">Ferramentas</td>
+  <td style="text-align:left">O ambiente de sandbox da API de pagamento pode ter comportamento diferente do ambiente de produção (timeouts simulados, respostas fictícias), mascarando bugs que só aparecerão com dados reais.</td>
+</tr>
+<tr>
+  <td style="text-align:left">Requisitos</td>
+  <td style="text-align:left">As regras de reagendamento e multa por falta não foram formalizadas pela clínica. Cada médico pode ter uma política diferente, e a equipe só descobrirá essas diferenças durante as entrevistas.</td>
+</tr>
+<tr>
+  <td style="text-align:left">Estimativas</td>
+  <td style="text-align:left">A equipe estimou &quot;confirmação por WhatsApp&quot; como uma tarefa simples, mas ignorou o fluxo completo: template de mensagem precisa ser aprovado pelo Meta, webhook de resposta precisa tratar falha de envio, e uma fila de retentativa precisa ser implementada para mensagens não entregues.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Etapa 2: Análise</strong></p>
+<p>Escolha os três riscos mais importantes da sua lista. Para cada um, atribua probabilidade, impacto e prioridade usando os critérios da matriz de riscos.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Risco</th>
+  <th style="text-align:left">Probabilidade</th>
+  <th style="text-align:left">Impacto</th>
+  <th style="text-align:left">Prioridade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">A integração com WhatsApp Business API atrasa porque a equipe nunca usou a plataforma e o processo de aprovação é externo</td>
+  <td style="text-align:left">Alta</td>
+  <td style="text-align:left">Grave</td>
+  <td style="text-align:left">Crítico</td>
+</tr>
+<tr>
+  <td style="text-align:left">A integração com pagamento gera retrabalho porque a equipe não conhece o domínio e a lógica de convênios é mais complexa do que parecia</td>
+  <td style="text-align:left">Moderada</td>
+  <td style="text-align:left">Grave</td>
+  <td style="text-align:left">Alto</td>
+</tr>
+<tr>
+  <td style="text-align:left">As regras de reagendamento, falta e multa não foram formalizadas e cada médico segue uma política diferente</td>
+  <td style="text-align:left">Moderada</td>
+  <td style="text-align:left">Grave</td>
+  <td style="text-align:left">Alto</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Etapa 3: Planejamento de respostas</strong></p>
+<p>Para cada um dos três riscos, proponha pelo menos uma ação de prevenção, minimização ou contingência.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Risco</th>
+  <th style="text-align:left">Estratégia</th>
+  <th style="text-align:left">Ação concreta</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">WhatsApp Business API</td>
+  <td style="text-align:left">Prevenção</td>
+  <td style="text-align:left">Iniciar o cadastro Business Verification na semana 1, antes mesmo de implementar qualquer envio de mensagem.</td>
+</tr>
+<tr>
+  <td style="text-align:left">WhatsApp Business API</td>
+  <td style="text-align:left">Minimização</td>
+  <td style="text-align:left">Implementar confirmação por e-mail como canal reserva, usando a mesma lógica de agendamento, para que o sistema funcione mesmo sem o WhatsApp aprovado.</td>
+</tr>
+<tr>
+  <td style="text-align:left">WhatsApp Business API</td>
+  <td style="text-align:left">Contingência</td>
+  <td style="text-align:left">Se a aprovação do Meta não sair até a semana 6, entregar a primeira versão com confirmação por e-mail e SMS, e agendar a migração para WhatsApp na segunda versão.</td>
+</tr>
+<tr>
+  <td style="text-align:left">Integração de pagamento</td>
+  <td style="text-align:left">Prevenção</td>
+  <td style="text-align:left">Reservar as duas primeiras semanas para estudo dirigido da documentação do gateway e prova de conceito com sandbox, antes de comprometer qualquer prazo.</td>
+</tr>
+<tr>
+  <td style="text-align:left">Integração de pagamento</td>
+  <td style="text-align:left">Minimização</td>
+  <td style="text-align:left">Projetar o módulo de pagamento com uma interface bem definida e isolada do restante do sistema, para que trocar de gateway ou adiar a integração tenha baixo impacto.</td>
+</tr>
+<tr>
+  <td style="text-align:left">Integração de pagamento</td>
+  <td style="text-align:left">Contingência</td>
+  <td style="text-align:left">Se a integração real não estiver estável na semana 10, entregar com registro manual de pagamento (valor, data, convênio), permitindo que a clínica opere enquanto a integração é concluída.</td>
+</tr>
+<tr>
+  <td style="text-align:left">Regras de reagendamento não formalizadas</td>
+  <td style="text-align:left">Prevenção</td>
+  <td style="text-align:left">Agendar na semana 1 uma reunião com todos os médicos para levantar as políticas reais de falta, multa e reagendamento, consolidando em um documento único.</td>
+</tr>
+<tr>
+  <td style="text-align:left">Regras de reagendamento não formalizadas</td>
+  <td style="text-align:left">Minimização</td>
+  <td style="text-align:left">Implementar as regras como parâmetros configuráveis por médico (tempo de antecedência, valor da multa, limite de remarcações), em vez de codificar valores fixos.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Etapa 4: Monitoramento</strong></p>
+<p>Para cada um dos três riscos, que indicador(es) você observaria nas reuniões semanais de acompanhamento?</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Risco</th>
+  <th style="text-align:left">Indicadores para monitorar</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">WhatsApp Business API</td>
+  <td style="text-align:left">Status do Business Verification no portal Meta, data de submissão e previsão de resposta, número de mensagens de teste enviadas com sucesso, tempo médio de entrega no sandbox.</td>
+</tr>
+<tr>
+  <td style="text-align:left">Integração de pagamento</td>
+  <td style="text-align:left">Tempo gasto pela equipe estudando documentação (horas registradas), número de bugs abertos no módulo de pagamento, diferenças de comportamento entre sandbox e produção, complexidade real dos convênios mapeada.</td>
+</tr>
+<tr>
+  <td style="text-align:left">Regras de reagendamento não formalizadas</td>
+  <td style="text-align:left">Número de exceções e políticas diferentes descobertas a cada entrevista, quantidade de e-mails da clínica pedindo ajustes em regras já implementadas, data em que o documento consolidado de regras foi formalizado e assinado pelos médicos.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Perguntas para discussão:</strong></p>
+<ol>
+<li>Qual desses riscos você trataria primeiro? Por quê?</li>
+<li>Existe algum risco que poderia ser apenas monitorado, sem ação imediata?</li>
+<li>Que informação adicional você gostaria de ter para reduzir a incerteza de algum desses riscos?</li>
+<li>Se o prazo fosse reduzido de 4 para 3 meses, como sua análise de riscos mudaria?</li>
+</ol>
+<div class="example">
+  <div class="example-title">Resolução comentada</div>
+  <p><strong>1. Qual risco tratar primeiro?</strong> A integração com WhatsApp Business API. Motivo: é o risco com maior incerteza técnica (equipe sem experiência nenhuma), depende de aprovação externa (Meta) fora do controle da equipe, e afeta diretamente uma funcionalidade visível para o paciente final. Se a aprovação atrasar, o tempo de reação é curto e o impacto no cronograma é alto. Começar a tratá-lo na semana 1 maximiza a janela de resposta.</p>
+<p><strong>2. Existe risco que pode ser apenas monitorado?</strong> Sim. O risco de &quot;ferramentas com comportamento diferente entre sandbox e produção&quot; (categoria Ferramentas) pode ser apenas monitorado no início, porque o impacto só aparece quando os testes de integração estiverem avançados. Basta registrar o risco e começar a observá-lo a partir da semana 6. O risco de &quot;mudança de preço de hospedagem&quot; (categoria Organizacional, se identificado) também é de baixa prioridade para um projeto de 4 meses com equipe interna.</p>
+<p><strong>3. Que informação reduziria a incerteza?</strong> Para o risco do WhatsApp: saber o prazo médio real de aprovação do Business Verification para contas brasileiras (perguntar em fóruns, comunidades ou diretamente ao suporte Meta). Para o risco de pagamento: testar pelo menos dois gateways diferentes na semana 1 e comparar documentação, suporte e complexidade de integração, para escolher o mais adequado antes de comprometer a arquitetura. Para o risco de requisitos: entrevistar a recepcionista mais antiga da clínica. Ela provavelmente conhece todas as exceções e políticas informais que os médicos não documentaram.</p>
+<p><strong>4. Se o prazo cair para 3 meses, como a análise muda?</strong> Todos os riscos sobem de prioridade. O risco do WhatsApp, que já era crítico, continua crítico mas com margem de reação menor. A contingência (confirmação por e-mail) deixa de ser plano B e se torna o plano A provável para a primeira entrega. O risco de pagamento sobe de Alto para Crítico, porque não haverá tempo de aprendizado. A equipe precisará escolher um gateway na semana 1 e aceitar a solução que funcionar, mesmo que não seja a ideal. O risco de regras não formalizadas sobe de Alto para Crítico, porque não haverá tempo para implementar políticas diferentes por médico. A primeira versão terá que impor uma política única e lidar com reclamações depois. Em resumo: com prazo comprimido, a equipe precisará reduzir escopo, aceitar mais contingências e priorizar apenas o que for indispensável para operar.</p>
+</div>
+<h2 id="questões"><span class="heading-text">Questões</span><span class="heading-arabic">11.12</span></h2>
+<div class="questions">
+  <p><strong>1.</strong> Diferencie risco de problema. Por que essa distinção é importante para o gerente de projeto?</p>
+<p><strong>2.</strong> Explique as três categorias de risco (projeto, produto e negócio) e dê um exemplo de um mesmo evento que afeta mais de uma categoria ao mesmo tempo.</p>
+<p><strong>3.</strong> Por que projetos de software são especialmente suscetíveis a riscos, quando comparados a outros tipos de projeto de engenharia? Cite pelo menos duas razões.</p>
+<p><strong>4.</strong> Descreva as quatro atividades do processo de gerência de riscos e explique por que esse processo é iterativo, e não linear.</p>
+<p><strong>5.</strong> O que é uma matriz de riscos? Para que ela serve e quais são suas limitações?</p>
+<p><strong>6.</strong> Um risco tem probabilidade baixa e impacto catastrófico. De acordo com a matriz de riscos apresentada na aula, qual é a prioridade desse risco? Justifique.</p>
+<p><strong>7.</strong> Diferencie estratégias de prevenção, minimização e contingência. Dê um exemplo de cada para um mesmo risco.</p>
+<p><strong>8.</strong> Cite três indicadores que podem sinalizar que um risco de requisitos está se agravando.</p>
+<p><strong>9.</strong> Por que um cronograma que não considera riscos pode dar uma falsa sensação de segurança?</p>
+<p><strong>10.</strong> Uma equipe ágil diz que &quot;não precisa de gerência de riscos porque faz daily e retrospectiva&quot;. Você concorda? Justifique.</p>
+</div>
+<div class="example">
+  <div class="example-title">Gabarito</div>
+  <p><strong>1.</strong> Risco é um evento incerto que, <strong>se</strong> acontecer, afeta negativamente o projeto, produto ou negócio. Problema é algo que <strong>já</strong> aconteceu e precisa ser resolvido. A distinção é importante porque riscos podem ser prevenidos ou mitigados antes de virarem problemas. Depois que o problema se materializa, a equipe só pode reagir, e o custo da reação costuma ser maior.</p>
+<p><strong>2.</strong> Risco de projeto afeta cronograma, custo ou recursos. Risco de produto afeta qualidade, desempenho ou segurança do software. Risco de negócio afeta objetivos comerciais ou estratégicos. Um mesmo evento, por exemplo, a saída de um desenvolvedor experiente, afeta as três categorias: atrasa o projeto (risco de projeto), pode introduzir erros pela inexperiência do substituto (risco de produto) e pode comprometer a confiança do cliente ou novos contratos (risco de negócio).</p>
+<p><strong>3.</strong> Entre as razões: o trabalho em software é invisível (não se vê progresso olhando para o artefato), grandes projetos costumam ser únicos (experiência anterior não se transfere diretamente), processos de software variam entre organizações, tecnologias mudam rapidamente, requisitos frequentemente são vagos no início e mudam durante o desenvolvimento, e estimativas iniciais têm incerteza muito alta.</p>
+<p><strong>4.</strong> As quatro atividades são: identificação (listar riscos potenciais), análise (avaliar probabilidade e impacto de cada risco), planejamento (definir estratégias de prevenção, minimização e contingência) e monitoramento (observar indicadores e reavaliar riscos periodicamente). O processo é iterativo porque o monitoramento revela novos riscos e mudanças nos riscos existentes, realimentando a identificação e a análise. Riscos não são estáticos.</p>
+<p><strong>5.</strong> A matriz de riscos é uma tabela que cruza probabilidade e impacto para atribuir prioridade (Baixo, Médio, Alto, Crítico) a cada risco. Serve para ajudar a equipe a concentrar energia nos riscos mais importantes, em vez de tratar todos como iguais. Suas limitações: depende de julgamento subjetivo para estimar probabilidade e impacto, não substitui o bom senso (um risco de baixa probabilidade e impacto catastrófico pode merecer atenção especial), é uma ferramenta de apoio à decisão, não uma fórmula automática.</p>
+<p><strong>6.</strong> Probabilidade baixa + Impacto catastrófico = Prioridade <strong>Alto</strong>. Embora a probabilidade seja baixa, o impacto é tão grave (ameaça a sobrevivência do projeto) que o risco não pode ser ignorado. A célula correspondente na matriz é &quot;Alto&quot;.</p>
+<p><strong>7.</strong> Prevenção reduz a probabilidade de o risco ocorrer. Minimização reduz o impacto caso o risco ocorra. Contingência é um plano de reação se o risco se concretizar. Exemplo para o risco &quot;a API de pagamento pode não ser homologada a tempo&quot;: prevenção = iniciar a homologação no primeiro mês do projeto, minimização = projetar o checkout com baixo acoplamento para trocar de provedor com facilidade, contingência = se a homologação atrasar, entregar a primeira versão com checkout e pagamento manual, migrando para a API na versão seguinte.</p>
+<p><strong>8.</strong> Três indicadores de que um risco de requisitos está se agravando: aumento súbito no número de solicitações de mudança, reclamações frequentes dos clientes sobre o que foi entregue, decisões de escopo pendentes por várias semanas sem definição.</p>
+<p><strong>9.</strong> Porque o cronograma descreve o que a equipe fará se tudo der certo, mas não prepara a equipe para o que fazer quando algo der errado. Se uma tarefa depende de uma integração externa que atrasa, o cronograma &quot;perfeito&quot; simplesmente quebra, e a equipe não tem um plano B. Um cronograma que reconhece riscos inclui folgas, dependências explícitas, tarefas de validação antecipada e planos de contingência.</p>
+<p><strong>10.</strong> A resposta esperada é que daily e retrospectiva ajudam a identificar riscos operacionais e de curto prazo, mas não substituem completamente uma análise estruturada de riscos. Riscos estratégicos (orçamento, contrato, mercado, dependências externas de longo prazo) podem não aparecer em reuniões curtas e focadas no dia a dia. Além disso, a retrospectiva olha para trás (o que deu errado), enquanto a gerência de riscos também olha para frente (o que pode dar errado). O ideal é combinar as duas abordagens: práticas ágeis para riscos do dia a dia e análise periódica para riscos estratégicos.</p>
+</div>
+<h2 id="próximos-passos"><span class="heading-text">Próximos passos</span><span class="heading-arabic">11.13</span></h2>
+<p>Na <a href="12-concepts-estimates-schedule-deadlines.html">próxima aula</a>, entraremos em Conceitos, Estimativas, Cronograma e Prazos. Depois de entender riscos, o próximo passo é estimar esforço, organizar tarefas e discutir prazos de forma responsável.</p>
+
+                </div>
+            </article>
+            <footer class="footer">
+                <p>© 2025 · <a href="#">Gabriel Soares Baptista</a></p>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        const toggle = document.querySelector('.mobile-menu-toggle');
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.querySelector('.mobile-menu-overlay');
+
+        function openMenu() {
+            sidebar.classList.add('open');
+            overlay.classList.add('open');
+            toggle.classList.add('open');
+            toggle.innerHTML = '<i data-lucide="x"></i>';
+            CourseForgeUI.initIcons();
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMenu() {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('open');
+            toggle.classList.remove('open');
+            toggle.innerHTML = '<i data-lucide="menu"></i>';
+            CourseForgeUI.initIcons();
+            document.body.style.overflow = '';
+        }
+
+        toggle.addEventListener('click', () => {
+            if (sidebar.classList.contains('open')) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        overlay.addEventListener('click', closeMenu);
+    </script>
+
+    
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            renderMathInElement(document.body, {
+                output: 'html',
+                delimiters: [
+                    { left: "$$", right: "$$", display: true },
+                    { left: "$", right: "$", display: false },
+                    { left: "\\(", right: "\\)", display: false },
+                    { left: "\\[", right: "\\]", display: true }
+                ],
+                throwOnError: false,
+                strict: false
+            });
+        });
+    </script>
+    
+    
+    <script src="/aulas-faesa/js/vendor/prism/prism.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-c.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-cpp.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-python.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-clike.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-perl.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-java.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-mermaid.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-php.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js" data-no-bundle></script>
+    
+    
+    
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            mermaid.initialize({
+                startOnLoad: true,
+                theme: 'default',
+                securityLevel: 'loose',
+                fontFamily: 'Inter, system-ui, sans-serif',
+                themeVariables: {
+                    fontSize: '16px',
+                    edgeLabelFontSize: '16px',
+                    multiplicityFontSize: '18px'
+                }
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const isSubcourse = false;
+        const courseName = "Engenharia de Software";
+        CourseForgeNav.applyDynamicBreadcrumbs('.breadcrumb', isSubcourse);
+        CourseForgeNav.initScrollSpy();
+        CourseForgeUI.initCopyButtons();
+        CourseForgeUI.initExamples();
+        });
+
+        function handleBackNavigation() {
+            const isSubcourse = false;
+        const dynamic = CourseForgeNav.getBackLink('contents.html', 'Voltar', isSubcourse);
+        window.location.href = dynamic.url;
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toposia - Processamento Digital de Sinais</title>
+    <link rel="icon" href="/aulas-faesa/img/dark-favicon.svg" media="(prefers-color-scheme: light)">
+    <link rel="icon" href="/aulas-faesa/img/light-favicon.svg" media="(prefers-color-scheme: dark)">
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/fonts.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/bundles/katex-base-prism-one-light-b0347952c973.bundle.min.css">
+    
+    
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css" data-no-bundle>
+    <script src="/aulas-faesa/js/bundles/lucide-katex-auto-render-4b36e8bd8642.bundle.min.js"></script>
+</head>
+
+<body>
+    <script>
+        // Restore sidebar state instantly (before first paint) to avoid transition flash
+        (function() {
+            if (localStorage.getItem('cf_sidebar_hidden') === 'true') {
+                document.body.classList.add('sidebar-hidden', 'no-transition');
+            }
+            requestAnimationFrame(function() {
+                requestAnimationFrame(function() {
+                    document.body.classList.remove('no-transition');
+                });
+            });
+        })();
+    </script>
+    <div class="page-wrapper">
+        <nav class="sidebar">
+            <div class="sidebar-content">
+                <header class="sidebar-title-section">
+                    <a href="contents.html" class="course-title-link">
+                        <h1 class="sidebar-course-title">Processamento Digital de Sinais</h1>
+                    </a>
+                    <div class="sidebar-ornament">❧</div>
+                </header>
+
+                
+                <section class="sidebar-toc-section">
+                    <h2 class="toc-header">Tabela de Conteúdos</h2>
+                    <ol class="toc-list">
+                        
+                        <li class="toc-item level-2">
+                            <a href="#introdução">11.1. Introdução</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#do-sinal-amostrado-para-a-sequência">11.2. Do sinal amostrado para a sequência</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#impulso-e-degrau-discretos">11.3. Impulso e degrau discretos</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#sequências-exponenciais">11.4. Sequências exponenciais</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#senoides-discretas">11.5. Senoides discretas</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#periodicidade-da-senoide-discreta">11.5.1. Periodicidade da senoide discreta</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#equivalência-de-frequências-discretas">11.5.2. Equivalência de frequências discretas</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#exponencial-complexa-discreta">11.6. Exponencial complexa discreta</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#sistemas-discretos-e-equações-de-diferenças">11.7. Sistemas discretos e equações de diferenças</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#forma-geral">11.7.1. Forma geral</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#notação-operacional">11.7.2. Notação operacional</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#solução-recursiva">11.7.3. Solução recursiva</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#polinômio-característico-e-modos-naturais">11.7.4. Polinômio característico e modos naturais</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#resposta-ao-impulso">11.8. Resposta ao impulso</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#como-obter-de-uma-equação-de-diferenças">11.8.1. Como obter $h[n]$ de uma equação de diferenças</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#convolução-discreta">11.9. Convolução discreta</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#propriedade-da-largura">11.9.1. Propriedade da largura</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#interpretação-operacional-da-convolução">11.9.2. Interpretação operacional da convolução</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#propriedades-da-convolução-discreta">11.10. Propriedades da convolução discreta</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#sistemas-interconectados">11.11. Sistemas interconectados</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#estabilidade-e-outras-características-via">11.12. Estabilidade e outras características via $h[n]$</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#conexão-com-filtros-digitais">11.13. Conexão com filtros digitais</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#próximos-passos">11.14. Próximos Passos</a>
+                        </li>
+                        
+                    </ol>
+                </section>
+                
+
+                <nav class="sidebar-nav-section">
+                    
+                    <a href="10-adc-dft-and-fft.html" class="sidebar-nav-link prev"><i data-lucide="chevron-left" class="nav-icon"></i> Conversão A/D, TDF e FFT</a>
+                    
+                    
+                    <a href="12-transformada-z.html" class="sidebar-nav-link next">Transformada Z, Estabilidade e Polos/Zeros <i data-lucide="chevron-right" class="nav-icon"></i></a>
+                    
+                    <a href="javascript:void(0)" onclick="handleBackNavigation()"
+                        class="sidebar-nav-link back"><i data-lucide="arrow-left" class="nav-icon"></i> Voltar</a>
+                </nav>
+
+            </div>
+        </nav>
+
+        <button class="mobile-menu-toggle" aria-label="Menu">
+            <i data-lucide="menu"></i>
+        </button>
+
+        <button class="sidebar-toggle" onclick="CourseForgeNav.toggleSidebar()" aria-label="Alternar Barra Lateral">
+            <i data-lucide="chevron-left" class="toggle-icon" id="sidebar-toggle-icon"></i>
+        </button>
+
+        <div class="mobile-menu-overlay"></div>
+
+        <main class="main-content">
+            <article class="article">
+                <header class="article-header">
+                    <span class="chapter-number">11</span>
+                    <h1 class="article-title">
+                        <span class="title-ornament left">❧</span>
+                        <span class="title-text">Sinais Discretos e Convolução Discreta</span>
+                        <span class="title-ornament right">❧</span>
+                    </h1>
+                    
+                    <p class="article-date">08/06/2026</p>
+                    
+                    
+                    <nav class="breadcrumb" aria-label="Breadcrumb">
+                        
+                        
+                        
+                        <a href="contents.html" class="breadcrumb-link">Processamento Digital de Sinais</a>
+                        
+                        <span class="breadcrumb-separator"><i data-lucide="chevron-right" class="breadcrumb-icon"></i></span>
+                        
+                        
+                        
+                        
+                        <a href="contents.html#part-III" class="breadcrumb-link">III - Teoria de Frequência e Conversão A/D</a>
+                        
+                        <span class="breadcrumb-separator"><i data-lucide="chevron-right" class="breadcrumb-icon"></i></span>
+                        
+                        
+                        
+                        <span class="breadcrumb-current">Sinais Discretos e Convolução Discreta</span>
+                        
+                        
+                    </nav>
+                    
+                </header>
+                <div class="article-body">
+                    <h2 id="introdução"><span class="heading-text">Introdução</span><span class="heading-arabic">11.1</span></h2>
+<p>Hoje você vai trabalhar pela primeira vez não com funções do tempo contínuo, mas com sequências. A diferença é brutal.</p>
+<p>Nas últimas aulas, você viu a Transformada de Fourier, o teorema da amostragem e a conversão A/D, TDF e FFT. A pergunta central era: como sair de um sinal físico e chegar a uma lista de números que um computador possa processar?</p>
+<p>Agora a pergunta muda. Você já tem as amostras. Como processá-las?</p>
+<p>Quando você escreve</p>
+<p>$$
+x[n]=x(nT)
+$$</p>
+<p>não está apenas trocando parênteses por colchetes. Está trocando de objeto matemático. O sinal deixa de ser uma função de $t$ contínuo e vira uma sequência indexada por inteiros. O índice $n$ não percorre instantes. Percorre posições.</p>
+<div class="callout callout-abstract">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
+    <span class="callout-title-inner">Ideia central<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Um sinal discreto é uma sequência de valores. Sistemas discretos processam essas sequências por equações de diferenças. Para sistemas lineares e invariantes no tempo, a resposta a qualquer entrada pode ser obtida pela convolução discreta entre a entrada e a resposta ao impulso.</p>
+  </div>
+</div>
+<h2 id="do-sinal-amostrado-para-a-sequência"><span class="heading-text">Do sinal amostrado para a sequência</span><span class="heading-arabic">11.2</span></h2>
+<p>Suponha que um sinal contínuo $x(t)$ seja amostrado a cada $T$ segundos. A sequência correspondente é</p>
+<p>$$
+x[n]=x(nT), \quad n\in\mathbb{Z}
+$$</p>
+<p>$T$ pertence ao processo físico de amostragem. $n$ é apenas um contador inteiro. Por isso, ao desenhar $x[n]$, você usa hastes, não uma curva contínua. Entre $x[2]$ e $x[3]$ não existe automaticamente um valor de $x[2{,}5]$ dentro do modelo discreto.</p>
+<p>Essa distinção evita um erro comum: pensar que uma sequência discreta é uma curva contínua desenhada com poucos pontos. Não é. Uma sequência é uma lista ordenada de valores.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Notação</th>
+  <th style="text-align:left">Leitura</th>
+  <th style="text-align:left">Tipo de variável</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">$x(t)$</td>
+  <td style="text-align:left">sinal contínuo no tempo</td>
+  <td style="text-align:left">$t$ real</td>
+</tr>
+<tr>
+  <td style="text-align:left">$x[n]$</td>
+  <td style="text-align:left">sinal discreto no tempo</td>
+  <td style="text-align:left">$n$ inteiro</td>
+</tr>
+<tr>
+  <td style="text-align:left">$x(nT)$</td>
+  <td style="text-align:left">amostra do sinal contínuo</td>
+  <td style="text-align:left">$n$ inteiro, $T$ fixo</td>
+</tr>
+</tbody>
+</table>
+<p>Na prática de processamento digital de sinais, essa sequência pode representar amostras de áudio, amostras de tensão, pixels de uma imagem, medições de um sensor ou valores já calculados por um algoritmo.</p>
+<h2 id="impulso-e-degrau-discretos"><span class="heading-text">Impulso e degrau discretos</span><span class="heading-arabic">11.3</span></h2>
+<p>Dois sinais aparecem o tempo todo em sistemas discretos: o impulso unitário e o degrau unitário.</p>
+<p>O <strong>impulso unitário discreto</strong> (delta de Kronecker) é definido por</p>
+<p>$$
+\delta[n]=
+\begin{cases}
+1, & n=0\\
+0, & n\ne 0
+\end{cases}
+$$</p>
+<p>O impulso deslocado $\delta[n-m]$ vale $1$ em $n=m$ e $0$ nos demais índices. Ele marca uma única posição da sequência.</p>
+<p>O <strong>degrau unitário discreto</strong> é definido por</p>
+<p>$$
+u[n]=
+\begin{cases}
+1, & n\ge 0\\
+0, & n<0
+\end{cases}
+$$</p>
+<p>Multiplicar uma sequência por $u[n]$ é uma forma simples de dizer que ela começa em $n=0$. Se você quiser escrever &quot;uma exponencial que começa em $n=0$ e vale zero antes disso&quot;, escreve $\gamma^n u[n]$. Sem o $u[n]$, a expressão $\gamma^n$ estaria definida para índices negativos, o que pode não ser o desejado.</p>
+<p>Outra utilidade do degrau é criar janelas de duração finita. O sinal</p>
+<p>$$
+u[n]-u[n-5]
+$$</p>
+<p>vale $1$ para $n=0,1,2,3,4$ e $0$ nos demais índices. É um pulso retangular discreto de largura $5$.</p>
+<p>A Figura 11.1 mostra o impulso e o degrau discretos lado a lado.</p>
+<p><img src="static/figura-11-1-impulso-degrau-discretos.png" alt="Figura 11.1: Impulso e degrau discretos" /></p>
+<p>Existe uma relação muito útil entre os dois. O degrau pode ser escrito como soma acumulada de impulsos:</p>
+<p>$$
+u[n]=\sum_{k=-\infty}^{n}\delta[k]
+$$</p>
+<p>Isso faz sentido: para $n<0$, a soma é vazia (zero). Para $n=0$, o impulso em $k=0$ contribui com $1$ e a soma passa a ser $1$. Para $n>0$, a soma permanece $1$ porque todos os outros impulsos são zero.</p>
+<p>Inversamente, o impulso pode ser obtido como a diferença entre dois degraus consecutivos:</p>
+<p>$$
+\delta[n]=u[n]-u[n-1]
+$$</p>
+<p>Essa relação é a contrapartida discreta do fato de que, no tempo contínuo, a derivada do degrau é o impulso.</p>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Cuidado com a analogia contínua<br /></span>
+  </div>
+  <div class="callout-content">
+<p>O impulso discreto $\delta[n]$ é uma sequência comum: vale $1$ em um ponto e $0$ nos outros. Ele <strong>não</strong> possui as sutilezas do impulso de Dirac $\delta(t)$, que exige a teoria de distribuições para ser definido com rigor.</p>
+  </div>
+</div>
+<h2 id="sequências-exponenciais"><span class="heading-text">Sequências exponenciais</span><span class="heading-arabic">11.4</span></h2>
+<p>Uma das famílias mais importantes em tempo discreto é a exponencial</p>
+<p>$$
+\gamma^n
+$$</p>
+<p>O número $\gamma$ pode ser real ou complexo. Se $\gamma$ é real e positivo, o comportamento é direto:</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Valor de $\gamma$</th>
+  <th style="text-align:left">Comportamento de $\gamma^n$</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">$0<\gamma<1$</td>
+  <td style="text-align:left">decai com $n$</td>
+</tr>
+<tr>
+  <td style="text-align:left">$\gamma=1$</td>
+  <td style="text-align:left">permanece constante</td>
+</tr>
+<tr>
+  <td style="text-align:left">$\gamma>1$</td>
+  <td style="text-align:left">cresce com $n$</td>
+</tr>
+</tbody>
+</table>
+<p>Se $\gamma$ é real e negativo, a sequência alterna sinal a cada amostra. Por exemplo, $(-0{,}8)^n$ tem módulo decrescente, mas muda de positivo para negativo sucessivamente: $(-0{,}8)^0=1$, $(-0{,}8)^1=-0{,}8$, $(-0{,}8)^2=0{,}64$, $(-0{,}8)^3=-0{,}512$ e assim por diante.</p>
+<p>A Figura 11.3 mostra três exponenciais discretas com comportamentos diferentes.</p>
+<p><img src="static/figura-11-3-exponenciais-discretas.png" alt="Figura 11.3: Exponenciais discretas" /></p>
+<p>Para sinais e sistemas discretos, é muito útil enxergar $\gamma$ no plano complexo. O círculo unitário separa crescimento e decaimento:</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Posição de $\gamma$</th>
+  <th style="text-align:left">Comportamento de $\gamma^n$</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">$|\gamma|<1$</td>
+  <td style="text-align:left">decai</td>
+</tr>
+<tr>
+  <td style="text-align:left">$|\gamma|=1$</td>
+  <td style="text-align:left">mantém módulo constante</td>
+</tr>
+<tr>
+  <td style="text-align:left">$|\gamma|>1$</td>
+  <td style="text-align:left">cresce</td>
+</tr>
+</tbody>
+</table>
+<p>A Figura 11.2 mostra essa classificação no plano complexo.</p>
+<p><img src="static/figura-11-2-plano-gamma-circulo-unitario.png" alt="Figura 11.2: Plano gamma e círculo unitário" /></p>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Pare e pense<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Em tempo contínuo, a região de decaimento era o semiplano esquerdo. Por que em tempo discreto a região é o interior do círculo unitário? O que muda na natureza do sistema quando você troca equações diferenciais por equações de diferenças?</p>
+  </div>
+</div>
+<p>A resposta está na relação entre o operador de atraso e a variável $\gamma$. Em tempo contínuo, os modos naturais são $e^{\lambda t}$, e $\operatorname{Re}(\lambda)<0$ garante decaimento. Em tempo discreto, os modos são $\gamma^n$, e $|\gamma|<1$ garante decaimento. O círculo unitário ocupa, no plano discreto, o papel que o eixo imaginário ocupa no plano contínuo.</p>
+<div class="example">
+  <div class="example-title">Exemplo 1</div>
+  <p>Classifique o comportamento das sequências:</p>
+<p>$$
+x_1[n]=(0{,}7)^n u[n]
+$$</p>
+<p>$$
+x_2[n]=(-0{,}7)^n u[n]
+$$</p>
+<p>$$
+x_3[n]=(1{,}2)^n u[n]
+$$</p>
+<hr />
+<p>Para $x_1[n]$, $|0{,}7|<1$. A sequência decai sem alternar sinal.</p>
+<p>Para $x_2[n]$, $|-0{,}7|<1$. A sequência decai em módulo, mas alterna sinal porque a base é negativa.</p>
+<p>Para $x_3[n]$, $|1{,}2|>1$. A sequência cresce com $n$.</p>
+<p>Qual dessas três sequências poderia ser a resposta ao impulso de um sistema estável?</p>
+</div>
+<h2 id="senoides-discretas"><span class="heading-text">Senoides discretas</span><span class="heading-arabic">11.5</span></h2>
+<p>Uma senoide discreta pode ser escrita como</p>
+<p>$$
+x[n]=C\cos(\Omega n+\theta)
+$$</p>
+<p>$C$ é a amplitude, $\theta$ é a fase e $\Omega$ é a frequência angular discreta, medida em <strong>radianos por amostra</strong>.</p>
+<p>Também podemos escrever</p>
+<p>$$
+\Omega=2\pi F
+$$</p>
+<p>em que $F$ é medida em <strong>ciclos por amostra</strong>. Se $F=1/10$, são necessárias $10$ amostras para completar um ciclo.</p>
+<p>A Figura 11.4 mostra uma senoide discreta típica.</p>
+<p><img src="static/figura-11-4-senoide-discreta.png" alt="Figura 11.4: Senoide discreta" /></p>
+<p>Se uma senoide contínua $\cos(\omega t)$ é amostrada com período $T$, então</p>
+<p>$$
+x[n]=\cos(\omega nT)
+$$</p>
+<p>ou seja,</p>
+<p>$$
+x[n]=\cos(\Omega n), \quad \Omega=\omega T
+$$</p>
+<p>Essa relação mostra por que a frequência discreta depende da taxa de amostragem. A mesma senoide física gera sequências diferentes se você mudar $T$.</p>
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">De rad/s para rad/amostra<br /></span>
+  </div>
+  <div class="callout-content">
+<p>A conversão $\Omega=\omega T$ é a mesma que você já viu na aula de amostragem. A diferença é que agora você não está pensando em reconstruir o sinal contínuo, e sim em trabalhar diretamente com a sequência.</p>
+  </div>
+</div>
+<h3 id="periodicidade-da-senoide-discreta"><span class="heading-text">Periodicidade da senoide discreta</span><span class="heading-arabic">11.5.1</span></h3>
+<p>No tempo contínuo, $\cos(\omega t)$ é sempre periódico. No tempo discreto, <strong>não é mais verdade</strong>. Para que $\cos(\Omega n)$ seja periódico, é necessário que a cada $N_0$ amostras a senoide complete um número inteiro de ciclos. Deve existir um inteiro $N_0>0$ e um inteiro $m$ tais que</p>
+<p>$$
+\Omega N_0=2\pi m
+$$</p>
+<p>ou, de forma equivalente,</p>
+<p>$$
+\frac{\Omega}{2\pi}=\frac{m}{N_0}
+$$</p>
+<p>Portanto, $\cos(\Omega n)$ é periódico se, e somente se, $\Omega/2\pi$ for um <strong>número racional</strong>.</p>
+<p>Quando a condição é satisfeita, o período fundamental $N_0$ é o menor inteiro positivo que satisfaz a igualdade, após simplificar a fração $m/N_0$ à sua forma irredutível.</p>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">A intuição engana?<br /></span>
+  </div>
+  <div class="callout-content">
+<p>$\cos(1{,}2n)$ — esta sequência parece oscilar, mas ela é periódica ou não? Antes de calcular, responda com base na condição $\Omega/2\pi = m/N_0$.</p>
+  </div>
+</div>
+<div class="example">
+  <div class="example-title">Exemplo 2</div>
+  <p>Determine se as senoides discretas são periódicas e, se forem, ache o período fundamental.</p>
+<p>(a) $x_1[n]=\cos\left(\dfrac{\pi}{6}n\right)$</p>
+<p>(b) $x_2[n]=\cos(0{,}4n)$</p>
+<p>(c) $x_3[n]=\cos(1{,}2n)$</p>
+<hr />
+<p><strong>(a)</strong> $\Omega=\pi/6$. Calculamos</p>
+<p>$$
+\frac{\Omega}{2\pi}=\frac{\pi/6}{2\pi}=\frac{1}{12}
+$$</p>
+<p>$1/12$ é racional. A sequência é periódica com $N_0=12$ amostras: a cada $12$ amostras, ela completa exatamente $1$ ciclo.</p>
+<p><strong>(b)</strong> $\Omega=0{,}4$. Calculamos</p>
+<p>$$
+\frac{\Omega}{2\pi}=\frac{0{,}4}{2\pi}=\frac{0{,}4}{6{,}28318\ldots}\approx 0{,}06366\ldots
+$$</p>
+<p>Esse número não pode ser expresso como razão de dois inteiros (porque $\pi$ é irracional). Portanto, a sequência <strong>não é periódica</strong>. Apesar de parecer uma oscilação, ela nunca se repete exatamente.</p>
+<p><strong>(c)</strong> $\Omega=1{,}2$. Calculamos</p>
+<p>$$
+\frac{\Omega}{2\pi}=\frac{1{,}2}{2\pi}\approx 0{,}19098\ldots
+$$</p>
+<p>Também irracional. A sequência não é periódica.</p>
+<p>Moral da história: em tempo discreto, a periodicidade é exceção, não regra.</p>
+</div>
+<h3 id="equivalência-de-frequências-discretas"><span class="heading-text">Equivalência de frequências discretas</span><span class="heading-arabic">11.5.2</span></h3>
+<p>Outra propriedade surpreendente: duas frequências diferentes podem produzir exatamente a mesma sequência.</p>
+<p>Isso acontece porque o índice $n$ é inteiro, e</p>
+<p>$$
+\cos((\Omega+2\pi k)n)=\cos(\Omega n+2\pi kn)=\cos(\Omega n)
+$$</p>
+<p>para qualquer inteiro $k$. O termo $2\pi kn$ é sempre um múltiplo inteiro de $2\pi$, e acrescentar $2\pi$ ao argumento do cosseno não altera seu valor.</p>
+<p>Em outras palavras: <strong>duas frequências discretas que diferem por $2\pi$ geram a mesma sequência</strong>. Por isso, você só precisa estudar frequências no intervalo</p>
+<p>$$
+-\pi<\Omega\le\pi
+$$</p>
+<p>Qualquer frequência fora desse intervalo é equivalente a alguma frequência dentro dele.</p>
+<p>Frequências próximas de $\Omega=0$ (ou $\Omega=2\pi$) oscilam lentamente. Frequências próximas de $\Omega=\pi$ oscilam rapidamente — alternam sinal a cada amostra. $\Omega=\pi$ é a maior frequência discreta possível. Em tempo contínuo, a frequência pode crescer indefinidamente. Em tempo discreto, não.</p>
+<div class="example">
+  <div class="example-title">Exemplo 3</div>
+  <p>Mostre que $\cos(0{,}2\pi n)$ e $\cos(2{,}2\pi n)$ são a mesma sequência.</p>
+<hr />
+<p>$2{,}2\pi = 0{,}2\pi + 2\pi$. Como $2\pi n$ é sempre um múltiplo de $2\pi$,</p>
+<p>$$
+\cos(2{,}2\pi n)=\cos(0{,}2\pi n+2\pi n)=\cos(0{,}2\pi n)
+$$</p>
+<p>As duas expressões geram exatamente os mesmos valores para todo $n$ inteiro.</p>
+</div>
+<h2 id="exponencial-complexa-discreta"><span class="heading-text">Exponencial complexa discreta</span><span class="heading-arabic">11.6</span></h2>
+<p>A exponencial complexa discreta é</p>
+<p>$$
+e^{j\Omega n}
+$$</p>
+<p>Pela fórmula de Euler,</p>
+<p>$$
+e^{j\Omega n}=\cos(\Omega n)+j\sin(\Omega n)
+$$</p>
+<p>e</p>
+<p>$$
+\cos(\Omega n)=\frac{e^{j\Omega n}+e^{-j\Omega n}}{2}
+$$</p>
+<p>A exponencial complexa $e^{j\Omega n}$ também goza da propriedade de equivalência: $e^{j(\Omega+2\pi)n}=e^{j\Omega n}$ para todo $n$ inteiro. Sua frequência só precisa ser estudada no intervalo $(-\pi,\pi]$. Além disso, $|e^{j\Omega n}|=1$ para todo $n$. Essa exponencial está sempre sobre o círculo unitário.</p>
+<p>Essas exponenciais são os blocos naturais da análise em frequência. A TDF que você viu na aula anterior mede exatamente quanto de cada exponencial complexa discreta aparece em uma sequência finita.</p>
+<div class="callout callout-tip">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .5 2.2 1.5 3.1.7.7 1.3 1.5 1.5 2.4"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span>
+    <span class="callout-title-inner">Você já viu isso antes<br /></span>
+  </div>
+  <div class="callout-content">
+<p>A periodicidade $2\pi$ do espectro da TDF não é um acidente. Ela é consequência direta da equivalência de frequências discretas. Se $e^{j(\Omega+2\pi)n}=e^{j\Omega n}$, então o conteúdo espectral medido em $\Omega$ e $\Omega+2\pi$ é o mesmo. O espectro se repete porque, para a sequência, essas duas frequências são indistinguíveis.</p>
+  </div>
+</div>
+<h2 id="sistemas-discretos-e-equações-de-diferenças"><span class="heading-text">Sistemas discretos e equações de diferenças</span><span class="heading-arabic">11.7</span></h2>
+<p>Um sistema discreto recebe uma sequência $x[n]$ e produz outra sequência $y[n]$.</p>
+<p>Muitos sistemas digitais são descritos por <strong>equações de diferenças</strong>. Um exemplo simples:</p>
+<p>$$
+y[n]=0{,}8y[n-1]+x[n]
+$$</p>
+<p>Esse sistema calcula a saída atual usando a entrada atual e a saída anterior. O valor $0{,}8$ controla quanta memória o sistema tem do passado.</p>
+<h3 id="forma-geral"><span class="heading-text">Forma geral</span><span class="heading-arabic">11.7.1</span></h3>
+<p>Uma equação de diferenças linear de coeficientes constantes tem a forma</p>
+<p>$$
+y[n]+a_1y[n-1]+\cdots+a_Ny[n-N]
+=b_0x[n]+b_1x[n-1]+\cdots+b_Mx[n-M]
+$$</p>
+<p>A ordem do sistema é $\max(N,M)$. Para que o sistema seja causal, devemos ter $M\le N$: a saída em um instante não pode depender de valores futuros da entrada.</p>
+<p>Isolando $y[n]$:</p>
+<p>$$
+y[n]=-\sum_{k=1}^{N}a_k y[n-k]+\sum_{k=0}^{M}b_k x[n-k]
+$$</p>
+<p>A saída atual é uma combinação linear de saídas passadas e de entradas presente e passadas.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Tipo</th>
+  <th style="text-align:left">Característica</th>
+  <th style="text-align:left">Exemplo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">não recursivo (FIR)</td>
+  <td style="text-align:left">usa apenas amostras de entrada ($a_k=0$ para $k\ge 1$)</td>
+  <td style="text-align:left">$y[n]=x[n]+x[n-1]$</td>
+</tr>
+<tr>
+  <td style="text-align:left">recursivo (IIR)</td>
+  <td style="text-align:left">usa saídas anteriores (pelo menos um $a_k\ne 0$)</td>
+  <td style="text-align:left">$y[n]=0{,}8y[n-1]+x[n]$</td>
+</tr>
+</tbody>
+</table>
+<p>FIR = <em>Finite Impulse Response</em>. IIR = <em>Infinite Impulse Response</em>. A diferença prática é enorme: sistemas FIR têm resposta ao impulso com duração finita, sistemas IIR podem responder para sempre (embora com decaimento, se estáveis).</p>
+<h3 id="notação-operacional"><span class="heading-text">Notação operacional</span><span class="heading-arabic">11.7.2</span></h3>
+<p>Assim como no tempo contínuo você usava o operador $D$ para diferenciação, no tempo discreto você usa o operador $E$ para <strong>avanço</strong> de uma unidade:</p>
+<p>$$
+Ex[n]=x[n+1]
+$$</p>
+<p>O operador de <strong>atraso</strong> é $E^{-1}$:</p>
+<p>$$
+E^{-1}x[n]=x[n-1]
+$$</p>
+<p>Potências do operador representam avanços (ou atrasos) múltiplos:</p>
+<p>$$
+E^{k}x[n]=x[n+k],\qquad E^{-k}x[n]=x[n-k]
+$$</p>
+<p>Com essa notação, a equação</p>
+<p>$$
+y[n+2]-0{,}6y[n+1]+0{,}08y[n]=x[n+1]+3x[n]
+$$</p>
+<p>vira</p>
+<p>$$
+(E^{2}-0{,}6E+0{,}08)y[n]=(E+3)x[n]
+$$</p>
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">A mesma lógica do contínuo<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Em Laplace, você escrevia $Q(D)y(t)=P(D)x(t)$. Aqui você escreve $Q[E]y[n]=P[E]x[n]$. A estrutura é idêntica. O que muda é o significado do operador: $D$ diferencia, $E$ avança.</p>
+  </div>
+</div>
+<h3 id="solução-recursiva"><span class="heading-text">Solução recursiva</span><span class="heading-arabic">11.7.3</span></h3>
+<p>O modo mais direto de resolver uma equação de diferenças é o método iterativo. Dadas as condições iniciais $y[-1],y[-2],\ldots,y[-N]$ e a entrada $x[n]$, você calcula $y[0]$, depois $y[1]$, depois $y[2]$ e assim por diante.</p>
+<p>Isso pode parecer trabalhoso, mas é exatamente o que um computador faz ao executar um filtro digital.</p>
+<div class="example">
+  <div class="example-title">Exemplo 4</div>
+  <p>Considere o sistema</p>
+<p>$$
+y[n]=0{,}5y[n-1]+x[n]
+$$</p>
+<p>com $y[-1]=0$ e entrada $x[n]=u[n]$. Determine os quatro primeiros valores de $y[n]$.</p>
+<hr />
+<p>Como $x[n]=u[n]$, temos $x[0]=x[1]=x[2]=x[3]=1$.</p>
+<p>Para $n=0$:</p>
+<p>$$
+y[0]=0{,}5y[-1]+x[0]=0{,}5\cdot 0+1=1
+$$</p>
+<p>Para $n=1$:</p>
+<p>$$
+y[1]=0{,}5y[0]+x[1]=0{,}5\cdot 1+1=1{,}5
+$$</p>
+<p>Para $n=2$:</p>
+<p>$$
+y[2]=0{,}5y[1]+x[2]=0{,}5\cdot 1{,}5+1=1{,}75
+$$</p>
+<p>Para $n=3$:</p>
+<p>$$
+y[3]=0{,}5y[2]+x[3]=0{,}5\cdot 1{,}75+1=1{,}875
+$$</p>
+<p>Portanto,</p>
+<p>$$
+y[0]=1,\quad y[1]=1{,}5,\quad y[2]=1{,}75,\quad y[3]=1{,}875
+$$</p>
+<p>Você consegue adivinhar para qual valor $y[n]$ tende quando $n$ cresce?</p>
+</div>
+<h3 id="polinômio-característico-e-modos-naturais"><span class="heading-text">Polinômio característico e modos naturais</span><span class="heading-arabic">11.7.4</span></h3>
+<p>O comportamento intrínseco de um sistema recursivo é governado pelo seu <strong>polinômio característico</strong>. Ele é obtido a partir do operador $Q[E]$, substituindo $E$ por $\gamma$:</p>
+<p>$$
+Q(\gamma)=\gamma^{N}+a_1\gamma^{N-1}+\cdots+a_N
+$$</p>
+<p>A equação $Q(\gamma)=0$ é a <strong>equação característica</strong>, e suas raízes $\gamma_1,\gamma_2,\ldots,\gamma_N$ são as <strong>raízes características</strong>.</p>
+<p>Cada raiz $\gamma_i$ gera um <strong>modo característico</strong>: a sequência $\gamma_i^{\,n}$. Esses modos descrevem o comportamento do sistema quando a entrada é nula (resposta de entrada nula).</p>
+<p>Se todas as raízes são distintas, a resposta de entrada nula é</p>
+<p>$$
+y_0[n]=c_1\gamma_1^{\,n}+c_2\gamma_2^{\,n}+\cdots+c_N\gamma_N^{\,n}
+$$</p>
+<p>Se houver raízes repetidas (por exemplo, $\gamma$ com multiplicidade $r$), os modos correspondentes são $\gamma^n$, $n\gamma^n$, $n^2\gamma^n$, $\ldots$, $n^{r-1}\gamma^n$.</p>
+<div class="example">
+  <div class="example-title">Exemplo 5</div>
+  <p>Determine o polinômio característico e as raízes características do sistema</p>
+<p>$$
+y[n]-0{,}6y[n-1]+0{,}08y[n-2]=x[n]+3x[n-1]
+$$</p>
+<hr />
+<p>Passando para a forma com avanço:</p>
+<p>$$
+y[n+2]-0{,}6y[n+1]+0{,}08y[n]=x[n+2]+3x[n+1]
+$$</p>
+<p>O polinômio característico é obtido dos coeficientes de $y$:</p>
+<p>$$
+Q(\gamma)=\gamma^{2}-0{,}6\gamma+0{,}08
+$$</p>
+<p>Resolvendo $Q(\gamma)=0$:</p>
+<p>$$
+\gamma=\frac{0{,}6\pm\sqrt{0{,}36-0{,}32}}{2}=\frac{0{,}6\pm 0{,}2}{2}
+$$</p>
+<p>Logo, $\gamma_1=0{,}4$ e $\gamma_2=0{,}2$. As raízes características são $0{,}4$ e $0{,}2$.</p>
+<p>Os modos naturais são $(0{,}4)^n$ e $(0{,}2)^n$. Como ambos têm módulo menor que $1$, o sistema é estável: sua resposta de entrada nula decai com o tempo.</p>
+</div>
+<p>A posição das raízes características no plano complexo determina a estabilidade. Se todas estiverem <strong>dentro</strong> do círculo unitário ($|\gamma_i|<1$), o sistema é assintoticamente estável. Se alguma estiver <strong>fora</strong> ($|\gamma_i|>1$), o sistema é instável. Raízes sobre o círculo ($|\gamma_i|=1$) produzem modos que não decaem nem crescem: são marginalmente estáveis.</p>
+<h2 id="resposta-ao-impulso"><span class="heading-text">Resposta ao impulso</span><span class="heading-arabic">11.8</span></h2>
+<p>Para sistemas lineares e invariantes no tempo, existe uma sequência especialmente importante: a <strong>resposta ao impulso</strong>.</p>
+<p>Chamamos de $h[n]$ a saída do sistema quando a entrada é $\delta[n]$ e o sistema parte do repouso (todas as condições iniciais nulas).</p>
+<p>$$
+\delta[n] \longrightarrow h[n]
+$$</p>
+<p>Por que $h[n]$ é tão importante? Porque <strong>qualquer sequência</strong> pode ser escrita como soma de impulsos deslocados e escalados:</p>
+<p>$$
+x[n]=\sum_{m=-\infty}^{\infty}x[m]\delta[n-m]
+$$</p>
+<p>Leia com calma. Para cada índice $m$, você coloca um impulso em $n=m$ com altura $x[m]$ e soma todos esses impulsos. Isso funciona porque $\delta[n-m]$ só é diferente de zero em $n=m$, e nesse ponto ele multiplica exatamente $x[m]$.</p>
+<p>A Figura 11.5 ilustra essa decomposição.</p>
+<p><img src="static/figura-11-5-decomposicao-por-impulsos.png" alt="Figura 11.5: Decomposição por impulsos" /></p>
+<div class="callout callout-tip">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .5 2.2 1.5 3.1.7.7 1.3 1.5 1.5 2.4"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span>
+    <span class="callout-title-inner">A chave da convolução<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Se você sabe como o sistema responde a um único impulso, e se o sistema é linear e invariante, então você sabe como ele responde a qualquer entrada. Basta decompor a entrada em impulsos, deixar o sistema responder a cada um e somar as respostas. É exatamente isso que a convolução faz.</p>
+  </div>
+</div>
+<h3 id="como-obter-de-uma-equação-de-diferenças"><span class="heading-text">Como obter $h[n]$ de uma equação de diferenças</span><span class="heading-arabic">11.8.1</span></h3>
+<p>Para um sistema descrito por uma equação de diferenças, a resposta ao impulso pode ser obtida fazendo $x[n]=\delta[n]$ e resolvendo recursivamente com condições iniciais nulas.</p>
+<div class="example">
+  <div class="example-title">Exemplo 6</div>
+  <p>Determine $h[n]$, a resposta ao impulso, para</p>
+<p>$$
+y[n]=0{,}5y[n-1]+x[n]
+$$</p>
+<hr />
+<p>Substituímos $x[n]=\delta[n]$ e $y[n]=h[n]$, com $h[-1]=0$:</p>
+<p>$$
+h[n]=0{,}5h[n-1]+\delta[n]
+$$</p>
+<p>Para $n=0$: $h[0]=0{,}5\cdot 0+\delta[0]=1$</p>
+<p>Para $n=1$: $h[1]=0{,}5\cdot 1+\delta[1]=0{,}5$</p>
+<p>Para $n=2$: $h[2]=0{,}5\cdot 0{,}5+\delta[2]=0{,}25$</p>
+<p>Para $n=3$: $h[3]=0{,}5\cdot 0{,}25+\delta[3]=0{,}125$</p>
+<p>O padrão é $h[n]=(0{,}5)^n u[n]$. A resposta ao impulso nunca termina: ela decai, mas nunca chega a zero exatamente. Por isso esse sistema é IIR.</p>
+<p>Agora pense: se a entrada for um degrau $u[n]$, qual será a saída? Você já calculou os primeiros valores no Exemplo 4 e viu que $y[n]$ se aproxima de $2$. Na próxima aula, com a Transformada Z, você obterá a expressão fechada em segundos.</p>
+</div>
+<h2 id="convolução-discreta"><span class="heading-text">Convolução discreta</span><span class="heading-arabic">11.9</span></h2>
+<p>Se $h[n]$ é a resposta ao impulso de um sistema LIT discreto, a resposta de estado nulo a uma entrada qualquer $x[n]$ é</p>
+<p>$$
+y[n]=\sum_{m=-\infty}^{\infty}x[m]h[n-m]
+$$</p>
+<p>Esse somatório recebe o nome de <strong>convolução discreta</strong>:</p>
+<p>$$
+y[n]=x[n]*h[n]
+$$</p>
+<p>Se $x[n]$ e $h[n]$ são <strong>causais</strong> (valem zero para índices negativos), os limites se simplificam:</p>
+<p>$$
+y[n]=\sum_{m=0}^{n}x[m]h[n-m], \qquad n\ge 0
+$$</p>
+<p>Para $n<0$, a saída é zero.</p>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Não confunda índice livre com índice de soma<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Em $y[n]=\sum_m x[m]h[n-m]$, o índice $n$ é o que você escolhe: ele diz qual amostra da saída você quer calcular. O índice $m$ é mudo: ele percorre todos os valores dentro do somatório. Cada $n$ gera um somatório diferente.</p>
+  </div>
+</div>
+<h3 id="propriedade-da-largura"><span class="heading-text">Propriedade da largura</span><span class="heading-arabic">11.9.1</span></h3>
+<p>Se $x[n]$ tem comprimento $L_1$ (número de amostras não nulas) e $h[n]$ tem comprimento $L_2$, então $y[n]=x[n]*h[n]$ tem comprimento</p>
+<p>$$
+L_y = L_1+L_2-1
+$$</p>
+<p>Por exemplo, dois pulsos de $5$ amostras cada produzem uma saída de $5+5-1=9$ amostras não nulas.</p>
+<p>Você já usou essa propriedade na aula de TDF sem saber: quando a TDF é usada para calcular convolução linear, o comprimento da TDF precisa ser pelo menos $L_1+L_2-1$ para evitar aliasing temporal.</p>
+<h3 id="interpretação-operacional-da-convolução"><span class="heading-text">Interpretação operacional da convolução</span><span class="heading-arabic">11.9.2</span></h3>
+<p>Para entender o que a convolução realmente faz, você pode decompô-la em etapas:</p>
+<ol>
+<li>Escreva $x[m]$ como função de $m$.</li>
+<li>Inverta $h[m]$ com relação à origem para obter $h[-m]$.</li>
+<li>Desloque $h[-m]$ por $n$ unidades para obter $h[n-m]$.</li>
+<li>Multiplique ponto a ponto as sequências $x[m]$ e $h[n-m]$.</li>
+<li>Some todos os produtos. Essa soma é $y[n]$.</li>
+<li>Repita para cada valor de $n$.</li>
+</ol>
+<p>A Figura 11.6 ilustra esse procedimento.</p>
+<p><img src="static/figura-11-6-convolucao-deslocamento-fita.png" alt="Figura 11.6: Convolução por deslocamento de fita" /></p>
+<p>É a versão discreta do procedimento gráfico de convolução do tempo contínuo. A diferença é que agora você não integra áreas: você soma produtos de amostras.</p>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">E se a entrada for muito longa?<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Calcular $y[n]$ amostra por amostra via convolução direta custa caro. Se $x[n]$ tem $L_1$ amostras e $h[n]$ tem $L_2$, o cálculo direto exige $L_1 L_2$ multiplicações. Há um jeito mais rápido?</p>
+  </div>
+</div>
+<p>Sim. A Transformada de Fourier Discreta (via FFT) calcula a convolução em $O(N\log N)$. É por isso que, na prática, filtros FIR longos quase sempre são implementados no domínio da frequência.</p>
+<div class="example">
+  <div class="example-title">Exemplo 7</div>
+  <p>Calcule $y[n]=x[n]*h[n]$ para</p>
+<p>$$
+x[n]=\delta[n]+2\delta[n-1]
+$$</p>
+<p>e</p>
+<p>$$
+h[n]=u[n]-u[n-3]
+$$</p>
+<hr />
+<p>A sequência $x[n]$ tem dois impulsos: $x[0]=1$, $x[1]=2$.</p>
+<p>A sequência $h[n]$ vale $1$ para $n=0,1,2$ e $0$ fora disso.</p>
+<p>Usando a propriedade do impulso deslocado:</p>
+<p>$$
+\delta[n]*h[n]=h[n],\qquad \delta[n-1]*h[n]=h[n-1]
+$$</p>
+<p>Pela linearidade,</p>
+<p>$$
+y[n]=h[n]+2h[n-1]
+$$</p>
+<p>Avaliando amostra por amostra:</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">$n$</th>
+  <th style="text-align:left">$h[n]$</th>
+  <th style="text-align:left">$h[n-1]$</th>
+  <th style="text-align:left">$y[n]=h[n]+2h[n-1]$</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">0</td>
+  <td style="text-align:left">1</td>
+  <td style="text-align:left">0</td>
+  <td style="text-align:left">1</td>
+</tr>
+<tr>
+  <td style="text-align:left">1</td>
+  <td style="text-align:left">1</td>
+  <td style="text-align:left">1</td>
+  <td style="text-align:left">3</td>
+</tr>
+<tr>
+  <td style="text-align:left">2</td>
+  <td style="text-align:left">1</td>
+  <td style="text-align:left">1</td>
+  <td style="text-align:left">3</td>
+</tr>
+<tr>
+  <td style="text-align:left">3</td>
+  <td style="text-align:left">0</td>
+  <td style="text-align:left">1</td>
+  <td style="text-align:left">2</td>
+</tr>
+</tbody>
+</table>
+<p>Para $n\ge 4$, $h[n]=0$ e $h[n-1]=0$, portanto $y[n]=0$.</p>
+<p>O comprimento de $x[n]$ é $2$, o de $h[n]$ é $3$, e o de $y[n]$ é $2+3-1=4$, confirmando a propriedade da largura.</p>
+</div>
+<div class="example">
+  <div class="example-title">Exemplo 8</div>
+  <p>Determine $y[n]=x[n]*h[n]$ para</p>
+<p>$$
+x[n]=(0{,}8)^n u[n], \qquad h[n]=(0{,}3)^n u[n]
+$$</p>
+<hr />
+<p>Como ambos são causais,</p>
+<p>$$
+y[n]=\sum_{m=0}^{n}x[m]h[n-m]
+$$</p>
+<p>Substituindo:</p>
+<p>$$
+y[n]=\sum_{m=0}^{n}(0{,}8)^m(0{,}3)^{n-m}
+$$</p>
+<p>Colocando $(0{,}3)^n$ em evidência:</p>
+<p>$$
+y[n]=(0{,}3)^n\sum_{m=0}^{n}\left(\frac{0{,}8}{0{,}3}\right)^m
+$$</p>
+<p>Usando a soma da progressão geométrica com $r=0{,}8/0{,}3$,</p>
+<p>$$
+y[n]=2\left[(0{,}8)^{n+1}-(0{,}3)^{n+1}\right]u[n]
+$$</p>
+<p>A convolução de duas exponenciais causais também pode ser obtida de forma analítica.</p>
+</div>
+<div class="example">
+  <div class="example-title">Exemplo 9</div>
+  <p>Calcule a convolução de dois degraus: $y[n]=u[n]*u[n]$.</p>
+<hr />
+<p>Ambos são causais, portanto</p>
+<p>$$
+y[n]=\sum_{m=0}^{n}u[m]u[n-m]
+$$</p>
+<p>Para $m$ entre $0$ e $n$, tanto $u[m]$ quanto $u[n-m]$ valem $1$.</p>
+<p>$$
+y[n]=\sum_{m=0}^{n}1 = n+1, \qquad n\ge 0
+$$</p>
+<p>Logo,</p>
+<p>$$
+u[n]*u[n]=(n+1)u[n]
+$$</p>
+<p>A convolução de dois degraus produz uma rampa discreta. Pense no significado: um acumulador aplicado a um degrau produz uma rampa.</p>
+</div>
+<h2 id="propriedades-da-convolução-discreta"><span class="heading-text">Propriedades da convolução discreta</span><span class="heading-arabic">11.10</span></h2>
+<p>A convolução discreta possui as mesmas propriedades algébricas da convolução contínua. Você verá que nada muda na estrutura.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Propriedade</th>
+  <th style="text-align:left">Expressão</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">comutatividade</td>
+  <td style="text-align:left">$x[n]*h[n]=h[n]*x[n]$</td>
+</tr>
+<tr>
+  <td style="text-align:left">distributividade</td>
+  <td style="text-align:left">$x[n]*(h_1[n]+h_2[n])=x[n]*h_1[n]+x[n]*h_2[n]$</td>
+</tr>
+<tr>
+  <td style="text-align:left">associatividade</td>
+  <td style="text-align:left">$x[n]*(h_1[n]*h_2[n])=(x[n]*h_1[n])*h_2[n]$</td>
+</tr>
+<tr>
+  <td style="text-align:left">impulso</td>
+  <td style="text-align:left">$x[n]*\delta[n]=x[n]$</td>
+</tr>
+<tr>
+  <td style="text-align:left">impulso deslocado</td>
+  <td style="text-align:left">$x[n]*\delta[n-n_0]=x[n-n_0]$</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-success">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></span>
+    <span class="callout-title-inner">Por que o impulso é tão útil<br /></span>
+  </div>
+  <div class="callout-content">
+<p>A propriedade do impulso deslocado é a mais usada na prática. Convoluir com um impulso em $n_0$ apenas desloca o sinal em $n_0$ posições. Isso simplifica o cálculo de convoluções quando um dos sinais é uma soma de impulsos — exatamente o que você fez no Exemplo 7.</p>
+  </div>
+</div>
+<div class="example">
+  <div class="example-title">Exemplo 10</div>
+  <p>Use as propriedades para calcular $x[n]*h[n]$ quando</p>
+<p>$$
+x[n]=(0{,}5)^n u[n], \qquad h[n]=\delta[n]-0{,}5\delta[n-1]
+$$</p>
+<hr />
+<p>Pela propriedade distributiva,</p>
+<p>$$
+y[n]=x[n]*\delta[n]-0{,}5\,x[n]*\delta[n-1]
+$$</p>
+<p>Pela propriedade do impulso e do impulso deslocado,</p>
+<p>$$
+x[n]*\delta[n]=x[n]=(0{,}5)^n u[n]
+$$</p>
+<p>$$
+x[n]*\delta[n-1]=x[n-1]=(0{,}5)^{n-1}u[n-1]
+$$</p>
+<p>Portanto,</p>
+<p>$$
+y[n]=(0{,}5)^n u[n]-0{,}5\cdot(0{,}5)^{n-1}u[n-1]
+$$</p>
+<p>Para $n=0$, $u[-1]=0$, então $y[0]=(0{,}5)^0\cdot 1 = 1$.</p>
+<p>Para $n\ge 1$,</p>
+<p>$$
+y[n]=(0{,}5)^n-0{,}5\cdot(0{,}5)^{n-1}=(0{,}5)^n-(0{,}5)^n=0
+$$</p>
+<p>Portanto, $y[n]=\delta[n]$.</p>
+<p>Os sistemas $h[n]=(0{,}5)^n u[n]$ e $h_{\text{inv}}[n]=\delta[n]-0{,}5\delta[n-1]$ são inversos um do outro. A convolução dos dois produz o impulso unitário — a identidade do sistema.</p>
+</div>
+<h2 id="sistemas-interconectados"><span class="heading-text">Sistemas interconectados</span><span class="heading-arabic">11.11</span></h2>
+<p>Assim como no tempo contínuo, sistemas discretos podem ser conectados em paralelo ou em cascata.</p>
+<p><strong>Conexão em paralelo.</strong> Se dois sistemas com respostas ao impulso $h_1[n]$ e $h_2[n]$ são conectados em paralelo (mesma entrada, saídas somadas), o sistema equivalente tem resposta ao impulso</p>
+<p>$$
+h[n]=h_1[n]+h_2[n]
+$$</p>
+<p><strong>Conexão em cascata.</strong> Se dois sistemas são conectados em série (a saída do primeiro é a entrada do segundo), o sistema equivalente tem resposta ao impulso</p>
+<p>$$
+h[n]=h_1[n]*h_2[n]
+$$</p>
+<p>Pela comutatividade, a ordem não importa: $h_1[n]*h_2[n]=h_2[n]*h_1[n]$.</p>
+<p><strong>Sistema inverso.</strong> Dois sistemas em cascata são inversos um do outro se a convolução de suas respostas ao impulso for o impulso unitário:</p>
+<p>$$
+h[n]*h_{\text{inv}}[n]=\delta[n]
+$$</p>
+<p>O Exemplo 10 mostrou exatamente isso.</p>
+<h2 id="estabilidade-e-outras-características-via"><span class="heading-text">Estabilidade e outras características via $h[n]$</span><span class="heading-arabic">11.12</span></h2>
+<p>A resposta ao impulso $h[n]$ não serve apenas para calcular a saída por convolução. Ela também permite classificar o sistema.</p>
+<p><strong>Estabilidade BIBO</strong> (<em>Bounded-Input Bounded-Output</em>). Um sistema LIT discreto é BIBO estável se, e somente se, a resposta ao impulso for absolutamente somável:</p>
+<p>$$
+\sum_{n=-\infty}^{\infty}|h[n]|<\infty
+$$</p>
+<p>Se essa soma for finita, qualquer entrada limitada produzirá uma saída limitada. Se a soma divergir, existe pelo menos uma entrada limitada que produz saída ilimitada.</p>
+<div class="example">
+  <div class="example-title">Exemplo 11</div>
+  <p>Verifique a estabilidade BIBO dos sistemas:</p>
+<p>(a) $h[n]=(0{,}8)^n u[n]$</p>
+<p>(b) $h[n]=u[n]$</p>
+<p>(c) $h[n]=u[n]-u[n-5]$</p>
+<hr />
+<p><strong>(a)</strong> $\sum_{n=0}^{\infty}(0{,}8)^n = \dfrac{1}{1-0{,}8}=5<\infty$. Sistema estável.</p>
+<p><strong>(b)</strong> $\sum_{n=0}^{\infty}1 \to \infty$. Sistema instável. Esse sistema é o acumulador, que soma todas as amostras passadas. Mesmo com entrada limitada, a saída pode divergir.</p>
+<p><strong>(c)</strong> Somamos apenas $5$ termos não nulos: $\sum_{n=0}^{4}1=5<\infty$. Sistema estável. Todo sistema FIR (resposta ao impulso finita) é automaticamente BIBO estável.</p>
+<p>Por que o acumulador é instável mas parece inofensivo? Porque se você colocar um degrau na entrada, a saída é uma rampa que cresce para sempre — e uma rampa não é limitada.</p>
+</div>
+<p><strong>Sistema sem memória.</strong> Um sistema LIT discreto não tem memória se, e somente se,</p>
+<p>$$
+h[n]=K\delta[n]
+$$</p>
+<p>Nesse caso, $y[n]=K x[n]$: a saída em $n$ depende apenas da entrada em $n$. Se $h[n]$ for diferente de zero para qualquer $n\neq 0$, o sistema tem memória.</p>
+<p><strong>Causalidade.</strong> Um sistema LIT discreto é causal se, e somente se,</p>
+<p>$$
+h[n]=0, \quad n<0
+$$</p>
+<p>A resposta ao impulso não pode começar antes do impulso.</p>
+<h2 id="conexão-com-filtros-digitais"><span class="heading-text">Conexão com filtros digitais</span><span class="heading-arabic">11.13</span></h2>
+<p>Quando você implementa um filtro digital, está construindo um sistema discreto. A sequência de entrada é $x[n]$ e a de saída é $y[n]$.</p>
+<p>Se o filtro é LIT, conhecer $h[n]$ significa conhecer completamente o filtro no domínio do tempo. A saída para qualquer entrada é</p>
+<p>$$
+y[n]=x[n]*h[n]
+$$</p>
+<p>Na aula anterior, a TDF apareceu como ferramenta para enxergar frequências em uma sequência finita. Agora a convolução aparece como ferramenta para enxergar o processamento no tempo. Mais adiante, essas duas ideias se encontram em uma relação fundamental:</p>
+<p>$$
+\text{convolução no tempo} \quad \longleftrightarrow \quad \text{multiplicação em frequência}
+$$</p>
+<p>Ou, em notação compacta:</p>
+<p>$$
+x[n]*h[n] \;\longleftrightarrow\; X[k]H[k]
+$$</p>
+<div class="callout callout-tip">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .5 2.2 1.5 3.1.7.7 1.3 1.5 1.5 2.4"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span>
+    <span class="callout-title-inner">Projetando filtros<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Essa propriedade é a base do projeto de filtros digitais: você projeta $H[k]$ (a resposta em frequência desejada) e implementa $h[n]$ (a resposta ao impulso correspondente). A convolução no tempo realiza a filtragem.</p>
+  </div>
+</div>
+<h2 id="próximos-passos"><span class="heading-text">Próximos Passos</span><span class="heading-arabic">11.14</span></h2>
+<p>A convolução resolve tudo no tempo, mas é cara e pouco intuitiva para enxergar o efeito sobre cada frequência. No <strong><a href="12-transformada-z.html">12 - Transformada Z</a></strong> você fará pelos sistemas discretos o que Laplace fez pelos contínuos: trocar equações de diferenças por álgebra e convolução por multiplicação.</p>
+
+                </div>
+            </article>
+            <footer class="footer">
+                <p>© 2025 · <a href="#">Gabriel Soares Baptista</a></p>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        const toggle = document.querySelector('.mobile-menu-toggle');
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.querySelector('.mobile-menu-overlay');
+
+        function openMenu() {
+            sidebar.classList.add('open');
+            overlay.classList.add('open');
+            toggle.classList.add('open');
+            toggle.innerHTML = '<i data-lucide="x"></i>';
+            CourseForgeUI.initIcons();
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMenu() {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('open');
+            toggle.classList.remove('open');
+            toggle.innerHTML = '<i data-lucide="menu"></i>';
+            CourseForgeUI.initIcons();
+            document.body.style.overflow = '';
+        }
+
+        toggle.addEventListener('click', () => {
+            if (sidebar.classList.contains('open')) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        overlay.addEventListener('click', closeMenu);
+    </script>
+
+    
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            renderMathInElement(document.body, {
+                output: 'html',
+                delimiters: [
+                    { left: "$$", right: "$$", display: true },
+                    { left: "$", right: "$", display: false },
+                    { left: "\\(", right: "\\)", display: false },
+                    { left: "\\[", right: "\\]", display: true }
+                ],
+                throwOnError: false,
+                strict: false
+            });
+        });
+    </script>
+    
+    
+    <script src="/aulas-faesa/js/vendor/prism/prism.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-c.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-cpp.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-python.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-clike.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-perl.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-java.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-mermaid.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-php.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js" data-no-bundle></script>
+    
+    
+    
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            mermaid.initialize({
+                startOnLoad: true,
+                theme: 'default',
+                securityLevel: 'loose',
+                fontFamily: 'Inter, system-ui, sans-serif',
+                themeVariables: {
+                    fontSize: '16px',
+                    edgeLabelFontSize: '16px',
+                    multiplicityFontSize: '18px'
+                }
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const isSubcourse = false;
+        const courseName = "Processamento Digital de Sinais";
+        CourseForgeNav.applyDynamicBreadcrumbs('.breadcrumb', isSubcourse);
+        CourseForgeNav.initScrollSpy();
+        CourseForgeUI.initCopyButtons();
+        CourseForgeUI.initExamples();
+        });
+
+        function handleBackNavigation() {
+            const isSubcourse = false;
+        const dynamic = CourseForgeNav.getBackLink('contents.html', 'Voltar', isSubcourse);
+        window.location.href = dynamic.url;
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,143 @@
+"//(Note: The 'images' folder is assumed to be in the ""/content/<course path>/"" directory)",,,,
+"//Question Text is always a required field",,,,
+"//An ID will be generated using the (Course code)-(Question number) if an ID is not specified for a question",,,,
+"//Please ensure that the CSV file is saved as ""CSV UTF-8"" encoded",,,,
+,,,,
+NewQuestion,MC,,,
+ID,ES-1101,,,
+Title,Risco vs. problema,,,
+QuestionText,"Um projeto de sistema de agendamento médico está na semana 4 de desenvolvimento. Durante a reunião de acompanhamento, o gerente diz: 'A integração com a API de pagamento está atrasada. O fornecedor prometeu o ambiente de homologação para a semana 2 e ainda não entregou.' A equipe havia registrado esse item como risco no plano inicial.
+
+Considerando a diferença entre risco e problema, qual é a situação atual desse item e qual deveria ter sido a conduta correta enquanto ainda era um risco?",,,
+Points,1,,,
+Difficulty,3,,,
+Option,0,"É um risco, pois ainda há chance de o fornecedor entregar. A conduta correta era aguardar.",,"Incorreto. Na semana 4, com duas semanas de atraso, o evento já se concretizou. Não é mais uma possibilidade: é um fato. Aguardar passivamente não é uma conduta de gerência de riscos."
+Option,100,"Já é um problema, pois o atraso se concretizou. Enquanto era risco, a conduta correta era preparar uma alternativa (como um simulador da API) e acompanhar o prazo do fornecedor.",,"Correto. O atraso já aconteceu, portanto é um problema. Enquanto era risco (antes da semana 2), o gerente deveria ter preparado um plano de contingência, como desenvolver um simulador para não bloquear o restante do desenvolvimento."
+Option,0,"É um problema, mas não havia o que fazer antes, pois riscos são imprevisíveis.",,"Incorreto. Riscos não são imprevisíveis. A própria equipe havia identificado esse risco no plano inicial, o que significa que era possível antecipá-lo e preparar uma resposta."
+Option,0,"Ainda é um risco, porque o projeto não foi cancelado. A conduta correta era terceirizar a integração.",,"Incorreto. O evento já ocorreu (o fornecedor não entregou), portanto não é mais risco. Terceirizar pode ser uma ação corretiva, mas não substitui o planejamento prévio de contingência.",,,
+,,,,
+NewQuestion,MC,,,
+ID,ES-1102,,,
+Title,Categorias de risco,,,
+QuestionText,"Durante a identificação de riscos de um sistema de controle de equipamento médico, a equipe listou vários eventos que poderiam afetar o projeto. Um dos riscos identificados foi: 'O banco de dados usado no sistema não consegue processar o volume de transações esperado por segundo, deixando o sistema mais lento do que o exigido pela regulação.'
+
+Considerando as três categorias principais de risco estudadas, qual das alternativas abaixo NÃO representa uma dessas categorias?",,,
+Points,1,,,
+Difficulty,2,,,
+Option,0,Risco de projeto (afeta cronograma, custo ou recursos),,Este tipo existe e é uma das três categorias principais.
+Option,0,Risco de produto (afeta qualidade, desempenho ou segurança do software),,Este tipo existe e é uma das três categorias principais. O exemplo dado se encaixa aqui, mas a pergunta é sobre qual categoria NÃO existe.
+Option,100,Risco técnico (afeta apenas a implementação do código),,"Correto. 'Risco técnico' não é uma das três categorias principais. As três categorias são: risco de projeto, risco de produto e risco de negócio. Um mesmo evento pode afetar mais de uma categoria simultaneamente."
+Option,0,Risco de negócio (afeta objetivos comerciais ou estratégicos da organização),,Este tipo existe e é uma das três categorias principais.
+,,,,
+NewQuestion,MC,,,
+ID,ES-1103,,,
+Title,Probabilidade e impacto na matriz,,,
+QuestionText,"Uma equipe de cinco pessoas está desenvolvendo um sistema acadêmico. Apenas uma pessoa da equipe entende profundamente a integração com o sistema de autenticação institucional. No meio do projeto, essa pessoa anuncia que vai sair da empresa em duas semanas. Não há documentação atualizada da integração.
+
+Usando a matriz de riscos, qual é a classificação mais adequada para esse evento em termos de probabilidade e impacto?",,,
+Points,1,,,
+Difficulty,4,,,
+Option,0,"Probabilidade baixa e impacto tolerável. A pessoa ainda está na empresa e pode transferir conhecimento.",,"Incorreto. A pessoa já anunciou a saída, então a probabilidade é alta, não baixa. E o impacto de perder a única pessoa que entende uma integração crítica não é tolerável."
+Option,100,"Probabilidade alta e impacto grave. A saída é certa e afeta cronograma e qualidade do produto.",,"Correto. A pessoa já comunicou a saída (probabilidade alta). O impacto é grave porque: (1) atrasa o cronograma (risco de projeto), (2) o substituto pode cometer erros na integração (risco de produto) e (3) pode comprometer a confiança da instituição (risco de negócio)."
+Option,0,"Probabilidade moderada e impacto insignificante. Basta contratar outro desenvolvedor.",,"Incorreto. A probabilidade não é moderada: a saída já foi anunciada. E o impacto está longe de ser insignificante: substituir alguém com conhecimento crítico não documentado leva tempo e gera risco de erros."
+Option,0,"Probabilidade alta e impacto catastrófico. O projeto inteiro será cancelado.",,"Incorreto. Embora o impacto seja grave, chamá-lo de catastrófico seria exagero neste cenário. Catastrófico significaria que o projeto não tem salvação, o que não é o caso se houver tempo para treinar um substituto ou documentar o conhecimento.",,,
+,,,,
+NewQuestion,TF,,,
+ID,ES-1104,,,
+Title,Risco de baixa probabilidade e impacto catastrófico,,,
+QuestionText,"Um gerente de projeto analisou a matriz de riscos e encontrou um risco classificado como 'baixa probabilidade, impacto catastrófico'. Ele decidiu ignorá-lo, argumentando que, como a probabilidade é baixa, não vale a pena gastar energia com ele.
+
+De acordo com o que foi estudado sobre a matriz de riscos, a decisão do gerente está correta?",,,
+Points,1,,,
+Difficulty,2,,,
+TRUE,0,"Incorreto. A matriz de riscos mostra que um risco de baixa probabilidade e impacto catastrófico tem prioridade Alta. Impacto catastrófico merece atenção mesmo quando a probabilidade é baixa, especialmente em sistemas críticos, contratos com multas pesadas ou projetos com margem de atraso pequena. A decisão final é do gerente, mas ignorar completamente não é a conduta esperada.",
+FALSE,100,"Correto. A decisão está errada. Segundo a matriz de riscos, probabilidade baixa + impacto catastrófico = prioridade Alta. Um risco que ameaça a sobrevivência do projeto não pode ser simplesmente ignorado, mesmo que seja improvável. O gerente deveria pelo menos preparar um plano de contingência.",
+,,,,
+NewQuestion,M,,,
+ID,ES-1105,,,
+Title,Etapas do processo de gerência de riscos,,,
+QuestionText,"O processo de gerência de riscos é composto por quatro atividades principais que formam um ciclo iterativo. Cada etapa tem um objetivo específico e produz um resultado que alimenta a etapa seguinte. O monitoramento, por sua vez, pode revelar novos riscos e realimentar a identificação, reiniciando o ciclo.
+
+Associe cada etapa do processo (coluna da esquerda) ao seu objetivo principal (coluna da direita).",,,
+Points,2,,,
+Difficulty,3,,,
+Scoring,EquallyWeighted,,,
+Choice,1,Identificação de riscos,,,
+Choice,2,Análise de riscos,,,
+Choice,3,Planejamento de riscos,,,
+Choice,4,Monitoramento de riscos,,,
+Match,4,"Avaliar regularmente os riscos e seus planos, verificando se a probabilidade ou o impacto mudaram",,
+Match,1,"Listar os riscos potenciais que podem ameaçar o projeto, o produto ou o negócio",,
+Match,3,"Definir estratégias de prevenção, minimização e contingência para cada risco relevante",,
+Match,2,"Avaliar a probabilidade e a gravidade de cada risco, produzindo uma lista priorizada",,
+Hint,"Releia a seção 'O processo de gerência de riscos' na aula. As quatro etapas formam um ciclo: identificar, analisar, planejar e monitorar.",,,
+,,,,
+NewQuestion,MC,,,
+ID,ES-1106,,,
+Title,Matriz de riscos,,,
+QuestionText,"Uma equipe está analisando os riscos de um sistema de protocolo digital para uma prefeitura. Um dos riscos identificados é: 'A equipe não conhece a API de integração com o sistema legado de processos, e a documentação está desatualizada.' A equipe avalia que a probabilidade é moderada (há chance real, pois ninguém na equipe tem experiência com essa API) e o impacto é grave (se a integração falhar, o fluxo principal de tramitação de processos não funciona).
+
+De acordo com a matriz de riscos apresentada na aula, qual é a prioridade desse risco?",,,
+Points,1,,,
+Difficulty,2,,,
+Option,0,Baixo,,A célula (Grave, Moderada) na matriz não corresponde a Baixo.
+Option,0,Médio,,A célula (Grave, Moderada) na matriz não corresponde a Médio.
+Option,100,Alto,,"Correto. Na matriz de riscos, a célula que cruza impacto Grave com probabilidade Moderada resulta em prioridade Alta. Esse risco exige plano de resposta e monitoramento cuidadoso."
+Option,0,Crítico,,A célula (Grave, Moderada) é Alta. Crítico seria Grave + Alta ou Catastrófico + Moderada/Alta.
+,,,,
+NewQuestion,MS,,,
+ID,ES-1107,,,
+Title,Estratégias de resposta,,,
+QuestionText,"Durante a aula sobre gerência de riscos, estudamos três categorias principais de estratégias para responder a um risco identificado. Cada uma atua em um momento diferente: antes de o risco acontecer (reduzindo a chance), durante (limitando o dano) ou depois (tendo um plano pronto).
+
+Selecione, entre as opções abaixo, as três estratégias que correspondem a essas categorias.",,,
+Points,2,,,
+Difficulty,3,,,
+Scoring,RightMinusWrong,,,
+Option,1,Prevenção: reduzir a probabilidade de o risco acontecer,,Correto. Prevenção atua antes, tornando o risco menos provável (ex.: fazer prova de conceito antes de prometer prazo).
+Option,0,Eliminação: remover completamente qualquer possibilidade de erro,,Este conceito não foi apresentado como uma das três categorias de estratégia. Em projetos reais, eliminar completamente um risco é raramente possível.
+Option,0,Transferência: passar o risco para um terceiro,,Este conceito não foi apresentado como uma das três categorias. Pode aparecer em outros contextos de gestão, mas não na aula.
+Option,1,Minimização: reduzir o impacto caso o risco aconteça,,Correto. Minimização atua durante, limitando o dano (ex.: documentar e distribuir conhecimento para reduzir impacto da saída de uma pessoa).
+Option,1,Contingência: ter um plano pronto para reagir se o risco se materializar,,Correto. Contingência atua depois, com resposta preparada (ex.: se API atrasar, usar simulador para não bloquear o desenvolvimento).
+Hint,"Releia a seção 'Planejamento de respostas' da aula. As três categorias são prevenção, minimização e contingência.",,,
+,,,,
+NewQuestion,MC,,,
+ID,ES-1108,,,
+Title,Estratégia de resposta,,,
+QuestionText,"Uma equipe está desenvolvendo um sistema de vendas online que depende de uma API externa de pagamento. O fornecedor da API tem histórico de instabilidade e mudanças contratuais. A equipe identificou esse risco como 'Alto' (probabilidade moderada, impacto grave).
+
+Qual das alternativas abaixo representa uma ação de CONTINGÊNCIA (não de prevenção nem de minimização) para esse risco?",,,
+Points,1,,,
+Difficulty,3,,,
+Option,0,"Iniciar o processo de homologação e os testes de integração na primeira semana do projeto, em vez de deixar para o final.",,"Esta é uma ação de PREVENÇÃO, não de contingência. A prevenção reduz a probabilidade de descobrir incompatibilidades tarde demais."
+Option,0,"Projetar o checkout com baixo acoplamento e interface bem definida para trocar de provedor com pouco retrabalho.",,"Esta é uma ação de MINIMIZAÇÃO, não de contingência. A minimização reduz o impacto de trocar de provedor se o atual falhar."
+Option,100,"Se a homologação não for concluída até a semana 8, entregar a versão inicial com registro manual de pagamento, migrando para a API na versão seguinte.",,"Correto. Esta é uma ação de CONTINGÊNCIA: um plano B documentado e acordado, pronto para ser acionado se o risco se materializar. Não é improviso de última hora, é uma resposta preparada."
+Option,0,"Contratar um consultor especializado na API de pagamento para acelerar a integração.",,"Esta é uma ação que pode ser de prevenção ou minimização, mas não é uma contingência. A contingência pressupõe que o risco já se materializou e define o que fazer nesse caso.",,,
+,,,,
+NewQuestion,TF,,,
+ID,ES-1109,,,
+Title,Quando gerenciar riscos,,,
+QuestionText,"Um gerente de projeto fez uma reunião de identificação de riscos na semana 1 e produziu uma planilha com 15 riscos, probabilidades, impactos e estratégias. Depois disso, nunca mais revisou a planilha. Quando questionado, respondeu: 'Os riscos já foram identificados. Não preciso perder tempo com isso de novo. O projeto está rodando.'
+
+De acordo com o processo de gerência de riscos estudado, a postura do gerente está correta?",,,
+Points,1,,,
+Difficulty,2,,,
+TRUE,0,"Incorreto. O gerenciamento de riscos é um processo iterativo que continua ao longo do projeto. Riscos novos podem surgir e riscos antigos podem mudar de probabilidade ou impacto.",
+FALSE,100,"Correto. A postura está errada. O processo de gerência de riscos é iterativo: depois de identificar, analisar e planejar, é preciso monitorar continuamente. O monitoramento pode revelar novos riscos e mudanças nos existentes. Uma planilha nunca revisada representa o que a equipe temia no passado, não o que ameaça o projeto agora.",
+,,,,
+NewQuestion,M,,,
+ID,ES-1110,,,
+Title,Indicadores de risco,,,
+QuestionText,"O monitoramento de riscos depende de indicadores: sinais observáveis que sugerem que um risco está ficando mais provável ou mais grave. A tabela abaixo lista quatro tipos de risco na coluna da esquerda. Associe cada tipo de risco ao indicador correspondente na coluna da direita.",,,
+Points,2,,,
+Difficulty,3,,,
+Scoring,EquallyWeighted,,,
+Choice,1,Risco de tecnologia,,,
+Choice,2,Risco de pessoas,,,
+Choice,3,Risco de requisitos,,,
+Choice,4,Risco de estimativa,,,
+Match,3,"Aumento de solicitações de mudança e reclamações de clientes sobre o que foi entregue",,
+Match,1,"Muitos problemas relatados com uma biblioteca ou plataforma e atraso na entrega de hardware de suporte",,
+Match,4,"Tarefas simples atrasando repetidamente e defeitos reabertos várias vezes",,
+Match,2,"Baixa motivação, conflitos entre membros da equipe e pessoas-chave ausentes em momentos críticos",,
+Hint,"Releia a seção 'Indicadores: os sinais de alerta' na aula de gerência de riscos.",,,

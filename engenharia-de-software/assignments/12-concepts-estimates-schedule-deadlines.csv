@@ -1,0 +1,155 @@
+"//(Note: The 'images' folder is assumed to be in the ""/content/<course path>/"" directory)",,,,
+"//Question Text is always a required field",,,,
+"//An ID will be generated using the (Course code)-(Question number) if an ID is not specified for a question",,,,
+"//Please ensure that the CSV file is saved as ""CSV UTF-8"" encoded",,,,
+,,,,
+NewQuestion,M,,,
+ID,ES-1201,,,
+Title,Esforço, duração, custo e preço,,,
+QuestionText,"Na aula sobre conceitos de planejamento, quatro termos foram diferenciados: esforço, duração, custo e preço. Embora relacionados, cada um tem um significado próprio. Confundir esforço com duração pode gerar cronogramas irreais. Confundir custo com preço pode gerar contratos problemáticos.
+
+Associe cada conceito (coluna da esquerda) à sua definição correta (coluna da direita).",,,
+Points,2,,,
+Difficulty,3,,,
+Scoring,EquallyWeighted,,,
+Choice,1,Esforço,,,
+Choice,2,Duração,,,
+Choice,3,Custo,,,
+Choice,4,Preço,,,
+Match,3,"Gasto da organização para executar o projeto (salários, licenças, servidores, viagens)",,
+Match,4,"Valor negociado com o cliente, que pode incluir margem, risco e estratégia comercial",,
+Match,2,"Tempo de calendário que uma tarefa ou projeto ocupa (ex.: 3 semanas, 4 meses)",,
+Match,1,"Quantidade de trabalho humano necessária (ex.: 40 pessoas-dia, 12 pessoas-mês)",,
+Hint,"Releia a seção 'Custo, preço, esforço e prazo' da aula. Esforço é trabalho humano, duração é tempo no calendário, custo é gasto da organização e preço é valor negociado.",,,
+,,,,
+NewQuestion,MC,,,
+ID,ES-1202,,,
+Title,Pontos de aplicação,,,
+QuestionText,"Uma equipe está estimando o esforço para desenvolver um sistema de gestão de clínicas usando o modelo de pontos de aplicação. O sistema foi estimado em 120 pontos de aplicação (considerando telas, relatórios e componentes de terceiros). A equipe acredita que 30% do sistema poderá ser obtido por reúso de componentes já existentes. A produtividade estimada da equipe é de 12 pontos de aplicação por pessoa-mês.
+
+Utilizando a fórmula PM = (NAP x (1 - %reuso/100)) / PROD, qual é o esforço aproximado em pessoas-mês?",,,
+Points,1,,,
+Difficulty,3,,,
+Option,0,"4 pessoas-mês",,"Incorreto. Esse seria o resultado se o reúso fosse maior ou a produtividade fosse maior. Refaça: PM = (120 x (1 - 0,30)) / 12."
+Option,0,"10 pessoas-mês",,"Incorreto. Esse seria o resultado se não houvesse reúso: 120/12 = 10. Mas 30% é reusado, então o NAP efetivo é menor."
+Option,100,"7 pessoas-mês",,"Correto. PM = (120 x (1 - 30/100)) / 12 = (120 x 0,70) / 12 = 84 / 12 = 7 pessoas-mês."
+Option,0,"14 pessoas-mês",,"Incorreto. Esse valor seria obtido se a fórmula fosse aplicada com o dobro da produtividade ou outro erro de cálculo. Refaça passo a passo.",,,
+,,,,
+NewQuestion,MC,,,
+ID,ES-1203,,,
+Title,Compressão de prazo,,,
+QuestionText,"Uma equipe estimou um projeto em 60 pessoas-mês de esforço. O cliente solicitou que o prazo fosse reduzido de 12 para 9 meses, mantendo o mesmo escopo. O gerente, preocupado, lembrou que 'comprimir cronograma não é de graça'.
+
+Com base no que foi estudado sobre compressão de prazo, o que tende a acontecer com o esforço total do projeto quando o cronograma é comprimido sem redução de escopo?",,,
+Points,1,,,
+Difficulty,2,,,
+Option,0,"O esforço total diminui, pois a equipe trabalha mais rápido sob pressão.",,"Incorreto. Pressão de prazo não torna o trabalho magicamente mais rápido. Na prática, a coordenação adicional e o paralelismo forçado tendem a aumentar o esforço."
+Option,100,"O esforço total aumenta, pois a compressão gera mais coordenação, comunicação, integração e retrabalho.",,"Correto. Comprimir prazo força mais paralelismo, o que aumenta a necessidade de coordenação, reuniões, integração e resolução de conflitos. Além disso, adicionar pessoas tarde demais gera custo de aprendizado e entrosamento."
+Option,0,"O esforço total se mantém igual, apenas redistribuído em menos tempo.",,"Incorreto. Embora parte do esforço original seja apenas redistribuída, a compressão cria trabalho adicional (coordenação, integração, retrabalho) que aumenta o esforço total."
+Option,0,"O esforço total dobra, independentemente do projeto.",,"Incorreto. O aumento não é fixo nem automático. Depende do tipo de projeto, da equipe e do grau de compressão, mas a tendência é de aumento, não de duplicação exata.",,,
+,,,,
+NewQuestion,TF,,,
+ID,ES-1204,,,
+Title,Adicionar pessoas a projeto atrasado,,,
+QuestionText,"Um projeto de software está com duas semanas de atraso em relação ao cronograma. O gerente decide contratar mais três desenvolvedores para 'recuperar o tempo perdido'. Ele acredita que, com mais pessoas, as tarefas serão concluídas mais rapidamente e o prazo será retomado.
+
+De acordo com o que foi estudado sobre alocação de pessoas e compressão de prazo, a decisão do gerente tem grande probabilidade de resolver o atraso?",,,
+Points,1,,,
+Difficulty,2,,,
+TRUE,0,"Incorreto. Adicionar pessoas a um projeto atrasado frequentemente piora o atraso. Novas pessoas precisam aprender o projeto, entender o domínio, se entrosar com a equipe e entender o código existente. Enquanto isso, as pessoas experientes precisam gastar tempo ensinando, revisando e coordenando, reduzindo sua própria produtividade.",
+FALSE,100,"Correto. A decisão provavelmente não resolverá o atraso e pode piorá-lo. Novas pessoas exigem treinamento, aumentam a necessidade de comunicação e coordenação, e reduzem a produtividade de quem já estava no projeto. Em software, o trabalho não é perfeitamente divisível.",
+Hint,"Releia a seção 'Compressão de prazo' da aula. O livro de Brooks, 'The Mythical Man-Month', trata exatamente desse problema.",,,
+,,,,
+NewQuestion,MS,,,
+ID,ES-1205,,,
+Title,Elementos de um cronograma,,,
+QuestionText,"Durante a aula sobre cronograma e prazos, foram apresentados os elementos essenciais que uma programação de projeto realista precisa considerar. Sem esses elementos, o cronograma pode parecer viável no papel mas ser impossível na prática.
+
+Selecione, entre as opções abaixo, quais são os elementos essenciais para uma programação de projeto realista.",,,
+Points,2,,,
+Difficulty,2,,,
+Scoring,RightMinusWrong,,,
+Option,1,Tarefa: o que precisa ser feito,,Correto. Sem definir as tarefas, não há como estimar duração, esforço ou dependências.
+Option,1,Duração: quanto tempo de calendário a tarefa ocupa,,Correto. A duração é essencial para posicionar a tarefa no cronograma e identificar paralelismo.
+Option,1,Esforço: quanto trabalho humano é necessário,,Correto. O esforço permite estimar custo e alocar pessoas corretamente.
+Option,1,Dependência: que outra tarefa precisa terminar antes,,Correto. Dependências determinam a sequência e revelam o caminho crítico do projeto.
+Option,0,Nome do cliente em cada tarefa,,Este não é um elemento essencial da programação. O cliente participa da validação e priorização, mas não como elemento estrutural do cronograma.
+Option,0,Cor preferida do gerente para o gráfico de Gantt,,Este não é um elemento essencial. A cor pode ajudar na visualização, mas não é um elemento estrutural da programação.
+,,,,
+NewQuestion,MC,,,
+ID,ES-1206,,,
+Title,Incerteza das estimativas iniciais,,,
+QuestionText,"Na fase de proposta, uma equipe estimou que um sistema de biblioteca exigiria 20 pessoas-mês. A estimativa foi feita com base em uma descrição curta: cadastro de livros, empréstimos, devoluções, multas e relatórios. Duas semanas depois, durante a análise de requisitos, a equipe descobriu que o sistema precisaria importar 15 anos de acervo antigo, integrar com login institucional, enviar notificações por e-mail e gerar relatórios para auditoria pública. O gerente insiste em manter os 20 pessoas-mês como compromisso firme, argumentando que 'já foi acordado com o cliente'.
+
+Com base no que foi estudado sobre a incerteza das estimativas, qual é o problema com a postura do gerente?",,,
+Points,1,,,
+Difficulty,3,,,
+Option,0,"Nenhum problema. O gerente está certo em honrar o compromisso inicial, mesmo que o escopo tenha crescido.",,"Incorreto. Honrar compromissos é importante, mas insistir em uma estimativa feita com pouca informação, depois que o escopo real se revelou maior, não é responsabilidade."
+Option,100,"A estimativa inicial foi feita com pouca informação e precisa ser revisada agora que o escopo real é maior. Manter os 20 pessoas-mês é tratar uma previsão frágil como promessa rígida.",,"Correto. Estimativas iniciais têm incerteza alta. Quando nova informação revela que o escopo é maior, a estimativa deve ser revisada e renegociada com o cliente. O erro não é fazer estimativas iniciais, é recusar-se a revisá-las quando o projeto aprende."
+Option,0,"A estimativa inicial estava errada e a equipe é incompetente por não ter previsto os requisitos ocultos.",,"Incorreto. A estimativa não estava necessariamente errada: ela foi feita com a informação disponível naquele momento. Nenhuma equipe consegue prever todos os requisitos na fase de proposta."
+Option,0,"O problema é que o cliente não especificou todos os requisitos na proposta. A equipe não tem culpa.",,"Incorreto. Embora requisitos incompletos sejam comuns, a responsabilidade do gerente é revisar a estimativa quando nova informação aparece, e não culpar o cliente e seguir com números desatualizados.",,,
+,,,,
+NewQuestion,MC,,,
+ID,ES-1207,,,
+Title,Tarefa com esforço maior que duração,,,
+QuestionText,"Durante a elaboração de um cronograma, a equipe registrou a seguinte tarefa:
+- Tarefa: Protótipo de integração com serviço de pagamento
+- Duração: 10 dias úteis
+- Esforço: 20 pessoas-dia
+
+Com base no que foi estudado sobre a diferença entre duração e esforço, o que essa combinação indica sobre a alocação de pessoas nessa tarefa?",,,
+Points,1,,,
+Difficulty,2,,,
+Option,0,"Uma pessoa trabalhando em meio período (4 horas por dia).",,"Se uma pessoa trabalhasse meio período por 10 dias, o esforço seria de 5 pessoas-dia, não 20."
+Option,0,"Uma pessoa trabalhando em tempo integral (8 horas por dia).",,"Se uma pessoa trabalhasse tempo integral por 10 dias, o esforço seria de 10 pessoas-dia, não 20."
+Option,100,"Duas pessoas trabalhando em paralelo, ou combinação de pessoas em regime integral e parcial.",,"Correto. Com 20 pessoas-dia de esforço em 10 dias de duração, há em média 2 pessoas trabalhando simultaneamente. O esforço total (20) é maior que a duração (10) porque há paralelismo."
+Option,0,"Vinte pessoas trabalhando um dia cada.",,"Embora matematicamente 20 pessoas-dia pudessem ser 20 pessoas por 1 dia, na prática isso seria inviável: 20 pessoas não conseguiriam se coordenar em um único dia para produzir um protótipo funcional.",,,
+,,,,
+NewQuestion,O,,,
+ID,ES-1208,,,
+Title,Passos da estimativa baseada em experiência,,,
+QuestionText,"A aula apresentou um fluxo de sete passos para realizar uma estimativa baseada em experiência. Esse fluxo parte dos entregáveis do projeto e chega até a revisão contínua da estimativa durante o desenvolvimento.
+
+Ordene os passos abaixo na sequência correta em que devem ser executados durante o processo de estimativa.",,,
+Points,2,,,
+Difficulty,3,,,
+Scoring,RightMinusWrong,,,
+Item,Identificar os entregáveis: o que precisa existir ao final do projeto,NOT HTML,,,
+Item,Decompor o trabalho: dividir cada entrega em partes menores,NOT HTML,,,
+Item,Estimar cada parte individualmente: atribuir esforço a cada componente,NOT HTML,,,
+Item,Discutir divergências entre as estimativas dos membros da equipe,NOT HTML,,,
+Item,Registrar as premissas usadas em cada estimativa,NOT HTML,,,
+Item,Adicionar contingência para reconhecer riscos e incertezas,NOT HTML,,,
+Item,Revisar a estimativa conforme o projeto avança e novas informações surgem,NOT HTML,,,
+Hint,"Releia a seção 'Estimativa baseada em experiência' da aula. O fluxo começa pelos entregáveis e termina com a revisão contínua.",,,
+,,,,
+NewQuestion,TF,,,
+ID,ES-1209,,,
+Title,Marco vs. entregável,,,
+QuestionText,"Durante uma reunião de planejamento, um desenvolvedor afirmou: 'Marco e entregável são a mesma coisa. Ambos são pontos no cronograma que indicam que algo foi concluído. Se a arquitetura foi revisada internamente, isso já conta como entregável para o cliente.'
+
+De acordo com o que foi estudado sobre marcos e entregáveis, a afirmação do desenvolvedor está correta?",,,
+Points,1,,,
+Difficulty,2,,,
+TRUE,0,"Incorreto. Marco e entregável não são a mesma coisa. Um marco é um ponto de controle interno do projeto (ex.: arquitetura revisada). Um entregável é um produto de trabalho enviado ao cliente (ex.: protótipo, documento, versão executável). Todo entregável importante pode ser um marco, mas nem todo marco é entregue ao cliente.",
+FALSE,100,"Correto. A afirmação está errada. Marco é um ponto de controle usado para avaliar progresso internamente. Entregável é um produto de trabalho enviado ao cliente. A revisão interna de arquitetura é um marco, não um entregável. Confundir os dois pode gerar expectativas erradas no cliente e problemas contratuais.",
+,,,,
+NewQuestion,MC,,,
+ID,ES-1210,,,
+Title,Propagação de atraso,,,
+QuestionText,"Considere a seguinte tabela de dependências entre tarefas de um projeto:
+
+| Tarefa | Duração | Dependências |
+| T1: definir modelo de dados | 5 dias | nenhuma |
+| T2: implementar API de pacientes | 8 dias | T1 |
+| T3: implementar tela de cadastro | 6 dias | T2 |
+| T4: preparar massa de testes | 4 dias | T1 |
+| T5: testar fluxo de cadastro | 5 dias | T3, T4 |
+
+Se a tarefa T1 atrasar 3 dias, qual será o efeito sobre o projeto?",,,
+Points,1,,,
+Difficulty,3,,,
+Option,0,"Apenas T1 será afetada. As demais tarefas têm duração própria e não dependem do início de T1.",,"Incorreto. T2 e T4 dependem diretamente de T1. Se T1 atrasa, elas não podem começar na data prevista."
+Option,0,"Apenas T2 será afetada, pois é a primeira tarefa que depende diretamente de T1.",,"Incorreto. T4 também depende de T1. Além disso, o atraso se propaga: T2 atrasando afeta T3, que afeta T5."
+Option,100,"Todas as tarefas serão afetadas e a entrega atrasará pelo menos 3 dias, pois o atraso se propaga pelas dependências.",,"Correto. T1 atrasando 3 dias empurra T2 e T4. T2 atrasando empurra T3. T3 e T4 atrasando empurram T5. Como T5 é a tarefa final, a entrega atrasa no mínimo 3 dias. Esse é o mecanismo de propagação: dependências transformam um atraso local em atraso global."
+Option,0,"O projeto não será afetado porque T4 (massa de testes) pode ser feita em paralelo e compensa o atraso.",,"Incorreto. T4 depende de T1 também, então ela também atrasa. Além disso, T5 depende tanto de T3 quanto de T4, então o atraso em ambas as ramificações afeta a tarefa final.",,,

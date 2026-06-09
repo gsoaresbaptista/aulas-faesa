@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toposia - Engenharia de Software</title>
+    <link rel="icon" href="/aulas-faesa/img/dark-favicon.svg" media="(prefers-color-scheme: light)">
+    <link rel="icon" href="/aulas-faesa/img/light-favicon.svg" media="(prefers-color-scheme: dark)">
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/fonts.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/bundles/katex-base-prism-one-light-b0347952c973.bundle.min.css">
+    
+    
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css" data-no-bundle>
+    <script src="/aulas-faesa/js/bundles/lucide-katex-auto-render-4b36e8bd8642.bundle.min.js"></script>
+</head>
+
+<body>
+    <script>
+        // Restore sidebar state instantly (before first paint) to avoid transition flash
+        (function() {
+            if (localStorage.getItem('cf_sidebar_hidden') === 'true') {
+                document.body.classList.add('sidebar-hidden', 'no-transition');
+            }
+            requestAnimationFrame(function() {
+                requestAnimationFrame(function() {
+                    document.body.classList.remove('no-transition');
+                });
+            });
+        })();
+    </script>
+    <div class="page-wrapper">
+        <nav class="sidebar">
+            <div class="sidebar-content">
+                <header class="sidebar-title-section">
+                    <a href="contents.html" class="course-title-link">
+                        <h1 class="sidebar-course-title">Engenharia de Software</h1>
+                    </a>
+                    <div class="sidebar-ornament">❧</div>
+                </header>
+
+                
+                <section class="sidebar-toc-section">
+                    <h2 class="toc-header">Tabela de Conteúdos</h2>
+                    <ol class="toc-list">
+                        
+                        <li class="toc-item level-2">
+                            <a href="#introdução">12.1. Introdução</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#o-planejamento-começa-com-incerteza">12.2. O planejamento começa com incerteza</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#custo-preço-esforço-e-prazo">12.3. Custo, preço, esforço e prazo</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#estimativas-em-estágios-diferentes">12.4. Estimativas em estágios diferentes</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#estimativa-baseada-em-experiência">12.5. Estimativa baseada em experiência</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#modelagem-algorítmica">12.6. Modelagem algorítmica</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#pontos-de-aplicação">12.6.1. Pontos de aplicação</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#drivers-de-custo">12.7. Drivers de custo</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#programação-de-projeto-e-cronograma">12.8. Programação de projeto e cronograma</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#duração-e-esforço">12.8.1. Duração e esforço</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#dependências-entre-tarefas">12.9. Dependências entre tarefas</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#marcos-e-entregáveis">12.10. Marcos e entregáveis</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#representando-cronogramas">12.11. Representando cronogramas</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#alocação-de-pessoas">12.12. Alocação de pessoas</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#contingência-e-prazos-realistas">12.13. Contingência e prazos realistas</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#compressão-de-prazo">12.14. Compressão de prazo</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#exercício-guiado">12.15. Exercício guiado</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#questões">12.16. Questões</a>
+                        </li>
+                        
+                    </ol>
+                </section>
+                
+
+                <nav class="sidebar-nav-section">
+                    
+                    <a href="11-risk-management.html" class="sidebar-nav-link prev"><i data-lucide="chevron-left" class="nav-icon"></i> Gerência de Riscos em Projetos de Software</a>
+                    
+                    
+                    <a href="javascript:void(0)" onclick="handleBackNavigation()"
+                        class="sidebar-nav-link back"><i data-lucide="arrow-left" class="nav-icon"></i> Voltar</a>
+                </nav>
+
+            </div>
+        </nav>
+
+        <button class="mobile-menu-toggle" aria-label="Menu">
+            <i data-lucide="menu"></i>
+        </button>
+
+        <button class="sidebar-toggle" onclick="CourseForgeNav.toggleSidebar()" aria-label="Alternar Barra Lateral">
+            <i data-lucide="chevron-left" class="toggle-icon" id="sidebar-toggle-icon"></i>
+        </button>
+
+        <div class="mobile-menu-overlay"></div>
+
+        <main class="main-content">
+            <article class="article">
+                <header class="article-header">
+                    <span class="chapter-number">12</span>
+                    <h1 class="article-title">
+                        <span class="title-ornament left">❧</span>
+                        <span class="title-text">Conceitos, Estimativas, Cronograma e Prazos</span>
+                        <span class="title-ornament right">❧</span>
+                    </h1>
+                    
+                    <p class="article-date">20/05/2026</p>
+                    
+                    
+                    <nav class="breadcrumb" aria-label="Breadcrumb">
+                        
+                        
+                        
+                        <a href="contents.html" class="breadcrumb-link">Engenharia de Software</a>
+                        
+                        <span class="breadcrumb-separator"><i data-lucide="chevron-right" class="breadcrumb-icon"></i></span>
+                        
+                        
+                        
+                        
+                        <a href="contents.html#part-III" class="breadcrumb-link">III - Gerenciamento de Software</a>
+                        
+                        <span class="breadcrumb-separator"><i data-lucide="chevron-right" class="breadcrumb-icon"></i></span>
+                        
+                        
+                        
+                        <span class="breadcrumb-current">Conceitos, Estimativas, Cronograma e Prazos</span>
+                        
+                        
+                    </nav>
+                    
+                </header>
+                <div class="article-body">
+                    <h2 id="introdução"><span class="heading-text">Introdução</span><span class="heading-arabic">12.1</span></h2>
+<p>Hoje você vai ver como transformar uma intenção de projeto em um plano que pode ser discutido, acompanhado e corrigido. Nas últimas aulas, você estudou planejamento em visão geral e gerência de riscos. Agora o foco muda para duas perguntas práticas: <strong>quanto trabalho existe?</strong> e <strong>quando esse trabalho pode ser entregue?</strong></p>
+<p>Essas duas perguntas parecem simples, mas são fontes constantes de erro em projetos reais. Uma equipe pode subestimar o tamanho do sistema. Pode confundir esforço com duração. Pode esquecer dependências entre tarefas. Pode prometer prazo sem considerar pessoas disponíveis. Pode aceitar uma data fixa sem reduzir escopo. Pode usar uma estimativa inicial, feita com pouca informação, como se fosse uma promessa definitiva.</p>
+<p>Planejar bem não significa prever tudo. Significa deixar claras as hipóteses usadas, estimar com responsabilidade, reconhecer incertezas, organizar tarefas em uma sequência possível e acompanhar o progresso com evidências.</p>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Estimativa não é promessa<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Uma estimativa é uma previsão feita com as informações disponíveis em um momento específico. Quando requisitos, arquitetura, tecnologia, equipe ou riscos mudam, a estimativa também precisa ser revisada.</p>
+  </div>
+</div>
+<p>Esta aula está organizada em dois blocos. O primeiro trata de <strong>conceitos e estimativas</strong>: custo, preço, esforço, incerteza, estimativas baseadas em experiência e modelos algorítmicos. O segundo trata de <strong>cronograma e prazos</strong>: tarefas, duração, dependências, marcos, entregáveis, alocação de pessoas, contingência e compressão de prazo.</p>
+<h2 id="o-planejamento-começa-com-incerteza"><span class="heading-text">O planejamento começa com incerteza</span><span class="heading-arabic">12.2</span></h2>
+<p>Quando um projeto começa, a equipe raramente conhece todos os detalhes do produto. Ela pode ter uma visão geral do sistema, algumas restrições contratuais, uma ideia de tecnologias possíveis e uma expectativa inicial de prazo. Mas ainda faltam informações importantes.</p>
+<p>Os requisitos podem estar incompletos. O cliente pode ainda não conhecer todas as regras de negócio. Uma integração pode parecer simples e depois revelar dependências externas. Uma funcionalidade aparentemente pequena pode exigir mudança em banco de dados, permissões, relatórios e testes. Uma tecnologia escolhida pode funcionar bem em protótipo e falhar em volume real.</p>
+<p>Por isso, o planejamento deve ser visto como uma hipótese organizada. Ele descreve como a equipe pretende executar o trabalho, mas essa descrição precisa ser revisada conforme o projeto aprende.</p>
+<img src="static/figura-23-1-processo-planejamento-projeto.png" width="90%">
+
+<p>A Figura 23.1 mostra o processo de planejamento como um ciclo. Primeiro a equipe identifica restrições, riscos, marcos e entregáveis. Depois organiza o cronograma. Durante o trabalho, monitora o progresso. Se surgirem problemas graves, o projeto precisa de mitigação e replanejamento.</p>
+<p>Um plano que nunca muda pode parecer disciplinado, mas pode estar apenas escondendo a realidade. O problema não é revisar o plano. O problema é continuar trabalhando como se o plano antigo ainda representasse o projeto.</p>
+<div class="example">
+  <div class="example-title">Exemplo 1</div>
+  <p>Uma equipe planeja entregar um sistema de agendamento médico em quatro meses. No plano inicial, a integração com pagamentos aparece apenas no terceiro mês. Na segunda semana, a equipe descobre que o gateway de pagamento exige cadastro, validação jurídica, ambiente de homologação e certificação.</p>
+<p>Se a equipe mantiver o plano original, ela provavelmente descobrirá tarde demais que a integração bloqueia a entrega. Um plano maduro antecipa essa validação. A equipe pode criar uma prova de conceito na primeira quinzena, descobrir os prazos externos e ajustar o cronograma antes de comprometer a data de entrega.</p>
+</div>
+<h2 id="custo-preço-esforço-e-prazo"><span class="heading-text">Custo, preço, esforço e prazo</span><span class="heading-arabic">12.3</span></h2>
+<p>Antes de estimar, precisamos separar alguns conceitos que costumam ser misturados.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Conceito</th>
+  <th style="text-align:left">Significado</th>
+  <th style="text-align:left">Exemplo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><strong>Esforço</strong></td>
+  <td style="text-align:left">Quantidade de trabalho humano necessário</td>
+  <td style="text-align:left">40 pessoas-dia, 12 pessoas-mês</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Duração</strong></td>
+  <td style="text-align:left">Tempo no calendário</td>
+  <td style="text-align:left">3 semanas, 4 meses</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Custo</strong></td>
+  <td style="text-align:left">Gasto da organização para executar o projeto</td>
+  <td style="text-align:left">salários, licenças, servidores, viagens</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Preço</strong></td>
+  <td style="text-align:left">Valor negociado com o cliente</td>
+  <td style="text-align:left">contrato de R<span>$</span> 300.000,00</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Escopo</strong></td>
+  <td style="text-align:left">Conjunto de funcionalidades, entregas e restrições</td>
+  <td style="text-align:left">cadastro, relatórios, integração, implantação</td>
+</tr>
+</tbody>
+</table>
+<p>Esses conceitos se relacionam, mas não são iguais. Uma tarefa pode exigir 10 pessoas-dia de esforço e durar 5 dias se duas pessoas trabalharem nela em paralelo. Outra tarefa pode exigir 10 pessoas-dia e durar 20 dias se uma pessoa trabalhar em meio período. O esforço mede trabalho humano. A duração mede tempo de calendário.</p>
+<p>Também é importante separar custo e preço. O custo é o que a organização gasta para executar o projeto. O preço é o que ela cobra ou negocia. O preço pode ser influenciado por estratégia comercial, concorrência, risco assumido, relacionamento com o cliente e oportunidade de mercado.</p>
+<div class="example">
+  <div class="example-title">Exemplo 2</div>
+  <p>Uma empresa estima que um projeto exigirá 30 pessoas-mês de esforço. O custo médio mensal de uma pessoa, considerando salário, encargos e estrutura da empresa, é de R<span>$</span> 16.000,00.</p>
+<p>O custo direto de esforço será:</p>
+<p>$$
+30 \times 16.000 = 480.000
+$$</p>
+<p>Se ainda houver R<span>$</span> 40.000,00 em licenças, R<span>$</span> 25.000,00 em infraestrutura e R<span>$</span> 15.000,00 em treinamentos, o custo estimado será:</p>
+<p>$$
+480.000 + 40.000 + 25.000 + 15.000 = 560.000
+$$</p>
+<p>Esse valor não é necessariamente o preço. A empresa pode cobrar mais para incluir margem e risco. Pode cobrar menos por estratégia comercial. Mas, se aceitar um preço muito abaixo do custo sem reduzir escopo, ela estará assumindo um risco financeiro.</p>
+</div>
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">Custo não é preço<br /></span>
+  </div>
+  <div class="callout-content">
+<p>O custo ajuda a entender a viabilidade econômica do projeto. O preço depende de negociação, estratégia e risco. Um projeto pode ser tecnicamente bem estimado e ainda assim ter preço ruim.</p>
+  </div>
+</div>
+<h2 id="estimativas-em-estágios-diferentes"><span class="heading-text">Estimativas em estágios diferentes</span><span class="heading-arabic">12.4</span></h2>
+<p>Uma estimativa feita no início do projeto não tem a mesma confiabilidade de uma estimativa feita depois que requisitos, arquitetura, riscos e equipe estão mais claros. No começo, a equipe conhece pouco. Depois, aprende mais.</p>
+<img src="static/figura-23-6-incerteza-estimativa.png" width="85%">
+
+<p>A Figura 23.6 deixa a mensagem clara: a incerteza diminui conforme o projeto avança. No estágio de viabilidade, a estimativa pode variar muito. Depois que requisitos principais foram discutidos, a incerteza diminui. Depois que a arquitetura inicial é definida, diminui mais. Quando o sistema já foi implementado e entregue, o esforço real é conhecido.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Estágio</th>
+  <th style="text-align:left">Informação disponível</th>
+  <th style="text-align:left">Confiabilidade da estimativa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Viabilidade</td>
+  <td style="text-align:left">Objetivo geral, restrições iniciais, pouco detalhe</td>
+  <td style="text-align:left">Baixa</td>
+</tr>
+<tr>
+  <td style="text-align:left">Requisitos</td>
+  <td style="text-align:left">Funções principais, usuários, regras iniciais</td>
+  <td style="text-align:left">Melhor, mas ainda incerta</td>
+</tr>
+<tr>
+  <td style="text-align:left">Arquitetura</td>
+  <td style="text-align:left">Principais componentes, integrações, decisões técnicas</td>
+  <td style="text-align:left">Mais estável</td>
+</tr>
+<tr>
+  <td style="text-align:left">Implementação</td>
+  <td style="text-align:left">Parte do sistema já construída, velocidade observada</td>
+  <td style="text-align:left">Alta</td>
+</tr>
+<tr>
+  <td style="text-align:left">Entrega</td>
+  <td style="text-align:left">Esforço real conhecido</td>
+  <td style="text-align:left">Não é mais estimativa</td>
+</tr>
+</tbody>
+</table>
+<p>Fazer estimativas iniciais é necessário. Sem elas não há proposta, orçamento nem cronograma. O perigo está em tratá-las como verdade definitiva.</p>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Se sua estimativa inicial dobrar depois de duas semanas de análise, isso significa que a primeira estimativa estava errada ou que o projeto era maior do que parecia?</p>
+  </div>
+</div>
+<div class="example">
+  <div class="example-title">Exemplo 3</div>
+  <p>Na fase de proposta, uma equipe estima que um sistema de biblioteca exigirá 20 pessoas-mês. Essa estimativa foi feita com base em uma descrição curta: cadastro de livros, empréstimos, devoluções, multas e relatórios.</p>
+<p>Duas semanas depois, durante análise de requisitos, a equipe descobre novas condições. O sistema precisa importar 15 anos de acervo antigo, integrar com login institucional, enviar notificações por e-mail, controlar reserva por prioridade e gerar relatórios para auditoria pública.</p>
+<p>A estimativa inicial não estava necessariamente errada. Ela foi feita com pouca informação. O erro seria manter os 20 pessoas-mês como compromisso rígido depois que o escopo real ficou maior.</p>
+</div>
+<h2 id="estimativa-baseada-em-experiência"><span class="heading-text">Estimativa baseada em experiência</span><span class="heading-arabic">12.5</span></h2>
+<p>A forma mais comum de estimar em projetos reais é usar experiência. A equipe olha para projetos anteriores, para tarefas semelhantes, para sua própria capacidade e para o domínio do problema. Depois decompõe o trabalho em partes menores e estima cada parte.</p>
+<p>Essa abordagem melhora quando mais de uma pessoa participa. Um desenvolvedor pode perceber dificuldade técnica. Uma pessoa de testes pode lembrar massa de dados e cenários de borda. Uma pessoa de operações pode lembrar implantação, certificados e permissões. Alguém do cliente pode lembrar regras raras que não aparecem na descrição inicial.</p>
+<p>Um processo simples de estimativa baseada em experiência pode seguir este fluxo:</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Passo</th>
+  <th style="text-align:left">Pergunta</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Identificar entregáveis</td>
+  <td style="text-align:left">O que precisa existir ao final?</td>
+</tr>
+<tr>
+  <td style="text-align:left">Decompor o trabalho</td>
+  <td style="text-align:left">Quais partes menores compõem cada entrega?</td>
+</tr>
+<tr>
+  <td style="text-align:left">Estimar cada parte</td>
+  <td style="text-align:left">Quanto esforço cada parte exige?</td>
+</tr>
+<tr>
+  <td style="text-align:left">Discutir divergências</td>
+  <td style="text-align:left">Por que uma pessoa estimou 2 dias e outra 8 dias?</td>
+</tr>
+<tr>
+  <td style="text-align:left">Registrar premissas</td>
+  <td style="text-align:left">O que estamos assumindo como verdadeiro?</td>
+</tr>
+<tr>
+  <td style="text-align:left">Adicionar contingência</td>
+  <td style="text-align:left">Que margem reconhece riscos e incerteza?</td>
+</tr>
+<tr>
+  <td style="text-align:left">Revisar durante o projeto</td>
+  <td style="text-align:left">O que aprendemos que muda a estimativa?</td>
+</tr>
+</tbody>
+</table>
+<div class="example">
+  <div class="example-title">Exemplo 4</div>
+  <p>Uma equipe estima um módulo de relatórios administrativos.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Parte</th>
+  <th style="text-align:center">Estimativa inicial</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Relatório de consultas por período</td>
+  <td style="text-align:center">3 pessoas-dia</td>
+</tr>
+<tr>
+  <td style="text-align:left">Relatório por médico</td>
+  <td style="text-align:center">3 pessoas-dia</td>
+</tr>
+<tr>
+  <td style="text-align:left">Relatório de taxa de falta</td>
+  <td style="text-align:center">4 pessoas-dia</td>
+</tr>
+<tr>
+  <td style="text-align:left">Exportação CSV</td>
+  <td style="text-align:center">2 pessoas-dia</td>
+</tr>
+<tr>
+  <td style="text-align:left">Controle de permissão</td>
+  <td style="text-align:center">3 pessoas-dia</td>
+</tr>
+<tr>
+  <td style="text-align:left">Testes com massa realista</td>
+  <td style="text-align:center">4 pessoas-dia</td>
+</tr>
+</tbody>
+</table>
+<p>O total direto é 19 pessoas-dia. Durante a discussão, a equipe percebe que os dados históricos estão inconsistentes. Alguns registros antigos não têm especialidade médica, outros não têm status de comparecimento e alguns pacientes foram cadastrados duas vezes.</p>
+<p>A equipe adiciona 6 pessoas-dia para saneamento e adaptação de dados. A estimativa passa para 25 pessoas-dia antes da contingência. A conversa em grupo revelou trabalho escondido.</p>
+</div>
+<h2 id="modelagem-algorítmica"><span class="heading-text">Modelagem algorítmica</span><span class="heading-arabic">12.6</span></h2>
+<p>Modelos algorítmicos tentam estimar esforço por meio de fórmulas. A ideia geral é relacionar esforço com tamanho do sistema, complexidade, características do produto, maturidade do processo, capacidade da equipe e qualidade das ferramentas.</p>
+<p>Uma forma geral de pensar esses modelos é:</p>
+<p>$$
+\text{Esforço} = A \times \text{Tamanho}^{B} \times M
+$$</p>
+<p>Cada termo tem uma função.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Termo</th>
+  <th style="text-align:left">Significado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">$A$</td>
+  <td style="text-align:left">Fator associado ao contexto da organização e ao tipo de software</td>
+</tr>
+<tr>
+  <td style="text-align:left">$\text{Tamanho}$</td>
+  <td style="text-align:left">Medida de tamanho, como linhas de código, pontos de função ou pontos de aplicação</td>
+</tr>
+<tr>
+  <td style="text-align:left">$B$</td>
+  <td style="text-align:left">Expoente que representa crescimento não linear do esforço</td>
+</tr>
+<tr>
+  <td style="text-align:left">$M$</td>
+  <td style="text-align:left">Multiplicador formado por fatores de produto, processo, plataforma e equipe</td>
+</tr>
+</tbody>
+</table>
+<p>O expoente $B$ é importante porque projetos maiores não crescem apenas em quantidade de código. Eles aumentam comunicação, coordenação, integração, configuração, testes e risco. Por isso, dobrar o tamanho do sistema pode mais do que dobrar o esforço.</p>
+<img src="static/figura-23-7-modelos-cocomo.png" width="90%">
+
+<p>A Figura 23.7 mostra que modelos de estimativa podem ser usados em momentos diferentes. Algumas estimativas servem para protótipos e aplicações compostas por componentes. Outras exigem mais informação sobre arquitetura, tamanho e fatores de custo.</p>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Fórmula não substitui julgamento<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Um modelo algorítmico parece objetivo, mas depende de entradas difíceis de estimar. Se o tamanho, a complexidade ou a capacidade da equipe forem mal avaliados, o resultado da fórmula também será frágil.</p>
+  </div>
+</div>
+<h3 id="pontos-de-aplicação"><span class="heading-text">Pontos de aplicação</span><span class="heading-arabic">12.6.1</span></h3>
+<p>Em projetos com telas, relatórios, scripts e componentes, uma estimativa pode usar pontos de aplicação. A lógica é contar elementos visíveis do sistema, ajustar por reúso e dividir pela produtividade esperada.</p>
+<p>Uma fórmula simplificada é:</p>
+<p>$$
+PM = \frac{NAP \times (1 - \text{\%reúso}/100)}{PROD}
+$$</p>
+<p>Nessa fórmula, $PM$ é o esforço em pessoas-mês, $NAP$ é o número de pontos de aplicação, $\text{\%reúso}$ é a porcentagem estimada de reúso e $PROD$ é a produtividade em pontos de aplicação por pessoa-mês.</p>
+<div class="example">
+  <div class="example-title">Exemplo 5</div>
+  <p>Uma equipe estima um protótipo com 80 pontos de aplicação. Ela acredita que 25% poderá ser obtido por reúso. A produtividade estimada é de 10 pontos de aplicação por pessoa-mês.</p>
+<p>Aplicando a fórmula:</p>
+<p>$$
+PM = \frac{80 \times (1 - 25/100)}{10}
+$$</p>
+<p>$$
+PM = \frac{80 \times 0,75}{10} = \frac{60}{10} = 6
+$$</p>
+<p>A estimativa aproximada é de 6 pessoas-mês.</p>
+<p>Esse número não é um compromisso final. Ele serve para abrir a conversa certa: a produtividade é realista? O reúso de 25% é provável? A equipe já trabalhou com esse tipo de sistema?</p>
+</div>
+<h2 id="drivers-de-custo"><span class="heading-text">Drivers de custo</span><span class="heading-arabic">12.7</span></h2>
+<p>Mesmo sistemas de tamanho parecido podem exigir esforços muito diferentes. Isso acontece porque esforço não depende apenas do número de funcionalidades. Depende também de confiabilidade exigida, complexidade, restrições de plataforma, experiência da equipe, qualidade das ferramentas, maturidade do processo e pressão de prazo.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Fator</th>
+  <th style="text-align:left">Como afeta o esforço</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Confiabilidade exigida</td>
+  <td style="text-align:left">Sistemas críticos exigem mais análise, testes e revisão</td>
+</tr>
+<tr>
+  <td style="text-align:left">Complexidade do produto</td>
+  <td style="text-align:left">Regras difíceis e integrações complexas aumentam trabalho</td>
+</tr>
+<tr>
+  <td style="text-align:left">Restrições de plataforma</td>
+  <td style="text-align:left">Memória, desempenho e ambiente limitado aumentam cuidado técnico</td>
+</tr>
+<tr>
+  <td style="text-align:left">Experiência da equipe</td>
+  <td style="text-align:left">Equipe nova no domínio aprende durante o projeto</td>
+</tr>
+<tr>
+  <td style="text-align:left">Qualidade das ferramentas</td>
+  <td style="text-align:left">Ferramentas ruins aumentam retrabalho e tempo de configuração</td>
+</tr>
+<tr>
+  <td style="text-align:left">Compressão do prazo</td>
+  <td style="text-align:left">Prazo agressivo aumenta coordenação, paralelismo e risco</td>
+</tr>
+</tbody>
+</table>
+<div class="example">
+  <div class="example-title">Exemplo 6</div>
+  <p>Dois projetos têm tamanho parecido em número de telas e relatórios.</p>
+<p>O primeiro é um painel administrativo interno, usado por dez pessoas, com baixa criticidade, equipe experiente e tecnologia conhecida.</p>
+<p>O segundo é um sistema de controle de equipamento médico, usado em ambiente regulado, com alta exigência de segurança, necessidade de validação formal, logs auditáveis e equipe nova no domínio.</p>
+<p>Mesmo com tamanho parecido, o esforço não deve ser parecido. O segundo projeto exige mais análise, documentação, revisão, testes, controle de riscos e validação. Estimar apenas pelo tamanho esconderia a diferença real.</p>
+</div>
+<h2 id="programação-de-projeto-e-cronograma"><span class="heading-text">Programação de projeto e cronograma</span><span class="heading-arabic">12.8</span></h2>
+<p>Depois de estimar esforço, ainda falta organizar o trabalho no tempo. Essa é a função da programação de projeto. Ela decide quais tarefas serão feitas, em que ordem, com quais dependências, por quais pessoas e em quais datas.</p>
+<img src="static/figura-23-2-processo-programacao-projeto.png" width="90%">
+
+<p>A Figura 23.2 apresenta a programação como um fluxo. Primeiro a equipe identifica atividades. Depois identifica dependências. Em seguida estima recursos, aloca pessoas e produz representações do cronograma.</p>
+<p>Uma programação realista precisa considerar ao menos quatro elementos:</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Elemento</th>
+  <th style="text-align:left">Pergunta principal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><strong>Tarefa</strong></td>
+  <td style="text-align:left">O que precisa ser feito?</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Duração</strong></td>
+  <td style="text-align:left">Quanto tempo de calendário a tarefa ocupa?</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Esforço</strong></td>
+  <td style="text-align:left">Quanto trabalho humano é necessário?</td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>Dependência</strong></td>
+  <td style="text-align:left">Que outra tarefa precisa terminar antes?</td>
+</tr>
+</tbody>
+</table>
+<h3 id="duração-e-esforço"><span class="heading-text">Duração e esforço</span><span class="heading-arabic">12.8.1</span></h3>
+<p>Duração e esforço não são a mesma coisa. Duração é tempo no calendário. Esforço é trabalho humano.</p>
+<p>Uma tarefa pode durar 10 dias e exigir 5 pessoas-dia se uma pessoa trabalhar nela em meio período. Outra tarefa pode durar 10 dias e exigir 20 pessoas-dia se duas pessoas trabalharem em paralelo. Confundir duração e esforço gera cronogramas irreais.</p>
+<div class="example">
+  <div class="example-title">Exemplo 7</div>
+  <p>Uma equipe estima um protótipo de pagamento.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Item</th>
+  <th style="text-align:left">Valor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Duração</td>
+  <td style="text-align:left">10 dias úteis</td>
+</tr>
+<tr>
+  <td style="text-align:left">Esforço</td>
+  <td style="text-align:left">15 pessoas-dia</td>
+</tr>
+<tr>
+  <td style="text-align:left">Pessoas</td>
+  <td style="text-align:left">1 backend em tempo integral e 1 frontend em meio período</td>
+</tr>
+<tr>
+  <td style="text-align:left">Resultado</td>
+  <td style="text-align:left">Protótipo executando pagamento simulado e registrando retorno da transação</td>
+</tr>
+</tbody>
+</table>
+<p>A duração é de duas semanas no calendário. O esforço é maior do que 10 pessoas-dia porque há mais de uma pessoa envolvida. Se o gerente olhar apenas a duração, pode subestimar a quantidade de trabalho. Se olhar apenas o esforço, pode imaginar que basta colocar mais pessoas para terminar mais rápido, o que nem sempre é verdade.</p>
+</div>
+<h2 id="dependências-entre-tarefas"><span class="heading-text">Dependências entre tarefas</span><span class="heading-arabic">12.9</span></h2>
+<p>Dependência significa que uma tarefa só pode começar ou terminar depois de outra. Implementar uma tela pode depender da definição da API. Testar integração pode depender do ambiente de homologação. Gerar relatórios pode depender do modelo de dados. Treinar usuários pode depender da estabilização da versão.</p>
+<p>Dependências são uma das razões pelas quais cronograma não é apenas soma de durações.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Tarefa</th>
+  <th style="text-align:left">Duração</th>
+  <th style="text-align:left">Dependências</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">T1: definir modelo de dados</td>
+  <td style="text-align:left">5 dias</td>
+  <td style="text-align:left">nenhuma</td>
+</tr>
+<tr>
+  <td style="text-align:left">T2: implementar API de pacientes</td>
+  <td style="text-align:left">8 dias</td>
+  <td style="text-align:left">T1</td>
+</tr>
+<tr>
+  <td style="text-align:left">T3: implementar tela de cadastro</td>
+  <td style="text-align:left">6 dias</td>
+  <td style="text-align:left">T2</td>
+</tr>
+<tr>
+  <td style="text-align:left">T4: preparar massa de testes</td>
+  <td style="text-align:left">4 dias</td>
+  <td style="text-align:left">T1</td>
+</tr>
+<tr>
+  <td style="text-align:left">T5: testar fluxo de cadastro</td>
+  <td style="text-align:left">5 dias</td>
+  <td style="text-align:left">T3, T4</td>
+</tr>
+</tbody>
+</table>
+<p>Mesmo que T4 seja curta, T5 não pode começar antes que T3 e T4 terminem. Se T3 atrasar, T5 atrasa. Se T5 for necessária para uma entrega contratual, o atraso se propaga.</p>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Se T1 atrasar 3 dias, quais tarefas são afetadas? E se a equipe decidir cortar T4 (massa de testes) para compensar o atraso, que novo risco isso cria?</p>
+  </div>
+</div>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="680" viewBox="0.00 0.00 1018.19 129.00" class="svg-graph graphviz-img"><g id="svg-graphviz-b035741ab1ee-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 125)"><title>DependenciasCadastro</title><polygon fill="white" stroke="transparent" points="-4,4 -4,-125 1014.19,-125 1014.19,4 -4,4" /><g id="svg-graphviz-b035741ab1ee-node1" class="node"><title>inicio</title><ellipse fill="#f7f7f7" stroke="#777777" cx="34.45" cy="-60" rx="34.39" ry="34.39" /><text text-anchor="middle" x="34.45" y="-56.3" font-family="Helvetica,sans-Serif" font-size="14.00">Início</text></g><g id="svg-graphviz-b035741ab1ee-node2" class="node"><title>t1</title><path fill="#eef5ff" stroke="#5b7aa0" d="M255.89,-79C255.89,-79 145.89,-79 145.89,-79 139.89,-79 133.89,-73 133.89,-67 133.89,-67 133.89,-53 133.89,-53 133.89,-47 139.89,-41 145.89,-41 145.89,-41 255.89,-41 255.89,-41 261.89,-41 267.89,-47 267.89,-53 267.89,-53 267.89,-67 267.89,-67 267.89,-73 261.89,-79 255.89,-79" /><text text-anchor="middle" x="200.89" y="-63.8" font-family="Helvetica,sans-Serif" font-size="14.00">T1</text><text text-anchor="middle" x="200.89" y="-48.8" font-family="Helvetica,sans-Serif" font-size="14.00">Modelo de dados</text></g><g id="svg-graphviz-b035741ab1ee-edge1" class="edge"><title>inicio-&gt;t1</title><path fill="none" stroke="black" d="M68.93,-60C68.93,-60 123.81,-60 123.81,-60" /><polygon fill="black" stroke="black" points="123.81,-63.5 133.81,-60 123.81,-56.5 123.81,-63.5" /></g><g id="svg-graphviz-b035741ab1ee-node3" class="node"><title>t2</title><path fill="#eef5ff" stroke="#5b7aa0" d="M452.89,-121C452.89,-121 344.89,-121 344.89,-121 338.89,-121 332.89,-115 332.89,-109 332.89,-109 332.89,-95 332.89,-95 332.89,-89 338.89,-83 344.89,-83 344.89,-83 452.89,-83 452.89,-83 458.89,-83 464.89,-89 464.89,-95 464.89,-95 464.89,-109 464.89,-109 464.89,-115 458.89,-121 452.89,-121" /><text text-anchor="middle" x="398.89" y="-105.8" font-family="Helvetica,sans-Serif" font-size="14.00">T2</text><text text-anchor="middle" x="398.89" y="-90.8" font-family="Helvetica,sans-Serif" font-size="14.00">API de pacientes</text></g><g id="svg-graphviz-b035741ab1ee-edge2" class="edge"><title>t1-&gt;t2</title><path fill="none" stroke="black" d="M201.19,-79.32C201.19,-84.51 201.19,-88.72 201.19,-88.72 201.19,-88.72 322.79,-88.72 322.79,-88.72" /><polygon fill="black" stroke="black" points="322.79,-92.22 332.79,-88.72 322.79,-85.22 322.79,-92.22" /></g><g id="svg-graphviz-b035741ab1ee-node5" class="node"><title>t4</title><path fill="#eef5ff" stroke="#5b7aa0" d="M645.89,-38C645.89,-38 541.89,-38 541.89,-38 535.89,-38 529.89,-32 529.89,-26 529.89,-26 529.89,-12 529.89,-12 529.89,-6 535.89,0 541.89,0 541.89,0 645.89,0 645.89,0 651.89,0 657.89,-6 657.89,-12 657.89,-12 657.89,-26 657.89,-26 657.89,-32 651.89,-38 645.89,-38" /><text text-anchor="middle" x="593.89" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">T4</text><text text-anchor="middle" x="593.89" y="-7.8" font-family="Helvetica,sans-Serif" font-size="14.00">Massa de testes</text></g><g id="svg-graphviz-b035741ab1ee-edge4" class="edge"><title>t1-&gt;t4</title><path fill="none" stroke="black" d="M201.19,-40.71C201.19,-35.75 201.19,-31.78 201.19,-31.78 201.19,-31.78 519.49,-31.78 519.49,-31.78" /><polygon fill="black" stroke="black" points="519.49,-35.28 529.49,-31.78 519.49,-28.28 519.49,-35.28" /></g><g id="svg-graphviz-b035741ab1ee-node4" class="node"><title>t3</title><path fill="#eef5ff" stroke="#5b7aa0" d="M645.89,-120C645.89,-120 541.89,-120 541.89,-120 535.89,-120 529.89,-114 529.89,-108 529.89,-108 529.89,-94 529.89,-94 529.89,-88 535.89,-82 541.89,-82 541.89,-82 645.89,-82 645.89,-82 651.89,-82 657.89,-88 657.89,-94 657.89,-94 657.89,-108 657.89,-108 657.89,-114 651.89,-120 645.89,-120" /><text text-anchor="middle" x="593.89" y="-104.8" font-family="Helvetica,sans-Serif" font-size="14.00">T3</text><text text-anchor="middle" x="593.89" y="-89.8" font-family="Helvetica,sans-Serif" font-size="14.00">Tela de cadastro</text></g><g id="svg-graphviz-b035741ab1ee-edge3" class="edge"><title>t2-&gt;t3</title><path fill="none" stroke="black" d="M464.91,-101.5C464.91,-101.5 519.6,-101.5 519.6,-101.5" /><polygon fill="black" stroke="black" points="519.6,-105 529.6,-101.5 519.6,-98 519.6,-105" /></g><g id="svg-graphviz-b035741ab1ee-node6" class="node"><title>t5</title><path fill="#fff1d6" stroke="#b9852f" d="M832.89,-78C832.89,-78 734.89,-78 734.89,-78 728.89,-78 722.89,-72 722.89,-66 722.89,-66 722.89,-52 722.89,-52 722.89,-46 728.89,-40 734.89,-40 734.89,-40 832.89,-40 832.89,-40 838.89,-40 844.89,-46 844.89,-52 844.89,-52 844.89,-66 844.89,-66 844.89,-72 838.89,-78 832.89,-78" /><text text-anchor="middle" x="783.89" y="-62.8" font-family="Helvetica,sans-Serif" font-size="14.00">T5</text><text text-anchor="middle" x="783.89" y="-47.8" font-family="Helvetica,sans-Serif" font-size="14.00">Testar cadastro</text></g><g id="svg-graphviz-b035741ab1ee-edge5" class="edge"><title>t3-&gt;t5</title><path fill="none" stroke="black" d="M658.05,-95.57C713.3,-95.57 784.19,-95.57 784.19,-95.57 784.19,-95.57 784.19,-88.14 784.19,-88.14" /><polygon fill="black" stroke="black" points="787.69,-88.14 784.19,-78.14 780.69,-88.14 787.69,-88.14" /></g><g id="svg-graphviz-b035741ab1ee-edge6" class="edge"><title>t4-&gt;t5</title><path fill="none" stroke="black" d="M658.05,-23.43C713.3,-23.43 784.19,-23.43 784.19,-23.43 784.19,-23.43 784.19,-29.96 784.19,-29.96" /><polygon fill="black" stroke="black" points="780.69,-29.96 784.19,-39.96 787.69,-29.96 780.69,-29.96" /></g><g id="svg-graphviz-b035741ab1ee-node7" class="node"><title>fim</title><ellipse fill="#e2f4e2" stroke="#5b8a5b" cx="960.04" cy="-59" rx="46.28" ry="46.28" /><ellipse fill="none" stroke="#5b8a5b" cx="960.04" cy="-59" rx="50.29" ry="50.29" /><text text-anchor="middle" x="960.04" y="-55.3" font-family="Helvetica,sans-Serif" font-size="14.00">Entrega</text></g><g id="svg-graphviz-b035741ab1ee-edge7" class="edge"><title>t5-&gt;fim</title><path fill="none" stroke="black" d="M845.01,-59C845.01,-59 899.82,-59 899.82,-59" /><polygon fill="black" stroke="black" points="899.82,-62.5 909.82,-59 899.82,-55.5 899.82,-62.5" /></g></g></svg></div></div>
+
+<h2 id="marcos-e-entregáveis"><span class="heading-text">Marcos e entregáveis</span><span class="heading-arabic">12.10</span></h2>
+<p>Cronogramas precisam de pontos de controle. Dois conceitos ajudam aqui: <strong>marco</strong> e <strong>entregável</strong>.</p>
+<p>Um marco é um ponto de verificação do projeto. Ele permite avaliar progresso. Pode ser interno, como &quot;arquitetura revisada&quot; ou &quot;ambiente de testes pronto&quot;.</p>
+<p>Um entregável é um produto de trabalho entregue ao cliente. Pode ser uma especificação, um protótipo, uma versão executável, um relatório de testes ou um manual.</p>
+<p>Todo entregável importante pode ser um marco, mas nem todo marco é entregue ao cliente.</p>
+<div class="example">
+  <div class="example-title">Exemplo 8</div>
+  <p>Em um projeto de sistema financeiro, a equipe define os seguintes pontos.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Ponto</th>
+  <th style="text-align:left">Tipo</th>
+  <th style="text-align:left">Evidência</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Modelo de dados aprovado pela equipe técnica</td>
+  <td style="text-align:left">Marco interno</td>
+  <td style="text-align:left">Ata de revisão técnica</td>
+</tr>
+<tr>
+  <td style="text-align:left">Protótipo de conciliação bancária demonstrado ao cliente</td>
+  <td style="text-align:left">Entregável</td>
+  <td style="text-align:left">Versão executável e roteiro de demonstração</td>
+</tr>
+<tr>
+  <td style="text-align:left">Testes de integração com banco concluídos</td>
+  <td style="text-align:left">Marco interno</td>
+  <td style="text-align:left">Relatório de execução dos testes</td>
+</tr>
+<tr>
+  <td style="text-align:left">Manual de operação entregue</td>
+  <td style="text-align:left">Entregável</td>
+  <td style="text-align:left">Documento enviado e aceito pelo cliente</td>
+</tr>
+</tbody>
+</table>
+<p>Essa distinção ajuda a não confundir controle gerencial com entrega contratual.</p>
+</div>
+<h2 id="representando-cronogramas"><span class="heading-text">Representando cronogramas</span><span class="heading-arabic">12.11</span></h2>
+<p>Cronogramas podem aparecer como tabelas, planilhas, gráficos de barras ou redes de atividades. O formato depende do público e da finalidade. Para a equipe, uma rede de dependências pode ser útil. Para o cliente, um gráfico de barras pode comunicar melhor as datas.</p>
+<img src="static/figura-23-3-grafico-barras-atividades.png" width="85%">
+
+<p>Gráficos de barras ajudam a visualizar início, fim, paralelismo, sobreposição e marcos. Eles também facilitam perceber quando várias tarefas críticas estão concentradas no mesmo período.</p>
+<p>Uma representação textual simples pode ser suficiente em uma nota de aula.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Tarefa</th>
+  <th style="text-align:center">Semana 1</th>
+  <th style="text-align:center">Semana 2</th>
+  <th style="text-align:center">Semana 3</th>
+  <th style="text-align:center">Semana 4</th>
+  <th style="text-align:center">Semana 5</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">T1: requisitos principais</td>
+  <td style="text-align:center">█</td>
+  <td style="text-align:center">█</td>
+  <td style="text-align:center"></td>
+  <td style="text-align:center"></td>
+  <td style="text-align:center"></td>
+</tr>
+<tr>
+  <td style="text-align:left">T2: modelo de dados</td>
+  <td style="text-align:center"></td>
+  <td style="text-align:center">█</td>
+  <td style="text-align:center">█</td>
+  <td style="text-align:center"></td>
+  <td style="text-align:center"></td>
+</tr>
+<tr>
+  <td style="text-align:left">T3: API inicial</td>
+  <td style="text-align:center"></td>
+  <td style="text-align:center"></td>
+  <td style="text-align:center">█</td>
+  <td style="text-align:center">█</td>
+  <td style="text-align:center"></td>
+</tr>
+<tr>
+  <td style="text-align:left">T4: interface de cadastro</td>
+  <td style="text-align:center"></td>
+  <td style="text-align:center"></td>
+  <td style="text-align:center">█</td>
+  <td style="text-align:center">█</td>
+  <td style="text-align:center"></td>
+</tr>
+<tr>
+  <td style="text-align:left">T5: testes de integração</td>
+  <td style="text-align:center"></td>
+  <td style="text-align:center"></td>
+  <td style="text-align:center"></td>
+  <td style="text-align:center"></td>
+  <td style="text-align:center">█</td>
+</tr>
+</tbody>
+</table>
+<p>Essa tabela mostra que T3 e T4 podem ocorrer em paralelo, mas T5 fica no final porque depende das duas.</p>
+<h2 id="alocação-de-pessoas"><span class="heading-text">Alocação de pessoas</span><span class="heading-arabic">12.12</span></h2>
+<p>Um cronograma não envolve apenas tarefas. Ele também envolve pessoas. Uma pessoa pode estar em outro projeto, pode tirar férias, pode participar de treinamento ou pode ser especialista em uma parte crítica.</p>
+<img src="static/figura-23-4-grafico-alocacao-pessoal.png" width="85%">
+
+<p>A Figura 23.4 desloca a atenção das tarefas para as pessoas. Um cronograma pode parecer possível quando visto apenas como sequência de atividades, mas se tornar inviável quando percebemos que a mesma pessoa aparece em várias tarefas ao mesmo tempo.</p>
+<div class="example">
+  <div class="example-title">Exemplo 9</div>
+  <p>Uma equipe tem quatro pessoas.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Pessoa</th>
+  <th style="text-align:left">Disponibilidade</th>
+  <th style="text-align:left">Observação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Ana</td>
+  <td style="text-align:left">100%</td>
+  <td style="text-align:left">backend e banco de dados</td>
+</tr>
+<tr>
+  <td style="text-align:left">Bruno</td>
+  <td style="text-align:left">50%</td>
+  <td style="text-align:left">frontend, também está em outro projeto</td>
+</tr>
+<tr>
+  <td style="text-align:left">Carla</td>
+  <td style="text-align:left">100%</td>
+  <td style="text-align:left">testes e automação</td>
+</tr>
+<tr>
+  <td style="text-align:left">Diego</td>
+  <td style="text-align:left">25%</td>
+  <td style="text-align:left">especialista em autenticação institucional</td>
+</tr>
+</tbody>
+</table>
+<p>O cronograma inicial coloca autenticação nas semanas 2 e 3. Porém, Diego só está disponível na semana 4. O plano precisa mudar.</p>
+<p>Uma alternativa é antecipar preparação de telas e banco, deixando a integração real para a semana 4. Outra alternativa é treinar Ana para assumir parte da tarefa, reduzindo dependência de Diego.</p>
+</div>
+<h2 id="contingência-e-prazos-realistas"><span class="heading-text">Contingência e prazos realistas</span><span class="heading-arabic">12.13</span></h2>
+<p>Cronogramas de software tendem ao otimismo. A equipe imagina o caminho em que tudo funciona, todos estão disponíveis, a biblioteca atende, o cliente responde rápido e nenhum defeito grave aparece. Projetos reais raramente seguem esse caminho.</p>
+<p>Contingência é a margem que reconhece incerteza. Ela não é desculpa para trabalhar devagar. Ela é proteção contra o fato de que estimativas iniciais não capturam todos os problemas.</p>
+<div class="example">
+  <div class="example-title">Exemplo 10</div>
+  <p>Uma equipe estima três tarefas sequenciais.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Tarefa</th>
+  <th style="text-align:center">Estimativa otimista</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Integração com API externa</td>
+  <td style="text-align:center">10 dias</td>
+</tr>
+<tr>
+  <td style="text-align:left">Implementação do fluxo de compra</td>
+  <td style="text-align:center">12 dias</td>
+</tr>
+<tr>
+  <td style="text-align:left">Testes de integração</td>
+  <td style="text-align:center">8 dias</td>
+</tr>
+</tbody>
+</table>
+<p>O total otimista é de 30 dias. Se o projeto promete entrega exatamente em 30 dias, não há espaço para atraso do fornecedor, defeitos, mudança de contrato da API ou indisponibilidade de ambiente.</p>
+<p>Com 30% de contingência, o planejamento gerencial consideraria:</p>
+<p>$$
+30 \times 1,3 = 39\text{ dias}
+$$</p>
+<p>Isso não obriga a equipe a gastar 39 dias. Significa que o compromisso externo reconhece que o caminho provável não é o caminho perfeito.</p>
+</div>
+<h2 id="compressão-de-prazo"><span class="heading-text">Compressão de prazo</span><span class="heading-arabic">12.14</span></h2>
+<p>Depois de estimar esforço, ainda falta estimar duração de calendário e tamanho da equipe. Não basta dividir esforço por prazo.</p>
+<p>Se um projeto exige 60 pessoas-mês, isso não significa que 60 pessoas entregam em um mês. Software exige comunicação, aprendizagem, coordenação e integração. Adicionar pessoas pode aumentar o trabalho de coordenação e reduzir produtividade individual.</p>
+<p>Se 4 pessoas entregam em 12 meses, 8 pessoas não entregam em 6 meses. A relação não é linear. Pessoas novas precisam entender o projeto. Tarefas precisam ser divididas. Interfaces precisam ser combinadas. Código precisa ser integrado. Reuniões aumentam.</p>
+<div class="example">
+  <div class="example-title">Exemplo 11</div>
+  <p>Uma estimativa indica 52 pessoas-mês em 13 meses, com equipe média de quatro pessoas. Se o gerente decidir colocar uma quinta pessoa para reduzir o prazo e fizer a conta:</p>
+<p>$$
+5 \times 11 = 55\text{ pessoas-mês}
+$$</p>
+<p>Mas essa conta ignora comunicação e coordenação. A quinta pessoa precisa aprender o projeto, conversar com a equipe, dividir interfaces e integrar seu trabalho. Se o cronograma for comprimido, o esforço total pode subir para algo como 66 pessoas-mês.</p>
+<p>O prazo menor não apenas redistribuiu o mesmo trabalho. Ele criou trabalho adicional de coordenação.</p>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>&quot;Colocar mais gente&quot; é a primeira reação de muitos gerentes quando um projeto atrasa. Por que essa reação é tão comum, mesmo sendo frequentemente a pior?</p>
+  </div>
+</div>
+</div>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Prazo menor pode custar mais<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Reduzir prazo sem reduzir escopo normalmente aumenta esforço, risco e retrabalho. Em muitos projetos, adicionar pessoas tarde demais piora o atraso em vez de resolvê-lo.</p>
+  </div>
+</div>
+<h2 id="exercício-guiado"><span class="heading-text">Exercício guiado</span><span class="heading-arabic">12.15</span></h2>
+<p>Considere o seguinte projeto:</p>
+<p>Uma equipe de quatro pessoas deve desenvolver um sistema de reservas para uma rede pequena de salas de estudo. O sistema terá cadastro de usuários, reserva por horário, bloqueio de salas em manutenção, confirmação por e-mail, painel administrativo, relatórios de uso e autenticação institucional. O prazo desejado pelo cliente é de 10 semanas.</p>
+<p><strong>Etapa 1: Estimativa inicial</strong></p>
+<p>Preencha a tabela abaixo com uma estimativa de esforço.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Parte</th>
+  <th style="text-align:center">Estimativa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Cadastro de usuários</td>
+  <td style="text-align:center">4 pessoas-dia</td>
+</tr>
+<tr>
+  <td style="text-align:left">Autenticação institucional</td>
+  <td style="text-align:center">8 pessoas-dia</td>
+</tr>
+<tr>
+  <td style="text-align:left">Reserva por horário</td>
+  <td style="text-align:center">10 pessoas-dia</td>
+</tr>
+<tr>
+  <td style="text-align:left">Bloqueio de salas</td>
+  <td style="text-align:center">4 pessoas-dia</td>
+</tr>
+<tr>
+  <td style="text-align:left">Confirmação por e-mail</td>
+  <td style="text-align:center">4 pessoas-dia</td>
+</tr>
+<tr>
+  <td style="text-align:left">Painel administrativo</td>
+  <td style="text-align:center">8 pessoas-dia</td>
+</tr>
+<tr>
+  <td style="text-align:left">Relatórios de uso</td>
+  <td style="text-align:center">6 pessoas-dia</td>
+</tr>
+<tr>
+  <td style="text-align:left">Testes de integração</td>
+  <td style="text-align:center">8 pessoas-dia</td>
+</tr>
+</tbody>
+</table>
+<p>O total direto é 52 pessoas-dia. Como há integração institucional e regras de conflito de horário, vamos adicionar 25% de contingência.</p>
+<p>$$
+52 \times 1,25 = 65\text{ pessoas-dia}
+$$</p>
+<p><strong>Etapa 2: Duração provável</strong></p>
+<p>Se a equipe tem quatro pessoas, mas uma delas está alocada em meio período, a capacidade semanal não é de 20 pessoas-dia. Ela é de 17,5 pessoas-dia.</p>
+<p>$$
+3,5\text{ pessoas} \times 5\text{ dias} = 17,5\text{ pessoas-dia por semana}
+$$</p>
+<p>Com 65 pessoas-dia de esforço, a duração aproximada será:</p>
+<p>$$
+\frac{65}{17,5} \approx 3,7\text{ semanas}
+$$</p>
+<p>Essa conta parece indicar que o prazo de 10 semanas é confortável. Porém, ela ainda ignora dependências, validação com cliente, ambientes, retrabalho e implantação. Por isso, a equipe não deve prometer quatro semanas. Ela deve usar essa conta como base para discutir um cronograma realista com marcos.</p>
+<p><strong>Etapa 3: Dependências críticas</strong></p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Dependência</th>
+  <th style="text-align:left">Por que importa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Autenticação antes de permissões</td>
+  <td style="text-align:left">O painel administrativo depende de perfis corretos</td>
+</tr>
+<tr>
+  <td style="text-align:left">Reserva antes de relatórios</td>
+  <td style="text-align:left">Relatórios dependem dos dados reais de reserva</td>
+</tr>
+<tr>
+  <td style="text-align:left">Bloqueio de salas antes dos testes finais</td>
+  <td style="text-align:left">Testes precisam validar conflito entre reserva e manutenção</td>
+</tr>
+<tr>
+  <td style="text-align:left">Confirmação por e-mail antes da homologação</td>
+  <td style="text-align:left">O cliente quer testar o fluxo completo de reserva</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Etapa 4: Decisão gerencial</strong></p>
+<p>Uma resposta madura seria propor uma entrega em duas partes. A primeira, até a semana 6, com autenticação, cadastro, reserva, bloqueio e confirmação por e-mail. A segunda, até a semana 10, com painel administrativo refinado, relatórios e ajustes de homologação.</p>
+<p>Essa divisão protege o projeto porque entrega cedo o fluxo central e deixa funcionalidades administrativas para depois. Se houver atraso na autenticação, a equipe ainda consegue negociar o escopo da segunda entrega sem comprometer o uso básico do sistema.</p>
+<h2 id="questões"><span class="heading-text">Questões</span><span class="heading-arabic">12.16</span></h2>
+<div class="questions">
+  <p><strong>1.</strong> Diferencie esforço e duração. Dê um exemplo.</p>
+<p><strong>2.</strong> Explique por que custo e preço não são a mesma coisa.</p>
+<p><strong>3.</strong> Por que estimativas feitas no início do projeto são mais incertas?</p>
+<p><strong>4.</strong> O que significa adicionar contingência a uma estimativa?</p>
+<p><strong>5.</strong> Explique por que dependências entre tarefas podem atrasar um projeto mesmo quando as tarefas individuais parecem curtas.</p>
+<p><strong>6.</strong> Diferencie marco e entregável.</p>
+<p><strong>7.</strong> Por que a alocação de pessoas pode tornar um cronograma inviável?</p>
+<p><strong>8.</strong> Uma equipe estimou 80 pontos de aplicação, 25% de reúso e produtividade de 10 pontos por pessoa-mês. Calcule o esforço.</p>
+<p><strong>9.</strong> Por que adicionar pessoas a um projeto atrasado pode piorar o atraso?</p>
+<p><strong>10.</strong> Explique por que prazo menor pode aumentar esforço total.</p>
+</div>
+<div class="callout callout-success">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></span>
+    <span class="callout-title-inner">Estimativa não é adivinhação<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Planejar bem não significa prever tudo. Significa criar condições para perceber desvios cedo e decidir com base em evidências. Um plano maduro não é o mais detalhado, e sim o que ajuda a equipe a tomar a decisão certa quando a realidade inevitavelmente divergir da previsão.</p>
+  </div>
+</div>
+<div class="example">
+  <div class="example-title">Gabarito</div>
+  <p><strong>1.</strong> Esforço é quantidade de trabalho humano. Duração é tempo no calendário. Uma tarefa pode exigir 10 pessoas-dia e durar 5 dias se duas pessoas trabalharem nela em paralelo.</p>
+<p><strong>2.</strong> Custo é o gasto para executar o projeto. Preço é o valor negociado com o cliente. O preço pode incluir margem, risco e estratégia comercial, ou pode ficar abaixo do custo quando a empresa assume uma aposta estratégica.</p>
+<p><strong>3.</strong> Porque no início há pouca informação sobre requisitos, arquitetura, integrações, riscos, equipe e qualidade dos dados. A estimativa melhora conforme o projeto aprende.</p>
+<p><strong>4.</strong> Significa acrescentar margem para lidar com incerteza, riscos e variações normais do trabalho. Contingência não é folga arbitrária. É reconhecimento de que o caminho real raramente é o caminho perfeito.</p>
+<p><strong>5.</strong> Porque uma tarefa dependente só pode começar quando outra termina. Se uma tarefa predecessora atrasa, o atraso se propaga para as tarefas seguintes.</p>
+<p><strong>6.</strong> Marco é ponto de controle usado para avaliar progresso. Entregável é produto de trabalho enviado ao cliente, como protótipo, documento ou versão executável.</p>
+<p><strong>7.</strong> Porque pessoas têm disponibilidade limitada, férias, outros projetos e especialidades. Um cronograma pode parecer possível nas tarefas, mas impossível quando todas dependem da mesma pessoa.</p>
+<p><strong>8.</strong> $PM = \frac{80 \times (1 - 25/100)}{10} = \frac{80 \times 0,75}{10} = 6$. O esforço aproximado é de 6 pessoas-mês.</p>
+<p><strong>9.</strong> Porque novas pessoas precisam aprender o projeto, aumentam comunicação, exigem coordenação e podem gerar retrabalho. Em software, o trabalho não é perfeitamente divisível.</p>
+<p><strong>10.</strong> Porque comprimir prazo normalmente exige mais paralelismo, mais comunicação, mais integração, mais reuniões e mais gestão de riscos. O esforço total pode crescer mesmo que a duração diminua.</p>
+</div>
+
+                </div>
+            </article>
+            <footer class="footer">
+                <p>© 2025 · <a href="#">Gabriel Soares Baptista</a></p>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        const toggle = document.querySelector('.mobile-menu-toggle');
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.querySelector('.mobile-menu-overlay');
+
+        function openMenu() {
+            sidebar.classList.add('open');
+            overlay.classList.add('open');
+            toggle.classList.add('open');
+            toggle.innerHTML = '<i data-lucide="x"></i>';
+            CourseForgeUI.initIcons();
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMenu() {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('open');
+            toggle.classList.remove('open');
+            toggle.innerHTML = '<i data-lucide="menu"></i>';
+            CourseForgeUI.initIcons();
+            document.body.style.overflow = '';
+        }
+
+        toggle.addEventListener('click', () => {
+            if (sidebar.classList.contains('open')) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        overlay.addEventListener('click', closeMenu);
+    </script>
+
+    
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            renderMathInElement(document.body, {
+                output: 'html',
+                delimiters: [
+                    { left: "$$", right: "$$", display: true },
+                    { left: "$", right: "$", display: false },
+                    { left: "\\(", right: "\\)", display: false },
+                    { left: "\\[", right: "\\]", display: true }
+                ],
+                throwOnError: false,
+                strict: false
+            });
+        });
+    </script>
+    
+    
+    <script src="/aulas-faesa/js/vendor/prism/prism.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-c.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-cpp.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-python.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-clike.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-perl.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-java.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-mermaid.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-php.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js" data-no-bundle></script>
+    
+    
+    
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            mermaid.initialize({
+                startOnLoad: true,
+                theme: 'default',
+                securityLevel: 'loose',
+                fontFamily: 'Inter, system-ui, sans-serif',
+                themeVariables: {
+                    fontSize: '16px',
+                    edgeLabelFontSize: '16px',
+                    multiplicityFontSize: '18px'
+                }
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const isSubcourse = false;
+        const courseName = "Engenharia de Software";
+        CourseForgeNav.applyDynamicBreadcrumbs('.breadcrumb', isSubcourse);
+        CourseForgeNav.initScrollSpy();
+        CourseForgeUI.initCopyButtons();
+        CourseForgeUI.initExamples();
+        });
+
+        function handleBackNavigation() {
+            const isSubcourse = false;
+        const dynamic = CourseForgeNav.getBackLink('contents.html', 'Voltar', isSubcourse);
+        window.location.href = dynamic.url;
+        }
+    </script>
+</body>
+
+</html>

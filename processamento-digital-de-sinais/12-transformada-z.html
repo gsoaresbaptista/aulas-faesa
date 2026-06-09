@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toposia - Processamento Digital de Sinais</title>
+    <link rel="icon" href="/aulas-faesa/img/dark-favicon.svg" media="(prefers-color-scheme: light)">
+    <link rel="icon" href="/aulas-faesa/img/light-favicon.svg" media="(prefers-color-scheme: dark)">
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/fonts.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/bundles/katex-base-prism-one-light-b0347952c973.bundle.min.css">
+    
+    
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css" data-no-bundle>
+    <script src="/aulas-faesa/js/bundles/lucide-katex-auto-render-4b36e8bd8642.bundle.min.js"></script>
+</head>
+
+<body>
+    <script>
+        // Restore sidebar state instantly (before first paint) to avoid transition flash
+        (function() {
+            if (localStorage.getItem('cf_sidebar_hidden') === 'true') {
+                document.body.classList.add('sidebar-hidden', 'no-transition');
+            }
+            requestAnimationFrame(function() {
+                requestAnimationFrame(function() {
+                    document.body.classList.remove('no-transition');
+                });
+            });
+        })();
+    </script>
+    <div class="page-wrapper">
+        <nav class="sidebar">
+            <div class="sidebar-content">
+                <header class="sidebar-title-section">
+                    <a href="contents.html" class="course-title-link">
+                        <h1 class="sidebar-course-title">Processamento Digital de Sinais</h1>
+                    </a>
+                    <div class="sidebar-ornament">❧</div>
+                </header>
+
+                
+                <section class="sidebar-toc-section">
+                    <h2 class="toc-header">Tabela de Conteúdos</h2>
+                    <ol class="toc-list">
+                        
+                        <li class="toc-item level-2">
+                            <a href="#introdução">12.1. Introdução</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#por-que-você-precisa-da-transformada-z">12.2. Por que você precisa da Transformada Z</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#definição-da-transformada-z">12.3. Definição da Transformada Z</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#região-de-convergência">12.4. Região de convergência</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#pares-básicos-da-transformada-z">12.5. Pares básicos da Transformada Z</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#transformada-z-inversa">12.6. Transformada Z inversa</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#propriedades-importantes">12.7. Propriedades importantes</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#linearidade">12.7.1. Linearidade</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#atraso">12.7.2. Atraso</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#convolução">12.7.3. Convolução</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#função-de-transferência">12.8. Função de transferência</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#solução-de-equações-de-diferenças">12.9. Solução de equações de diferenças</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#polos-e-zeros">12.10. Polos e zeros</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#estabilidade-no-plano-z">12.11. Estabilidade no plano Z</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#sistemas-inversos">12.12. Sistemas inversos</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#resposta-em-frequência-e-círculo-unitário">12.13. Resposta em frequência e círculo unitário</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#como-polos-e-zeros-moldam-a-resposta">12.14. Como polos e zeros moldam a resposta</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#filtros-passa-baixas">12.14.1. Filtros passa-baixas</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#filtros-passa-altas">12.14.2. Filtros passa-altas</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#filtros-notch">12.14.3. Filtros notch</a>
+                        </li>
+                        
+                    </ol>
+                </section>
+                
+
+                <nav class="sidebar-nav-section">
+                    
+                    <a href="11-sinais-discretos-e-convolucao-discreta.html" class="sidebar-nav-link prev"><i data-lucide="chevron-left" class="nav-icon"></i> Sinais Discretos e Convolução Discreta</a>
+                    
+                    
+                    <a href="javascript:void(0)" onclick="handleBackNavigation()"
+                        class="sidebar-nav-link back"><i data-lucide="arrow-left" class="nav-icon"></i> Voltar</a>
+                </nav>
+
+            </div>
+        </nav>
+
+        <button class="mobile-menu-toggle" aria-label="Menu">
+            <i data-lucide="menu"></i>
+        </button>
+
+        <button class="sidebar-toggle" onclick="CourseForgeNav.toggleSidebar()" aria-label="Alternar Barra Lateral">
+            <i data-lucide="chevron-left" class="toggle-icon" id="sidebar-toggle-icon"></i>
+        </button>
+
+        <div class="mobile-menu-overlay"></div>
+
+        <main class="main-content">
+            <article class="article">
+                <header class="article-header">
+                    <span class="chapter-number">12</span>
+                    <h1 class="article-title">
+                        <span class="title-ornament left">❧</span>
+                        <span class="title-text">Transformada Z, Estabilidade e Polos/Zeros</span>
+                        <span class="title-ornament right">❧</span>
+                    </h1>
+                    
+                    <p class="article-date">15/06/2026</p>
+                    
+                    
+                    <nav class="breadcrumb" aria-label="Breadcrumb">
+                        
+                        
+                        
+                        <a href="contents.html" class="breadcrumb-link">Processamento Digital de Sinais</a>
+                        
+                        <span class="breadcrumb-separator"><i data-lucide="chevron-right" class="breadcrumb-icon"></i></span>
+                        
+                        
+                        
+                        
+                        <a href="contents.html#part-III" class="breadcrumb-link">III - Teoria de Frequência e Conversão A/D</a>
+                        
+                        <span class="breadcrumb-separator"><i data-lucide="chevron-right" class="breadcrumb-icon"></i></span>
+                        
+                        
+                        
+                        <span class="breadcrumb-current">Transformada Z, Estabilidade e Polos/Zeros</span>
+                        
+                        
+                    </nav>
+                    
+                </header>
+                <div class="article-body">
+                    <h2 id="introdução"><span class="heading-text">Introdução</span><span class="heading-arabic">12.1</span></h2>
+<p>Hoje você vai trocar o domínio do tempo discreto pelo domínio Z. A mudança é tão profunda quanto foi a passagem para Laplace no contínuo.</p>
+<p>Na aula anterior, você estudou sinais discretos, equações de diferenças, resposta ao impulso e convolução discreta. Esse conjunto já permite analisar sistemas no domínio do tempo: se você conhece $h[n]$, calcula a saída por</p>
+<p>$$
+y[n]=x[n]*h[n]
+$$</p>
+<p>A fórmula é correta. Mas nem sempre é prática. A convolução pode ser trabalhosa e não mostra diretamente como o sistema altera cada frequência. Você quer uma ferramenta que transforme convolução em multiplicação e equações de diferenças em álgebra.</p>
+<p>Essa ferramenta é a <strong>Transformada Z</strong>.</p>
+<div class="callout callout-abstract">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
+    <span class="callout-title-inner">Ideia central<br /></span>
+  </div>
+  <div class="callout-content">
+<p>A Transformada Z leva sequências do domínio do tempo discreto para uma função da variável complexa $z$. Convolução vira multiplicação, equações de diferenças viram equações algébricas e a estabilidade passa a ser lida pela posição dos polos em relação ao círculo unitário.</p>
+  </div>
+</div>
+<h2 id="por-que-você-precisa-da-transformada-z"><span class="heading-text">Por que você precisa da Transformada Z</span><span class="heading-arabic">12.2</span></h2>
+<p>Em tempo contínuo, a Transformada de Laplace permitiu analisar sistemas com equações diferenciais usando funções algébricas em $s$. Em tempo discreto, a Transformada Z cumpre o mesmo papel para equações de diferenças.</p>
+<p>Na aula 11, você viu que uma equação como</p>
+<p>$$
+y[n]=0{,}8y[n-1]+x[n]
+$$</p>
+<p>pode ser resolvida passo a passo. Esse método recursivo é simples para calcular algumas amostras, mas não ajuda a entender o sistema como um todo. A Transformada Z oferece uma visão global. Com ela, você responde a perguntas que o método iterativo não alcança: qual é a função de transferência? O sistema é estável? Onde estão os polos? Que frequências serão reforçadas ou atenuadas?</p>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Antes de continuar<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Você já resolveu $y[n]=0{,}5y[n-1]+x[n]$ para $x[n]=u[n]$ iterativamente no Exemplo 4 da aula 11. Quanto deu $y[3]$? E para qual valor $y[n]$ parecia tender? Quando terminar esta aula, você vai obter a expressão fechada $y[n]=2-(0{,}5)^n$ em três linhas de álgebra.</p>
+  </div>
+</div>
+<h2 id="definição-da-transformada-z"><span class="heading-text">Definição da Transformada Z</span><span class="heading-arabic">12.3</span></h2>
+<p>A Transformada Z de uma sequência $x[n]$ é definida por</p>
+<p>$$
+X(z)=\sum_{n=-\infty}^{\infty}x[n]z^{-n}
+$$</p>
+<p>em que $z$ é uma variável complexa.</p>
+<p>Para sinais causais, que começam em $n=0$, usamos com frequência a forma unilateral:</p>
+<p>$$
+X(z)=\sum_{n=0}^{\infty}x[n]z^{-n}
+$$</p>
+<div class="callout callout-info">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></span>
+    <span class="callout-title-inner">Qual forma usar?<br /></span>
+  </div>
+  <div class="callout-content">
+<p>A forma unilateral é a mais comum em sistemas físicos e filtros digitais, porque normalmente você assume que a entrada começa em algum instante inicial e conhece as condições iniciais. A forma bilateral é necessária quando o sinal existe para índices negativos.</p>
+  </div>
+</div>
+<p>Uma maneira simples de ler a definição: a Transformada Z transforma a sequência $x[0],x[1],x[2],\ldots$ em uma série em potências de $z^{-1}$:</p>
+<p>$$
+X(z)=x[0]+x[1]z^{-1}+x[2]z^{-2}+x[3]z^{-3}+\cdots
+$$</p>
+<p>Esse formato revela algo importante: $z^{-1}$ aparece como atraso unitário. Em filtros digitais, atrasar uma amostra é a operação básica. Por isso, o domínio Z conversa diretamente com a implementação.</p>
+<h2 id="região-de-convergência"><span class="heading-text">Região de convergência</span><span class="heading-arabic">12.4</span></h2>
+<p>Nem todo somatório da Transformada Z converge para qualquer valor de $z$. A região do plano complexo em que o somatório existe é chamada de <strong>região de convergência</strong> (RDC).</p>
+<p>Considere a sequência causal</p>
+<p>$$
+x[n]=\gamma^n u[n]
+$$</p>
+<p>Pela definição unilateral,</p>
+<p>$$
+X(z)=\sum_{n=0}^{\infty}\gamma^n z^{-n}
+$$</p>
+<p>Reescrevendo:</p>
+<p>$$
+X(z)=\sum_{n=0}^{\infty}\left(\frac{\gamma}{z}\right)^n
+$$</p>
+<p>Essa é uma progressão geométrica. Ela converge quando</p>
+<p>$$
+\left|\frac{\gamma}{z}\right|<1
+$$</p>
+<p>ou seja,</p>
+<p>$$
+|z|>|\gamma|
+$$</p>
+<p>Nessa região, a soma é</p>
+<p>$$
+X(z)=\frac{1}{1-\gamma z^{-1}}=\frac{z}{z-\gamma}
+$$</p>
+<p>A Figura 12.1 mostra visualmente a RDC como a região externa a um círculo.</p>
+<p><img src="static/figura-12-1-roc-transformada-z.png" alt="Figura 12.1: Região de convergência da Transformada Z" /></p>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">A RDC não é um detalhe<br /></span>
+  </div>
+  <div class="callout-content">
+<p>A mesma expressão algébrica pode representar sinais diferentes se a região de convergência mudar. Nesta aula, você trabalhará principalmente com sinais causais, em que a RDC normalmente fica fora do polo de maior módulo. Mas nunca descarte a RDC como um formalismo — ela carrega a informação de causalidade.</p>
+  </div>
+</div>
+<div class="example">
+  <div class="example-title">Exemplo 1</div>
+  <p>Determine a Transformada Z de</p>
+<p>$$
+x[n]=(0{,}5)^n u[n]
+$$</p>
+<hr />
+<p>Usando o par geral $\gamma^n u[n]\longleftrightarrow \frac{z}{z-\gamma}$ com $\gamma=0{,}5$,</p>
+<p>$$
+X(z)=\frac{z}{z-0{,}5}
+$$</p>
+<p>A região de convergência é $|z|>0{,}5$. A série só converge fora do círculo de raio $0{,}5$ no plano Z.</p>
+<p>E se $\gamma=2$ em vez de $0{,}5$? A expressão algébrica seria a mesma: $z/(z-2)$. Mas a RDC mudaria, e com ela o sinal representado.</p>
+</div>
+<h2 id="pares-básicos-da-transformada-z"><span class="heading-text">Pares básicos da Transformada Z</span><span class="heading-arabic">12.5</span></h2>
+<p>Alguns pares aparecem tantas vezes que vale a pena tê-los à mão.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Sinal no tempo</th>
+  <th style="text-align:left">Transformada Z</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">$\delta[n]$</td>
+  <td style="text-align:left">$1$</td>
+</tr>
+<tr>
+  <td style="text-align:left">$u[n]$</td>
+  <td style="text-align:left">$\dfrac{z}{z-1}$</td>
+</tr>
+<tr>
+  <td style="text-align:left">$\gamma^n u[n]$</td>
+  <td style="text-align:left">$\dfrac{z}{z-\gamma}$</td>
+</tr>
+<tr>
+  <td style="text-align:left">$n\gamma^n u[n]$</td>
+  <td style="text-align:left">$\dfrac{\gamma z}{(z-\gamma)^2}$</td>
+</tr>
+</tbody>
+</table>
+<p>O par do impulso é imediato: $\delta[0]=1$ e todos os outros termos são zero, então $\mathcal{Z}\{\delta[n]\}=1$.</p>
+<p>O par do degrau sai do caso exponencial fazendo $\gamma=1$:</p>
+<p>$$
+u[n]\longleftrightarrow \frac{z}{z-1}
+$$</p>
+<div class="example">
+  <div class="example-title">Exemplo 2</div>
+  <p>Determine a Transformada Z de</p>
+<p>$$
+x[n]=3\delta[n]+2u[n]
+$$</p>
+<hr />
+<p>Pela linearidade,</p>
+<p>$$
+X(z)=3\mathcal{Z}\{\delta[n]\}+2\mathcal{Z}\{u[n]\}
+$$</p>
+<p>Logo,</p>
+<p>$$
+X(z)=3+2\frac{z}{z-1}
+$$</p>
+<p>Colocando em uma única fração:</p>
+<p>$$
+X(z)=\frac{3(z-1)+2z}{z-1}=\frac{5z-3}{z-1}
+$$</p>
+</div>
+<h2 id="transformada-z-inversa"><span class="heading-text">Transformada Z inversa</span><span class="heading-arabic">12.6</span></h2>
+<p>Quando você tem $X(z)$ e quer voltar para $x[n]$, calcula a Transformada Z inversa. Na prática, evita-se a integral de inversão. Você usa tabelas, frações parciais ou expansão em série.</p>
+<p>O método mais comum nesta etapa é a decomposição em frações parciais: escreva $X(z)$ como soma de termos simples, cada um associado a um par conhecido.</p>
+<p>Em Transformada Z, é conveniente expandir $X(z)/z$, não apenas $X(z)$. Isso ocorre porque muitos pares possuem um fator $z$ no numerador — expandir $X(z)/z$ elimina esse fator e simplifica as contas.</p>
+<div class="example">
+  <div class="example-title">Exemplo 3</div>
+  <p>Determine a Transformada Z inversa de</p>
+<p>$$
+X(z)=\frac{z}{(z-0{,}5)(z-0{,}2)}
+$$</p>
+<hr />
+<p>Primeiro escrevemos</p>
+<p>$$
+\frac{X(z)}{z}=\frac{1}{(z-0{,}5)(z-0{,}2)}
+$$</p>
+<p>Decompomos em frações parciais:</p>
+<p>$$
+\frac{1}{(z-0{,}5)(z-0{,}2)}=\frac{A}{z-0{,}5}+\frac{B}{z-0{,}2}
+$$</p>
+<p>Multiplicando pelos denominadores:</p>
+<p>$$
+1=A(z-0{,}2)+B(z-0{,}5)
+$$</p>
+<p>Fazendo $z=0{,}5$: $1=A(0{,}3)$, então $A=10/3$.</p>
+<p>Fazendo $z=0{,}2$: $1=B(-0{,}3)$, então $B=-10/3$.</p>
+<p>Multiplicando tudo por $z$:</p>
+<p>$$
+X(z)=\frac{10}{3}\frac{z}{z-0{,}5}-\frac{10}{3}\frac{z}{z-0{,}2}
+$$</p>
+<p>Pelo par básico $z/(z-a)\longleftrightarrow a^n u[n]$,</p>
+<p>$$
+x[n]=\frac{10}{3}(0{,}5)^n u[n]-\frac{10}{3}(0{,}2)^n u[n]
+$$</p>
+<p>ou</p>
+<p>$$
+x[n]=\frac{10}{3}\left[(0{,}5)^n-(0{,}2)^n\right]u[n]
+$$</p>
+<p>Observe que esta é exatamente a resposta ao degrau do sistema do Exemplo 5 da aula 11 — lá apareceram os mesmos modos $0{,}4^n$ e $0{,}2^n$. A Transformada Z unifica tudo.</p>
+</div>
+<h2 id="propriedades-importantes"><span class="heading-text">Propriedades importantes</span><span class="heading-arabic">12.7</span></h2>
+<p>A Transformada Z possui muitas propriedades. As mais importantes para analisar sistemas discretos são estas três.</p>
+<h3 id="linearidade"><span class="heading-text">Linearidade</span><span class="heading-arabic">12.7.1</span></h3>
+<p>Se $x_1[n]\longleftrightarrow X_1(z)$ e $x_2[n]\longleftrightarrow X_2(z)$, então</p>
+<p>$$
+a x_1[n]+b x_2[n]\longleftrightarrow aX_1(z)+bX_2(z)
+$$</p>
+<p>Você já usou essa propriedade no Exemplo 2.</p>
+<h3 id="atraso"><span class="heading-text">Atraso</span><span class="heading-arabic">12.7.2</span></h3>
+<p>Para sinais causais, atrasar por uma amostra corresponde a multiplicar por $z^{-1}$:</p>
+<p>$$
+x[n-1]u[n-1]\longleftrightarrow z^{-1}X(z)
+$$</p>
+<p>De forma geral,</p>
+<p>$$
+x[n-k]u[n-k]\longleftrightarrow z^{-k}X(z)
+$$</p>
+<p>A Figura 12.3 mostra por que $z^{-1}$ é o operador de atraso unitário.</p>
+<p><img src="static/figura-12-3-atraso-unitario-z.png" alt="Figura 12.3: Atraso unitário no domínio Z" /></p>
+<h3 id="convolução"><span class="heading-text">Convolução</span><span class="heading-arabic">12.7.3</span></h3>
+<p>Se $y[n]=x[n]*h[n]$, então</p>
+<p>$$
+Y(z)=X(z)H(z)
+$$</p>
+<p>Essa é a propriedade que justifica tudo. No tempo, um sistema LIT calcula a saída por convolução. No domínio Z, a mesma operação vira multiplicação. A Figura 12.2 mostra essa equivalência.</p>
+<p><img src="static/figura-12-2-sistema-dominio-z.png" alt="Figura 12.2: Sistema no domínio Z" /></p>
+<div class="callout callout-success">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></span>
+    <span class="callout-title-inner">Convolução $\to$ multiplicação<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Esta é a propriedade mais libertadora da Transformada Z. Toda a trabalheira de somatórios da aula 11 desaparece: $y[n]=x[n]*h[n]$ no tempo vira $Y(z)=X(z)H(z)$ em Z. Você resolve o sistema algebricamente e depois volta ao tempo com frações parciais. É exatamente o mesmo ganho que Laplace deu sobre a convolução contínua.</p>
+  </div>
+</div>
+<h2 id="função-de-transferência"><span class="heading-text">Função de transferência</span><span class="heading-arabic">12.8</span></h2>
+<p>Na aula anterior, você definiu $h[n]$ como resposta ao impulso. Agora você pode definir a função de transferência como a Transformada Z de $h[n]$:</p>
+<p>$$
+H(z)=\mathcal{Z}\{h[n]\}
+$$</p>
+<p>Com condições iniciais nulas,</p>
+<p>$$
+H(z)=\frac{Y(z)}{X(z)}
+$$</p>
+<p>Essa expressão permite obter $H(z)$ diretamente da equação de diferenças, sem calcular $h[n]$ amostra por amostra.</p>
+<div class="example">
+  <div class="example-title">Exemplo 4</div>
+  <p>Determine a função de transferência de</p>
+<p>$$
+y[n]-0{,}5y[n-1]=x[n]
+$$</p>
+<p>com condições iniciais nulas.</p>
+<hr />
+<p>Aplicando Transformada Z,</p>
+<p>$$
+Y(z)-0{,}5z^{-1}Y(z)=X(z)
+$$</p>
+<p>Colocando $Y(z)$ em evidência:</p>
+<p>$$
+Y(z)(1-0{,}5z^{-1})=X(z)
+$$</p>
+<p>Logo,</p>
+<p>$$
+H(z)=\frac{Y(z)}{X(z)}=\frac{1}{1-0{,}5z^{-1}}
+$$</p>
+<p>Multiplicando numerador e denominador por $z$:</p>
+<p>$$
+H(z)=\frac{z}{z-0{,}5}
+$$</p>
+<p>Como $H(z)$ é a Transformada Z de $h[n]$, $h[n]=(0{,}5)^n u[n]$. Compare com o Exemplo 6 da aula 11: lá você obteve o mesmo resultado por iteração, amostra por amostra. Aqui foram duas linhas de álgebra.</p>
+</div>
+<h2 id="solução-de-equações-de-diferenças"><span class="heading-text">Solução de equações de diferenças</span><span class="heading-arabic">12.9</span></h2>
+<p>A Transformada Z transforma equações de diferenças em equações algébricas. O procedimento geral: aplique a transformada, isole $Y(z)$, faça frações parciais, volte para $y[n]$.</p>
+<div class="example">
+  <div class="example-title">Exemplo 5</div>
+  <p>Resolva</p>
+<p>$$
+y[n]-0{,}5y[n-1]=x[n]
+$$</p>
+<p>para $x[n]=u[n]$ e condição inicial nula.</p>
+<hr />
+<p>Do Exemplo 4, $H(z)=\dfrac{z}{z-0{,}5}$.</p>
+<p>Como $u[n]\longleftrightarrow \dfrac{z}{z-1}$,</p>
+<p>$$
+Y(z)=H(z)X(z)=\frac{z}{z-0{,}5}\frac{z}{z-1}
+$$</p>
+<p>Para inverter, escrevemos</p>
+<p>$$
+\frac{Y(z)}{z}=\frac{z}{(z-0{,}5)(z-1)}
+$$</p>
+<p>Decompomos:</p>
+<p>$$
+\frac{z}{(z-0{,}5)(z-1)}=\frac{A}{z-0{,}5}+\frac{B}{z-1}
+$$</p>
+<p>Multiplicando pelos denominadores:</p>
+<p>$$
+z=A(z-1)+B(z-0{,}5)
+$$</p>
+<p>Fazendo $z=0{,}5$: $0{,}5=A(-0{,}5)$, então $A=-1$.</p>
+<p>Fazendo $z=1$: $1=B(0{,}5)$, então $B=2$.</p>
+<p>Portanto,</p>
+<p>$$
+Y(z)=-\frac{z}{z-0{,}5}+2\frac{z}{z-1}
+$$</p>
+<p>Voltando ao tempo:</p>
+<p>$$
+y[n]=-(0{,}5)^n u[n]+2u[n]
+$$</p>
+<p>ou</p>
+<p>$$
+y[n]=\left[2-(0{,}5)^n\right]u[n]
+$$</p>
+<p>Agora você tem a expressão fechada prometida no início da aula. Para $n=0,1,2,3$, isso dá $1$, $1{,}5$, $1{,}75$, $1{,}875$ — exatamente os valores do Exemplo 4 da aula 11. E você vê de imediato que $y[n]\to 2$ quando $n\to\infty$.</p>
+</div>
+<h2 id="polos-e-zeros"><span class="heading-text">Polos e zeros</span><span class="heading-arabic">12.10</span></h2>
+<p>Uma função de transferência racional pode ser escrita como razão de polinômios:</p>
+<p>$$
+H(z)=\frac{B(z)}{A(z)}
+$$</p>
+<p>As raízes do numerador $B(z)$ são os <strong>zeros</strong>. As raízes do denominador $A(z)$ são os <strong>polos</strong>.</p>
+<p>Os zeros indicam valores de $z$ que anulam a função de transferência. Os polos indicam valores de $z$ que fazem a função crescer sem limite.</p>
+<div class="example">
+  <div class="example-title">Exemplo 6</div>
+  <p>Determine polos e zeros de</p>
+<p>$$
+H(z)=\frac{z-0{,}2}{(z-0{,}5)(z+0{,}8)}
+$$</p>
+<hr />
+<p>Zero: $z-0{,}2=0 \;\Longrightarrow\; z=0{,}2$</p>
+<p>Polos: $(z-0{,}5)(z+0{,}8)=0 \;\Longrightarrow\; z=0{,}5$ e $z=-0{,}8$</p>
+<p>Um zero em $0{,}2$ e polos em $0{,}5$ e $-0{,}8$.</p>
+</div>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">O que um polo negativo significa?<br /></span>
+  </div>
+  <div class="callout-content">
+<p>O polo em $z=-0{,}8$ não parece familiar? Lembre-se de que $(-0{,}8)^n$ alterna de sinal a cada amostra. Um polo real negativo produz um modo natural que oscila entre positivo e negativo. É a versão discreta de um par de polos complexos conjugados no contínuo — só que aqui um único polo real já produz alternância.</p>
+  </div>
+</div>
+<h2 id="estabilidade-no-plano-z"><span class="heading-text">Estabilidade no plano Z</span><span class="heading-arabic">12.11</span></h2>
+<p>Na aula 11, você viu que $\gamma^n$ decai quando $|\gamma|<1$, permanece constante quando $|\gamma|=1$ e cresce quando $|\gamma|>1$.</p>
+<p>Agora você aplica essa mesma ideia aos polos. Cada polo contribui com um modo natural do tipo $\gamma^n$. Portanto, a estabilidade depende da posição dos polos em relação ao círculo unitário.</p>
+<p>Para sistemas LIT causais:</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Posição dos polos</th>
+  <th style="text-align:left">Comportamento</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Todos dentro do círculo unitário</td>
+  <td style="text-align:left">estável</td>
+</tr>
+<tr>
+  <td style="text-align:left">Algum polo fora do círculo unitário</td>
+  <td style="text-align:left">instável</td>
+</tr>
+<tr>
+  <td style="text-align:left">Polo simples sobre o círculo unitário</td>
+  <td style="text-align:left">marginalmente estável, mas não BIBO estável</td>
+</tr>
+<tr>
+  <td style="text-align:left">Polo repetido sobre o círculo unitário</td>
+  <td style="text-align:left">instável</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Cuidado com cancelamentos<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Se um polo e um zero estão no mesmo ponto, eles podem se cancelar na função de transferência. Esse cancelamento pode esconder modos internos do sistema. A estabilidade BIBO é lida pelos polos de $H(z)$ após cancelamentos. A estabilidade interna depende da realização completa do sistema — e essa distinção será importante em controle.</p>
+  </div>
+</div>
+<div class="example">
+  <div class="example-title">Exemplo 7</div>
+  <p>Classifique a estabilidade dos sistemas:</p>
+<p>$$
+H_1(z)=\frac{z}{z-0{,}7}
+$$</p>
+<p>$$
+H_2(z)=\frac{z}{z-1{,}2}
+$$</p>
+<p>$$
+H_3(z)=\frac{z}{z-1}
+$$</p>
+<hr />
+<p>$H_1(z)$: polo em $z=0{,}7$. $|0{,}7|<1$. <strong>Estável.</strong></p>
+<p>$H_2(z)$: polo em $z=1{,}2$. $|1{,}2|>1$. <strong>Instável.</strong></p>
+<p>$H_3(z)$: polo em $z=1$. $|1|=1$ (polo sobre o círculo unitário). <strong>Marginalmente estável</strong>, mas não BIBO estável. É o acumulador ($h[n]=u[n]$), cuja soma absoluta diverge.</p>
+<p>Se você encontrasse $H(z)=z/(z+1)$, o polo estaria em $z=-1$, também sobre o círculo unitário. O modo natural $(-1)^n$ não cresce nem decai — apenas alterna. Também marginalmente estável.</p>
+</div>
+<h2 id="sistemas-inversos"><span class="heading-text">Sistemas inversos</span><span class="heading-arabic">12.12</span></h2>
+<p>Se um sistema tem função de transferência $H(z)$, seu sistema inverso deve desfazer o efeito do primeiro. No domínio Z, sistemas em cascata multiplicam suas funções. Para que a cascata seja o sistema identidade $(h[n]=\delta[n])$, precisamos de</p>
+<p>$$
+H(z)H_i(z)=1
+$$</p>
+<p>Logo,</p>
+<p>$$
+H_i(z)=\frac{1}{H(z)}
+$$</p>
+<div class="example">
+  <div class="example-title">Exemplo 8</div>
+  <p>Encontre o inverso de</p>
+<p>$$
+H(z)=\frac{z}{z-0{,}5}
+$$</p>
+<hr />
+<p>$$
+H_i(z)=\frac{z-0{,}5}{z}=1-0{,}5z^{-1}
+$$</p>
+<p>Isso corresponde à equação $y[n]=x[n]-0{,}5x[n-1]$.</p>
+<p>Esse sistema remove o efeito do sistema original ($h[n]=(0{,}5)^n u[n]$). Na aula 11, você verificou no Exemplo 10 que a convolução dos dois dá $\delta[n]$. Aqui basta olhar para $H(z)H_i(z)=1$.</p>
+<p>Mais uma vez: o que era convolução no tempo virou multiplicação.</p>
+</div>
+<h2 id="resposta-em-frequência-e-círculo-unitário"><span class="heading-text">Resposta em frequência e círculo unitário</span><span class="heading-arabic">12.13</span></h2>
+<p>Para obter a resposta em frequência de um sistema discreto, você avalia a função de transferência no círculo unitário:</p>
+<p>$$
+z=e^{j\Omega}
+$$</p>
+<p>Assim,</p>
+<p>$$
+H(e^{j\Omega})=H(z)\big|_{z=e^{j\Omega}}
+$$</p>
+<p>O ponto $e^{j\Omega}$ percorre o círculo unitário conforme $\Omega$ varia. Isso conecta diretamente a resposta em frequência com a posição de polos e zeros no plano Z.</p>
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">Frequência discreta $\Omega$ é ângulo no plano Z<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Em $z=e^{j\Omega}$, o ângulo de $z$ é exatamente a frequência discreta $\Omega$. Uma volta completa no círculo ($\Omega$ de $0$ a $2\pi$) corresponde a percorrer todas as frequências possíveis. E como você viu na aula 11, $\Omega$ e $\Omega+2\pi$ são equivalentes — por isso uma volta já cobre todas as frequências distintas.</p>
+  </div>
+</div>
+<p>Se a entrada é uma senoide discreta $\cos(\Omega n)$, a saída em regime permanente de um sistema estável terá a mesma frequência. O sistema só altera amplitude e fase:</p>
+<p>$$
+y[n]=|H(e^{j\Omega})|\cos\left(\Omega n+\angle H(e^{j\Omega})\right)
+$$</p>
+<p>$|H(e^{j\Omega})|$ é o ganho e $\angle H(e^{j\Omega})$ é o deslocamento de fase.</p>
+<h2 id="como-polos-e-zeros-moldam-a-resposta"><span class="heading-text">Como polos e zeros moldam a resposta</span><span class="heading-arabic">12.14</span></h2>
+<p>Para entender a resposta em frequência geometricamente, você conecta os polos e zeros ao ponto $e^{j\Omega}$ no círculo unitário.</p>
+<p>A Figura 12.4, correspondente à Figura 5.18 do Lathi, ilustra essa ideia de vetores.</p>
+<p><img src="static/figura-12-4-vetores-polos-zeros.png" alt="Figura 12.4: Vetores de polos e zeros" /></p>
+<p>A amplitude é proporcional ao produto das distâncias dos zeros até $e^{j\Omega}$, dividido pelo produto das distâncias dos polos até $e^{j\Omega}$:</p>
+<p>$$
+|H(e^{j\Omega})|=K\frac{\text{produto das distâncias aos zeros}}{\text{produto das distâncias aos polos}}
+$$</p>
+<p>Essa leitura geométrica é poderosa demais para ficar só na teoria:</p>
+<p>Um zero próximo do círculo unitário <strong>reduz</strong> o ganho naquela frequência. Um zero exatamente sobre o círculo <strong>zera</strong> o ganho. Um polo próximo do círculo unitário <strong>aumenta</strong> o ganho. Um polo exatamente sobre o círculo torna o sistema problemático (ganho infinito ou instabilidade).</p>
+<p>A Figura 12.5, correspondente à Figura 5.20 do Lathi, mostra configurações típicas e seus efeitos.</p>
+<p><img src="static/figura-12-5-configuracoes-polos-zeros.png" alt="Figura 12.5: Configurações de polos e zeros" /></p>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Treine o olho geométrico<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Imagine um zero em $z=1$ e um polo em $z=0{,}5$. Quando $e^{j\Omega}$ está perto de $1$ ($\Omega\approx 0$), a distância ao zero é pequena: ganho baixo em baixas frequências. Quando $e^{j\Omega}$ está perto de $-1$ ($\Omega\approx\pi$), a distância ao zero é grande e a distância ao polo é o que conta. Que tipo de filtro é esse?</p>
+  </div>
+</div>
+<h3 id="filtros-passa-baixas"><span class="heading-text">Filtros passa-baixas</span><span class="heading-arabic">12.14.1</span></h3>
+<p>Baixas frequências correspondem a $\Omega=0$, isto é, $z=e^{j0}=1$.</p>
+<p>Um filtro passa-baixas deve ter ganho alto perto de $z=1$ e ganho baixo perto de $z=-1$ ($\Omega=\pi$). Para isso, você coloca polos próximos de $z=1$ (reforçam graves) e zeros próximos de $z=-1$ (atenuam agudos).</p>
+<h3 id="filtros-passa-altas"><span class="heading-text">Filtros passa-altas</span><span class="heading-arabic">12.14.2</span></h3>
+<p>Altas frequências correspondem a $\Omega=\pi$, isto é, $z=e^{j\pi}=-1$.</p>
+<p>Um filtro passa-altas deve atenuar baixas e reforçar altas. Você coloca zeros próximos de $z=1$ (atenuam graves) e polos próximos de $z=-1$ (reforçam agudos), sempre mantendo os polos dentro do círculo unitário.</p>
+<h3 id="filtros-notch"><span class="heading-text">Filtros notch</span><span class="heading-arabic">12.14.3</span></h3>
+<p>Um filtro notch rejeita uma frequência específica. Para anular $\Omega_0$, você coloca zeros <strong>sobre</strong> o círculo unitário em</p>
+<p>$$
+z=e^{j\Omega_0}
+$$</p>
+<p>e, para coeficientes reais, também em $z=e^{-j\Omega_0}$.</p>
+<p>Polos próximos desses zeros, mas dentro do círculo unitário, tornam a rejeição mais estreita e ajudam o ganho a se recuperar nas frequências vizinhas.</p>
+<div class="example">
+  <div class="example-title">Exemplo 9</div>
+  <p>Você quer rejeitar a frequência $\Omega_0=\pi/2$. Onde colocar os zeros? Escreva o numerador correspondente.</p>
+<hr />
+<p>Os zeros devem estar no círculo unitário em</p>
+<p>$$
+z=e^{j\pi/2}=j, \qquad z=e^{-j\pi/2}=-j
+$$</p>
+<p>O polinômio associado é</p>
+<p>$$
+(z-j)(z+j)=z^2+1
+$$</p>
+<p>Portanto, $B(z)=z^2+1$ é um numerador possível. Com os zeros sobre o círculo unitário, o ganho é zero em $\Omega=\pi/2$.</p>
+<p>O que acontece nas frequências vizinhas, como $\Omega\approx\pi/4$? Os zeros estão longe, então o ganho se recupera. Para controlar a largura do notch, você adicionaria polos próximos dos zeros, dentro do círculo.</p>
+</div>
+
+                </div>
+            </article>
+            <footer class="footer">
+                <p>© 2025 · <a href="#">Gabriel Soares Baptista</a></p>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        const toggle = document.querySelector('.mobile-menu-toggle');
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.querySelector('.mobile-menu-overlay');
+
+        function openMenu() {
+            sidebar.classList.add('open');
+            overlay.classList.add('open');
+            toggle.classList.add('open');
+            toggle.innerHTML = '<i data-lucide="x"></i>';
+            CourseForgeUI.initIcons();
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMenu() {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('open');
+            toggle.classList.remove('open');
+            toggle.innerHTML = '<i data-lucide="menu"></i>';
+            CourseForgeUI.initIcons();
+            document.body.style.overflow = '';
+        }
+
+        toggle.addEventListener('click', () => {
+            if (sidebar.classList.contains('open')) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        overlay.addEventListener('click', closeMenu);
+    </script>
+
+    
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            renderMathInElement(document.body, {
+                output: 'html',
+                delimiters: [
+                    { left: "$$", right: "$$", display: true },
+                    { left: "$", right: "$", display: false },
+                    { left: "\\(", right: "\\)", display: false },
+                    { left: "\\[", right: "\\]", display: true }
+                ],
+                throwOnError: false,
+                strict: false
+            });
+        });
+    </script>
+    
+    
+    <script src="/aulas-faesa/js/vendor/prism/prism.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-c.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-cpp.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-python.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-clike.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-perl.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-java.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-mermaid.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-php.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js" data-no-bundle></script>
+    
+    
+    
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            mermaid.initialize({
+                startOnLoad: true,
+                theme: 'default',
+                securityLevel: 'loose',
+                fontFamily: 'Inter, system-ui, sans-serif',
+                themeVariables: {
+                    fontSize: '16px',
+                    edgeLabelFontSize: '16px',
+                    multiplicityFontSize: '18px'
+                }
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const isSubcourse = false;
+        const courseName = "Processamento Digital de Sinais";
+        CourseForgeNav.applyDynamicBreadcrumbs('.breadcrumb', isSubcourse);
+        CourseForgeNav.initScrollSpy();
+        CourseForgeUI.initCopyButtons();
+        CourseForgeUI.initExamples();
+        });
+
+        function handleBackNavigation() {
+            const isSubcourse = false;
+        const dynamic = CourseForgeNav.getBackLink('contents.html', 'Voltar', isSubcourse);
+        window.location.href = dynamic.url;
+        }
+    </script>
+</body>
+
+</html>
