@@ -124,6 +124,10 @@
                             <a href="#filtros-notch">12.14.3. Filtros notch</a>
                         </li>
                         
+                        <li class="toc-item level-2">
+                            <a href="#questões">12.15. Questões</a>
+                        </li>
+                        
                     </ol>
                 </section>
                 
@@ -680,6 +684,73 @@ $$</p>
 $$</p>
 <p>Portanto, $B(z)=z^2+1$ é um numerador possível. Com os zeros sobre o círculo unitário, o ganho é zero em $\Omega=\pi/2$.</p>
 <p>O que acontece nas frequências vizinhas, como $\Omega\approx\pi/4$? Os zeros estão longe, então o ganho se recupera. Para controlar a largura do notch, você adicionaria polos próximos dos zeros, dentro do círculo.</p>
+</div>
+<h2 id="questões"><span class="heading-text">Questões</span><span class="heading-arabic">12.15</span></h2>
+<div class="questions">
+  <p><strong>1.</strong> Escreva a definição da Transformada Z unilateral de uma sequência causal $x[n]$. Qual é a Transformada Z de $\delta[n]$?</p>
+<p><strong>2.</strong> Determine a Transformada Z e a região de convergência de:</p>
+<ul>
+<li>a) $x_1[n]=(0{,}3)^n u[n]$</li>
+<li>b) $x_2[n]=u[n]$</li>
+<li>c) $x_3[n]=2\delta[n]-3(0{,}7)^n u[n]$</li>
+</ul>
+<p><strong>3.</strong> Determine a Transformada Z inversa (causal) de</p>
+<p>$$
+X(z)=\frac{z}{(z-0{,}4)(z-0{,}8)}
+$$</p>
+<p>usando decomposição em frações parciais.</p>
+<p><strong>4.</strong> Para o sistema $y[n]-0{,}6y[n-1]=x[n]+2x[n-1]$ com condições iniciais nulas:</p>
+<ul>
+<li>a) Determine $H(z)=Y(z)/X(z)$.</li>
+<li>b) Determine polos e zeros.</li>
+<li>c) Classifique a estabilidade BIBO.</li>
+</ul>
+<p><strong>5.</strong> Classifique a estabilidade BIBO de cada sistema a partir da posição dos polos:</p>
+<ul>
+<li>a) $H_1(z)=\dfrac{z}{z-0{,}4}$</li>
+<li>b) $H_2(z)=\dfrac{z}{z+1{,}2}$</li>
+<li>c) $H_3(z)=\dfrac{z}{z+1}$</li>
+</ul>
+<p><strong>6.</strong> Determine o sistema inverso $H_i(z)$ para $H(z)=\dfrac{z}{z-0{,}3}$. Em seguida, escreva a equação de diferenças correspondente a $H_i(z)$.</p>
+<p><strong>7.</strong> Explique a relação entre a resposta em frequência $H(e^{j\Omega})$ e a posição de polos e zeros no plano Z.</p>
+<p><strong>8.</strong> Um filtro notch deve rejeitar $\Omega_0=\pi/3$. Em quais pontos do plano Z devem ser colocados os zeros? Escreva o polinômio do numerador correspondente.</p>
+<p><strong>9.</strong> Considere $H(z)=\dfrac{z-1}{z-0{,}5}$.</p>
+<ul>
+<li>a) Qual é a frequência rejeitada pelo zero?</li>
+<li>b) O sistema é estável? Justifique.</li>
+<li>c) Esse filtro é passa-baixas ou passa-altas? Justifique com base na posição do zero.</li>
+</ul>
+<p><strong>10.</strong> Marque <strong>V</strong> ou <strong>F</strong>.</p>
+<ul>
+<li><strong>( )</strong> A Transformada Z de $\delta[n]$ é $1$.</li>
+<li><strong>( )</strong> A região de convergência de uma sequência causal fica dentro do polo de menor módulo.</li>
+<li><strong>( )</strong> Um sistema é BIBO estável se todos os seus polos estiverem dentro do círculo unitário.</li>
+<li><strong>( )</strong> A resposta em frequência é obtida avaliando $H(z)$ em $z=e^{j\Omega}$.</li>
+<li><strong>( )</strong> Zeros sobre o círculo unitário atenuam totalmente a frequência correspondente.</li>
+</ul>
+</div>
+<div class="example">
+  <div class="example-title">Gabarito</div>
+  <p><strong>1.</strong> $X(z)=\sum_{n=0}^{\infty}x[n]z^{-n}$. Para $\delta[n]$, apenas o termo $n=0$ contribui: $X(z)=1$.</p>
+<p><strong>2.</strong> (a) $X_1(z)=\dfrac{z}{z-0{,}3}$, RDC: $|z|>0{,}3$. (b) $X_2(z)=\dfrac{z}{z-1}$, RDC: $|z|>1$. (c) $X_3(z)=2-3\dfrac{z}{z-0{,}7}=\dfrac{2(z-0{,}7)-3z}{z-0{,}7}=\dfrac{-z-1{,}4}{z-0{,}7}$, RDC: $|z|>0{,}7$.</p>
+<p><strong>3.</strong> $\dfrac{X(z)}{z}=\dfrac{1}{(z-0{,}4)(z-0{,}8)}=\dfrac{A}{z-0{,}4}+\dfrac{B}{z-0{,}8}$.</p>
+<p>$1=A(z-0{,}8)+B(z-0{,}4)$.</p>
+<p>$z=0{,}4$: $1=A(-0{,}4)\Rightarrow A=-2{,}5$.</p>
+<p>$z=0{,}8$: $1=B(0{,}4)\Rightarrow B=2{,}5$.</p>
+<p>$X(z)=-2{,}5\dfrac{z}{z-0{,}4}+2{,}5\dfrac{z}{z-0{,}8}$.</p>
+<p>$x[n]=2{,}5\left[(0{,}8)^n-(0{,}4)^n\right]u[n]$.</p>
+<p><strong>4.</strong> (a) Aplicando Transformada Z: $Y(z)-0{,}6z^{-1}Y(z)=X(z)+2z^{-1}X(z)$. $Y(z)(1-0{,}6z^{-1})=X(z)(1+2z^{-1})$. $H(z)=\dfrac{1+2z^{-1}}{1-0{,}6z^{-1}}=\dfrac{z+2}{z-0{,}6}$.</p>
+<p>(b) Zero em $z=-2$. Polo em $z=0{,}6$.</p>
+<p>(c) $|0{,}6|<1$: polo dentro do círculo unitário. Sistema BIBO estável.</p>
+<p><strong>5.</strong> (a) Polo em $0{,}4$, $|0{,}4|<1$: estável. (b) Polo em $-1{,}2$, $|-1{,}2|>1$: instável. (c) Polo em $-1$, $|-1|=1$: marginalmente estável (polo sobre o círculo unitário), não BIBO estável.</p>
+<p><strong>6.</strong> $H_i(z)=\dfrac{1}{H(z)}=\dfrac{z-0{,}3}{z}=1-0{,}3z^{-1}$.</p>
+<p>A equação de diferenças é $y[n]=x[n]-0{,}3x[n-1]$.</p>
+<p><strong>7.</strong> A amplitude $|H(e^{j\Omega})|$ é proporcional ao produto das distâncias dos zeros a $e^{j\Omega}$ dividido pelo produto das distâncias dos polos a $e^{j\Omega}$. Um zero próximo do círculo unitário reduz o ganho naquela frequência; um zero sobre o círculo zera o ganho. Um polo próximo do círculo aumenta o ganho naquela frequência.</p>
+<p><strong>8.</strong> Zeros sobre o círculo unitário em $z=e^{j\pi/3}$ e $z=e^{-j\pi/3}$. Numerador: $(z-e^{j\pi/3})(z-e^{-j\pi/3})=z^2-2\cos(\pi/3)z+1=z^2-z+1$.</p>
+<p><strong>9.</strong> (a) Zero em $z=1$, que corresponde a $\Omega=0$ (frequência nula). O filtro rejeita baixas frequências.</p>
+<p>(b) Polo em $0{,}5$, $|0{,}5|<1$: estável.</p>
+<p>(c) Passa-altas: o zero em $z=1$ atenua baixas frequências, e o polo em $0{,}5$ reforça a resposta nas demais.</p>
+<p><strong>10.</strong> V, F, V, V, V.</p>
 </div>
 
                 </div>

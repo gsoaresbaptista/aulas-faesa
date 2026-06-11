@@ -1,0 +1,1255 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toposia - Redes</title>
+    <link rel="icon" href="/aulas-faesa/img/dark-favicon.svg" media="(prefers-color-scheme: light)">
+    <link rel="icon" href="/aulas-faesa/img/light-favicon.svg" media="(prefers-color-scheme: dark)">
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/fonts.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/bundles/katex-base-prism-one-light-b0347952c973.bundle.min.css">
+    
+    
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css" data-no-bundle>
+    <script src="/aulas-faesa/js/bundles/lucide-katex-auto-render-4b36e8bd8642.bundle.min.js"></script>
+</head>
+
+<body>
+    <script>
+        // Restore sidebar state instantly (before first paint) to avoid transition flash
+        (function() {
+            if (localStorage.getItem('cf_sidebar_hidden') === 'true') {
+                document.body.classList.add('sidebar-hidden', 'no-transition');
+            }
+            requestAnimationFrame(function() {
+                requestAnimationFrame(function() {
+                    document.body.classList.remove('no-transition');
+                });
+            });
+        })();
+    </script>
+    <div class="page-wrapper">
+        <nav class="sidebar">
+            <div class="sidebar-content">
+                <header class="sidebar-title-section">
+                    <a href="contents.html" class="course-title-link">
+                        <h1 class="sidebar-course-title">Redes</h1>
+                    </a>
+                    <div class="sidebar-ornament">❧</div>
+                </header>
+
+                
+                <section class="sidebar-toc-section">
+                    <h2 class="toc-header">Tabela de Conteúdos</h2>
+                    <ol class="toc-list">
+                        
+                        <li class="toc-item level-2">
+                            <a href="#introdução">11.1. Introdução</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#mapa-de-leitura-dos-livros">11.2. Mapa de leitura dos livros</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#o-papel-da-camada-de-aplicação">11.3. O papel da camada de aplicação</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#dns-nomes-para-máquinas">11.4. DNS: nomes para máquinas</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#o-espaço-de-nomes">11.4.1. O espaço de nomes</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#servidores-dns">11.4.2. Servidores DNS</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#resolução-iterativa-e-recursiva">11.4.3. Resolução iterativa e recursiva</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#registros-de-recursos">11.4.4. Registros de recursos</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#cache-e-ttl">11.4.5. Cache e TTL</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#correio-eletrônico">11.5. Correio eletrônico</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#agentes-do-sistema-de-e-mail">11.5.1. Agentes do sistema de e-mail</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#smtp-envio-e-transferência">11.5.2. SMTP: envio e transferência</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#pop3-e-imap-acesso-à-caixa-postal">11.5.3. POP3 e IMAP: acesso à caixa postal</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#mime-mensagens-além-de-texto-simples">11.5.4. MIME: mensagens além de texto simples</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#web-e-http">11.6. Web e HTTP</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#url">11.6.1. URL</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#http-como-solicitação-e-resposta">11.6.2. HTTP como solicitação e resposta</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#métodos-http">11.6.3. Métodos HTTP</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#códigos-de-status">11.6.4. Códigos de status</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#conexões-persistentes">11.6.5. Conexões persistentes</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#cache-http">11.6.6. Cache HTTP</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#juntando-dns-tcp-http-e-e-mail">11.7. Juntando DNS, TCP, HTTP e e-mail</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#mini-laboratório-no-linux">11.8. Mini-laboratório no Linux</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#fazer-uma-consulta-dns-simples">11.8.1. . Fazer uma consulta DNS simples</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#consultar-tipos-diferentes-de-registros-dns">11.8.2. . Consultar tipos diferentes de registros DNS</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#ver-o-caminho-da-resolução-dns">11.8.3. . Ver o caminho da resolução DNS</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#comparar-dns-por-udp-e-por-tcp">11.8.4. . Comparar DNS por UDP e por TCP</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#ver-cabeçalhos-http">11.8.5. . Ver cabeçalhos HTTP</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#ver-uma-requisição-http-com-detalhes">11.8.6. . Ver uma requisição HTTP com detalhes</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#comparar-http-e-https">11.8.7. . Comparar HTTP e HTTPS</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#observar-uma-requisição-http-chegando-localmente">11.8.8. . Observar uma requisição HTTP chegando localmente</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#responder-manualmente-com-http">11.8.9. . Responder manualmente com HTTP</a>
+                        </li>
+                        
+                        <li class="toc-item level-3">
+                            <a href="#ver-conexões-tcp-para-serviços-web">11.8.10. . Ver conexões TCP para serviços Web</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#síntese">11.9. Síntese</a>
+                        </li>
+                        
+                    </ol>
+                </section>
+                
+
+                <nav class="sidebar-nav-section">
+                    
+                    <a href="10-complete-transport-layer-udp-and-tcp.html" class="sidebar-nav-link prev"><i data-lucide="chevron-left" class="nav-icon"></i> Camada de Transporte Completa: UDP e TCP</a>
+                    
+                    
+                    <a href="javascript:void(0)" onclick="handleBackNavigation()"
+                        class="sidebar-nav-link back"><i data-lucide="arrow-left" class="nav-icon"></i> Voltar</a>
+                </nav>
+
+            </div>
+        </nav>
+
+        <button class="mobile-menu-toggle" aria-label="Menu">
+            <i data-lucide="menu"></i>
+        </button>
+
+        <button class="sidebar-toggle" onclick="CourseForgeNav.toggleSidebar()" aria-label="Alternar Barra Lateral">
+            <i data-lucide="chevron-left" class="toggle-icon" id="sidebar-toggle-icon"></i>
+        </button>
+
+        <div class="mobile-menu-overlay"></div>
+
+        <main class="main-content">
+            <article class="article">
+                <header class="article-header">
+                    <span class="chapter-number">11</span>
+                    <h1 class="article-title">
+                        <span class="title-ornament left">❧</span>
+                        <span class="title-text">Camada de Aplicação: DNS, E-mail e HTTP</span>
+                        <span class="title-ornament right">❧</span>
+                    </h1>
+                    
+                    <p class="article-date">11/06/2026</p>
+                    
+                    
+                    <nav class="breadcrumb" aria-label="Breadcrumb">
+                        
+                        
+                        
+                        <a href="contents.html" class="breadcrumb-link">Redes</a>
+                        
+                        <span class="breadcrumb-separator"><i data-lucide="chevron-right" class="breadcrumb-icon"></i></span>
+                        
+                        
+                        
+                        
+                        <a href="contents.html#part-VI" class="breadcrumb-link">VI - Camada de Aplicação</a>
+                        
+                        <span class="breadcrumb-separator"><i data-lucide="chevron-right" class="breadcrumb-icon"></i></span>
+                        
+                        
+                        
+                        <span class="breadcrumb-current">Camada de Aplicação: DNS, E-mail e HTTP</span>
+                        
+                        
+                    </nav>
+                    
+                </header>
+                <div class="article-body">
+                    <h2 id="introdução"><span class="heading-text">Introdução</span><span class="heading-arabic">11.1</span></h2>
+<p>Hoje você vai ver a camada que fica mais próxima do usuário. Até aqui, estudamos como bits atravessam meios físicos, como quadros circulam em enlaces, como pacotes IP atravessam redes e como UDP e TCP entregam dados ao processo correto. Agora o foco muda para os <strong>protocolos usados pelas aplicações</strong>.</p>
+<p>A camada de aplicação não está preocupada em escolher rotas nem em controlar janelas TCP. Ela define mensagens, comandos, respostas, nomes e formatos que permitem que programas reais conversem: navegador e servidor Web, cliente e servidor DNS, agente de e-mail e servidor de correio.</p>
+<div class="callout callout-abstract">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
+    <span class="callout-title-inner">Ideia central<br /></span>
+  </div>
+  <div class="callout-content">
+<p>A camada de aplicação define os protocolos que dão significado aos dados transportados pela rede. DNS traduz nomes em endereços, e-mail organiza envio e recebimento de mensagens, e HTTP permite a transferência de recursos na Web.</p>
+  </div>
+</div>
+<p>Esta aula usa como base o Forouzan, capítulos 25, 26 e 27, e o Tanenbaum, capítulo 7, com recorte nas seções de DNS, correio eletrônico e Web/HTTP.</p>
+<h2 id="mapa-de-leitura-dos-livros"><span class="heading-text">Mapa de leitura dos livros</span><span class="heading-arabic">11.2</span></h2>
+<p>Antes de entrar nos protocolos, vale deixar claro de onde a aula está saindo nos dois livros.</p>
+<p>No Forouzan, os capítulos 25, 26 e 27 aparecem dentro da parte de <strong>Camada de Aplicação</strong>.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Fonte</th>
+  <th style="text-align:left">Trecho usado</th>
+  <th style="text-align:left">Páginas do livro</th>
+  <th style="text-align:left">Assunto</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Forouzan</td>
+  <td style="text-align:left">Capítulo 25</td>
+  <td style="text-align:left">789 a 815</td>
+  <td style="text-align:left">Sistema de Nomes de Domínios, espaço de nomes, servidores, resolução, mensagens e DDNS</td>
+</tr>
+<tr>
+  <td style="text-align:left">Forouzan</td>
+  <td style="text-align:left">Capítulo 26</td>
+  <td style="text-align:left">816 a 850</td>
+  <td style="text-align:left">Correio eletrônico, SMTP, POP3, IMAP, MIME e transferência de arquivos</td>
+</tr>
+<tr>
+  <td style="text-align:left">Forouzan</td>
+  <td style="text-align:left">Capítulo 27</td>
+  <td style="text-align:left">851 a 882</td>
+  <td style="text-align:left">WWW, arquitetura Web, documentos, URL, HTTP, cache e segurança</td>
+</tr>
+</tbody>
+</table>
+<p>No Tanenbaum, o capítulo 7 se chama <strong>A camada de aplicação</strong>. Para esta aula, usamos principalmente as partes abaixo.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Fonte</th>
+  <th style="text-align:left">Trecho usado</th>
+  <th style="text-align:left">Páginas do livro</th>
+  <th style="text-align:left">Assunto</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Tanenbaum</td>
+  <td style="text-align:left">7.1</td>
+  <td style="text-align:left">384 a 391</td>
+  <td style="text-align:left">DNS, ambiente de nomes, registros e servidores</td>
+</tr>
+<tr>
+  <td style="text-align:left">Tanenbaum</td>
+  <td style="text-align:left">7.2</td>
+  <td style="text-align:left">391 a 407</td>
+  <td style="text-align:left">Correio eletrônico, agentes, formato, transferência e entrega final</td>
+</tr>
+<tr>
+  <td style="text-align:left">Tanenbaum</td>
+  <td style="text-align:left">7.3.1 a 7.3.4</td>
+  <td style="text-align:left">407 a 436</td>
+  <td style="text-align:left">Web, URLs, servidores, páginas e HTTP</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">Recorte da aula<br /></span>
+  </div>
+  <div class="callout-content">
+<p>O capítulo 7 do Tanenbaum também trata de streaming, entrega de conteúdo e redes peer-to-peer. Esses temas ficam fora do foco de hoje. O objetivo aqui é entender os três protocolos essenciais mais comuns quando pensamos em uso diário da Internet: DNS, e-mail e HTTP.</p>
+  </div>
+</div>
+<h2 id="o-papel-da-camada-de-aplicação"><span class="heading-text">O papel da camada de aplicação</span><span class="heading-arabic">11.3</span></h2>
+<p>Quando um usuário acessa um site, ele normalmente pensa em uma ação simples: digitar um endereço no navegador e pressionar Enter. Por trás disso, várias camadas trabalham juntas.</p>
+<ol>
+<li>A aplicação precisa transformar um nome, como <code>www.exemplo.com</code>, em um endereço IP.</li>
+<li>O navegador precisa abrir uma conexão com o servidor correto.</li>
+<li>O cliente precisa enviar uma solicitação compreensível para o servidor.</li>
+<li>O servidor precisa responder com um documento, uma imagem, um erro ou outro recurso.</li>
+</ol>
+<p>Essas etapas não são definidas pelo IP nem pelo TCP. O IP entrega pacotes entre hosts. O TCP entrega bytes entre processos. Mas quem define o significado desses bytes é a camada de aplicação.</p>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Se TCP entrega um fluxo confiável de bytes, por que ainda precisamos de protocolos como HTTP, SMTP e DNS?</p>
+  </div>
+</div>
+<p>Porque confiabilidade de transporte não define semântica. O TCP pode garantir que os bytes cheguem em ordem, mas não diz o que significa <code>GET / HTTP/1.1</code>, nem como representar um endereço de e-mail, nem como consultar o endereço IP associado a um nome de domínio.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Protocolo</th>
+  <th style="text-align:left">Problema principal</th>
+  <th style="text-align:left">Transporte comum</th>
+  <th style="text-align:left">Porta comum</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">DNS</td>
+  <td style="text-align:left">Resolver nomes em registros, como endereços IP</td>
+  <td style="text-align:left">UDP ou TCP</td>
+  <td style="text-align:left">53</td>
+</tr>
+<tr>
+  <td style="text-align:left">SMTP</td>
+  <td style="text-align:left">Enviar mensagens de e-mail entre servidores</td>
+  <td style="text-align:left">TCP</td>
+  <td style="text-align:left">25</td>
+</tr>
+<tr>
+  <td style="text-align:left">POP3</td>
+  <td style="text-align:left">Baixar mensagens da caixa postal</td>
+  <td style="text-align:left">TCP</td>
+  <td style="text-align:left">110</td>
+</tr>
+<tr>
+  <td style="text-align:left">IMAP</td>
+  <td style="text-align:left">Acessar e sincronizar mensagens no servidor</td>
+  <td style="text-align:left">TCP</td>
+  <td style="text-align:left">143</td>
+</tr>
+<tr>
+  <td style="text-align:left">HTTP</td>
+  <td style="text-align:left">Transferir recursos Web</td>
+  <td style="text-align:left">TCP</td>
+  <td style="text-align:left">80</td>
+</tr>
+<tr>
+  <td style="text-align:left">HTTPS</td>
+  <td style="text-align:left">HTTP sobre transporte seguro</td>
+  <td style="text-align:left">TCP</td>
+  <td style="text-align:left">443</td>
+</tr>
+</tbody>
+</table>
+<h2 id="dns-nomes-para-máquinas"><span class="heading-text">DNS: nomes para máquinas</span><span class="heading-arabic">11.4</span></h2>
+<p>O DNS, ou <em>Domain Name System</em>, existe porque pessoas trabalham melhor com nomes do que com endereços numéricos. É mais simples lembrar <code>www.universidade.edu.br</code> do que lembrar um endereço IP.</p>
+<p>Mas a rede não encaminha pacotes usando nomes. Roteadores trabalham com endereços IP. Portanto, antes de acessar muitos serviços, a aplicação precisa resolver o nome em algum tipo de registro útil.</p>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Cuidado conceitual<br /></span>
+  </div>
+  <div class="callout-content">
+<p>DNS não é apenas &quot;traduzir site para IP&quot;. O DNS é um banco de dados distribuído de registros. Um nome pode ter registros de endereço, registros de servidor de e-mail, aliases e outros tipos de informação.</p>
+  </div>
+</div>
+<h3 id="o-espaço-de-nomes"><span class="heading-text">O espaço de nomes</span><span class="heading-arabic">11.4.1</span></h3>
+<p>O DNS organiza nomes em uma estrutura hierárquica. No topo está a raiz. Abaixo aparecem domínios de alto nível, como <code>com</code>, <code>org</code>, <code>br</code> e <code>edu</code>. Depois vêm subdomínios administrados por organizações.</p>
+<img src="static/fig25_1_espaco_nomes_dns_forouzan.png" width="80%">
+
+<p>A ideia importante é que o nome completo descreve um caminho dentro dessa hierarquia. Por exemplo:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">www.exemplo.com.br
+</code></pre>
+<p>Esse nome pode ser lido da direita para a esquerda.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Parte</th>
+  <th style="text-align:left">Papel</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><code>br</code></td>
+  <td style="text-align:left">Domínio de alto nível de país</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>com</code></td>
+  <td style="text-align:left">Subdomínio comercial dentro de <code>br</code></td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>exemplo</code></td>
+  <td style="text-align:left">Domínio da organização</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>www</code></td>
+  <td style="text-align:left">Host ou serviço dentro do domínio</td>
+</tr>
+</tbody>
+</table>
+<div class="example">
+  <div class="example-title">Exemplo 1</div>
+  <p>Suponha que um navegador precise acessar:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">https://www.exemplo.com.br/aulas/redes.html
+</code></pre>
+<p>Antes de buscar a página, ele precisa descobrir o endereço IP de <code>www.exemplo.com.br</code>. Essa consulta é feita ao DNS. Depois que o endereço é obtido, o navegador pode abrir uma conexão com o servidor e usar HTTP ou HTTPS.</p>
+<p>O DNS não baixa a página. Ele apenas ajuda a localizar o servidor.</p>
+</div>
+<h3 id="servidores-dns"><span class="heading-text">Servidores DNS</span><span class="heading-arabic">11.4.2</span></h3>
+<p>O DNS é distribuído. Não existe um único servidor mundial contendo todos os nomes. Se existisse, ele seria um gargalo e um ponto único de falha.</p>
+<p>O funcionamento depende de vários níveis de servidores.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Tipo de servidor</th>
+  <th style="text-align:left">Função</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Servidores raiz</td>
+  <td style="text-align:left">Indicam servidores responsáveis por domínios de alto nível</td>
+</tr>
+<tr>
+  <td style="text-align:left">Servidores TLD</td>
+  <td style="text-align:left">Respondem por domínios como <code>com</code>, <code>org</code>, <code>br</code> e semelhantes</td>
+</tr>
+<tr>
+  <td style="text-align:left">Servidores autoritativos</td>
+  <td style="text-align:left">Mantêm os registros de uma zona específica</td>
+</tr>
+<tr>
+  <td style="text-align:left">Resolvedor local</td>
+  <td style="text-align:left">Recebe consultas do cliente e busca a resposta em nome dele</td>
+</tr>
+</tbody>
+</table>
+<img src="static/fig7_1_dns_tanenbaum.png" width="80%">
+
+<p>Na prática, seu computador normalmente não consulta diretamente todos esses servidores. Ele pergunta a um resolvedor configurado no sistema, no roteador, no provedor ou em algum serviço público. Esse resolvedor pode usar cache para acelerar consultas repetidas.</p>
+<h3 id="resolução-iterativa-e-recursiva"><span class="heading-text">Resolução iterativa e recursiva</span><span class="heading-arabic">11.4.3</span></h3>
+<p>Em uma consulta <strong>recursiva</strong>, o cliente pede ao resolvedor: “descubra isso para mim”. O resolvedor assume o trabalho de consultar outros servidores até obter uma resposta ou falha.</p>
+<p>Em uma consulta <strong>iterativa</strong>, um servidor pode responder: “não tenho a resposta final, mas pergunte a este outro servidor”. Assim, quem fez a pergunta continua seguindo referências.</p>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="760" viewBox="0.00 0.00 765.00 186.70" class="svg-graph graphviz-img"><g id="svg-graphviz-ad24afeae41d-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 182.7)"><title>DNSResolucao</title><g id="svg-graphviz-ad24afeae41d-node1" class="node"><title>cliente</title><path fill="#eef4ff" stroke="#5b7bbb" d="M125,-88.05C125,-88.05 12,-88.05 12,-88.05 6,-88.05 0,-82.05 0,-76.05 0,-76.05 0,-62.05 0,-62.05 0,-56.05 6,-50.05 12,-50.05 12,-50.05 125,-50.05 125,-50.05 131,-50.05 137,-56.05 137,-62.05 137,-62.05 137,-76.05 137,-76.05 137,-82.05 131,-88.05 125,-88.05" /><text text-anchor="middle" x="68.5" y="-72.85" font-family="Helvetica,sans-Serif" font-size="14.00">Cliente</text><text text-anchor="middle" x="68.5" y="-57.85" font-family="Helvetica,sans-Serif" font-size="14.00">navegador ou SO</text></g><g id="svg-graphviz-ad24afeae41d-node2" class="node"><title>resolvedor</title><path fill="#eef4ff" stroke="#5b7bbb" d="M375,-118.05C375,-118.05 256,-118.05 256,-118.05 250,-118.05 244,-112.05 244,-106.05 244,-106.05 244,-92.05 244,-92.05 244,-86.05 250,-80.05 256,-80.05 256,-80.05 375,-80.05 375,-80.05 381,-80.05 387,-86.05 387,-92.05 387,-92.05 387,-106.05 387,-106.05 387,-112.05 381,-118.05 375,-118.05" /><text text-anchor="middle" x="315.5" y="-102.85" font-family="Helvetica,sans-Serif" font-size="14.00">Resolvedor DNS</text><text text-anchor="middle" x="315.5" y="-87.85" font-family="Helvetica,sans-Serif" font-size="14.00">consulta recursiva</text></g><g id="svg-graphviz-ad24afeae41d-edge1" class="edge"><title>cliente-&gt;resolvedor</title><path fill="none" stroke="black" d="M137.07,-82.32C143.12,-83.32 149.17,-84.25 155,-85.05 180.42,-88.53 208.23,-91.33 233.42,-93.47" /><polygon fill="black" stroke="black" points="233.41,-96.98 243.67,-94.32 233.99,-90.01 233.41,-96.98" /><text text-anchor="middle" x="190.5" y="-95.85" font-family="Times,serif" font-size="14.00">qual o IP?</text></g><g id="svg-graphviz-ad24afeae41d-node6" class="node"><title>ip</title><path fill="#eef4ff" stroke="#5b7bbb" d="M369,-55.05C369,-55.05 262,-55.05 262,-55.05 256,-55.05 250,-49.05 250,-43.05 250,-43.05 250,-29.05 250,-29.05 250,-23.05 256,-17.05 262,-17.05 262,-17.05 369,-17.05 369,-17.05 375,-17.05 381,-23.05 381,-29.05 381,-29.05 381,-43.05 381,-43.05 381,-49.05 375,-55.05 369,-55.05" /><text text-anchor="middle" x="315.5" y="-39.85" font-family="Helvetica,sans-Serif" font-size="14.00">Registro A/AAAA</text><text text-anchor="middle" x="315.5" y="-24.85" font-family="Helvetica,sans-Serif" font-size="14.00">endereço IP</text></g><g id="svg-graphviz-ad24afeae41d-edge8" class="edge"><title>resolvedor-&gt;cliente</title><path fill="none" stroke="black" d="M272.6,-79.94C258.15,-74.29 241.65,-68.87 226,-66.05 200.73,-61.49 172.8,-60.71 147.61,-61.53" /><polygon fill="black" stroke="black" points="147.21,-58.04 137.37,-61.96 147.5,-65.04 147.21,-58.04" /><text text-anchor="middle" x="190.5" y="-69.85" font-family="Times,serif" font-size="14.00">IP</text></g><g id="svg-graphviz-ad24afeae41d-node3" class="node"><title>raiz</title><path fill="#eef4ff" stroke="#5b7bbb" d="M718,-177.05C718,-177.05 637,-177.05 637,-177.05 631,-177.05 625,-171.05 625,-165.05 625,-165.05 625,-153.05 625,-153.05 625,-147.05 631,-141.05 637,-141.05 637,-141.05 718,-141.05 718,-141.05 724,-141.05 730,-147.05 730,-153.05 730,-153.05 730,-165.05 730,-165.05 730,-171.05 724,-177.05 718,-177.05" /><text text-anchor="middle" x="677.5" y="-155.35" font-family="Helvetica,sans-Serif" font-size="14.00">Servidor raiz</text></g><g id="svg-graphviz-ad24afeae41d-edge2" class="edge"><title>resolvedor-&gt;raiz</title><path fill="none" stroke="black" d="M335.2,-118.07C351.86,-133.55 377.76,-154.23 405,-163.05 474.14,-185.43 558.46,-179.41 614.61,-171.07" /><polygon fill="black" stroke="black" points="615.41,-174.49 624.75,-169.49 614.33,-167.57 615.41,-174.49" /></g><g id="svg-graphviz-ad24afeae41d-node4" class="node"><title>tld</title><path fill="#eef4ff" stroke="#5b7bbb" d="M718.5,-119.05C718.5,-119.05 636.5,-119.05 636.5,-119.05 630.5,-119.05 624.5,-113.05 624.5,-107.05 624.5,-107.05 624.5,-95.05 624.5,-95.05 624.5,-89.05 630.5,-83.05 636.5,-83.05 636.5,-83.05 718.5,-83.05 718.5,-83.05 724.5,-83.05 730.5,-89.05 730.5,-95.05 730.5,-95.05 730.5,-107.05 730.5,-107.05 730.5,-113.05 724.5,-119.05 718.5,-119.05" /><text text-anchor="middle" x="677.5" y="-97.35" font-family="Helvetica,sans-Serif" font-size="14.00">Servidor TLD</text></g><g id="svg-graphviz-ad24afeae41d-edge4" class="edge"><title>resolvedor-&gt;tld</title><path fill="none" stroke="black" d="M387.03,-99.89C393.11,-99.95 399.16,-100.01 405,-100.05 476.73,-100.59 559.13,-100.84 614.16,-100.95" /><polygon fill="black" stroke="black" points="614.44,-104.45 624.45,-100.98 614.46,-97.45 614.44,-104.45" /></g><g id="svg-graphviz-ad24afeae41d-node5" class="node"><title>autoritativo</title><path fill="#eef4ff" stroke="#5b7bbb" d="M745,-56.05C745,-56.05 610,-56.05 610,-56.05 604,-56.05 598,-50.05 598,-44.05 598,-44.05 598,-32.05 598,-32.05 598,-26.05 604,-20.05 610,-20.05 610,-20.05 745,-20.05 745,-20.05 751,-20.05 757,-26.05 757,-32.05 757,-32.05 757,-44.05 757,-44.05 757,-50.05 751,-56.05 745,-56.05" /><text text-anchor="middle" x="677.5" y="-34.35" font-family="Helvetica,sans-Serif" font-size="14.00">Servidor autoritativo</text></g><g id="svg-graphviz-ad24afeae41d-edge6" class="edge"><title>resolvedor-&gt;autoritativo</title><path fill="none" stroke="black" d="M371.31,-79.97C382.36,-76.62 393.98,-73.44 405,-71.05 465.27,-57.97 534.27,-49.67 587.62,-44.66" /><polygon fill="black" stroke="black" points="588.1,-48.13 597.74,-43.74 587.46,-41.16 588.1,-48.13" /></g><g id="svg-graphviz-ad24afeae41d-edge3" class="edge"><title>raiz-&gt;resolvedor</title><path fill="none" stroke="black" d="M624.95,-150.56C570.33,-141.56 481.57,-126.88 405,-114.05 402.35,-113.61 399.66,-113.15 396.95,-112.7" /><polygon fill="black" stroke="black" points="397.47,-109.24 387.02,-111.03 396.3,-116.14 397.47,-109.24" /><text text-anchor="middle" x="492.5" y="-146.85" font-family="Times,serif" font-size="14.00">pergunte ao TLD</text></g><g id="svg-graphviz-ad24afeae41d-edge5" class="edge"><title>tld-&gt;resolvedor</title><path fill="none" stroke="black" d="M624.47,-88.24C610.15,-85.27 594.55,-82.54 580,-81.05 502.63,-73.12 482.39,-73.26 405,-81.05 402.47,-81.3 399.91,-81.6 397.34,-81.93" /><polygon fill="black" stroke="black" points="396.73,-78.48 387.32,-83.34 397.71,-85.41 396.73,-78.48" /><text text-anchor="middle" x="492.5" y="-84.85" font-family="Times,serif" font-size="14.00">pergunte ao autoritativo</text></g><g id="svg-graphviz-ad24afeae41d-edge7" class="edge"><title>autoritativo-&gt;resolvedor</title><path fill="none" stroke="black" d="M626.83,-19.98C568.83,-2.24 472.28,16.53 405,-26.05 389.21,-36.04 400.09,-50.71 387,-64.05 383.32,-67.79 379.17,-71.2 374.75,-74.29" /><polygon fill="black" stroke="black" points="372.58,-71.53 366.01,-79.84 376.33,-77.44 372.58,-71.53" /><text text-anchor="middle" x="492.5" y="-29.85" font-family="Times,serif" font-size="14.00">resposta</text></g></g></svg></div></div>
+
+<h3 id="registros-de-recursos"><span class="heading-text">Registros de recursos</span><span class="heading-arabic">11.4.4</span></h3>
+<p>O DNS armazena registros. Cada registro tem um nome, um tipo, uma classe, um tempo de vida e um valor.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Tipo</th>
+  <th style="text-align:left">Uso comum</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><code>A</code></td>
+  <td style="text-align:left">Associa um nome a um endereço IPv4</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>AAAA</code></td>
+  <td style="text-align:left">Associa um nome a um endereço IPv6</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>CNAME</code></td>
+  <td style="text-align:left">Define um alias para outro nome canônico</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>MX</code></td>
+  <td style="text-align:left">Indica servidores de e-mail de um domínio</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>NS</code></td>
+  <td style="text-align:left">Indica servidores de nomes de uma zona</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>TXT</code></td>
+  <td style="text-align:left">Armazena texto associado ao domínio, usado também em verificações e políticas</td>
+</tr>
+</tbody>
+</table>
+<div class="example">
+  <div class="example-title">Exemplo 2</div>
+  <p>O domínio <code>exemplo.com</code> pode ter registros diferentes para finalidades diferentes.</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">www.exemplo.com.    A      203.0.113.10
+exemplo.com.        MX     10 mail.exemplo.com.
+mail.exemplo.com.   A      203.0.113.20
+</code></pre>
+<p>O primeiro registro ajuda a acessar o site. O segundo informa que mensagens de e-mail para <code>@exemplo.com</code> devem ser entregues ao servidor <code>mail.exemplo.com</code>. O terceiro resolve o nome desse servidor de e-mail para um endereço IP.</p>
+</div>
+<h3 id="cache-e-ttl"><span class="heading-text">Cache e TTL</span><span class="heading-arabic">11.4.5</span></h3>
+<p>Como consultas DNS acontecem o tempo todo, o cache é essencial. Quando um resolvedor recebe uma resposta, ele pode guardá-la por um tempo definido pelo TTL, ou <em>Time To Live</em>.</p>
+<p>Um TTL maior reduz consultas repetidas e melhora desempenho. Um TTL menor permite mudanças mais rápidas quando um endereço muda.</p>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Erro comum<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Não confunda o TTL do DNS com o TTL do IP. O TTL do IP limita a vida de um pacote em saltos. O TTL do DNS indica por quanto tempo uma resposta DNS pode permanecer em cache.</p>
+  </div>
+</div>
+<h2 id="correio-eletrônico"><span class="heading-text">Correio eletrônico</span><span class="heading-arabic">11.5</span></h2>
+<p>O e-mail é uma das aplicações mais antigas e importantes da Internet. Apesar de parecer simples para o usuário, ele envolve vários componentes.</p>
+<p>Uma mensagem não vai diretamente do computador do remetente para o computador do destinatário. Em geral, ela passa por servidores de correio e fica armazenada até que o destinatário a acesse.</p>
+<img src="static/fig26_correio_eletronico_forouzan.png" width="80%">
+
+<h3 id="agentes-do-sistema-de-e-mail"><span class="heading-text">Agentes do sistema de e-mail</span><span class="heading-arabic">11.5.1</span></h3>
+<p>O Forouzan separa o sistema de e-mail em agentes. Essa separação ajuda bastante a entender o caminho da mensagem.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Componente</th>
+  <th style="text-align:left">Papel</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">MUA</td>
+  <td style="text-align:left">Agente do usuário, como cliente de e-mail ou webmail</td>
+</tr>
+<tr>
+  <td style="text-align:left">MSA/MTA</td>
+  <td style="text-align:left">Servidor que aceita e transfere mensagens</td>
+</tr>
+<tr>
+  <td style="text-align:left">MDA</td>
+  <td style="text-align:left">Agente que entrega a mensagem na caixa postal</td>
+</tr>
+<tr>
+  <td style="text-align:left">Servidor de caixa postal</td>
+  <td style="text-align:left">Mantém mensagens até o usuário acessá-las</td>
+</tr>
+</tbody>
+</table>
+<p>Em termos práticos, o usuário escreve a mensagem no cliente. O servidor de envio recebe a mensagem. Depois, servidores de correio transferem a mensagem até o domínio de destino. Por fim, o destinatário acessa sua caixa postal.</p>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="760" viewBox="0.00 0.00 1054.00 112.00" class="svg-graph graphviz-img"><g id="svg-graphviz-4f068d8359a7-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 108)"><title>EmailFluxo</title><g id="svg-graphviz-4f068d8359a7-node1" class="node"><title>remetente</title><path fill="#eef4ff" stroke="#5b7bbb" d="M134,-76C134,-76 12,-76 12,-76 6,-76 0,-70 0,-64 0,-64 0,-50 0,-50 0,-44 6,-38 12,-38 12,-38 134,-38 134,-38 140,-38 146,-44 146,-50 146,-50 146,-64 146,-64 146,-70 140,-76 134,-76" /><text text-anchor="middle" x="73" y="-60.8" font-family="Helvetica,sans-Serif" font-size="14.00">Usuário remetente</text><text text-anchor="middle" x="73" y="-45.8" font-family="Helvetica,sans-Serif" font-size="14.00">MUA</text></g><g id="svg-graphviz-4f068d8359a7-node2" class="node"><title>smtp1</title><path fill="#eef4ff" stroke="#5b7bbb" d="M326,-76C326,-76 233,-76 233,-76 227,-76 221,-70 221,-64 221,-64 221,-50 221,-50 221,-44 227,-38 233,-38 233,-38 326,-38 326,-38 332,-38 338,-44 338,-50 338,-50 338,-64 338,-64 338,-70 332,-76 326,-76" /><text text-anchor="middle" x="279.5" y="-60.8" font-family="Helvetica,sans-Serif" font-size="14.00">Servidor SMTP</text><text text-anchor="middle" x="279.5" y="-45.8" font-family="Helvetica,sans-Serif" font-size="14.00">do remetente</text></g><g id="svg-graphviz-4f068d8359a7-edge1" class="edge"><title>remetente-&gt;smtp1</title><path fill="none" stroke="black" d="M146.1,-57C167.15,-57 190.07,-57 210.83,-57" /><polygon fill="black" stroke="black" points="210.84,-60.5 220.84,-57 210.84,-53.5 210.84,-60.5" /><text text-anchor="middle" x="183.5" y="-60.8" font-family="Times,serif" font-size="14.00">envia</text></g><g id="svg-graphviz-4f068d8359a7-node3" class="node"><title>dns</title><path fill="#eef4ff" stroke="#5b7bbb" d="M587,-104C587,-104 516,-104 516,-104 510,-104 504,-98 504,-92 504,-92 504,-78 504,-78 504,-72 510,-66 516,-66 516,-66 587,-66 587,-66 593,-66 599,-72 599,-78 599,-78 599,-92 599,-92 599,-98 593,-104 587,-104" /><text text-anchor="middle" x="551.5" y="-88.8" font-family="Helvetica,sans-Serif" font-size="14.00">DNS</text><text text-anchor="middle" x="551.5" y="-73.8" font-family="Helvetica,sans-Serif" font-size="14.00">registro MX</text></g><g id="svg-graphviz-4f068d8359a7-edge2" class="edge"><title>smtp1-&gt;dns</title><path fill="none" stroke="black" d="M338.06,-70.11C344.09,-71.21 350.16,-72.21 356,-73 402.16,-79.28 454.93,-82.28 493.85,-83.7" /><polygon fill="black" stroke="black" points="493.82,-87.21 503.94,-84.05 494.06,-80.21 493.82,-87.21" /><text text-anchor="middle" x="414.5" y="-85.8" font-family="Times,serif" font-size="14.00">consulta MX</text></g><g id="svg-graphviz-4f068d8359a7-node4" class="node"><title>smtp2</title><path fill="#eef4ff" stroke="#5b7bbb" d="M600,-38C600,-38 503,-38 503,-38 497,-38 491,-32 491,-26 491,-26 491,-12 491,-12 491,-6 497,0 503,0 503,0 600,0 600,0 606,0 612,-6 612,-12 612,-12 612,-26 612,-26 612,-32 606,-38 600,-38" /><text text-anchor="middle" x="551.5" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">Servidor SMTP</text><text text-anchor="middle" x="551.5" y="-7.8" font-family="Helvetica,sans-Serif" font-size="14.00">do destinatário</text></g><g id="svg-graphviz-4f068d8359a7-edge4" class="edge"><title>smtp1-&gt;smtp2</title><path fill="none" stroke="black" d="M322.9,-37.99C333.51,-34 345.01,-30.3 356,-28 396.68,-19.48 443.14,-17.07 480.45,-16.86" /><polygon fill="black" stroke="black" points="480.72,-20.36 490.72,-16.86 480.72,-13.36 480.72,-20.36" /><text text-anchor="middle" x="414.5" y="-31.8" font-family="Times,serif" font-size="14.00">SMTP</text></g><g id="svg-graphviz-4f068d8359a7-edge3" class="edge"><title>dns-&gt;smtp1</title><path fill="none" stroke="black" d="M511.16,-65.91C499.19,-61.03 485.81,-56.47 473,-54 432.2,-46.14 385.63,-46.62 348.52,-49.2" /><polygon fill="black" stroke="black" points="348.02,-45.73 338.31,-49.97 348.55,-52.71 348.02,-45.73" /><text text-anchor="middle" x="414.5" y="-57.8" font-family="Times,serif" font-size="14.00">servidor destino</text></g><g id="svg-graphviz-4f068d8359a7-node5" class="node"><title>caixa</title><path fill="#eef4ff" stroke="#5b7bbb" d="M793,-37C793,-37 716,-37 716,-37 710,-37 704,-31 704,-25 704,-25 704,-13 704,-13 704,-7 710,-1 716,-1 716,-1 793,-1 793,-1 799,-1 805,-7 805,-13 805,-13 805,-25 805,-25 805,-31 799,-37 793,-37" /><text text-anchor="middle" x="754.5" y="-15.3" font-family="Helvetica,sans-Serif" font-size="14.00">Caixa postal</text></g><g id="svg-graphviz-4f068d8359a7-edge5" class="edge"><title>smtp2-&gt;caixa</title><path fill="none" stroke="black" d="M612.26,-19C638.01,-19 668.04,-19 693.78,-19" /><polygon fill="black" stroke="black" points="693.79,-22.5 703.79,-19 693.79,-15.5 693.79,-22.5" /><text text-anchor="middle" x="658" y="-22.8" font-family="Times,serif" font-size="14.00">entrega</text></g><g id="svg-graphviz-4f068d8359a7-node6" class="node"><title>destinatario</title><path fill="#eef4ff" stroke="#5b7bbb" d="M1034,-38C1034,-38 901,-38 901,-38 895,-38 889,-32 889,-26 889,-26 889,-12 889,-12 889,-6 895,0 901,0 901,0 1034,0 1034,0 1040,0 1046,-6 1046,-12 1046,-12 1046,-26 1046,-26 1046,-32 1040,-38 1034,-38" /><text text-anchor="middle" x="967.5" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">Usuário destinatário</text><text text-anchor="middle" x="967.5" y="-7.8" font-family="Helvetica,sans-Serif" font-size="14.00">POP3/IMAP/Webmail</text></g><g id="svg-graphviz-4f068d8359a7-edge6" class="edge"><title>caixa-&gt;destinatario</title><path fill="none" stroke="black" d="M805.24,-19C827.08,-19 853.4,-19 878.39,-19" /><polygon fill="black" stroke="black" points="878.62,-22.5 888.62,-19 878.62,-15.5 878.62,-22.5" /><text text-anchor="middle" x="847" y="-22.8" font-family="Times,serif" font-size="14.00">leitura</text></g></g></svg></div></div>
+
+<h3 id="smtp-envio-e-transferência"><span class="heading-text">SMTP: envio e transferência</span><span class="heading-arabic">11.5.2</span></h3>
+<p>O SMTP, ou <em>Simple Mail Transfer Protocol</em>, é usado para envio e transferência de mensagens. Ele funciona em cima do TCP e usa uma conversa textual entre cliente e servidor.</p>
+<p>Uma troca SMTP simplificada pode ser lida assim.</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">Cliente: HELO cliente.exemplo.com
+Servidor: 250 OK
+Cliente: MAIL FROM:&lt;ana@exemplo.com&gt;
+Servidor: 250 OK
+Cliente: RCPT TO:&lt;bruno@universidade.edu.br&gt;
+Servidor: 250 OK
+Cliente: DATA
+Servidor: 354 envie a mensagem
+Cliente: Subject: Aula de redes
+Cliente:
+Cliente: Segue o material da aula.
+Cliente: .
+Servidor: 250 mensagem aceita
+</code></pre>
+<p>O ponto importante é perceber que o SMTP é um protocolo de <strong>envio</strong>. Ele não é, por si só, o protocolo usado pelo usuário para sincronizar sua caixa postal em vários dispositivos.</p>
+<h3 id="pop3-e-imap-acesso-à-caixa-postal"><span class="heading-text">POP3 e IMAP: acesso à caixa postal</span><span class="heading-arabic">11.5.3</span></h3>
+<p>Depois que a mensagem chega ao servidor do destinatário, o usuário precisa acessá-la. Para isso, aparecem POP3 e IMAP.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Aspecto</th>
+  <th style="text-align:left">POP3</th>
+  <th style="text-align:left">IMAP</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Ideia principal</td>
+  <td style="text-align:left">Baixar mensagens para o cliente</td>
+  <td style="text-align:left">Manter mensagens organizadas no servidor</td>
+</tr>
+<tr>
+  <td style="text-align:left">Estado no servidor</td>
+  <td style="text-align:left">Mais simples</td>
+  <td style="text-align:left">Mais rico</td>
+</tr>
+<tr>
+  <td style="text-align:left">Uso com vários dispositivos</td>
+  <td style="text-align:left">Menos adequado</td>
+  <td style="text-align:left">Mais adequado</td>
+</tr>
+<tr>
+  <td style="text-align:left">Pastas e sincronização</td>
+  <td style="text-align:left">Limitado</td>
+  <td style="text-align:left">Natural</td>
+</tr>
+</tbody>
+</table>
+<p>O POP3 foi pensado para um modelo mais simples: baixar mensagens e, muitas vezes, removê-las do servidor. O IMAP combina melhor com o uso atual, em que a mesma caixa postal é acessada por notebook, celular e webmail.</p>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Por que o IMAP é mais adequado do que o POP3 quando o usuário acessa o mesmo e-mail pelo celular e pelo computador?</p>
+  </div>
+</div>
+<p>Porque o IMAP mantém o estado da caixa postal no servidor. Mensagens lidas, pastas, buscas e organização podem ser refletidas em vários clientes. No POP3, o foco histórico é o download da mensagem para um cliente específico.</p>
+<h3 id="mime-mensagens-além-de-texto-simples"><span class="heading-text">MIME: mensagens além de texto simples</span><span class="heading-arabic">11.5.4</span></h3>
+<p>O e-mail original foi projetado para mensagens textuais simples. Mas mensagens modernas carregam anexos, imagens, HTML e caracteres de várias línguas. O MIME, ou <em>Multipurpose Internet Mail Extensions</em>, amplia o formato da mensagem para permitir esses conteúdos.</p>
+<p>Com MIME, uma mensagem pode ter várias partes.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Parte</th>
+  <th style="text-align:left">Exemplo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Cabeçalhos</td>
+  <td style="text-align:left"><code>From</code>, <code>To</code>, <code>Subject</code>, <code>Date</code></td>
+</tr>
+<tr>
+  <td style="text-align:left">Corpo textual</td>
+  <td style="text-align:left">Texto simples ou HTML</td>
+</tr>
+<tr>
+  <td style="text-align:left">Anexos</td>
+  <td style="text-align:left">PDF, imagem, planilha</td>
+</tr>
+<tr>
+  <td style="text-align:left">Tipo de conteúdo</td>
+  <td style="text-align:left"><code>text/plain</code>, <code>text/html</code>, <code>image/png</code>, <code>application/pdf</code></td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Cuidado conceitual<br /></span>
+  </div>
+  <div class="callout-content">
+<p>SMTP transporta a mensagem. MIME descreve como representar conteúdos dentro dela. São problemas diferentes.</p>
+  </div>
+</div>
+<h2 id="web-e-http"><span class="heading-text">Web e HTTP</span><span class="heading-arabic">11.6</span></h2>
+<p>A Web combina três ideias centrais: identificação de recursos por URL, documentos ligados por hipertexto e transferência por HTTP.</p>
+<p>Quando usamos um navegador, não estamos apenas abrindo “a Internet”. Estamos usando uma aplicação que interpreta URLs, consulta DNS, abre conexões, envia requisições HTTP, recebe respostas e monta uma página com texto, imagens, estilos e scripts.</p>
+<h3 id="url"><span class="heading-text">URL</span><span class="heading-arabic">11.6.1</span></h3>
+<p>Um URL, ou <em>Uniform Resource Locator</em>, identifica onde está um recurso e como acessá-lo.</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">https://www.exemplo.com.br/aulas/redes.html
+</code></pre>
+<p>Esse URL pode ser separado assim.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Parte</th>
+  <th style="text-align:left">Valor</th>
+  <th style="text-align:left">Significado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Esquema</td>
+  <td style="text-align:left"><code>https</code></td>
+  <td style="text-align:left">Protocolo usado</td>
+</tr>
+<tr>
+  <td style="text-align:left">Host</td>
+  <td style="text-align:left"><code>www.exemplo.com.br</code></td>
+  <td style="text-align:left">Nome do servidor</td>
+</tr>
+<tr>
+  <td style="text-align:left">Caminho</td>
+  <td style="text-align:left"><code>/aulas/redes.html</code></td>
+  <td style="text-align:left">Recurso solicitado no servidor</td>
+</tr>
+</tbody>
+</table>
+<div class="example">
+  <div class="example-title">Exemplo 3</div>
+  <p>Ao acessar <code>http://www.exemplo.com/index.html</code>, o navegador executa uma sequência de passos.</p>
+<ol>
+<li>Identifica o host <code>www.exemplo.com</code>.</li>
+<li>Consulta o DNS para obter o endereço IP.</li>
+<li>Abre uma conexão TCP com o servidor, normalmente na porta 80.</li>
+<li>Envia uma requisição HTTP pedindo <code>/index.html</code>.</li>
+<li>Recebe uma resposta HTTP com status, cabeçalhos e corpo.</li>
+<li>Renderiza o conteúdo recebido.</li>
+</ol>
+<p>O usuário vê uma página. A rede vê uma sequência de protocolos trabalhando em conjunto.</p>
+</div>
+<h3 id="http-como-solicitação-e-resposta"><span class="heading-text">HTTP como solicitação e resposta</span><span class="heading-arabic">11.6.2</span></h3>
+<p>O HTTP é um protocolo de aplicação baseado no modelo requisição-resposta. O cliente envia uma requisição. O servidor responde.</p>
+<img src="static/fig27_http_transacao_forouzan.png" width="80%">
+
+<p>Uma requisição HTTP simples pode ser escrita assim.</p>
+<pre class="line-numbers language-http" data-lang="HTTP"><code class="language-http">GET /index.html HTTP/1.1
+Host: www.exemplo.com
+User-Agent: NavegadorExemplo/1.0
+Accept: text/html
+</code></pre>
+<p>A resposta pode vir assim.</p>
+<pre class="line-numbers language-http" data-lang="HTTP"><code class="language-http">HTTP/1.1 200 OK
+Content-Type: text/html
+Content-Length: 1250
+
+&lt;html&gt;
+...
+&lt;/html&gt;
+</code></pre>
+<p>O primeiro bloco é a linha de requisição e os cabeçalhos. O segundo bloco é a linha de status, os cabeçalhos de resposta e o corpo.</p>
+<h3 id="métodos-http"><span class="heading-text">Métodos HTTP</span><span class="heading-arabic">11.6.3</span></h3>
+<p>O método informa a intenção da requisição.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Método</th>
+  <th style="text-align:left">Ideia principal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><code>GET</code></td>
+  <td style="text-align:left">Solicitar um recurso</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>HEAD</code></td>
+  <td style="text-align:left">Solicitar apenas cabeçalhos</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>POST</code></td>
+  <td style="text-align:left">Enviar dados para processamento</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>PUT</code></td>
+  <td style="text-align:left">Substituir ou criar um recurso no destino indicado</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>DELETE</code></td>
+  <td style="text-align:left">Solicitar remoção de um recurso</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>OPTIONS</code></td>
+  <td style="text-align:left">Consultar opções de comunicação</td>
+</tr>
+</tbody>
+</table>
+<p>Em navegação comum, <code>GET</code> aparece o tempo todo. Em formulários e APIs, <code>POST</code>, <code>PUT</code> e <code>DELETE</code> são comuns.</p>
+<h3 id="códigos-de-status"><span class="heading-text">Códigos de status</span><span class="heading-arabic">11.6.4</span></h3>
+<p>O status da resposta informa o resultado geral da requisição.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Classe</th>
+  <th style="text-align:left">Significado</th>
+  <th style="text-align:left">Exemplo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">1xx</td>
+  <td style="text-align:left">Informação</td>
+  <td style="text-align:left"><code>100 Continue</code></td>
+</tr>
+<tr>
+  <td style="text-align:left">2xx</td>
+  <td style="text-align:left">Sucesso</td>
+  <td style="text-align:left"><code>200 OK</code></td>
+</tr>
+<tr>
+  <td style="text-align:left">3xx</td>
+  <td style="text-align:left">Redirecionamento</td>
+  <td style="text-align:left"><code>301 Moved Permanently</code></td>
+</tr>
+<tr>
+  <td style="text-align:left">4xx</td>
+  <td style="text-align:left">Erro do cliente</td>
+  <td style="text-align:left"><code>404 Not Found</code></td>
+</tr>
+<tr>
+  <td style="text-align:left">5xx</td>
+  <td style="text-align:left">Erro do servidor</td>
+  <td style="text-align:left"><code>500 Internal Server Error</code></td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Erro comum<br /></span>
+  </div>
+  <div class="callout-content">
+<code>404</code> não significa que a Internet caiu. Significa que o servidor foi alcançado, mas não encontrou o recurso solicitado naquele caminho.</p>
+  </div>
+</div>
+<h3 id="conexões-persistentes"><span class="heading-text">Conexões persistentes</span><span class="heading-arabic">11.6.5</span></h3>
+<p>No HTTP/1.0, era comum abrir uma conexão TCP para cada objeto. Isso era caro quando uma página tinha muitos elementos, como HTML, imagens e arquivos de estilo.</p>
+<p>O HTTP/1.1 tornou comum o uso de conexões persistentes. Assim, uma mesma conexão TCP pode carregar várias requisições e respostas em sequência.</p>
+<img src="static/fig7_14_http_persistente_tanenbaum.png" width="80%">
+
+<p>O ganho é reduzir o custo de criar várias conexões TCP. Lembre que uma conexão TCP exige handshake, controle de estado e encerramento. Se uma página precisa buscar muitos recursos no mesmo servidor, reaproveitar a conexão melhora o desempenho.</p>
+<h3 id="cache-http"><span class="heading-text">Cache HTTP</span><span class="heading-arabic">11.6.6</span></h3>
+<p>Assim como no DNS, cache também é importante na Web. O HTTP permite que navegadores e proxies guardem cópias de recursos e verifiquem se elas ainda são válidas.</p>
+<p>Isso reduz latência e tráfego, mas exige cuidado: uma cópia em cache não pode ser usada indefinidamente se o conteúdo mudou.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Mecanismo</th>
+  <th style="text-align:left">Ideia</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><code>Cache-Control</code></td>
+  <td style="text-align:left">Define políticas de cache</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>Expires</code></td>
+  <td style="text-align:left">Indica uma data de expiração</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>Last-Modified</code></td>
+  <td style="text-align:left">Informa quando o recurso foi alterado</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>ETag</code></td>
+  <td style="text-align:left">Identificador de versão do recurso</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>If-Modified-Since</code></td>
+  <td style="text-align:left">Cliente pergunta se houve modificação desde uma data</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>If-None-Match</code></td>
+  <td style="text-align:left">Cliente valida usando uma ETag</td>
+</tr>
+</tbody>
+</table>
+<div class="example">
+  <div class="example-title">Exemplo 4</div>
+  <p>Um navegador já tem uma imagem em cache. Em vez de baixar tudo novamente, ele pode perguntar ao servidor se a imagem mudou.</p>
+<pre class="line-numbers language-http" data-lang="HTTP"><code class="language-http">GET /logo.png HTTP/1.1
+Host: www.exemplo.com
+If-None-Match: &quot;abc123&quot;
+</code></pre>
+<p>Se a imagem não mudou, o servidor pode responder:</p>
+<pre class="line-numbers language-http" data-lang="HTTP"><code class="language-http">HTTP/1.1 304 Not Modified
+</code></pre>
+<p>Nesse caso, o navegador reutiliza a cópia local. Isso economiza tempo e banda.</p>
+</div>
+<h2 id="juntando-dns-tcp-http-e-e-mail"><span class="heading-text">Juntando DNS, TCP, HTTP e e-mail</span><span class="heading-arabic">11.7</span></h2>
+<p>Os protocolos de aplicação raramente aparecem isolados. Eles se apoiam nos serviços das camadas inferiores e também se combinam entre si.</p>
+<p>Quando acessamos uma página Web, o DNS normalmente aparece antes do HTTP. Quando enviamos e-mail, o DNS pode ser usado para localizar o servidor de correio do domínio de destino por meio de registros MX. Quando a aplicação precisa de entrega confiável, TCP aparece como transporte comum.</p>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="760" viewBox="0.00 0.00 247.00 342.00" class="svg-graph graphviz-img"><g id="svg-graphviz-28860701cf6d-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 338)"><title>AplicacaoInternet</title><g id="svg-graphviz-28860701cf6d-node1" class="node"><title>app</title><path fill="#eef4ff" stroke="#5b7bbb" d="M227,-334C227,-334 12,-334 12,-334 6,-334 0,-328 0,-322 0,-322 0,-308 0,-308 0,-302 6,-296 12,-296 12,-296 227,-296 227,-296 233,-296 239,-302 239,-308 239,-308 239,-322 239,-322 239,-328 233,-334 227,-334" /><text text-anchor="middle" x="119.5" y="-318.8" font-family="Helvetica,sans-Serif" font-size="14.00">Aplicações</text><text text-anchor="middle" x="119.5" y="-303.8" font-family="Helvetica,sans-Serif" font-size="14.00">Web, e-mail, consultas de nome</text></g><g id="svg-graphviz-28860701cf6d-node2" class="node"><title>protocolos</title><path fill="#eef4ff" stroke="#5b7bbb" d="M221,-260C221,-260 18,-260 18,-260 12,-260 6,-254 6,-248 6,-248 6,-234 6,-234 6,-228 12,-222 18,-222 18,-222 221,-222 221,-222 227,-222 233,-228 233,-234 233,-234 233,-248 233,-248 233,-254 227,-260 221,-260" /><text text-anchor="middle" x="119.5" y="-244.8" font-family="Helvetica,sans-Serif" font-size="14.00">Protocolos de aplicação</text><text text-anchor="middle" x="119.5" y="-229.8" font-family="Helvetica,sans-Serif" font-size="14.00">DNS, SMTP, POP3, IMAP, HTTP</text></g><g id="svg-graphviz-28860701cf6d-edge1" class="edge"><title>app-&gt;protocolos</title><path fill="none" stroke="black" d="M119.5,-295.83C119.5,-288.13 119.5,-278.97 119.5,-270.42" /><polygon fill="black" stroke="black" points="123,-270.41 119.5,-260.41 116,-270.41 123,-270.41" /></g><g id="svg-graphviz-28860701cf6d-node3" class="node"><title>transporte</title><path fill="#eef4ff" stroke="#5b7bbb" d="M156.5,-186C156.5,-186 82.5,-186 82.5,-186 76.5,-186 70.5,-180 70.5,-174 70.5,-174 70.5,-160 70.5,-160 70.5,-154 76.5,-148 82.5,-148 82.5,-148 156.5,-148 156.5,-148 162.5,-148 168.5,-154 168.5,-160 168.5,-160 168.5,-174 168.5,-174 168.5,-180 162.5,-186 156.5,-186" /><text text-anchor="middle" x="119.5" y="-170.8" font-family="Helvetica,sans-Serif" font-size="14.00">Transporte</text><text text-anchor="middle" x="119.5" y="-155.8" font-family="Helvetica,sans-Serif" font-size="14.00">UDP ou TCP</text></g><g id="svg-graphviz-28860701cf6d-edge2" class="edge"><title>protocolos-&gt;transporte</title><path fill="none" stroke="black" d="M119.5,-221.83C119.5,-214.13 119.5,-204.97 119.5,-196.42" /><polygon fill="black" stroke="black" points="123,-196.41 119.5,-186.41 116,-196.41 123,-196.41" /></g><g id="svg-graphviz-28860701cf6d-node4" class="node"><title>rede</title><path fill="#eef4ff" stroke="#5b7bbb" d="M134.5,-112C134.5,-112 104.5,-112 104.5,-112 98.5,-112 92.5,-106 92.5,-100 92.5,-100 92.5,-86 92.5,-86 92.5,-80 98.5,-74 104.5,-74 104.5,-74 134.5,-74 134.5,-74 140.5,-74 146.5,-80 146.5,-86 146.5,-86 146.5,-100 146.5,-100 146.5,-106 140.5,-112 134.5,-112" /><text text-anchor="middle" x="119.5" y="-96.8" font-family="Helvetica,sans-Serif" font-size="14.00">Rede</text><text text-anchor="middle" x="119.5" y="-81.8" font-family="Helvetica,sans-Serif" font-size="14.00">IP</text></g><g id="svg-graphviz-28860701cf6d-edge3" class="edge"><title>transporte-&gt;rede</title><path fill="none" stroke="black" d="M119.5,-147.83C119.5,-140.13 119.5,-130.97 119.5,-122.42" /><polygon fill="black" stroke="black" points="123,-122.41 119.5,-112.41 116,-122.41 123,-122.41" /></g><g id="svg-graphviz-28860701cf6d-node5" class="node"><title>enlace</title><path fill="#eef4ff" stroke="#5b7bbb" d="M187,-38C187,-38 52,-38 52,-38 46,-38 40,-32 40,-26 40,-26 40,-12 40,-12 40,-6 46,0 52,0 52,0 187,0 187,0 193,0 199,-6 199,-12 199,-12 199,-26 199,-26 199,-32 193,-38 187,-38" /><text text-anchor="middle" x="119.5" y="-22.8" font-family="Helvetica,sans-Serif" font-size="14.00">Enlace e física</text><text text-anchor="middle" x="119.5" y="-7.8" font-family="Helvetica,sans-Serif" font-size="14.00">Ethernet, Wi-Fi, fibra</text></g><g id="svg-graphviz-28860701cf6d-edge4" class="edge"><title>rede-&gt;enlace</title><path fill="none" stroke="black" d="M119.5,-73.83C119.5,-66.13 119.5,-56.97 119.5,-48.42" /><polygon fill="black" stroke="black" points="123,-48.41 119.5,-38.41 116,-48.41 123,-48.41" /></g></g></svg></div></div>
+
+<div class="example">
+  <div class="example-title">Exemplo 5</div>
+  <p>Considere o envio de uma mensagem para <code>aluno@universidade.edu.br</code>.</p>
+<ol>
+<li>O cliente de e-mail entrega a mensagem ao servidor de envio.</li>
+<li>O servidor consulta o DNS procurando o registro <code>MX</code> de <code>universidade.edu.br</code>.</li>
+<li>O DNS informa qual servidor recebe e-mails desse domínio.</li>
+<li>O servidor de origem abre uma conexão TCP com o servidor de destino.</li>
+<li>O SMTP transfere a mensagem.</li>
+<li>O destinatário lê a mensagem depois, usando IMAP, POP3 ou webmail.</li>
+</ol>
+<p>Perceba que DNS e SMTP trabalham juntos, mas resolvem problemas diferentes.</p>
+</div>
+<h2 id="mini-laboratório-no-linux"><span class="heading-text">Mini-laboratório no Linux</span><span class="heading-arabic">11.8</span></h2>
+<p>Os comandos abaixo servem para observar a camada de aplicação funcionando na prática. Alguns dependem de acesso à Internet, especialmente os exemplos com <code>dig</code> e <code>curl</code> para domínios externos. Os exemplos com <code>127.0.0.1</code> rodam localmente na própria máquina.</p>
+<h3 id="fazer-uma-consulta-dns-simples"><span class="heading-text">. Fazer uma consulta DNS simples</span><span class="heading-arabic">11.8.1</span></h3>
+<pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">dig www.google.com
+</code></pre>
+<p>O que observar:</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Campo ou seção</th>
+  <th style="text-align:left">Como interpretar</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><code>QUESTION SECTION</code></td>
+  <td style="text-align:left">Nome e tipo de registro consultado</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>ANSWER SECTION</code></td>
+  <td style="text-align:left">Resposta obtida, quando existe</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>A</code> ou <code>AAAA</code></td>
+  <td style="text-align:left">Endereço IPv4 ou IPv6 associado ao nome</td>
+</tr>
+<tr>
+  <td style="text-align:left">TTL</td>
+  <td style="text-align:left">Tempo pelo qual a resposta pode ficar em cache</td>
+</tr>
+</tbody>
+</table>
+<p>Esse comando mostra a função mais lembrada do DNS: resolver um nome para um endereço. Mesmo assim, é importante observar que a resposta vem como um <strong>registro DNS</strong>, não como uma tradução mágica feita pelo navegador.</p>
+<h3 id="consultar-tipos-diferentes-de-registros-dns"><span class="heading-text">. Consultar tipos diferentes de registros DNS</span><span class="heading-arabic">11.8.2</span></h3>
+<pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">dig google.com MX
+dig google.com NS
+dig google.com TXT
+</code></pre>
+<p>O ponto didático é mostrar que DNS não guarda apenas endereços IP.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Consulta</th>
+  <th style="text-align:left">O que mostra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><code>MX</code></td>
+  <td style="text-align:left">Servidores responsáveis por receber e-mail do domínio</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>NS</code></td>
+  <td style="text-align:left">Servidores de nomes responsáveis pelo domínio</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>TXT</code></td>
+  <td style="text-align:left">Registros textuais usados para verificações, políticas e outros metadados</td>
+</tr>
+</tbody>
+</table>
+<p>No caso do e-mail, o registro <code>MX</code> é especialmente importante. Ele permite que um servidor SMTP descubra para qual servidor deve entregar mensagens destinadas a um domínio.</p>
+<h3 id="ver-o-caminho-da-resolução-dns"><span class="heading-text">. Ver o caminho da resolução DNS</span><span class="heading-arabic">11.8.3</span></h3>
+<pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">dig +trace www.google.com
+</code></pre>
+<p>Esse comando mostra uma resolução percorrendo a hierarquia do DNS. Na saída, procure a passagem pelos servidores raiz, pelos servidores do domínio de alto nível e pelos servidores autoritativos.</p>
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">Observação<br /></span>
+  </div>
+  <div class="callout-content">
+<p>A saída pode variar de uma rede para outra. O objetivo não é decorar os servidores que aparecem, mas enxergar que o DNS é distribuído e hierárquico.</p>
+  </div>
+</div>
+<h3 id="comparar-dns-por-udp-e-por-tcp"><span class="heading-text">. Comparar DNS por UDP e por TCP</span><span class="heading-arabic">11.8.4</span></h3>
+<pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">dig www.google.com
+dig +tcp www.google.com
+</code></pre>
+<p>Consultas DNS comuns normalmente usam UDP, porque são pequenas e rápidas. Porém, DNS também pode usar TCP, por exemplo em respostas maiores ou em algumas operações administrativas.</p>
+<p>Esse exemplo conecta a aula atual com a aula anterior: a aplicação escolhe o transporte de acordo com o serviço de que precisa.</p>
+<h3 id="ver-cabeçalhos-http"><span class="heading-text">. Ver cabeçalhos HTTP</span><span class="heading-arabic">11.8.5</span></h3>
+<pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">curl -I http://example.com
+</code></pre>
+<p>O parâmetro <code>-I</code> solicita apenas os cabeçalhos da resposta. O que observar:</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Informação</th>
+  <th style="text-align:left">Como interpretar</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><code>HTTP/1.1 200 OK</code> ou outro status</td>
+  <td style="text-align:left">Resultado geral da requisição</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>Content-Type</code></td>
+  <td style="text-align:left">Tipo do conteúdo retornado</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>Content-Length</code></td>
+  <td style="text-align:left">Tamanho do corpo, quando informado</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>Location</code></td>
+  <td style="text-align:left">Destino de redirecionamento, quando existir</td>
+</tr>
+<tr>
+  <td style="text-align:left">Cabeçalhos de cache</td>
+  <td style="text-align:left">Pistas sobre validade e armazenamento da resposta</td>
+</tr>
+</tbody>
+</table>
+<p>Esse comando é útil porque mostra que uma resposta HTTP não é apenas a página. Antes do corpo, há metadados que ajudam cliente e servidor a coordenar a transferência.</p>
+<h3 id="ver-uma-requisição-http-com-detalhes"><span class="heading-text">. Ver uma requisição HTTP com detalhes</span><span class="heading-arabic">11.8.6</span></h3>
+<pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">curl -v http://example.com
+</code></pre>
+<p>Com <code>-v</code>, o <code>curl</code> mostra detalhes da conexão e da conversa HTTP. Procure linhas como estas:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">&gt; GET / HTTP/1.1
+&gt; Host: example.com
+&lt; HTTP/1.1 200 OK
+</code></pre>
+<p>As linhas que começam com <code>&gt;</code> representam dados enviados pelo cliente. As linhas que começam com <code>&lt;</code> representam dados recebidos do servidor.</p>
+<h3 id="comparar-http-e-https"><span class="heading-text">. Comparar HTTP e HTTPS</span><span class="heading-arabic">11.8.7</span></h3>
+<pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">curl -I https://example.com
+</code></pre>
+<p>Aqui a aplicação continua sendo HTTP, mas a comunicação ocorre sobre uma camada segura, normalmente TLS, usando a porta 443. O conteúdo HTTP fica protegido durante o transporte.</p>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Cuidado conceitual<br /></span>
+  </div>
+  <div class="callout-content">
+<p>HTTPS não é um protocolo completamente separado do HTTP em termos de semântica de aplicação. Ele é HTTP protegido por uma camada de segurança.</p>
+  </div>
+</div>
+<h3 id="observar-uma-requisição-http-chegando-localmente"><span class="heading-text">. Observar uma requisição HTTP chegando localmente</span><span class="heading-arabic">11.8.8</span></h3>
+<p>Em um terminal, abra uma escuta TCP local.</p>
+<pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">nc -l 8080
+</code></pre>
+<p>Em outro terminal, envie uma requisição com <code>curl</code>.</p>
+<pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">curl -v http://127.0.0.1:8080/teste
+</code></pre>
+<p>No terminal do <code>nc</code>, você verá a requisição HTTP chegando como texto, incluindo a linha <code>GET /teste HTTP/1.1</code> e cabeçalhos como <code>Host</code> e <code>User-Agent</code>.</p>
+<p>Esse exemplo é forte porque mostra que HTTP é uma conversa estruturada sobre uma conexão TCP. O navegador ou o <code>curl</code> montam essa conversa automaticamente, mas ela pode ser observada diretamente.</p>
+<h3 id="responder-manualmente-com-http"><span class="heading-text">. Responder manualmente com HTTP</span><span class="heading-arabic">11.8.9</span></h3>
+<p>Em um terminal, rode:</p>
+<pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">printf 'HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\nOla, HTTP!\n' | nc -l 8080
+</code></pre>
+<p>Em outro terminal, acesse:</p>
+<pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">curl http://127.0.0.1:8080
+</code></pre>
+<p>O <code>curl</code> deve mostrar:</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">Ola, HTTP!
+</code></pre>
+<p>Aqui o servidor é apenas um <code>nc</code> respondendo texto no formato esperado. Isso ajuda a separar duas ideias: HTTP é o protocolo; Apache, Nginx e outros são implementações de servidores que falam esse protocolo.</p>
+<h3 id="ver-conexões-tcp-para-serviços-web"><span class="heading-text">. Ver conexões TCP para serviços Web</span><span class="heading-arabic">11.8.10</span></h3>
+<p>Com algumas abas ou requisições Web abertas, execute:</p>
+<pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">ss -tn '( dport = :80 or dport = :443 )'
+</code></pre>
+<p>O que observar:</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Informação</th>
+  <th style="text-align:left">Como interpretar</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><code>ESTAB</code></td>
+  <td style="text-align:left">Conexão TCP estabelecida</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>dport = :80</code></td>
+  <td style="text-align:left">Conexão com serviço HTTP comum</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>dport = :443</code></td>
+  <td style="text-align:left">Conexão com serviço HTTPS</td>
+</tr>
+</tbody>
+</table>
+<p>Esse comando reforça a separação entre camadas. HTTP e HTTPS são protocolos de aplicação, mas aparecem no sistema operacional como conexões TCP associadas a portas.</p>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Sobre demonstrações com SMTP<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Evite depender de testes SMTP reais com servidores externos durante a aula. A porta 25 costuma ser bloqueada por provedores e instituições, e conexões manuais podem ser interpretadas como atividade suspeita. Para e-mail, a demonstração mais segura é observar registros <code>MX</code> com <code>dig</code> e explicar como eles orientam a entrega por SMTP.</p>
+  </div>
+</div>
+<h2 id="síntese"><span class="heading-text">Síntese</span><span class="heading-arabic">11.9</span></h2>
+<p>A camada de aplicação é onde os serviços ficam visíveis para usuários e programas. Ela não substitui as camadas inferiores. Ela usa essas camadas para definir conversas com significado.</p>
+<p>DNS resolve o problema dos nomes. Sem ele, teríamos de lidar diretamente com endereços IP na maior parte do tempo. E-mail resolve o envio, armazenamento e acesso assíncrono a mensagens. HTTP resolve a transferência de recursos na Web usando requisições e respostas.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Protocolo</th>
+  <th style="text-align:left">Ideia que você deve guardar</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">DNS</td>
+  <td style="text-align:left">Banco de dados distribuído que associa nomes a registros</td>
+</tr>
+<tr>
+  <td style="text-align:left">SMTP</td>
+  <td style="text-align:left">Protocolo principal de envio e transferência de e-mail</td>
+</tr>
+<tr>
+  <td style="text-align:left">POP3</td>
+  <td style="text-align:left">Protocolo simples para baixar mensagens</td>
+</tr>
+<tr>
+  <td style="text-align:left">IMAP</td>
+  <td style="text-align:left">Protocolo mais adequado para sincronizar caixa postal no servidor</td>
+</tr>
+<tr>
+  <td style="text-align:left">HTTP</td>
+  <td style="text-align:left">Protocolo de requisição-resposta usado para transferir recursos Web</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-abstract">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
+    <span class="callout-title-inner">Fechamento<br /></span>
+  </div>
+  <div class="callout-content">
+<p>A Internet não é apenas IP e TCP. Esses protocolos entregam dados, mas DNS, e-mail e HTTP dão significado prático à comunicação. É na camada de aplicação que a rede se transforma em serviços usados todos os dias.</p>
+  </div>
+</div>
+
+                </div>
+            </article>
+            <footer class="footer">
+                <p>© 2025 · <a href="#">Gabriel Soares Baptista</a></p>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        const toggle = document.querySelector('.mobile-menu-toggle');
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.querySelector('.mobile-menu-overlay');
+
+        function openMenu() {
+            sidebar.classList.add('open');
+            overlay.classList.add('open');
+            toggle.classList.add('open');
+            toggle.innerHTML = '<i data-lucide="x"></i>';
+            CourseForgeUI.initIcons();
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMenu() {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('open');
+            toggle.classList.remove('open');
+            toggle.innerHTML = '<i data-lucide="menu"></i>';
+            CourseForgeUI.initIcons();
+            document.body.style.overflow = '';
+        }
+
+        toggle.addEventListener('click', () => {
+            if (sidebar.classList.contains('open')) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        overlay.addEventListener('click', closeMenu);
+    </script>
+
+    
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            renderMathInElement(document.body, {
+                output: 'html',
+                delimiters: [
+                    { left: "$$", right: "$$", display: true },
+                    { left: "$", right: "$", display: false },
+                    { left: "\\(", right: "\\)", display: false },
+                    { left: "\\[", right: "\\]", display: true }
+                ],
+                throwOnError: false,
+                strict: false
+            });
+        });
+    </script>
+    
+    
+    <script src="/aulas-faesa/js/vendor/prism/prism.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-c.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-cpp.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-python.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-clike.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-perl.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-java.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-mermaid.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-php.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js" data-no-bundle></script>
+    
+    
+    
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            mermaid.initialize({
+                startOnLoad: true,
+                theme: 'default',
+                securityLevel: 'loose',
+                fontFamily: 'Inter, system-ui, sans-serif',
+                themeVariables: {
+                    fontSize: '16px',
+                    edgeLabelFontSize: '16px',
+                    multiplicityFontSize: '18px'
+                }
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const isSubcourse = false;
+        const courseName = "Redes";
+        CourseForgeNav.applyDynamicBreadcrumbs('.breadcrumb', isSubcourse);
+        CourseForgeNav.initScrollSpy();
+        CourseForgeUI.initCopyButtons();
+        CourseForgeUI.initExamples();
+        });
+
+        function handleBackNavigation() {
+            const isSubcourse = false;
+        const dynamic = CourseForgeNav.getBackLink('contents.html', 'Voltar', isSubcourse);
+        window.location.href = dynamic.url;
+        }
+    </script>
+</body>
+
+</html>

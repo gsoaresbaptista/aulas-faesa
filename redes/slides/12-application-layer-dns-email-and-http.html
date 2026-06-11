@@ -1,0 +1,1511 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <title>Camada de Aplicação: DNS, E-mail e HTTP</title>
+    <link rel="icon" href="/aulas-faesa/img/dark-favicon.svg" media="(prefers-color-scheme: light)">
+    <link rel="icon" href="/aulas-faesa/img/light-favicon.svg" media="(prefers-color-scheme: dark)">
+
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/reset.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/reveal.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/theme/white.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/aulas-faesa/css/prism-one-light.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/fonts.css" data-no-bundle>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+            <section><h1>Camada de Aplicação: DNS, E-mail e HTTP</h1>
+<h2>Protocolos essenciais da Internet</h2>
+<p>Professor: Gabriel Soares Baptista</p>
+</section>
+<section><h1>Da Aula Anterior Para Hoje</h1>
+<p>Na aula passada, transporte entregava dados ao <strong>processo correto</strong>.</p>
+<p>Hoje a pergunta muda.</p>
+<h3>Pergunta central</h3>
+<p>Depois que os bytes chegam ao processo, o que eles significam?</p>
+<h3>Resposta curta</h3>
+<p>Quem dá significado é o protocolo de aplicação.</p>
+</section>
+<section><h1>Ideia Central</h1>
+<p>A camada de aplicação define mensagens, comandos, respostas, nomes e formatos usados por programas reais.</p>
+<h3>Nesta aula</h3>
+<ul>
+<li>DNS: nomes e registros.</li>
+<li>E-mail: envio, entrega e acesso.</li>
+<li>HTTP: requisição, resposta e Web.</li>
+<li>Mini-lab: <code>dig</code>, <code>curl</code>, <code>nc</code> e <code>ss</code>.</li>
+</ul>
+<div class="callout callout-abstract">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
+    <span class="callout-title-inner">Base da aula<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Forouzan capítulos 25, 26 e 27; Tanenbaum capítulo 7.</p>
+  </div>
+</div>
+</section>
+<section><h1>Mapa de Leitura</h1>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Livro</th>
+  <th style="text-align:left">Trecho</th>
+  <th style="text-align:left">Assunto</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Forouzan 25</td>
+  <td style="text-align:left">789-815</td>
+  <td style="text-align:left">DNS</td>
+</tr>
+<tr>
+  <td style="text-align:left">Forouzan 26</td>
+  <td style="text-align:left">816-850</td>
+  <td style="text-align:left">e-mail, SMTP, POP3, IMAP, MIME</td>
+</tr>
+<tr>
+  <td style="text-align:left">Forouzan 27</td>
+  <td style="text-align:left">851-882</td>
+  <td style="text-align:left">WWW e HTTP</td>
+</tr>
+<tr>
+  <td style="text-align:left">Tanenbaum 7.1</td>
+  <td style="text-align:left">384-391</td>
+  <td style="text-align:left">DNS</td>
+</tr>
+<tr>
+  <td style="text-align:left">Tanenbaum 7.2</td>
+  <td style="text-align:left">391-407</td>
+  <td style="text-align:left">correio eletrônico</td>
+</tr>
+<tr>
+  <td style="text-align:left">Tanenbaum 7.3.1-7.3.4</td>
+  <td style="text-align:left">407-436</td>
+  <td style="text-align:left">Web e HTTP</td>
+</tr>
+</tbody>
+</table>
+<h3>Recorte</h3>
+<p>Streaming, CDNs e peer-to-peer ficam fora da aula de hoje.</p>
+</section>
+<section><h1>O Papel da Aplicação</h1>
+<p>TCP pode entregar bytes em ordem, mas não define o significado desses bytes.</p>
+<h3>Exemplos</h3>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Bytes da aplicação</th>
+  <th style="text-align:left">Quem interpreta</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><code>GET / HTTP/1.1</code></td>
+  <td style="text-align:left">HTTP</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>MAIL FROM:&lt;ana@exemplo.com&gt;</code></td>
+  <td style="text-align:left">SMTP</td>
+</tr>
+<tr>
+  <td style="text-align:left">consulta por <code>A www.exemplo.com</code></td>
+  <td style="text-align:left">DNS</td>
+</tr>
+</tbody>
+</table>
+<h3>Ideia prática</h3>
+<p>Transporte entrega. Aplicação interpreta.</p>
+</section>
+<section><h1>Protocolos da Aula</h1>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Protocolo</th>
+  <th style="text-align:left">Problema</th>
+  <th style="text-align:left">Transporte comum</th>
+  <th style="text-align:left">Porta comum</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">DNS</td>
+  <td style="text-align:left">resolver nomes e registros</td>
+  <td style="text-align:left">UDP ou TCP</td>
+  <td style="text-align:left">53</td>
+</tr>
+<tr>
+  <td style="text-align:left">SMTP</td>
+  <td style="text-align:left">enviar e transferir e-mail</td>
+  <td style="text-align:left">TCP</td>
+  <td style="text-align:left">25</td>
+</tr>
+<tr>
+  <td style="text-align:left">POP3</td>
+  <td style="text-align:left">baixar mensagens</td>
+  <td style="text-align:left">TCP</td>
+  <td style="text-align:left">110</td>
+</tr>
+<tr>
+  <td style="text-align:left">IMAP</td>
+  <td style="text-align:left">sincronizar caixa postal</td>
+  <td style="text-align:left">TCP</td>
+  <td style="text-align:left">143</td>
+</tr>
+<tr>
+  <td style="text-align:left">HTTP</td>
+  <td style="text-align:left">transferir recursos Web</td>
+  <td style="text-align:left">TCP</td>
+  <td style="text-align:left">80</td>
+</tr>
+<tr>
+  <td style="text-align:left">HTTPS</td>
+  <td style="text-align:left">HTTP protegido</td>
+  <td style="text-align:left">TCP</td>
+  <td style="text-align:left">443</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section><h1>DNS</h1>
+<p>DNS significa <strong>Domain Name System</strong>.</p>
+<h3>Problema</h3>
+<p>Pessoas usam nomes. A rede encaminha por endereços IP.</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">www.universidade.edu.br -&gt; endereço IP
+</code></pre>
+<h3>Nuance</h3>
+<p>DNS não é só nome para IP. DNS é um banco de dados distribuído de registros.</p>
+</section>
+<section><h3>Leitura</h3>
+<p>O nome completo descreve um caminho na hierarquia.</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">www.exemplo.com.br
+</code></pre>
+<p>Leia da direita para a esquerda: <code>br</code>, <code>com</code>, <code>exemplo</code>, <code>www</code>.</p>
+</section>
+<section><h1>Servidores DNS</h1>
+<p>DNS é distribuído para evitar gargalo e ponto único de falha.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Servidor</th>
+  <th style="text-align:left">Papel</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">Raiz</td>
+  <td style="text-align:left">aponta para TLDs</td>
+</tr>
+<tr>
+  <td style="text-align:left">TLD</td>
+  <td style="text-align:left">responde por <code>com</code>, <code>org</code>, <code>br</code> etc.</td>
+</tr>
+<tr>
+  <td style="text-align:left">Autoritativo</td>
+  <td style="text-align:left">mantém registros da zona</td>
+</tr>
+<tr>
+  <td style="text-align:left">Resolvedor local</td>
+  <td style="text-align:left">consulta em nome do cliente</td>
+</tr>
+</tbody>
+</table>
+<h3>Cache</h3>
+<p>Respostas podem ser guardadas por um tempo indicado pelo TTL.</p>
+</section>
+<section><h1>Resolução DNS</h1>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="760" viewBox="0.00 0.00 869.00 78.00" class="svg-graph graphviz-img"><g id="svg-graphviz-de202eda00a9-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 74)"><title>DNSResolucaoSlide</title><g id="svg-graphviz-de202eda00a9-node1" class="node"><title>cliente</title><path fill="#eef4ff" stroke="#5b7bbb" d="M53,-36C53,-36 12,-36 12,-36 6,-36 0,-30 0,-24 0,-24 0,-12 0,-12 0,-6 6,0 12,0 12,0 53,0 53,0 59,0 65,-6 65,-12 65,-12 65,-24 65,-24 65,-30 59,-36 53,-36" /><text text-anchor="middle" x="32.5" y="-14.3" font-family="Helvetica,sans-Serif" font-size="14.00">Cliente</text></g><g id="svg-graphviz-de202eda00a9-node2" class="node"><title>resolvedor</title><path fill="#eef4ff" stroke="#5b7bbb" d="M243,-36C243,-36 174,-36 174,-36 168,-36 162,-30 162,-24 162,-24 162,-12 162,-12 162,-6 168,0 174,0 174,0 243,0 243,0 249,0 255,-6 255,-12 255,-12 255,-24 255,-24 255,-30 249,-36 243,-36" /><text text-anchor="middle" x="208.5" y="-14.3" font-family="Helvetica,sans-Serif" font-size="14.00">Resolvedor</text></g><g id="svg-graphviz-de202eda00a9-edge1" class="edge"><title>cliente-&gt;resolvedor</title><path fill="none" stroke="black" d="M65.01,-18C89.08,-18 122.89,-18 151.53,-18" /><polygon fill="black" stroke="black" points="151.82,-21.5 161.82,-18 151.82,-14.5 151.82,-21.5" /><text text-anchor="middle" x="113.5" y="-21.8" font-family="Times,serif" font-size="14.00">consulta</text></g><g id="svg-graphviz-de202eda00a9-edge7" class="edge"><title>resolvedor-&gt;cliente</title><path fill="none" stroke="black" d="M161.72,-16.39C155.76,-16.23 149.73,-16.09 144,-16 116.89,-15.57 110.11,-15.45 83,-16 80.48,-16.05 77.89,-16.12 75.27,-16.19" /><polygon fill="black" stroke="black" points="75.06,-12.7 65.18,-16.53 75.29,-19.69 75.06,-12.7" /></g><g id="svg-graphviz-de202eda00a9-node3" class="node"><title>raiz</title><path fill="#eef4ff" stroke="#5b7bbb" d="M334,-70C334,-70 304,-70 304,-70 298,-70 292,-64 292,-58 292,-58 292,-46 292,-46 292,-40 298,-34 304,-34 304,-34 334,-34 334,-34 340,-34 346,-40 346,-46 346,-46 346,-58 346,-58 346,-64 340,-70 334,-70" /><text text-anchor="middle" x="319" y="-48.3" font-family="Helvetica,sans-Serif" font-size="14.00">Raiz</text></g><g id="svg-graphviz-de202eda00a9-edge2" class="edge"><title>resolvedor-&gt;raiz</title><path fill="none" stroke="black" d="M255.2,-32.32C264.19,-35.14 273.5,-38.06 282.12,-40.76" /><polygon fill="black" stroke="black" points="281.25,-44.15 291.84,-43.8 283.35,-37.47 281.25,-44.15" /></g><g id="svg-graphviz-de202eda00a9-node4" class="node"><title>tld</title><path fill="#eef4ff" stroke="#5b7bbb" d="M497,-70C497,-70 467,-70 467,-70 461,-70 455,-64 455,-58 455,-58 455,-46 455,-46 455,-40 461,-34 467,-34 467,-34 497,-34 497,-34 503,-34 509,-40 509,-46 509,-46 509,-58 509,-58 509,-64 503,-70 497,-70" /><text text-anchor="middle" x="482" y="-48.3" font-family="Helvetica,sans-Serif" font-size="14.00">TLD</text></g><g id="svg-graphviz-de202eda00a9-edge3" class="edge"><title>raiz-&gt;tld</title><path fill="none" stroke="black" d="M346.23,-52C373.01,-52 414.79,-52 444.73,-52" /><polygon fill="black" stroke="black" points="444.79,-55.5 454.79,-52 444.79,-48.5 444.79,-55.5" /><text text-anchor="middle" x="400.5" y="-55.8" font-family="Times,serif" font-size="14.00">referência</text></g><g id="svg-graphviz-de202eda00a9-node5" class="node"><title>autoritativo</title><path fill="#eef4ff" stroke="#5b7bbb" d="M704,-70C704,-70 630,-70 630,-70 624,-70 618,-64 618,-58 618,-58 618,-46 618,-46 618,-40 624,-34 630,-34 630,-34 704,-34 704,-34 710,-34 716,-40 716,-46 716,-46 716,-58 716,-58 716,-64 710,-70 704,-70" /><text text-anchor="middle" x="667" y="-48.3" font-family="Helvetica,sans-Serif" font-size="14.00">Autoritativo</text></g><g id="svg-graphviz-de202eda00a9-edge4" class="edge"><title>tld-&gt;autoritativo</title><path fill="none" stroke="black" d="M509.22,-52C534.84,-52 574.69,-52 607.81,-52" /><polygon fill="black" stroke="black" points="607.85,-55.5 617.85,-52 607.85,-48.5 607.85,-55.5" /><text text-anchor="middle" x="563.5" y="-55.8" font-family="Times,serif" font-size="14.00">referência</text></g><g id="svg-graphviz-de202eda00a9-node6" class="node"><title>resposta</title><path fill="#eef4ff" stroke="#5b7bbb" d="M849,-36C849,-36 765,-36 765,-36 759,-36 753,-30 753,-24 753,-24 753,-12 753,-12 753,-6 759,0 765,0 765,0 849,0 849,0 855,0 861,-6 861,-12 861,-12 861,-24 861,-24 861,-30 855,-36 849,-36" /><text text-anchor="middle" x="807" y="-14.3" font-family="Helvetica,sans-Serif" font-size="14.00">IP ou registro</text></g><g id="svg-graphviz-de202eda00a9-edge5" class="edge"><title>autoritativo-&gt;resposta</title><path fill="none" stroke="black" d="M716.27,-40.11C724.85,-37.99 733.91,-35.76 742.83,-33.56" /><polygon fill="black" stroke="black" points="743.95,-36.89 752.82,-31.1 742.27,-30.1 743.95,-36.89" /></g><g id="svg-graphviz-de202eda00a9-edge6" class="edge"><title>resposta-&gt;resolvedor</title><path fill="none" stroke="black" d="M752.68,-11.19C727.11,-8.49 696.02,-6 668,-6 318,-6 318,-6 318,-6 300.81,-6 282.19,-7.51 265.3,-9.45" /><polygon fill="black" stroke="black" points="264.54,-6.02 255.04,-10.71 265.39,-12.97 264.54,-6.02" /></g></g></svg></div></div>
+
+<h3>Ideia</h3>
+<p>O cliente normalmente pergunta ao resolvedor. O resolvedor faz o trabalho de buscar a resposta.</p>
+</section>
+<section><h1>Registros DNS</h1>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Tipo</th>
+  <th style="text-align:left">Uso comum</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><code>A</code></td>
+  <td style="text-align:left">nome para IPv4</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>AAAA</code></td>
+  <td style="text-align:left">nome para IPv6</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>CNAME</code></td>
+  <td style="text-align:left">alias para outro nome</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>MX</code></td>
+  <td style="text-align:left">servidor de e-mail do domínio</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>NS</code></td>
+  <td style="text-align:left">servidor de nomes da zona</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>TXT</code></td>
+  <td style="text-align:left">texto, verificações e políticas</td>
+</tr>
+</tbody>
+</table>
+<h3>Exemplo</h3>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">exemplo.com.      MX 10 mail.exemplo.com.
+mail.exemplo.com. A     203.0.113.20
+</code></pre>
+</section>
+<section><h1>Mini-lab: DNS Básico</h1>
+<h3>Consulta comum</h3>
+<pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">dig www.google.com
+</code></pre>
+<h3>Registros específicos</h3>
+<pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">dig google.com MX
+dig google.com NS
+dig google.com TXT
+</code></pre>
+<h3>O que observar</h3>
+<ul>
+<li><code>QUESTION SECTION</code></li>
+<li><code>ANSWER SECTION</code></li>
+<li>tipos <code>A</code>, <code>AAAA</code>, <code>MX</code>, <code>NS</code>, <code>TXT</code></li>
+<li>TTL da resposta</li>
+</ul>
+</section>
+<section><h1>Mini-lab: DNS Por Dentro</h1>
+<h3>Caminho da resolução</h3>
+<pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">dig +trace www.google.com
+</code></pre>
+<h3>Comparar UDP e TCP</h3>
+<pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">dig www.google.com
+dig +tcp www.google.com
+</code></pre>
+<h3>Ideia</h3>
+<p>DNS normalmente usa UDP em consultas simples, mas também pode usar TCP.</p>
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">Conexão com transporte<br /></span>
+  </div>
+  <div class="callout-content">
+<p>A aplicação escolhe o transporte conforme o serviço necessário.</p>
+  </div>
+</div>
+</section>
+<section><h1>Correio Eletrônico</h1>
+<p>E-mail não vai diretamente do computador do remetente para o computador do destinatário.</p>
+<h3>Ideia</h3>
+<p>Mensagens passam por servidores e ficam armazenadas até o destinatário acessá-las.</p>
+</section>
+<section><h1>Componentes do E-mail</h1>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Componente</th>
+  <th style="text-align:left">Papel</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">MUA</td>
+  <td style="text-align:left">agente do usuário</td>
+</tr>
+<tr>
+  <td style="text-align:left">MSA/MTA</td>
+  <td style="text-align:left">aceita e transfere mensagens</td>
+</tr>
+<tr>
+  <td style="text-align:left">MDA</td>
+  <td style="text-align:left">entrega na caixa postal</td>
+</tr>
+<tr>
+  <td style="text-align:left">Servidor de caixa postal</td>
+  <td style="text-align:left">armazena mensagens</td>
+</tr>
+</tbody>
+</table>
+<h3>Caminho comum</h3>
+<p>Usuário escreve -&gt; servidor envia -&gt; DNS indica <code>MX</code> -&gt; SMTP transfere -&gt; destinatário acessa.</p>
+</section>
+<section><h1>SMTP, POP3 e IMAP</h1>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Protocolo</th>
+  <th style="text-align:left">Papel</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">SMTP</td>
+  <td style="text-align:left">envio e transferência entre servidores</td>
+</tr>
+<tr>
+  <td style="text-align:left">POP3</td>
+  <td style="text-align:left">download simples da caixa postal</td>
+</tr>
+<tr>
+  <td style="text-align:left">IMAP</td>
+  <td style="text-align:left">acesso e sincronização no servidor</td>
+</tr>
+</tbody>
+</table>
+<h3>Diferença importante</h3>
+<p>SMTP envia. POP3 e IMAP acessam a caixa postal.</p>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Erro comum<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Não diga que SMTP é o protocolo usado para sincronizar sua caixa de entrada no celular.</p>
+  </div>
+</div>
+</section>
+<section><h1>Exemplo SMTP</h1>
+<p>SMTP é textual e roda sobre TCP.</p>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">HELO cliente.exemplo.com
+MAIL FROM:&lt;ana@exemplo.com&gt;
+RCPT TO:&lt;bruno@universidade.edu.br&gt;
+DATA
+Subject: Aula de redes
+
+Segue o material da aula.
+.
+</code></pre>
+<h3>Leitura</h3>
+<p>O protocolo define comandos e respostas para transferir a mensagem.</p>
+</section>
+<section><h1>MIME</h1>
+<p>O e-mail original foi pensado para texto simples.</p>
+<h3>MIME permite</h3>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Conteúdo</th>
+  <th style="text-align:left">Exemplo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">texto simples</td>
+  <td style="text-align:left"><code>text/plain</code></td>
+</tr>
+<tr>
+  <td style="text-align:left">HTML</td>
+  <td style="text-align:left"><code>text/html</code></td>
+</tr>
+<tr>
+  <td style="text-align:left">imagem</td>
+  <td style="text-align:left"><code>image/png</code></td>
+</tr>
+<tr>
+  <td style="text-align:left">anexo</td>
+  <td style="text-align:left"><code>application/pdf</code></td>
+</tr>
+</tbody>
+</table>
+<h3>Ideia</h3>
+<p>SMTP transporta a mensagem. MIME descreve como representar conteúdos dentro dela.</p>
+</section>
+<section><h1>Web e URL</h1>
+<p>A Web combina identificação de recursos, hipertexto e transferência por HTTP.</p>
+<h3>URL</h3>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">https://www.exemplo.com.br/aulas/redes.html
+</code></pre>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Parte</th>
+  <th style="text-align:left">Valor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">esquema</td>
+  <td style="text-align:left"><code>https</code></td>
+</tr>
+<tr>
+  <td style="text-align:left">host</td>
+  <td style="text-align:left"><code>www.exemplo.com.br</code></td>
+</tr>
+<tr>
+  <td style="text-align:left">caminho</td>
+  <td style="text-align:left"><code>/aulas/redes.html</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section><h1>Acesso a Uma Página</h1>
+<p>Ao acessar uma página, o navegador faz várias etapas.</p>
+<ol>
+<li>Lê o URL.</li>
+<li>Consulta DNS para resolver o host.</li>
+<li>Abre conexão TCP com o servidor.</li>
+<li>Envia requisição HTTP.</li>
+<li>Recebe resposta HTTP.</li>
+<li>Renderiza o conteúdo.</li>
+</ol>
+<h3>Ideia</h3>
+<p>O usuário vê uma página. A rede executa uma composição de protocolos.</p>
+</section>
+<section><h1>HTTP</h1>
+<p>HTTP significa <strong>HyperText Transfer Protocol</strong>.</p>
+<h3>Modelo</h3>
+<p>Cliente envia requisição. Servidor envia resposta.</p>
+</section>
+<section><h1>Requisição e Resposta HTTP</h1>
+<h3>Requisição</h3>
+<pre class="line-numbers language-http" data-lang="HTTP"><code class="language-http">GET /index.html HTTP/1.1
+Host: www.exemplo.com
+Accept: text/html
+</code></pre>
+<h3>Resposta</h3>
+<pre class="line-numbers language-http" data-lang="HTTP"><code class="language-http">HTTP/1.1 200 OK
+Content-Type: text/html
+
+&lt;html&gt;...&lt;/html&gt;
+</code></pre>
+<h3>Leitura</h3>
+<p>HTTP é texto estruturado com linha inicial, cabeçalhos e corpo opcional.</p>
+</section>
+<section><h1>Métodos e Status HTTP</h1>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Método</th>
+  <th style="text-align:left">Ideia</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><code>GET</code></td>
+  <td style="text-align:left">solicitar recurso</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>HEAD</code></td>
+  <td style="text-align:left">pedir só cabeçalhos</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>POST</code></td>
+  <td style="text-align:left">enviar dados</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>PUT</code></td>
+  <td style="text-align:left">criar ou substituir</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>DELETE</code></td>
+  <td style="text-align:left">remover</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Classe</th>
+  <th style="text-align:left">Significado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">2xx</td>
+  <td style="text-align:left">sucesso</td>
+</tr>
+<tr>
+  <td style="text-align:left">3xx</td>
+  <td style="text-align:left">redirecionamento</td>
+</tr>
+<tr>
+  <td style="text-align:left">4xx</td>
+  <td style="text-align:left">erro do cliente</td>
+</tr>
+<tr>
+  <td style="text-align:left">5xx</td>
+  <td style="text-align:left">erro do servidor</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section><h1>Conexões Persistentes</h1>
+<h3>Problema antigo</h3>
+<p>Abrir uma conexão TCP para cada objeto é caro.</p>
+<h3>Solução comum</h3>
+<p>Reaproveitar a conexão para várias requisições e respostas.</p>
+</section>
+<section><h1>Cache HTTP</h1>
+<p>Cache reduz tráfego e latência, mas precisa validar se o conteúdo ainda serve.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Cabeçalho</th>
+  <th style="text-align:left">Ideia</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><code>Cache-Control</code></td>
+  <td style="text-align:left">política de cache</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>Expires</code></td>
+  <td style="text-align:left">data de expiração</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>Last-Modified</code></td>
+  <td style="text-align:left">última alteração</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>ETag</code></td>
+  <td style="text-align:left">identificador de versão</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>If-None-Match</code></td>
+  <td style="text-align:left">validação por ETag</td>
+</tr>
+</tbody>
+</table>
+<h3>Exemplo de resposta</h3>
+<pre class="line-numbers language-http" data-lang="HTTP"><code class="language-http">HTTP/1.1 304 Not Modified
+</code></pre>
+</section>
+<section><h1>Mini-lab: HTTP Com <code>curl</code></h1>
+<h3>Ver cabeçalhos</h3>
+<pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">curl -I http://example.com
+</code></pre>
+<h3>Ver detalhes da conversa</h3>
+<pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">curl -v http://example.com
+</code></pre>
+<h3>Comparar HTTPS</h3>
+<pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">curl -I https://example.com
+</code></pre>
+<h3>O que observar</h3>
+<p>Status, cabeçalhos, <code>Host</code>, <code>Content-Type</code>, redirecionamentos e conexão.</p>
+</section>
+<section><h1>Mini-lab: HTTP Local Com <code>nc</code></h1>
+<h3>Terminal 1</h3>
+<pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">nc -l 8080
+</code></pre>
+<h3>Terminal 2</h3>
+<pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">curl -v http://127.0.0.1:8080/teste
+</code></pre>
+<h3>O que aparece no <code>nc</code></h3>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">GET /teste HTTP/1.1
+Host: 127.0.0.1:8080
+</code></pre>
+<h3>Ideia</h3>
+<p>HTTP é uma conversa textual sobre TCP.</p>
+</section>
+<section><h1>Mini-lab: Responder HTTP Manualmente</h1>
+<h3>Terminal 1</h3>
+<pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">printf 'HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\nOla, HTTP!\n' | nc -l 8080
+</code></pre>
+<h3>Terminal 2</h3>
+<pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">curl http://127.0.0.1:8080
+</code></pre>
+<h3>Resultado esperado</h3>
+<pre class="line-numbers language-text" data-lang="TEXT"><code class="language-text">Ola, HTTP!
+</code></pre>
+<p>Servidor Web, no fundo, é um programa que fala HTTP corretamente.</p>
+</section>
+<section><h1>Mini-lab: Conexões Web</h1>
+<p>Com algumas abas ou requisições Web abertas:</p>
+<pre class="line-numbers language-bash" data-lang="BASH"><code class="language-bash">ss -tn '( dport = :80 or dport = :443 )'
+</code></pre>
+<h3>O que observar</h3>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Informação</th>
+  <th style="text-align:left">Interpretação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><code>ESTAB</code></td>
+  <td style="text-align:left">conexão TCP estabelecida</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>:80</code></td>
+  <td style="text-align:left">HTTP</td>
+</tr>
+<tr>
+  <td style="text-align:left"><code>:443</code></td>
+  <td style="text-align:left">HTTPS</td>
+</tr>
+</tbody>
+</table>
+<h3>Cuidado</h3>
+<p>Para e-mail, prefira demonstrar <code>dig dominio MX</code>. Testes SMTP externos podem ser bloqueados.</p>
+</section>
+<section><h1>Síntese</h1>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">Protocolo</th>
+  <th style="text-align:left">Ideia que deve ficar</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">DNS</td>
+  <td style="text-align:left">banco distribuído de registros</td>
+</tr>
+<tr>
+  <td style="text-align:left">SMTP</td>
+  <td style="text-align:left">envio e transferência de e-mail</td>
+</tr>
+<tr>
+  <td style="text-align:left">POP3</td>
+  <td style="text-align:left">download simples de mensagens</td>
+</tr>
+<tr>
+  <td style="text-align:left">IMAP</td>
+  <td style="text-align:left">sincronização da caixa postal</td>
+</tr>
+<tr>
+  <td style="text-align:left">HTTP</td>
+  <td style="text-align:left">requisição e resposta para recursos Web</td>
+</tr>
+</tbody>
+</table>
+<h3>Fechamento</h3>
+<p>IP e TCP entregam dados. Protocolos de aplicação transformam esses dados em serviços.</p>
+</section>
+<section><h1>Questões Rápidas</h1>
+<ol>
+<li>Por que TCP sozinho não define uma aplicação?</li>
+<li>Qual é a diferença entre registro <code>A</code> e registro <code>MX</code>?</li>
+<li>Por que DNS usa cache?</li>
+<li>Qual é a função do SMTP?</li>
+<li>Por que IMAP é melhor que POP3 para vários dispositivos?</li>
+<li>O que significa <code>GET /index.html HTTP/1.1</code>?</li>
+<li>Qual é a diferença entre HTTP e HTTPS?</li>
+<li>O que um status <code>404</code> realmente indica?</li>
+</ol>
+</section>
+        </div>
+    </div>
+
+    <script src="/aulas-faesa/js/vendor/reveal/reveal.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/notes/notes.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/markdown/markdown.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/math/math.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/zoom/zoom.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/prism.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-c.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-python.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-clike.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-cpp.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-perl.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-java.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-php.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/toolbar/prism-toolbar.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/show-language/prism-show-language.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/prism-slang.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/mermaid.min.js" data-no-bundle></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            mermaid.initialize({
+                startOnLoad: false,
+                theme: 'default',
+                securityLevel: 'loose',
+                htmlLabels: false,
+                fontFamily: 'Inter, system-ui, sans-serif',
+            });
+        });
+    </script>
+    <script src="/aulas-faesa/js/rough.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/apply_sketch.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/lucide.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/ui.js" data-no-bundle></script>
+    <script>
+        const waitForNextFrame = () => new Promise(resolve => requestAnimationFrame(resolve));
+
+        const initSlideUI = () => {
+            if (!window.CourseForgeUI) {
+                return;
+            }
+
+            window.CourseForgeUI.initCopyButtons();
+            window.CourseForgeUI.initIcons();
+        };
+
+        const renderMermaidsInSlide = async (slide) => {
+            if (!slide) {
+                return;
+            }
+
+            const mermaids = slide.querySelectorAll('.mermaid');
+            if (!mermaids.length) {
+                return;
+            }
+
+            try {
+                if (document.fonts?.ready) {
+                    await document.fonts.ready;
+                }
+
+                await waitForNextFrame();
+                await waitForNextFrame();
+
+                for (const element of mermaids) {
+                    if (element.dataset.mermaidRendered === 'true') {
+                        continue;
+                    }
+
+                    await mermaid.run({
+                        nodes: [element],
+                    });
+                    element.dataset.mermaidRendered = 'true';
+                }
+            } catch (err) {
+                console.warn('Mermaid render failed', err);
+            }
+        };
+
+        const updateMermaidDisplayBounds = (slide) => {
+            const scope = slide || document;
+            const displays = scope.querySelectorAll('.mermaid-display');
+
+            for (const display of displays) {
+                const rect = display.getBoundingClientRect();
+                const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+                const bottomGap = 24;
+                const availableHeight = Math.max(160, Math.floor(viewportHeight - rect.top - bottomGap));
+                display.style.setProperty('--mermaid-max-height', `${availableHeight}px`);
+            }
+        };
+
+        const resetNativeLineNumbers = (pre) => {
+            if (!pre?.classList.contains('line-numbers')) {
+                return;
+            }
+
+            const existingRows = pre.querySelector('.line-numbers-rows');
+            if (existingRows) {
+                existingRows.remove();
+            }
+        };
+
+        const highlightCodeInSlide = (slide) => {
+            const scope = slide || document;
+            const codeBlocks = scope.querySelectorAll('pre[class*="language-"] > code[class*="language-"]');
+
+            for (const code of codeBlocks) {
+                const pre = code.parentElement;
+                resetNativeLineNumbers(pre);
+                Prism.highlightElement(code);
+
+                if (pre?.classList.contains('line-numbers') && Prism.plugins?.lineNumbers?.resize) {
+                    Prism.plugins.lineNumbers.resize(pre);
+                }
+            }
+        };
+
+        const enhanceCurrentSlide = async (slide) => {
+            highlightCodeInSlide(slide);
+            await renderMermaidsInSlide(slide);
+            updateMermaidDisplayBounds(slide);
+            initSlideUI();
+        };
+
+        Reveal.initialize({
+            hash: true,
+            slideNumber: 'c/t',
+            center: false,
+            controls: false,
+            plugins: [RevealMarkdown, RevealNotes, RevealMath.KaTeX, RevealZoom],
+            katex: {
+                local: '/aulas-faesa/js/vendor/katex',
+                output: 'html',
+                throwOnError: false,
+                strict: false,
+            },
+            width: 960,
+            height: 800,
+            margin: 0.15,
+            maxScale: 2.0,
+        });
+
+        Reveal.on('ready', event => {
+            enhanceCurrentSlide(event.currentSlide);
+        });
+
+        Reveal.on('slideready', event => {
+            enhanceCurrentSlide(event.currentSlide);
+        });
+
+        Reveal.on('slidechanged', event => {
+            enhanceCurrentSlide(event.currentSlide);
+        });
+
+        window.addEventListener('resize', () => {
+            updateMermaidDisplayBounds(Reveal.getCurrentSlide());
+        });
+    </script>
+    <style>
+        /* Modern base styles */
+        :root {
+            --callout-note: #448aff;
+            --callout-abstract: #00b0ff;
+            --callout-info: #00b8d4;
+            --callout-todo: #00bfa5;
+            --callout-tip: #00c853;
+            --callout-success: #64dd17;
+            --callout-question: #ffab00;
+            --callout-warning: #ff9100;
+            --callout-failure: #ff5252;
+            --callout-danger: #ff1744;
+            --callout-bug: #f50057;
+            --callout-example: #7c4dff;
+            --callout-quote: #9e9e9e;
+            --code-bg: #f1f5f9;
+            --border: #e2e8f0;
+            --radius: 6px;
+            --radius-sm: 4px;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --text-muted: #64748b;
+            --text: #334155;
+            --bg: #ffffff;
+            --heading: #0f172a;
+            --link: #3b82f6;
+            --font-code: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+        }
+
+        .reveal {
+            font-size: 20px;
+            text-align: left !important;
+        }
+
+        .reveal code:not(pre code) {
+            font-family: var(--font-code) !important;
+            background-color: var(--code-bg) !important;
+            padding: 0.1em 0.35em !important;
+            border-radius: var(--radius-sm) !important;
+            font-size: 0.9em !important;
+            color: var(--link) !important;
+            border: 1px dashed var(--border) !important;
+            white-space: pre-wrap !important;
+            word-break: break-word !important;
+            font-variant-ligatures: none;
+            font-feature-settings: "liga" 0, "calt" 0;
+        }
+
+        .reveal h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px !important;
+            margin-left: 0 !important;
+            /* min-height: 2.3em; */
+            display: flex;
+            align-items: center;
+            justify-content: flex-start !important;
+            text-align: left !important;
+            width: 100% !important;
+            text-shadow: none !important;
+        }
+
+        /* Prism overrides for Reveal.js */
+        .reveal div.code-toolbar {
+            position: relative;
+            width: 100% !important;
+            margin: 1.5rem 0 !important;
+        }
+
+        .reveal pre[class*="language-"] {
+            background: hsl(230, 1%, 98%) !important;
+            margin: 1.5rem 0 !important;
+            padding: 1rem !important;
+            border: 1px solid var(--border) !important;
+            border-radius: var(--radius) !important;
+            box-shadow: var(--shadow-sm) !important;
+            font-family: var(--font-code) !important;
+            font-size: 0.85em !important;
+            position: relative;
+            overflow-x: auto;
+            box-sizing: border-box !important;
+            max-width: 100% !important;
+            font-variant-ligatures: none;
+            font-feature-settings: "liga" 0, "calt" 0;
+        }
+
+        .reveal pre[class*="language-"] > code {
+            background: 0 0 !important;
+            text-shadow: none !important;
+            color: hsl(230, 8%, 24%) !important;
+            position: relative !important;
+            display: block !important;
+        }
+
+        .reveal .line-numbers .line-numbers-rows {
+            border-right: 1px solid #444 !important;
+            padding-right: .5rem !important;
+            margin-bottom: 1.5rem;
+        }
+
+        .reveal .line-numbers-rows>span:before {
+            color: #666 !important;
+        }
+
+        .reveal pre[class*="language-"].line-numbers,
+        .reveal pre[class*="language-"]:has(.line-numbers-rows) {
+            padding-left: 3.8em !important;
+            overflow-y: hidden !important;
+        }
+
+        .reveal .copy-button,
+        .reveal pre[data-lang]::before {
+            position: absolute;
+            top: .5rem;
+            height: 26px;
+            background: hsl(230, 1%, 92%);
+            border: 1px solid hsl(230, 1%, 85%);
+            border-radius: var(--radius-sm);
+            box-sizing: border-box;
+        }
+
+        .reveal .copy-button {
+            right: .5rem;
+            width: 26px;
+            padding: 0;
+            color: hsl(230, 6%, 44%);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all .2s ease;
+            z-index: 20;
+            opacity: .8;
+        }
+
+        .reveal .copy-button:hover {
+            background: hsl(230, 1%, 85%);
+            color: hsl(230, 8%, 24%);
+            opacity: 1;
+        }
+
+        .reveal .copy-button svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Language label styling - hide all Prism toolbar plugins, keep only data-lang label */
+        .reveal div.toolbar,
+        .reveal div.toolbar-item,
+        .reveal button.toolbar-item,
+        .reveal span.toolbar-item {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            height: 0 !important;
+            width: 0 !important;
+            overflow: hidden !important;
+            position: absolute !important;
+            pointer-events: none !important;
+        }
+
+        /* Use the pseudo-element data-lang label only */
+        .reveal pre[data-lang]::before {
+            content: attr(data-lang);
+            right: 2.35rem;
+            padding: 0 .5rem;
+            font-size: .65rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: hsl(230, 6%, 50%);
+            pointer-events: none;
+            z-index: 10;
+            display: inline-flex !important;
+            align-items: center !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            height: 26px !important;
+            width: auto !important;
+            position: absolute !important;
+            overflow: visible !important;
+            line-height: 26px !important;
+        }
+
+        .reveal h2 {
+            font-size: 1.6em;
+            margin-top: 30px !important;
+            margin-bottom: 20px !important;
+            text-align: left !important;
+        }
+
+        .reveal h3 {
+            font-size: 1.3em;
+            margin-top: 20px !important;
+            margin-bottom: 15px !important;
+            text-align: left !important;
+        }
+
+        .reveal p {
+            line-height: 1.5;
+            margin-top: 20px !important;
+            margin-left: 0 !important;
+            text-align: left !important;
+        }
+
+        .reveal ul,
+        .reveal ol,
+        .reveal li {
+            line-height: 1.5;
+            text-align: left !important;
+            margin-left: 0 !important;
+        }
+        
+        .reveal ul, .reveal ol {
+            display: block !important;
+            padding-left: 1.2em !important;
+        }
+
+        /* Slide padding and layout */
+        .reveal .slides section {
+            padding: 40px !important;
+            box-sizing: border-box;
+            text-align: left !important;
+            overflow: visible !important;
+        }
+
+        .reveal .slides {
+            text-align: left !important;
+        }
+
+        /* Centering for Title slides (h1 ONLY, h1 + h2 ONLY, or h1 + h2 + p ONLY) */
+        .reveal .slides section:not(.stack):has(> h1:only-child),
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child),
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) {
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: center !important;
+            align-items: center !important;
+            text-align: center !important;
+            height: 100% !important;
+            top: 0 !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:only-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child) h2,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h2,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) p {
+            justify-content: center !important;
+            text-align: center !important;
+            margin: 0 !important;
+            min-height: auto !important;
+            width: 100% !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h1 {
+            margin-bottom: 0.5em !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h2 {
+            margin-bottom: 0.3em !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) p {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        /* Full screen slide fix */
+        .reveal .slides section:has(.full-screen-image) {
+            padding: 0 !important;
+        }
+
+        /* Full screen slide fix - Garantindo que o fundo do Reveal fique visível e a imagem carregada */
+        .reveal:has(section.present .full-screen-image) {
+            background-image: url('../../slide_end_background.png') !important;
+            background-size: cover !important;
+            background-position: center !important;
+        }
+
+        /* Torna o slide e o container de slides transparentes para mostrar o fundo da .reveal */
+        .reveal:has(section.present .full-screen-image) .slides,
+        .reveal:has(section.present .full-screen-image) .slides section.present {
+            background: transparent !important;
+        }
+
+        .full-screen-image {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 !important;
+            /* Se houver texto, ele centraliza aqui */
+        }
+
+        /* Spacing for diagrams */
+        .reveal .svg-graph {
+            margin-top: 1em !important;
+            margin-bottom: 1em !important;
+            overflow: visible !important; /* Prevent labels from being cut off */
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* Mermaid Diagram Styles */
+        .reveal .mermaid {
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            padding: 0 !important;
+            margin: 1rem 0 !important;
+            font-family: inherit !important;
+            overflow: visible !important;
+            text-align: center;
+            display: block !important;
+            width: auto !important;
+            max-width: 100% !important;
+        }
+
+        .reveal pre.mermaid {
+            white-space: pre;
+            font-family: var(--font-code);
+            color: var(--text-muted);
+            margin: 0 !important;
+            padding: 0 !important;
+            width: auto !important;
+            line-height: 1 !important;
+            border: none !important;
+            box-shadow: none !important;
+            background: transparent !important;
+            overflow: visible !important;
+        }
+
+        .reveal .centered .mermaid {
+            display: block !important;
+            justify-content: center;
+            margin-left: auto !important;
+            margin-right: auto !important;
+        }
+
+        .reveal .mermaid svg {
+            max-width: 100% !important;
+            height: auto !important;
+            display: block !important;
+            overflow: visible !important;
+            vertical-align: top !important;
+            font-family: Inter, system-ui, sans-serif !important;
+            font-style: normal !important;
+            font-variant: normal !important;
+            font-weight: 400 !important;
+            letter-spacing: normal !important;
+            word-spacing: normal !important;
+            text-transform: none !important;
+            text-shadow: none !important;
+            line-height: normal !important;
+            text-rendering: geometricPrecision !important;
+        }
+
+        .reveal .mermaid svg * {
+            font-family: inherit !important;
+            font-style: normal !important;
+            font-variant: normal !important;
+            letter-spacing: normal !important;
+            word-spacing: normal !important;
+            text-transform: none !important;
+            text-shadow: none !important;
+            line-height: normal !important;
+        }
+
+        .reveal .mermaid svg .edgeBadge text,
+        .reveal .mermaid svg .edgeBadge tspan,
+        .reveal .mermaid svg .edgeTerm text,
+        .reveal .mermaid svg .edgeTerm tspan,
+        .reveal .mermaid svg .multiplicity text,
+        .reveal .mermaid svg .multiplicity tspan,
+        .reveal .mermaid svg text.edgeBadge,
+        .reveal .mermaid svg text.edgeTerm {
+            font-size: 18px !important;
+            font-weight: 700 !important;
+            fill: var(--heading) !important;
+        }
+
+        /* Mermaid Source Switcher */
+        .reveal .mermaid-outer-container {
+            margin: 1rem 0;
+            position: relative;
+            width: 100%;
+            max-width: 100%;
+        }
+
+        .reveal .mermaid-switcher {
+            display: flex !important;
+            justify-content: flex-end;
+            margin-bottom: 0.5rem;
+            width: 100%;
+        }
+
+        .reveal .switcher-track {
+            display: inline-flex;
+            align-items: center;
+            background: var(--code-bg);
+            padding: 3px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            position: relative;
+        }
+
+        .reveal .switcher-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            border: none;
+            background: transparent;
+            padding: 0.35rem 1rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            border-radius: calc(var(--radius) - 2px);
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            z-index: 1;
+        }
+
+        .reveal .switcher-btn svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .reveal .switcher-btn:hover {
+            color: var(--text);
+        }
+
+        .reveal .switcher-btn.active {
+            color: var(--heading);
+            background: var(--bg);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        .reveal .mermaid-content {
+            min-height: 50px;
+        }
+
+        /* Mermaid display - respect inline width */
+        .reveal .mermaid-display {
+            transition: opacity 0.2s ease;
+            display: block !important;
+            max-width: 100% !important;
+            max-height: var(--mermaid-max-height, calc(100vh - 140px)) !important;
+            border: none !important;
+            box-shadow: none !important;
+            background: transparent !important;
+            overflow: auto !important;
+        }
+
+        .reveal .mermaid-source pre {
+            margin: 0 !important;
+            background: var(--code-bg) !important;
+            border: 1px dashed var(--border) !important;
+        }
+
+        /* Ensure proper toggle behavior */
+        .reveal .mermaid-source {
+            display: none !important;
+        }
+
+        .reveal .mermaid-source[style*="display: block"],
+        .reveal .mermaid-source[style*="display:block"] {
+            display: block !important;
+        }
+
+        .reveal .mermaid-display[style*="display: none"],
+        .reveal .mermaid-display[style*="display:none"] {
+            display: none !important;
+        }
+
+        .reveal .mermaid-display.centered {
+            margin-left: auto !important;
+            margin-right: auto !important;
+            max-width: 100% !important;
+        }
+
+        .centered:not(.mermaid-display) {
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            width: 100% !important;
+            margin: 1em 0 !important;
+        }
+
+        .no-break {
+            display: block;
+            width: 100%;
+        }
+
+        .reveal blockquote {
+            display: block;
+            position: relative;
+            margin: var(--r-block-margin) auto !important;
+            padding: 5px;
+            font-style: italic;
+            background: rgba(255, 170, 73, 0.2);
+            box-shadow: 0 0 2px rgba(0,0,0,.2);
+            text-align: left !important;
+        }
+
+        .col1 {
+            width: 90%;
+            margin: 0 auto;
+        }
+
+        .col2 {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start;
+            width: 90%;
+            margin: 0 auto;
+            align-items: flex-start;
+        }
+
+        /* Callout Styles */
+        :root {
+            --callout-note: #448aff;
+            --callout-abstract: #00b0ff;
+            --callout-info: #00b8d4;
+            --callout-todo: #00bfa5;
+            --callout-tip: #00c853;
+            --callout-success: #64dd17;
+            --callout-question: #ffab00;
+            --callout-warning: #ff9100;
+            --callout-failure: #ff5252;
+            --callout-danger: #ff1744;
+            --callout-bug: #f50057;
+            --callout-example: #7c4dff;
+            --callout-quote: #9e9e9e;
+            --code-bg: #f8f8f8;
+            --border: #ddd;
+        }
+
+        .reveal .callout {
+            margin: 1rem auto !important;
+            border: 1px solid var(--border);
+            border-left: 6px solid var(--callout-note);
+            border-radius: 4px;
+            overflow: hidden;
+            text-align: left !important;
+            font-size: 0.8em;
+            width: 75% !important;
+            max-width: 100% !important;
+        }
+
+        .reveal .callout-title {
+            padding: 0.5rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            color: var(--callout-note);
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .reveal .callout-icon {
+            display: flex;
+            align-items: center;
+        }
+
+        .reveal .callout-icon svg {
+            width: 1.2em;
+            height: 1.2em;
+        }
+
+        .reveal .callout-content {
+            padding: 0.5rem 1rem;
+        }
+
+        .reveal .callout-content p {
+            margin-top: 0.5rem !important;
+        }
+
+        .reveal .callout-content p:first-child {
+            margin-top: 0 !important;
+        }
+
+        .reveal h1 { text-transform: none !important; }
+
+        .reveal .callout-abstract { border-left-color: var(--callout-abstract); }
+        .reveal .callout-abstract .callout-title { color: var(--callout-abstract); }
+        .reveal .callout-info { border-left-color: var(--callout-info); }
+        .reveal .callout-info .callout-title { color: var(--callout-info); }
+        .reveal .callout-todo { border-left-color: var(--callout-todo); }
+        .reveal .callout-todo .callout-title { color: var(--callout-todo); }
+        .reveal .callout-tip { border-left-color: var(--callout-tip); }
+        .reveal .callout-tip .callout-title { color: var(--callout-tip); }
+        .reveal .callout-success { border-left-color: var(--callout-success); }
+        .reveal .callout-success .callout-title { color: var(--callout-success); }
+        .reveal .callout-question { border-left-color: var(--callout-question); }
+        .reveal .callout-question .callout-title { color: var(--callout-question) ; }
+        .reveal .callout-warning { border-left-color: var(--callout-warning); }
+        .reveal .callout-warning .callout-title { color: var(--callout-warning); }
+        .reveal .callout-failure { border-left-color: var(--callout-failure); }
+        .reveal .callout-failure .callout-title { color: var(--callout-failure); }
+        .reveal .callout-danger { border-left-color: var(--callout-danger); }
+        .reveal .callout-danger .callout-title { color: var(--callout-danger); }
+        .reveal .callout-bug { border-left-color: var(--callout-bug); }
+        .reveal .callout-bug .callout-title { color: var(--callout-bug); }
+        .reveal .callout-example { border-left-color: var(--callout-example); }
+        .reveal .callout-example .callout-title { color: var(--callout-example); }
+        .reveal .callout-quote { border-left-color: var(--callout-quote); }
+        .reveal .callout-quote .callout-title { color: var(--callout-quote); }
+        .red-note { color: var(--callout-failure); }
+
+        .reveal .slide-number {
+            font-size: 0.8em !important;
+            padding: 5px 10px !important;
+            background: rgba(0,0,0,0.1) !important;
+            border-radius: 4px;
+            color: #000000b1 !important;
+        }
+
+        /* Print styles */
+        @media print {
+            .reveal .slides section {
+                display: block !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                position: relative !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+                page-break-after: always !important;
+                overflow: hidden !important;
+            }
+
+            .reveal .slides {
+                transform: none !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+            }
+            
+            .reveal {
+                overflow: visible !important;
+            }
+        }
+    </style>
+</body>
+
+</html>

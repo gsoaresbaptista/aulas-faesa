@@ -133,7 +133,11 @@
                         </li>
                         
                         <li class="toc-item level-2">
-                            <a href="#próximos-passos">11.14. Próximos Passos</a>
+                            <a href="#questões">11.14. Questões</a>
+                        </li>
+                        
+                        <li class="toc-item level-2">
+                            <a href="#próximos-passos">11.15. Próximos Passos</a>
                         </li>
                         
                     </ol>
@@ -983,7 +987,112 @@ $$</p>
 <p>Essa propriedade é a base do projeto de filtros digitais: você projeta $H[k]$ (a resposta em frequência desejada) e implementa $h[n]$ (a resposta ao impulso correspondente). A convolução no tempo realiza a filtragem.</p>
   </div>
 </div>
-<h2 id="próximos-passos"><span class="heading-text">Próximos Passos</span><span class="heading-arabic">11.14</span></h2>
+<h2 id="questões"><span class="heading-text">Questões</span><span class="heading-arabic">11.14</span></h2>
+<div class="questions">
+  <p><strong>1.</strong> Explique a diferença entre $x(t)$, $x[n]$ e $x(nT)$. Por que uma sequência discreta não deve ser interpretada como uma curva contínua com poucos pontos?</p>
+<p><strong>2.</strong> Escreva a definição de $\delta[n]$ e $u[n]$ por partes. Em seguida, mostre que $\delta[n]=u[n]-u[n-1]$.</p>
+<p><strong>3.</strong> Classifique o comportamento de cada sequência como decrescente, crescente, alternada ou módulo constante:</p>
+<ul>
+<li>a) $x_1[n]=(0{,}3)^n u[n]$</li>
+<li>b) $x_2[n]=(-0{,}9)^n u[n]$</li>
+<li>c) $x_3[n]=(1{,}05)^n u[n]$</li>
+</ul>
+<p><strong>4.</strong> Determine, para cada senoide discreta, se é periódica e, em caso afirmativo, ache o período fundamental:</p>
+<ul>
+<li>a) $x_1[n]=\cos\left(\dfrac{\pi}{3}n\right)$</li>
+<li>b) $x_2[n]=\cos\left(\dfrac{3\pi}{4}n\right)$</li>
+<li>c) $x_3[n]=\cos(\sqrt{3}n)$</li>
+</ul>
+<p><strong>5.</strong> Mostre que $\cos(0{,}8\pi n)$ e $\cos(2{,}8\pi n)$ geram a mesma sequência para todo $n$ inteiro.</p>
+<p><strong>6.</strong> Resolva iterativamente o sistema $y[n]=0{,}6y[n-1]+x[n]$ com $y[-1]=0$ e $x[n]=u[n]$. Determine $y[0]$, $y[1]$, $y[2]$ e $y[3]$.</p>
+<p><strong>7.</strong> Determine a resposta ao impulso $h[n]$ para o sistema $y[n]=0{,}3y[n-1]+x[n]$.</p>
+<p><strong>8.</strong> Calcule a convolução discreta $y[n]=x[n]*h[n]$ para</p>
+<p>$$
+x[n]=2\delta[n]+\delta[n-1]
+$$</p>
+<p>e</p>
+<p>$$
+h[n]=u[n]-u[n-2]
+$$</p>
+<p>Apresente os valores não nulos de $y[n]$.</p>
+<p><strong>9.</strong> Duas sequências têm comprimentos $L_1=4$ e $L_2=7$. Qual é o comprimento da convolução $y[n]=x_1[n]*x_2[n]$?</p>
+<p><strong>10.</strong> Verifique a estabilidade BIBO de cada sistema pela soma absoluta de $h[n]$:</p>
+<ul>
+<li>a) $h[n]=(0{,}5)^n u[n]$</li>
+<li>b) $h[n]=(1{,}1)^n u[n]$</li>
+<li>c) $h[n]=u[n]-u[n-10]$</li>
+</ul>
+<p><strong>11.</strong> Calcule $x[n]*h[n]$ usando as propriedades da convolução, sendo</p>
+<p>$$
+x[n]=(0{,}2)^n u[n],\qquad h[n]=\delta[n]-0{,}2\delta[n-1]
+$$</p>
+<p><strong>12.</strong> Marque <strong>V</strong> ou <strong>F</strong>.</p>
+<ul>
+<li><strong>( )</strong> O impulso discreto $\delta[n]$ tem as mesmas propriedades analíticas do impulso de Dirac $\delta(t)$.</li>
+<li><strong>( )</strong> Em tempo discreto, $\cos(\Omega n)$ é sempre periódico.</li>
+<li><strong>( )</strong> Duas frequências discretas que diferem por $2\pi$ produzem a mesma sequência.</li>
+<li><strong>( )</strong> Todo sistema FIR é BIBO estável.</li>
+<li><strong>( )</strong> A convolução discreta é comutativa: $x[n]*h[n]=h[n]*x[n]$.</li>
+</ul>
+</div>
+<div class="example">
+  <div class="example-title">Gabarito</div>
+  <p><strong>1.</strong> $x(t)$ é função de $t$ real contínuo. $x[n]$ é uma sequência indexada por $n$ inteiro. $x(nT)$ é o valor do sinal contínuo no instante $t=nT$, ou seja, uma amostra. Uma sequência discreta não é uma curva com poucos pontos porque entre $x[2]$ e $x[3]$ não existe $x[2{,}5]$ no modelo discreto: os índices são apenas inteiros.</p>
+<p><strong>2.</strong><br />
+$$
+\delta[n]=\begin{cases}1,&n=0\\0,&n\ne 0\end{cases},\qquad
+u[n]=\begin{cases}1,&n\ge 0\\0,&n<0\end{cases}
+$$<br />
+Para $n=0$, $u[0]-u[-1]=1-0=1$. Para $n>0$, $u[n]-u[n-1]=1-1=0$. Para $n<0$, $u[n]-u[n-1]=0-0=0$. Logo $u[n]-u[n-1]=\delta[n]$.</p>
+<p><strong>3.</strong> (a) $|0{,}3|<1$: decrescente. (b) $|-0{,}9|<1$: alternada e decrescente em módulo. (c) $|1{,}05|>1$: crescente.</p>
+<p><strong>4.</strong> (a) $\Omega/(2\pi)=1/6$, racional: periódica, $N_0=6$. (b) $\Omega/(2\pi)=(3\pi/4)/(2\pi)=3/8$, racional: periódica, $N_0=8$. (c) $\Omega/(2\pi)=\sqrt{3}/(2\pi)$, irracional: não periódica.</p>
+<p><strong>5.</strong> $2{,}8\pi=0{,}8\pi+2\pi$. Como $\cos(\theta+2\pi n)=\cos\theta$ para $n$ inteiro, $\cos(2{,}8\pi n)=\cos(0{,}8\pi n+2\pi n)=\cos(0{,}8\pi n)$.</p>
+<p><strong>6.</strong> $y[0]=1$, $y[1]=1{,}6$, $y[2]=1{,}96$, $y[3]=2{,}176$.</p>
+<p><strong>7.</strong> Substituindo $x[n]=\delta[n]$ e $y[n]=h[n]$ com $h[-1]=0$:</p>
+<p>$$
+h[n]=0{,}3h[n-1]+\delta[n]
+$$</p>
+<p>$h[0]=1$, $h[1]=0{,}3$, $h[2]=(0{,}3)^2$, $h[3]=(0{,}3)^3$. Padrão: $h[n]=(0{,}3)^n u[n]$.</p>
+<p><strong>8.</strong> $x[0]=2$, $x[1]=1$. $h[n]$ vale $1$ para $n=0,1$ e $0$ fora.</p>
+<p>$y[n]=2h[n]+h[n-1]$.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:left">$n$</th>
+  <th style="text-align:left">$h[n]$</th>
+  <th style="text-align:left">$h[n-1]$</th>
+  <th style="text-align:left">$y[n]$</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left">0</td>
+  <td style="text-align:left">1</td>
+  <td style="text-align:left">0</td>
+  <td style="text-align:left">2</td>
+</tr>
+<tr>
+  <td style="text-align:left">1</td>
+  <td style="text-align:left">1</td>
+  <td style="text-align:left">1</td>
+  <td style="text-align:left">3</td>
+</tr>
+<tr>
+  <td style="text-align:left">2</td>
+  <td style="text-align:left">0</td>
+  <td style="text-align:left">1</td>
+  <td style="text-align:left">1</td>
+</tr>
+</tbody>
+</table>
+<p>$y[0]=2$, $y[1]=3$, $y[2]=1$. Comprimento: $2+2-1=3$, ok.</p>
+<p><strong>9.</strong> $L_y=L_1+L_2-1=4+7-1=10$.</p>
+<p><strong>10.</strong> (a) $\sum_{n=0}^{\infty}(0{,}5)^n=2<\infty$: estável. (b) $\sum_{n=0}^{\infty}(1{,}1)^n\to\infty$: instável. (c) Soma finita de $10$ termos: estável (FIR).</p>
+<p><strong>11.</strong> $y[n]=x[n]*\delta[n]-0{,}2\,x[n]*\delta[n-1]=x[n]-0{,}2x[n-1]$.</p>
+<p>Para $n=0$: $y[0]=1$. Para $n\ge 1$: $(0{,}2)^n-0{,}2(0{,}2)^{n-1}=0$. Portanto $y[n]=\delta[n]$. São sistemas inversos.</p>
+<p><strong>12.</strong> F, F, V, V, V.</p>
+</div>
+<h2 id="próximos-passos"><span class="heading-text">Próximos Passos</span><span class="heading-arabic">11.15</span></h2>
 <p>A convolução resolve tudo no tempo, mas é cara e pouco intuitiva para enxergar o efeito sobre cada frequência. No <strong><a href="12-transformada-z.html">12 - Transformada Z</a></strong> você fará pelos sistemas discretos o que Laplace fez pelos contínuos: trocar equações de diferenças por álgebra e convolução por multiplicação.</p>
 
                 </div>
