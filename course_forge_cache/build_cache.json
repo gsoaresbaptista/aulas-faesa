@@ -413,7 +413,7 @@
   "../obsidian-vault/6. Teaching/T\u00f3picos de Programa\u00e7\u00e3o II/slides/5 - libraries in c.md": "eee8b7630c9447fc7bdf4d6a0642490a",
   "../obsidian-vault/6. Teaching/T\u00f3picos de Programa\u00e7\u00e3o II/slides/6 - abstract data types.md": "9b041cfaec858198b54112723df9ff44",
   "../obsidian-vault/6. Teaching/Sistemas Operacionais/static/fig_dining_philosophers.png": "7bdd4c6686f2e0534c44f8096fb53067",
-  "../obsidian-vault/6. Teaching/.course_forge_cache/build_cache.json": "a63c7f3f9432d5582225d0340474f226",
+  "../obsidian-vault/6. Teaching/.course_forge_cache/build_cache.json": "4d3c1d0822af833bdb36fdd93f108af3",
   "../obsidian-vault/6. Teaching/Redes/6 - mac sublayer, ethernet and mac addressing.md": "6c07c69cbad857bdba2ec8e1933b60b6",
   "../obsidian-vault/6. Teaching/Compiladores/bin/tests/lexer/expected/01_delimiters.txt": "7eee78b2a963b2b5582b4959d31eb53c",
   "../obsidian-vault/6. Teaching/Compiladores/bin/tests/lexer/expected/08_strings.txt": "3a48f84a1c1c66feb1064c6c970613b6",
@@ -736,5 +736,10 @@
   "../obsidian-vault/6. Teaching/Redes/static/fig27_http_transacao_forouzan.png": "2887ae1e3b3d887aecaf8fcce6829557",
   "../obsidian-vault/6. Teaching/Redes/static/fig7_1_dns_tanenbaum.png": "3d7cd716aa475ffa15d6febea6d54df1",
   "../obsidian-vault/6. Teaching/Redes/static/fig7_14_http_persistente_tanenbaum.png": "03abb24a75f06303de615d89ba7096ef",
-  "../obsidian-vault/6. Teaching/Redes/slides/12 - application layer dns email and http.md": "a9e709b0ce58091f8d6fb6d1beb3cc3a"
+  "../obsidian-vault/6. Teaching/Redes/slides/12 - application layer dns email and http.md": "a9e709b0ce58091f8d6fb6d1beb3cc3a",
+  "../obsidian-vault/6. Teaching/Sistemas Digitais e Microprocessados/static/tocci_fig_7_59_fsm_block.png": "60f9b2509ea4cee40cc38fbb6445581d",
+  "../obsidian-vault/6. Teaching/Sistemas Digitais e Microprocessados/static/tocci_fig_7_63_traffic_block.png": "3c58f793a1aedd607cc42c6face920c8",
+  "../obsidian-vault/6. Teaching/Sistemas Operacionais/assignments/third exam.md": "7afd9ca0ba6e45269315065e7fa3b9da",
+  "../obsidian-vault/6. Teaching/Sistemas Digitais e Microprocessados/17 - state machines.md": "b5dafb54005543f53fc96668e3d07a56",
+  "../obsidian-vault/6. Teaching/Sistemas Digitais e Microprocessados/slides/17 - state machines.md": "269c6877c8991fab94b4cbf46d606c66"
 }

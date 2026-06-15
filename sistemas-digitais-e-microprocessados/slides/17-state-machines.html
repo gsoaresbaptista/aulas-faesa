@@ -1,0 +1,1233 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <title>Máquinas de Estados Finitos e Diagramas de Estado</title>
+    <link rel="icon" href="/aulas-faesa/img/dark-favicon.svg" media="(prefers-color-scheme: light)">
+    <link rel="icon" href="/aulas-faesa/img/light-favicon.svg" media="(prefers-color-scheme: dark)">
+
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/reset.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/reveal.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/reveal/theme/white.min.css" data-no-bundle />
+    <link rel="stylesheet" href="/aulas-faesa/css/prism-one-light.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/prism/prism-line-numbers.min.css" data-no-bundle>
+    <link rel="stylesheet" href="/aulas-faesa/css/vendor/fonts.css" data-no-bundle>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+            <section><h1>Sistemas Digitais e Microprocessados</h1>
+<h2>Análise e Síntese Sequencial: FSM e Diagramas de Estado</h2>
+<p>Professor: Gabriel Soares Baptista</p>
+</section>
+<section><h1>Introdução</h1>
+<p>Na aula anterior, estudamos contadores síncronos e assíncronos, registradores de deslocamento e contadores por deslocamento.</p>
+<p>Hoje generalizamos esse comportamento:</p>
+<ul>
+<li>um contador é um caso particular de FSM</li>
+<li>uma FSM pode ter sequência numérica ou arbitrária</li>
+<li>uma FSM pode controlar eventos, não apenas contá-los</li>
+</ul>
+<p>Base: Seção 7.14 de <strong>Sistemas Digitais: Princípios e Aplicações</strong> (Tocci, Widmer, Moss).</p>
+</section>
+<section><h1>Ideia Central</h1>
+<div class="callout callout-abstract">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
+    <span class="callout-title-inner">Ideia central<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Uma máquina de estados finitos é um circuito sequencial que percorre um conjunto finito de estados sob o controle de um clock. As transições entre estados e os valores das saídas são funções determinísticas do estado atual e, possivelmente, das entradas externas.</p>
+  </div>
+</div>
+<p>$$
+\text{estado atual, entradas} \xrightarrow{\text{clock, lógica combinacional}} \text{próximo estado, saídas}
+$$</p>
+<p>O foco da aula é a <strong>análise</strong> de FSMs a partir de diagramas de estados, e a <strong>síntese</strong> a partir de uma especificação.</p>
+</section>
+<section><h1>Contador ou Máquina de Estado?</h1>
+<p>Um <strong>contador</strong> percorre uma sequência numérica regular.</p>
+<ul>
+<li>crescente, decrescente ou bidirecional</li>
+<li>módulo $2^N$ ou módulo menor</li>
+<li>autorreciclável ou com parada programada</li>
+</ul>
+<p>Uma <strong>máquina de estado</strong> é o nome genérico para qualquer circuito sequencial que percorre um conjunto predeterminado de estados sob o controle de um clock.</p>
+<div class="callout callout-question">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Reflita<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Um contador em anel de quatro bits percorre a sequência $1000 \to 0100 \to 0010 \to 0001 \to 1000$. Esse circuito deve ser chamado de contador ou de máquina de estado?</p>
+  </div>
+</div>
+</section>
+<section><h1>Quando é Qual?</h1>
+<p>A distinção é apenas de uso, e não de natureza do circuito.</p>
+<ul>
+<li>se o circuito é usado para <strong>contar</strong> pulsos, é contador</li>
+<li>se o circuito é usado para <strong>acionar</strong> fases de um processo, é máquina de estado</li>
+</ul>
+<p>Exemplos clássicos de máquina de estado:</p>
+<ul>
+<li>controle de motor de passo</li>
+<li>controle de máquina de lavar roupa</li>
+<li>controle de semáforo</li>
+<li>detector de sequência em protocolo de comunicação</li>
+</ul>
+</section>
+<section><h1>Modelos de Máquina de Estado</h1>
+<p>A Figura 7.59 apresenta o diagrama em bloco genérico de um circuito sequencial, aplicável a contadores e a máquinas de estado.</p>
+<img src="../static/tocci_fig_7_59_fsm_block.png" width="86%" style="display: block; margin: 0 auto;" alt="Diagrama em bloco de contadores e máquinas de estado segundo os modelos Mealy e Moore.">
+
+<p>Três blocos fundamentais: <strong>circuito combinacional</strong>, <strong>flip-flops</strong> e, opcionalmente, <strong>circuito de saída</strong>.</p>
+</section>
+<section><h1>Modelo Moore</h1>
+<p>No <strong>modelo Moore</strong>, as saídas são funções <strong>exclusivas do estado atual</strong> dos flip-flops.</p>
+<p>$$
+\Lambda(t) = f\bigl(Q(t)\bigr)
+$$</p>
+<p>Símbolos da equação:</p>
+<ul>
+<li>$t$: instante de tempo considerado</li>
+<li>$Q(t)$: vetor de estado atual, formado pelas saídas $Q$ dos flip-flops</li>
+<li>$X(t)$: vetor de entradas externas</li>
+<li>$\Lambda(t)$: vetor de saídas externas</li>
+<li>$f$: função combinacional de saída, sem memória</li>
+</ul>
+<p>Não há caminho direto entre as entradas externas e o circuito de saída. Como o estado só se altera nas bordas ativas do clock, todas as saídas Moore são <strong>completamente síncronas</strong> em relação ao clock.</p>
+</section>
+<section><h1>Modelo Mealy</h1>
+<p>No <strong>modelo Mealy</strong>, as saídas são funções do estado atual <strong>e</strong> das entradas externas.</p>
+<p>$$
+\Lambda(t) = f\bigl(Q(t), X(t)\bigr)
+$$</p>
+<p>Os símbolos $t$, $Q(t)$, $X(t)$, $\Lambda(t)$ e $f$ mantêm o mesmo significado do modelo Moore. A diferença é que $X(t)$ aparece como segundo argumento de $f$, o que reflete a dependência direta entre entradas externas e saídas.</p>
+<p>Há um caminho combinacional direto entre as entradas e o circuito de saída. As saídas Mealy podem <strong>mudar assincronamente</strong> em resposta a variações nas entradas, exigindo cuidado com hazards e temporização.</p>
+</section>
+<section><h1>Mealy × Moore</h1>
+<table>
+<thead>
+<tr>
+  <th>Característica</th>
+  <th>Moore</th>
+  <th>Mealy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Saídas em função de</td>
+  <td>estado atual</td>
+  <td>estado atual e entradas</td>
+</tr>
+<tr>
+  <td>Caminho entrada → saída direto</td>
+  <td>não</td>
+  <td>sim</td>
+</tr>
+<tr>
+  <td>Comportamento temporal das saídas</td>
+  <td>síncrono</td>
+  <td>potencialmente assíncrono</td>
+</tr>
+<tr>
+  <td>Complexidade do estado</td>
+  <td>geralmente maior</td>
+  <td>geralmente menor</td>
+</tr>
+<tr>
+  <td>Robustez a hazards</td>
+  <td>maior</td>
+  <td>menor</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section><h1>O Diagrama de Estados</h1>
+<p>O <strong>diagrama de estados</strong> é a representação gráfica do comportamento de uma FSM.</p>
+<ul>
+<li><strong>bolhas</strong> representam os estados (rótulo simbólico, opcionalmente com código binário)</li>
+<li><strong>arestas direcionadas</strong> representam as transições</li>
+<li><strong>rótulo da aresta</strong> indica a condição na forma <code>entrada/saída</code> (Mealy) ou <code>entrada</code> (Moore)</li>
+<li>a saída Moore, quando aplicável, é inscrita <strong>dentro</strong> da bolha</li>
+</ul>
+<p>A direção da seta indica o sentido do avanço do sistema após a próxima borda de clock.</p>
+</section>
+<section><h1>Exemplo: Máquina de Lavar</h1>
+<p>Quatro estados nomeados, quatro entradas externas (<code>start</code>, <code>full</code>, <code>timesup</code>, <code>dry</code>).</p>
+<ul>
+<li><code>idle</code>: ociosa até o botão de início</li>
+<li><code>fill</code>: enche o tanque até o nível completo</li>
+<li><code>agitate</code>: movimenta o agitador até o temporizador</li>
+<li><code>spin</code>: gira o tambor até a água ser eliminada</li>
+</ul>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="820" viewBox="0.00 0.00 477.48 164.14" class="svg-graph graphviz-img"><g id="svg-graphviz-579d2896c8f8-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 160.14)"><title>WashMachine</title><polygon fill="white" stroke="transparent" points="-4,4 -4,-160.14 473.48,-160.14 473.48,4 -4,4" /><g id="svg-graphviz-579d2896c8f8-node1" class="node"><title>idle</title><ellipse fill="#f5f5e8" stroke="black" cx="26.65" cy="-29.9" rx="26.8" ry="26.8" /><text text-anchor="middle" x="26.65" y="-26.2" font-family="Helvetica,sans-Serif" font-size="14.00">idle</text></g><g id="svg-graphviz-579d2896c8f8-edge2" class="edge"><title>idle-&gt;idle</title><path fill="none" stroke="black" d="M15.2,-54.24C14.11,-65.13 17.93,-74.54 26.65,-74.54 32.37,-74.54 35.98,-70.49 37.48,-64.62" /><polygon fill="black" stroke="black" points="40.99,-64.43 38.09,-54.24 34.01,-64.01 40.99,-64.43" /><text text-anchor="middle" x="26.65" y="-77.74" font-family="Helvetica,sans-Serif" font-size="11.00">¬start/0</text></g><g id="svg-graphviz-579d2896c8f8-node2" class="node"><title>fill</title><ellipse fill="#f5f5e8" stroke="black" cx="147.74" cy="-67.9" rx="21.4" ry="21.4" /><text text-anchor="middle" x="147.74" y="-64.2" font-family="Helvetica,sans-Serif" font-size="14.00">fill</text></g><g id="svg-graphviz-579d2896c8f8-edge1" class="edge"><title>idle-&gt;fill</title><path fill="none" stroke="black" d="M52.32,-37.77C71.33,-43.83 97.64,-52.23 117.66,-58.62" /><polygon fill="black" stroke="black" points="116.62,-61.96 127.21,-61.66 118.75,-55.29 116.62,-61.96" /><text text-anchor="middle" x="89.8" y="-58.1" font-family="Helvetica,sans-Serif" font-size="11.00">start/0</text></g><g id="svg-graphviz-579d2896c8f8-edge4" class="edge"><title>fill-&gt;fill</title><path fill="none" stroke="black" d="M138.4,-87.38C136.81,-97.83 139.92,-107.35 147.74,-107.35 152.88,-107.35 155.98,-103.25 157.06,-97.48" /><polygon fill="black" stroke="black" points="160.56,-97.39 157.09,-87.38 153.56,-97.37 160.56,-97.39" /><text text-anchor="middle" x="147.74" y="-110.55" font-family="Helvetica,sans-Serif" font-size="11.00">¬full/0</text></g><g id="svg-graphviz-579d2896c8f8-node3" class="node"><title>agitate</title><ellipse fill="#f5f5e8" stroke="black" cx="276.44" cy="-83.9" rx="42.49" ry="42.49" /><text text-anchor="middle" x="276.44" y="-80.2" font-family="Helvetica,sans-Serif" font-size="14.00">agitate</text></g><g id="svg-graphviz-579d2896c8f8-edge3" class="edge"><title>fill-&gt;agitate</title><path fill="none" stroke="black" d="M169.1,-70.47C184.05,-72.36 205.05,-75.01 224.44,-77.46" /><polygon fill="black" stroke="black" points="224.04,-80.93 234.4,-78.71 224.92,-73.99 224.04,-80.93" /><text text-anchor="middle" x="201.69" y="-79.1" font-family="Helvetica,sans-Serif" font-size="11.00">full/0</text></g><g id="svg-graphviz-579d2896c8f8-edge6" class="edge"><title>agitate-&gt;agitate</title><path fill="none" stroke="black" d="M262.62,-123.87C263.16,-135.32 267.77,-144.14 276.44,-144.14 282.26,-144.14 286.26,-140.16 288.41,-134.07" /><polygon fill="black" stroke="black" points="291.92,-134.34 290.26,-123.87 285.03,-133.09 291.92,-134.34" /><text text-anchor="middle" x="276.44" y="-147.34" font-family="Helvetica,sans-Serif" font-size="11.00">¬timesup/0</text></g><g id="svg-graphviz-579d2896c8f8-node4" class="node"><title>spin</title><ellipse fill="#f5f5e8" stroke="black" cx="439.58" cy="-29.9" rx="29.8" ry="29.8" /><text text-anchor="middle" x="439.58" y="-26.2" font-family="Helvetica,sans-Serif" font-size="14.00">spin</text></g><g id="svg-graphviz-579d2896c8f8-edge5" class="edge"><title>agitate-&gt;spin</title><path fill="none" stroke="black" d="M316.86,-70.69C342.52,-62.09 375.8,-50.94 401.07,-42.47" /><polygon fill="black" stroke="black" points="402.31,-45.74 410.68,-39.25 400.09,-39.11 402.31,-45.74" /><text text-anchor="middle" x="364.18" y="-66.1" font-family="Helvetica,sans-Serif" font-size="11.00">timesup/0</text></g><g id="svg-graphviz-579d2896c8f8-edge7" class="edge"><title>spin-&gt;idle</title><path fill="none" stroke="black" d="M409.64,-29.9C336.36,-29.9 143.64,-29.9 63.45,-29.9" /><polygon fill="black" stroke="black" points="63.35,-26.4 53.35,-29.9 63.35,-33.4 63.35,-26.4" /><text text-anchor="middle" x="201.69" y="-33.1" font-family="Helvetica,sans-Serif" font-size="11.00">dry/0</text></g><g id="svg-graphviz-579d2896c8f8-edge8" class="edge"><title>spin-&gt;spin</title><path fill="none" stroke="black" d="M425.87,-56.5C424.75,-67.97 429.32,-77.79 439.58,-77.79 446.64,-77.79 451,-73.15 452.67,-66.52" /><polygon fill="black" stroke="black" points="456.17,-66.69 453.29,-56.5 449.18,-66.26 456.17,-66.69" /><text text-anchor="middle" x="439.58" y="-80.99" font-family="Helvetica,sans-Serif" font-size="11.00">¬dry/0</text></g></g></svg></div></div>
+
+</section>
+<section><h1>Tabela de Transição de Estados</h1>
+<p>O diagrama é convertido mecanicamente em uma <strong>tabela de transição de estados</strong> (ATUAL/PRÓXIMO).</p>
+<p>Cada linha: (estado atual, entradas) → (próximo estado, saídas).</p>
+<p>$$
+\begin{array}{c|cc|cc}
+\text{Estado atual} & \text{Entradas} & \text{Próximo estado} & \text{Saídas} \\
+\hline
+\text{idle}    & \text{start}=1   & \text{fill}    & 0 \\
+\text{idle}    & \text{start}=0   & \text{idle}    & 0 \\
+\text{fill}    & \text{full}=1    & \text{agitate} & 0 \\
+\text{fill}    & \text{full}=0    & \text{fill}    & 0 \\
+\text{agitate} & \text{timesup}=1 & \text{spin}    & 0 \\
+\text{agitate} & \text{timesup}=0 & \text{agitate} & 0 \\
+\text{spin}    & \text{dry}=1     & \text{idle}    & 0 \\
+\text{spin}    & \text{dry}=0     & \text{spin}    & 0 \\
+\end{array}
+$$</p>
+<p>A tabela guarda a mesma informação do diagrama, em forma adequada à síntese algébrica.</p>
+</section>
+<section><h1>Procedimento de Síntese de uma FSM</h1>
+<p>A síntese de uma FSM segue seis etapas sistemáticas.</p>
+<ol>
+<li><strong>Diagrama de estados</strong> a partir da especificação</li>
+<li><strong>Codificação dos estados</strong> em binário ($\lceil \log_2 M \rceil$ flip-flops)</li>
+<li><strong>Tabela de estados</strong> ATUAL/PRÓXIMO</li>
+<li><strong>Tabela de excitação</strong> para o tipo de flip-flop adotado</li>
+<li><strong>Mapas de Karnaugh</strong> para simplificar expressões</li>
+<li><strong>Implementação</strong> do circuito combinacional + realimentação</li>
+</ol>
+<div class="callout callout-warning">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+    <span class="callout-title-inner">Erro comum<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Esquecer de tratar os estados não utilizados. Se a codificação usou $N$ bits mas apenas $M < 2^N$ estados são acessíveis, os estados restantes devem ser declarados como <em>don't care</em> ou ter comportamento definido.</p>
+  </div>
+</div>
+</section>
+<section><h1>Tabela de Excitação</h1>
+<p>A tabela de excitação resume, para cada flip-flop, qual deve ser o valor das entradas de controle para a transição desejada.</p>
+<p>$$
+\begin{array}{c|c|c|c|c}
+Q & Q^+ & D & J & K \\
+\hline
+0 & 0 & 0 & 0 & d \\
+0 & 1 & 1 & 1 & d \\
+1 & 0 & 0 & d & 1 \\
+1 & 1 & 1 & d & 0 \\
+\end{array}
+$$</p>
+<p>Para flip-flops D, a excitação é trivial: $D = Q^+$.</p>
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">Leitura prática<br /></span>
+  </div>
+  <div class="callout-content">
+<p>A escolha entre D e J-K é, em geral, uma questão de contexto. Em projetos com portas discretas, J-K tende a produzir expressões mais simples. Em projetos com PLDs, D é mais conveniente.</p>
+  </div>
+</div>
+</section>
+<section><h1>Exemplo 1: Detector de Sequência &quot;11&quot;</h1>
+<p>Aplica-se o procedimento a um problema clássico: produzir saída $Z = 1$ sempre que os dois últimos bits observados na entrada $X$ formam o padrão &quot;11&quot;.</p>
+<p>Três estados bastam para registrar a história relevante:</p>
+<ul>
+<li>$S_0$: nenhum bit &quot;1&quot; recente (estado inicial)</li>
+<li>$S_1$: o último bit foi &quot;1&quot;</li>
+<li>$S_2$: a sequência &quot;11&quot; foi detectada (transitório)</li>
+</ul>
+<p>Modelo: <strong>Mealy</strong>.</p>
+</section>
+<section><h1>Diagrama do Detector</h1>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="680" viewBox="0.00 0.00 509.15 241.87" class="svg-graph graphviz-img"><g id="svg-graphviz-e107f0d2e583-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 237.87)"><title>Detector11</title><polygon fill="white" stroke="transparent" points="-4,4 -4,-237.87 505.15,-237.87 505.15,4 -4,4" /><g id="svg-graphviz-e107f0d2e583-node1" class="node"><title>S0</title><ellipse fill="#f5f5e8" stroke="black" cx="62.23" cy="-62.23" rx="62.45" ry="62.45" /><text text-anchor="middle" x="62.23" y="-66.03" font-family="Helvetica,sans-Serif" font-size="14.00">S0</text><text text-anchor="middle" x="62.23" y="-51.03" font-family="Helvetica,sans-Serif" font-size="14.00">nenhum 1</text></g><g id="svg-graphviz-e107f0d2e583-edge1" class="edge"><title>S0-&gt;S0</title><path fill="none" stroke="black" d="M46.51,-122.75C48.39,-134.29 53.63,-142.45 62.23,-142.45 68.13,-142.45 72.46,-138.59 75.19,-132.43" /><polygon fill="black" stroke="black" points="78.57,-133.33 77.94,-122.75 71.84,-131.42 78.57,-133.33" /><text text-anchor="middle" x="62.23" y="-145.65" font-family="Helvetica,sans-Serif" font-size="11.00">0/0</text></g><g id="svg-graphviz-e107f0d2e583-node2" class="node"><title>S1</title><ellipse fill="#f5f5e8" stroke="black" cx="242.09" cy="-140.23" rx="63.78" ry="63.78" /><text text-anchor="middle" x="242.09" y="-144.03" font-family="Helvetica,sans-Serif" font-size="14.00">S1</text><text text-anchor="middle" x="242.09" y="-129.03" font-family="Helvetica,sans-Serif" font-size="14.00">último = 1</text></g><g id="svg-graphviz-e107f0d2e583-edge2" class="edge"><title>S0-&gt;S1</title><path fill="none" stroke="black" d="M119.5,-86.91C136.84,-94.51 156.09,-102.95 174.07,-110.84" /><polygon fill="black" stroke="black" points="172.78,-114.09 183.34,-114.9 175.59,-107.68 172.78,-114.09" /><text text-anchor="middle" x="151.45" y="-107.43" font-family="Helvetica,sans-Serif" font-size="11.00">1/0</text></g><g id="svg-graphviz-e107f0d2e583-edge3" class="edge"><title>S1-&gt;S1</title><path fill="none" stroke="black" d="M226.02,-201.82C227.95,-213.56 233.3,-221.87 242.09,-221.87 248.13,-221.87 252.55,-217.94 255.35,-211.67" /><polygon fill="black" stroke="black" points="258.78,-212.39 258.16,-201.82 252.05,-210.47 258.78,-212.39" /><text text-anchor="middle" x="242.09" y="-225.07" font-family="Helvetica,sans-Serif" font-size="11.00">1/0</text></g><g id="svg-graphviz-e107f0d2e583-node3" class="node"><title>S2</title><ellipse fill="#f5f5e8" stroke="black" cx="430.44" cy="-105.23" rx="70.92" ry="70.92" /><text text-anchor="middle" x="430.44" y="-109.03" font-family="Helvetica,sans-Serif" font-size="14.00">S2</text><text text-anchor="middle" x="430.44" y="-94.03" font-family="Helvetica,sans-Serif" font-size="14.00">detectou 11</text></g><g id="svg-graphviz-e107f0d2e583-edge4" class="edge"><title>S1-&gt;S2</title><path fill="none" stroke="black" d="M304.88,-128.62C319.57,-125.86 335.44,-122.88 350.77,-120" /><polygon fill="black" stroke="black" points="351.56,-123.41 360.74,-118.13 350.27,-116.53 351.56,-123.41" /><text text-anchor="middle" x="332.73" y="-128.43" font-family="Helvetica,sans-Serif" font-size="11.00">1/1</text></g><g id="svg-graphviz-e107f0d2e583-edge5" class="edge"><title>S2-&gt;S0</title><path fill="none" stroke="black" d="M366.67,-74.44C347.56,-66.57 326.2,-59.2 305.73,-55.23 248.7,-44.14 182.72,-47.03 134,-52.06" /><polygon fill="black" stroke="black" points="133.43,-48.6 123.87,-53.16 134.19,-55.56 133.43,-48.6" /><text text-anchor="middle" x="242.09" y="-58.43" font-family="Helvetica,sans-Serif" font-size="11.00">0/0</text></g><g id="svg-graphviz-e107f0d2e583-edge6" class="edge"><title>S2-&gt;S1</title><path fill="none" stroke="black" d="M359.66,-102.9C347.59,-103.54 335.23,-104.85 323.73,-107.23 319.28,-108.15 314.76,-109.3 310.25,-110.63" /><polygon fill="black" stroke="black" points="308.88,-107.4 300.43,-113.79 311.02,-114.06 308.88,-107.4" /><text text-anchor="middle" x="332.73" y="-110.43" font-family="Helvetica,sans-Serif" font-size="11.00">1/0</text></g></g></svg></div></div>
+
+<p>A saída $Z$ aparece no rótulo da aresta, confirmando o modelo Mealy.</p>
+</section>
+<section><h1>Codificação dos Estados</h1>
+<p>Para $M = 3$ estados, são necessários $N = 2$ flip-flops.</p>
+<p>$$
+\begin{array}{c|cc}
+\text{Estado} & Q_1 & Q_0 \\
+\hline
+S_0 & 0 & 0 \\
+S_1 & 0 & 1 \\
+S_2 & 1 & 0 \\
+\end{array}
+$$</p>
+<p>O estado $(Q_1, Q_0) = (1, 1)$ é <strong>não utilizado</strong> e será tratado como <em>don't care</em> na síntese.</p>
+</section>
+<section><h1>Tabela de Estados</h1>
+<p>$$
+\begin{array}{cc|c|cc|c}
+Q_1 & Q_0 & X & Q_1^+ & Q_0^+ & Z \\
+\hline
+0 & 0 & 0 & 0 & 0 & 0 \\
+0 & 0 & 1 & 0 & 1 & 0 \\
+0 & 1 & 0 & 0 & 0 & 0 \\
+0 & 1 & 1 & 1 & 0 & 1 \\
+1 & 0 & 0 & 0 & 0 & 0 \\
+1 & 0 & 1 & 0 & 1 & 0 \\
+1 & 1 & 0 & d & d & d \\
+1 & 1 & 1 & d & d & d \\
+\end{array}
+$$</p>
+<p>A partir desta tabela, os mapas de Karnaugh produzem as expressões de excitação e de saída.</p>
+</section>
+<section><h1>Expressões do Detector</h1>
+<p>Para flip-flops D ($D_i = Q_i^+$), os mapas de Karnaugh produzem:</p>
+<p>$$
+D_1 = Q_0 \cdot X
+$$</p>
+<p>$$
+D_0 = X
+$$</p>
+<p>$$
+Z = Q_1
+$$</p>
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">Interpretação<br /></span>
+  </div>
+  <div class="callout-content">
+<p>A expressão de $D_0$ mostra que o bit menos significativo do estado é uma réplica da entrada $X$. A expressão de $D_1$ mostra que a detecção ocorre exatamente quando $Q_0 = 1$ e $X = 1$, ou seja, quando dois &quot;1&quot;s consecutivos foram observados.</p>
+  </div>
+</div>
+</section>
+<section><h1>Diagrama Lógico do Detector</h1>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="720" viewBox="0.00 0.00 385.63 200.00" class="svg-graph graphviz-img"><g id="svg-graphviz-be1ca551f33b-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 196)"><title>Detector11Circuit</title><polygon fill="white" stroke="transparent" points="-4,4 -4,-196 381.63,-196 381.63,4 -4,4" /><g id="svg-graphviz-be1ca551f33b-node1" class="node"><title>X</title><ellipse fill="#f5f5e8" stroke="black" cx="41.63" cy="-174" rx="18" ry="18" /><text text-anchor="middle" x="41.63" y="-170.3" font-family="Helvetica,sans-Serif" font-size="14.00">X</text></g><g id="svg-graphviz-be1ca551f33b-node3" class="node"><title>AND</title><path fill="#eef0e8" stroke="black" d="M56.63,-54C56.63,-54 26.63,-54 26.63,-54 20.63,-54 14.63,-48 14.63,-42 14.63,-42 14.63,-30 14.63,-30 14.63,-24 20.63,-18 26.63,-18 26.63,-18 56.63,-18 56.63,-18 62.63,-18 68.63,-24 68.63,-30 68.63,-30 68.63,-42 68.63,-42 68.63,-48 62.63,-54 56.63,-54" /><text text-anchor="middle" x="41.63" y="-32.3" font-family="Helvetica,sans-Serif" font-size="14.00">AND</text></g><g id="svg-graphviz-be1ca551f33b-edge2" class="edge"><title>X-&gt;AND</title><path fill="none" stroke="black" d="M26.5,-163.54C18.68,-157.17 9.89,-148.29 5.63,-138 -2.54,-118.29 -0.55,-110.42 5.63,-90 8.58,-80.24 13.95,-70.62 19.66,-62.28" /><polygon fill="black" stroke="black" points="22.57,-64.22 25.64,-54.08 16.91,-60.1 22.57,-64.22" /></g><g id="svg-graphviz-be1ca551f33b-node4" class="node"><title>D0</title><path fill="#eef0e8" stroke="black" d="M174.63,-154C174.63,-154 144.63,-154 144.63,-154 138.63,-154 132.63,-148 132.63,-142 132.63,-142 132.63,-128 132.63,-128 132.63,-122 138.63,-116 144.63,-116 144.63,-116 174.63,-116 174.63,-116 180.63,-116 186.63,-122 186.63,-128 186.63,-128 186.63,-142 186.63,-142 186.63,-148 180.63,-154 174.63,-154" /><text text-anchor="middle" x="159.63" y="-138.8" font-family="Helvetica,sans-Serif" font-size="14.00">D</text><text text-anchor="middle" x="159.63" y="-123.8" font-family="Helvetica,sans-Serif" font-size="14.00">Q0</text></g><g id="svg-graphviz-be1ca551f33b-edge1" class="edge"><title>X-&gt;D0</title><path fill="none" stroke="black" d="M59.25,-168.41C75.8,-162.85 101.72,-154.13 122.95,-147" /><polygon fill="black" stroke="black" points="124.26,-150.25 132.62,-143.74 122.03,-143.61 124.26,-150.25" /></g><g id="svg-graphviz-be1ca551f33b-node2" class="node"><title>Q0</title><ellipse fill="#f5f5e8" stroke="black" cx="41.63" cy="-114" rx="24.1" ry="24.1" /><text text-anchor="middle" x="41.63" y="-110.3" font-family="Helvetica,sans-Serif" font-size="14.00">Q0</text></g><g id="svg-graphviz-be1ca551f33b-edge3" class="edge"><title>Q0-&gt;AND</title><path fill="none" stroke="black" d="M41.63,-89.74C41.63,-81.34 41.63,-72.93 41.63,-64.53" /><polygon fill="black" stroke="black" points="45.13,-64.28 41.63,-54.28 38.13,-64.28 45.13,-64.28" /></g><g id="svg-graphviz-be1ca551f33b-node5" class="node"><title>D1</title><path fill="#eef0e8" stroke="black" d="M174.63,-55C174.63,-55 144.63,-55 144.63,-55 138.63,-55 132.63,-49 132.63,-43 132.63,-43 132.63,-29 132.63,-29 132.63,-23 138.63,-17 144.63,-17 144.63,-17 174.63,-17 174.63,-17 180.63,-17 186.63,-23 186.63,-29 186.63,-29 186.63,-43 186.63,-43 186.63,-49 180.63,-55 174.63,-55" /><text text-anchor="middle" x="159.63" y="-39.8" font-family="Helvetica,sans-Serif" font-size="14.00">D</text><text text-anchor="middle" x="159.63" y="-24.8" font-family="Helvetica,sans-Serif" font-size="14.00">Q1</text></g><g id="svg-graphviz-be1ca551f33b-edge4" class="edge"><title>AND-&gt;D1</title><path fill="none" stroke="black" d="M68.66,-36C84.37,-36 104.63,-36 121.95,-36" /><polygon fill="black" stroke="black" points="122.28,-39.5 132.28,-36 122.28,-32.5 122.28,-39.5" /></g><g id="svg-graphviz-be1ca551f33b-edge5" class="edge"><title>D0-&gt;Q0</title><path fill="none" stroke="black" stroke-dasharray="5,2" d="M132.52,-130.27C115.69,-127.23 93.67,-123.24 75.63,-119.98" /><polygon fill="black" stroke="black" points="76.01,-116.49 65.55,-118.15 74.76,-123.37 76.01,-116.49" /><text text-anchor="middle" x="100.63" y="-129.2" font-family="Helvetica,sans-Serif" font-size="11.00">clock</text></g><g id="svg-graphviz-be1ca551f33b-node7" class="node"><title>Q1</title><path fill="#eef0e8" stroke="black" d="M292.63,-54C292.63,-54 262.63,-54 262.63,-54 256.63,-54 250.63,-48 250.63,-42 250.63,-42 250.63,-30 250.63,-30 250.63,-24 256.63,-18 262.63,-18 262.63,-18 292.63,-18 292.63,-18 298.63,-18 304.63,-24 304.63,-30 304.63,-30 304.63,-42 304.63,-42 304.63,-48 298.63,-54 292.63,-54" /><text text-anchor="middle" x="277.63" y="-32.3" font-family="Helvetica,sans-Serif" font-size="14.00">Q1</text></g><g id="svg-graphviz-be1ca551f33b-edge6" class="edge"><title>D1-&gt;Q1</title><path fill="none" stroke="black" stroke-dasharray="5,2" d="M186.66,-36C202.37,-36 222.63,-36 239.95,-36" /><polygon fill="black" stroke="black" points="240.28,-39.5 250.28,-36 240.28,-32.5 240.28,-39.5" /><text text-anchor="middle" x="218.63" y="-39.2" font-family="Helvetica,sans-Serif" font-size="11.00">clock</text></g><g id="svg-graphviz-be1ca551f33b-node6" class="node"><title>Z</title><ellipse fill="#f5f5e8" stroke="black" cx="359.63" cy="-18" rx="18" ry="18" /><text text-anchor="middle" x="359.63" y="-14.3" font-family="Helvetica,sans-Serif" font-size="14.00">Z</text></g><g id="svg-graphviz-be1ca551f33b-edge7" class="edge"><title>Q1:s-&gt;Z</title><path fill="none" stroke="black" d="M277.63,-17C277.63,5.52 309.32,-0.52 333.05,-8.21" /><polygon fill="black" stroke="black" points="332.03,-11.56 342.62,-11.52 334.32,-4.94 332.03,-11.56" /></g></g></svg></div></div>
+
+</section>
+<section><h1>Análise de uma FSM</h1>
+<p>A análise é o problema inverso da síntese.</p>
+<p>Dado o circuito (ou a tabela ATUAL/PRÓXIMO), pede-se o diagrama de estados, a descrição verbal e a classificação do modelo.</p>
+<div class="callout callout-abstract">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
+    <span class="callout-title-inner">Síntese × análise<br /></span>
+  </div>
+  <div class="callout-content">
+<p>A síntese parte de uma especificação de alto nível e produz um circuito. A análise parte de um circuito e produz uma especificação de alto nível. As duas operações são complementares: nenhuma síntese é confiável sem uma etapa posterior de análise que verifique a correspondência com a especificação original.</p>
+  </div>
+</div>
+</section>
+<section><h1>Exemplo 2: Análise Dada a Tabela</h1>
+<p>Tabela ATUAL/PRÓXIMO estado com dois flip-flops, entrada $X$:</p>
+<p>$$
+\begin{array}{cc|cc}
+Q_1 & Q_0 & X & Q_1^+ Q_0^+ \\
+\hline
+0 & 0 & 0 & 0\ \ 1 \\
+0 & 0 & 1 & 1\ \ 0 \\
+0 & 1 & 0 & 0\ \ 1 \\
+0 & 1 & 1 & 1\ \ 1 \\
+1 & 0 & 0 & 1\ \ 0 \\
+1 & 0 & 1 & 0\ \ 0 \\
+1 & 1 & 0 & 1\ \ 1 \\
+1 & 1 & 1 & 0\ \ 0 \\
+\end{array}
+$$</p>
+<p>Os quatro estados $S_0 = 00$, $S_1 = 01$, $S_2 = 10$, $S_3 = 11$ são todos acessíveis. Modelo: <strong>Mealy</strong>.</p>
+</section>
+<section><h1>Diagrama Reconstruído</h1>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="500" viewBox="0.00 0.00 255.22 234.74" class="svg-graph graphviz-img"><g id="svg-graphviz-bc9166607001-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 230.74)"><title>AnalysisExample</title><polygon fill="white" stroke="transparent" points="-4,4 -4,-230.74 251.22,-230.74 251.22,4 -4,4" /><g id="svg-graphviz-bc9166607001-node1" class="node"><title>S0</title><ellipse fill="#f5f5e8" stroke="black" cx="26.87" cy="-72.87" rx="26.74" ry="26.74" /><text text-anchor="middle" x="26.87" y="-76.67" font-family="Helvetica,sans-Serif" font-size="14.00">S0</text><text text-anchor="middle" x="26.87" y="-61.67" font-family="Helvetica,sans-Serif" font-size="14.00">00</text></g><g id="svg-graphviz-bc9166607001-node2" class="node"><title>S1</title><ellipse fill="#f5f5e8" stroke="black" cx="123.61" cy="-169.87" rx="26.74" ry="26.74" /><text text-anchor="middle" x="123.61" y="-173.67" font-family="Helvetica,sans-Serif" font-size="14.00">S1</text><text text-anchor="middle" x="123.61" y="-158.67" font-family="Helvetica,sans-Serif" font-size="14.00">01</text></g><g id="svg-graphviz-bc9166607001-edge1" class="edge"><title>S0-&gt;S1</title><path fill="none" stroke="black" d="M46.59,-92.03C61.08,-106.88 81.32,-127.59 97.26,-143.92" /><polygon fill="black" stroke="black" points="94.76,-146.37 104.25,-151.08 99.77,-141.48 94.76,-146.37" /><text text-anchor="middle" x="75.24" y="-127.07" font-family="Helvetica,sans-Serif" font-size="11.00">0</text></g><g id="svg-graphviz-bc9166607001-node3" class="node"><title>S2</title><ellipse fill="#f5f5e8" stroke="black" cx="123.61" cy="-67.87" rx="26.74" ry="26.74" /><text text-anchor="middle" x="123.61" y="-71.67" font-family="Helvetica,sans-Serif" font-size="14.00">S2</text><text text-anchor="middle" x="123.61" y="-56.67" font-family="Helvetica,sans-Serif" font-size="14.00">10</text></g><g id="svg-graphviz-bc9166607001-edge2" class="edge"><title>S0-&gt;S2</title><path fill="none" stroke="black" d="M53.76,-71.5C63.89,-70.97 75.68,-70.35 86.62,-69.77" /><polygon fill="black" stroke="black" points="86.95,-73.26 96.75,-69.23 86.58,-66.27 86.95,-73.26" /><text text-anchor="middle" x="75.24" y="-74.07" font-family="Helvetica,sans-Serif" font-size="11.00">1</text></g><g id="svg-graphviz-bc9166607001-edge3" class="edge"><title>S1-&gt;S1</title><path fill="none" stroke="black" d="M114.69,-195.24C114.07,-205.79 117.05,-214.74 123.61,-214.74 127.92,-214.74 130.68,-210.89 131.89,-205.26" /><polygon fill="black" stroke="black" points="135.39,-205.44 132.53,-195.24 128.4,-205 135.39,-205.44" /><text text-anchor="middle" x="123.61" y="-217.94" font-family="Helvetica,sans-Serif" font-size="11.00">0</text></g><g id="svg-graphviz-bc9166607001-node4" class="node"><title>S3</title><ellipse fill="#f5f5e8" stroke="black" cx="220.35" cy="-26.87" rx="26.74" ry="26.74" /><text text-anchor="middle" x="220.35" y="-30.67" font-family="Helvetica,sans-Serif" font-size="14.00">S3</text><text text-anchor="middle" x="220.35" y="-15.67" font-family="Helvetica,sans-Serif" font-size="14.00">11</text></g><g id="svg-graphviz-bc9166607001-edge4" class="edge"><title>S1-&gt;S3</title><path fill="none" stroke="black" d="M140.39,-148.29C143.76,-143.57 147.28,-138.58 150.48,-133.87 167.66,-108.62 186.37,-79.44 199.95,-57.93" /><polygon fill="black" stroke="black" points="203.07,-59.55 205.43,-49.22 197.14,-55.82 203.07,-59.55" /><text text-anchor="middle" x="171.98" y="-107.07" font-family="Helvetica,sans-Serif" font-size="11.00">1</text></g><g id="svg-graphviz-bc9166607001-edge6" class="edge"><title>S2-&gt;S0</title><path fill="none" stroke="black" d="M98.67,-57.23C90.21,-54.67 80.59,-53.12 71.74,-54.87 68.24,-55.56 64.67,-56.53 61.15,-57.67" /><polygon fill="black" stroke="black" points="59.66,-54.49 51.48,-61.22 62.08,-61.06 59.66,-54.49" /><text text-anchor="middle" x="75.24" y="-58.07" font-family="Helvetica,sans-Serif" font-size="11.00">1</text></g><g id="svg-graphviz-bc9166607001-edge5" class="edge"><title>S2-&gt;S2</title><path fill="none" stroke="black" d="M114.69,-93.24C114.07,-103.79 117.05,-112.74 123.61,-112.74 127.92,-112.74 130.68,-108.89 131.89,-103.26" /><polygon fill="black" stroke="black" points="135.39,-103.44 132.53,-93.24 128.4,-103 135.39,-103.44" /><text text-anchor="middle" x="123.61" y="-115.94" font-family="Helvetica,sans-Serif" font-size="11.00">0</text></g><g id="svg-graphviz-bc9166607001-edge8" class="edge"><title>S3-&gt;S0</title><path fill="none" stroke="black" d="M194.18,-20.02C168.86,-14.36 129.04,-8.88 96.74,-19.87 80.69,-25.33 65.46,-36.21 53.42,-46.7" /><polygon fill="black" stroke="black" points="51.02,-44.15 45.99,-53.48 55.74,-49.32 51.02,-44.15" /><text text-anchor="middle" x="123.61" y="-23.07" font-family="Helvetica,sans-Serif" font-size="11.00">1</text></g><g id="svg-graphviz-bc9166607001-edge7" class="edge"><title>S3-&gt;S3</title><path fill="none" stroke="black" d="M211.43,-52.24C210.81,-62.79 213.79,-71.74 220.35,-71.74 224.66,-71.74 227.42,-67.89 228.63,-62.26" /><polygon fill="black" stroke="black" points="232.13,-62.44 229.27,-52.24 225.14,-62 232.13,-62.44" /><text text-anchor="middle" x="220.35" y="-74.94" font-family="Helvetica,sans-Serif" font-size="11.00">0</text></g></g></svg></div></div>
+
+</section>
+<section><h1>Interpretação do Comportamento</h1>
+<p>O sistema conta o número de &quot;1&quot;s consecutivos recebidos em binário módulo 4. Um &quot;0&quot; mantém o sistema no estado atual.</p>
+<p>O caso $S_3$ é um caso particular:</p>
+<ul>
+<li>$S_3$ com $X = 0$ permanece em $S_3$</li>
+<li>$S_3$ com $X = 1$ volta para $S_0$</li>
+</ul>
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">Leitura prática<br /></span>
+  </div>
+  <div class="callout-content">
+<p>Esse comportamento evidencia por que a análise tabelar é tão útil: ela torna visível um padrão que a especificação verbal esconderia. A reconstrução do diagrama força a explicitar todas as transições.</p>
+  </div>
+</div>
+</section>
+<section><h1>FSMs Conhecidas em Formas Canônicas</h1>
+<p>Vários circuitos estudados nas aulas anteriores são casos particulares de FSMs.</p>
+<div class="no-break centered"><div class="centered"><svg xmlns="http://www.w3.org/2000/svg" width="820" viewBox="0.00 0.00 580.97 329.29" class="svg-graph graphviz-img"><g id="svg-graphviz-33e98d4f84ca-graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 325.29)"><title>Canonical</title><polygon fill="white" stroke="transparent" points="-4,4 -4,-325.29 576.97,-325.29 576.97,4 -4,4" /><g id="svg-graphviz-33e98d4f84ca-node1" class="node"><title>ripple</title><ellipse fill="#f5f5e8" stroke="black" cx="64.35" cy="-121.57" rx="64.19" ry="64.19" /><text text-anchor="middle" x="64.35" y="-132.87" font-family="Helvetica,sans-Serif" font-size="14.00">Contador</text><text text-anchor="middle" x="64.35" y="-117.87" font-family="Helvetica,sans-Serif" font-size="14.00">assíncrono</text><text text-anchor="middle" x="64.35" y="-102.87" font-family="Helvetica,sans-Serif" font-size="14.00">ripple</text></g><g id="svg-graphviz-33e98d4f84ca-node2" class="node"><title>sync</title><ellipse fill="#f5f5e8" stroke="black" cx="278.26" cy="-187.57" rx="56.64" ry="56.64" /><text text-anchor="middle" x="278.26" y="-191.37" font-family="Helvetica,sans-Serif" font-size="14.00">Contador</text><text text-anchor="middle" x="278.26" y="-176.37" font-family="Helvetica,sans-Serif" font-size="14.00">síncrono</text></g><g id="svg-graphviz-33e98d4f84ca-edge1" class="edge"><title>ripple-&gt;sync</title><path fill="none" stroke="black" d="M126.07,-140.48C153.75,-149.1 186.5,-159.3 214.43,-168" /><polygon fill="black" stroke="black" points="213.5,-171.38 224.09,-171.01 215.59,-164.69 213.5,-171.38" /><text text-anchor="middle" x="175.19" y="-178.77" font-family="Helvetica,sans-Serif" font-size="11.00">Moore</text><text text-anchor="middle" x="175.19" y="-166.77" font-family="Helvetica,sans-Serif" font-size="11.00">síncrono</text></g><g id="svg-graphviz-33e98d4f84ca-node3" class="node"><title>ring</title><ellipse fill="#f5f5e8" stroke="black" cx="278.26" cy="-56.57" rx="56.64" ry="56.64" /><text text-anchor="middle" x="278.26" y="-60.37" font-family="Helvetica,sans-Serif" font-size="14.00">Contador</text><text text-anchor="middle" x="278.26" y="-45.37" font-family="Helvetica,sans-Serif" font-size="14.00">em anel</text></g><g id="svg-graphviz-33e98d4f84ca-edge2" class="edge"><title>ripple-&gt;ring</title><path fill="none" stroke="black" d="M126.07,-102.94C153.75,-94.45 186.5,-84.41 214.43,-75.84" /><polygon fill="black" stroke="black" points="215.56,-79.16 224.09,-72.88 213.51,-72.46 215.56,-79.16" /><text text-anchor="middle" x="175.19" y="-110.77" font-family="Helvetica,sans-Serif" font-size="11.00">Moore</text><text text-anchor="middle" x="175.19" y="-98.77" font-family="Helvetica,sans-Serif" font-size="11.00">1 bit ativo</text></g><g id="svg-graphviz-33e98d4f84ca-node5" class="node"><title>moore</title><ellipse fill="#f5f5e8" stroke="black" cx="516.4" cy="-279.57" rx="41.94" ry="41.94" /><text text-anchor="middle" x="516.4" y="-283.37" font-family="Helvetica,sans-Serif" font-size="14.00">FSM</text><text text-anchor="middle" x="516.4" y="-268.37" font-family="Helvetica,sans-Serif" font-size="14.00">Moore</text></g><g id="svg-graphviz-33e98d4f84ca-edge4" class="edge"><title>sync-&gt;moore</title><path fill="none" stroke="black" d="M331.38,-207.87C372.07,-223.73 428.15,-245.58 467.68,-260.98" /><polygon fill="black" stroke="black" points="466.76,-264.38 477.35,-264.75 469.3,-257.85 466.76,-264.38" /><text text-anchor="middle" x="397.33" y="-264.77" font-family="Helvetica,sans-Serif" font-size="11.00">modelo</text><text text-anchor="middle" x="397.33" y="-252.77" font-family="Helvetica,sans-Serif" font-size="11.00">canônico</text></g><g id="svg-graphviz-33e98d4f84ca-node6" class="node"><title>mealy</title><ellipse fill="#f5f5e8" stroke="black" cx="516.4" cy="-179.57" rx="40.11" ry="40.11" /><text text-anchor="middle" x="516.4" y="-183.37" font-family="Helvetica,sans-Serif" font-size="14.00">FSM</text><text text-anchor="middle" x="516.4" y="-168.37" font-family="Helvetica,sans-Serif" font-size="14.00">Mealy</text></g><g id="svg-graphviz-33e98d4f84ca-edge5" class="edge"><title>sync-&gt;mealy</title><path fill="none" stroke="black" d="M334.92,-185.68C374.56,-184.34 427.36,-182.55 465.6,-181.26" /><polygon fill="black" stroke="black" points="466.1,-184.74 475.98,-180.9 465.87,-177.74 466.1,-184.74" /><text text-anchor="middle" x="397.33" y="-199.77" font-family="Helvetica,sans-Serif" font-size="11.00">+ entradas</text><text text-anchor="middle" x="397.33" y="-187.77" font-family="Helvetica,sans-Serif" font-size="11.00">de saída</text></g><g id="svg-graphviz-33e98d4f84ca-node4" class="node"><title>john</title><ellipse fill="#f5f5e8" stroke="black" cx="516.4" cy="-56.57" rx="56.64" ry="56.64" /><text text-anchor="middle" x="516.4" y="-60.37" font-family="Helvetica,sans-Serif" font-size="14.00">Contador</text><text text-anchor="middle" x="516.4" y="-45.37" font-family="Helvetica,sans-Serif" font-size="14.00">Johnson</text></g><g id="svg-graphviz-33e98d4f84ca-edge3" class="edge"><title>ring-&gt;john</title><path fill="none" stroke="black" d="M334.92,-56.57C369.18,-56.57 413.26,-56.57 449.29,-56.57" /><polygon fill="black" stroke="black" points="449.7,-60.07 459.7,-56.57 449.7,-53.07 449.7,-60.07" /><text text-anchor="middle" x="397.33" y="-71.77" font-family="Helvetica,sans-Serif" font-size="11.00">realim.</text><text text-anchor="middle" x="397.33" y="-59.77" font-family="Helvetica,sans-Serif" font-size="11.00">complementada</text></g></g></svg></div></div>
+
+</section>
+<section><h1>Aplicações Típicas de FSMs</h1>
+<p>A formalização por meio de FSMs é especialmente útil em problemas de controle.</p>
+<ul>
+<li><strong>máquina de lavar roupa</strong>: estados ocioso, enchimento, agitação, centrifugação</li>
+<li><strong>semáforo</strong>: quatro estados de luzes, com temporização regulada por contador auxiliar</li>
+<li><strong>detector de sequência</strong>: subsequência específica em cadeia de bits</li>
+<li><strong>controle de motor de passo</strong>: padrão cíclico arbitrário</li>
+<li><strong>protocolos de comunicação serial</strong>: sincronização de bits de início, dados, paridade e parada</li>
+</ul>
+<p>A Figura 7.63 ilustra a decomposição modular típica de um controlador de semáforo modelado como FSM.</p>
+</section>
+<section><h1>Controlador de Semáforo (Fig. 7.63)</h1>
+<img src="../static/tocci_fig_7_63_traffic_block.png" width="92%" style="display: block; margin: 0 auto;" alt="Diagrama em bloco do controlador de farol de trânsito, com módulos delay, control e lite_ctrl.">
+
+</section>
+<section><h1>Decomposição do Semáforo</h1>
+<p>A Figura 7.63 particiona o sistema em três blocos funcionais.</p>
+<ul>
+<li><code>delay</code>: temporizador que conta ciclos de clock e gera o sinal <code>change</code></li>
+<li><code>control</code>: máquina de estado com os quatro estados das luzes</li>
+<li><code>lite_ctrl</code>: decodificador que aciona as seis lâmpadas, duas por via</li>
+</ul>
+<div class="callout callout-note">
+  <div class="callout-title">
+    <span class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z"/><path d="M15 3v6h6"/><path d="M9 13h6"/><path d="M9 17h3"/></svg></span>
+    <span class="callout-title-inner">Acoplamento Mealy<br /></span>
+  </div>
+  <div class="callout-content">
+<p>O bloco <code>control</code> é a FSM cujo diagrama de estados o engenheiro precisa construir. A entrada <code>enable</code> conectada a <code>change</code> indica um acoplamento Mealy, pois a transição depende de um sinal (<code>change</code>) que é função do estado atual do bloco <code>delay</code> realimentado pela contagem de clocks.</p>
+  </div>
+</div>
+</section>
+<section><h1>Tabela-Resumo: Mealy × Moore</h1>
+<p>$$
+\begin{array}{c|c|c}
+\text{Característica} & \text{Moore} & \text{Mealy} \\
+\hline
+\text{Saídas} & f(Q) & f(Q, X) \\
+\text{Número de estados} & \text{possivelmente maior} & \text{possivelmente menor} \\
+\text{Sincronismo das saídas} & \text{síncronas} & \text{parcialmente assíncronas} \\
+\text{Sensibilidade a hazards} & \text{baixa} & \text{alta} \\
+\text{Modelo canônico} & \text{contador síncrono puro} & \text{detector de sequência} \\
+\end{array}
+$$</p>
+</section>
+<section><h1>Síntese: O que Retemos</h1>
+<p>Em uma FSM, todo circuito sequencial com um número finito de estados internos pode ser descrito por uma única estrutura: <strong>estado atual, entradas, próximo estado, saídas</strong>.</p>
+<p>O diagrama de estados torna essa estrutura visível.</p>
+<p>A síntese produz o circuito a partir da especificação. A análise recupera a especificação a partir do circuito. As duas operações são complementares.</p>
+</section>
+<section><h1>Próximos Passos</h1>
+<p>Nesta aula, introduzimos o conceito e a formalização de máquinas de estados finitos, os modelos Mealy e Moore, o diagrama de estados, a tabela de transição e o procedimento completo de síntese.</p>
+<p>Próxima etapa:</p>
+<ul>
+<li>técnicas para redução do número de estados por equivalência</li>
+<li>aplicação de máquinas de estado em projetos de sistemas completos</li>
+<li>descrição desses sistemas em linguagens de descrição de hardware</li>
+</ul>
+</section>
+        </div>
+    </div>
+
+    <script src="/aulas-faesa/js/vendor/reveal/reveal.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/notes/notes.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/markdown/markdown.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/math/math.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/reveal/plugin/zoom/zoom.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/prism.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-c.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-python.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-javascript.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-clike.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-cpp.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-perl.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-java.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-markup-templating.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/components/prism-php.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/line-numbers/prism-line-numbers.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/toolbar/prism-toolbar.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/vendor/prism/plugins/show-language/prism-show-language.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/prism-slang.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/mermaid.min.js" data-no-bundle></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            mermaid.initialize({
+                startOnLoad: false,
+                theme: 'default',
+                securityLevel: 'loose',
+                htmlLabels: false,
+                fontFamily: 'Inter, system-ui, sans-serif',
+            });
+        });
+    </script>
+    <script src="/aulas-faesa/js/rough.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/apply_sketch.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/lucide.min.js" data-no-bundle></script>
+    <script src="/aulas-faesa/js/ui.js" data-no-bundle></script>
+    <script>
+        const waitForNextFrame = () => new Promise(resolve => requestAnimationFrame(resolve));
+
+        const initSlideUI = () => {
+            if (!window.CourseForgeUI) {
+                return;
+            }
+
+            window.CourseForgeUI.initCopyButtons();
+            window.CourseForgeUI.initIcons();
+        };
+
+        const renderMermaidsInSlide = async (slide) => {
+            if (!slide) {
+                return;
+            }
+
+            const mermaids = slide.querySelectorAll('.mermaid');
+            if (!mermaids.length) {
+                return;
+            }
+
+            try {
+                if (document.fonts?.ready) {
+                    await document.fonts.ready;
+                }
+
+                await waitForNextFrame();
+                await waitForNextFrame();
+
+                for (const element of mermaids) {
+                    if (element.dataset.mermaidRendered === 'true') {
+                        continue;
+                    }
+
+                    await mermaid.run({
+                        nodes: [element],
+                    });
+                    element.dataset.mermaidRendered = 'true';
+                }
+            } catch (err) {
+                console.warn('Mermaid render failed', err);
+            }
+        };
+
+        const updateMermaidDisplayBounds = (slide) => {
+            const scope = slide || document;
+            const displays = scope.querySelectorAll('.mermaid-display');
+
+            for (const display of displays) {
+                const rect = display.getBoundingClientRect();
+                const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+                const bottomGap = 24;
+                const availableHeight = Math.max(160, Math.floor(viewportHeight - rect.top - bottomGap));
+                display.style.setProperty('--mermaid-max-height', `${availableHeight}px`);
+            }
+        };
+
+        const resetNativeLineNumbers = (pre) => {
+            if (!pre?.classList.contains('line-numbers')) {
+                return;
+            }
+
+            const existingRows = pre.querySelector('.line-numbers-rows');
+            if (existingRows) {
+                existingRows.remove();
+            }
+        };
+
+        const highlightCodeInSlide = (slide) => {
+            const scope = slide || document;
+            const codeBlocks = scope.querySelectorAll('pre[class*="language-"] > code[class*="language-"]');
+
+            for (const code of codeBlocks) {
+                const pre = code.parentElement;
+                resetNativeLineNumbers(pre);
+                Prism.highlightElement(code);
+
+                if (pre?.classList.contains('line-numbers') && Prism.plugins?.lineNumbers?.resize) {
+                    Prism.plugins.lineNumbers.resize(pre);
+                }
+            }
+        };
+
+        const enhanceCurrentSlide = async (slide) => {
+            highlightCodeInSlide(slide);
+            await renderMermaidsInSlide(slide);
+            updateMermaidDisplayBounds(slide);
+            initSlideUI();
+        };
+
+        Reveal.initialize({
+            hash: true,
+            slideNumber: 'c/t',
+            center: false,
+            controls: false,
+            plugins: [RevealMarkdown, RevealNotes, RevealMath.KaTeX, RevealZoom],
+            katex: {
+                local: '/aulas-faesa/js/vendor/katex',
+                output: 'html',
+                throwOnError: false,
+                strict: false,
+            },
+            width: 960,
+            height: 800,
+            margin: 0.15,
+            maxScale: 2.0,
+        });
+
+        Reveal.on('ready', event => {
+            enhanceCurrentSlide(event.currentSlide);
+        });
+
+        Reveal.on('slideready', event => {
+            enhanceCurrentSlide(event.currentSlide);
+        });
+
+        Reveal.on('slidechanged', event => {
+            enhanceCurrentSlide(event.currentSlide);
+        });
+
+        window.addEventListener('resize', () => {
+            updateMermaidDisplayBounds(Reveal.getCurrentSlide());
+        });
+    </script>
+    <style>
+        /* Modern base styles */
+        :root {
+            --callout-note: #448aff;
+            --callout-abstract: #00b0ff;
+            --callout-info: #00b8d4;
+            --callout-todo: #00bfa5;
+            --callout-tip: #00c853;
+            --callout-success: #64dd17;
+            --callout-question: #ffab00;
+            --callout-warning: #ff9100;
+            --callout-failure: #ff5252;
+            --callout-danger: #ff1744;
+            --callout-bug: #f50057;
+            --callout-example: #7c4dff;
+            --callout-quote: #9e9e9e;
+            --code-bg: #f1f5f9;
+            --border: #e2e8f0;
+            --radius: 6px;
+            --radius-sm: 4px;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --text-muted: #64748b;
+            --text: #334155;
+            --bg: #ffffff;
+            --heading: #0f172a;
+            --link: #3b82f6;
+            --font-code: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+        }
+
+        .reveal {
+            font-size: 20px;
+            text-align: left !important;
+        }
+
+        .reveal code:not(pre code) {
+            font-family: var(--font-code) !important;
+            background-color: var(--code-bg) !important;
+            padding: 0.1em 0.35em !important;
+            border-radius: var(--radius-sm) !important;
+            font-size: 0.9em !important;
+            color: var(--link) !important;
+            border: 1px dashed var(--border) !important;
+            white-space: pre-wrap !important;
+            word-break: break-word !important;
+            font-variant-ligatures: none;
+            font-feature-settings: "liga" 0, "calt" 0;
+        }
+
+        .reveal h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px !important;
+            margin-left: 0 !important;
+            /* min-height: 2.3em; */
+            display: flex;
+            align-items: center;
+            justify-content: flex-start !important;
+            text-align: left !important;
+            width: 100% !important;
+            text-shadow: none !important;
+        }
+
+        /* Prism overrides for Reveal.js */
+        .reveal div.code-toolbar {
+            position: relative;
+            width: 100% !important;
+            margin: 1.5rem 0 !important;
+        }
+
+        .reveal pre[class*="language-"] {
+            background: hsl(230, 1%, 98%) !important;
+            margin: 1.5rem 0 !important;
+            padding: 1rem !important;
+            border: 1px solid var(--border) !important;
+            border-radius: var(--radius) !important;
+            box-shadow: var(--shadow-sm) !important;
+            font-family: var(--font-code) !important;
+            font-size: 0.85em !important;
+            position: relative;
+            overflow-x: auto;
+            box-sizing: border-box !important;
+            max-width: 100% !important;
+            font-variant-ligatures: none;
+            font-feature-settings: "liga" 0, "calt" 0;
+        }
+
+        .reveal pre[class*="language-"] > code {
+            background: 0 0 !important;
+            text-shadow: none !important;
+            color: hsl(230, 8%, 24%) !important;
+            position: relative !important;
+            display: block !important;
+        }
+
+        .reveal .line-numbers .line-numbers-rows {
+            border-right: 1px solid #444 !important;
+            padding-right: .5rem !important;
+            margin-bottom: 1.5rem;
+        }
+
+        .reveal .line-numbers-rows>span:before {
+            color: #666 !important;
+        }
+
+        .reveal pre[class*="language-"].line-numbers,
+        .reveal pre[class*="language-"]:has(.line-numbers-rows) {
+            padding-left: 3.8em !important;
+            overflow-y: hidden !important;
+        }
+
+        .reveal .copy-button,
+        .reveal pre[data-lang]::before {
+            position: absolute;
+            top: .5rem;
+            height: 26px;
+            background: hsl(230, 1%, 92%);
+            border: 1px solid hsl(230, 1%, 85%);
+            border-radius: var(--radius-sm);
+            box-sizing: border-box;
+        }
+
+        .reveal .copy-button {
+            right: .5rem;
+            width: 26px;
+            padding: 0;
+            color: hsl(230, 6%, 44%);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all .2s ease;
+            z-index: 20;
+            opacity: .8;
+        }
+
+        .reveal .copy-button:hover {
+            background: hsl(230, 1%, 85%);
+            color: hsl(230, 8%, 24%);
+            opacity: 1;
+        }
+
+        .reveal .copy-button svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Language label styling - hide all Prism toolbar plugins, keep only data-lang label */
+        .reveal div.toolbar,
+        .reveal div.toolbar-item,
+        .reveal button.toolbar-item,
+        .reveal span.toolbar-item {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            height: 0 !important;
+            width: 0 !important;
+            overflow: hidden !important;
+            position: absolute !important;
+            pointer-events: none !important;
+        }
+
+        /* Use the pseudo-element data-lang label only */
+        .reveal pre[data-lang]::before {
+            content: attr(data-lang);
+            right: 2.35rem;
+            padding: 0 .5rem;
+            font-size: .65rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: hsl(230, 6%, 50%);
+            pointer-events: none;
+            z-index: 10;
+            display: inline-flex !important;
+            align-items: center !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            height: 26px !important;
+            width: auto !important;
+            position: absolute !important;
+            overflow: visible !important;
+            line-height: 26px !important;
+        }
+
+        .reveal h2 {
+            font-size: 1.6em;
+            margin-top: 30px !important;
+            margin-bottom: 20px !important;
+            text-align: left !important;
+        }
+
+        .reveal h3 {
+            font-size: 1.3em;
+            margin-top: 20px !important;
+            margin-bottom: 15px !important;
+            text-align: left !important;
+        }
+
+        .reveal p {
+            line-height: 1.5;
+            margin-top: 20px !important;
+            margin-left: 0 !important;
+            text-align: left !important;
+        }
+
+        .reveal ul,
+        .reveal ol,
+        .reveal li {
+            line-height: 1.5;
+            text-align: left !important;
+            margin-left: 0 !important;
+        }
+        
+        .reveal ul, .reveal ol {
+            display: block !important;
+            padding-left: 1.2em !important;
+        }
+
+        /* Slide padding and layout */
+        .reveal .slides section {
+            padding: 40px !important;
+            box-sizing: border-box;
+            text-align: left !important;
+            overflow: visible !important;
+        }
+
+        .reveal .slides {
+            text-align: left !important;
+        }
+
+        /* Centering for Title slides (h1 ONLY, h1 + h2 ONLY, or h1 + h2 + p ONLY) */
+        .reveal .slides section:not(.stack):has(> h1:only-child),
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child),
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) {
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: center !important;
+            align-items: center !important;
+            text-align: center !important;
+            height: 100% !important;
+            top: 0 !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:only-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child) h2,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h2,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) p {
+            justify-content: center !important;
+            text-align: center !important;
+            margin: 0 !important;
+            min-height: auto !important;
+            width: 100% !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2:last-child) h1,
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h1 {
+            margin-bottom: 0.5em !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) h2 {
+            margin-bottom: 0.3em !important;
+        }
+
+        .reveal .slides section:not(.stack):has(> h1:first-child + h2 + p:last-child) p {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        /* Full screen slide fix */
+        .reveal .slides section:has(.full-screen-image) {
+            padding: 0 !important;
+        }
+
+        /* Full screen slide fix - Garantindo que o fundo do Reveal fique visível e a imagem carregada */
+        .reveal:has(section.present .full-screen-image) {
+            background-image: url('../../slide_end_background.png') !important;
+            background-size: cover !important;
+            background-position: center !important;
+        }
+
+        /* Torna o slide e o container de slides transparentes para mostrar o fundo da .reveal */
+        .reveal:has(section.present .full-screen-image) .slides,
+        .reveal:has(section.present .full-screen-image) .slides section.present {
+            background: transparent !important;
+        }
+
+        .full-screen-image {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 !important;
+            /* Se houver texto, ele centraliza aqui */
+        }
+
+        /* Spacing for diagrams */
+        .reveal .svg-graph {
+            margin-top: 1em !important;
+            margin-bottom: 1em !important;
+            overflow: visible !important; /* Prevent labels from being cut off */
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* Mermaid Diagram Styles */
+        .reveal .mermaid {
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            padding: 0 !important;
+            margin: 1rem 0 !important;
+            font-family: inherit !important;
+            overflow: visible !important;
+            text-align: center;
+            display: block !important;
+            width: auto !important;
+            max-width: 100% !important;
+        }
+
+        .reveal pre.mermaid {
+            white-space: pre;
+            font-family: var(--font-code);
+            color: var(--text-muted);
+            margin: 0 !important;
+            padding: 0 !important;
+            width: auto !important;
+            line-height: 1 !important;
+            border: none !important;
+            box-shadow: none !important;
+            background: transparent !important;
+            overflow: visible !important;
+        }
+
+        .reveal .centered .mermaid {
+            display: block !important;
+            justify-content: center;
+            margin-left: auto !important;
+            margin-right: auto !important;
+        }
+
+        .reveal .mermaid svg {
+            max-width: 100% !important;
+            height: auto !important;
+            display: block !important;
+            overflow: visible !important;
+            vertical-align: top !important;
+            font-family: Inter, system-ui, sans-serif !important;
+            font-style: normal !important;
+            font-variant: normal !important;
+            font-weight: 400 !important;
+            letter-spacing: normal !important;
+            word-spacing: normal !important;
+            text-transform: none !important;
+            text-shadow: none !important;
+            line-height: normal !important;
+            text-rendering: geometricPrecision !important;
+        }
+
+        .reveal .mermaid svg * {
+            font-family: inherit !important;
+            font-style: normal !important;
+            font-variant: normal !important;
+            letter-spacing: normal !important;
+            word-spacing: normal !important;
+            text-transform: none !important;
+            text-shadow: none !important;
+            line-height: normal !important;
+        }
+
+        .reveal .mermaid svg .edgeBadge text,
+        .reveal .mermaid svg .edgeBadge tspan,
+        .reveal .mermaid svg .edgeTerm text,
+        .reveal .mermaid svg .edgeTerm tspan,
+        .reveal .mermaid svg .multiplicity text,
+        .reveal .mermaid svg .multiplicity tspan,
+        .reveal .mermaid svg text.edgeBadge,
+        .reveal .mermaid svg text.edgeTerm {
+            font-size: 18px !important;
+            font-weight: 700 !important;
+            fill: var(--heading) !important;
+        }
+
+        /* Mermaid Source Switcher */
+        .reveal .mermaid-outer-container {
+            margin: 1rem 0;
+            position: relative;
+            width: 100%;
+            max-width: 100%;
+        }
+
+        .reveal .mermaid-switcher {
+            display: flex !important;
+            justify-content: flex-end;
+            margin-bottom: 0.5rem;
+            width: 100%;
+        }
+
+        .reveal .switcher-track {
+            display: inline-flex;
+            align-items: center;
+            background: var(--code-bg);
+            padding: 3px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            position: relative;
+        }
+
+        .reveal .switcher-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            border: none;
+            background: transparent;
+            padding: 0.35rem 1rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            border-radius: calc(var(--radius) - 2px);
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            z-index: 1;
+        }
+
+        .reveal .switcher-btn svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .reveal .switcher-btn:hover {
+            color: var(--text);
+        }
+
+        .reveal .switcher-btn.active {
+            color: var(--heading);
+            background: var(--bg);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        .reveal .mermaid-content {
+            min-height: 50px;
+        }
+
+        /* Mermaid display - respect inline width */
+        .reveal .mermaid-display {
+            transition: opacity 0.2s ease;
+            display: block !important;
+            max-width: 100% !important;
+            max-height: var(--mermaid-max-height, calc(100vh - 140px)) !important;
+            border: none !important;
+            box-shadow: none !important;
+            background: transparent !important;
+            overflow: auto !important;
+        }
+
+        .reveal .mermaid-source pre {
+            margin: 0 !important;
+            background: var(--code-bg) !important;
+            border: 1px dashed var(--border) !important;
+        }
+
+        /* Ensure proper toggle behavior */
+        .reveal .mermaid-source {
+            display: none !important;
+        }
+
+        .reveal .mermaid-source[style*="display: block"],
+        .reveal .mermaid-source[style*="display:block"] {
+            display: block !important;
+        }
+
+        .reveal .mermaid-display[style*="display: none"],
+        .reveal .mermaid-display[style*="display:none"] {
+            display: none !important;
+        }
+
+        .reveal .mermaid-display.centered {
+            margin-left: auto !important;
+            margin-right: auto !important;
+            max-width: 100% !important;
+        }
+
+        .centered:not(.mermaid-display) {
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            width: 100% !important;
+            margin: 1em 0 !important;
+        }
+
+        .no-break {
+            display: block;
+            width: 100%;
+        }
+
+        .reveal blockquote {
+            display: block;
+            position: relative;
+            margin: var(--r-block-margin) auto !important;
+            padding: 5px;
+            font-style: italic;
+            background: rgba(255, 170, 73, 0.2);
+            box-shadow: 0 0 2px rgba(0,0,0,.2);
+            text-align: left !important;
+        }
+
+        .col1 {
+            width: 90%;
+            margin: 0 auto;
+        }
+
+        .col2 {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start;
+            width: 90%;
+            margin: 0 auto;
+            align-items: flex-start;
+        }
+
+        /* Callout Styles */
+        :root {
+            --callout-note: #448aff;
+            --callout-abstract: #00b0ff;
+            --callout-info: #00b8d4;
+            --callout-todo: #00bfa5;
+            --callout-tip: #00c853;
+            --callout-success: #64dd17;
+            --callout-question: #ffab00;
+            --callout-warning: #ff9100;
+            --callout-failure: #ff5252;
+            --callout-danger: #ff1744;
+            --callout-bug: #f50057;
+            --callout-example: #7c4dff;
+            --callout-quote: #9e9e9e;
+            --code-bg: #f8f8f8;
+            --border: #ddd;
+        }
+
+        .reveal .callout {
+            margin: 1rem auto !important;
+            border: 1px solid var(--border);
+            border-left: 6px solid var(--callout-note);
+            border-radius: 4px;
+            overflow: hidden;
+            text-align: left !important;
+            font-size: 0.8em;
+            width: 75% !important;
+            max-width: 100% !important;
+        }
+
+        .reveal .callout-title {
+            padding: 0.5rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            color: var(--callout-note);
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .reveal .callout-icon {
+            display: flex;
+            align-items: center;
+        }
+
+        .reveal .callout-icon svg {
+            width: 1.2em;
+            height: 1.2em;
+        }
+
+        .reveal .callout-content {
+            padding: 0.5rem 1rem;
+        }
+
+        .reveal .callout-content p {
+            margin-top: 0.5rem !important;
+        }
+
+        .reveal .callout-content p:first-child {
+            margin-top: 0 !important;
+        }
+
+        .reveal h1 { text-transform: none !important; }
+
+        .reveal .callout-abstract { border-left-color: var(--callout-abstract); }
+        .reveal .callout-abstract .callout-title { color: var(--callout-abstract); }
+        .reveal .callout-info { border-left-color: var(--callout-info); }
+        .reveal .callout-info .callout-title { color: var(--callout-info); }
+        .reveal .callout-todo { border-left-color: var(--callout-todo); }
+        .reveal .callout-todo .callout-title { color: var(--callout-todo); }
+        .reveal .callout-tip { border-left-color: var(--callout-tip); }
+        .reveal .callout-tip .callout-title { color: var(--callout-tip); }
+        .reveal .callout-success { border-left-color: var(--callout-success); }
+        .reveal .callout-success .callout-title { color: var(--callout-success); }
+        .reveal .callout-question { border-left-color: var(--callout-question); }
+        .reveal .callout-question .callout-title { color: var(--callout-question) ; }
+        .reveal .callout-warning { border-left-color: var(--callout-warning); }
+        .reveal .callout-warning .callout-title { color: var(--callout-warning); }
+        .reveal .callout-failure { border-left-color: var(--callout-failure); }
+        .reveal .callout-failure .callout-title { color: var(--callout-failure); }
+        .reveal .callout-danger { border-left-color: var(--callout-danger); }
+        .reveal .callout-danger .callout-title { color: var(--callout-danger); }
+        .reveal .callout-bug { border-left-color: var(--callout-bug); }
+        .reveal .callout-bug .callout-title { color: var(--callout-bug); }
+        .reveal .callout-example { border-left-color: var(--callout-example); }
+        .reveal .callout-example .callout-title { color: var(--callout-example); }
+        .reveal .callout-quote { border-left-color: var(--callout-quote); }
+        .reveal .callout-quote .callout-title { color: var(--callout-quote); }
+        .red-note { color: var(--callout-failure); }
+
+        .reveal .slide-number {
+            font-size: 0.8em !important;
+            padding: 5px 10px !important;
+            background: rgba(0,0,0,0.1) !important;
+            border-radius: 4px;
+            color: #000000b1 !important;
+        }
+
+        /* Print styles */
+        @media print {
+            .reveal .slides section {
+                display: block !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                position: relative !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+                page-break-after: always !important;
+                overflow: hidden !important;
+            }
+
+            .reveal .slides {
+                transform: none !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+            }
+            
+            .reveal {
+                overflow: visible !important;
+            }
+        }
+    </style>
+</body>
+
+</html>
